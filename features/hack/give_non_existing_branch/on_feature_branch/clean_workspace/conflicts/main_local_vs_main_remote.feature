@@ -13,16 +13,16 @@ Feature: conflicts between the main branch and its tracking branch
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | existing | git fetch --prune --tags                |
       |          | git checkout main                       |
       | main     | git rebase origin/main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -31,7 +31,7 @@ Feature: conflicts between the main branch and its tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | main   | git rebase --abort    |
       |        | git checkout existing |
@@ -41,7 +41,7 @@ Feature: conflicts between the main branch and its tracking branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -50,7 +50,7 @@ Feature: conflicts between the main branch and its tracking branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
       |        | git push              |
@@ -69,7 +69,7 @@ Feature: conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND             |
       | main   | git push            |
       |        | git checkout -b new |

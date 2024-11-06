@@ -9,8 +9,8 @@ Feature: prototype another parked branch
     When I run "git-town prototype parked"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "parked" is now a prototype branch
       """
@@ -19,5 +19,5 @@ Feature: prototype another parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the parked branches are still "parked"

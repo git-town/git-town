@@ -10,7 +10,7 @@ Feature: on a forked repo
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | main   | git fetch --prune --tags                  |
       |        | git rebase origin/main --no-update-refs   |
@@ -25,7 +25,7 @@ Feature: on a forked repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |

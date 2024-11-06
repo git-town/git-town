@@ -8,14 +8,14 @@ Feature: display the parent of a top-level feature branch
     When I run "git-town config get-parent --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE    | COMMAND                            |
       |        | backend | git version                        |
       |        | backend | git rev-parse --show-toplevel      |
       |        | backend | git config -lz --includes --global |
       |        | backend | git config -lz --includes --local  |
       |        | backend | git rev-parse --abbrev-ref HEAD    |
-    And it prints:
+    And Git Town prints:
       """
       Ran 5 shell commands.
       """

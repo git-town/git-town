@@ -26,7 +26,7 @@ Feature: one person making a series of commits and syncs in between
       | the feature | my_file_1 | my content 1 | file      | content 1    |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -48,7 +48,7 @@ Feature: one person making a series of commits and syncs in between
       | my second commit | file      | content 2    |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -70,7 +70,7 @@ Feature: one person making a series of commits and syncs in between
       | my second commit | file      | content 3    |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |

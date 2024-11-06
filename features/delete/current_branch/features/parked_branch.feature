@@ -16,7 +16,7 @@ Feature: delete the current parked branch
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
       | parked  | git fetch --prune --tags                         |
       |         | git push origin :parked                          |
@@ -38,7 +38,7 @@ Feature: delete the current parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                        |
       | feature | git push origin {{ sha 'parked commit' }}:refs/heads/parked    |
       |         | git branch parked {{ sha 'Committing WIP for git town undo' }} |

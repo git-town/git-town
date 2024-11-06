@@ -10,7 +10,7 @@ Feature: on the main branch with uncommitted changes
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND             |
       | main   | git add -A          |
       |        | git stash           |
@@ -25,7 +25,7 @@ Feature: on the main branch with uncommitted changes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | new    | git add -A        |
       |        | git stash         |

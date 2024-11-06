@@ -14,7 +14,7 @@ Feature: don't sync tags while deleting branches
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | current | git fetch --prune --no-tags |
       |         | git push origin :current    |
@@ -24,7 +24,7 @@ Feature: don't sync tags while deleting branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git push -u origin current                    |

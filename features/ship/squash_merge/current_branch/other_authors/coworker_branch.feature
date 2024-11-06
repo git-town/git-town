@@ -13,7 +13,7 @@ Feature: ship a coworker's feature branch
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                 |
       | feature | git fetch --prune --tags                                                |
       |         | git checkout main                                                       |
@@ -30,7 +30,7 @@ Feature: ship a coworker's feature branch
   @skipWindows
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                               |
       | feature | git fetch --prune --tags                              |
       |         | git checkout main                                     |
@@ -47,7 +47,7 @@ Feature: ship a coworker's feature branch
   Scenario: undo
     Given I ran "git-town ship -m 'feature done'"
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git revert {{ sha 'feature done' }}            |
       |        | git push                                       |

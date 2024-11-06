@@ -16,7 +16,7 @@ Feature: syncing a top-level feature branch using --no-push
     When I run "git-town sync --no-push"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git fetch --prune --tags                   |
       |         | git checkout main                          |
@@ -37,7 +37,7 @@ Feature: syncing a top-level feature branch using --no-push
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
       |         | git checkout main                                 |

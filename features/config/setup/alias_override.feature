@@ -27,7 +27,7 @@ Feature: override an existing Git alias
       | save config to config file  | enter   |
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |
     And global Git setting "alias.append" is now "town append"

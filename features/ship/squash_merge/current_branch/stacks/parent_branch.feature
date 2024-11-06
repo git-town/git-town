@@ -15,7 +15,7 @@ Feature: ship a parent branch
     When I run "git-town ship -m 'parent done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | parent | git fetch --prune --tags       |
       |        | git checkout main              |
@@ -24,7 +24,7 @@ Feature: ship a parent branch
       |        | git push                       |
       |        | git push origin :parent        |
       |        | git branch -D parent           |
-    And it prints:
+    And Git Town prints:
       """
       branch "child" is now a child of "main"
       """
@@ -39,7 +39,7 @@ Feature: ship a parent branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | main   | git revert {{ sha 'parent done' }}          |
       |        | git push                                    |

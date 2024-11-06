@@ -9,7 +9,7 @@ Feature: on the main branch
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
@@ -24,7 +24,7 @@ Feature: on the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |

@@ -11,7 +11,7 @@ Feature: previous branch is checked out in another worktree
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -22,7 +22,7 @@ Feature: previous branch is checked out in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND              |
       | new     | git checkout current |
       | current | git branch -D new    |

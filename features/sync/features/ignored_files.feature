@@ -17,7 +17,7 @@ Feature: ignore files
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And the current branch is still "feature"

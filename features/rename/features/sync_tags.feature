@@ -14,7 +14,7 @@ Feature: don't sync tags while renaming branches
     When I run "git-town rename new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | old    | git fetch --prune --no-tags |
       |        | git branch --move old new   |
@@ -25,7 +25,7 @@ Feature: don't sync tags while renaming branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | new    | git branch old {{ sha 'initial commit' }} |
       |        | git push -u origin old                    |

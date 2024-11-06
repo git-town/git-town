@@ -7,10 +7,10 @@ Feature: branch does not exist
       | main   | local, origin | main commit |
     And the current branch is "main"
     When I run "git-town rename non-existing new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is no branch "non-existing"
       """

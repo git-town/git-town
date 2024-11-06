@@ -15,7 +15,7 @@ Feature: compress the commits on a feature branch verbosely
     When I run "git-town compress --verbose" and enter "compressed commit" for the commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |
       |         | git version                                        |
       |         | git rev-parse --show-toplevel                      |
@@ -42,7 +42,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
       |         | git stash list                                     |
-    And it prints:
+    And Git Town prints:
       """
       Ran 25 shell commands
       """
@@ -58,7 +58,7 @@ Feature: compress the commits on a feature branch verbosely
 
   Scenario: undo
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |
       |         | git version                                        |
       |         | git rev-parse --show-toplevel                      |

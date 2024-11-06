@@ -10,17 +10,17 @@ Feature: already existing remote branch
     When I run "git-town prepend existing"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is already a branch "existing" at the "origin" remote
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

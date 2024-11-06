@@ -14,7 +14,7 @@ Feature: offline mode
     When I run "git-town rename new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | old    | git branch --move old new |
       |        | git checkout new          |
@@ -30,7 +30,7 @@ Feature: offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |

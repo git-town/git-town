@@ -16,7 +16,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git add -A                              |
@@ -24,11 +24,11 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -39,7 +39,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And a merge is now in progress
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git commit --no-edit                  |
       |        | git merge --no-edit --ff origin/alpha |
@@ -48,15 +48,15 @@ Feature: shipped changes conflict with multiple existing feature branches
       | main   | git branch -D beta                    |
       |        | git checkout gamma                    |
       | gamma  | git merge --no-edit --ff main         |
-    And it prints something like:
+    And Git Town prints something like:
       """
       deleted branch "beta"
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -65,7 +65,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And the current branch is now "gamma"
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git commit --no-edit                  |
       |        | git merge --no-edit --ff origin/gamma |

@@ -8,8 +8,8 @@ Feature: make another parked branch an observed branch
     When I run "git-town observe parked"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "parked" is now an observed branch
       """
@@ -18,6 +18,6 @@ Feature: make another parked branch an observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the parked branches are now "parked"
     And there are now no observed branches

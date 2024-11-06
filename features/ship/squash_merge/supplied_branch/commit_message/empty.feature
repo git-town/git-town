@@ -17,7 +17,7 @@ Feature: abort the ship via empty commit message
 
   @skipWindows
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
@@ -28,7 +28,7 @@ Feature: abort the ship via empty commit message
       |        | git reset --hard                |
       |        | git checkout other              |
       | other  | git stash pop                   |
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -39,8 +39,8 @@ Feature: abort the ship via empty commit message
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

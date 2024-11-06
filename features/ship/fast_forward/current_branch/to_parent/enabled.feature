@@ -21,7 +21,7 @@ Feature: allowing shipping into a feature branch
     When I run "git-town ship --to-parent"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
       |        | git checkout alpha       |
@@ -45,7 +45,7 @@ Feature: allowing shipping into a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git reset --hard {{ sha 'alpha 2' }}            |
       |        | git push --force-with-lease --force-if-includes |

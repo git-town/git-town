@@ -9,7 +9,7 @@ Feature: display all executed Git commands
 
   Scenario: result
     When I run "git-town hack new --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
       |        | backend  | git rev-parse --show-toplevel                 |
@@ -34,7 +34,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
       |        | backend  | git stash list                                |
-    And it prints:
+    And Git Town prints:
       """
       Ran 23 shell commands.
       """
@@ -43,7 +43,7 @@ Feature: display all executed Git commands
   Scenario: undo
     Given I ran "git-town hack new"
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
       |        | backend  | git rev-parse --show-toplevel                 |
@@ -60,7 +60,7 @@ Feature: display all executed Git commands
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
       |        | frontend | git branch -D new                             |
       |        | backend  | git config --unset git-town-branch.new.parent |
-    And it prints:
+    And Git Town prints:
       """
       Ran 15 shell commands.
       """

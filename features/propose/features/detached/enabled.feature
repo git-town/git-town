@@ -13,7 +13,7 @@ Feature: GitHub support
     When I run "git-town propose --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --tags                                           |
       | <none>  | Looking for proposal online ... ok                                 |

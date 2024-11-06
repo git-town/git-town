@@ -15,7 +15,7 @@ Feature: provide the commit message via a CLI argument
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
@@ -42,7 +42,7 @@ Feature: provide the commit message via a CLI argument
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
       |        | git stash                                     |

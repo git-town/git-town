@@ -6,8 +6,8 @@ Feature: cannot observe the main branch
     When I run "git-town observe"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       cannot observe the main branch
       """
@@ -18,7 +18,7 @@ Feature: cannot observe the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "main"
     And the main branch is still "main"
     And there are still no observed branches

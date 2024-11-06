@@ -15,7 +15,7 @@ Feature: compress the commits on a parked branch
     When I run "git-town compress"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
       |        | git add -A                                      |
@@ -36,7 +36,7 @@ Feature: compress the commits on a parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | parked | git add -A                                      |
       |        | git stash                                       |

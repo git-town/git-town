@@ -7,7 +7,7 @@ Feature: require minimum Git version
 
   Scenario Outline: using an unsupported Git Version
     When I run "git-town <COMMAND>"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       this app requires Git 2.30 or higher
       """
@@ -31,7 +31,7 @@ Feature: require minimum Git version
 
   Scenario Outline: not requiring Git
     When I run "git-town <COMMAND>"
-    Then it runs no commands
+    Then Git Town runs no commands
 
     Examples:
       | COMMAND          |

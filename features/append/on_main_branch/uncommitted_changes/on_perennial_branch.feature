@@ -14,7 +14,7 @@ Feature: append to a perennial branch
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND             |
       | production | git add -A          |
       |            | git stash           |
@@ -29,7 +29,7 @@ Feature: append to a perennial branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                 |
       | new        | git add -A              |
       |            | git stash               |

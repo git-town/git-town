@@ -15,7 +15,7 @@ Feature: dry-run compressing the commits on a feature branch
     When I run "git-town compress --dry-run"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
       |         | git add -A               |
@@ -33,7 +33,7 @@ Feature: dry-run compressing the commits on a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

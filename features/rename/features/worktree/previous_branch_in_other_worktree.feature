@@ -11,7 +11,7 @@ Feature: rename the current branch to a branch that is active in another worktre
     When I run "git-town rename new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                       |
       | current | git fetch --prune --tags      |
       |         | git branch --move current new |
@@ -21,7 +21,7 @@ Feature: rename the current branch to a branch that is active in another worktre
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
       | new     | git branch current {{ sha 'initial commit' }} |
       |         | git checkout current                          |

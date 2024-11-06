@@ -16,10 +16,10 @@ Feature: ship a feature branch that is active in another worktree
     When I run "git-town ship feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is active in another worktree
       """
@@ -28,8 +28,8 @@ Feature: ship a feature branch that is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

@@ -15,10 +15,10 @@ Feature: cannot ship a local branch via API
     When I run "git-town ship -m done"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship branch "feature" via API because it has no remote branch
       """
@@ -27,6 +27,6 @@ Feature: cannot ship a local branch via API
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the initial commits exist now
     And the initial branches and lineage exist now

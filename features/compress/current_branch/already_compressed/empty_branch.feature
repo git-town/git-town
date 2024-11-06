@@ -9,10 +9,10 @@ Feature: does not compress empty branches
     When I run "git-town compress"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" has no commits
       """
@@ -21,6 +21,6 @@ Feature: does not compress empty branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And the initial branches and lineage exist now

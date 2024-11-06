@@ -18,7 +18,7 @@ Feature: multiple shipped branches
     When I run "git-town sync --all"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-3 | git fetch --prune --tags                  |
       |           | git checkout main                         |
@@ -30,11 +30,11 @@ Feature: multiple shipped branches
       |           | git merge --no-edit --ff origin/feature-3 |
       |           | git push                                  |
       |           | git push --tags                           |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-2"
       """
@@ -48,7 +48,7 @@ Feature: multiple shipped branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                      |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                |
       |           | git push --force-with-lease --force-if-includes              |

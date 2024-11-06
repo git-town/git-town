@@ -14,7 +14,7 @@ Feature: ignores other Git remotes
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                 |
       | feature | frontend | git fetch --prune --tags                |
       |         | frontend | git checkout main                       |
@@ -26,7 +26,7 @@ Feature: ignores other Git remotes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                |
       | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |

@@ -19,7 +19,7 @@ Feature: shipped parent branches in a stacked change
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | feature-3 | git fetch --prune --tags                        |
       |           | git checkout main                               |
@@ -29,11 +29,11 @@ Feature: shipped parent branches in a stacked change
       |           | git checkout feature-3                          |
       | feature-3 | git rebase main --no-update-refs                |
       |           | git push --force-with-lease --force-if-includes |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-2"
       """
@@ -47,7 +47,7 @@ Feature: shipped parent branches in a stacked change
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                      |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                |
       |           | git push --force-with-lease --force-if-includes              |

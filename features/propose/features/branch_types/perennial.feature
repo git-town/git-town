@@ -10,10 +10,10 @@ Feature: Cannot create proposals for perennial branches
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
       | perennial | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot propose perennial branches
       """

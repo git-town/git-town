@@ -9,8 +9,8 @@ Feature: parking the current contribution branch
     When I run "git-town park"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "contribution" is now parked
       """
@@ -20,7 +20,7 @@ Feature: parking the current contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "contribution"
     And branch "contribution" is now a contribution branch
     And there are now no parked branches

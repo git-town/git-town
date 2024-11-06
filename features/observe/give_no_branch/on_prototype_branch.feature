@@ -9,8 +9,8 @@ Feature: observe the current prototype branch
     When I run "git-town observe"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "prototype" is now an observed branch
       """
@@ -19,6 +19,6 @@ Feature: observe the current prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And there are now no observed branches
     And the prototype branches are now "prototype"

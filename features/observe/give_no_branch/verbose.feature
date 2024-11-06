@@ -10,7 +10,7 @@ Feature: observe the current branch verbosely
     When I run "git-town observe --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       |        | git version                                   |
       |        | git rev-parse --show-toplevel                 |
@@ -21,11 +21,11 @@ Feature: observe the current branch verbosely
       |        | git branch -vva --sort=refname                |
       |        | git config -lz --includes --global            |
       |        | git config -lz --includes --local             |
-    And it prints:
+    And Git Town prints:
       """
       Ran 9 shell commands
       """
-    And it prints:
+    And Git Town prints:
       """
       branch "feature" is now an observed branch
       """
@@ -35,7 +35,7 @@ Feature: observe the current branch verbosely
 
   Scenario: undo
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
       |         | git version                                   |
       |         | git rev-parse --show-toplevel                 |
@@ -52,7 +52,7 @@ Feature: observe the current branch verbosely
       | <none>  | git config --unset git-town.observed-branches |
       |         | git stash list                                |
       | feature | git stash pop                                 |
-    And it prints:
+    And Git Town prints:
       """
       Ran 15 shell commands
       """

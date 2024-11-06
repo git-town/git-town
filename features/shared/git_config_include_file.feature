@@ -14,7 +14,7 @@ Feature: support Git configuration that includes other files
       email = user@example.com
       """
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |

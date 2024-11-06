@@ -18,7 +18,7 @@ Feature: switch branches of a single type
     When I run "git-town switch --type=observed" and enter into the dialogs:
       | KEYS       |
       | down enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                 |
       | observed-2 | git checkout observed-1 |
     And the current branch is now "observed-1"
@@ -27,7 +27,7 @@ Feature: switch branches of a single type
     When I run "git-town switch -to" and enter into the dialogs:
       | KEYS       |
       | down enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                 |
       | observed-2 | git checkout observed-1 |
     And the current branch is now "observed-1"
@@ -37,6 +37,6 @@ Feature: switch branches of a single type
       | KEYS       |
       | down enter |
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "observed-1"
     And the initial branches and lineage exist now

@@ -14,7 +14,7 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | existing | git fetch --prune --tags                |
       |          | git checkout main                       |
@@ -32,7 +32,7 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | new      | git checkout main                           |
       | main     | git reset --hard {{ sha 'initial commit' }} |

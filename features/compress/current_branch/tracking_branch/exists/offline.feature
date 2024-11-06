@@ -15,7 +15,7 @@ Feature: compress the commits in offline mode
     When I run "git-town compress"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git add -A               |
       |         | git stash                |
@@ -34,7 +34,7 @@ Feature: compress the commits in offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git add -A                            |
       |         | git stash                             |

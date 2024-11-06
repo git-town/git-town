@@ -14,7 +14,7 @@ Feature: shipping a prototype branch
     When I run "git-town ship" and enter "prototype done" for the commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                           |
       | prototype | git fetch --prune --tags          |
       |           | git checkout main                 |
@@ -34,7 +34,7 @@ Feature: shipping a prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | main   | git revert {{ sha 'prototype done' }}             |
       |        | git push                                          |

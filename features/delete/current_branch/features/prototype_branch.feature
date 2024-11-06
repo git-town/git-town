@@ -15,7 +15,7 @@ Feature: delete the current prototype branch
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                          |
       | prototype | git fetch --prune --tags                         |
       |           | git push origin :prototype                       |
@@ -37,7 +37,7 @@ Feature: delete the current prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                           |
       | previous  | git push origin {{ sha 'prototype commit' }}:refs/heads/prototype |
       |           | git branch prototype {{ sha 'Committing WIP for git town undo' }} |

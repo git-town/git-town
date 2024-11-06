@@ -13,10 +13,10 @@ Feature: cannot compress branches that are out of sync
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         | origin        | commit 2 | file_2    | content 2    |
     When I run "git-town compress"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       please sync branch "feature" before compressing it
       """
@@ -29,7 +29,7 @@ Feature: cannot compress branches that are out of sync
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         | local         | commit 2 | file_2    | content 2    |
     When I run "git-town compress"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       please sync branch "feature" before compressing it
       """
@@ -43,7 +43,7 @@ Feature: cannot compress branches that are out of sync
       |         | local         | commit 2 | file_2    | content 2    |
       |         | origin        | commit 3 | file_3    | content 3    |
     When I run "git-town compress"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       please sync branch "feature" before compressing it
       """
@@ -57,7 +57,7 @@ Feature: cannot compress branches that are out of sync
       |         |               | commit 2 | file_2    | content 2    |
     And origin deletes the "feature" branch
     When I run "git-town compress"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       please sync branch "feature" before compressing it
       """

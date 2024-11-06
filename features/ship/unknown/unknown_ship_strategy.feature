@@ -15,17 +15,17 @@ Feature: unknown ship strategy
     When I run "git-town ship -m done"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And it prints the error:
+    And Git Town prints the error:
       """
       unknown ship strategy: "zonk"
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       unknown ship strategy: "zonk"
       """

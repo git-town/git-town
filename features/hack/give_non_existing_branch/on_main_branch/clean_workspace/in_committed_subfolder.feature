@@ -9,7 +9,7 @@ Feature: in a subfolder on the main branch
     When I run "git-town hack new" in the "new_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
@@ -25,7 +25,7 @@ Feature: in a subfolder on the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |

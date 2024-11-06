@@ -16,7 +16,7 @@ Feature: deleting a branch without a useful previous branch setting
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
       | current | git fetch --prune --tags                         |
       |         | git add -A                                       |
@@ -38,7 +38,7 @@ Feature: deleting a branch without a useful previous branch setting
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | main    | git branch current {{ sha 'Committing WIP for git town undo' }} |
       |         | git checkout current                                            |

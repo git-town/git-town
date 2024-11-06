@@ -16,7 +16,7 @@ Feature: delete the current contribution branch
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                          |
       | contribution | git fetch --prune --tags                         |
       |              | git add -A                                       |
@@ -39,7 +39,7 @@ Feature: delete the current contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                                              |
       | feature      | git branch contribution {{ sha 'Committing WIP for git town undo' }} |
       |              | git checkout contribution                                            |

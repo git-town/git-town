@@ -9,7 +9,7 @@ Feature: already existing unfetched remote branch
     When I run "git-town append existing"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | main     | git add -A               |
       |          | git stash                |
@@ -24,7 +24,7 @@ Feature: already existing unfetched remote branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                |
       | existing | git add -A             |
       |          | git stash              |

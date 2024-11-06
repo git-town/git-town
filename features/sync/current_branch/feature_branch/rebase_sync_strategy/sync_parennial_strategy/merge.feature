@@ -17,7 +17,7 @@ Feature: with sync-perennial-strategy set to "merge"
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
@@ -42,7 +42,7 @@ Feature: with sync-perennial-strategy set to "merge"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                           |
       | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |

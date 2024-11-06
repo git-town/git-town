@@ -15,7 +15,7 @@ Feature: delete the current branch
     When I run "git-town delete current"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
       | current | git fetch --prune --tags                         |
       |         | git push origin :current                         |
@@ -37,7 +37,7 @@ Feature: delete the current branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | main    | git push origin {{ sha 'current commit' }}:refs/heads/current   |
       |         | git branch current {{ sha 'Committing WIP for git town undo' }} |

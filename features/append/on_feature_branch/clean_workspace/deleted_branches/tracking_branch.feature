@@ -13,14 +13,14 @@ Feature: append a branch to a branch whose tracking branch was deleted
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | shipped | git fetch --prune --tags                |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git branch -D shipped                   |
       |         | git checkout -b new                     |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "shipped"
       """
@@ -35,7 +35,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
       | new     | git checkout main                             |
       | main    | git reset --hard {{ sha 'initial commit' }}   |

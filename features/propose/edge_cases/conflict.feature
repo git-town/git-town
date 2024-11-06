@@ -17,7 +17,7 @@ Feature: merge conflict
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       | <none>  | Looking for proposal online ... ok      |
@@ -25,11 +25,11 @@ Feature: merge conflict
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -39,7 +39,7 @@ Feature: merge conflict
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
     And the current branch is still "feature"
@@ -48,8 +48,8 @@ Feature: merge conflict
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -59,7 +59,7 @@ Feature: merge conflict
   Scenario: resolve and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
@@ -83,7 +83,7 @@ Feature: merge conflict
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |

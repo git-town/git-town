@@ -7,7 +7,7 @@ Feature: display all executed Git commands
       | feature | feature | main   | local     |
     And the current branch is "feature"
     When I run "git-town diff-parent --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                               |
       |         | backend  | git version                           |
       |         | backend  | git rev-parse --show-toplevel         |
@@ -18,7 +18,7 @@ Feature: display all executed Git commands
       |         | backend  | git branch -vva --sort=refname        |
       |         | backend  | git remote get-url origin             |
       | feature | frontend | git diff main..feature                |
-    And it prints:
+    And Git Town prints:
       """
       Ran 9 shell commands.
       """

@@ -22,7 +22,7 @@ Feature: stacked changes where all ancestor branches aren't local
     When I run "git-town sync"
 
   Scenario:
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | gamma  | git fetch --prune --tags                        |
       |        | git rebase origin/beta --no-update-refs         |
@@ -46,7 +46,7 @@ Feature: stacked changes where all ancestor branches aren't local
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                       |
       | gamma  | git reset --hard {{ sha-before-run 'local gamma commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin gamma commit' }}:gamma |

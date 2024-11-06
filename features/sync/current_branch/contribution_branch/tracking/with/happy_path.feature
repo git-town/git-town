@@ -14,7 +14,7 @@ Feature: sync the current contribution branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
       |              | git rebase origin/contribution --no-update-refs |
@@ -28,7 +28,7 @@ Feature: sync the current contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                             |
       | contribution | git reset --hard {{ sha-before-run 'local commit' }}                                |
       |              | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:contribution |

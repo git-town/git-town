@@ -15,7 +15,7 @@ Feature: sync the current feature branch without a tracking branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -37,7 +37,7 @@ Feature: sync the current feature branch without a tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
       |         | git push origin :feature                          |

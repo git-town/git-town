@@ -11,7 +11,7 @@ Feature: the parent of the branch to delete was deleted remotely
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
       |        | git push origin :beta    |
@@ -28,7 +28,7 @@ Feature: the parent of the branch to delete was deleted remotely
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                    |
       | alpha  | git branch beta {{ sha 'initial commit' }} |
       |        | git push -u origin beta                    |

@@ -22,7 +22,7 @@ Feature: stack that changes the same file in multiple commits per branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -30,11 +30,11 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git branch -D alpha                     |
       |        | git checkout beta                       |
       | beta   | git rebase main --no-update-refs        |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in favorite-fruit
       """
-    And it prints an error like:
+    And Git Town prints an error like:
       """
       could not apply .* alpha commit 1
       """
@@ -43,21 +43,21 @@ Feature: stack that changes the same file in multiple commits per branch
   Scenario: resolve and continue
     When I resolve the conflict in "favorite-fruit" with "resolved apple"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | beta   | git rebase --continue |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in favorite-fruit
       """
-    And it prints an error like:
+    And Git Town prints an error like:
       """
       could not apply .* alpha commit 2
       """
     And a rebase is still in progress
     And I resolve the conflict in "favorite-fruit" with "resolved peach"
     And I run "git-town continue" and close the editor
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git rebase --continue                           |
       |        | git push --force-with-lease --force-if-includes |
@@ -74,7 +74,7 @@ Feature: stack that changes the same file in multiple commits per branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
       | beta   | git rebase --abort                                     |
       |        | git checkout main                                      |

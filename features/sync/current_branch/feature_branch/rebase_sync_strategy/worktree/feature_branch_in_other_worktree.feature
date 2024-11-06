@@ -16,7 +16,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     When I run "git-town sync" in the other worktree
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git rebase origin/main --no-update-refs         |
@@ -34,7 +34,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
 
   Scenario: undo
     When I run "git-town undo" in the other worktree
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                |
       | feature | git reset --hard {{ sha-in-worktree 'local feature commit' }}                          |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |

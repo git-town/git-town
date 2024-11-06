@@ -14,7 +14,7 @@ Feature: append a new feature branch to an existing feature branch with uncommit
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND             |
       | existing | git add -A          |
       |          | git stash           |
@@ -32,7 +32,7 @@ Feature: append a new feature branch to an existing feature branch with uncommit
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
       |          | git stash             |

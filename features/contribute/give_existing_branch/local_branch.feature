@@ -8,8 +8,8 @@ Feature: make another local feature branch a contribution branch
     When I run "git-town contribute local"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       branch "local" is local only - branches you want to contribute to must have a remote branch because they are per definition other people's branches
       """
@@ -19,7 +19,7 @@ Feature: make another local feature branch a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "main"
     And branch "local" is still a feature branch
     And there are still no contribution branches

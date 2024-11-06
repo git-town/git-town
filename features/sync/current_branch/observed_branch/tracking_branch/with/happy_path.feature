@@ -14,7 +14,7 @@ Feature: sync the current observed branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | observed | git fetch --prune --tags                    |
       |          | git rebase origin/observed --no-update-refs |
@@ -27,7 +27,7 @@ Feature: sync the current observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                              |
       | observed | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "observed"

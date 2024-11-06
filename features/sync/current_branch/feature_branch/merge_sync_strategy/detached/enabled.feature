@@ -19,7 +19,7 @@ Feature: sync the current feature branch with a tracking branch using the "merge
     When I run "git-town sync --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -47,7 +47,7 @@ Feature: sync the current feature branch with a tracking branch using the "merge
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                            |
       | beta   | git checkout alpha                                                                 |
       | alpha  | git reset --hard {{ sha 'local alpha commit' }}                                    |

@@ -10,7 +10,7 @@ Feature: show the configuration from a subfolder
       """
     And a folder "subfolder"
     When I run "git-town config" in the "subfolder" folder
-    Then it prints:
+    Then Git Town prints:
       """
       Branches:
         main branch: main

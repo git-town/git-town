@@ -9,8 +9,8 @@ Feature: cannot park non-existing branches
     When I run "git-town park feature non-existing"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       there is no branch "non-existing"
       """
@@ -19,6 +19,6 @@ Feature: cannot park non-existing branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And there are still no parked branches
     And the current branch is still "feature"

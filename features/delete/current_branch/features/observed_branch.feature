@@ -16,7 +16,7 @@ Feature: delete the current observed branch
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
       | observed | git fetch --prune --tags                         |
       |          | git add -A                                       |
@@ -39,7 +39,7 @@ Feature: delete the current observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                          |
       | feature  | git branch observed {{ sha 'Committing WIP for git town undo' }} |
       |          | git checkout observed                                            |

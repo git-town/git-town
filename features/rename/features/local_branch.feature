@@ -13,7 +13,7 @@ Feature: rename a local-only branch
     When I run "git-town rename new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |
@@ -26,7 +26,7 @@ Feature: rename a local-only branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |

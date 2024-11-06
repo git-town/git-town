@@ -9,8 +9,8 @@ Feature: already existing local branch
     When I run "git-town append existing"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       there is already a branch "existing"
       """
@@ -18,7 +18,7 @@ Feature: already existing local branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

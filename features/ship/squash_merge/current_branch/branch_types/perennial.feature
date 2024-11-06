@@ -13,10 +13,10 @@ Feature: cannot ship perennial branches
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
       | perennial | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship perennial branches
       """
@@ -26,7 +26,7 @@ Feature: cannot ship perennial branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "perennial"
     And the initial commits exist now
     And the initial branches and lineage exist now

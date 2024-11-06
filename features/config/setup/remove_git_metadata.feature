@@ -58,7 +58,7 @@ Feature: remove existing configuration in Git metadata
       | save config to Git metadata             | down enter                                                        |
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                             |
       | git config --global --unset alias.append            |
       | git config --global --unset alias.diff-parent       |

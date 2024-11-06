@@ -13,7 +13,7 @@ Feature: display all executed Git commands
 
   Scenario: result
     When I run "git-town prepend parent --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
       |        | backend  | git rev-parse --show-toplevel                 |
@@ -42,7 +42,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
       |        | backend  | git stash list                                |
-    And it prints:
+    And Git Town prints:
       """
       Ran 27 shell commands.
       """
@@ -51,7 +51,7 @@ Feature: display all executed Git commands
   Scenario: undo
     Given I ran "git-town prepend parent"
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                          |
       |        | backend  | git version                                      |
       |        | backend  | git rev-parse --show-toplevel                    |
@@ -71,7 +71,7 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main       |
       |        | backend  | git stash list                                   |
       | old    | frontend | git stash pop                                    |
-    And it prints:
+    And Git Town prints:
       """
       Ran 18 shell commands.
       """

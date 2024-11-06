@@ -10,8 +10,8 @@ Feature: observing the current feature branch
     When I run "git-town observe"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "feature" is now an observed branch
       """
@@ -21,7 +21,7 @@ Feature: observing the current feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND       |
       | feature | git add -A    |
       |         | git stash     |

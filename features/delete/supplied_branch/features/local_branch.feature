@@ -15,7 +15,7 @@ Feature: local branch
     When I run "git-town delete dead"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | dead   | git add -A                                       |
       |        | git commit -m "Committing WIP for git town undo" |
@@ -35,7 +35,7 @@ Feature: local branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                      |
       | main   | git branch dead {{ sha 'Committing WIP for git town undo' }} |
       |        | git checkout dead                                            |

@@ -23,12 +23,12 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
@@ -37,21 +37,21 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
   Scenario: resolve and continue
     When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | main   | git rebase --continue         |
       |        | git push                      |
       |        | git branch -D alpha           |
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
     And a merge is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                              |
       | beta   | git commit --no-edit                 |
       |        | git merge --no-edit --ff origin/beta |
@@ -68,7 +68,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git checkout beta  |

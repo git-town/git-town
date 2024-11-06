@@ -19,7 +19,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-1 | git add -A                                |
       |           | git stash                                 |
@@ -35,7 +35,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND       |
       | feature-1 | git add -A    |
       |           | git stash     |

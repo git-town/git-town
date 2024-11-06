@@ -18,7 +18,7 @@ Feature: a default branch type is set, the feature-regex does not match
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                      |
       | my-branch | git fetch --prune --tags                     |
       |           | git rebase origin/my-branch --no-update-refs |
@@ -32,7 +32,7 @@ Feature: a default branch type is set, the feature-regex does not match
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                             |
       | my-branch | git reset --hard {{ sha 'local my-branch commit' }} |
     And the current branch is still "my-branch"

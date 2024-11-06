@@ -15,7 +15,7 @@ Feature: display all executed Git commands
 
   Scenario: result
     When I run "git-town sync --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | TYPE     | COMMAND                                            |
       |          | backend  | git version                                        |
       |          | backend  | git rev-parse --show-toplevel                      |
@@ -41,7 +41,7 @@ Feature: display all executed Git commands
       |          | backend  | git config -lz --includes --global                 |
       |          | backend  | git config -lz --includes --local                  |
       |          | backend  | git stash list                                     |
-    And it prints:
+    And Git Town prints:
       """
       Ran 24 shell commands.
       """
@@ -56,7 +56,7 @@ Feature: display all executed Git commands
   Scenario: undo
     Given I ran "git-town sync"
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                         |
       |        | backend  | git version                                     |
       |        | backend  | git rev-parse --show-toplevel                   |
@@ -72,7 +72,7 @@ Feature: display all executed Git commands
       |        | backend  | git show-ref --quiet refs/heads/branch-2        |
       | main   | frontend | git checkout branch-2                           |
       |        | backend  | git config git-town-branch.branch-2.parent main |
-    And it prints:
+    And Git Town prints:
       """
       Ran 14 shell commands.
       """

@@ -14,17 +14,17 @@ Feature: does not ship out-of-sync branches
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is not in sync
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now

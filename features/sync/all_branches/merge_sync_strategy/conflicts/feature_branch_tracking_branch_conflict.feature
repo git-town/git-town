@@ -19,7 +19,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     When I run "git-town sync --all"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git add -A                              |
@@ -32,11 +32,11 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git checkout beta                       |
       | beta   | git merge --no-edit --ff main           |
       |        | git merge --no-edit --ff origin/beta    |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -48,7 +48,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git merge --abort                               |
       |        | git checkout alpha                              |
@@ -66,7 +66,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
 
   Scenario: skip
     When I run "git-town skip"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                        |
       | beta   | git merge --abort                              |
       |        | git reset --hard {{ sha 'local beta commit' }} |
@@ -99,8 +99,8 @@ Feature: handle merge conflicts between feature branches and their tracking bran
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -111,7 +111,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git commit --no-edit                  |
       |        | git push                              |
@@ -140,7 +140,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git push                              |
       |        | git checkout gamma                    |

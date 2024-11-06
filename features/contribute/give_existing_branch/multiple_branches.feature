@@ -11,18 +11,18 @@ Feature: make multiple other branches contribution branches
     When I run "git-town contribute feature-1 feature-2 feature-3"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "feature-1" is now a contribution branch
       """
     And branch "feature-1" is now a contribution branch
-    And it prints:
+    And Git Town prints:
       """
       branch "feature-2" is now a contribution branch
       """
     And branch "feature-2" is now a contribution branch
-    And it prints:
+    And Git Town prints:
       """
       branch "feature-3" is now a contribution branch
       """
@@ -32,7 +32,7 @@ Feature: make multiple other branches contribution branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND       |
       | main   | git add -A    |
       |        | git stash     |

@@ -14,7 +14,7 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | parked | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -24,14 +24,14 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parked"
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                               |
       | main   | git branch parked {{ sha-before-run 'local commit' }} |
       |        | git checkout parked                                   |

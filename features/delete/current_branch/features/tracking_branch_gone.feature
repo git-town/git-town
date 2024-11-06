@@ -17,7 +17,7 @@ Feature: deleting a branch whose tracking branch is gone
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
       | current | git fetch --prune --tags                         |
       |         | git add -A                                       |
@@ -38,7 +38,7 @@ Feature: deleting a branch whose tracking branch is gone
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | other   | git branch current {{ sha 'Committing WIP for git town undo' }} |
       |         | git checkout current                                            |

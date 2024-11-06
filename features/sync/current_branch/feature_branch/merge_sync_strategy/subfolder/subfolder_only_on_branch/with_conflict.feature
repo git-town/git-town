@@ -17,7 +17,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -29,14 +29,14 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And the current branch is still "current"
     And the uncommitted file is stashed
     And a merge is now in progress
-    And it prints the error:
+    And Git Town prints the error:
       """
       git merge conflict
       """
 
   Scenario: undo
     When I run "git-town undo" in the "new_folder" folder
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
       |         | git stash pop     |
@@ -48,8 +48,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -60,7 +60,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" in the "new_folder" folder
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git commit --no-edit                    |
       |         | git merge --no-edit --ff origin/current |

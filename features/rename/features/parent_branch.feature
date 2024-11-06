@@ -14,7 +14,7 @@ Feature: rename a parent branch
     When I run "git-town rename parent new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                      |
       | parent | git fetch --prune --tags     |
       |        | git branch --move parent new |
@@ -32,7 +32,7 @@ Feature: rename a parent branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | new    | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |

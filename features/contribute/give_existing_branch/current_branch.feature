@@ -8,8 +8,8 @@ Feature: make the current contribution branch a contribution branch
     When I run "git-town contribute contribution"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       branch "contribution" is already a contribution branch
       """
@@ -17,5 +17,5 @@ Feature: make the current contribution branch a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the contribution branches are still "contribution"

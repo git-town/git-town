@@ -13,7 +13,7 @@ Feature: switch branches
     When I run "git-town switch" and enter into the dialogs:
       | KEYS       |
       | down enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | alpha  | git checkout gamma |
     And the current branch is now "gamma"

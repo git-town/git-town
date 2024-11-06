@@ -13,7 +13,7 @@ Feature: auto-create prototype branches when prepending
     When I run "git-town prepend parent"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | old    | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -34,7 +34,7 @@ Feature: auto-create prototype branches when prepending
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |

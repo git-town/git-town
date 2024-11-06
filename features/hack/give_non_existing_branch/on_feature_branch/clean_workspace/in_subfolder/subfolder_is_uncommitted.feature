@@ -13,7 +13,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
     When I run "git-town hack new" in the "uncommitted_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | existing | git fetch --prune --tags                |
       |          | git checkout main                       |
@@ -28,7 +28,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
