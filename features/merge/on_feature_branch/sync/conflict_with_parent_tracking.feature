@@ -26,6 +26,16 @@ Feature: merging a branch with a totally conflicting parent
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
 
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND           |
+      | alpha  | git merge --abort |
+      |        | git checkout beta |
+    And the current branch is still "beta"
+    And the initial commits exist now
+    And the initial lineage exists now
+
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
@@ -72,13 +82,13 @@ Feature: merging a branch with a totally conflicting parent
     And these committed files exist now
       | BRANCH | NAME             | CONTENT                                  |
       | beta   | conflicting_file | resolved between local and tracking beta |
-
-  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND           |
-      | alpha  | git merge --abort |
-      |        | git checkout beta |
+      | BRANCH | COMMAND                                                                          |
+      | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}                        |
+      |        | git push --force-with-lease origin {{ sha-in-origin 'remote beta commit' }}:beta |
+      |        | git push origin {{ sha-in-origin 'remote alpha commit' }}:refs/heads/alpha       |
+      |        | git branch alpha {{ sha-before-run 'local alpha commit' }}                       |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
