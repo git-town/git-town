@@ -120,6 +120,7 @@ type mergeData struct {
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
+	parentBranchInfo                gitdomain.BranchInfo
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
 	remotes                         gitdomain.Remotes
@@ -213,6 +214,10 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
+	if !hasParentBranchInfo {
+		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
+	}
 	return mergeData{
 		branchesSnapshot:                branchesSnapshot,
 		branchesToSync:                  branchesToSync,
@@ -227,6 +232,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		offline:                         repo.IsOffline,
 		parentBranch:                    parentBranch,
 		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
+		parentBranchInfo:                *parentBranchInfo,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
 		remotes:                         remotes,
@@ -236,7 +242,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	if data.remotes.HasOrigin() {
+	if data.remotes.HasOrigin() && data.parentBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
 		sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(
 			gitdomain.RemoteOrigin),
@@ -255,7 +261,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             prog,
-		PushBranches:        true,
+		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
 		Remotes:             data.remotes,
 	})
 	// update proposals
