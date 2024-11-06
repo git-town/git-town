@@ -36,7 +36,7 @@ Feature: merging a branch when everything is conflicting
     And the initial commits exist now
     And the initial lineage exists now
 
-  Scenario: resolve all conflicts and undo
+  Scenario: resolve all conflicts
     When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -82,6 +82,14 @@ Feature: merging a branch when everything is conflicting
     And these committed files exist now
       | BRANCH | NAME             | CONTENT                                  |
       | beta   | conflicting_file | resolved between local and tracking beta |
+
+  Scenario: undo after resolving all conflicts
+    When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
+    And I run "git-town continue" and close the editor
+    And I resolve the conflict in "conflicting_file" with "resolved between local beta and local alpha"
+    And I run "git-town continue" and close the editor
+    And I resolve the conflict in "conflicting_file" with "resolved between local and tracking beta"
+    And I run "git-town continue" and close the editor
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                                                          |
