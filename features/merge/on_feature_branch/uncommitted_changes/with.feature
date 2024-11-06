@@ -11,7 +11,6 @@ Feature: merging a branch with uncommitted changes
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And Git Town setting "sync-feature-strategy" is "merge"
     And an uncommitted file
     When I run "git-town merge"
 

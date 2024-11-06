@@ -10,7 +10,6 @@ Feature: merging a branch in a stack with its parent
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
-    And Git Town setting "sync-feature-strategy" is "merge"
     And origin deletes the "alpha" branch
     And the current branch is "beta"
     When I run "git-town merge"

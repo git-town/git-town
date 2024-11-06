@@ -1,4 +1,4 @@
-Feature: merging a branch in an unsynced stack
+Feature: merging a branch in a stack with its parent
 
   Background:
     Given a Git repo with origin
@@ -8,9 +8,10 @@ Feature: merging a branch in an unsynced stack
       | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | origin        | alpha commit | alpha-file | alpha content |
+      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
+    And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
 
   Scenario: result
@@ -42,11 +43,11 @@ Feature: merging a branch in an unsynced stack
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                   |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}       |
-      |        | git push --force-with-lease --force-if-includes           |
-      |        | git push origin {{ sha 'alpha commit' }}:refs/heads/alpha |
-      |        | git branch alpha {{ sha-in-origin 'initial commit' }}     |
+      | BRANCH | COMMAND                                              |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes      |
+      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
+      |        | git push -u origin alpha                             |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

@@ -11,7 +11,6 @@ Feature: merging with missing lineage
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge" and enter into the dialog:
       | DIALOG                             | KEYS       |
       | select parent branch for "feature" | down enter |

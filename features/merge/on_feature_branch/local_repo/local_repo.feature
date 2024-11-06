@@ -11,7 +11,6 @@ Feature: merging in a local repo
       | alpha  | local    | alpha commit |
       | beta   | local    | beta commit  |
     And the current branch is "beta"
-    And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
 
   Scenario: result

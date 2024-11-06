@@ -11,7 +11,6 @@ Feature: merging a branch in an unsynced stack
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | origin        | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town merge"
 
   Scenario: result
