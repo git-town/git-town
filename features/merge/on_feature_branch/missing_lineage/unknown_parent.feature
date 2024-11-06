@@ -3,17 +3,18 @@ Feature: merging with missing lineage
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | alpha | feature | main   | local, origin |
-      | beta  | (none)  |        | local, origin |
+      | NAME  | TYPE   | PARENT | LOCATIONS     |
+      | alpha | (none) |        | local, origin |
+      | beta  | (none) |        | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
     When I run "git-town merge" and enter into the dialog:
-      | DIALOG                             | KEYS       |
-      | select parent branch for "feature" | down enter |
+      | DIALOG                          | KEYS       |
+      | select parent branch for "beta" | down enter |
+      | select parent branch for "beta" | enter      |
 
   Scenario: result
     Then it runs the commands
