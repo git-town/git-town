@@ -38,9 +38,8 @@ Feature: merging a branch in offline mode
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                              |
-      | beta   | git branch alpha {{ sha-before-run 'alpha commit' }} |
-      |        | git push -u origin alpha                             |
-      |        | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
