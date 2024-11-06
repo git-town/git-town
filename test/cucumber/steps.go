@@ -393,6 +393,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockGit(version)
 	})
 
+	sc.Step(`^Git Town does not print "(.+)"$`, func(ctx context.Context, text string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), text) {
+			return fmt.Errorf("text found: %q", text)
+		}
+		return nil
+	})
+
 	sc.Step(`^Git Town is no longer configured$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -413,6 +421,122 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := configdomain.NewParentKey(branchName)
 		return devRepo.Config.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configKey, value)
+	})
+
+	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode != 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
+		}
+		output := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !strings.Contains(output, strings.TrimRight(expected.Content, "\n")) {
+			fmt.Println("ERROR: text not found:")
+			fmt.Println("==================================================================")
+			fmt.Println("EXPECTED OUTPUT START ==============================================")
+			fmt.Println("==================================================================")
+			fmt.Println()
+			fmt.Println(expected.Content)
+			fmt.Println()
+			fmt.Println("==================================================================")
+			fmt.Println("EXPECTED OUTPUT END ================================================")
+			fmt.Println("==================================================================")
+			fmt.Println()
+			fmt.Println("==================================================================")
+			fmt.Println("ACTUAL OUTPUT START ==============================================")
+			fmt.Println("==================================================================")
+			fmt.Println()
+			fmt.Println(output)
+			fmt.Println()
+			fmt.Println("==================================================================")
+			fmt.Println("ACTUAL OUTPUT END ================================================")
+			fmt.Println("==================================================================")
+			fmt.Println()
+			return errors.New("expected text not found")
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		regex := regexp.MustCompile(expected.Content)
+		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !regex.MatchString(have) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
+		}
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		output := state.runOutput.GetOrPanic()
+		if len(output) > 0 {
+			return fmt.Errorf("expected no output but found %q", output)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		regex := regexp.MustCompile(expected.Content)
+		have := stripansi.Strip(state.runOutput.GetOrPanic())
+		if !regex.MatchString(have) {
+			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
+		}
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town runs no commands$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
+		if len(commands) > 0 {
+			fmt.Println("\n\nERROR: Unexpected commands run!")
+			for _, command := range commands {
+				fmt.Printf("%s > %s\n", command.Branch, command.Command)
+			}
+			fmt.Println()
+			fmt.Println()
+			return fmt.Errorf("expected no commands but found %d commands", len(commands))
+		}
+		return nil
+	})
+
+	sc.Step(`^Git Town runs the commands$`, func(ctx context.Context, input *godog.Table) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
+		table := output.RenderExecutedGitCommands(commands, input)
+		dataTable := datatable.FromGherkin(input)
+		expanded := dataTable.Expand(
+			devRepo,
+			state.fixture.OriginRepo.Value,
+			state.fixture.SecondWorktree.Value,
+			state.initialDevSHAs.GetOrPanic(),
+			state.initialOriginSHAs,
+			state.initialWorktreeSHAs,
+		)
+		diff, errorCount := table.EqualDataTable(expanded)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
+			fmt.Println(diff)
+			return errors.New("mismatching commands run, see diff above")
+		}
+		return nil
 	})
 
 	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
@@ -763,130 +887,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Config.Reload()
-	})
-
-	sc.Step(`^Git Town does not print "(.+)"$`, func(ctx context.Context, text string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), text) {
-			return fmt.Errorf("text found: %q", text)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode != 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
-		}
-		output := stripansi.Strip(state.runOutput.GetOrPanic())
-		if !strings.Contains(output, strings.TrimRight(expected.Content, "\n")) {
-			fmt.Println("ERROR: text not found:")
-			fmt.Println("==================================================================")
-			fmt.Println("EXPECTED OUTPUT START ==============================================")
-			fmt.Println("==================================================================")
-			fmt.Println()
-			fmt.Println(expected.Content)
-			fmt.Println()
-			fmt.Println("==================================================================")
-			fmt.Println("EXPECTED OUTPUT END ================================================")
-			fmt.Println("==================================================================")
-			fmt.Println()
-			fmt.Println("==================================================================")
-			fmt.Println("ACTUAL OUTPUT START ==============================================")
-			fmt.Println("==================================================================")
-			fmt.Println()
-			fmt.Println(output)
-			fmt.Println()
-			fmt.Println("==================================================================")
-			fmt.Println("ACTUAL OUTPUT END ================================================")
-			fmt.Println("==================================================================")
-			fmt.Println()
-			return errors.New("expected text not found")
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.runExitCodeChecked = true
-		regex := regexp.MustCompile(expected.Content)
-		have := stripansi.Strip(state.runOutput.GetOrPanic())
-		if !regex.MatchString(have) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
-		}
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		output := state.runOutput.GetOrPanic()
-		if len(output) > 0 {
-			return fmt.Errorf("expected no output but found %q", output)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints something like:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		regex := regexp.MustCompile(expected.Content)
-		have := stripansi.Strip(state.runOutput.GetOrPanic())
-		if !regex.MatchString(have) {
-			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town prints the error:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.runExitCodeChecked = true
-		if !strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), expected.Content) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
-		}
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town runs no commands$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
-		if len(commands) > 0 {
-			fmt.Println("\n\nERROR: Unexpected commands run!")
-			for _, command := range commands {
-				fmt.Printf("%s > %s\n", command.Branch, command.Command)
-			}
-			fmt.Println()
-			fmt.Println()
-			return fmt.Errorf("expected no commands but found %d commands", len(commands))
-		}
-		return nil
-	})
-
-	sc.Step(`^Git Town runs the commands$`, func(ctx context.Context, input *godog.Table) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
-		table := output.RenderExecutedGitCommands(commands, input)
-		dataTable := datatable.FromGherkin(input)
-		expanded := dataTable.Expand(
-			devRepo,
-			state.fixture.OriginRepo.Value,
-			state.fixture.SecondWorktree.Value,
-			state.initialDevSHAs.GetOrPanic(),
-			state.initialOriginSHAs,
-			state.initialWorktreeSHAs,
-		)
-		diff, errorCount := table.EqualDataTable(expanded)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
-			fmt.Println(diff)
-			return errors.New("mismatching commands run, see diff above")
-		}
-		return nil
 	})
 
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
