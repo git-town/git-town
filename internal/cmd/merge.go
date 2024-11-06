@@ -276,7 +276,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.parentBranch,
 	})
-	if data.parentBranchInfo.HasTrackingBranch() {
+	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsFalse() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
 			Branch: data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
 		})

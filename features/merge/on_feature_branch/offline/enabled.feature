@@ -1,4 +1,4 @@
-Feature: merging a branch in a stack with its parent
+Feature: merging a branch in offline mode
 
   Background:
     Given a Git repo with origin
@@ -7,9 +7,9 @@ Feature: merging a branch in a stack with its parent
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
-      | beta   | local, origin | beta commit  | beta-file  | beta content  |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
     And the current branch is "beta"
     And offline mode is enabled
     When I run "git-town merge"
@@ -23,20 +23,16 @@ Feature: merging a branch in a stack with its parent
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
       |        | git branch -D alpha                   |
-      |        | git push origin :alpha                |
     And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
-      | beta   | local, origin | beta commit                    | beta-file  | beta content  |
-      |        | local         | alpha commit                   | alpha-file | alpha content |
-      |        |               | Merge branch 'alpha' into beta |            |               |
-    And these committed files exist now
-      | BRANCH | NAME       | CONTENT       |
-      | beta   | alpha-file | alpha content |
-      |        | beta-file  | beta content  |
+      | BRANCH | LOCATION      | MESSAGE                        |
+      | alpha  | origin        | alpha commit                   |
+      | beta   | local, origin | beta commit                    |
+      |        | local         | alpha commit                   |
+      |        |               | Merge branch 'alpha' into beta |
 
   Scenario: undo
     When I run "git-town undo"
