@@ -765,7 +765,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Config.Reload()
 	})
 
-	sc.Step(`^it does not print "(.+)"$`, func(ctx context.Context, text string) error {
+	sc.Step(`^Git Town does not print "(.+)"$`, func(ctx context.Context, text string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if strings.Contains(stripansi.Strip(state.runOutput.GetOrPanic()), text) {
 			return fmt.Errorf("text found: %q", text)

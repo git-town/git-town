@@ -37,7 +37,7 @@ Feature: help for commands
         git-town [flags]
         git-town [command]
       """
-    And it does not print "fatal: Not a Git repository"
+    And Git Town does not print "fatal: Not a Git repository"
 
     Examples:
       | COMMAND       |

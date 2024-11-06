@@ -47,7 +47,7 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git checkout existing                            |
       | existing | git branch -D new                                |
       |          | git stash pop                                    |
-    And it does not print "to go back to where you started, run \"git-town undo\""
+    And Git Town does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And the initial commits exist now
     And file "conflicting_file" still has content "conflicting content"
