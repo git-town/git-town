@@ -19,7 +19,6 @@ Feature: merging local branches
       | beta   | git fetch --prune --tags       |
       |        | git merge --no-edit --ff alpha |
       |        | git branch -D alpha            |
-      |        | git push origin :alpha         |
     And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
