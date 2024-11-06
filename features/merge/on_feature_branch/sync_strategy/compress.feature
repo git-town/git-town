@@ -1,4 +1,4 @@
-Feature: merging a branch with the "compress" sync-strategy
+Feature: merging branches using the "compress" sync-strategy
 
   Background:
     Given a Git repo with origin
