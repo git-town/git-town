@@ -1,4 +1,4 @@
-Feature: merging a branch in a stack with its parent
+Feature: merging a branch whose parent was deleted remotely
 
   Background:
     Given a Git repo with origin
