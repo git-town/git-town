@@ -14,7 +14,7 @@ Feature: merging a branch with a parent that has conflicting changes
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -29,7 +29,7 @@ Feature: merging a branch with a parent that has conflicting changes
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                              |
       | beta   | git commit --no-edit                 |
       |        | git merge --no-edit --ff origin/beta |
@@ -48,7 +48,7 @@ Feature: merging a branch with a parent that has conflicting changes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | beta   | git merge --abort |
     And the current branch is still "beta"

@@ -16,7 +16,7 @@ Feature: merging a branch when everything is conflicting
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -28,7 +28,7 @@ Feature: merging a branch when everything is conflicting
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git merge --abort |
       |        | git checkout beta |
@@ -39,7 +39,7 @@ Feature: merging a branch when everything is conflicting
   Scenario: resolve all conflicts
     When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | alpha  | git commit --no-edit           |
       |        | git checkout beta              |
@@ -50,7 +50,7 @@ Feature: merging a branch when everything is conflicting
       """
     When I resolve the conflict in "conflicting_file" with "resolved between local beta and local alpha"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                              |
       | beta   | git commit --no-edit                 |
       |        | git merge --no-edit --ff origin/beta |
@@ -60,7 +60,7 @@ Feature: merging a branch when everything is conflicting
       """
     When I resolve the conflict in "conflicting_file" with "resolved between local and tracking beta"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                |
       | beta   | git commit --no-edit   |
       |        | git push               |
@@ -92,7 +92,7 @@ Feature: merging a branch when everything is conflicting
     And I run "git-town continue" and close the editor
     Then it runs without errors
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                          |
       | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}                        |
       |        | git push --force-with-lease origin {{ sha-in-origin 'remote beta commit' }}:beta |
