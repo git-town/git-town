@@ -1,4 +1,4 @@
-Feature: merging a branch with a totally conflicting parent
+Feature: merging a branch when everything is conflicting
 
   Background:
     Given a Git repo with origin
