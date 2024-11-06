@@ -165,7 +165,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 type syncData struct {
 	branchInfos              gitdomain.BranchInfos
 	branchesSnapshot         gitdomain.BranchesSnapshot
-	branchesToSync           []configdomain.BranchToSync
+	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
 	detached                 configdomain.Detached
 	dialogTestInputs         components.TestInputs
@@ -323,9 +323,9 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 }
 
 // determines the complete info needed to sync the given branches
-func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) ([]configdomain.BranchToSync, error) {
+func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) (configdomain.BranchesToSync, error) {
 	branchInfosToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
-	result := make([]configdomain.BranchToSync, len(branchInfosToSync))
+	result := make(configdomain.BranchesToSync, len(branchInfosToSync))
 	if err != nil {
 		return result, err
 	}

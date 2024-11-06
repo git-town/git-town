@@ -109,7 +109,7 @@ func executeAppend(arg string, detached configdomain.Detached, dryRun configdoma
 type appendFeatureData struct {
 	branchInfos               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
-	branchesToSync            []configdomain.BranchToSync
+	branchesToSync            configdomain.BranchesToSync
 	config                    config.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun

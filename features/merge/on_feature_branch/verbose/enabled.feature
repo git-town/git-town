@@ -31,8 +31,6 @@ Feature: merging a branch in a stack with its parent
       |        | git rev-parse --verify --abbrev-ref @{-1}       |
       |        | git log main..alpha --format=%s --reverse       |
       |        | git log alpha..beta --format=%s --reverse       |
-      |        | git log alpha..beta --format=%s --reverse       |
-      |        | git log main..alpha --format=%s --reverse       |
       | beta   | git checkout alpha                              |
       | alpha  | git merge --no-edit --ff origin/alpha           |
       |        | git checkout beta                               |
@@ -53,7 +51,7 @@ Feature: merging a branch in a stack with its parent
       |        | git stash list                                  |
     And Git Town prints:
       """
-      Ran 34 shell commands.
+      Ran 32 shell commands.
       """
     And the current branch is still "beta"
     And this lineage exists now
