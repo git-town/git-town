@@ -27,11 +27,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const mergeDesc = "Merges the current branch in a stack with its parent"
+const mergeDesc = "Merges the current branch with its parent"
 
 const mergeHelp = `
 Merges the current branch with its parent branch.
-Both branches must be feature branches and be in sync with their tracking branches.
+Both branches must be feature branches.
 `
 
 func mergeCmd() *cobra.Command {
