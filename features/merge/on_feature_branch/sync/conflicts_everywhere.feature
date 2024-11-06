@@ -21,7 +21,7 @@ Feature: merging a branch when everything is conflicting
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
@@ -44,7 +44,7 @@ Feature: merging a branch when everything is conflicting
       | alpha  | git commit --no-edit           |
       |        | git checkout beta              |
       | beta   | git merge --no-edit --ff alpha |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
@@ -54,7 +54,7 @@ Feature: merging a branch when everything is conflicting
       | BRANCH | COMMAND                              |
       | beta   | git commit --no-edit                 |
       |        | git merge --no-edit --ff origin/beta |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
