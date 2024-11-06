@@ -295,6 +295,9 @@ func validateMergeData(data mergeData) error {
 	if parentInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
 		return fmt.Errorf(messages.BranchDeletedAtRemote, data.parentBranch)
 	}
+	if parentInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
+	}
 	// ensure branch isn't deleted at remote
 	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch).Get()
 	if !hasBranchInfo {

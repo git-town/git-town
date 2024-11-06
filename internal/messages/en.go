@@ -33,6 +33,7 @@ const (
 	BranchIsAlreadyParked             = "branch %q is already parked"
 	BranchLocalSHAProblem             = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                = "cannot determine whether the local branch %q exists: %w"
+	BranchOtherWorktree               = `branch %q is active in another worktree`
 	BranchParentChanged               = "branch %q is now a child of %q"
 	BrowserOpen                       = "Please open in a browser: %s\n"
 	CacheUnitialized                  = "using a cached value before initialization"
@@ -126,7 +127,6 @@ END OUTPUT FROM 'git branch -vva'
 	HostingPlatformUnknown              = "unknown hosting platform: %q"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
-	DeleteBranchOtherWorktree           = `branch %q is active in another worktree`
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
 	KillDeprecation                     = `DEPRECATION NOTICE
