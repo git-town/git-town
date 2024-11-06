@@ -84,12 +84,13 @@ Feature: merging a branch when everything is conflicting
       | beta   | conflicting_file | resolved between local and tracking beta |
 
   Scenario: undo after resolving all conflicts
-    When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
+    Given I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
     And I resolve the conflict in "conflicting_file" with "resolved between local beta and local alpha"
     And I run "git-town continue" and close the editor
     And I resolve the conflict in "conflicting_file" with "resolved between local and tracking beta"
     And I run "git-town continue" and close the editor
+    Then it runs without errors
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                                                          |

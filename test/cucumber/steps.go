@@ -889,6 +889,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^it runs without errors`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		exitCode := state.runExitCode.GetOrPanic()
+		if exitCode != 0 {
+			return errors.New("unexpected failure of scenario")
+		}
+		return nil
+	})
+
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
