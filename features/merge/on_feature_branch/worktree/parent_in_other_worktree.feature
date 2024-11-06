@@ -1,4 +1,4 @@
-Feature: merging a branch in a stack with its parent
+Feature: merging a branch whose parent is active in another worktree
 
   Background:
     Given a Git repo with origin
@@ -20,7 +20,7 @@ Feature: merging a branch in a stack with its parent
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "alpha"
+      branch "alpha" is active in another worktree
       """
     And the current branch is still "beta"
     And the initial lineage exists now
