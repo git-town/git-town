@@ -17,7 +17,7 @@ Feature: don't sync tags while proposing
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --no-tags                                        |
       | <none>  | Looking for proposal online ... ok                                 |
@@ -31,7 +31,7 @@ Feature: don't sync tags while proposing
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the initial commits exist now
     And the initial lineage exists now
     And the initial tags exist now

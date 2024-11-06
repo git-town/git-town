@@ -11,7 +11,7 @@ Feature: prototype multiple other branches
     When I run "git-town prototype feature contribution observed parked"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "feature" is now a prototype branch
@@ -37,7 +37,7 @@ Feature: prototype multiple other branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And there are now no prototype branches
     And branch "contribution" is now a contribution branch
     And branch "observed" is now observed

@@ -18,7 +18,7 @@ Feature: multiple shipped branches
     When I run "git-town sync --all"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-3 | git fetch --prune --tags                  |
       |           | git checkout main                         |
@@ -48,7 +48,7 @@ Feature: multiple shipped branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                      |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                |
       |           | git push --force-with-lease --force-if-includes              |

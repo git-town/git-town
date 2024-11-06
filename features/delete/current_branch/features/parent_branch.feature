@@ -17,7 +17,7 @@ Feature: delete a branch within a branch chain
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | beta   | git fetch --prune --tags                         |
       |        | git push origin :beta                            |
@@ -45,7 +45,7 @@ Feature: delete a branch within a branch chain
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                      |
       | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta      |
       |        | git branch beta {{ sha 'Committing WIP for git town undo' }} |

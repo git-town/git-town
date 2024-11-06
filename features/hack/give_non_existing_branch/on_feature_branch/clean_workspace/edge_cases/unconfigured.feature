@@ -9,7 +9,7 @@ Feature: missing configuration
       | main branch | enter |
 
   Scenario: result
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
@@ -22,7 +22,7 @@ Feature: missing configuration
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND               |
       | feature | git checkout main     |
       | main    | git branch -D feature |

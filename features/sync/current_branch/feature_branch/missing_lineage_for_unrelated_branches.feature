@@ -14,7 +14,7 @@ Feature: do not ask for lineage of branches that don't need to get synced
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-1 | git fetch --prune --tags                  |
       |           | git checkout main                         |
@@ -32,7 +32,7 @@ Feature: do not ask for lineage of branches that don't need to get synced
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND              |
       | feature-1 | git commit --no-edit |
       |           | git push             |

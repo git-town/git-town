@@ -10,7 +10,7 @@ Feature: ask for missing parent information
     When I run "git-town prepend new" and enter into the dialog:
       | DIALOG               | KEYS  |
       | parent branch of old | enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | old    | git fetch --prune --tags                |
       |        | git checkout main                       |

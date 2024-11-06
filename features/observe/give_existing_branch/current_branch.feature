@@ -9,7 +9,7 @@ Feature: make the current observed branch an observed branch
     When I run "git-town observe observed"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       branch "observed" is already observed
@@ -19,6 +19,6 @@ Feature: make the current observed branch an observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "observed"
     And the observed branches are still "observed"

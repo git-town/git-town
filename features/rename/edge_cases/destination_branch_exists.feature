@@ -14,7 +14,7 @@ Feature: destination branch exists
       | beta   | local, origin | beta commit  |
     And the current branch is "alpha"
     When I run "git-town rename alpha beta"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | alpha  | git fetch --prune --tags |
     And it prints the error:
@@ -35,7 +35,7 @@ Feature: destination branch exists
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |
     When I run "git-town rename alpha beta"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | alpha  | git fetch --prune --tags |
     And it prints the error:

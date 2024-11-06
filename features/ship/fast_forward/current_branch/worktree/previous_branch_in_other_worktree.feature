@@ -15,7 +15,7 @@ Feature: ship while the previous branch is active in another worktree
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | current | git checkout main           |
       | main    | git merge --ff-only current |
@@ -25,7 +25,7 @@ Feature: ship while the previous branch is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch current {{ sha 'current commit' }} |

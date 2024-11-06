@@ -15,7 +15,7 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | observed | git fetch --prune --tags |
       |          | git checkout main        |
@@ -31,7 +31,7 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                 |
       | main   | git branch observed {{ sha-before-run 'local commit' }} |
       |        | git checkout observed                                   |

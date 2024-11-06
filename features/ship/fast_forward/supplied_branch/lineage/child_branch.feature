@@ -17,7 +17,7 @@ Feature: does not ship a child branch using the fast-forward strategy
     When I run "git-town ship gamma"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | alpha  | git fetch --prune --tags |
     And it prints the error:
@@ -31,7 +31,7 @@ Feature: does not ship a child branch using the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       nothing to undo

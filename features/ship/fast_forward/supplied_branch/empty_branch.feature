@@ -16,7 +16,7 @@ Feature: does not ship empty feature branches using the fast-forward strategy
     When I run "git-town ship empty"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
       |        | git add -A               |
@@ -33,7 +33,7 @@ Feature: does not ship empty feature branches using the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       nothing to undo

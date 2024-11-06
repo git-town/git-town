@@ -5,7 +5,7 @@ Feature: prototype the current main branch
     When I run "git-town prototype"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       cannot prototype the main branch
@@ -16,7 +16,7 @@ Feature: prototype the current main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "main"
     And the main branch is still "main"
     And there are still no prototype branches

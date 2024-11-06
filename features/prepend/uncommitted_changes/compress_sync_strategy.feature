@@ -14,7 +14,7 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
     When I run "git-town prepend parent"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | old    | git add -A                  |
       |        | git stash                   |
@@ -32,7 +32,7 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | parent | git add -A           |
       |        | git stash            |

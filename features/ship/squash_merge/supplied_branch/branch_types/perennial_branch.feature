@@ -10,7 +10,7 @@ Feature: does not ship perennial branches
     When I run "git-town ship production"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
     And it prints the error:
@@ -23,7 +23,7 @@ Feature: does not ship perennial branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       nothing to undo

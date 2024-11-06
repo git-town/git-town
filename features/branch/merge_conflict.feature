@@ -22,7 +22,7 @@ Feature: display the local branch hierarchy in the middle of a merge conflict
     When I run "git-town branch"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
         main

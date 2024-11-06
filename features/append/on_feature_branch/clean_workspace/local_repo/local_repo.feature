@@ -12,7 +12,7 @@ Feature: in a local repo
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                       |
       | existing | git merge --no-edit --ff main |
       |          | git checkout -b new           |
@@ -27,7 +27,7 @@ Feature: in a local repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |

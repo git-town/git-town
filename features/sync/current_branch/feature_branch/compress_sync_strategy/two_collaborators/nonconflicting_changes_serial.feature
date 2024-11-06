@@ -32,7 +32,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | the feature | my_file_1 | my content 1 | file      | my content 1 \n\n coworker content 0 |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -51,7 +51,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     # my coworker syncs and adds a commit to the branch
     Given wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -68,7 +68,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | coworker first commit | file      | my content 1 \n\n coworker content 1 |
     And wait 1 second to ensure new Git timestamps
     And the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -88,7 +88,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     # I sync, make another change, and sync again
     Given wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -102,7 +102,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       """
     When I resolve the conflict in "file" with "my content 1 \n\n coworker content 1"
     And I run "git town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git commit --no-edit        |
       |         | git reset --soft main       |
@@ -118,7 +118,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | my second commit | file      | my content 2 \n\n coworker content 1 |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -138,7 +138,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     # the coworker syncs, makes another change, and syncs again
     Given wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -152,7 +152,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       """
     When the coworker resolves the conflict in "file" with "my content 2 \n\n coworker content 1"
     And the coworker runs "git town continue" and closes the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git commit --no-edit        |
       |         | git reset --soft main       |
@@ -168,7 +168,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | coworker first commit | file      | my content 2 \n\n coworker content 2 |
     And wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |

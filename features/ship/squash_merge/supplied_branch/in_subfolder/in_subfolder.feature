@@ -15,7 +15,7 @@ Feature: ship the supplied feature branch from a subfolder
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
@@ -42,7 +42,7 @@ Feature: ship the supplied feature branch from a subfolder
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
       |        | git stash                                     |

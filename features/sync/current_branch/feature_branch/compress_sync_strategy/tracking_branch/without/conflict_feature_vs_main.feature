@@ -16,7 +16,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -42,7 +42,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
@@ -56,7 +56,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -68,7 +68,7 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git commit --no-edit                       |
       |         | git merge --no-edit --ff origin/feature    |
@@ -88,7 +88,7 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: resolve resulting in no changes and continue
     When I resolve the conflict in "conflicting_file" with "feature content"
     And I run "git-town continue" and enter "resolved commit" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git commit --no-edit                       |
       |         | git merge --no-edit --ff origin/feature    |
@@ -109,7 +109,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git commit" and enter "resolved commit" for the commit message
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git merge --no-edit --ff origin/feature    |
       |         | git reset --soft main                      |

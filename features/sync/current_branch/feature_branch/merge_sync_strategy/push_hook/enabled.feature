@@ -16,7 +16,7 @@ Feature: push-hook setting set to "true"
 
   Scenario: result
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -43,4 +43,4 @@ Feature: push-hook setting set to "true"
       """
       nothing to undo
       """
-    And it runs no commands
+    And Git Town runs no commands

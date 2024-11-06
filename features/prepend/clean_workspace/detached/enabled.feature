@@ -12,7 +12,7 @@ Feature: prepend a branch to a feature branch in detached mode
     When I run "git-town prepend parent --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                             |
       | old    | git fetch --prune --tags            |
       |        | git merge --no-edit --ff main       |
@@ -29,7 +29,7 @@ Feature: prepend a branch to a feature branch in detached mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |

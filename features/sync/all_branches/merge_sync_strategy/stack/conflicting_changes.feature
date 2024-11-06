@@ -14,7 +14,7 @@ Feature: sync a stack that makes conflicting changes
     And the current branch is "alpha"
     And an uncommitted file
     When I run "git-town sync --all"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | alpha  | git fetch --prune --tags                |
       |        | git add -A                              |
@@ -30,7 +30,7 @@ Feature: sync a stack that makes conflicting changes
       """
     When I resolve the conflict in "file" with "resolved alpha content"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git commit --no-edit                  |
       |        | git merge --no-edit --ff origin/alpha |
@@ -45,7 +45,7 @@ Feature: sync a stack that makes conflicting changes
     And a merge is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                              |
       | beta   | git commit --no-edit                 |
       |        | git merge --no-edit --ff origin/beta |
@@ -63,7 +63,7 @@ Feature: sync a stack that makes conflicting changes
       | beta   | local, origin | beta commit                    | file      | beta content           |
       |        |               | Merge branch 'alpha' into beta | file      | resolved beta content  |
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                               |
       | alpha  | git add -A                                            |
       |        | git stash                                             |

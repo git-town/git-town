@@ -9,7 +9,7 @@ Feature: observing the current parked branch
     When I run "git-town observe"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "parked" is now an observed branch
@@ -20,7 +20,7 @@ Feature: observing the current parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "parked"
     And branch "parked" is now parked
     And there are now no observed branches

@@ -10,7 +10,7 @@ Feature: ask for missing parent
     When I run "git-town diff-parent feature" and enter into the dialog:
       | DIALOG                   | KEYS  |
       | parent branch of feature | enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                |
       | main   | git diff main..feature |
     And this lineage exists now

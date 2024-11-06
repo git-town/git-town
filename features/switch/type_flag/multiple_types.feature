@@ -18,7 +18,7 @@ Feature: switch branches using multiple types
     When I run "git-town switch --type=observed+prototype" and enter into the dialogs:
       | KEYS       |
       | down enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
     And the current branch is now "prototype"
@@ -27,7 +27,7 @@ Feature: switch branches using multiple types
     When I run "git-town switch -to+pr" and enter into the dialogs:
       | KEYS       |
       | down enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
     And the current branch is now "prototype"
@@ -37,6 +37,6 @@ Feature: switch branches using multiple types
       | KEYS       |
       | down enter |
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "prototype"
     And the initial branches and lineage exist now

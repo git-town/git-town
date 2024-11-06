@@ -21,7 +21,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-3 | git fetch --prune --tags                  |
       |           | git checkout main                         |
@@ -57,7 +57,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                      |
       | feature-3 | git reset --hard {{ sha-before-run 'feature-3 commit B' }}   |
       |           | git push --force-with-lease --force-if-includes              |

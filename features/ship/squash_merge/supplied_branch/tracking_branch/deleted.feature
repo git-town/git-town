@@ -15,7 +15,7 @@ Feature: branch was deleted at the remote
     When I run "git-town ship feature" and enter "feature done" for the commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
     And it prints the error:
@@ -25,4 +25,4 @@ Feature: branch was deleted at the remote
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands

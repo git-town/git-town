@@ -10,7 +10,7 @@ Feature: observe the current branch verbosely
     When I run "git-town observe --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       |        | git version                                   |
       |        | git rev-parse --show-toplevel                 |
@@ -35,7 +35,7 @@ Feature: observe the current branch verbosely
 
   Scenario: undo
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
       |         | git version                                   |
       |         | git rev-parse --show-toplevel                 |

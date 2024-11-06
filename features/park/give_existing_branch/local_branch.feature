@@ -8,7 +8,7 @@ Feature: park another local feature branch
     When I run "git-town park feature"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "feature" is now parked
@@ -17,6 +17,6 @@ Feature: park another local feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "feature" is now a feature branch
     And there are now no parked branches

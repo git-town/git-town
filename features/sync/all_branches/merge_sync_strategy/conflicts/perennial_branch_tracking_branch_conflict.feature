@@ -20,7 +20,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: result
     Then I am not prompted for any parent branches
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | main   | git fetch --prune --tags                 |
       |        | git add -A                               |
@@ -44,7 +44,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
       |        | git checkout main  |
@@ -56,7 +56,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: skip
     When I run "git-town skip"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | beta   | git rebase --abort                       |
       |        | git checkout gamma                       |
@@ -77,7 +77,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -88,7 +88,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | beta   | git rebase --continue                    |
       |        | git push                                 |
@@ -107,7 +107,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | beta   | git push                                 |
       |        | git checkout gamma                       |

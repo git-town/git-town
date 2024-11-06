@@ -8,7 +8,7 @@ Feature: making a branch a feature branch
     When I run "git-town hack contribution"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
     And it prints:
@@ -19,5 +19,5 @@ Feature: making a branch a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "contribution" is now a contribution branch

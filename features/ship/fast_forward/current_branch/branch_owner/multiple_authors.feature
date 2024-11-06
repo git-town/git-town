@@ -24,7 +24,7 @@ Feature: ship a coworker's feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch feature {{ sha 'coworker commit' }} |
       |        | git push -u origin feature                     |

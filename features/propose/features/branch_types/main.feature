@@ -6,7 +6,7 @@ Feature: Cannot create proposals for the main branch
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
     And it prints the error:

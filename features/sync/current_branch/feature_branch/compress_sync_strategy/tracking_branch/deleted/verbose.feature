@@ -15,7 +15,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
     When I run "git-town sync --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | TYPE     | COMMAND                                            |
       |          | backend  | git version                                        |
       |          | backend  | git rev-parse --show-toplevel                      |
@@ -55,7 +55,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
 
   Scenario: undo
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                         |
       |        | backend  | git version                                     |
       |        | backend  | git rev-parse --show-toplevel                   |

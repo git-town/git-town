@@ -32,7 +32,7 @@ Feature: Accepting all default values leads to a working setup
       | save config to config file  | enter |
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
     And local Git Town setting "create-prototype-branches" still doesn't exist

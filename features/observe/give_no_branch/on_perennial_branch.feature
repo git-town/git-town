@@ -10,7 +10,7 @@ Feature: observe the current perennial branch
     When I run "git-town observe"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       cannot observe perennial branches
@@ -22,7 +22,7 @@ Feature: observe the current perennial branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no observed branches

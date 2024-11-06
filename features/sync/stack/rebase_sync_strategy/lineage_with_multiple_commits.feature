@@ -22,7 +22,7 @@ Feature: stack that changes the same file in multiple commits per branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -43,7 +43,7 @@ Feature: stack that changes the same file in multiple commits per branch
   Scenario: resolve and continue
     When I resolve the conflict in "favorite-fruit" with "resolved apple"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | beta   | git rebase --continue |
     And it prints the error:
@@ -57,7 +57,7 @@ Feature: stack that changes the same file in multiple commits per branch
     And a rebase is still in progress
     And I resolve the conflict in "favorite-fruit" with "resolved peach"
     And I run "git-town continue" and close the editor
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git rebase --continue                           |
       |        | git push --force-with-lease --force-if-includes |
@@ -74,7 +74,7 @@ Feature: stack that changes the same file in multiple commits per branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
       | beta   | git rebase --abort                                     |
       |        | git checkout main                                      |

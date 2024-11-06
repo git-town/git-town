@@ -13,7 +13,7 @@ Feature: print the URL when no browser installed
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
       | <none>  | Looking for proposal online ... ok |
@@ -24,4 +24,4 @@ Feature: print the URL when no browser installed
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands

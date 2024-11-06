@@ -13,7 +13,7 @@ Feature: cannot ship observed branches
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | observed | git fetch --prune --tags |
     And it prints the error:
@@ -26,7 +26,7 @@ Feature: cannot ship observed branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "observed"
     And the initial commits exist now
     And the initial branches and lineage exist now

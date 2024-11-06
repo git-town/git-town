@@ -19,7 +19,7 @@ Feature: detached syncing a stacked feature branch using --no-push
     When I run "git-town sync --no-push --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -45,7 +45,7 @@ Feature: detached syncing a stacked feature branch using --no-push
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'local alpha commit' }} |

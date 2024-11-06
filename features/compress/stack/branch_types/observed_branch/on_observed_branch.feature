@@ -21,7 +21,7 @@ Feature: does not compress an active observed branch
     When I run "git-town compress --stack"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | observed | git fetch --prune --tags                        |
       |          | git add -A                                      |
@@ -45,7 +45,7 @@ Feature: does not compress an active observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | observed | git add -A                                      |
       |          | git stash                                       |

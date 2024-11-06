@@ -8,7 +8,7 @@ Feature: park another perennial branch
     When I run "git-town park perennial"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       cannot park perennial branches
@@ -18,6 +18,6 @@ Feature: park another perennial branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the perennial branches are still "perennial"
     And there are still no observed branches

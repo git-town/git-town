@@ -13,7 +13,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
     When I run "git-town ship --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
       |         | backend  | git rev-parse --show-toplevel                     |
@@ -49,7 +49,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
   Scenario: undo
     Given I ran "git-town ship -m done"
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                        |
       |        | backend  | git version                                    |
       |        | backend  | git rev-parse --show-toplevel                  |

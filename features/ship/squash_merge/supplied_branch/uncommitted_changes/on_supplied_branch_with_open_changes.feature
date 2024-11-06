@@ -11,7 +11,7 @@ Feature: does not ship a branch that has open changes
     When I run "git-town ship feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
     And it prints the error:
@@ -23,7 +23,7 @@ Feature: does not ship a branch that has open changes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       nothing to undo

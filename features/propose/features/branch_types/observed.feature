@@ -10,7 +10,7 @@ Feature: Cannot create proposals for observed branches
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | observed | git fetch --prune --tags |
     And it prints the error:

@@ -13,7 +13,7 @@ Feature: must provide a commit message
     When I run "git-town ship" and close the editor
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |

@@ -9,7 +9,7 @@ Feature: rename a branch to itself
 
   Scenario: without force
     When I run "git-town rename old"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
     And it prints the error:
@@ -19,7 +19,7 @@ Feature: rename a branch to itself
 
   Scenario: with force
     When I run "git-town rename --force old"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
     And it prints the error:

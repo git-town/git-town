@@ -15,7 +15,7 @@ Feature: ship a parent branch using the fast-forward strategy
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                    |
       | parent | git fetch --prune --tags   |
       |        | git checkout main          |
@@ -38,7 +38,7 @@ Feature: ship a parent branch using the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | main   | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |

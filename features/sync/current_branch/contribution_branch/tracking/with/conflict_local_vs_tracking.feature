@@ -14,7 +14,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
       |              | git add -A                                      |
@@ -35,7 +35,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND            |
       | contribution | git rebase --abort |
       |              | git stash pop      |
@@ -47,7 +47,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -58,7 +58,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND               |
       | contribution | git rebase --continue |
       |              | git push              |
@@ -78,7 +78,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND       |
       | contribution | git push      |
       |              | git stash pop |

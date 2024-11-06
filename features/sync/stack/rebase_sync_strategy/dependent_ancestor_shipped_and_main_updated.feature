@@ -21,7 +21,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | beta   | git fetch --prune --tags                        |
       |        | git checkout main                               |
@@ -41,7 +41,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
       |        | git push --force-with-lease --force-if-includes      |

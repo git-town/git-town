@@ -11,7 +11,7 @@ Feature: previous Git branch is in another worktree
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | current | git fetch --prune --tags |
       |         | git checkout main        |
@@ -21,7 +21,7 @@ Feature: previous Git branch is in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git checkout current                          |

@@ -11,7 +11,7 @@ Feature: observing multiple other branches
     When I run "git-town observe feature contribution parked prototype"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "feature" is now an observed branch
@@ -39,7 +39,7 @@ Feature: observing multiple other branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And there are now no observed branches
     And the initial branches exist now
     And the current branch is still "main"

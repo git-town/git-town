@@ -17,7 +17,7 @@ Feature: skip deleting the remote branch when shipping another branch
     And origin deletes the "feature" branch
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git checkout main               |
@@ -40,7 +40,7 @@ Feature: skip deleting the remote branch when shipping another branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git checkout main                             |
       | main   | git revert {{ sha 'feature done' }}           |

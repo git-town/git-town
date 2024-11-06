@@ -17,7 +17,7 @@ Feature: delete a parent branch
     When I run "git-town delete beta"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | gamma  | git fetch --prune --tags |
       |        | git add -A               |
@@ -41,7 +41,7 @@ Feature: delete a parent branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | gamma  | git add -A                              |
       |        | git stash                               |

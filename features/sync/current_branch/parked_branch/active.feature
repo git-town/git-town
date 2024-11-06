@@ -15,7 +15,7 @@ Feature: active parked branches get synced like normal feature branches
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | parked | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -38,7 +38,7 @@ Feature: active parked branches get synced like normal feature branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                              |
       | parked | git reset --hard {{ sha 'local parked commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin 'origin parked commit' }}:parked |

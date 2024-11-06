@@ -11,7 +11,7 @@ Feature: append a branch when the previous branch is active in another worktree
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -26,7 +26,7 @@ Feature: append a branch when the previous branch is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND              |
       | new     | git checkout current |
       | current | git branch -D new    |

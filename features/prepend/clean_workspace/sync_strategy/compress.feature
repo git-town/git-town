@@ -17,7 +17,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
     When I run "git-town prepend branch-1a"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | branch-2 | git fetch --prune --tags                 |
       |          | git checkout main                        |
@@ -45,7 +45,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                 |
       | branch-1a | git checkout branch-1                                   |
       | branch-1  | git reset --hard {{ sha-before-run 'branch-1 commit' }} |

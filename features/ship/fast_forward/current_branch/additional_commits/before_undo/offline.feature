@@ -16,7 +16,7 @@ Feature: partially undo an offline ship using the fast-forward strategy after ad
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |

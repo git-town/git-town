@@ -13,7 +13,7 @@ Feature: switch to branches described by a regex
     When I run "git-town switch ^al" and enter into the dialogs:
       | KEYS       |
       | down enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | alpha  | git checkout aloha |
     And the current branch is now "aloha"

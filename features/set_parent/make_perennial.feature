@@ -17,7 +17,7 @@ Feature: make a feature branch perennial
       """
       Selected parent branch for "child": <none> (perennial branch)
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the perennial branches are now "child"
     And this lineage exists now
       | BRANCH | PARENT |
@@ -26,7 +26,7 @@ Feature: make a feature branch perennial
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

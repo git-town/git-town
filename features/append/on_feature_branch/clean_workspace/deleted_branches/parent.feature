@@ -15,7 +15,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | child  | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -47,7 +47,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
       | new    | git checkout child                                     |
       | child  | git reset --hard {{ sha 'child commit' }}              |

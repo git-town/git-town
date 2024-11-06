@@ -17,7 +17,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -43,7 +43,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
@@ -58,7 +58,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -70,7 +70,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git commit --no-edit                       |
       |         | git merge --no-edit --ff origin/feature    |
@@ -92,7 +92,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     When I resolve the conflict in "conflicting_file"
     And I run "git commit" and enter "resolved conflict between main and feature branch" for the commit message
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git merge --no-edit --ff origin/feature    |
       |         | git reset --soft main                      |

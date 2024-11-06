@@ -9,7 +9,7 @@ Feature: cannot make the current feature branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       branch "feature" is already a feature branch
@@ -18,5 +18,5 @@ Feature: cannot make the current feature branch a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "feature" is still a feature branch

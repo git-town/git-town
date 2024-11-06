@@ -15,7 +15,7 @@ Feature: ship a parent branch
     When I run "git-town ship parent -m 'parent done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | child  | git fetch --prune --tags       |
       |        | git checkout main              |
@@ -36,7 +36,7 @@ Feature: ship a parent branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | child  | git checkout main                           |
       | main   | git revert {{ sha 'parent done' }}          |

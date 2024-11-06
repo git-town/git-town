@@ -15,7 +15,7 @@ Feature: compress a branch when the previous branch is active in another worktre
     When I run "git-town compress"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | current | git fetch --prune --tags                        |
       |         | git reset --soft main                           |
@@ -27,7 +27,7 @@ Feature: compress a branch when the previous branch is active in another worktre
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | current | git reset --hard {{ sha 'commit 2' }}           |
       |         | git push --force-with-lease --force-if-includes |

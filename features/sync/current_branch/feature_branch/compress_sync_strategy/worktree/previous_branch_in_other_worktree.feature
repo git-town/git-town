@@ -16,7 +16,7 @@ Feature: sync while the previous branch is checked out in another worktree
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -29,7 +29,7 @@ Feature: sync while the previous branch is checked out in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | current | git push origin :current |
     And the current branch is now "current"

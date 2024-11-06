@@ -16,7 +16,7 @@ Feature: offline mode
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
@@ -34,7 +34,7 @@ Feature: offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
     And the current branch is still "feature"

@@ -12,7 +12,7 @@ Feature: already existing remote branch
     When I run "git-town prepend existing"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       there is already a branch "existing"
@@ -24,7 +24,7 @@ Feature: already existing remote branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is now "old"
     And the uncommitted file still exists
     And the initial commits exist now

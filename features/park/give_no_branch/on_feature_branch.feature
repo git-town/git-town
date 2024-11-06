@@ -9,7 +9,7 @@ Feature: parking the current feature branch
     When I run "git-town park"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "feature" is now parked
@@ -19,6 +19,6 @@ Feature: parking the current feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And there are now no parked branches

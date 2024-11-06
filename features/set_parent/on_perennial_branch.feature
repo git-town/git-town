@@ -9,7 +9,7 @@ Feature: cannot set parent of perennial branches
       """
       the branch "main" is not a feature branch. Only feature branches can have parent branches
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the initial lineage exists now
     And the current branch is still "main"
 
@@ -23,6 +23,6 @@ Feature: cannot set parent of perennial branches
       """
       the branch "qa" is not a feature branch. Only feature branches can have parent branches
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the initial lineage exists now
     And the current branch is still "qa"

@@ -13,7 +13,7 @@ Feature: ship a feature branch in a local repo using the fast-forward strategy
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git checkout main           |
       | main    | git merge --ff-only feature |
@@ -29,7 +29,7 @@ Feature: ship a feature branch in a local repo using the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |

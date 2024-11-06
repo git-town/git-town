@@ -18,7 +18,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | child  | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -48,7 +48,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
       | child  | git reset --hard {{ sha-before-run 'child commit 2' }} |
       |        | git push --force-with-lease --force-if-includes        |

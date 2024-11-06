@@ -11,7 +11,7 @@ Feature: display all executed Git commands
     And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exist
     When I run "git-town propose --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       |         | backend  | git version                                                        |
       |         | backend  | git rev-parse --show-toplevel                                      |

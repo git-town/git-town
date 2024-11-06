@@ -16,7 +16,7 @@ Feature: offline mode
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
       | feature | git add -A                                       |
       |         | git commit -m "Committing WIP for git town undo" |
@@ -38,7 +38,7 @@ Feature: offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | main    | git branch feature {{ sha 'Committing WIP for git town undo' }} |
       |         | git checkout feature                                            |

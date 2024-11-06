@@ -8,7 +8,7 @@ Feature: display the parent of a top-level feature branch
     When I run "git-town config get-parent --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE    | COMMAND                            |
       |        | backend | git version                        |
       |        | backend | git rev-parse --show-toplevel      |

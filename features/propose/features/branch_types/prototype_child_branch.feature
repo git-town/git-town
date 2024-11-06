@@ -14,7 +14,7 @@ Feature: Create proposals for prototype branches
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                       |
       | prototype | git fetch --prune --tags                                                      |
       | <none>    | Looking for proposal online ... ok                                            |

@@ -12,7 +12,7 @@ Feature: rename an unsynced branch
       | BRANCH | LOCATION | MESSAGE       |
       | old    | origin   | origin commit |
     When I run "git-town rename old new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
     And it prints the error:
@@ -26,7 +26,7 @@ Feature: rename an unsynced branch
       | BRANCH | LOCATION | MESSAGE      |
       | old    | local    | local commit |
     When I run "git-town rename old new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
     And it prints the error:

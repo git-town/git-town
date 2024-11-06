@@ -9,7 +9,7 @@ Feature: display the parent of a stacked feature branch
     When I run "git-town config get-parent child"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       parent

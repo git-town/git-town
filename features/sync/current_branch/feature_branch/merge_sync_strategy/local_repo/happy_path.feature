@@ -13,7 +13,7 @@ Feature: sync the current feature branch (in a local repo)
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                       |
       | feature | git merge --no-edit --ff main |
     And all branches are now synchronized
@@ -26,7 +26,7 @@ Feature: sync the current feature branch (in a local repo)
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                     |
       | feature | git reset --hard {{ sha 'feature commit' }} |
     And the current branch is still "feature"

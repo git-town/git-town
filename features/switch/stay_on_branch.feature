@@ -11,6 +11,6 @@ Feature: stay on the same branch
     When I run "git-town switch" and enter into the dialogs:
       | KEYS  |
       | enter |
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND |
     And the current branch is still "alpha"

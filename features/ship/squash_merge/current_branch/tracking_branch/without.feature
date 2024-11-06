@@ -13,7 +13,7 @@ Feature: ship a local feature branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |
@@ -32,7 +32,7 @@ Feature: ship a local feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |

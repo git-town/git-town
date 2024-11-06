@@ -14,7 +14,7 @@ Feature: don't sync tags while prepending
     When I run "git-town prepend new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | old    | git fetch --prune --no-tags             |
       |        | git checkout main                       |
@@ -27,7 +27,7 @@ Feature: don't sync tags while prepending
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | new    | git checkout old  |
       | old    | git branch -D new |

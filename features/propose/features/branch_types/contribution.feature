@@ -10,7 +10,7 @@ Feature: Cannot create proposals for contribution branches
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                  |
       | contribution | git fetch --prune --tags |
     And it prints the error:

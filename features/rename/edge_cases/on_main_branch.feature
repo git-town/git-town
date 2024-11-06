@@ -6,7 +6,7 @@ Feature: does not rename the main branch
 
   Scenario: try to rename
     When I run "git-town rename main new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
     And it prints the error:
@@ -17,7 +17,7 @@ Feature: does not rename the main branch
 
   Scenario: try to force rename
     When I run "git-town rename main new --force"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
     And it prints the error:

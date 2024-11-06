@@ -13,7 +13,7 @@ Feature: conflicts between uncommitted changes and the main branch
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git add -A               |
       |          | git stash                |
@@ -27,7 +27,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: undo with unresolved merge conflict
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
       | new      | git add -A                                       |
       |          | git commit -m "Committing WIP for git town undo" |
@@ -40,7 +40,7 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and undo
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
       | new      | git add -A                                       |
       |          | git commit -m "Committing WIP for git town undo" |
@@ -62,7 +62,7 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND        |
       | new    | git stash drop |
     And the current branch is now "new"
@@ -73,7 +73,7 @@ Feature: conflicts between uncommitted changes and the main branch
     Given I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
       |          | git stash             |

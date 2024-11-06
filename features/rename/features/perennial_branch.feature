@@ -14,7 +14,7 @@ Feature: rename a perennial branch
 
   Scenario: normal rename fails
     When I run "git-town rename production new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                  |
       | production | git fetch --prune --tags |
     And it prints the error:
@@ -24,7 +24,7 @@ Feature: rename a perennial branch
 
   Scenario: forced rename works
     When I run "git-town rename --force production new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                          |
       | production | git fetch --prune --tags         |
       |            | git branch --move production new |
@@ -44,7 +44,7 @@ Feature: rename a perennial branch
   Scenario: undo
     Given I ran "git-town rename --force production new"
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                             |
       | new        | git branch production {{ sha 'production commit' }} |
       |            | git push -u origin production                       |

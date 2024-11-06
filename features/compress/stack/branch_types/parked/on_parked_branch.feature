@@ -21,7 +21,7 @@ Feature: compresses active parked branches
     When I run "git-town compress --stack"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
       |        | git add -A                                      |
@@ -47,7 +47,7 @@ Feature: compresses active parked branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | parked | git add -A                                      |
       |        | git stash                                       |

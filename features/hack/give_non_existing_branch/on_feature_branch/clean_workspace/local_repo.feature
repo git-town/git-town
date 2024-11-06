@@ -12,7 +12,7 @@ Feature: local repo
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git checkout -b new main |
     And the current branch is now "new"
@@ -24,7 +24,7 @@ Feature: local repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |

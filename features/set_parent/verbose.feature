@@ -17,7 +17,7 @@ Feature: display all executed Git commands
       """
       Selected parent branch for "child": main
       """
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH | TYPE    | COMMAND                                      |
       |        | backend | git version                                  |
       |        | backend | git rev-parse --show-toplevel                |
@@ -44,7 +44,7 @@ Feature: display all executed Git commands
 
   Scenario: undo
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE    | COMMAND                                        |
       |        | backend | git version                                    |
       |        | backend | git rev-parse --show-toplevel                  |

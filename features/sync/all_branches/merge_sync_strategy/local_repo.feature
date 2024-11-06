@@ -15,7 +15,7 @@ Feature: syncs all feature branches (in a local repo)
     When I run "git-town sync --all"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | alpha  | git merge --no-edit --ff main |
       |        | git checkout beta             |

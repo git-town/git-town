@@ -13,7 +13,7 @@ Feature: ship an omni-branch via the fast-forward strategy
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git fetch --prune --tags    |
       |         | git checkout main           |
@@ -32,7 +32,7 @@ Feature: ship an omni-branch via the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                  |
       | main   | git branch feature {{ sha-before-run 'feature commit' }} |
       |        | git push -u origin feature                               |

@@ -9,7 +9,7 @@ Feature: making the current contribution branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "contribution" is now a feature branch
@@ -18,5 +18,5 @@ Feature: making the current contribution branch a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "contribution" is now a contribution branch

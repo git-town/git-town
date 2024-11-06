@@ -17,7 +17,7 @@ Feature: abort the ship via empty commit message
 
   @skipWindows
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
@@ -39,7 +39,7 @@ Feature: abort the ship via empty commit message
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       nothing to undo

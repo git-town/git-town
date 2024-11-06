@@ -14,7 +14,7 @@ Feature: sync perennial branch that was deleted at the remote
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH      | COMMAND                   |
       | perennial-1 | git fetch --prune --tags  |
       |             | git checkout main         |
@@ -35,7 +35,7 @@ Feature: sync perennial branch that was deleted at the remote
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | main   | git branch perennial-1 {{ sha 'initial commit' }} |
       |        | git checkout perennial-1                          |

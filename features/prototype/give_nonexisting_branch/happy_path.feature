@@ -5,7 +5,7 @@ Feature: does not create prototyping branches this way
     When I run "git-town prototype zonk"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       there is no branch "zonk"
@@ -14,7 +14,7 @@ Feature: does not create prototyping branches this way
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       nothing to undo

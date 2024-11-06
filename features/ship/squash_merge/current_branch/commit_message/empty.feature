@@ -14,7 +14,7 @@ Feature: abort the ship by empty commit message
     When I run "git-town ship" and enter an empty commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |

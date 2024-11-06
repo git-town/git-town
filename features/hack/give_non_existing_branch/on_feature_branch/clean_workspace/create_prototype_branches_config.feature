@@ -14,7 +14,7 @@ Feature: auto-creating a prototype branch when hacking
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | existing | git fetch --prune --tags                |
       |          | git checkout main                       |
@@ -33,7 +33,7 @@ Feature: auto-creating a prototype branch when hacking
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | new      | git checkout main                           |
       | main     | git reset --hard {{ sha 'initial commit' }} |

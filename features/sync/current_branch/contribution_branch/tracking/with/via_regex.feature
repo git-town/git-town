@@ -15,7 +15,7 @@ Feature: sync the current branch that is contribution via regex
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                       |
       | renovate/1 | git fetch --prune --tags                      |
       |            | git rebase origin/renovate/1 --no-update-refs |
@@ -29,7 +29,7 @@ Feature: sync the current branch that is contribution via regex
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                                                           |
       | renovate/1 | git reset --hard {{ sha-before-run 'local commit' }}                              |
       |            | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:renovate/1 |

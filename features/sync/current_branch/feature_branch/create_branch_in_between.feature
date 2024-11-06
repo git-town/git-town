@@ -11,7 +11,7 @@ Feature: do not undo branches that were created while resolving conflicts
       | feature-1 | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
     And I run "git-town sync"
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-1 | git fetch --prune --tags                  |
       |           | git checkout main                         |
@@ -34,7 +34,7 @@ Feature: do not undo branches that were created while resolving conflicts
     When I run "git-town continue"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND  |
       | feature-1 | git push |
     And no merge is in progress
@@ -42,7 +42,7 @@ Feature: do not undo branches that were created while resolving conflicts
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                                      |
       | feature-1 | git reset --hard {{ sha 'conflicting local commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature-1 |

@@ -17,7 +17,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -43,7 +43,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
       |         | git stash pop      |
@@ -58,7 +58,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -70,14 +70,14 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
       |         | git push --force-with-lease --force-if-includes |
@@ -96,13 +96,13 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and enter "resolved conflict between main and feature branch" for the commit message
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
       |         | git push --force-with-lease --force-if-includes |

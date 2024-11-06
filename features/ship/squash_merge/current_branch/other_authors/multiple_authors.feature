@@ -38,7 +38,7 @@ Feature: ship a coworker's feature branch
       | DIALOG                              | KEYS  |
       | choose author for the squash commit | enter |
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git revert {{ sha 'feature done' }}            |
       |        | git push                                       |

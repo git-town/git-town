@@ -9,7 +9,7 @@ Feature: park another prototype branch
     When I run "git-town park prototype"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "prototype" is now parked
@@ -19,7 +19,7 @@ Feature: park another prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the prototype branches are now "prototype"
     And there are now no parked branches
     And the initial branches and lineage exist now

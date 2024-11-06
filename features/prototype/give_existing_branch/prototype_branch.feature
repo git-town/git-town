@@ -9,7 +9,7 @@ Feature: prototype another prototype branch
     When I run "git-town prototype prototype"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       branch "prototype" is already a prototype branch
@@ -19,7 +19,7 @@ Feature: prototype another prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the prototype branches are now "prototype"
     And the current branch is still "prototype"
     And the initial branches and lineage exist now

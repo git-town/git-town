@@ -13,7 +13,7 @@ Feature: offline mode
     When I run "git-town prepend new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | old    | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
@@ -32,7 +32,7 @@ Feature: offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | new    | git checkout old  |
       | old    | git branch -D new |

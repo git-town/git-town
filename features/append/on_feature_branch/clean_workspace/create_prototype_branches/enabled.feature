@@ -13,7 +13,7 @@ Feature: auto-creating a prototype branch when appending
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
       |          | git checkout main                        |
@@ -32,7 +32,7 @@ Feature: auto-creating a prototype branch when appending
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |

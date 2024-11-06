@@ -21,7 +21,7 @@ Feature: does not compress the active contribution branch
     When I run "git-town compress --stack"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
       |              | git add -A                                      |
@@ -45,7 +45,7 @@ Feature: does not compress the active contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git add -A                                      |
       |              | git stash                                       |

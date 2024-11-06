@@ -851,7 +851,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it runs no commands$`, func(ctx context.Context) error {
+	sc.Step(`^Git Town runs no commands$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
 		if len(commands) > 0 {
@@ -866,7 +866,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^it runs the commands$`, func(ctx context.Context, input *godog.Table) error {
+	sc.Step(`^Git Town runs the commands$`, func(ctx context.Context, input *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())

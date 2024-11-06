@@ -16,7 +16,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git add -A                              |
@@ -39,7 +39,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And a merge is now in progress
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git commit --no-edit                  |
       |        | git merge --no-edit --ff origin/alpha |
@@ -65,7 +65,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And the current branch is now "gamma"
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git commit --no-edit                  |
       |        | git merge --no-edit --ff origin/gamma |

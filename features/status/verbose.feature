@@ -4,7 +4,7 @@ Feature: display all executed Git commands
     Given a Git repo with origin
     And I ran "git-town sync"
     When I run "git-town status --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE    | COMMAND                            |
       |        | backend | git version                        |
       |        | backend | git rev-parse --show-toplevel      |

@@ -9,7 +9,7 @@ Feature: cannot make the current local feature branch a contribution branch
     When I run "git-town contribute"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       branch "feature" is local only - branches you want to contribute to must have a remote branch because they are per definition other people's branches
@@ -19,6 +19,6 @@ Feature: cannot make the current local feature branch a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And there are still no contribution branches

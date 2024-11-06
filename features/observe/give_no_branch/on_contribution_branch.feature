@@ -10,7 +10,7 @@ Feature: observe the current contribution branch
     When I run "git-town observe"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "contribution" is now an observed branch
@@ -21,7 +21,7 @@ Feature: observe the current contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND       |
       | contribution | git add -A    |
       |              | git stash     |

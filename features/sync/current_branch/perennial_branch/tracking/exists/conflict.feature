@@ -15,7 +15,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | qa     | git fetch --prune --tags              |
       |        | git add -A                            |
@@ -36,7 +36,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git stash pop      |
@@ -47,7 +47,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -58,7 +58,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
       |        | git push              |
@@ -76,7 +76,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND         |
       | qa     | git push        |
       |        | git push --tags |

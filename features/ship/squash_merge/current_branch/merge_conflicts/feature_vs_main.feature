@@ -14,7 +14,7 @@ Feature: handle conflicts between the shipped branch and the main branch
     And I run "git-town ship -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |
@@ -38,7 +38,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       """
       nothing to undo
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now

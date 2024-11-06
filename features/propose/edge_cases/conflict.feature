@@ -17,7 +17,7 @@ Feature: merge conflict
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       | <none>  | Looking for proposal online ... ok      |
@@ -39,7 +39,7 @@ Feature: merge conflict
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
     And the current branch is still "feature"
@@ -48,7 +48,7 @@ Feature: merge conflict
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -59,7 +59,7 @@ Feature: merge conflict
   Scenario: resolve and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
@@ -83,7 +83,7 @@ Feature: merge conflict
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |

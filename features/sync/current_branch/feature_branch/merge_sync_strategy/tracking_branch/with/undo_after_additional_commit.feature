@@ -26,6 +26,6 @@ Feature: undo offline sync after additional commits to the feature branch
       """
       because it received additional commits in the meantime
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the current branch is still "feature"
     And the initial branches and lineage exist now

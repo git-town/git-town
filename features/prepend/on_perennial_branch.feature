@@ -5,7 +5,7 @@ Feature: does not prepend perennial branches
 
   Scenario: on main branch
     When I run "git-town prepend new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
     And it prints the error:
@@ -20,7 +20,7 @@ Feature: does not prepend perennial branches
       | production | perennial | local, origin |
     And the current branch is "production"
     When I run "git-town prepend new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                  |
       | production | git fetch --prune --tags |
     And it prints the error:

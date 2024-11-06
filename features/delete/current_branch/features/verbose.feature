@@ -15,7 +15,7 @@ Feature: display all executed Git commands
 
   Scenario: result
     When I run "git-town delete --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
       |         | backend  | git rev-parse --show-toplevel                     |

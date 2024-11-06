@@ -14,7 +14,7 @@ Feature: rename the current branch without pre-push hook
   Scenario: set to "false"
     Given Git Town setting "push-hook" is "false"
     When I run "git-town rename new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                            |
       | old    | git fetch --prune --tags           |
       |        | git branch --move old new          |
@@ -30,7 +30,7 @@ Feature: rename the current branch without pre-push hook
   Scenario: set to "true"
     Given Git Town setting "push-hook" is "true"
     When I run "git-town rename new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |

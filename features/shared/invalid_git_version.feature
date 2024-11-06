@@ -31,7 +31,7 @@ Feature: require minimum Git version
 
   Scenario Outline: not requiring Git
     When I run "git-town <COMMAND>"
-    Then it runs no commands
+    Then Git Town runs no commands
 
     Examples:
       | COMMAND          |

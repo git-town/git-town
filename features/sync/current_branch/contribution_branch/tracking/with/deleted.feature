@@ -14,7 +14,7 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                    |
       | contribution | git fetch --prune --tags   |
       |              | git checkout main          |
@@ -30,7 +30,7 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                     |
       | main   | git branch contribution {{ sha-before-run 'local commit' }} |
       |        | git checkout contribution                                   |

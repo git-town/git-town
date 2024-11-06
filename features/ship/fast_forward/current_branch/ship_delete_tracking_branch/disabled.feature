@@ -15,7 +15,7 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
     And origin deletes the "feature" branch
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git fetch --prune --tags    |
       |         | git checkout main           |
@@ -33,7 +33,7 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |

@@ -8,7 +8,7 @@ Feature: make another observed branch a contribution branch
     When I run "git-town contribute observed"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "observed" is now a contribution branch
@@ -19,6 +19,6 @@ Feature: make another observed branch a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "main"
     And the observed branches are now "observed"

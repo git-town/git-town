@@ -9,7 +9,7 @@ Feature: making the current observed branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "observed" is now a feature branch
@@ -18,5 +18,5 @@ Feature: making the current observed branch a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "observed" is now observed

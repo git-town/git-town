@@ -13,7 +13,7 @@ Feature: dry-run hacking a new feature branch
     When I run "git-town hack new --dry-run"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | existing | git fetch --prune --tags                |
       |          | git checkout main                       |
@@ -25,7 +25,7 @@ Feature: dry-run hacking a new feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

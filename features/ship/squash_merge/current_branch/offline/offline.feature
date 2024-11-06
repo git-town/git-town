@@ -14,7 +14,7 @@ Feature: offline mode
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git checkout main               |
       | main    | git merge --squash --ff feature |
@@ -29,7 +29,7 @@ Feature: offline mode
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |

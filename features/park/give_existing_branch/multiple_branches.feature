@@ -11,7 +11,7 @@ Feature: parking multiple other branches
     When I run "git-town park feature contribution observed prototype"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "feature" is now parked
@@ -27,6 +27,6 @@ Feature: parking multiple other branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And there are now no parked branches
     And the current branch is still "main"

@@ -17,7 +17,7 @@ Feature: sync a branch whose tracking branch was shipped
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                 |
       | feature-1 | git fetch --prune --tags                |
       |           | git add -A                              |
@@ -43,7 +43,7 @@ Feature: sync a branch whose tracking branch was shipped
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-2 | git add -A                                        |
       |           | git stash                                         |

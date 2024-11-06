@@ -13,7 +13,7 @@ Feature: dry-run prepending a branch to a feature branch
     When I run "git-town prepend parent --dry-run"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | old    | git add -A                  |
       |        | git stash                   |
@@ -26,7 +26,7 @@ Feature: dry-run prepending a branch to a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "old"
     And the uncommitted file still exists
     And the initial commits exist now

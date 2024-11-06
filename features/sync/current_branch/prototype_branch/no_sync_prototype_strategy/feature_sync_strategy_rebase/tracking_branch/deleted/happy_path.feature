@@ -15,7 +15,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                 |
       | prototype | git fetch --prune --tags                |
       |           | git checkout main                       |
@@ -32,7 +32,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                  |
       | main   | git branch prototype {{ sha-before-run 'local commit' }} |
       |        | git checkout prototype                                   |

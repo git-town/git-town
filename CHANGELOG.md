@@ -543,7 +543,7 @@ Git Town 10 starts a larger effort to remove redundant commands and make Git Tow
 
 ## 9.0.1 (2023-07-29)
 
-Git Town should now run a bit faster because it runs fewer Git commands under the hood.
+Git Town should now run a bit faster because Git Town runs fewer Git commands under the hood.
 
 #### Bug Fixes
 

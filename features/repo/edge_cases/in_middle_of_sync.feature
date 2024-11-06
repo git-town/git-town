@@ -20,7 +20,7 @@ Feature: displaying the repo in the middle of an ongoing sync merge conflict
     When I run "git-town repo"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       |        | open https://github.com/git-town/git-town |
     And "open" launches a new proposal with this url in my browser:

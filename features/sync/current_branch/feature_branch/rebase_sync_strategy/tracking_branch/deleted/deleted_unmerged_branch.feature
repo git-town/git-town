@@ -17,7 +17,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | branch-2 | git fetch --prune --tags                |
       |          | git add -A                              |
@@ -41,7 +41,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND       |
       | branch-2 | git add -A    |
       |          | git stash     |

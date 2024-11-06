@@ -15,7 +15,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -36,7 +36,7 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
       |         | git checkout feature |
@@ -48,7 +48,7 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -59,7 +59,7 @@ Feature: handle conflicts between the main branch and its tracking branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | main    | git rebase --continue                           |
       |         | git push                                        |
@@ -80,7 +80,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | main    | git push                                        |
       |         | git checkout feature                            |

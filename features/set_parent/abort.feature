@@ -17,14 +17,14 @@ Feature: abort the dialog
       """
       Selected parent branch for "child": (aborted)
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

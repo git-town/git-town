@@ -9,7 +9,7 @@ Feature: creating a new prototype branch
     When I run "git-town hack --prototype new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
@@ -25,7 +25,7 @@ Feature: creating a new prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |

@@ -9,7 +9,7 @@ Feature: park another remote branch
     When I run "git-town park remote-feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       |        | git checkout remote-feature |
     And it prints:
@@ -21,7 +21,7 @@ Feature: park another remote branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |

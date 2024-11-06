@@ -12,7 +12,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
     When I run "git-town hack new" in the "committed_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | existing | git fetch --prune --tags                |
       |          | git checkout main                       |
@@ -27,7 +27,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |

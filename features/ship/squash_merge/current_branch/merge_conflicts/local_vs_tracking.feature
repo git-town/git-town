@@ -14,7 +14,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
     And it prints the error:
@@ -24,7 +24,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now

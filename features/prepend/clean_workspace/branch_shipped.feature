@@ -15,7 +15,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
     When I run "git-town prepend new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | child  | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -42,7 +42,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | new    | git checkout parent                             |
       | parent | git reset --hard {{ sha 'parent commit' }}      |

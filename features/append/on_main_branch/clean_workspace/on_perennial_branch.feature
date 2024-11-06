@@ -13,7 +13,7 @@ Feature: append to a perennial branch
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                       |
       | production | git fetch --prune --tags                      |
       |            | git rebase origin/production --no-update-refs |
@@ -28,7 +28,7 @@ Feature: append to a perennial branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                     |
       | new        | git checkout production                     |
       | production | git reset --hard {{ sha 'initial commit' }} |

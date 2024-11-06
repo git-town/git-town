@@ -10,7 +10,7 @@ Feature: make the current branch a contribution branch verbosely
     When I run "git-town contribute --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       |        | git version                                       |
       |        | git rev-parse --show-toplevel                     |
@@ -35,7 +35,7 @@ Feature: make the current branch a contribution branch verbosely
 
   Scenario: undo
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       |         | git version                                       |
       |         | git rev-parse --show-toplevel                     |

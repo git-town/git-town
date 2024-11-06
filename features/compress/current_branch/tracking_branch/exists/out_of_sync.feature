@@ -13,7 +13,7 @@ Feature: cannot compress branches that are out of sync
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         | origin        | commit 2 | file_2    | content 2    |
     When I run "git-town compress"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
     And it prints the error:

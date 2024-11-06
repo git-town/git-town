@@ -10,7 +10,7 @@ Feature: making multiple branches a feature branch
     When I run "git-town hack contribution observed parked"
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And it prints:
       """
       branch "contribution" is now a feature branch
@@ -29,7 +29,7 @@ Feature: making multiple branches a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "contribution" is now a contribution branch
     And branch "observed" is now observed
     And branch "parked" is now parked

@@ -18,7 +18,7 @@ Feature: proposing using the "compress" sync strategy
     And wait 1 second to ensure new Git timestamps
     And a proposal for this branch does not exist
     When I run "git-town propose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                             |
       | existing | git fetch --prune --tags                                            |
       | <none>   | Looking for proposal online ... ok                                  |
