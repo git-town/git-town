@@ -10,6 +10,7 @@ Feature: merging a branch with the "compress" sync-strategy
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
+    And wait 1 second to ensure new Git timestamps
     And the current branch is "beta"
     And Git Town setting "sync-feature-strategy" is "compress"
     When I run "git-town merge"
@@ -22,6 +23,7 @@ Feature: merging a branch with the "compress" sync-strategy
       | alpha  | git merge --no-edit --ff origin/alpha |
       |        | git reset --soft main                 |
       |        | git commit -m "alpha commit"          |
+      |        | git push --force-with-lease           |
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
