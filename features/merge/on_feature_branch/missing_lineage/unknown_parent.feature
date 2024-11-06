@@ -7,9 +7,9 @@ Feature: merging with missing lineage
       | alpha | (none) |        | local, origin |
       | beta  | (none) |        | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
-      | beta   | local, origin | beta commit  | beta-file  | beta content  |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
     And the current branch is "beta"
     When I run "git-town merge" and enter into the dialog:
       | DIALOG                          | KEYS       |
@@ -33,14 +33,10 @@ Feature: merging with missing lineage
       | BRANCH | PARENT |
       | beta   | main   |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
-      | beta   | local, origin | beta commit                    | beta-file  | beta content  |
-      |        |               | alpha commit                   | alpha-file | alpha content |
-      |        |               | Merge branch 'alpha' into beta |            |               |
-    And these committed files exist now
-      | BRANCH | NAME       | CONTENT       |
-      | beta   | alpha-file | alpha content |
-      |        | beta-file  | beta content  |
+      | BRANCH | LOCATION      | MESSAGE                        |
+      | beta   | local, origin | beta commit                    |
+      |        |               | alpha commit                   |
+      |        |               | Merge branch 'alpha' into beta |
 
   Scenario: undo
     When I run "git-town undo"
