@@ -26,8 +26,9 @@ Feature: merging a branch with a parent that has conflicting changes
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
 
+  @this
   Scenario: resolve and continue
-    When I resolve the conflict in "conflicting_file" with "resolved alpha content"
+    When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                        |
@@ -38,7 +39,7 @@ Feature: merging a branch with a parent that has conflicting changes
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    When I resolve the conflict in "conflicting_file" with "resolved content with parent"
+    When I resolve the conflict in "conflicting_file" with "resolved between local beta and local alpha"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                              |
@@ -48,7 +49,7 @@ Feature: merging a branch with a parent that has conflicting changes
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    When I resolve the conflict in "conflicting_file" with "resolved beta content"
+    When I resolve the conflict in "conflicting_file" with "resolved between local and tracking beta"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND                |
@@ -61,17 +62,17 @@ Feature: merging a branch with a parent that has conflicting changes
       | BRANCH | PARENT |
       | beta   | main   |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                                                | FILE NAME        | FILE CONTENT                 |
-      | beta   | local, origin | local beta commit                                      | conflicting_file | local beta content           |
-      |        |               | local alpha commit                                     | conflicting_file | local alpha content          |
-      |        |               | remote alpha commit                                    | conflicting_file | remote alpha content         |
-      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha | conflicting_file | resolved alpha content       |
-      |        |               | Merge branch 'alpha' into beta                         | conflicting_file | resolved content with parent |
-      |        |               | remote beta commit                                     | conflicting_file | remote beta content          |
-      |        |               | Merge remote-tracking branch 'origin/beta' into beta   | conflicting_file | resolved beta content        |
+      | BRANCH | LOCATION      | MESSAGE                                                | FILE NAME        | FILE CONTENT                                |
+      | beta   | local, origin | local beta commit                                      | conflicting_file | local beta content                          |
+      |        |               | local alpha commit                                     | conflicting_file | local alpha content                         |
+      |        |               | remote alpha commit                                    | conflicting_file | remote alpha content                        |
+      |        |               | Merge remote-tracking branch 'origin/alpha' into alpha | conflicting_file | resolved between local and tracking alpha   |
+      |        |               | Merge branch 'alpha' into beta                         | conflicting_file | resolved between local beta and local alpha |
+      |        |               | remote beta commit                                     | conflicting_file | remote beta content                         |
+      |        |               | Merge remote-tracking branch 'origin/beta' into beta   | conflicting_file | resolved between local and tracking beta    |
     And these committed files exist now
-      | BRANCH | NAME             | CONTENT               |
-      | beta   | conflicting_file | resolved beta content |
+      | BRANCH | NAME             | CONTENT                                  |
+      | beta   | conflicting_file | resolved between local and tracking beta |
 
   Scenario: undo
     When I run "git-town undo"
