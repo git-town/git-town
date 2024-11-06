@@ -36,7 +36,7 @@ Feature: merging a branch when everything is conflicting
     And the initial commits exist now
     And the initial lineage exists now
 
-  Scenario: resolve and continue
+  Scenario: resolve all conflicts and undo
     When I resolve the conflict in "conflicting_file" with "resolved between local and tracking alpha"
     And I run "git-town continue" and close the editor
     Then it runs the commands
