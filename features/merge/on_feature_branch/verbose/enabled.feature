@@ -51,7 +51,7 @@ Feature: merging a branch in a stack with its parent
       |        | git config -lz --includes --global              |
       |        | git config -lz --includes --local               |
       |        | git stash list                                  |
-    And it prints:
+    And Git Town prints:
       """
       Ran 34 shell commands.
       """

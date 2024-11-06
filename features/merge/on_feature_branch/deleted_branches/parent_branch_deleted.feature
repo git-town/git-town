@@ -15,10 +15,10 @@ Feature: merging a branch whose parent was deleted remotely
     When I run "git-town merge"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "alpha" was deleted at the remote
       """
@@ -28,8 +28,8 @@ Feature: merging a branch whose parent was deleted remotely
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """
