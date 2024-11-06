@@ -1,4 +1,4 @@
-Feature: merging a branch in a stack with its parent
+Feature: merging a branch in a stack that is fully in sync
 
   Background:
     Given a Git repo with origin
