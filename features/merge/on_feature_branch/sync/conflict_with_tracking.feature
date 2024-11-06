@@ -27,6 +27,14 @@ Feature: merging a branch with a conflicting parent
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND                                                   |
+      | beta   | git merge --abort                                         |
+      |        | git reset --hard {{ sha-before-run 'local beta commit' }} |
+    And the current branch is still "beta"
+    And the initial commits exist now
+    And the initial lineage exists now
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file" with "resolved beta content"
@@ -48,13 +56,3 @@ Feature: merging a branch with a conflicting parent
       |        |               | Merge branch 'alpha' into beta                       |                  |                       |
       |        |               | remote beta commit                                   | conflicting_file | remote beta content   |
       |        |               | Merge remote-tracking branch 'origin/beta' into beta | conflicting_file | resolved beta content |
-
-  Scenario: undo
-    When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND                                                   |
-      | beta   | git merge --abort                                         |
-      |        | git reset --hard {{ sha-before-run 'local beta commit' }} |
-    And the current branch is still "beta"
-    And the initial commits exist now
-    And the initial lineage exists now
