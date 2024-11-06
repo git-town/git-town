@@ -40,7 +40,7 @@ func mergeCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "merge",
 		Args:    cobra.NoArgs,
-		GroupID: "lineage",
+		GroupID: "stack",
 		Short:   mergeDesc,
 		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
