@@ -44,11 +44,11 @@ Feature: merging a branch with disabled push-hook
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
-      |        | git push --force-with-lease --force-if-includes      |
-      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
-      |        | git push -u origin alpha                             |
+      | BRANCH | COMMAND                                                     |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}         |
+      |        | git push --force-with-lease --force-if-includes --no-verify |
+      |        | git branch alpha {{ sha-before-run 'alpha commit' }}        |
+      |        | git push --no-verify -u origin alpha                        |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
