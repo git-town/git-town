@@ -28,11 +28,11 @@ Feature: merging a branch in a stack with its parent
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
+    Then it runs no commands
+    And it prints:
       """
       nothing to undo
       """
-    Then it runs no commands
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

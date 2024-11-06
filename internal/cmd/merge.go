@@ -43,7 +43,7 @@ func mergeCmd() *cobra.Command {
 		GroupID: "lineage",
 		Short:   mergeDesc,
 		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeMerge(readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}

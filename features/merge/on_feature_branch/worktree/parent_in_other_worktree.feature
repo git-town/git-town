@@ -15,13 +15,13 @@ Feature: merging a branch in a stack with its parent
     When I run "git-town merge"
 
   Scenario: result
-    Then it prints the error:
-      """
-      branch "alpha"
-      """
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
+    And it prints the error:
+      """
+      branch "alpha"
+      """
     And the current branch is still "beta"
     And the initial lineage exists now
     And the initial commits exist now

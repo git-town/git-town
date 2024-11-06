@@ -15,24 +15,24 @@ Feature: merging a branch that was deleted at the remote
     When I run "git-town merge"
 
   Scenario: result
-    Then it prints the error:
-      """
-      branch "beta" was deleted at the remote
-      """
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
+    And it prints the error:
+      """
+      branch "beta" was deleted at the remote
+      """
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
+    Then it runs no commands
+    And it prints:
       """
       nothing to undo
       """
-    Then it runs no commands
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
