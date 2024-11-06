@@ -15,13 +15,13 @@ Feature: merging a branch in a stack with its parent
     When I run "git-town merge"
 
   Scenario: result
-    Then it prints the error:
-      """
-      branch "alpha" was deleted at the remote
-      """
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
+    And it prints the error:
+      """
+      branch "alpha" was deleted at the remote
+      """
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now
