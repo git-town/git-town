@@ -36,9 +36,6 @@ func rootCmd() cobra.Command {
 		ID:    "lineage",
 		Title: "Commands for stacked changes:",
 	}, &cobra.Group{
-		ID:    "refactoring",
-		Title: "Commands for refactoring branch stacks:",
-	}, &cobra.Group{
 		ID:    "types",
 		Title: "Commands to limit branch syncing:",
 	}, &cobra.Group{
