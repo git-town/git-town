@@ -33,7 +33,7 @@ func rootCmd() cobra.Command {
 		ID:    "errors",
 		Title: "Commands to deal with errors:",
 	}, &cobra.Group{
-		ID:    "lineage",
+		ID:    "stack",
 		Title: "Commands for stacked changes:",
 	}, &cobra.Group{
 		ID:    "types",
