@@ -36,7 +36,7 @@ func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     setParentCmd,
-		GroupID: "lineage",
+		GroupID: "stack",
 		Args:    cobra.NoArgs,
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc),

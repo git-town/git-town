@@ -31,7 +31,7 @@ func diffParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
-		GroupID: "lineage",
+		GroupID: "stack",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   diffParentDesc,
 		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
