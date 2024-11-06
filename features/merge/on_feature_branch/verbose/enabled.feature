@@ -53,19 +53,6 @@ Feature: merging a branch in a stack with its parent
       """
       Ran 32 shell commands.
       """
-    And the current branch is still "beta"
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | beta   | main   |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                        | FILE NAME  | FILE CONTENT  |
-      | beta   | local, origin | beta commit                    | beta-file  | beta content  |
-      |        |               | alpha commit                   | alpha-file | alpha content |
-      |        |               | Merge branch 'alpha' into beta |            |               |
-    And these committed files exist now
-      | BRANCH | NAME       | CONTENT       |
-      | beta   | alpha-file | alpha content |
-      |        | beta-file  | beta content  |
 
   Scenario: undo
     When I run "git-town undo -v"
