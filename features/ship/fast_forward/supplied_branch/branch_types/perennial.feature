@@ -10,10 +10,10 @@ Feature: does not ship perennial branches using the fast-forward strategy
     When I run "git-town ship production"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship perennial branches
       """
@@ -23,8 +23,8 @@ Feature: does not ship perennial branches using the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

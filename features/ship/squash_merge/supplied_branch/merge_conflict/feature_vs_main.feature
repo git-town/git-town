@@ -16,7 +16,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
@@ -26,11 +26,11 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |        | git reset --hard                |
       |        | git checkout other              |
       | other  | git stash pop                   |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -40,8 +40,8 @@ Feature: handle conflicts between the supplied feature branch and the main branc
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

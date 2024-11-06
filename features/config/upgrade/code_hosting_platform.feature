@@ -4,7 +4,7 @@ Feature: automatically upgrade outdated configuration
     Given a Git repo with origin
     And <LOCATION> Git Town setting "code-hosting-platform" is "github"
     When I run "git-town config"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated <LOCATION> setting "git-town.code-hosting-platform" to "git-town.hosting-platform".
       """

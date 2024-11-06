@@ -13,7 +13,7 @@ Feature: commit message with double-quotes
     When I run "git-town ship -m 'with "double quotes"'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                              |
       | feature | git fetch --prune --tags             |
       |         | git checkout main                    |
@@ -34,7 +34,7 @@ Feature: commit message with double-quotes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git revert {{ sha 'with "double quotes"' }}   |
       |        | git push                                      |

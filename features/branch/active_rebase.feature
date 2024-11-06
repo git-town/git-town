@@ -22,8 +22,8 @@ Feature: display the local branch hierarchy in the middle of an ongoing rebase
     When I run "git-town branch"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
         main
           alpha

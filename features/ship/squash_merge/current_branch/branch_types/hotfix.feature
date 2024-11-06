@@ -14,7 +14,7 @@ Feature: ship hotfixes
     When I run "git-town ship -m 'hotfix done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                        |
       | hotfix     | git fetch --prune --tags       |
       |            | git checkout production        |
@@ -34,7 +34,7 @@ Feature: ship hotfixes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                     |
       | production | git revert {{ sha 'hotfix done' }}          |
       |            | git push                                    |

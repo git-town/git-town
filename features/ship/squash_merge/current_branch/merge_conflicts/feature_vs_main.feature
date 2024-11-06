@@ -14,18 +14,18 @@ Feature: handle conflicts between the shipped branch and the main branch
     And I run "git-town ship -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |
       | main    | git merge --squash --ff feature |
       |         | git reset --hard                |
       |         | git checkout feature            |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       aborted because merge exited with error
       """
@@ -34,11 +34,11 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints:
+    Then Git Town prints:
       """
       nothing to undo
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now

@@ -33,7 +33,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | my first commit | conflicting_file | my content 1 |
     And wait 1 second to ensure new Git timestamps
     When I run "git town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -55,7 +55,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | coworker first commit | conflicting_file | coworker content 1 |
     And wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -63,13 +63,13 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     When the coworker resolves the conflict in "conflicting_file" with "my content 1 and coworker content 1"
     And the coworker runs "git town continue" and closes the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git commit --no-edit                  |
       |         | git reset --soft main                 |
@@ -87,7 +87,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | my second commit | conflicting_file | my content 2 |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -95,13 +95,13 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     When I resolve the conflict in "conflicting_file" with "my content 2 and coworker content 1"
     And I run "git town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git commit --no-edit            |
       |         | git reset --soft main           |
@@ -119,7 +119,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | coworker second commit | conflicting_file | my content 1 and coworker content 2 |
     And wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -127,13 +127,13 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     When the coworker resolves the conflict in "conflicting_file" with "my content 2 and coworker content 2"
     And the coworker runs "git town continue" and closes the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git commit --no-edit                  |
       |         | git reset --soft main                 |

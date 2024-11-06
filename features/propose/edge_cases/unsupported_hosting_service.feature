@@ -9,7 +9,7 @@ Feature: unsupported hosting platform
     When I run "git-town propose"
 
   Scenario: result
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       unsupported hosting platform
 

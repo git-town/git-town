@@ -15,7 +15,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     When I run "git-town sync --all"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                 |
       | child      | git fetch --prune --tags                |
       |            | git checkout main                       |
@@ -24,11 +24,11 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git branch -D child                     |
       |            | git checkout grandchild                 |
       | grandchild | git merge --no-edit --ff main           |
-    And it prints the error:
+    And Git Town prints the error:
       """
       git merge conflict
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -39,13 +39,13 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Scenario: skip the grandchild merge conflict and delete the grandchild branch
     When I run "git-town skip"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND           |
       | grandchild | git merge --abort |
       |            | git push --tags   |
     And the current branch is now "grandchild"
     When I run "git-town delete"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                     |
       | grandchild | git fetch --prune --tags    |
       |            | git push origin :grandchild |

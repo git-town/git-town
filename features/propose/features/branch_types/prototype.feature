@@ -17,7 +17,7 @@ Feature: Create proposals for prototype branches
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
       | <none>    | Looking for proposal online ... ok                                   |
@@ -32,7 +32,7 @@ Feature: Create proposals for prototype branches
       """
       https://github.com/git-town/git-town/compare/prototype?expand=1
       """
-    And it prints:
+    And Git Town prints:
       """
       branch "prototype" is no longer a prototype branch
       """

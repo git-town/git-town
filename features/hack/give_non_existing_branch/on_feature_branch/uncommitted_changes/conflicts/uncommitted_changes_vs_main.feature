@@ -13,13 +13,13 @@ Feature: conflicts between uncommitted changes and the main branch
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git add -A               |
       |          | git stash                |
       |          | git checkout -b new main |
       | new      | git stash pop            |
-    And it prints the error:
+    And Git Town prints the error:
       """
       conflicts between your uncommmitted changes and the main branch
       """
@@ -27,7 +27,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: undo with unresolved merge conflict
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
       | new      | git add -A                                       |
       |          | git commit -m "Committing WIP for git town undo" |
@@ -40,21 +40,21 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and undo
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
       | new      | git add -A                                       |
       |          | git commit -m "Committing WIP for git town undo" |
       |          | git checkout existing                            |
       | existing | git branch -D new                                |
       |          | git stash pop                                    |
-    And it does not print "to go back to where you started, run \"git-town undo\""
+    And Git Town does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And the initial commits exist now
     And file "conflicting_file" still has content "conflicting content"
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -62,7 +62,7 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND        |
       | new    | git stash drop |
     And the current branch is now "new"
@@ -73,7 +73,7 @@ Feature: conflicts between uncommitted changes and the main branch
     Given I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
       |          | git stash             |

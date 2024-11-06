@@ -14,11 +14,11 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     When I run "git-town sync" in the other worktree
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git rebase origin/main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -27,7 +27,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: undo
     When I run "git-town undo" in the other worktree
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
     And the current branch in the other worktree is still "feature"
@@ -38,8 +38,8 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the other worktree
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -48,7 +48,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     When I resolve the conflict in "conflicting_file" in the other worktree
     And I run "git rebase --continue" in the other worktree and enter "resolved commit" for the commit message
     And I run "git-town continue" in the other worktree
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git push --force-with-lease --force-if-includes |
     And these commits exist now

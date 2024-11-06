@@ -17,7 +17,7 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
       | branch-2 | git fetch --prune --tags                |
       |          | git add -A                              |
@@ -27,7 +27,7 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
       |          | git checkout branch-2                   |
       | branch-2 | git merge --no-edit --ff main           |
       |          | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
       """
@@ -41,7 +41,7 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND       |
       | branch-2 | git add -A    |
       |          | git stash     |

@@ -23,7 +23,7 @@ Feature: sync before proposing
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
       | <none> | Looking for proposal online ... ok                                        |

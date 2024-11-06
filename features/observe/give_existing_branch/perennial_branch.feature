@@ -8,8 +8,8 @@ Feature: make another perennial branch an observed branch
     When I run "git-town observe perennial"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       cannot observe perennial branches
       """
@@ -18,6 +18,6 @@ Feature: make another perennial branch an observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the perennial branches are still "perennial"
     And there are still no observed branches

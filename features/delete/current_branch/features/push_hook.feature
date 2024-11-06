@@ -17,7 +17,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     Given Git Town setting "push-hook" is "false"
     When I run "git-town delete"
     And I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                   |
       | other   | git push --no-verify origin {{ sha 'current commit' }}:refs/heads/current |
       |         | git branch current {{ sha 'Committing WIP for git town undo' }}           |
@@ -32,7 +32,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     Given Git Town setting "push-hook" is "true"
     When I run "git-town delete"
     And I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | other   | git push origin {{ sha 'current commit' }}:refs/heads/current   |
       |         | git branch current {{ sha 'Committing WIP for git town undo' }} |

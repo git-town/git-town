@@ -11,7 +11,7 @@ Feature: ask for missing configuration
 
   Scenario: result
     Then the main branch is now "main"
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot propose the main branch
       """

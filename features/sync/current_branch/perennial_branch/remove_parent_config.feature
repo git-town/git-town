@@ -14,7 +14,7 @@ Feature: remove parent entries for perennial branches
       perennials = [ "feature-2" ]
       """
     When I run "git town sync"
-    Then it prints:
+    Then Git Town prints:
       """
       Removed parent entry for perennial branch "feature-2"
       """

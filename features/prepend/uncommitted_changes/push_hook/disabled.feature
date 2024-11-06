@@ -15,7 +15,7 @@ Feature: auto-push new branches
     When I run "git-town prepend new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                            |
       | old    | git add -A                         |
       |        | git stash                          |
@@ -34,7 +34,7 @@ Feature: auto-push new branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | new    | git add -A           |
       |        | git stash            |

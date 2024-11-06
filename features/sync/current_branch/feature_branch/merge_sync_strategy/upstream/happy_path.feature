@@ -14,7 +14,7 @@ Feature: with upstream repo
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                   |
       | feature | git fetch --prune --tags                  |
       |         | git checkout main                         |
@@ -36,7 +36,7 @@ Feature: with upstream repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha 'local commit' }}                             |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |

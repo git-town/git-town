@@ -16,7 +16,7 @@ Feature: dry-run deleting the current feature branch
     When I run "git-town delete --dry-run"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                          |
       | current | git fetch --prune --tags                         |
       |         | git push origin :current                         |
@@ -31,7 +31,7 @@ Feature: dry-run deleting the current feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is now "current"
     And the uncommitted file still exists
     And the initial commits exist now

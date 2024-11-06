@@ -16,7 +16,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | shipped | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -26,7 +26,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       |         | git checkout shipped                    |
       | shipped | git merge --no-edit --ff main           |
       |         | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
@@ -36,7 +36,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                  |
       | shipped | git add -A                                               |
       |         | git stash                                                |

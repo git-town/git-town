@@ -9,8 +9,8 @@ Feature: cannot make the current perennial branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       branch "perennial" is a perennial branch
       """
@@ -18,5 +18,5 @@ Feature: cannot make the current perennial branch a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "perennial" is still perennial

@@ -8,8 +8,8 @@ Feature: park another contribution branch
     When I run "git-town park contribution"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "contribution" is now parked
       """
@@ -18,6 +18,6 @@ Feature: park another contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the contribution branches are now "contribution"
     And there are now no parked branches

@@ -15,10 +15,10 @@ Feature: shipping a branch whose tracking branch is deleted
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" was deleted at the remote
       """
@@ -26,4 +26,4 @@ Feature: shipping a branch whose tracking branch is deleted
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands

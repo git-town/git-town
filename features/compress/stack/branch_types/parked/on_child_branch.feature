@@ -21,7 +21,7 @@ Feature: does not compress non-active parked branches in the stack
     When I run "git-town compress --stack"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git add -A                                      |
@@ -43,7 +43,7 @@ Feature: does not compress non-active parked branches in the stack
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git add -A                                      |
       |        | git stash                                       |

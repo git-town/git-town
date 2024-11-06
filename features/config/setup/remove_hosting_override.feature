@@ -27,7 +27,7 @@ Feature: remove an existing code hosting override
       | save config to Git metadata | down enter     |                                             |
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                      |
       | git config --unset git-town.hosting-platform |
     And local Git Town setting "hosting-platform" now doesn't exist

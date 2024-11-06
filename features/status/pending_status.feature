@@ -7,7 +7,7 @@ Feature: output the current Git Town command
   Scenario: Git Town command ran successfully
     Given I ran "git-town sync"
     When I run "git-town status --pending"
-    Then it prints:
+    Then Git Town prints:
       """
       """
 
@@ -22,20 +22,20 @@ Feature: output the current Git Town command
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I run "git-town sync"
     When I run "git-town status --pending"
-    Then it prints:
+    Then Git Town prints:
       """
       sync
       """
 
   Scenario: no runstate exists
     When I run "git-town status --pending"
-    Then it prints:
+    Then Git Town prints:
       """
       """
 
   Scenario: outside a Git repo
     Given I am outside a Git repo
     When I run "git-town status --pending"
-    Then it prints:
+    Then Git Town prints:
       """
       """

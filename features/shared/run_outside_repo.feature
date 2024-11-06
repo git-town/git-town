@@ -4,7 +4,7 @@ Feature: require a Git repository
   Scenario Outline:
     Given I am outside a Git repo
     When I run "<COMMAND>"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       this is not a Git repository
       """

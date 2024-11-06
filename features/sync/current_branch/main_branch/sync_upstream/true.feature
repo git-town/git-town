@@ -11,7 +11,7 @@ Feature: on the main branch with an upstream repo
     And I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | main   | git fetch --prune --tags                  |
       |        | git rebase origin/main --no-update-refs   |
@@ -27,7 +27,7 @@ Feature: on the main branch with an upstream repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "main"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |

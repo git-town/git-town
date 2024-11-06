@@ -15,7 +15,7 @@ Feature: syncing a branch whose parent was shipped
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | child  | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -25,7 +25,7 @@ Feature: syncing a branch whose parent was shipped
       | child  | git merge --no-edit --ff main           |
       |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "parent"
       """
@@ -39,7 +39,7 @@ Feature: syncing a branch whose parent was shipped
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
       | child  | git reset --hard {{ sha 'child commit' }}              |
       |        | git push --force-with-lease --force-if-includes        |

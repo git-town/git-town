@@ -14,7 +14,7 @@ Feature: on a feature branch with a clean workspace but without main branch
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                    |
       | existing | git fetch --prune --tags                   |
       |          | git checkout -b new origin/main --no-track |
@@ -31,7 +31,7 @@ Feature: on a feature branch with a clean workspace but without main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |

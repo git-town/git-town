@@ -28,7 +28,7 @@ Feature: enter the GitHub API token
       | ship-strategy                 | enter             |                                             |
       | ship-delete-tracking-branch   | enter             |                                             |
       | save config to Git metadata   | down enter        |                                             |
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.github-token 123456 |
     And local Git Town setting "hosting-platform" still doesn't exist
@@ -57,7 +57,7 @@ Feature: enter the GitHub API token
       | ship-strategy               | enter                |                                             |
       | ship-delete-tracking-branch | enter                |                                             |
       | save config to Git metadata | down enter           |                                             |
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                     |
       | git config git-town.github-token 123456     |
       | git config git-town.hosting-platform github |
@@ -89,7 +89,7 @@ Feature: enter the GitHub API token
       | ship-strategy                 | enter                               |                                             |
       | ship-delete-tracking-branch   | enter                               |                                             |
       | save config to Git metadata   | down enter                          |                                             |
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                  |
       | git config --unset git-town.github-token |
     And local Git Town setting "hosting-platform" still doesn't exist

@@ -9,8 +9,8 @@ Feature: display the parent of a top-level feature branch
     When I run "git-town config get-parent"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       main
       """

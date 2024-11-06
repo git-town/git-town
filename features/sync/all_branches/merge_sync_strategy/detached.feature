@@ -30,7 +30,7 @@ Feature: sync all feature branches
     When I run "git-town sync --all --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | alpha        | git fetch --prune --tags                        |
       |              | git merge --no-edit --ff main                   |
@@ -64,7 +64,7 @@ Feature: sync all feature branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                                          |
       | alpha        | git checkout contribution                                                                        |
       | contribution | git reset --hard {{ sha 'local contribution commit' }}                                           |

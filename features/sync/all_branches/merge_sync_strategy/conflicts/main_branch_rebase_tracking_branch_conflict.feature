@@ -15,17 +15,17 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     When I run "git-town sync --all"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git add -A                              |
       |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
@@ -35,7 +35,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
@@ -45,8 +45,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you must resolve the conflicts before continuing
       """
@@ -56,7 +56,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | main    | git rebase --continue                   |
       |         | git push                                |
@@ -81,7 +81,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | main    | git push                                |
       |         | git checkout feature                    |

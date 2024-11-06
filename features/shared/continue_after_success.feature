@@ -7,7 +7,7 @@ Feature: continue after successful command
       | feature | feature | main   | local, origin |
     And I run "git-town <COMMAND>"
     When I run "git-town continue"
-    Then it prints:
+    Then Git Town prints:
       """
       nothing to continue
       """

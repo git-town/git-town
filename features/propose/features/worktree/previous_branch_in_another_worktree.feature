@@ -15,7 +15,7 @@ Feature: prepend with the previous branch checked out in another worktree
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       | current | frontend | git fetch --prune --tags                                           |
       | <none>  | frontend | Looking for proposal online ... ok                                 |

@@ -17,10 +17,10 @@ Feature: does not ship a child branch
     When I run "git-town ship gamma -m 'gamma done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | alpha  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
@@ -31,8 +31,8 @@ Feature: does not ship a child branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

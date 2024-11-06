@@ -11,7 +11,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
@@ -27,7 +27,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |

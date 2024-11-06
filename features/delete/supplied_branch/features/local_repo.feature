@@ -16,7 +16,7 @@ Feature: local repository
     When I run "git-town delete other"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND             |
       | good   | git add -A          |
       |        | git stash           |
@@ -37,7 +37,7 @@ Feature: local repository
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | good   | git add -A                                |
       |        | git stash                                 |

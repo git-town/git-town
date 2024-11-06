@@ -4,7 +4,7 @@ Feature: automatically upgrade outdated configuration
     Given a Git repo with origin
     And <LOCATION> Git Town setting "sync-before-ship" is "true"
     When I run "git-town <COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Deleting obsolete setting "git-town.sync-before-ship"
       """

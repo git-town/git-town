@@ -12,7 +12,7 @@ Feature: rename an observed branch
     When I run "git-town rename observed new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                        |
       | observed | git fetch --prune --tags       |
       |          | git branch --move observed new |
@@ -29,7 +29,7 @@ Feature: rename an observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                               |
       | new      | git branch observed {{ sha 'somebody elses commit' }} |
       |          | git push -u origin observed                           |

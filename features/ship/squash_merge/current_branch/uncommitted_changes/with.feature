@@ -11,8 +11,8 @@ Feature: does not ship with uncommitted changes
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
@@ -20,8 +20,8 @@ Feature: does not ship with uncommitted changes
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

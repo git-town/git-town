@@ -4,7 +4,7 @@ Feature: automatically upgrade outdated configuration
     Given a Git repo with origin
     And <LOCATION> Git Town setting "ship-delete-remote-branch" is "true"
     When I run "git-town <COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated <LOCATION> setting "git-town.ship-delete-remote-branch" to "git-town.ship-delete-tracking-branch".
       """

@@ -17,7 +17,7 @@ Feature: delete a branch within a branch chain
     When I run "git-town delete"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | beta   | git fetch --prune --tags                         |
       |        | git push origin :beta                            |
@@ -25,7 +25,7 @@ Feature: delete a branch within a branch chain
       |        | git commit -m "Committing WIP for git town undo" |
       |        | git checkout alpha                               |
       | alpha  | git branch -D beta                               |
-    And it prints:
+    And Git Town prints:
       """
       branch "gamma" is now a child of "alpha"
       """
@@ -45,7 +45,7 @@ Feature: delete a branch within a branch chain
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                      |
       | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta      |
       |        | git branch beta {{ sha 'Committing WIP for git town undo' }} |

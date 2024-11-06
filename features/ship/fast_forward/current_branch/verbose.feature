@@ -13,7 +13,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
     When I run "git-town ship --verbose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
       |         | backend  | git rev-parse --show-toplevel                     |
@@ -40,7 +40,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git stash list                                    |
-    And it prints:
+    And Git Town prints:
       """
       Ran 25 shell commands.
       """
@@ -49,7 +49,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
   Scenario: undo
     Given I ran "git-town ship -m done"
     When I run "git-town undo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                        |
       |        | backend  | git version                                    |
       |        | backend  | git rev-parse --show-toplevel                  |
@@ -66,7 +66,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |        | backend  | git show-ref --quiet refs/heads/feature        |
       | main   | frontend | git checkout feature                           |
       |        | backend  | git config git-town-branch.feature.parent main |
-    And it prints:
+    And Git Town prints:
       """
       Ran 15 shell commands.
       """

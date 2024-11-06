@@ -13,7 +13,7 @@ Feature: dry-run proposing changes
   Scenario: a PR for this branch exists already
     Given a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
     When I run "git-town propose --dry-run"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
       | <none>  | Looking for proposal online ... ok                 |
@@ -24,7 +24,7 @@ Feature: dry-run proposing changes
   Scenario: there is no PR for this branch yet
     Given a proposal for this branch does not exist
     When I run "git-town propose --dry-run"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --tags                                           |
       | <none>  | Looking for proposal online ... ok                                 |

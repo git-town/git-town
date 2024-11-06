@@ -19,7 +19,7 @@ Feature: syncing a stacked feature branch using --no-push
     When I run "git-town sync --no-push"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | child  | git fetch --prune --tags                |
       |        | git checkout main                       |
@@ -47,7 +47,7 @@ Feature: syncing a stacked feature branch using --no-push
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | child  | git reset --hard {{ sha 'local child commit' }}  |
       |        | git checkout main                                |

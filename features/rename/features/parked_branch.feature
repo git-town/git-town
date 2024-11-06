@@ -12,7 +12,7 @@ Feature: rename a parked branch
     When I run "git-town rename parked new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                      |
       | parked | git fetch --prune --tags     |
       |        | git branch --move parked new |
@@ -30,7 +30,7 @@ Feature: rename a parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | new    | git branch parked {{ sha 'low-priority commit' }} |
       |        | git push -u origin parked                         |

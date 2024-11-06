@@ -15,7 +15,7 @@ Feature: sync the current prototype branch in a local repo
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | prototype | git merge --no-edit --ff main |
     And these commits exist now
@@ -29,7 +29,7 @@ Feature: sync the current prototype branch in a local repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "prototype"

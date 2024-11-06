@@ -20,7 +20,7 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
     When I run "git-town sync --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
@@ -46,7 +46,7 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                       |
       | beta   | git checkout alpha                                                                            |
       | alpha  | git reset --hard {{ sha-before-run 'local alpha commit' }}                                    |

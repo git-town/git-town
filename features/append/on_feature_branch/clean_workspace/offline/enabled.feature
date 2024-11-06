@@ -13,7 +13,7 @@ Feature: append in offline mode
 
   Scenario: result
     When I run "git-town append new"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git checkout main                        |
       | main     | git rebase origin/main --no-update-refs  |
@@ -27,7 +27,7 @@ Feature: append in offline mode
   Scenario: undo
     Given I ran "git-town append new"
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |

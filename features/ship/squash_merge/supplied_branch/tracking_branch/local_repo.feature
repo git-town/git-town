@@ -15,7 +15,7 @@ Feature: ship the supplied feature branch in a local repo
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git add -A                      |
       |        | git stash                       |
@@ -39,7 +39,7 @@ Feature: ship the supplied feature branch in a local repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
       |        | git stash                                     |

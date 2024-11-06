@@ -16,7 +16,7 @@ Feature: hack a new branch while the main branch is active in another worktree
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git add -A               |
       |          | git stash                |
@@ -36,7 +36,7 @@ Feature: hack a new branch while the main branch is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
       |          | git stash             |

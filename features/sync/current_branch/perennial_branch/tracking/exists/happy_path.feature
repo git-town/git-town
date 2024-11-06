@@ -15,7 +15,7 @@ Feature: sync the current perennial branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | qa     | git fetch --prune --tags              |
       |        | git rebase origin/qa --no-update-refs |
@@ -31,7 +31,7 @@ Feature: sync the current perennial branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "qa"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

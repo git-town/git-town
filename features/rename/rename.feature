@@ -14,7 +14,7 @@ Feature: rename the current branch
     When I run "git-town rename new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                   |
       | old    | git fetch --prune --tags  |
       |        | git branch --move old new |
@@ -29,7 +29,7 @@ Feature: rename the current branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git push -u origin old                |

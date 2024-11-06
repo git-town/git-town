@@ -13,7 +13,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     When I run "git-town ship" in the "new_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git fetch --prune --tags    |
       |         | git checkout main           |
@@ -32,7 +32,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |

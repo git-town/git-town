@@ -16,7 +16,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
     When I run "git-town prepend new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                    |
       | child  | git add -A                 |
       |        | git stash                  |
@@ -36,7 +36,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | new    | git add -A         |
       |        | git stash          |

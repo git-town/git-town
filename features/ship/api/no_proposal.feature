@@ -15,17 +15,17 @@ Feature: cannot ship a branch without proposal via API
     When I run "git-town ship -m done"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
       | <none>  | Looking for proposal online ... ok |
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship branch "feature" via API because it has no proposal
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the initial branches and lineage exist now
     And the initial commits exist now

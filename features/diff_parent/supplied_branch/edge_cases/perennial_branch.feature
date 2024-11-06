@@ -5,8 +5,8 @@ Feature: does not diff perennial branches
 
   Scenario: main branch
     When I run "git-town diff-parent main"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you can only diff-parent feature branches
       """
@@ -16,8 +16,8 @@ Feature: does not diff perennial branches
       | NAME | TYPE      | LOCATIONS |
       | qa   | perennial | local     |
     When I run "git-town diff-parent qa"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you can only diff-parent feature branches
       """

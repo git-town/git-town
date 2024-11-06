@@ -14,7 +14,7 @@ Feature: enter the commit message interactively via the editor
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | feature | git fetch --prune --tags        |
       |         | git checkout main               |
@@ -34,7 +34,7 @@ Feature: enter the commit message interactively via the editor
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |

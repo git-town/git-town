@@ -15,7 +15,7 @@ Feature: sync the current prototype branch with tracking branch
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | prototype | git fetch --prune --tags                  |
       |           | git checkout main                         |
@@ -36,7 +36,7 @@ Feature: sync the current prototype branch with tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "prototype"

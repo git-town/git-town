@@ -34,7 +34,7 @@ Feature: sync the entire stack
     When I run "git-town sync --stack --detached"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
@@ -66,7 +66,7 @@ Feature: sync the entire stack
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git checkout beta                               |
       | beta   | git reset --hard {{ sha 'beta commit' }}        |

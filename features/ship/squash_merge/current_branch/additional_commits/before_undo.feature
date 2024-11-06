@@ -15,7 +15,7 @@ Feature: can undo a ship even after additional commits to the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git revert {{ sha 'done' }}                   |
       |        | git push                                      |

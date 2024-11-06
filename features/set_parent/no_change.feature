@@ -13,17 +13,17 @@ Feature: update the parent of a feature branch
       | parent branch of child | enter |
 
   Scenario: result
-    Then it prints:
+    Then Git Town prints:
       """
       Selected parent branch for "child": parent
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the initial lineage exists now
     And the current branch is still "child"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

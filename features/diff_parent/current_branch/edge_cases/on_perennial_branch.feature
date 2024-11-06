@@ -4,8 +4,8 @@ Feature: on perennial branch
     Given a Git repo with origin
     And the current branch is "main"
     When I run "git-town diff-parent"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you can only diff-parent feature branches
       """
@@ -17,8 +17,8 @@ Feature: on perennial branch
       | qa   | perennial | local     |
     And the current branch is "qa"
     When I run "git-town diff-parent"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       you can only diff-parent feature branches
       """

@@ -13,14 +13,14 @@ Feature: displaying the repo in the middle of an ongoing sync merge conflict
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And I ran "git-town sync"
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     When I run "git-town repo"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       |        | open https://github.com/git-town/git-town |
     And "open" launches a new proposal with this url in my browser:

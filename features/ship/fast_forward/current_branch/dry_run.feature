@@ -13,7 +13,7 @@ Feature: dry-run shipping via the fast-forward strategy
     When I run "git-town ship --dry-run"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git fetch --prune --tags    |
       |         | git checkout main           |
@@ -26,7 +26,7 @@ Feature: dry-run shipping via the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

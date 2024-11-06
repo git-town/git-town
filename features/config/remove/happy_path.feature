@@ -13,7 +13,7 @@ Feature: reset the configuration
     And global Git setting "alias.sync" is "town sync"
     And global Git setting "alias.append" is "commit --amend"
     When I run "git-town config remove"
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                |
       | git config --global --unset alias.hack |
       | git config --global --unset alias.sync |

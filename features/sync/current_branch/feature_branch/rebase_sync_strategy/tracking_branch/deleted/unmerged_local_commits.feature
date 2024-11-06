@@ -16,7 +16,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | shipped | git fetch --prune --tags                |
       |         | git add -A                              |
@@ -26,7 +26,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       |         | git checkout shipped                    |
       | shipped | git rebase main --no-update-refs        |
       |         | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
@@ -36,7 +36,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                       |
       | shipped | git add -A                                    |
       |         | git stash                                     |

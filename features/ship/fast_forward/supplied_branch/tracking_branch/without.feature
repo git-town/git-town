@@ -15,7 +15,7 @@ Feature: ship the supplied local feature branch
     When I run "git-town ship feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | other  | git fetch --prune --tags    |
       |        | git add -A                  |
@@ -40,7 +40,7 @@ Feature: ship the supplied local feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
       |        | git stash                                     |

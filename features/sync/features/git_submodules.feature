@@ -11,7 +11,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -25,7 +25,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE         |

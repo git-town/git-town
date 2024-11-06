@@ -9,10 +9,10 @@ Feature: prototype another remote branch
     When I run "git-town prototype remote-feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | main   | git checkout remote-feature |
-    And it prints:
+    And Git Town prints:
       """
       branch "remote-feature" is now a prototype branch
       """
@@ -21,7 +21,7 @@ Feature: prototype another remote branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |

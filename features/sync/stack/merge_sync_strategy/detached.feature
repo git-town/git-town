@@ -18,7 +18,7 @@ Feature: detached sync of the entire branch stack
     When I run "git-town sync --stack --detached"
 
   Scenario:
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git fetch --prune --tags              |
       |        | git merge --no-edit --ff main         |
@@ -46,7 +46,7 @@ Feature: detached sync of the entire branch stack
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                       |
       | alpha  | git reset --hard {{ sha-before-run 'local alpha commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin alpha commit' }}:alpha |

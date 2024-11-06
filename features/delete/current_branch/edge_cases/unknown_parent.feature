@@ -7,7 +7,7 @@ Feature: ask for missing parent branch information
       | branch | (none) | local     |
     And the current branch is "branch"
     When I run "git-town delete"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | branch | git fetch --prune --tags |
       |        | git checkout main        |

@@ -5,11 +5,11 @@ Feature: cannot set parent of perennial branches
 
   Scenario: on main branch
     When I run "git-town set-parent"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       the branch "main" is not a feature branch. Only feature branches can have parent branches
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the initial lineage exists now
     And the current branch is still "main"
 
@@ -19,10 +19,10 @@ Feature: cannot set parent of perennial branches
       | qa   | perennial | local, origin |
     And the current branch is "qa"
     When I run "git-town set-parent"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       the branch "qa" is not a feature branch. Only feature branches can have parent branches
       """
-    And it runs no commands
+    And Git Town runs no commands
     And the initial lineage exists now
     And the current branch is still "qa"

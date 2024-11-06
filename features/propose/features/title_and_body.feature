@@ -47,7 +47,7 @@ Feature: Prepopulate title and body
 
   Scenario: non-existing body file
     When I run "git-town propose --body-file zonk.txt"
-    Then it prints the error:
+    Then Git Town prints the error:
       """
       Error: open zonk.txt: no such file or directory
       """

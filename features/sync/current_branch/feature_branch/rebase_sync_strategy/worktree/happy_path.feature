@@ -20,7 +20,7 @@ Feature: sync a branch whose parent is active in another worktree
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git checkout main                               |
@@ -44,7 +44,7 @@ Feature: sync a branch whose parent is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                       |
       | child  | git reset --hard {{ sha-before-run 'local child commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child |

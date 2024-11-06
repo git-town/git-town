@@ -15,7 +15,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
     When I run "git-town append new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
       |          | git checkout main                        |
@@ -38,7 +38,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                   |
       | new      | git checkout existing                                     |
       | existing | git reset --hard {{ sha-before-run 'existing commit 2' }} |

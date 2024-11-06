@@ -16,7 +16,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | alpha  | git fetch --prune --tags                |
       |        | git add -A                              |
@@ -47,7 +47,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git add -A                                      |
       |        | git stash                                       |

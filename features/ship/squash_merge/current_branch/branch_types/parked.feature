@@ -14,7 +14,7 @@ Feature: shipping a parked branch
     When I run "git-town ship" and enter "parked done" for the commit message
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                        |
       | parked | git fetch --prune --tags       |
       |        | git checkout main              |
@@ -34,7 +34,7 @@ Feature: shipping a parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | main   | git revert {{ sha 'parked done' }}          |
       |        | git push                                    |

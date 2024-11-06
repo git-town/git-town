@@ -21,7 +21,7 @@ Feature: compresses active prototype branches
     When I run "git-town compress --stack"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git fetch --prune --tags                        |
       |           | git add -A                                      |
@@ -47,7 +47,7 @@ Feature: compresses active prototype branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git add -A                                      |
       |           | git stash                                       |

@@ -9,8 +9,8 @@ Feature: prototype the current feature branch
     When I run "git-town prototype"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "feature" is now a prototype branch
       """
@@ -19,7 +19,7 @@ Feature: prototype the current feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And there are now no prototype branches
     And the initial branches exist now

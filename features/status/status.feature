@@ -7,7 +7,7 @@ Feature: describe the status of the current/last Git Town command
   Scenario: Git Town command ran successfully
     Given I ran "git-town sync"
     When I run "git-town status"
-    Then it prints:
+    Then Git Town prints:
       """
       The previous Git Town command (sync) finished successfully.
       You can run "git town undo" to go back to where you started.
@@ -24,7 +24,7 @@ Feature: describe the status of the current/last Git Town command
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I run "git-town sync"
     When I run "git-town status"
-    Then it prints something like:
+    Then Git Town prints something like:
       """
       The last Git Town command \(sync\) hit a problem .*s ago.
       You can run "git town undo" to go back to where you started.
@@ -34,7 +34,7 @@ Feature: describe the status of the current/last Git Town command
 
   Scenario: no runstate exists
     When I run "git-town status"
-    Then it prints:
+    Then Git Town prints:
       """
       No status file found for this repository.
       """

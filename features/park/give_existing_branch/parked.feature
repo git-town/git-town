@@ -9,8 +9,8 @@ Feature: park another already parked branch
     When I run "git-town park parked"
 
   Scenario: result
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       branch "parked" is already parked
       """
@@ -18,5 +18,5 @@ Feature: park another already parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the parked branches are still "parked"

@@ -7,8 +7,8 @@ Feature: switch branches
       | alpha | feature | main   | local     |
     And the current branch is "alpha"
     When I run "git-town switch zonk"
-    Then it runs no commands
-    And it prints the error:
+    Then Git Town runs no commands
+    And Git Town prints the error:
       """
       no branches to switch to
       """

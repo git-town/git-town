@@ -35,7 +35,7 @@ Feature: change existing information in Git metadata
       | save config to Git metadata               | down enter             |
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | COMMAND                                                  |
       | git config --global alias.append "town append"           |
       | git config --global alias.compress "town compress"       |

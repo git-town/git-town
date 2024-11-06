@@ -14,7 +14,7 @@ Feature: conflicts between the main branch and its tracking branch
     When I run "git-town hack new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git add -A               |
       |          | git stash                |
@@ -30,7 +30,7 @@ Feature: conflicts between the main branch and its tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
       |          | git stash             |

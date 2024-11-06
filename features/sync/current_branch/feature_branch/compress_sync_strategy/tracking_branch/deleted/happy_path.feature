@@ -19,7 +19,7 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
     When I run "git-town sync"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                 |
       | feature-1 | git fetch --prune --tags                |
       |           | git add -A                              |
@@ -28,7 +28,7 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
       | main      | git rebase origin/main --no-update-refs |
       |           | git branch -D feature-1                 |
       |           | git stash pop                           |
-    And it prints:
+    And Git Town prints:
       """
       deleted branch "feature-1"
       """
@@ -43,7 +43,7 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                             |
       | main      | git add -A                                          |
       |           | git stash                                           |

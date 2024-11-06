@@ -9,7 +9,7 @@ Feature: ask for missing configuration information
       | DIALOG      | KEYS  |
       | main branch | enter |
     And the main branch is now "main"
-    And it prints the error:
+    And Git Town prints the error:
       """
       cannot ship the main branch
       """

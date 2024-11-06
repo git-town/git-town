@@ -31,7 +31,7 @@ Feature: compress the commits on an entire stack when at the stack root
     When I run "git-town compress --stack"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git add -A                                      |
@@ -63,7 +63,7 @@ Feature: compress the commits on an entire stack when at the stack root
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git add -A                                      |
       |        | git stash                                       |

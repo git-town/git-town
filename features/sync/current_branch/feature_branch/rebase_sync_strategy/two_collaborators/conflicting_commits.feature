@@ -25,7 +25,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | MESSAGE         | FILE NAME | FILE CONTENT |
       | my first commit | file.txt  | my content   |
     When I run "git town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
@@ -43,7 +43,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | MESSAGE               | FILE NAME | FILE CONTENT     |
       | coworker first commit | file.txt  | coworker content |
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
@@ -52,13 +52,13 @@ Feature: two people using rebase make conflicting changes to a branch
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       """
     When the coworker resolves the conflict in "file.txt" with "my and coworker content"
     And the coworker runs "git town continue" and closes the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
       |         | git push --force-with-lease --force-if-includes |
@@ -73,7 +73,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git checkout main                               |
@@ -82,13 +82,13 @@ Feature: two people using rebase make conflicting changes to a branch
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-    And it prints the error:
+    And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
       """
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git rebase --continue                           |
       |         | git push --force-with-lease --force-if-includes |

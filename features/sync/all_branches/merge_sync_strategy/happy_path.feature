@@ -27,7 +27,7 @@ Feature: sync all feature branches
 
   Scenario: with "merge" sync-feature strategy
     When I run "git-town sync --all"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                       |
       | alpha      | git fetch --prune --tags                      |
       |            | git checkout main                             |
@@ -70,7 +70,7 @@ Feature: sync all feature branches
   Scenario: with "rebase" sync-feature strategy
     Given Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --all"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                                         |
       | alpha      | git fetch --prune --tags                        |
       |            | git checkout main                               |

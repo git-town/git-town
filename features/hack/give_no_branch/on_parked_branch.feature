@@ -9,8 +9,8 @@ Feature: making the current parked branch a feature branch
     When I run "git-town hack"
 
   Scenario: result
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       branch "parked" is now a feature branch
       """
@@ -18,5 +18,5 @@ Feature: making the current parked branch a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And branch "parked" is now parked

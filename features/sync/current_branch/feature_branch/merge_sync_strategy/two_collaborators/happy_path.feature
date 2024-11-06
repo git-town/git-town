@@ -14,7 +14,7 @@ Feature: collaborative feature branch syncing
       | feature | local    | my commit       |
       |         | coworker | coworker commit |
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -31,7 +31,7 @@ Feature: collaborative feature branch syncing
 
     Given the coworker is on the "feature" branch
     When the coworker runs "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -49,7 +49,7 @@ Feature: collaborative feature branch syncing
 
     Given the current branch is "feature"
     When I run "git-town sync"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |

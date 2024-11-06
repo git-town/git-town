@@ -4,7 +4,7 @@ Feature: automatically upgrade kill alias
     Given a Git repo with origin
     And global Git setting "alias.kill" is "town kill"
     When I run "git town hack foo"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated global setting "alias.kill" to "alias.delete".
       """
@@ -15,7 +15,7 @@ Feature: automatically upgrade kill alias
     Given a Git repo with origin
     And custom global Git setting "alias.my-command" is "town kill"
     When I run "git town hack foo"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading value of global Git alias "alias.my-command" from "town kill" to "town delete".
       """

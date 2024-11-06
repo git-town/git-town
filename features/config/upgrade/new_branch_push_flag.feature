@@ -8,7 +8,7 @@ Feature: automatically upgrade outdated configuration
     And <LOCATION> Git Town setting "new-branch-push-flag" is "true"
     And the current branch is "feature"
     When I run "git-town <COMMAND>"
-    Then it prints:
+    Then Git Town prints:
       """
       Upgrading deprecated <LOCATION> setting "git-town.new-branch-push-flag" to "git-town.push-new-branches".
       """

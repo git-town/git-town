@@ -16,13 +16,13 @@ Feature: does not ship empty feature branches
     When I run "git-town ship empty"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
       |        | git add -A               |
       |        | git stash                |
       |        | git stash pop            |
-    And it prints the error:
+    And Git Town prints the error:
       """
       the branch "empty" has no shippable changes
       """
@@ -33,8 +33,8 @@ Feature: does not ship empty feature branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

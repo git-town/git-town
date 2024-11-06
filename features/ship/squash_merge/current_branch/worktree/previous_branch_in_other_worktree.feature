@@ -15,7 +15,7 @@ Feature: ship a feature branch in a local repo
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                         |
       | current | git checkout main               |
       | main    | git merge --squash --ff current |
@@ -26,7 +26,7 @@ Feature: ship a feature branch in a local repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch current {{ sha 'current commit' }} |

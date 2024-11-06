@@ -15,7 +15,7 @@ Feature: ship the supplied feature branch without a tracking branch
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
@@ -41,7 +41,7 @@ Feature: ship the supplied feature branch without a tracking branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
       |        | git stash                                     |

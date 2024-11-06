@@ -14,7 +14,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       | coworker-1 | origin   | coworker-1 commit A       | coworker_1_file_a | content 1A     |
     And a coworker clones the repository
     And I run "git-town sync"
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
@@ -22,7 +22,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And it prints the error:
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
@@ -39,7 +39,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
     When I run "git-town continue"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
@@ -48,7 +48,7 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                    |
       | feature | git reset --hard {{ sha 'conflicting local commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |

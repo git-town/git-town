@@ -12,7 +12,7 @@ Feature: rename a prototype branch
     When I run "git-town rename prototype new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                         |
       | prototype | git fetch --prune --tags        |
       |           | git branch --move prototype new |
@@ -30,7 +30,7 @@ Feature: rename a prototype branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | new       | git branch prototype {{ sha 'experimental commit' }} |
       |           | git push -u origin prototype                         |

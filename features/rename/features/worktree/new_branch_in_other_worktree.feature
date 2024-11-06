@@ -16,10 +16,10 @@ Feature: rename the current branch to a branch that is active in another worktre
     When I run "git-town rename other"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       there is already a branch "other"
       """
@@ -27,8 +27,8 @@ Feature: rename the current branch to a branch that is active in another worktre
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
-    And it prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

@@ -14,7 +14,7 @@ Feature: shipping a prototype branch using the fast-forward strategy
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | prototype | git fetch --prune --tags      |
       |           | git checkout main             |
@@ -33,7 +33,7 @@ Feature: shipping a prototype branch using the fast-forward strategy
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | main   | git branch prototype {{ sha 'prototype commit' }} |
       |        | git push -u origin prototype                      |

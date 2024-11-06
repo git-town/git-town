@@ -6,7 +6,7 @@ Feature: display all executed Git commands
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     When I run "git-town repo --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                   |
       |        | backend  | git version                               |
       |        | backend  | git rev-parse --show-toplevel             |
@@ -18,7 +18,7 @@ Feature: display all executed Git commands
       |        | backend  | which open                                |
       |        | backend  | git rev-parse --abbrev-ref HEAD           |
       | <none> | frontend | open https://github.com/git-town/git-town |
-    And it prints:
+    And Git Town prints:
       """
       Ran 10 shell commands.
       """

@@ -12,7 +12,7 @@ Feature: rename a contribution branch
     When I run "git-town rename contribution new"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                            |
       | contribution | git fetch --prune --tags           |
       |              | git branch --move contribution new |
@@ -29,7 +29,7 @@ Feature: rename a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH       | COMMAND                                                   |
       | new          | git branch contribution {{ sha 'somebody elses commit' }} |
       |              | git push -u origin contribution                           |

@@ -9,7 +9,7 @@ Feature: view changes made on another branch
 
   Scenario: feature branch
     When I run "git-town diff-parent alpha"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | main   | git diff main..alpha |
 
@@ -18,6 +18,6 @@ Feature: view changes made on another branch
       | NAME | TYPE    | PARENT | LOCATIONS |
       | beta | feature | alpha  | local     |
     When I run "git-town diff-parent beta"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | main   | git diff alpha..beta |

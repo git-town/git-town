@@ -10,7 +10,7 @@ Feature: view changes made on the current feature branch
       | feature | feature | main   | local     |
     And the current branch is "feature"
     When I run "git-town diff-parent"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                |
       | feature | git diff main..feature |
 
@@ -21,6 +21,6 @@ Feature: view changes made on the current feature branch
       | child  | feature | parent | local     |
     And the current branch is "child"
     When I run "git-town diff-parent"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                |
       | child  | git diff parent..child |

@@ -17,7 +17,7 @@ Feature: delete another than the current branch
     When I run "git-town delete dead"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | good   | git fetch --prune --tags |
       |        | git add -A               |
@@ -40,7 +40,7 @@ Feature: delete another than the current branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | good   | git add -A                                  |
       |        | git stash                                   |

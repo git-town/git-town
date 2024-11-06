@@ -9,5 +9,5 @@ Feature: display the parent of a contribution branch
     When I run "git-town config get-parent"
 
   Scenario: result
-    Then it runs no commands
-    And it prints no output
+    Then Git Town runs no commands
+    And Git Town prints no output

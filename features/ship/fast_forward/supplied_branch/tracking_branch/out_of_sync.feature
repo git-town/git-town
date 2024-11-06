@@ -16,10 +16,10 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
     And I run "git-town ship feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
-    And it prints the error:
+    And Git Town prints the error:
       """
       branch "feature" is not in sync
       """
@@ -28,7 +28,7 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "other"
     And the uncommitted file still exists
     And no merge is in progress

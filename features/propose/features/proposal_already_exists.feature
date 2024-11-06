@@ -13,7 +13,7 @@ Feature: open the page of an already existing proposal
 
   Scenario: a PR for this branch exists already
     When I run "git-town propose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
       | <none>  | Looking for proposal online ... ok                 |
@@ -23,6 +23,6 @@ Feature: open the page of an already existing proposal
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands
     And the current branch is still "feature"
     And the initial commits exist now

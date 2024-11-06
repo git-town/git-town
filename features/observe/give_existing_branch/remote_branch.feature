@@ -10,10 +10,10 @@ Feature: make another remote feature branch an observed branch
     When I run "git-town observe remote-feature"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       |        | git checkout remote-feature |
-    And it prints:
+    And Git Town prints:
       """
       branch "remote-feature" is now an observed branch
       """
@@ -23,7 +23,7 @@ Feature: make another remote feature branch an observed branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH         | COMMAND                      |
       | remote-feature | git add -A                   |
       |                | git stash                    |

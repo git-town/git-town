@@ -13,16 +13,16 @@ Feature: print the URL when the browser crashes
     When I run "git-town propose"
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |
       | feature | git fetch --prune --tags                           |
       | <none>  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
-    And it prints:
+    And Git Town prints:
       """
       Please open in a browser: https://github.com/git-town/git-town/pull/123
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then Git Town runs no commands

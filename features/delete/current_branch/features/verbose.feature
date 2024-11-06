@@ -15,7 +15,7 @@ Feature: display all executed Git commands
 
   Scenario: result
     When I run "git-town delete --verbose"
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
       |         | backend  | git rev-parse --show-toplevel                     |
@@ -39,7 +39,7 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git stash list                                    |
-    And it prints:
+    And Git Town prints:
       """
       Ran 22 shell commands.
       """
