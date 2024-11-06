@@ -90,7 +90,7 @@ Feature: merging a branch when everything is conflicting
     And I run "git-town continue" and close the editor
     And I resolve the conflict in "conflicting_file" with "resolved between local and tracking beta"
     And I run "git-town continue" and close the editor
-    Then it runs without errors
+    Then Git Town runs without errors
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                          |
