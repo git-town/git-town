@@ -10,8 +10,8 @@ Feature: merging a branch in a stack with its parent
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
-    And origin deletes the "alpha" branch
     And the current branch is "beta"
+    And origin deletes the "alpha" branch
     When I run "git-town merge"
 
   Scenario: result

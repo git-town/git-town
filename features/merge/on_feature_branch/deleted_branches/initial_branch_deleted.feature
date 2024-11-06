@@ -10,8 +10,8 @@ Feature: merging a branch that was deleted at the remote
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
-    And origin deletes the "beta" branch
     And the current branch is "beta"
+    And origin deletes the "beta" branch
     When I run "git-town merge"
 
   Scenario: result
