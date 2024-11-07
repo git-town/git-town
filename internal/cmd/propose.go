@@ -125,7 +125,7 @@ type proposeData struct {
 	branchToPropose     gitdomain.LocalBranchName
 	branchTypeToPropose configdomain.BranchType
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      configdomain.BranchesToSync
+	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs

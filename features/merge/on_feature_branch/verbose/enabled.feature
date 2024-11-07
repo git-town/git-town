@@ -29,8 +29,8 @@ Feature: merging a branch verbosely
       |        | git branch -vva --sort=refname                  |
       |        | git remote get-url origin                       |
       |        | git rev-parse --verify --abbrev-ref @{-1}       |
-      |        | git log main..alpha --format=%s --reverse       |
       |        | git log alpha..beta --format=%s --reverse       |
+      |        | git log main..alpha --format=%s --reverse       |
       | beta   | git checkout alpha                              |
       | alpha  | git merge --no-edit --ff origin/alpha           |
       |        | git checkout beta                               |

@@ -111,7 +111,7 @@ func executePrepend(args []string, detached configdomain.Detached, dryRun config
 type prependData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      configdomain.BranchesToSync
+	branchesToSync      []configdomain.BranchToSync
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
