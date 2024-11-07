@@ -97,7 +97,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
-		HasOpenChanges:          false,
+		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
