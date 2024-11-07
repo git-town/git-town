@@ -27,6 +27,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const mergeCmd = "merge"
+
 const mergeDesc = "Merges the current branch with its parent"
 
 const mergeHelp = `
@@ -34,11 +36,11 @@ Merges the current branch with its parent branch.
 Both branches must be feature branches.
 `
 
-func mergeCmd() *cobra.Command {
+func mergeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
-		Use:     "merge",
+		Use:     mergeCmd,
 		Args:    cobra.NoArgs,
 		GroupID: "stack",
 		Short:   mergeDesc,
@@ -77,7 +79,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
-		Command:               "prepend",
+		Command:               mergeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),

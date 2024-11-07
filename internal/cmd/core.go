@@ -24,7 +24,7 @@ func Execute() error {
 	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(deleteCommand())
 	rootCmd.AddCommand(killCommand())
-	rootCmd.AddCommand(mergeCmd())
+	rootCmd.AddCommand(mergeCommand())
 	rootCmd.AddCommand(newPullRequestCommand())
 	rootCmd.AddCommand(observeCmd())
 	rootCmd.AddCommand(offlineCmd())
