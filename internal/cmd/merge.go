@@ -259,8 +259,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
 		Remotes:             data.remotes,
 	})
-	// update proposals
-	// remove the branches
+	// !!!!!!!!!!!!!!  TODO: update proposals
 	prog.Value.Add(&opcodes.LineageParentSet{
 		Branch: data.initialBranch,
 		Parent: data.grandParentBranch,
@@ -271,6 +270,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.parentBranch,
 	})
+	// remove the branches
 	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsFalse() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
 			Branch: data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
