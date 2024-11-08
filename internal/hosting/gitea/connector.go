@@ -27,6 +27,7 @@ type Connector struct {
 	log      print.Logger
 }
 
+// TODO: delete
 func (self Connector) CanMakeAPICalls() bool {
 	return self.APIToken.IsSome() || len(hostingdomain.ReadProposalOverride()) > 0
 }
@@ -35,45 +36,47 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
-			return None[hostingdomain.Proposal](), nil
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+		self.log.Start(messages.APIProposalLookupStart)
+		proposalURLOverride := hostingdomain.ReadProposalOverride()
+		if len(proposalURLOverride) > 0 {
+			self.log.Ok()
+			if proposalURLOverride == hostingdomain.OverrideNoProposal {
+				return None[hostingdomain.Proposal](), nil
+			}
+			return Some(hostingdomain.Proposal{
+				MergeWithAPI: true,
+				Number:       123,
+				Source:       branch,
+				Target:       target,
+				Title:        "title",
+				URL:          proposalURLOverride,
+			}), nil
 		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
-	}
-	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
+		openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+			ListOptions: gitea.ListOptions{
+				PageSize: 50,
+			},
+			State: gitea.StateOpen,
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), err
+		}
+		pullRequests := FilterPullRequests(openPullRequests, branch, target)
+		switch len(pullRequests) {
+		case 0:
+			self.log.Success("none")
+			return None[hostingdomain.Proposal](), nil
+		case 1:
+			proposal := parsePullRequest(pullRequests[0])
+			self.log.Success(proposal.Target.String())
+			return Some(proposal), nil
+		default:
+			return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		}
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-	pullRequests := FilterPullRequests(openPullRequests, branch, target)
-	switch len(pullRequests) {
-	case 0:
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	case 1:
-		proposal := parsePullRequest(pullRequests[0])
-		self.log.Success(proposal.Target.String())
-		return Some(proposal), nil
-	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
-	}
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
