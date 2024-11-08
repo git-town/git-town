@@ -206,6 +206,7 @@ and will be removed in future versions of Git Town.`
 	ShipBranchNotInSync           = "branch %q is not in sync"
 	ShipAbortedMergeError         = "aborted because merge exited with error"
 	ShipAPIConnectorRequired      = "shipping via the API requires a connector"
+	ShipAPIConnectorUnsupported   = "the Git Town driver for your code hosting platform does not support shipping via the API"
 	ShipBranchOtherWorktree       = "branch %q is active in another worktree"
 	ShipBranchHasNoParent         = "branch %q has no parent to ship into"
 	ShipBranchNothingToDo         = "the branch %q has no shippable changes"
