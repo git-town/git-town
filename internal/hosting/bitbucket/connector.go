@@ -231,20 +231,22 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	})
 }
 
-func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(source.String()))
-	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:           strconv.Itoa(number),
-		Owner:        self.Organization,
-		RepoSlug:     self.Repository,
-		SourceBranch: source.String(),
+func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+		self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(source.String()))
+		_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+			ID:           strconv.Itoa(number),
+			Owner:        self.Organization,
+			RepoSlug:     self.Repository,
+			SourceBranch: source.String(),
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		return nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
 }
 
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
