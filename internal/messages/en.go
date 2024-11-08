@@ -166,6 +166,7 @@ END OUTPUT FROM 'git branch -vva'
 	ProposalNoNumberGiven                 = "no proposal number given"
 	ProposalNoParent                      = "branch %q has no parent and can therefore not be proposed"
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
+	ProposalSourceCannotUpdate            = "cannot update the proposal source branch of your hosting platform"
 	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d via the API"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
 	PrototypeBranchIsNowPrototype         = "branch %q is now a prototype branch\n"
