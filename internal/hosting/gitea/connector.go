@@ -27,16 +27,14 @@ type Connector struct {
 	log      print.Logger
 }
 
-// TODO: delete
-func (self Connector) CanMakeAPICalls() bool {
-	return self.APIToken.IsSome() || len(hostingdomain.ReadProposalOverride()) > 0
-}
-
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	if self.APIToken.IsNone() && len(hostingdomain.ReadProposalOverride()) == 0 {
+		return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	}
 	return Some(func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 		self.log.Start(messages.APIProposalLookupStart)
 		proposalURLOverride := hostingdomain.ReadProposalOverride()
@@ -89,6 +87,9 @@ func (self Connector) RepositoryURL() string {
 }
 
 func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	if self.APIToken.IsNone() {
+		return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	}
 	return Some(func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 		self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 		openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
@@ -118,6 +119,9 @@ func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranc
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
+	if self.APIToken.IsNone() {
+		return None[func(number int, message gitdomain.CommitMessage) error]()
+	}
 	return Some(func(number int, message gitdomain.CommitMessage) error {
 		if number <= 0 {
 			return errors.New(messages.ProposalNoNumberGiven)
@@ -146,6 +150,9 @@ func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdoma
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	if self.APIToken.IsNone() {
+		return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+	}
 	return Some(func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 		targetName := target.String()
 		self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
