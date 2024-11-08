@@ -249,21 +249,23 @@ func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gi
 	})
 }
 
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(number),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		DestinationBranch: target.String(),
+func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+		targetName := target.String()
+		self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+		_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+			ID:                strconv.Itoa(number),
+			Owner:             self.Organization,
+			RepoSlug:          self.Repository,
+			DestinationBranch: target.String(),
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		return nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
 }
 
 func parsePullRequest(pullRequest map[string]interface{}) (result hostingdomain.Proposal, err error) {
