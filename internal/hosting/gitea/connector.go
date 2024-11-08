@@ -88,72 +88,77 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+		self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+		openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+			ListOptions: gitea.ListOptions{
+				PageSize: 50,
+			},
+			State: gitea.StateOpen,
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), err
+		}
+		pullRequests := FilterPullRequests2(openPullRequests, branch)
+		switch len(pullRequests) {
+		case 0:
+			self.log.Success("none")
+			return None[hostingdomain.Proposal](), nil
+		case 1:
+			pullRequest := pullRequests[0]
+			proposal := parsePullRequest(pullRequest)
+			self.log.Success(proposal.Target.String())
+			return Some(proposal), nil
+		default:
+			return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+		}
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-	pullRequests := FilterPullRequests2(openPullRequests, branch)
-	switch len(pullRequests) {
-	case 0:
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	case 1:
-		pullRequest := pullRequests[0]
-		proposal := parsePullRequest(pullRequest)
-		self.log.Success(proposal.Target.String())
-		return Some(proposal), nil
-	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
-	}
 }
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	commitMessageParts := message.Parts()
-	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
-	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
-		Style:   gitea.MergeStyleSquash,
-		Title:   commitMessageParts.Subject,
-		Message: commitMessageParts.Text,
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
+func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
+	return Some(func(number int, message gitdomain.CommitMessage) error {
+		if number <= 0 {
+			return errors.New(messages.ProposalNoNumberGiven)
+		}
+		commitMessageParts := message.Parts()
+		self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+		_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
+			Style:   gitea.MergeStyleSquash,
+			Title:   commitMessageParts.Subject,
+			Message: commitMessageParts.Text,
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		self.log.Start(messages.APIProposalLookupStart)
+		_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+		self.log.Ok()
 		return err
-	}
-	self.log.Ok()
-	self.log.Start(messages.APIProposalLookupStart)
-	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	self.log.Ok()
-	return err
-}
-
-func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGiteaCannotUpdateHeadBranch, number))
-	return nil
-}
-
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{
-		Base: targetName,
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
+}
+
+func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+}
+
+func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+		targetName := target.String()
+		self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+		_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{
+			Base: targetName,
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		return nil
+	})
 }
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
