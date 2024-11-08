@@ -123,17 +123,19 @@ func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdoma
 	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.Ptr(target.String()),
+func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+		self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
+		_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
+			TargetBranch: gitlab.Ptr(target.String()),
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		return nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
 }
 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
