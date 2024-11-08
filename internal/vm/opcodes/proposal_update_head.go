@@ -23,7 +23,7 @@ func (self *ProposalUpdateHead) AutomaticUndoError() error {
 
 func (self *ProposalUpdateHead) Run(args shared.RunArgs) error {
 	if connector, hasConnector := args.Connector.Get(); hasConnector {
-		return connector.UpdateProposalHead(self.ProposalNumber, self.NewTarget, args.FinalMessages)
+		return connector.UpdateProposalSource(self.ProposalNumber, self.NewTarget, args.FinalMessages)
 	}
 	return hostingdomain.UnsupportedServiceError()
 }
