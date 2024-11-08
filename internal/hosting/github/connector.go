@@ -134,7 +134,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateHeadBranch, number))
+	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateSourceBranch, number))
 	return nil
 }
 

@@ -230,8 +230,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	sourceName := source.String()
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:           strconv.Itoa(number),
 		Owner:        self.Organization,
