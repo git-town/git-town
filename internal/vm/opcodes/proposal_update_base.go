@@ -22,10 +22,11 @@ func (self *ProposalUpdateBase) AutomaticUndoError() error {
 }
 
 func (self *ProposalUpdateBase) Run(args shared.RunArgs) error {
-	if connector, hasConnector := args.Connector.Get(); hasConnector {
-		return connector.UpdateProposalBase(self.ProposalNumber, self.NewTarget, args.FinalMessages)
+	connector, hasConnector := args.Connector.Get()
+	if !hasConnector {
+		return hostingdomain.UnsupportedServiceError()
 	}
-	return hostingdomain.UnsupportedServiceError()
+	return connector.UpdateProposalBase(self.ProposalNumber, self.NewTarget, args.FinalMessages)
 }
 
 func (self *ProposalUpdateBase) ShouldUndoOnError() bool {
