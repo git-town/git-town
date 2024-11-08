@@ -229,9 +229,9 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:                strconv.Itoa(number),
 		Owner:             self.Organization,
@@ -248,7 +248,7 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 
 func (self Connector) UpdateProposalHead(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	sourceName := source.String()
-	self.log.Start(messages.APIUpdateProposalHead, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:           strconv.Itoa(number),
 		Owner:        self.Organization,
