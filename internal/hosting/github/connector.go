@@ -35,10 +35,13 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	if self.APIToken.IsNone() && len(hostingdomain.ReadProposalOverride()) == 0 {
-		return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	if len(hostingdomain.ReadProposalOverride()) == 0 {
+		return Some(self.findProposalViaOverride)
 	}
-	return Some(self.findProposal)
+	if self.APIToken.IsSome() {
+		return Some(self.findProposalViaAPI)
+	}
+	return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
@@ -85,23 +88,8 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
-			return None[hostingdomain.Proposal](), nil
-		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
-	}
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -121,6 +109,22 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	proposal := parsePullRequest(pullRequests[0])
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
 	return Some(proposal), nil
+}
+
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	self.log.Ok()
+	if proposalURLOverride == hostingdomain.OverrideNoProposal {
+		return None[hostingdomain.Proposal](), nil
+	}
+	return Some(hostingdomain.Proposal{
+		MergeWithAPI: true,
+		Number:       123,
+		Source:       branch,
+		Target:       target,
+		Title:        "title",
+		URL:          proposalURLOverride,
+	}), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
