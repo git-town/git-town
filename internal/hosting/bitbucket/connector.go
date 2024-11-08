@@ -229,14 +229,14 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	sourceName := source.String()
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(number),
-		Owner:             self.Organization,
-		RepoSlug:          self.Repository,
-		DestinationBranch: target.String(),
+		ID:           strconv.Itoa(number),
+		Owner:        self.Organization,
+		RepoSlug:     self.Repository,
+		SourceBranch: source.String(),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -246,14 +246,14 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 	return nil
 }
 
-func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	sourceName := source.String()
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
+func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	targetName := target.String()
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:           strconv.Itoa(number),
-		Owner:        self.Organization,
-		RepoSlug:     self.Repository,
-		SourceBranch: source.String(),
+		ID:                strconv.Itoa(number),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		DestinationBranch: target.String(),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())

@@ -134,6 +134,11 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
+func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add(fmt.Sprintf(messages.APIGiteaCannotUpdateHeadBranch, number))
+	return nil
+}
+
 func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
@@ -145,11 +150,6 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 		return err
 	}
 	self.log.Ok()
-	return nil
-}
-
-func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGiteaCannotUpdateHeadBranch, number))
 	return nil
 }
 
