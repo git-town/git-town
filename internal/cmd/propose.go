@@ -217,8 +217,8 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if !hasConnector {
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
-	if connector.CanMakeAPICalls() {
-		existingProposalOpt, err := connector.FindProposal(initialBranch, parentOfBranchToPropose)
+	if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
+		existingProposalOpt, err := findProposal(initialBranch, parentOfBranchToPropose)
 		if err != nil {
 			existingProposalOpt = None[hostingdomain.Proposal]()
 		}
