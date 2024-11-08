@@ -37,5 +37,5 @@ type Connector interface {
 	UpdateProposalSourceFn() Option[func(number int, newSource gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 
 	// UpdateProposalBase provides a function to update the target branch of proposal.
-	UpdateProposalHead() Option[func(number int, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+	UpdateProposalTargetFn() Option[func(number int, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 }

@@ -26,7 +26,11 @@ func (self *ProposalUpdateBase) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
 	}
-	return connector.UpdateProposalBase(self.ProposalNumber, self.NewTarget, args.FinalMessages)
+	updateProposalTarget, canUpdateProposalTarget := connector.UpdateProposalTargetFn().Get()
+	if !canUpdateProposalTarget {
+		return hostingdomain.UnsupportedServiceError()
+	}
+	return updateProposalTarget(self.ProposalNumber, self.NewTarget, args.FinalMessages)
 }
 
 func (self *ProposalUpdateBase) ShouldUndoOnError() bool {

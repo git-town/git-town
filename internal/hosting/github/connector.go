@@ -141,9 +141,14 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateSourceBranch, number))
+	return nil
+}
+
+func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalBase, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
@@ -154,11 +159,6 @@ func (self Connector) UpdateProposalBase(number int, target gitdomain.LocalBranc
 		return err
 	}
 	self.log.Ok()
-	return nil
-}
-
-func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateHeadBranch, number))
 	return nil
 }
 
