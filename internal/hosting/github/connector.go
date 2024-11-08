@@ -34,54 +34,48 @@ func (self Connector) CanMakeAPICalls() bool {
 	return self.APIToken.IsSome() || len(hostingdomain.ReadProposalOverride()) > 0
 }
 
-func (self Connector) CanUpdateProposalSourceBranch() bool {
-	return false
-}
-
-func (self Connector) CanUpdateProposalTargetBranch() bool {
-	return true
-}
-
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+		self.log.Start(messages.APIProposalLookupStart)
+		proposalURLOverride := hostingdomain.ReadProposalOverride()
+		if len(proposalURLOverride) > 0 {
+			self.log.Ok()
+			if proposalURLOverride == hostingdomain.OverrideNoProposal {
+				return None[hostingdomain.Proposal](), nil
+			}
+			return Some(hostingdomain.Proposal{
+				MergeWithAPI: true,
+				Number:       123,
+				Source:       branch,
+				Target:       target,
+				Title:        "title",
+				URL:          proposalURLOverride,
+			}), nil
+		}
+		pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
+			Head:  self.Organization + ":" + branch.String(),
+			Base:  target.String(),
+			State: "open",
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), err
+		}
+		if len(pullRequests) == 0 {
+			self.log.Success("none")
 			return None[hostingdomain.Proposal](), nil
 		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
-	}
-	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
-		Head:  self.Organization + ":" + branch.String(),
-		Base:  target.String(),
-		State: "open",
+		if len(pullRequests) > 1 {
+			return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		}
+		proposal := parsePullRequest(pullRequests[0])
+		self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
+		return Some(proposal), nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-	if len(pullRequests) == 0 {
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	}
-	if len(pullRequests) > 1 {
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
-	}
-	proposal := parsePullRequest(pullRequests[0])
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
-	return Some(proposal), nil
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
@@ -103,63 +97,68 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
-		Head:  self.Organization + ":" + branch.String(),
-		State: "open",
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+		self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+		pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
+			Head:  self.Organization + ":" + branch.String(),
+			State: "open",
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), err
+		}
+		if len(pullRequests) == 0 {
+			self.log.Success("none")
+			return None[hostingdomain.Proposal](), nil
+		}
+		if len(pullRequests) > 1 {
+			return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+		}
+		proposal := parsePullRequest(pullRequests[0])
+		self.log.Success(proposal.Target.String())
+		return Some(proposal), nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-	if len(pullRequests) == 0 {
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	}
-	if len(pullRequests) > 1 {
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
-	}
-	proposal := parsePullRequest(pullRequests[0])
-	self.log.Success(proposal.Target.String())
-	return Some(proposal), nil
 }
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
-	commitMessageParts := message.Parts()
-	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
-		MergeMethod: "squash",
-		CommitTitle: commitMessageParts.Subject,
-	})
-	if err != nil {
-		self.log.Ok()
-	}
-	return err
-}
-
-func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGitHubCannotUpdateSourceBranch, number))
-	return nil
-}
-
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
-		Base: &github.PullRequestBranch{
-			Ref: &(targetName),
-		},
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
+func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) (err error)] {
+	return Some(func(number int, message gitdomain.CommitMessage) (err error) {
+		if number <= 0 {
+			return errors.New(messages.ProposalNoNumberGiven)
+		}
+		self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+		commitMessageParts := message.Parts()
+		_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
+			MergeMethod: "squash",
+			CommitTitle: commitMessageParts.Subject,
+		})
+		if err != nil {
+			self.log.Ok()
+		}
 		return err
-	}
-	self.log.Ok()
-	return nil
+	})
+}
+
+func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+}
+
+func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+		targetName := target.String()
+		self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
+		_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
+			Base: &github.PullRequestBranch{
+				Ref: &(targetName),
+			},
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		return nil
+	})
 }
 
 // getGitHubApiToken returns the GitHub API token to use.
