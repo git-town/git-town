@@ -148,7 +148,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
+func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
 	finalMessages.Add(fmt.Sprintf(messages.APIGiteaCannotUpdateHeadBranch, number))
 	return nil
 }

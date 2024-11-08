@@ -246,7 +246,7 @@ func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBra
 	return nil
 }
 
-func (self Connector) UpdateProposalHead(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	sourceName := source.String()
 	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
