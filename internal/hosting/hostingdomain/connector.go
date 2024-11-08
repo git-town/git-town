@@ -35,9 +35,9 @@ type Connector interface {
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
-	// UpdateProposalTarget updates the target branch of the given proposal.
-	UpdateProposalTarget(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
-
 	// UpdateProposalSource updates the target branch of the given proposal.
 	UpdateProposalSource(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
+
+	// UpdateProposalTarget updates the target branch of the given proposal.
+	UpdateProposalTarget(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
 }
