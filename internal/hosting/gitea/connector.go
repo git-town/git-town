@@ -32,10 +32,13 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	if self.APIToken.IsNone() && len(hostingdomain.ReadProposalOverride()) == 0 {
-		return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	if len(hostingdomain.ReadProposalOverride()) > 0 {
+		return Some(self.findProposalViaOverride)
 	}
-	return Some(self.findProposal)
+	if self.APIToken.IsSome() {
+		return Some(self.findProposalViaAPI)
+	}
+	return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
@@ -48,17 +51,17 @@ func (self Connector) RepositoryURL() string {
 }
 
 func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	if self.APIToken.IsNone() {
-		return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	if self.APIToken.IsSome() {
+		return Some(self.searchProposal)
 	}
-	return Some(self.searchProposal)
+	return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
-	if self.APIToken.IsNone() {
-		return None[func(number int, message gitdomain.CommitMessage) error]()
+	if self.APIToken.IsSome() {
+		return Some(self.squashMergeProposal)
 	}
-	return Some(self.squashMergeProposal)
+	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
 func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
@@ -66,29 +69,14 @@ func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdoma
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	if self.APIToken.IsNone() {
-		return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+	if self.APIToken.IsSome() {
+		return Some(self.updateProposalTarget)
 	}
-	return Some(self.updateProposalTarget)
+	return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
-func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
-			return None[hostingdomain.Proposal](), nil
-		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
-	}
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -111,6 +99,22 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	default:
 		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
+}
+
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Ok()
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	if proposalURLOverride == hostingdomain.OverrideNoProposal {
+		return None[hostingdomain.Proposal](), nil
+	}
+	return Some(hostingdomain.Proposal{
+		MergeWithAPI: true,
+		Number:       123,
+		Source:       branch,
+		Target:       target,
+		Title:        "title",
+		URL:          proposalURLOverride,
+	}), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
