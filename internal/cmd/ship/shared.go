@@ -153,24 +153,33 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 }
 
 func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hostingdomain.Proposal {
-	var proposalsOfChildBranches []hostingdomain.Proposal
-	childBranches := args.Lineage.Children(args.OldBranch)
 	connector, hasConnector := args.ConnectorOpt.Get()
-	if hasConnector && connector.CanMakeAPICalls() {
-		if !args.Offline.IsTrue() && args.OldBranchHasTrackingBranch {
-			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, args.OldBranch)
-				if err != nil {
-					continue
-				}
-				childProposal, hasChildProposal := childProposalOpt.Get()
-				if hasChildProposal {
-					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-				}
-			}
-		}
+	if !hasConnector {
+		return []hostingdomain.Proposal{}
 	}
-	return proposalsOfChildBranches
+	findProposal, canFindProposal := connector.FindProposalFn().Get()
+	if !canFindProposal {
+		return []hostingdomain.Proposal{}
+	}
+	if args.Offline.IsTrue() {
+		return []hostingdomain.Proposal{}
+	}
+	if !args.OldBranchHasTrackingBranch {
+		return []hostingdomain.Proposal{}
+	}
+	var result []hostingdomain.Proposal
+	for _, childBranch := range args.Lineage.Children(args.OldBranch) {
+		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
+		if err != nil {
+			continue
+		}
+		childProposal, hasChildProposal := childProposalOpt.Get()
+		if !hasChildProposal {
+			continue
+		}
+		result = append(result, childProposal)
+	}
+	return result
 }
 
 type LoadProposalsOfChildBranchesArgs struct {
@@ -183,6 +192,8 @@ type LoadProposalsOfChildBranchesArgs struct {
 
 func FindProposal(connectorOpt Option[hostingdomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[hostingdomain.Proposal] {
 	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
+	}
 	target, hasTarget := targetBranch.Get()
 	if hasConnector && connector.CanMakeAPICalls() && hasTarget {
 		proposalOpt, err := connector.FindProposal(sourceBranch, target)
