@@ -118,10 +118,12 @@ type mergeData struct {
 	initialBranch                   gitdomain.LocalBranchName
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
+	initialBranchProposal           Option[hostingdomain.Proposal]
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	parentBranchInfo                gitdomain.BranchInfo
+	parentBranchProposal            Option[hostingdomain.Proposal]
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
 	remotes                         gitdomain.Remotes
@@ -163,7 +165,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
 	if err != nil {
 		return mergeData{}, false, err
 	}
@@ -173,7 +175,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		Connector:          connector,
+		Connector:          connectorOpt,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -214,20 +216,39 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	initialBranchProposal := None[hostingdomain.Proposal]()
+	parentBranchProposal := None[hostingdomain.Proposal]()
+	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
+		return mergeData{}, false, hostingdomain.UnsupportedServiceError()
+	}
+	if connector.CanMakeAPICalls() {
+		initialBranchProposal, err = connector.FindProposal(initialBranch, parentBranch)
+		if err != nil {
+			initialBranchProposal = None[hostingdomain.Proposal]()
+		}
+		parentBranchProposal, err = connector.FindProposal(initialBranch, parentBranch)
+		if err != nil {
+			parentBranchProposal = None[hostingdomain.Proposal]()
+		}
+	}
+
 	return mergeData{
 		branchesSnapshot:                branchesSnapshot,
 		config:                          validatedConfig,
-		connector:                       connector,
+		connector:                       connectorOpt,
 		dialogTestInputs:                dialogTestInputs,
 		grandParentBranch:               grandParentBranch,
 		hasOpenChanges:                  repoStatus.OpenChanges,
 		initialBranch:                   initialBranch,
 		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
 		initialBranchInfo:               *initialBranchInfo,
+		initialBranchProposal:           initialBranchProposal,
 		offline:                         repo.IsOffline,
 		parentBranch:                    parentBranch,
 		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
 		parentBranchInfo:                *parentBranchInfo,
+		parentBranchProposal:            parentBranchProposal,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
 		remotes:                         remotes,
