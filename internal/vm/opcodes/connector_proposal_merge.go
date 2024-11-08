@@ -71,6 +71,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	}
 	squashMergeProposal, canSquashMergeProposal := connector.SquashMergeProposalFn().Get()
 	if !canSquashMergeProposal {
+		return nil
 	}
 	self.mergeError = squashMergeProposal(self.ProposalNumber, commitMessage)
 	return self.mergeError

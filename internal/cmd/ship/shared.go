@@ -167,8 +167,9 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hosti
 	if !args.OldBranchHasTrackingBranch {
 		return []hostingdomain.Proposal{}
 	}
-	var result []hostingdomain.Proposal
-	for _, childBranch := range args.Lineage.Children(args.OldBranch) {
+	childBranches := args.Lineage.Children(args.OldBranch)
+	result := make([]hostingdomain.Proposal, 0, len(childBranches))
+	for _, childBranch := range childBranches {
 		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
 		if err != nil {
 			print.Error(err)
