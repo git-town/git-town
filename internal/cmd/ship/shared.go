@@ -171,6 +171,7 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hosti
 	for _, childBranch := range args.Lineage.Children(args.OldBranch) {
 		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
 		if err != nil {
+			print.Error(err)
 			continue
 		}
 		childProposal, hasChildProposal := childProposalOpt.Get()
@@ -193,13 +194,20 @@ type LoadProposalsOfChildBranchesArgs struct {
 func FindProposal(connectorOpt Option[hostingdomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[hostingdomain.Proposal] {
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
+		return None[hostingdomain.Proposal]()
 	}
 	target, hasTarget := targetBranch.Get()
-	if hasConnector && connector.CanMakeAPICalls() && hasTarget {
-		proposalOpt, err := connector.FindProposal(sourceBranch, target)
-		if err == nil {
-			return proposalOpt
-		}
+	if !hasTarget {
+		return None[hostingdomain.Proposal]()
 	}
-	return None[hostingdomain.Proposal]()
+	findProposal, canFindProposal := connector.FindProposalFn().Get()
+	if !canFindProposal {
+		return None[hostingdomain.Proposal]()
+	}
+	proposal, err := findProposal(sourceBranch, target)
+	if err != nil {
+		print.Error(err)
+		return None[hostingdomain.Proposal]()
+	}
+	return proposal
 }
