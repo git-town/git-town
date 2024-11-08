@@ -102,6 +102,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
 	self.log.Ok()
 	proposalURLOverride := hostingdomain.ReadProposalOverride()
 	if proposalURLOverride == hostingdomain.OverrideNoProposal {
