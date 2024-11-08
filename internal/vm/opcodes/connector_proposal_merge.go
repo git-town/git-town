@@ -65,11 +65,14 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		}
 		self.enteredEmptyCommitMessage = false
 	}
-	if connector, hasConnector := args.Connector.Get(); hasConnector {
-		self.mergeError = connector.SquashMergeProposal(self.ProposalNumber, commitMessage)
-	} else {
+	connector, hasConnector := args.Connector.Get()
+	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
 	}
+	squashMergeProposal, canSquashMergeProposal := connector.SquashMergeProposalFn().Get()
+	if !canSquashMergeProposal {
+	}
+	self.mergeError = squashMergeProposal(self.ProposalNumber, commitMessage)
 	return self.mergeError
 }
 
