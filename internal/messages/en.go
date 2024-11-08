@@ -10,7 +10,6 @@ const (
 	APIUnexpectedResultDataStructure  = "unexpected result data structure"
 	APIUpdateProposalSource           = "Updating source branch of proposal %s to %s ... "
 	APIUpdateProposalTarget           = "Updating target branch of proposal %s to %s ... "
-	APIGitLabCannotUpdateSourceBranch = "GitLab cannot update the source branch of merge requests:\nhttps://gitlab.com/gitlab-org/gitlab-foss/-/issues/47020\nGitLab has therefore closed the existing merge request for this branch (!%d).\nYou have to create a new one."
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple              = "\nMultiple people authored the %q branch.\n\n"
