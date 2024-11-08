@@ -48,96 +48,94 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) CanMakeAPICalls() bool {
-	return true
-}
-
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+		self.log.Start(messages.APIProposalLookupStart)
+		proposalURLOverride := hostingdomain.ReadProposalOverride()
+		if len(proposalURLOverride) > 0 {
+			self.log.Ok()
+			if proposalURLOverride == hostingdomain.OverrideNoProposal {
+				return None[hostingdomain.Proposal](), nil
+			}
+			return Some(hostingdomain.Proposal{
+				MergeWithAPI: true,
+				Number:       123,
+				Source:       branch,
+				Target:       target,
+				Title:        "title",
+				URL:          proposalURLOverride,
+			}), nil
+		}
+		query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
+		result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+			Owner:    self.Organization,
+			RepoSlug: self.Repository,
+			Query:    query,
+			States:   []string{"open"},
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), err
+		}
+		if result1 == nil {
+			self.log.Success("none")
 			return None[hostingdomain.Proposal](), nil
 		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
-	}
-	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
-	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
-		Owner:    self.Organization,
-		RepoSlug: self.Repository,
-		Query:    query,
-		States:   []string{"open"},
+		result2, ok := result1.(map[string]interface{})
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		size1, has := result2["size"]
+		if !has {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		size2, ok := size1.(float64)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		size := int(size2)
+		if size == 0 {
+			self.log.Success("none")
+			return None[hostingdomain.Proposal](), nil
+		}
+		if size > 1 {
+			self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
+			return None[hostingdomain.Proposal](), nil
+		}
+		proposal1, has := result2["values"]
+		if !has {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		proposal2, ok := proposal1.([]interface{})
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		if len(proposal2) == 0 {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		proposal3, ok := proposal2[0].(map[string]interface{})
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		proposal4, err := parsePullRequest(proposal3)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), nil
+		}
+		self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
+		return Some(proposal4), nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-	if result1 == nil {
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	}
-	result2, ok := result1.(map[string]interface{})
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	size1, has := result2["size"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	size2, ok := size1.(float64)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	size := int(size2)
-	if size == 0 {
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	}
-	if size > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
-		return None[hostingdomain.Proposal](), nil
-	}
-	proposal1, has := result2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	proposal2, ok := proposal1.([]interface{})
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	if len(proposal2) == 0 {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	proposal3, ok := proposal2[0].(map[string]interface{})
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	proposal4, err := parsePullRequest(proposal3)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), nil
-	}
-	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	return Some(proposal4), nil
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
@@ -154,79 +152,83 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
-		Owner:    self.Organization,
-		RepoSlug: self.Repository,
-		Query:    fmt.Sprintf("source.branch.name = %q", branch),
-		States:   []string{"open"},
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+		self.log.Start(messages.APIParentBranchLookupStart, branch.String())
+		response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+			Owner:    self.Organization,
+			RepoSlug: self.Repository,
+			Query:    fmt.Sprintf("source.branch.name = %q", branch),
+			States:   []string{"open"},
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), err
+		}
+		response2, ok := response1.(map[string]interface{})
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		size1, has := response2["size"]
+		if !has {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		size2, ok := size1.(float64)
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		size3 := int(size2)
+		if size3 == 0 {
+			self.log.Success("none")
+			return None[hostingdomain.Proposal](), nil
+		}
+		if size3 > 1 {
+			self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
+			return None[hostingdomain.Proposal](), nil
+		}
+		values1, has := response2["values"]
+		if !has {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		values2, ok := values1.([]interface{})
+		if !ok {
+			self.log.Failed(messages.APIUnexpectedResultDataStructure)
+			return None[hostingdomain.Proposal](), nil
+		}
+		proposal1 := values2[0].(map[string]interface{})
+		proposal2, err := parsePullRequest(proposal1)
+		if err != nil {
+			self.log.Failed(err.Error())
+			return None[hostingdomain.Proposal](), nil
+		}
+		self.log.Success(proposal2.Target.String())
+		return Some(proposal2), nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-	response2, ok := response1.(map[string]interface{})
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	size1, has := response2["size"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	size2, ok := size1.(float64)
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	size3 := int(size2)
-	if size3 == 0 {
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	}
-	if size3 > 1 {
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
-		return None[hostingdomain.Proposal](), nil
-	}
-	values1, has := response2["values"]
-	if !has {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	values2, ok := values1.([]interface{})
-	if !ok {
-		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[hostingdomain.Proposal](), nil
-	}
-	proposal1 := values2[0].(map[string]interface{})
-	proposal2, err := parsePullRequest(proposal1)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), nil
-	}
-	self.log.Success(proposal2.Target.String())
-	return Some(proposal2), nil
 }
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	self.log.Start(messages.HostingBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
-	_, err := self.client.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
-		ID:       strconv.Itoa(number),
-		Owner:    self.Organization,
-		RepoSlug: self.Repository,
-		Message:  message.String(),
+func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
+	return Some(func(number int, message gitdomain.CommitMessage) error {
+		if number <= 0 {
+			return errors.New(messages.ProposalNoNumberGiven)
+		}
+		self.log.Start(messages.HostingBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+		_, err := self.client.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
+			ID:       strconv.Itoa(number),
+			Owner:    self.Organization,
+			RepoSlug: self.Repository,
+			Message:  message.String(),
+		})
+		if err != nil {
+			self.log.Failed(err.Error())
+			return err
+		}
+		self.log.Ok()
+		return nil
 	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
 }
 
 func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
