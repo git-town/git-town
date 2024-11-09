@@ -560,11 +560,11 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
+        "NewBranch": "new-target",
+        "OldBranch": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateBase"
+      "type": "ProposalUpdateTarget"
     },
     {
       "data": {
@@ -572,15 +572,15 @@ func TestLoadSave(t *testing.T) {
         "OldTarget": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateBaseToParent"
+      "type": "ProposalUpdateTargetToParent"
     },
     {
       "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
+        "NewBranch": "new-target",
+        "OldBranch": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateHead"
+      "type": "ProposalUpdateSource"
     },
     {
       "data": {},
