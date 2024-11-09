@@ -224,9 +224,9 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 	case dialog.ParentOutcomeSelectedParent:
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		if data.connector.IsSome() && hasProposal {
-			prog.Add(&opcodes.ProposalUpdateBase{
-				NewTarget:      selectedBranch,
-				OldTarget:      proposal.Target,
+			prog.Add(&opcodes.ProposalUpdateTarget{
+				NewBranch:      selectedBranch,
+				OldBranch:      proposal.Target,
 				ProposalNumber: proposal.Number,
 			})
 		}

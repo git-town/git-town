@@ -10,19 +10,19 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ProposalUpdateHead updates the head of the proposal with the given number at the code hosting platform.
-type ProposalUpdateHead struct {
-	NewTarget               gitdomain.LocalBranchName
-	OldTarget               gitdomain.LocalBranchName
+// ProposalUpdateSource updates the source branch of the proposal with the given number at the code hosting platform.
+type ProposalUpdateSource struct {
+	NewBranch               gitdomain.LocalBranchName
+	OldBranch               gitdomain.LocalBranchName
 	ProposalNumber          int
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ProposalUpdateHead) AutomaticUndoError() error {
+func (self *ProposalUpdateSource) AutomaticUndoError() error {
 	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }
 
-func (self *ProposalUpdateHead) Run(args shared.RunArgs) error {
+func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
@@ -31,18 +31,18 @@ func (self *ProposalUpdateHead) Run(args shared.RunArgs) error {
 	if !canUpdateProposalSource {
 		return errors.New(messages.ProposalSourceCannotUpdate)
 	}
-	return updateProposalSource(self.ProposalNumber, self.NewTarget, args.FinalMessages)
+	return updateProposalSource(self.ProposalNumber, self.NewBranch, args.FinalMessages)
 }
 
-func (self *ProposalUpdateHead) ShouldUndoOnError() bool {
+func (self *ProposalUpdateSource) ShouldUndoOnError() bool {
 	return true
 }
 
-func (self *ProposalUpdateHead) UndoExternalChangesProgram() []shared.Opcode {
+func (self *ProposalUpdateSource) UndoExternalChangesProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&ProposalUpdateHead{
-			NewTarget:      self.OldTarget,
-			OldTarget:      self.NewTarget,
+		&ProposalUpdateSource{
+			NewBranch:      self.OldBranch,
+			OldBranch:      self.NewBranch,
 			ProposalNumber: self.ProposalNumber,
 		},
 	}
