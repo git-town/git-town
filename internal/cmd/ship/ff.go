@@ -8,8 +8,7 @@ import (
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
-func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataMerge) program.Program {
-	prog := NewMutable(&program.Program{})
+func shipProgramFastForward(prog Mutable[program.Program], sharedData sharedShipData, squashMergeData shipDataMerge) {
 	prog.Value.Add(&opcodes.BranchEnsureShippableChanges{Branch: sharedData.branchNameToShip, Parent: sharedData.targetBranchName})
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
@@ -45,5 +44,4 @@ func shipProgramFastForward(sharedData sharedShipData, squashMergeData shipDataM
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog.Get()
 }
