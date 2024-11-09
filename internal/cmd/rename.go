@@ -289,9 +289,9 @@ func renameProgram(data renameData) program.Program {
 			result.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
 			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			if proposal, hasProposal := data.proposal.Get(); hasProposal {
-				result.Value.Add(&opcodes.ProposalUpdateHead{
-					NewTarget:      data.newBranch,
-					OldTarget:      data.oldBranch.LocalBranchName(),
+				result.Value.Add(&opcodes.ProposalUpdateSource{
+					NewBranch:      data.newBranch,
+					OldBranch:      data.oldBranch.LocalBranchName(),
 					ProposalNumber: proposal.Number,
 				})
 			}
@@ -310,9 +310,9 @@ func renameProgram(data renameData) program.Program {
 
 func updateChildBranchProposalsToBranch(prog *program.Program, proposals []hostingdomain.Proposal, target gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
-		prog.Add(&opcodes.ProposalUpdateBase{
-			NewTarget:      target,
-			OldTarget:      childProposal.Target,
+		prog.Add(&opcodes.ProposalUpdateTarget{
+			NewBranch:      target,
+			OldBranch:      childProposal.Target,
 			ProposalNumber: childProposal.Number,
 		})
 	}

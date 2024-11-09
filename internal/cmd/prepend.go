@@ -269,9 +269,9 @@ func prependProgram(data prependData) program.Program {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	if hasProposal {
-		prog.Value.Add(&opcodes.ProposalUpdateBase{
-			NewTarget:      data.targetBranch,
-			OldTarget:      data.existingParent,
+		prog.Value.Add(&opcodes.ProposalUpdateTarget{
+			NewBranch:      data.targetBranch,
+			OldBranch:      data.existingParent,
 			ProposalNumber: proposal.Number,
 		})
 	}
