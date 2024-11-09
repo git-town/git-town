@@ -27,31 +27,56 @@ type Connector struct {
 	log      print.Logger
 }
 
-func (self Connector) CanMakeAPICalls() bool {
-	return self.APIToken.IsSome() || len(hostingdomain.ReadProposalOverride()) > 0
-}
-
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
-	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
-			return None[hostingdomain.Proposal](), nil
-		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	if len(hostingdomain.ReadProposalOverride()) > 0 {
+		return Some(self.findProposalViaOverride)
 	}
+	if self.APIToken.IsSome() {
+		return Some(self.findProposalViaAPI)
+	}
+	return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+}
+
+func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
+	toCompare := parentBranch.String() + "..." + branch.String()
+	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
+}
+
+func (self Connector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}
+
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	if self.APIToken.IsSome() {
+		return Some(self.searchProposal)
+	}
+	return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+}
+
+func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
+	if self.APIToken.IsSome() {
+		return Some(self.squashMergeProposal)
+	}
+	return None[func(number int, message gitdomain.CommitMessage) error]()
+}
+
+func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+}
+
+func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	if self.APIToken.IsSome() {
+		return Some(self.updateProposalTarget)
+	}
+	return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+}
+
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -76,16 +101,24 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
-	toCompare := parentBranch.String() + "..." + branch.String()
-	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
+	self.log.Ok()
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	if proposalURLOverride == hostingdomain.OverrideNoProposal {
+		return None[hostingdomain.Proposal](), nil
+	}
+	return Some(hostingdomain.Proposal{
+		MergeWithAPI: true,
+		Number:       123,
+		Source:       branch,
+		Target:       target,
+		Title:        "title",
+		URL:          proposalURLOverride,
+	}), nil
 }
 
-func (self Connector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
-}
-
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
@@ -112,7 +145,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	}
 }
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -134,12 +167,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) UpdateProposalSource(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error {
-	finalMessages.Add(fmt.Sprintf(messages.APIGiteaCannotUpdateHeadBranch, number))
-	return nil
-}
-
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{

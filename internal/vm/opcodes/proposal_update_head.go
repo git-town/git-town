@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -22,10 +23,15 @@ func (self *ProposalUpdateHead) AutomaticUndoError() error {
 }
 
 func (self *ProposalUpdateHead) Run(args shared.RunArgs) error {
-	if connector, hasConnector := args.Connector.Get(); hasConnector {
-		return connector.UpdateProposalSource(self.ProposalNumber, self.NewTarget, args.FinalMessages)
+	connector, hasConnector := args.Connector.Get()
+	if !hasConnector {
+		return hostingdomain.UnsupportedServiceError()
 	}
-	return hostingdomain.UnsupportedServiceError()
+	updateProposalSource, canUpdateProposalSource := connector.UpdateProposalSourceFn().Get()
+	if !canUpdateProposalSource {
+		return errors.New(messages.ProposalSourceCannotUpdate)
+	}
+	return updateProposalSource(self.ProposalNumber, self.NewTarget, args.FinalMessages)
 }
 
 func (self *ProposalUpdateHead) ShouldUndoOnError() bool {

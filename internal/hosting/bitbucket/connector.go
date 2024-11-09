@@ -48,31 +48,50 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) CanMakeAPICalls() bool {
-	return true
-}
-
 func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
 	proposalURLOverride := hostingdomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
-		self.log.Ok()
-		if proposalURLOverride == hostingdomain.OverrideNoProposal {
-			return None[hostingdomain.Proposal](), nil
-		}
-		return Some(hostingdomain.Proposal{
-			MergeWithAPI: true,
-			Number:       123,
-			Source:       branch,
-			Target:       target,
-			Title:        "title",
-			URL:          proposalURLOverride,
-		}), nil
+		return Some(self.findProposalViaOverride)
 	}
+	return Some(self.findProposalViaAPI)
+}
+
+func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
+	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
+			self.RepositoryURL(),
+			url.QueryEscape(branch.String()),
+			url.QueryEscape(self.Organization),
+			url.QueryEscape(self.Repository),
+			url.QueryEscape(parentBranch.String())),
+		nil
+}
+
+func (self Connector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}
+
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+	return Some(self.searchProposal)
+}
+
+func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
+	return Some(self.squashMergeProposal)
+}
+
+func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(self.updateProposalSource)
+}
+
+func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return Some(self.updateProposalTarget)
+}
+
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
@@ -140,21 +159,24 @@ func (self Connector) FindProposal(branch, target gitdomain.LocalBranchName) (Op
 	return Some(proposal4), nil
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
-	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
-			self.RepositoryURL(),
-			url.QueryEscape(branch.String()),
-			url.QueryEscape(self.Organization),
-			url.QueryEscape(self.Repository),
-			url.QueryEscape(parentBranch.String())),
-		nil
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
+	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	self.log.Ok()
+	if proposalURLOverride == hostingdomain.OverrideNoProposal {
+		return None[hostingdomain.Proposal](), nil
+	}
+	return Some(hostingdomain.Proposal{
+		MergeWithAPI: true,
+		Number:       123,
+		Source:       branch,
+		Target:       target,
+		Title:        "title",
+		URL:          proposalURLOverride,
+	}), nil
 }
 
-func (self Connector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
-}
-
-func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
@@ -210,7 +232,7 @@ func (self Connector) SearchProposals(branch gitdomain.LocalBranchName) (Option[
 	return Some(proposal2), nil
 }
 
-func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMessage) error {
+func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
@@ -229,7 +251,7 @@ func (self Connector) SquashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:           strconv.Itoa(number),
@@ -245,7 +267,7 @@ func (self Connector) UpdateProposalSource(number int, source gitdomain.LocalBra
 	return nil
 }
 
-func (self Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
