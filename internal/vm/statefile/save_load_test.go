@@ -107,9 +107,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateBase{ProposalNumber: 123, NewTarget: "new-target", OldTarget: "old-target"},
-				&opcodes.ProposalUpdateBaseToParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
-				&opcodes.ProposalUpdateHead{ProposalNumber: 123, NewTarget: "new-target", OldTarget: "old-target"},
+				&opcodes.ProposalUpdateTarget{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTargetToParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateSource{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
@@ -560,11 +560,11 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
+        "NewBranch": "new-target",
+        "OldBranch": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateBase"
+      "type": "ProposalUpdateTarget"
     },
     {
       "data": {
@@ -572,15 +572,15 @@ func TestLoadSave(t *testing.T) {
         "OldTarget": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateBaseToParent"
+      "type": "ProposalUpdateTargetToParent"
     },
     {
       "data": {
-        "NewTarget": "new-target",
-        "OldTarget": "old-target",
+        "NewBranch": "new-target",
+        "OldBranch": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateHead"
+      "type": "ProposalUpdateSource"
     },
     {
       "data": {},

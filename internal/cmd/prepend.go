@@ -271,9 +271,9 @@ func prependProgram(data prependData) program.Program {
 	if hasProposal {
 		if connector, hasConnector := data.connector.Get(); hasConnector {
 			if connector.UpdateProposalTargetFn().IsSome() {
-				prog.Value.Add(&opcodes.ProposalUpdateBase{
-					NewTarget:      data.targetBranch,
-					OldTarget:      data.existingParent,
+				prog.Value.Add(&opcodes.ProposalUpdateTarget{
+					NewBranch:      data.targetBranch,
+					OldBranch:      data.existingParent,
 					ProposalNumber: proposal.Number,
 				})
 			}
