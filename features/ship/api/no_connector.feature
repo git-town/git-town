@@ -20,7 +20,7 @@ Feature: cannot ship a branch without connector
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      shipping via the API requires a connector
+      please configure API access to your hosting platform, more info at https://www.git-town.com/configuration#access-tokens
       """
 
   Scenario: undo
