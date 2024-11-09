@@ -100,13 +100,13 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		return err
 	}
 
-	runProgram := program.Program{}
+	runProgram := NewMutable(&program.Program{})
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
-		Program:             NewMutable(&runProgram),
+		Program:             runProgram,
 		PushBranches:        pushBranches,
 		Remotes:             data.remotes,
 	})
@@ -115,20 +115,20 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
 		finalBranchCandidates = append(finalBranchCandidates, previousBranch)
 	}
-	runProgram.Add(&opcodes.CheckoutFirstExisting{
+	runProgram.Value.Add(&opcodes.CheckoutFirstExisting{
 		Branches:   finalBranchCandidates,
 		MainBranch: data.config.ValidatedConfigData.MainBranch,
 	})
 	if data.remotes.HasOrigin() && data.shouldPushTags && data.config.NormalConfig.IsOnline() {
-		runProgram.Add(&opcodes.PushTags{})
+		runProgram.Value.Add(&opcodes.PushTags{})
 	}
-	cmdhelpers.Wrap(NewMutable(&runProgram), cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousbranchCandidates,
 	})
-	runProgram = optimizer.Optimize(runProgram)
+	optimizedProgram := optimizer.Optimize(runProgram.Get())
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -138,8 +138,8 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            runProgram,
-		TouchedBranches:       runProgram.TouchedBranches(),
+		RunProgram:            optimizedProgram,
+		TouchedBranches:       optimizedProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
