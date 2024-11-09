@@ -82,27 +82,31 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil {
 		return err
 	}
-	var shipProgram program.Program
+	prog := NewMutable(&program.Program{})
 	switch sharedData.config.NormalConfig.ShipStrategy {
 	case configdomain.ShipStrategyAPI:
 		apiData, err := determineAPIData(sharedData)
 		if err != nil {
 			return err
 		}
-		shipProgram = shipAPIProgram(sharedData, apiData, message)
+		err = shipAPIProgram(prog, sharedData, apiData, message)
+		if err != nil {
+			return err
+		}
 	case configdomain.ShipStragegyFastForward:
 		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
-		shipProgram = shipProgramFastForward(sharedData, mergeData)
+		shipProgramFastForward(prog, sharedData, mergeData)
 	case configdomain.ShipStrategySquashMerge:
 		squashMergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
 		}
-		shipProgram = shipProgramSquashMerge(sharedData, squashMergeData, message)
+		shipProgramSquashMerge(prog, sharedData, squashMergeData, message)
 	}
+	shipProgram := prog.Get()
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: sharedData.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
