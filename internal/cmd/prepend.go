@@ -268,16 +268,14 @@ func prependProgram(data prependData) program.Program {
 	if data.remotes.HasOrigin() && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShouldPushNewBranches() || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
-	if hasProposal {
-		if connector, hasConnector := data.connector.Get(); hasConnector {
-			if connector.UpdateProposalTargetFn().IsSome() {
-				prog.Value.Add(&opcodes.ProposalUpdateTarget{
-					NewBranch:      data.targetBranch,
-					OldBranch:      data.existingParent,
-					ProposalNumber: proposal.Number,
-				})
-			}
-		}
+	connector, hasConnector := data.connector.Get()
+	connectorCanUpdateProposalTargets := connector.UpdateProposalTargetFn().IsSome()
+	if hasProposal && hasConnector && connectorCanUpdateProposalTargets {
+		prog.Value.Add(&opcodes.ProposalUpdateTarget{
+			NewBranch:      data.targetBranch,
+			OldBranch:      data.existingParent,
+			ProposalNumber: proposal.Number,
+		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
