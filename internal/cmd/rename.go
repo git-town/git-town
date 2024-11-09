@@ -289,11 +289,15 @@ func renameProgram(data renameData) program.Program {
 			result.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
 			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			if proposal, hasProposal := data.proposal.Get(); hasProposal {
-				result.Value.Add(&opcodes.ProposalUpdateSource{
-					NewBranch:      data.newBranch,
-					OldBranch:      data.oldBranch.LocalBranchName(),
-					ProposalNumber: proposal.Number,
-				})
+				if connector, hasConnector := data.connector.Get(); hasConnector {
+					if connector.UpdateProposalSourceFn().IsSome() {
+						result.Value.Add(&opcodes.ProposalUpdateSource{
+							NewBranch:      data.newBranch,
+							OldBranch:      data.oldBranch.LocalBranchName(),
+							ProposalNumber: proposal.Number,
+						})
+					}
+				}
 			}
 			result.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
