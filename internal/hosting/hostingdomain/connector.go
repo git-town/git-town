@@ -8,25 +8,31 @@ import (
 
 // Connector describes the activities that Git Town can perform on code hosting platforms.
 // Individual implementations exist to talk to specific hosting platforms.
+// Functions that might or might not be supported by a connector are implemented as higher-level functions,
+// i.e. they return an option of the function to call.
+// A `None“ value implies that the respective functionality isn't supported by this connector implementation.
 type Connector interface {
-	// CanMakeAPICalls indicates whether this connector instance is configured to make API calls.
-	// Most connectors need to have an API key to do so.
-	CanMakeAPICalls() bool
-
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective hosting platform is prepopulated with.
 	DefaultProposalMessage(proposal Proposal) string
 
-	// FindProposal provides details about the proposal for the given branch into the given target branch.
-	// Returns nil if no proposal exists.
-	FindProposal(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)
+	// If this connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to load details about the proposal for the given branch into the given target branch.
+	// A None return value indicates that this connector does not support this feature (yet).
+	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
 
-	// SearchProposals searches for a proposal that has the given branch as its head (source) branch.
-	SearchProposals(branch gitdomain.LocalBranchName) (Option[Proposal], error)
+	// If this connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to search for a proposal that has the given branch as its source branch.
+	// A None return value indicates that this connector does not support this feature (yet).
+	SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[Proposal], error)]
 
-	// SquashMergeProposal squash-merges the proposal with the given number
-	// using the given commit message.
-	SquashMergeProposal(number int, message gitdomain.CommitMessage) error
+	// If this connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to merge the proposal with the given number using the given message.
+	// A None return value indicates that this connector does not support this feature (yet).
+	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
@@ -35,9 +41,15 @@ type Connector interface {
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
-	// UpdateProposalSource updates the target branch of the given proposal.
-	UpdateProposalSource(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
+	// If this connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to update the source branch of the proposal with the given number.
+	// A None return value indicates that this connector does not support this feature (yet).
+	UpdateProposalSourceFn() Option[func(number int, newSource gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 
-	// UpdateProposalTarget updates the target branch of the given proposal.
-	UpdateProposalTarget(number int, target gitdomain.LocalBranchName, finalMessages stringslice.Collector) error
+	// If this connector instance supports loading proposals via the API,
+	// calling this function returns a function that you can call
+	// to update the target branch of the proposal with the given number.
+	// A None return value indicates that this connector does not support this feature (yet).
+	UpdateProposalTargetFn() Option[func(number int, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 }

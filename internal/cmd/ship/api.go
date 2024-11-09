@@ -30,7 +30,11 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	if !hasConnector {
 		return result, errors.New(messages.ShipAPIConnectorRequired)
 	}
-	proposalOpt, err := connector.FindProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
+	findProposal, canFindProposal := connector.FindProposalFn().Get()
+	if !canFindProposal {
+		return result, errors.New(messages.ShipAPIConnectorUnsupported)
+	}
+	proposalOpt, err := findProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
 	if err != nil {
 		return result, err
 	}

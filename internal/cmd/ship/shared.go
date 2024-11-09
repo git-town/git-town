@@ -153,24 +153,35 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 }
 
 func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hostingdomain.Proposal {
-	var proposalsOfChildBranches []hostingdomain.Proposal
-	childBranches := args.Lineage.Children(args.OldBranch)
 	connector, hasConnector := args.ConnectorOpt.Get()
-	if hasConnector && connector.CanMakeAPICalls() {
-		if !args.Offline.IsTrue() && args.OldBranchHasTrackingBranch {
-			for _, childBranch := range childBranches {
-				childProposalOpt, err := connector.FindProposal(childBranch, args.OldBranch)
-				if err != nil {
-					continue
-				}
-				childProposal, hasChildProposal := childProposalOpt.Get()
-				if hasChildProposal {
-					proposalsOfChildBranches = append(proposalsOfChildBranches, childProposal)
-				}
-			}
-		}
+	if !hasConnector {
+		return []hostingdomain.Proposal{}
 	}
-	return proposalsOfChildBranches
+	findProposal, canFindProposal := connector.FindProposalFn().Get()
+	if !canFindProposal {
+		return []hostingdomain.Proposal{}
+	}
+	if args.Offline.IsTrue() {
+		return []hostingdomain.Proposal{}
+	}
+	if !args.OldBranchHasTrackingBranch {
+		return []hostingdomain.Proposal{}
+	}
+	childBranches := args.Lineage.Children(args.OldBranch)
+	result := make([]hostingdomain.Proposal, 0, len(childBranches))
+	for _, childBranch := range childBranches {
+		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
+		if err != nil {
+			print.Error(err)
+			continue
+		}
+		childProposal, hasChildProposal := childProposalOpt.Get()
+		if !hasChildProposal {
+			continue
+		}
+		result = append(result, childProposal)
+	}
+	return result
 }
 
 type LoadProposalsOfChildBranchesArgs struct {
@@ -183,12 +194,21 @@ type LoadProposalsOfChildBranchesArgs struct {
 
 func FindProposal(connectorOpt Option[hostingdomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[hostingdomain.Proposal] {
 	connector, hasConnector := connectorOpt.Get()
-	target, hasTarget := targetBranch.Get()
-	if hasConnector && connector.CanMakeAPICalls() && hasTarget {
-		proposalOpt, err := connector.FindProposal(sourceBranch, target)
-		if err == nil {
-			return proposalOpt
-		}
+	if !hasConnector {
+		return None[hostingdomain.Proposal]()
 	}
-	return None[hostingdomain.Proposal]()
+	target, hasTarget := targetBranch.Get()
+	if !hasTarget {
+		return None[hostingdomain.Proposal]()
+	}
+	findProposal, canFindProposal := connector.FindProposalFn().Get()
+	if !canFindProposal {
+		return None[hostingdomain.Proposal]()
+	}
+	proposal, err := findProposal(sourceBranch, target)
+	if err != nil {
+		print.Error(err)
+		return None[hostingdomain.Proposal]()
+	}
+	return proposal
 }

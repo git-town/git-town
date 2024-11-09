@@ -212,14 +212,15 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if !hasParentBranch {
 		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
 	}
-	existingProposalURL := None[string]()
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
 		return data, false, hostingdomain.UnsupportedServiceError()
 	}
-	if connector.CanMakeAPICalls() {
-		existingProposalOpt, err := connector.FindProposal(initialBranch, parentOfBranchToPropose)
+	existingProposalURL := None[string]()
+	if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
+		existingProposalOpt, err := findProposal(initialBranch, parentOfBranchToPropose)
 		if err != nil {
+			print.Error(err)
 			existingProposalOpt = None[hostingdomain.Proposal]()
 		}
 		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
