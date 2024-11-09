@@ -51,7 +51,7 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	}, nil
 }
 
-func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) error {
+func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) {
 	branchToShipLocal, hasLocalBranchToShip := sharedData.branchToShip.LocalName.Get()
 	UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
@@ -80,5 +80,4 @@ func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, ap
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return nil
 }
