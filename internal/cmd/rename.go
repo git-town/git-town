@@ -288,16 +288,15 @@ func renameProgram(data renameData) program.Program {
 		if data.oldBranch.HasTrackingBranch() && data.config.NormalConfig.IsOnline() {
 			result.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
 			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
-			if proposal, hasProposal := data.proposal.Get(); hasProposal {
-				if connector, hasConnector := data.connector.Get(); hasConnector {
-					if connector.UpdateProposalSourceFn().IsSome() {
-						result.Value.Add(&opcodes.ProposalUpdateSource{
-							NewBranch:      data.newBranch,
-							OldBranch:      data.oldBranch.LocalBranchName(),
-							ProposalNumber: proposal.Number,
-						})
-					}
-				}
+			proposal, hasProposal := data.proposal.Get()
+			connector, hasConnector := data.connector.Get()
+			connectorCanUpdateProposalSource := connector.UpdateProposalSourceFn().IsSome()
+			if hasProposal && hasConnector && connectorCanUpdateProposalSource {
+				result.Value.Add(&opcodes.ProposalUpdateSource{
+					NewBranch:      data.newBranch,
+					OldBranch:      data.oldBranch.LocalBranchName(),
+					ProposalNumber: proposal.Number,
+				})
 			}
 			result.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
