@@ -103,7 +103,6 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		}
 		shipProgramSquashMerge(prog, sharedData, squashMergeData, message)
 	}
-	shipProgram := prog.Get()
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: sharedData.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -113,8 +112,8 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            shipProgram,
-		TouchedBranches:       shipProgram.TouchedBranches(),
+		RunProgram:            prog.Get(),
+		TouchedBranches:       prog.Value.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
