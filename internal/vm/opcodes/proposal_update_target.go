@@ -9,19 +9,19 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ProposalUpdateBase updates the target of the proposal with the given number at the code hosting platform.
-type ProposalUpdateBase struct {
-	NewTarget               gitdomain.LocalBranchName
-	OldTarget               gitdomain.LocalBranchName
+// ProposalUpdateTarget updates the target of the proposal with the given number at the code hosting platform.
+type ProposalUpdateTarget struct {
+	NewBranch               gitdomain.LocalBranchName
+	OldBranch               gitdomain.LocalBranchName
 	ProposalNumber          int
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ProposalUpdateBase) AutomaticUndoError() error {
+func (self *ProposalUpdateTarget) AutomaticUndoError() error {
 	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }
 
-func (self *ProposalUpdateBase) Run(args shared.RunArgs) error {
+func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
 		return hostingdomain.UnsupportedServiceError()
@@ -30,18 +30,18 @@ func (self *ProposalUpdateBase) Run(args shared.RunArgs) error {
 	if !canUpdateProposalTarget {
 		return hostingdomain.UnsupportedServiceError()
 	}
-	return updateProposalTarget(self.ProposalNumber, self.NewTarget, args.FinalMessages)
+	return updateProposalTarget(self.ProposalNumber, self.NewBranch, args.FinalMessages)
 }
 
-func (self *ProposalUpdateBase) ShouldUndoOnError() bool {
+func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {
 	return true
 }
 
-func (self *ProposalUpdateBase) UndoExternalChangesProgram() []shared.Opcode {
+func (self *ProposalUpdateTarget) UndoExternalChangesProgram() []shared.Opcode {
 	return []shared.Opcode{
-		&ProposalUpdateBase{
-			NewTarget:      self.OldTarget,
-			OldTarget:      self.NewTarget,
+		&ProposalUpdateTarget{
+			NewBranch:      self.OldBranch,
+			OldBranch:      self.NewBranch,
 			ProposalNumber: self.ProposalNumber,
 		},
 	}
