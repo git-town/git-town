@@ -1,5 +1,7 @@
 # Git Town Changelog
 
+new capabilities-oriented architecture
+
 ## 16.5.0 (2024-10-25)
 
 #### New Features
