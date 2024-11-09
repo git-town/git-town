@@ -35,7 +35,7 @@ func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) st
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	if len(hostingdomain.ReadProposalOverride()) == 0 {
+	if len(hostingdomain.ReadProposalOverride()) > 0 {
 		return Some(self.findProposalViaOverride)
 	}
 	if self.APIToken.IsSome() {
