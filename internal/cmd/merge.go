@@ -218,21 +218,18 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	}
 	initialBranchProposal := None[hostingdomain.Proposal]()
 	parentBranchProposal := None[hostingdomain.Proposal]()
-	connector, hasConnector := connectorOpt.Get()
-	if !hasConnector {
-		return mergeData{}, false, hostingdomain.UnsupportedServiceError()
-	}
-	if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
-		initialBranchProposal, err = findProposal(initialBranch, parentBranch)
-		if err != nil {
-			initialBranchProposal = None[hostingdomain.Proposal]()
-		}
-		parentBranchProposal, err = findProposal(initialBranch, parentBranch)
-		if err != nil {
-			parentBranchProposal = None[hostingdomain.Proposal]()
+	if connector, hasConnector := connectorOpt.Get(); hasConnector {
+		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
+			initialBranchProposal, err = findProposal(initialBranch, parentBranch)
+			if err != nil {
+				initialBranchProposal = None[hostingdomain.Proposal]()
+			}
+			parentBranchProposal, err = findProposal(initialBranch, parentBranch)
+			if err != nil {
+				parentBranchProposal = None[hostingdomain.Proposal]()
+			}
 		}
 	}
-
 	return mergeData{
 		branchesSnapshot:                branchesSnapshot,
 		config:                          validatedConfig,
