@@ -269,11 +269,15 @@ func prependProgram(data prependData) program.Program {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	if hasProposal {
-		prog.Value.Add(&opcodes.ProposalUpdateBase{
-			NewTarget:      data.targetBranch,
-			OldTarget:      data.existingParent,
-			ProposalNumber: proposal.Number,
-		})
+		if connector, hasConnector := data.connector.Get(); hasConnector {
+			if connector.UpdateProposalTargetFn().IsSome() {
+				prog.Value.Add(&opcodes.ProposalUpdateBase{
+					NewTarget:      data.targetBranch,
+					OldTarget:      data.existingParent,
+					ProposalNumber: proposal.Number,
+				})
+			}
+		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
