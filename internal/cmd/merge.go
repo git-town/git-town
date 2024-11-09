@@ -222,12 +222,12 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if !hasConnector {
 		return mergeData{}, false, hostingdomain.UnsupportedServiceError()
 	}
-	if connector.CanMakeAPICalls() {
-		initialBranchProposal, err = connector.FindProposal(initialBranch, parentBranch)
+	if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
+		initialBranchProposal, err = findProposal(initialBranch, parentBranch)
 		if err != nil {
 			initialBranchProposal = None[hostingdomain.Proposal]()
 		}
-		parentBranchProposal, err = connector.FindProposal(initialBranch, parentBranch)
+		parentBranchProposal, err = findProposal(initialBranch, parentBranch)
 		if err != nil {
 			parentBranchProposal = None[hostingdomain.Proposal]()
 		}
