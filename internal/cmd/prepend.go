@@ -269,7 +269,7 @@ func prependProgram(data prependData) program.Program {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	connector, hasConnector := data.connector.Get()
-	connectorCanUpdateProposalTargets := connector.UpdateProposalTargetFn().IsSome()
+	connectorCanUpdateProposalTargets := hasConnector && connector.UpdateProposalTargetFn().IsSome()
 	if hasProposal && hasConnector && connectorCanUpdateProposalTargets {
 		prog.Value.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch:      data.targetBranch,

@@ -290,7 +290,7 @@ func renameProgram(data renameData) program.Program {
 			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
 			proposal, hasProposal := data.proposal.Get()
 			connector, hasConnector := data.connector.Get()
-			connectorCanUpdateProposalSource := connector.UpdateProposalSourceFn().IsSome()
+			connectorCanUpdateProposalSource := hasConnector && connector.UpdateProposalSourceFn().IsSome()
 			if hasProposal && hasConnector && connectorCanUpdateProposalSource {
 				result.Value.Add(&opcodes.ProposalUpdateSource{
 					NewBranch:      data.newBranch,
