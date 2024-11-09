@@ -223,7 +223,9 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 		prog.Add(&opcodes.BranchParentDelete{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
-		if data.connector.IsSome() && hasProposal {
+		connector, hasConnector := data.connector.Get()
+		connectorCanUpdateProposalTarget := hasConnector && connector.UpdateProposalTargetFn().IsSome()
+		if hasProposal && hasConnector && connectorCanUpdateProposalTarget {
 			prog.Add(&opcodes.ProposalUpdateTarget{
 				NewBranch:      selectedBranch,
 				OldBranch:      proposal.Target,
