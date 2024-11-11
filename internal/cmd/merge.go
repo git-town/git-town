@@ -257,7 +257,8 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	if data.parentBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
-		sync.FeatureTrackingBranchProgram(data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
+		sync.FeatureTrackingBranchProgram(
+			data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
 			data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 			sync.FeatureTrackingArgs{
 				FirstCommitMessage: data.parentBranchFirstCommitMessage,
