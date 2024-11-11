@@ -221,7 +221,6 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 		existingProposalOpt, err := findProposal(initialBranch, parentOfBranchToPropose)
 		if err != nil {
 			print.Error(err)
-			existingProposalOpt = None[hostingdomain.Proposal]()
 		}
 		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
 			existingProposalURL = Some(existingProposal.URL)
