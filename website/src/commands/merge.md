@@ -2,8 +2,8 @@
 
 > _git town merge_
 
-The _merge_ command merges the current branch with its parent branch and updates
-proposals. Both branches must be
+The _merge_ command merges the current branch with its parent branch.
+Both branches must be
 [feature branches](../branch-types.md#feature-branches).
 
 When using the
