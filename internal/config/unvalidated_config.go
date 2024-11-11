@@ -14,12 +14,6 @@ type UnvalidatedConfig struct {
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
 
-// TODO: delete?
-type Runner interface {
-	Query(executable string, args ...string) (string, error)
-	Run(executable string, args ...string) error
-}
-
 func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType {
 	return self.UnvalidatedConfig.PartialBranchType(branch).GetOrElse(self.NormalConfig.PartialBranchType(branch))
 }
