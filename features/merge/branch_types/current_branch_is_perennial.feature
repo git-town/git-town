@@ -3,8 +3,8 @@ Feature: does not merge perennial branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE      | PARENT | LOCATIONS |
-      | current | perennial |        | local     |
+      | NAME    | TYPE      | LOCATIONS |
+      | current | perennial | local     |
     And the current branch is "current"
     When I run "git-town merge"
 

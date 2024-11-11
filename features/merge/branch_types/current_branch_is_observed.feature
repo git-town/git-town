@@ -3,8 +3,8 @@ Feature: does not merge observed branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE     | PARENT | LOCATIONS |
-      | current | observed |        | local     |
+      | NAME    | TYPE     | LOCATIONS |
+      | current | observed | local     |
     And the current branch is "current"
     When I run "git-town merge"
 
