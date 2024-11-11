@@ -1,4 +1,4 @@
-Feature: does not merge branches whose parent is contribution
+Feature: does not merge branches whose parent is perennial
 
   Background:
     Given a Git repo with origin
