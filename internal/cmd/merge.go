@@ -222,11 +222,11 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
 			initialBranchProposal, err = findProposal(initialBranch, parentBranch)
 			if err != nil {
-				initialBranchProposal = None[hostingdomain.Proposal]()
+				print.Error(err)
 			}
 			parentBranchProposal, err = findProposal(initialBranch, parentBranch)
 			if err != nil {
-				parentBranchProposal = None[hostingdomain.Proposal]()
+				print.Error(err)
 			}
 		}
 	}
