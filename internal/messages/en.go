@@ -16,6 +16,7 @@ const (
 	BranchCheckoutProblem             = "cannot check out branch %q: %w"
 	BranchCurrentProblem              = "cannot determine current branch: %w"
 	BranchDeleted                     = "deleted branch %q"
+	BranchDeletedAtRemote             = "branch %q was deleted at the remote"
 	BranchDeletedHasUnmergedChanges   = "Branch %q was deleted at the remote but the local branch contains unshipped changes.\nI am therefore not removing this branch. You can see the unshipped changes by running \"git town diff-parent\"."
 	BranchDiffProblem                 = "cannot determine if branch %q has unmerged commits: %w"
 	BranchDoesntContainCommit         = "branch %q does not contain commit %q. Found commits %s"
@@ -29,6 +30,7 @@ const (
 	BranchIsAlreadyParked             = "branch %q is already parked"
 	BranchLocalSHAProblem             = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                = "cannot determine whether the local branch %q exists: %w"
+	BranchOtherWorktree               = `branch %q is active in another worktree`
 	BranchParentChanged               = "branch %q is now a child of %q"
 	BrowserOpen                       = "Please open in a browser: %s\n"
 	CacheUnitialized                  = "using a cached value before initialization"
@@ -122,7 +124,6 @@ END OUTPUT FROM 'git branch -vva'
 	HostingPlatformUnknown              = "unknown hosting platform: %q"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
-	DeleteBranchOtherWorktree           = `branch %q is active in another worktree`
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
 	KillDeprecation                     = `DEPRECATION NOTICE
@@ -136,6 +137,9 @@ END OUTPUT FROM 'git branch -vva'
 	MainBranchCannotPropose               = "cannot propose the main branch"
 	MainBranchCannotPrototype             = "cannot prototype the main branch"
 	MainBranchCannotShip                  = "cannot ship the main branch"
+	MergeOpenChanges                      = "please commit or remove the open changes first"
+	MergeNoGrandParent                    = "cannot merge branch %q because its parent branch (%s) has no parent"
+	MergeNoParent                         = "cannot merge branch %q because it has no parent"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
@@ -201,7 +205,6 @@ and will be removed in future versions of Git Town.`
 	SettingCannotWrite            = "ERROR: cannot write %s Git setting %q: %v"
 	SettingIgnoreInvalid          = "Notice: ignoring invalid dialog input setting %q\n"
 	SettingSunsetDeleted          = "Deleting obsolete setting %q"
-	ShipBranchDeletedAtRemote     = "branch %q was deleted at the remote"
 	ShipBranchIsInOtherWorktree   = "branch %q is checked out in another worktree, please ship from there"
 	ShipBranchNotInSync           = "branch %q is not in sync"
 	ShipAbortedMergeError         = "aborted because merge exited with error"
