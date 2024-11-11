@@ -8,14 +8,14 @@ proposals. Both branches must be
 
 When using the
 [compress sync strategy](../preferences/sync-feature-strategy.md#compress), the
-merged branch will contain two commits: one commit per merged branch. This
-allows you to verify that the branches were correctly merged. Run
-[git town sync](sync.md) to compress these two commits.
+merged branch will contain two separate commits: one per merged branch. This
+makes it easy to verify that both branches were merged as expected. To
+consolidate these commits, run [git town sync](sync.md).
 
 ### --dry-run
 
-The `--dry-run` flag allows to test-drive this command. It prints the Git
-commands that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
 ### --verbose / -v
 
