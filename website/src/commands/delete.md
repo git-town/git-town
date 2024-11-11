@@ -15,7 +15,7 @@ When called with a branch name, it deletes the given branch.
 
 ### --dry-run
 
-The `--dry-run` flag allows to test-drive this command. It prints the Git
+Use the `--dry-run` flag allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
 
 ### --verbose / -v

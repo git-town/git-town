@@ -25,7 +25,7 @@ When called with a positional argument, it ships the branch with the given name.
 
 ### --dry-run
 
-The `--dry-run` flag allows to test-drive this command. It prints the Git
+Use the `--dry-run` flag allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
 
 ### --message / -m
