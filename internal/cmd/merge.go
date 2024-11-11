@@ -290,7 +290,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 			})
 		} else if hasParentBranchProposal && connectorCanUpdateSourceBranch {
 			prog.Value.Add(&opcodes.ProposalUpdateSource{
-				NewBranch:      data.grandParentBranch,
+				NewBranch:      data.initialBranch,
 				OldBranch:      data.parentBranch,
 				ProposalNumber: parentBranchProposal.Number,
 			})
