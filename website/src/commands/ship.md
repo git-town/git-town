@@ -2,7 +2,7 @@
 
 > _git town ship [--to-parent] [--message &lt;text&gt;] [branch-name]_
 
-_Notice: Most people don't need to use the \_ship_ command. The recommended way
+_Notice: Most people don't need to use the_ ship _command. The recommended way
 to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git town ship` is for edge cases
 like developing in [offline mode](../preferences/offline.md) or when shipping
@@ -25,8 +25,8 @@ When called with a positional argument, it ships the branch with the given name.
 
 ### --dry-run
 
-Use the `--dry-run` flag allows to test-drive this command. It prints the Git
-commands that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
 ### --message / -m
 
