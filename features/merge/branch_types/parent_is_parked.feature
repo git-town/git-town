@@ -22,7 +22,9 @@ Feature: merging a feature branch with a parked branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                      |
+      | current | git branch parent {{ sha 'initial commit' }} |
     And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now
