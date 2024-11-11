@@ -1,11 +1,11 @@
-Feature: does not merge branches whose parent is contribution
+Feature: does not merge contribution branches
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT       | LOCATIONS |
-      | contribution | contribution |              | local     |
-      | current      | feature      | contribution | local     |
+      | NAME    | TYPE         | PARENT | LOCATIONS |
+      | parent  | feature      | main   | local     |
+      | current | contribution | parent | local     |
     And the current branch is "current"
     When I run "git-town merge"
 
@@ -15,7 +15,7 @@ Feature: does not merge branches whose parent is contribution
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge branch "current" because its parent branch (contribution) has no parent
+      cannot merge branch "current" because it has no parent
       """
 
   Scenario: undo
