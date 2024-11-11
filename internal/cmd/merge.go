@@ -277,7 +277,25 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
 		Remotes:             data.remotes,
 	})
-	// !!!!!!!!!!!!!!  TODO: update proposals
+	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsFalse() {
+		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
+		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
+		_, connectorCanUpdateSourceBranch := connector.UpdateProposalSourceFn().Get()
+		_, connectorCanUpdateTargetBranch := connector.UpdateProposalTargetFn().Get()
+		if hasInitialBranchProposal && connectorCanUpdateTargetBranch {
+			prog.Value.Add(&opcodes.ProposalUpdateTarget{
+				NewBranch:      data.grandParentBranch,
+				OldBranch:      data.parentBranch,
+				ProposalNumber: initialBranchProposal.Number,
+			})
+		} else if hasParentBranchProposal && connectorCanUpdateSourceBranch {
+			prog.Value.Add(&opcodes.ProposalUpdateSource{
+				NewBranch:      data.grandParentBranch,
+				OldBranch:      data.parentBranch,
+				ProposalNumber: parentBranchProposal.Number,
+			})
+		}
+	}
 	prog.Value.Add(&opcodes.LineageParentSet{
 		Branch: data.initialBranch,
 		Parent: data.grandParentBranch,
