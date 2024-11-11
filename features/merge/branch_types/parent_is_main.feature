@@ -3,9 +3,8 @@ Feature: does not merge branches whose parent is contribution
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT       | LOCATIONS |
-      | contribution | contribution |              | local     |
-      | current      | feature      | contribution | local     |
+      | NAME    | TYPE    | PARENT | LOCATIONS |
+      | current | feature | main   | local     |
     And the current branch is "current"
     When I run "git-town merge"
 
@@ -15,7 +14,7 @@ Feature: does not merge branches whose parent is contribution
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge branch "current" because its parent branch (contribution) has no parent
+      cannot merge branch "current" because its parent branch (main) has no parent
       """
 
   Scenario: undo
