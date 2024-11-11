@@ -42,7 +42,7 @@ in changes from other developers.
 
 ### --dry-run
 
-The `--dry-run` flag allows to test-drive this command. It prints the Git
+Use the `--dry-run` flag allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
 
 ### --prototype / -p
