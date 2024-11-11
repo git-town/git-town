@@ -2,7 +2,7 @@
 
 > _git town ship [--to-parent] [--message &lt;text&gt;] [branch-name]_
 
-_Notice: Most people don't need to use the_ ship _command. The recommended way
+_Notice: Most people don't need to use this command. The recommended way
 to merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git town ship` is for edge cases
 like developing in [offline mode](../preferences/offline.md) or when shipping
