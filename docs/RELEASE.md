@@ -6,7 +6,7 @@ This guide is for maintainers who make releases of Git Town.
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
     CHANGELOG.md
-  - verify that all newly added Git Town commands are not hidden
+  - verify that all newly added Git Town commands are not hidden and listed in the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `16.5.0`
