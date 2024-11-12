@@ -6,11 +6,12 @@ This guide is for maintainers who make releases of Git Town.
   - update CHANGELOG.md
   - run `make stats-release` and copy the release stats and contributors into
     CHANGELOG.md
-  - verify that all newly added Git Town commands are not hidden
+  - verify that all newly added Git Town commands are not hidden and listed in
+    the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `16.5.0`
-    - double-digits: `16.5`
+    - triple-digits: `16.6.0`
+    - double-digits: `16.6`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
@@ -23,7 +24,7 @@ This guide is for maintainers who make releases of Git Town.
 - in a new branch:
   - update the changelog with links to the website
   - ship the branch
-- `git sync --all && git checkout main && git tag v16.5.0 && git push --tags`
+- `git sync --all && git checkout main && git tag v16.6.0 && git push --tags`
 - wait for CI to finish the release:
   https://github.com/git-town/git-town/actions
 - edit the new unpublished release:

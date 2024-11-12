@@ -1,6 +1,20 @@
 # Git Town Changelog
 
-new capabilities-oriented architecture
+## 16.6.0 (2024-11-12)
+
+#### New Features
+
+- Git Town now auto-resolves phantom merge conflicts for the `merge` and `compress` [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) ([#4183](https://github.com/git-town/git-town/pull/4183)). This eliminates the need to manually resolve unnecessary merge conflicts when you ship the oldest branch in a stack and then sync the rest of the stack.
+- The new `git town merge` command merges two adjacent branches in a branch stack ([#4196](https://github.com/git-town/git-town/pull/4196)).
+
+#### Bug Fixes
+
+- Git Town's new capabilities-driven architecture now only attempts to change proposals if the hosting platform supports it. This reduces error messages by preventing unsupported operations ([#4203](https://github.com/git-town/git-town/pull/4203), [#4200](https://github.com/git-town/git-town/pull/4200)).
+- Git Town now always syncs a branch with its parent branch before syncing with its tracking branch ([#4193](https://github.com/git-town/git-town/pull/4193)).
+
+#### Contributors
+
+Big thanks to @IGassmann, @ceilfors, @heisencoder, @kevgo, @mball-agathos, @stephenwade, @tranhl for contributing invaluable ideas to 30 shipped PRs and 2 resolved issues.
 
 ## 16.5.0 (2024-10-25)
 
