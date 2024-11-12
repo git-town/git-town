@@ -9,7 +9,7 @@
 
 #### Bug Fixes
 
-- Thanks to a new capabilities-oriented architecture, Git Town now only tries to change proposals if the hosting platform supports it. This means fewer error messages when those capabilities are not available ([#4203](https://github.com/git-town/git-town/pull/4203), [#4200](https://github.com/git-town/git-town/pull/4200)).
+- Thanks to its new capabilities-oriented architecture, Git Town now only tries to change proposals if the hosting platform supports it. This means fewer error messages when those capabilities are not available ([#4203](https://github.com/git-town/git-town/pull/4203), [#4200](https://github.com/git-town/git-town/pull/4200)).
 - Git Town now always syncs with the parent branch before syncing with the tracking branch ([#4193](https://github.com/git-town/git-town/pull/4193)).
 
 #### Contributors
