@@ -5,7 +5,7 @@
 #### New Features
 
 - Git Town now auto-resolves phantom merge conflicts for the `merge` and `compress` [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy) ([#4183](https://github.com/git-town/git-town/pull/4183)). This eliminates the need to manually resolve unnecessary merge conflicts when you ship the oldest branch in a stack and then sync the rest of the stack.
-- The new `git town merge` command merges two adjacent branches in a branch stack ([#4196](https://github.com/git-town/git-town/pull/4196)).
+- The new [git town merge](https://www.git-town.com/commands/merge) command merges two adjacent branches in a branch stack ([#4196](https://github.com/git-town/git-town/pull/4196)).
 
 #### Bug Fixes
 
