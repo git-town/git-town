@@ -121,7 +121,7 @@ func Types() []shared.Opcode {
 		&RebaseTrackingBranch{},
 		&ProposalCreate{},
 		&ProposalUpdateTarget{},
-		&ProposalUpdateTargetToParent{},
+		&ProposalUpdateTargetToGrandParent{},
 		&ProposalUpdateSource{},
 		&PullCurrentBranch{},
 		&PushCurrentBranch{},
