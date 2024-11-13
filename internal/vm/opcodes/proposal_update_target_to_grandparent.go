@@ -7,16 +7,16 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// ProposalUpdateTargetToParent updates the target of the proposal with the given number to the parent of the given branch.
-type ProposalUpdateTargetToParent struct {
+// ProposalUpdateTargetToGrandParent updates the target of the proposal with the given number to the parent of the given branch.
+type ProposalUpdateTargetToGrandParent struct {
 	Branch                  gitdomain.LocalBranchName
 	OldTarget               gitdomain.LocalBranchName
 	ProposalNumber          int
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ProposalUpdateTargetToParent) Run(args shared.RunArgs) error {
-	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
+func (self *ProposalUpdateTargetToGrandParent) Run(args shared.RunArgs) error {
+	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.OldTarget).Get()
 	if !hasParent {
 		return fmt.Errorf("branch %q has no parent", self.Branch)
 	}

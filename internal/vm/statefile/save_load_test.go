@@ -108,7 +108,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
 				&opcodes.ProposalUpdateTarget{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{CurrentBranch: "branch"},
@@ -572,7 +572,7 @@ func TestLoadSave(t *testing.T) {
         "OldTarget": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateTargetToParent"
+      "type": "ProposalUpdateTargetToGrandParent"
     },
     {
       "data": {
