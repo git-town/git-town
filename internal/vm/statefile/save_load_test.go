@@ -572,7 +572,7 @@ func TestLoadSave(t *testing.T) {
         "OldTarget": "old-target",
         "ProposalNumber": 123
       },
-      "type": "ProposalUpdateTargetToParent"
+      "type": "ProposalUpdateTargetToGrandParent"
     },
     {
       "data": {
