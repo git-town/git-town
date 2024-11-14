@@ -58,7 +58,11 @@ func hackCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeHack(args, detached, dryRun, readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			prototype, err := readPrototypeFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeHack(args, detached, dryRun, prototype, readVerboseFlag(cmd))
 		},
 	}
 	addDetachedFlag(&cmd)

@@ -54,7 +54,11 @@ func appendCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeAppend(args[0], detached, dryRun, readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			prototype, err := readPrototypeFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeAppend(args[0], detached, dryRun, prototype, readVerboseFlag(cmd))
 		},
 	}
 	addDetachedFlag(&cmd)
