@@ -12,7 +12,7 @@ import (
 
 const shipStrategyLong = "strategy"
 
-// type-safe access to the CLI arguments of type configdomain.ShipIntoNonPerennialParentLong
+// type-safe access to the CLI arguments of type configdomain.ShipStrategy
 func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().StringP(shipStrategyLong, "s", "", "override the ship-strategy")
