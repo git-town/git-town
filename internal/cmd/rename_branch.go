@@ -26,7 +26,11 @@ func renameBranchCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			result := executeRename(args, dryRun, readForceFlag(cmd), readVerboseFlag(cmd))
+			force, err := readForceFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executeRename(args, dryRun, force, readVerboseFlag(cmd))
 			printRenameBranchDeprecationNotice()
 			return result
 		},
