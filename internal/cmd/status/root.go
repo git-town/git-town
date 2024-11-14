@@ -29,7 +29,11 @@ func RootCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeStatus(readPendingFlag(cmd), readVerboseFlag(cmd))
+			pending, err := readPendingFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeStatus(pending, readVerboseFlag(cmd))
 		},
 	}
 	addPendingFlag(&cmd)
