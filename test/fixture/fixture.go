@@ -23,10 +23,10 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo OptionP[commands.TestCommands]
+	CoworkerRepo MutableOption[commands.TestCommands]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo OptionP[commands.TestCommands]
+	DevRepo MutableOption[commands.TestCommands]
 
 	// Dir defines the local folder in which this Fixture is stored.
 	// This folder also acts as the HOME directory for tests using this Fixture.
@@ -35,18 +35,18 @@ type Fixture struct {
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo OptionP[commands.TestCommands]
+	OriginRepo MutableOption[commands.TestCommands]
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
-	SecondWorktree OptionP[commands.TestCommands]
+	SecondWorktree MutableOption[commands.TestCommands]
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo OptionP[commands.TestCommands]
+	SubmoduleRepo MutableOption[commands.TestCommands]
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo OptionP[commands.TestCommands]
+	UpstreamRepo MutableOption[commands.TestCommands]
 }
 
 // AddCoworkerRepo adds a coworker repository.
