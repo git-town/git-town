@@ -63,7 +63,31 @@ func Cmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSync(readAllFlag(cmd), readStackFlag(cmd), readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
+			allBranches, err := readAllFlag(cmd)
+			if err != nil {
+				return err
+			}
+			detached, err := readDetachedFlag(cmd)
+			if err != nil {
+				return err
+			}
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			noPush, err := readNoPushFlag(cmd)
+			if err != nil {
+				return err
+			}
+			stack, err := readStackFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSync(allBranches, stack, detached, dryRun, verbose, noPush)
 		},
 	}
 	addAllFlag(&cmd)

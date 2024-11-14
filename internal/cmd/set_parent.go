@@ -41,7 +41,11 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSetParent(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSetParent(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

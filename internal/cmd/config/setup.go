@@ -31,7 +31,11 @@ func SetupCommand() *cobra.Command {
 		Short: setupConfigDesc,
 		Long:  cmdhelpers.Long(setupConfigDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeConfigSetup(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeConfigSetup(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

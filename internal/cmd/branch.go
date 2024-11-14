@@ -31,7 +31,11 @@ func branchCmd() *cobra.Command {
 		Short: branchDesc,
 		Long:  cmdhelpers.Long(branchDesc, branchHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeBranch(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeBranch(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

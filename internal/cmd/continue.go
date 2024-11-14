@@ -36,7 +36,11 @@ func continueCmd() *cobra.Command {
 		Short:   continueDesc,
 		Long:    cmdhelpers.Long(continueDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeContinue(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeContinue(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

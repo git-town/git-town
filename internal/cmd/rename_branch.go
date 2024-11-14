@@ -22,7 +22,19 @@ func renameBranchCommand() *cobra.Command {
 		Long:   cmdhelpers.Long(renameDesc, renameHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printRenameBranchDeprecationNotice()
-			result := executeRename(args, readDryRunFlag(cmd), readForceFlag(cmd), readVerboseFlag(cmd))
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			force, err := readForceFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executeRename(args, dryRun, force, verbose)
 			printRenameBranchDeprecationNotice()
 			return result
 		},

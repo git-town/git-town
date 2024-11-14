@@ -31,7 +31,11 @@ func offlineCmd() *cobra.Command {
 		Short:   offlineDesc,
 		Long:    cmdhelpers.Long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeOffline(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeOffline(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

@@ -23,7 +23,11 @@ func rootCmd() cobra.Command {
 		Short:         rootDesc,
 		Long:          cmdhelpers.Long(rootDesc, rootHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeRoot(cmd, readVersionFlag(cmd))
+			version, err := readVersionFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeRoot(cmd, version)
 		},
 	}
 	rootCmd.AddGroup(&cobra.Group{

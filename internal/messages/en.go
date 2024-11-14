@@ -219,6 +219,7 @@ and will be removed in future versions of Git Town.`
 	ShipAPINoRemoteBranch         = "cannot ship branch %q via API because it has no remote branch"
 	ShipMessageWithFastForward    = "shipping with the fast-forward strategy does not use the given commit message"
 	ShipOpenChanges               = "you have uncommitted changes. Did you mean to commit them before shipping?"
+	ShipStrategyMissing           = "no ship strategy provided"
 	ShippableChangesProblem       = "cannot determine whether branch %q has shippable changes: %w"
 	SkipBranchHasConflicts        = "cannot skip branch that resulted in conflicts"
 	SkipMessage                   = `You can run "git town skip" to skip the currently failing operation.`

@@ -15,15 +15,12 @@ func ProposalBody() (AddFunc, ReadProposalBodyFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().StringP(bodyLong, bodyShort, "", "provide a body for the proposal")
 	}
-	readFlag := func(cmd *cobra.Command) gitdomain.ProposalBody {
+	readFlag := func(cmd *cobra.Command) (gitdomain.ProposalBody, error) {
 		value, err := cmd.Flags().GetString(bodyLong)
-		if err != nil {
-			panic(err)
-		}
-		return gitdomain.ProposalBody(value)
+		return gitdomain.ProposalBody(value), err
 	}
 	return addFlag, readFlag
 }
 
 // ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
-type ReadProposalBodyFlagFunc func(*cobra.Command) gitdomain.ProposalBody
+type ReadProposalBodyFlagFunc func(*cobra.Command) (gitdomain.ProposalBody, error)
