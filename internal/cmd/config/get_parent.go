@@ -22,7 +22,11 @@ func getParentCommand() *cobra.Command {
 		Short: getParentDesc,
 		Long:  cmdhelpers.Long(getParentDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeGetParent(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeGetParent(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

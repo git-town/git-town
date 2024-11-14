@@ -53,7 +53,27 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readShipStrategyFlag(cmd), readToParentFlag(cmd))
+			shipStrategyOverride, err := readShipStrategyFlag(cmd)
+			if err != nil {
+				return err
+			}
+			message, err := readMessageFlag(cmd)
+			if err != nil {
+				return err
+			}
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			toParent, err := readToParentFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeShip(args, message, dryRun, verbose, shipStrategyOverride, toParent)
 		},
 	}
 	addDryRunFlag(&cmd)

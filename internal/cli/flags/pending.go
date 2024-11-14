@@ -15,15 +15,12 @@ func Pending() (AddFunc, ReadPendingFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(pendingLong, pendingShort, false, "display just the name of the pending Git Town command")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.Pending {
+	readFlag := func(cmd *cobra.Command) (configdomain.Pending, error) {
 		value, err := cmd.Flags().GetBool(pendingLong)
-		if err != nil {
-			panic(err)
-		}
-		return configdomain.Pending(value)
+		return configdomain.Pending(value), err
 	}
 	return addFlag, readFlag
 }
 
 // the type signature for the function that reads the pending flag from the args to the given Cobra command
-type ReadPendingFlagFunc func(*cobra.Command) configdomain.Pending
+type ReadPendingFlagFunc func(*cobra.Command) (configdomain.Pending, error)

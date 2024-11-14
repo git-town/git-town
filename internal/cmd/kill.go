@@ -21,7 +21,15 @@ func killCommand() *cobra.Command {
 		Long:   cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printKillDeprecationNotice()
-			result := executeDelete(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executeDelete(args, dryRun, verbose)
 			printKillDeprecationNotice()
 			return result
 		},

@@ -25,7 +25,11 @@ func RootCmd() *cobra.Command {
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeDisplayConfig(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeDisplayConfig(verbose)
 		},
 	}
 	addVerboseFlag(&configCmd)

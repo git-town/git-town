@@ -15,5 +15,7 @@ func TestDryRun(t *testing.T) {
 	addFlag(&cmd)
 	err := cmd.ParseFlags([]string{"--dry-run"})
 	must.NoError(t, err)
-	must.EqOp(t, true, readFlag(&cmd))
+	have, err := readFlag(&cmd)
+	must.NoError(t, err)
+	must.EqOp(t, true, have)
 }

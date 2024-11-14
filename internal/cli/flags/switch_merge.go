@@ -12,14 +12,11 @@ func SwitchMerge() (AddFunc, ReadMergeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(mergeLong, "m", false, "merge uncommitted changes into the target branch")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.SwitchUsingMerge {
+	readFlag := func(cmd *cobra.Command) (configdomain.SwitchUsingMerge, error) {
 		value, err := cmd.Flags().GetBool(mergeLong)
-		if err != nil {
-			panic(err)
-		}
-		return configdomain.SwitchUsingMerge(value)
+		return configdomain.SwitchUsingMerge(value), err
 	}
 	return addFlag, readFlag
 }
 
-type ReadMergeFlagFunc func(*cobra.Command) configdomain.SwitchUsingMerge
+type ReadMergeFlagFunc func(*cobra.Command) (configdomain.SwitchUsingMerge, error)

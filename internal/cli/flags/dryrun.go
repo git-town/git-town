@@ -12,15 +12,12 @@ func DryRun() (AddFunc, ReadDryRunFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(dryRunLong, "", false, "print but do not run the Git commands")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.DryRun {
+	readFlag := func(cmd *cobra.Command) (configdomain.DryRun, error) {
 		value, err := cmd.Flags().GetBool(dryRunLong)
-		if err != nil {
-			panic(err)
-		}
-		return configdomain.DryRun(value)
+		return configdomain.DryRun(value), err
 	}
 	return addFlag, readFlag
 }
 
 // the type signature for the function that reads the dry-run flag from the args to the given Cobra command
-type ReadDryRunFlagFunc func(*cobra.Command) configdomain.DryRun
+type ReadDryRunFlagFunc func(*cobra.Command) (configdomain.DryRun, error)

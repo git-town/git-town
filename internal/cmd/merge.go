@@ -46,7 +46,15 @@ func mergeCommand() *cobra.Command {
 		Short:   mergeDesc,
 		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeMerge(readDryRunFlag(cmd), readVerboseFlag(cmd))
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeMerge(dryRun, verbose)
 		},
 	}
 	addDryRunFlag(&cmd)

@@ -33,7 +33,11 @@ func undoCmd() *cobra.Command {
 		Short:   undoDesc,
 		Long:    cmdhelpers.Long(undoDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeUndo(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeUndo(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

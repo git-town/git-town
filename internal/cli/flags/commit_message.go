@@ -16,18 +16,18 @@ func CommitMessage(desc string) (AddFunc, ReadCommitMessageFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().StringP(commitMessageLong, commitMessageShort, "", desc)
 	}
-	readFlag := func(cmd *cobra.Command) Option[gitdomain.CommitMessage] {
+	readFlag := func(cmd *cobra.Command) (Option[gitdomain.CommitMessage], error) {
 		value, err := cmd.Flags().GetString(commitMessageLong)
 		if err != nil {
-			panic(err)
+			return None[gitdomain.CommitMessage](), err
 		}
 		if value == "" {
-			return None[gitdomain.CommitMessage]()
+			return None[gitdomain.CommitMessage](), nil
 		}
-		return Some(gitdomain.CommitMessage(value))
+		return Some(gitdomain.CommitMessage(value)), nil
 	}
 	return addFlag, readFlag
 }
 
 // ReadCommitMessageFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
-type ReadCommitMessageFlagFunc func(*cobra.Command) Option[gitdomain.CommitMessage]
+type ReadCommitMessageFlagFunc func(*cobra.Command) (Option[gitdomain.CommitMessage], error)

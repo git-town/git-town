@@ -35,7 +35,11 @@ func parkCmd() *cobra.Command {
 		Short:   parkDesc,
 		Long:    cmdhelpers.Long(parkDesc, parkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePark(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executePark(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

@@ -53,7 +53,23 @@ func compressCmd() *cobra.Command {
 		Short: compressDesc,
 		Long:  cmdhelpers.Long(compressDesc, compressHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeCompress(readDryRunFlag(cmd), readVerboseFlag(cmd), readMessageFlag(cmd), readStackFlag(cmd))
+			message, err := readMessageFlag(cmd)
+			if err != nil {
+				return err
+			}
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			stack, err := readStackFlag(cmd)
+			if err != nil {
+				return err
+			}
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeCompress(dryRun, verbose, message, stack)
 		},
 	}
 	addDryRunFlag(&cmd)

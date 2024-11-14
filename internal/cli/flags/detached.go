@@ -12,15 +12,12 @@ func Detached() (AddFunc, ReadDetachedFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(detachedLong, "d", false, "don't update the perennial root branch")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.Detached {
+	readFlag := func(cmd *cobra.Command) (configdomain.Detached, error) {
 		value, err := cmd.Flags().GetBool(detachedLong)
-		if err != nil {
-			panic(err)
-		}
-		return configdomain.Detached(value)
+		return configdomain.Detached(value), err
 	}
 	return addFlag, readFlag
 }
 
 // the type signature for the function that reads the detached flag from the args to the given Cobra command
-type ReadDetachedFlagFunc func(*cobra.Command) configdomain.Detached
+type ReadDetachedFlagFunc func(*cobra.Command) (configdomain.Detached, error)
