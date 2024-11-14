@@ -45,6 +45,7 @@ func Cmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("specify the commit message for the squash commit")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addShipStrategyFlag, readShipStrategyFlag := flags.ShipStrategy()
 	addToParentFlag, readToParentFlag := flags.ShipIntoNonPerennialParent()
 	cmd := cobra.Command{
 		Use:   shipCommand,
@@ -52,17 +53,18 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readToParentFlag(cmd))
+			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readShipStrategyFlag(cmd), readToParentFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
+	addShipStrategyFlag(&cmd)
 	addToParentFlag(&cmd)
 	return &cmd
 }
 
-func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose configdomain.Verbose, toParent configdomain.ShipIntoNonperennialParent) error {
+func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun configdomain.DryRun, verbose configdomain.Verbose, shipStrategy Option[configdomain.ShipStrategy], toParent configdomain.ShipIntoNonperennialParent) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -74,7 +76,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil {
 		return err
 	}
-	sharedData, exit, err := determineSharedShipData(args, repo, dryRun, verbose)
+	sharedData, exit, err := determineSharedShipData(args, repo, dryRun, shipStrategy, verbose)
 	if err != nil || exit {
 		return err
 	}
