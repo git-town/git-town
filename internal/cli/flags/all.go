@@ -14,10 +14,7 @@ func All(desc string) (AddFunc, ReadAllFlagFunc) {
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.AllBranches, error) {
 		value, err := cmd.Flags().GetBool(allLong)
-		if err != nil {
-			return false, err
-		}
-		return configdomain.AllBranches(value), nil
+		return configdomain.AllBranches(value), err
 	}
 	return addFlag, readFlag
 }
