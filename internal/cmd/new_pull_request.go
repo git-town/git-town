@@ -39,7 +39,11 @@ func newPullRequestCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			result := executePropose(detached, dryRun, readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), bodyFile)
+			bodyText, err := readBodyFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executePropose(detached, dryRun, readVerboseFlag(cmd), readTitleFlag(cmd), bodyText, bodyFile)
 			printDeprecationNotice()
 			return result
 		},
