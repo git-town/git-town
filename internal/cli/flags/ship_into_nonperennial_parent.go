@@ -12,15 +12,12 @@ func ShipIntoNonPerennialParent() (AddFunc, ReadShipIntoNonPerennialParentFlagFu
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(shipIntoNonPerennialParentLong, "p", false, "allow shipping into non-perennial parent")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.ShipIntoNonperennialParent {
+	readFlag := func(cmd *cobra.Command) (configdomain.ShipIntoNonperennialParent, error) {
 		value, err := cmd.Flags().GetBool(shipIntoNonPerennialParentLong)
-		if err != nil {
-			panic(err)
-		}
-		return configdomain.ShipIntoNonperennialParent(value)
+		return configdomain.ShipIntoNonperennialParent(value), err
 	}
 	return addFlag, readFlag
 }
 
 // the type signature for the function that reads the dry-run flag from the args to the given Cobra command
-type ReadShipIntoNonPerennialParentFlagFunc func(*cobra.Command) configdomain.ShipIntoNonperennialParent
+type ReadShipIntoNonPerennialParentFlagFunc func(*cobra.Command) (configdomain.ShipIntoNonperennialParent, error)
