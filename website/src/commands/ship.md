@@ -33,6 +33,15 @@ that would be run but doesn't execute them.
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
 specifying the commit message via the CLI.
 
+### --strategy / -s
+
+Overrides the configured [ship-strategy](../preferences/ship-strategy.md).
+Allowed values:
+
+- `api`
+- `fast-forward`
+- `squash-merge`
+
 ### --to-parent / -p
 
 The _ship_ command ships only direct children of the main branch. To ship a
