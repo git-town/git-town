@@ -1,10 +1,7 @@
 package flags
 
 import (
-	"errors"
-
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +24,7 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 		}
 		strategy, hasStrategy := strategyOpt.Get()
 		if !hasStrategy {
-			return None[configdomain.ShipStrategy](), errors.New(messages.ShipStrategyMissing)
+			return None[configdomain.ShipStrategy](), nil
 		}
 		return Some(strategy), nil
 	}
