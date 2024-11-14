@@ -1,4 +1,4 @@
-Feature: ship a feature branch in a local repo using the fast-forward strategy
+Feature: override the configured ship-strategy
 
   Background:
     Given a local Git repo
