@@ -43,7 +43,11 @@ func switchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSwitch(args, readAllFlag(cmd), readVerboseFlag(cmd), readMergeFlag(cmd), readDisplayTypesFlag(cmd), branchTypes)
+			allBranches, err := readAllFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSwitch(args, allBranches, readVerboseFlag(cmd), readMergeFlag(cmd), readDisplayTypesFlag(cmd), branchTypes)
 		},
 	}
 	addAllFlag(&cmd)
