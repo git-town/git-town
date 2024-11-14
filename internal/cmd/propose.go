@@ -54,7 +54,11 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executePropose(readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
+			detached, err := readDetachedFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executePropose(detached, readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 		},
 	}
 	addBodyFlag(&cmd)

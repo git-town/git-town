@@ -27,7 +27,11 @@ func newPullRequestCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			printDeprecationNotice()
-			result := executePropose(readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
+			detached, err := readDetachedFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executePropose(detached, readDryRunFlag(cmd), readVerboseFlag(cmd), readTitleFlag(cmd), readBodyFlag(cmd), readBodyFileFlag(cmd))
 			printDeprecationNotice()
 			return result
 		},

@@ -46,7 +46,11 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAppend(args[0], readDetachedFlag(cmd), readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			detached, err := readDetachedFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeAppend(args[0], detached, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDetachedFlag(&cmd)

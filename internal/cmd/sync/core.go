@@ -67,7 +67,11 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSync(allBranches, readStackFlag(cmd), readDetachedFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
+			detached, err := readDetachedFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSync(allBranches, readStackFlag(cmd), detached, readDryRunFlag(cmd), readVerboseFlag(cmd), readNoPushFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)

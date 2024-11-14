@@ -50,7 +50,11 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readDetachedFlag(cmd), readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
+			detached, err := readDetachedFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeHack(args, detached, readDryRunFlag(cmd), readPrototypeFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addDetachedFlag(&cmd)
