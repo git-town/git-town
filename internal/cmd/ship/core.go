@@ -69,7 +69,11 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeShip(args, message, dryRun, readVerboseFlag(cmd), shipStrategyOverride, toParent)
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeShip(args, message, dryRun, verbose, shipStrategyOverride, toParent)
 		},
 	}
 	addDryRunFlag(&cmd)

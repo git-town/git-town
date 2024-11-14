@@ -36,7 +36,11 @@ func diffParentCommand() *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeDiffParent(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeDiffParent(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

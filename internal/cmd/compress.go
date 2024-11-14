@@ -65,7 +65,11 @@ func compressCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeCompress(dryRun, readVerboseFlag(cmd), message, stack)
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeCompress(dryRun, verbose, message, stack)
 		},
 	}
 	addDryRunFlag(&cmd)

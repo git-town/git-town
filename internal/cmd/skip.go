@@ -32,7 +32,11 @@ func skipCmd() *cobra.Command {
 		Short:   skipDesc,
 		Long:    cmdhelpers.Long(skipDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return executeSkip(readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeSkip(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

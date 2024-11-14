@@ -60,7 +60,11 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePrepend(args, detached, dryRun, prototype, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executePrepend(args, detached, dryRun, prototype, verbose)
 		},
 	}
 	addDetachedFlag(&cmd)

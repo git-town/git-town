@@ -25,7 +25,11 @@ func killCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			result := executeDelete(args, dryRun, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executeDelete(args, dryRun, verbose)
 			printKillDeprecationNotice()
 			return result
 		},

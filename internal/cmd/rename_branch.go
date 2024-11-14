@@ -30,7 +30,11 @@ func renameBranchCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			result := executeRename(args, dryRun, force, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			result := executeRename(args, dryRun, force, verbose)
 			printRenameBranchDeprecationNotice()
 			return result
 		},

@@ -50,7 +50,11 @@ func mergeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeMerge(dryRun, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeMerge(dryRun, verbose)
 		},
 	}
 	addDryRunFlag(&cmd)

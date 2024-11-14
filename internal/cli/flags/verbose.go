@@ -15,15 +15,12 @@ func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(verboseLong, verboseShort, false, "display all Git commands run under the hood")
 	}
-	readFlag := func(cmd *cobra.Command) configdomain.Verbose {
+	readFlag := func(cmd *cobra.Command) (configdomain.Verbose, error) {
 		value, err := cmd.Flags().GetBool(verboseLong)
-		if err != nil {
-			panic(err)
-		}
-		return configdomain.Verbose(value)
+		return configdomain.Verbose(value), err
 	}
 	return addFlag, readFlag
 }
 
 // the type signature for the function that reads the verbose flag from the args to the given Cobra command
-type ReadVerboseFlagFunc func(*cobra.Command) configdomain.Verbose
+type ReadVerboseFlagFunc func(*cobra.Command) (configdomain.Verbose, error)

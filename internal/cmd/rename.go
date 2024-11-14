@@ -65,7 +65,11 @@ func renameCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeRename(args, dryRun, force, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeRename(args, dryRun, force, verbose)
 		},
 	}
 	addDryRunFlag(&cmd)

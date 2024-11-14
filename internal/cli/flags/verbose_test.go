@@ -18,7 +18,9 @@ func TestVerbose(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--verbose"})
 		must.NoError(t, err)
-		must.EqOp(t, true, readFlag(&cmd))
+		have, err := readFlag(&cmd)
+		must.NoError(t, err)
+		must.EqOp(t, true, have)
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -28,6 +30,8 @@ func TestVerbose(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-v"})
 		must.NoError(t, err)
-		must.EqOp(t, true, readFlag(&cmd))
+		have, err := readFlag(&cmd)
+		must.NoError(t, err)
+		must.EqOp(t, true, have)
 	})
 }

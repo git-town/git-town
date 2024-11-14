@@ -31,7 +31,11 @@ func repoCommand() *cobra.Command {
 		Short: repoDesc,
 		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeRepo(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeRepo(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

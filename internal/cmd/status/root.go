@@ -33,7 +33,11 @@ func RootCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeStatus(pending, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeStatus(pending, verbose)
 		},
 	}
 	addPendingFlag(&cmd)

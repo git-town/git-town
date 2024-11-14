@@ -41,7 +41,11 @@ func observeCmd() *cobra.Command {
 		Short:   observeDesc,
 		Long:    cmdhelpers.Long(observeDesc, observeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeObserve(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeObserve(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

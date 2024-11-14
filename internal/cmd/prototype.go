@@ -33,7 +33,11 @@ func prototypeCmd() *cobra.Command {
 		Short:   prototypeDesc,
 		Long:    cmdhelpers.Long(prototypeDesc, prototypeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePrototype(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executePrototype(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

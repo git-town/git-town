@@ -42,7 +42,11 @@ func contributeCmd() *cobra.Command {
 		Short:   contributeDesc,
 		Long:    cmdhelpers.Long(contributeDesc, contributeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeContribute(args, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeContribute(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)

@@ -47,7 +47,11 @@ func deleteCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeDelete(args, dryRun, readVerboseFlag(cmd))
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeDelete(args, dryRun, verbose)
 		},
 	}
 	addDryRunFlag(&cmd)
