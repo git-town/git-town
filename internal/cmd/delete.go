@@ -43,7 +43,11 @@ func deleteCommand() *cobra.Command {
 		Short: deleteDesc,
 		Long:  cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeDelete(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
+			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeDelete(args, dryRun, readVerboseFlag(cmd))
 		},
 	}
 	addDryRunFlag(&cmd)
