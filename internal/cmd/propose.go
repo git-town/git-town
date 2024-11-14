@@ -70,7 +70,11 @@ func proposeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePropose(detached, dryRun, readVerboseFlag(cmd), readTitleFlag(cmd), bodyText, bodyFile)
+			title, err := readTitleFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executePropose(detached, dryRun, readVerboseFlag(cmd), title, bodyText, bodyFile)
 		},
 	}
 	addBodyFlag(&cmd)
