@@ -1,7 +1,7 @@
 @skipWindows
 Feature: dry-run proposing changes
 
-  Background: proposing changes
+  Background:
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |

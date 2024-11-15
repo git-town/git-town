@@ -1,7 +1,7 @@
 @messyoutput
 Feature: missing configuration
 
-  Background: running unconfigured
+  Background:
     Given a Git repo with origin
     And Git Town is not configured
     When I run "git-town hack feature" and enter into the dialog:
