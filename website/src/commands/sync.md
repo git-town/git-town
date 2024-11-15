@@ -6,14 +6,15 @@
 The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.
 
-Merge conflicts are never fun and can break your code. Minimize them by syncing
-your branches frequently. Git town knows how to sync many different types of
-branches. When properly configured, "git town sync --all" can synchronize all
-your local branches with guarantee to never lose changes, even in edge cases.
+Merge conflicts are not fun and can break code. Minimize them by syncing your
+branches frequently. Git town knows how to sync many different types of
+branches. When properly configured, `git town sync --all` can synchronize all
+your local branches the right way without losing changes, even in edge cases.
 
-You can run `git sync` many times per day without thinking about it, even in the
-middle of ongoing work. If a sync goes wrong, you can safely go back to the
-exact state you repo was in before the sync by running [git town undo](undo.md).
+You can (and should) sync all branches many times per day without thinking about
+it, even in the middle of ongoing work. If a sync goes wrong, you can safely go
+back to the exact state you repo was in before the sync by running
+[git town undo](undo.md).
 
 - pulls and pushes updates from all parent branches and the tracking branch
 - deletes branches whose tracking branch was deleted at the remote if they
