@@ -42,7 +42,7 @@ func (self BranchInfo) GetLocalOrRemoteName() BranchName {
 }
 
 // provides both the name and SHA of the remote branch
-func (self BranchInfo) GetRemote() (bool, RemoteBranchName, SHA) {
+func (self BranchInfo) GetRemoteBranch() (bool, RemoteBranchName, SHA) {
 	name, hasName := self.RemoteName.Get()
 	sha, hasSHA := self.RemoteSHA.Get()
 	return hasName && hasSHA, name, sha
