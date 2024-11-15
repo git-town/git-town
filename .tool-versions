@@ -11,6 +11,7 @@ gofumpt 0.7.0
 golangci-lint 1.61.0
 goreleaser 1.26.2
 mdbook 0.4.40
+node 20.17.0
 scc 3.4.0
 shellcheck system 0.10.0
 shfmt 3.9.0
