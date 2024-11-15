@@ -540,6 +540,15 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 	return runner.Run("git", args...)
 }
 
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, target gitdomain.BranchName, version Version) error {
+	args := []string{"rebase", target.String()}
+	if version.HasRebaseUpdateRefs() {
+		args = append(args, "--no-update-refs")
+	}
+	return runner.Run("git", args...)
+}
+
 // Remotes provides the names of all Git remotes in this repository.
 func (self *Commands) Remotes(querier gitdomain.Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
