@@ -30,7 +30,7 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 	@tools/rta depth . | grep git-town
 
 docs: install tools/node_modules  # tests the documentation
-	${CURDIR}/tools/node_modules/.bin/text-run --offline
+	@tools/rta node tools/node_modules/.bin/text-run --offline
 
 fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
 	go run tools/format_unittests/format_unittests.go
