@@ -1,22 +1,23 @@
 # git town sync
 
-> _git town sync [--all] [--stack] [--detached] [--dry-run] [--no-push]_
+> _git town sync [--all] [--detached] [--dry-run] [--no-push] [--stack]
+> [--verbose]_
 
-Merge conflicts are never fun. If you experience too many merge conflicts, sync
-your branches more often. If your Git Town installation is properly configured,
-"git town sync --all" syncs all local branches with guarantee to never lose
-changes, even in edge cases. You can run it many times per day without thinking
-about it. If a sync goes wrong, you can safely go back to the state you repo was
-in before the sync by running [git town undo](undo.md).
-
-The _sync_ command ("synchronize this branch") updates the local Git workspace
+The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.
+
+Merge conflicts suck. If you experience too many of them, sync your branches
+more often. When properly configured, "git town sync --all" syncs _all_ your
+local branches with guarantee to never lose changes, even in edge cases. You can
+run it many times per day without thinking about it. If a sync goes wrong, you
+can safely go back to the exact state you repo was in before the sync by running
+[git town undo](undo.md).
 
 - pulls and pushes updates from all parent branches and the tracking branch
 - deletes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
 - if the parent branch is unknown, Git Town looks for a pull/merge request for
-  this branch and uses the parent branch from that, otherwise prompts you for
+  this branch and uses the parent branch from that - otherwise prompts you for
   the parent
 
 ### --all / -a
