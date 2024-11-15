@@ -24,44 +24,14 @@ Feature: stack that changes the same file in multiple commits per branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                       |
-      | beta   | git fetch --prune --tags                      |
-      |        | git checkout main                             |
-      | main   | git rebase origin/main --no-update-refs       |
-      |        | git checkout beta                             |
-      | beta   | git rebase --onto main alpha --no-update-refs |
-      |        | git branch -D alpha                           |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in favorite-fruit
-      """
-    And Git Town prints an error like:
-      """
-      could not apply .* alpha commit 1
-      """
-    And a rebase is now in progress
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "favorite-fruit" with "resolved apple"
-    And I run "git-town continue" and close the editor
-    Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | beta   | git rebase --continue |
-    And Git Town prints the error:
-      """
-      CONFLICT (content): Merge conflict in favorite-fruit
-      """
-    And Git Town prints an error like:
-      """
-      could not apply .* alpha commit 2
-      """
-    And a rebase is still in progress
-    And I resolve the conflict in "favorite-fruit" with "resolved peach"
-    And I run "git-town continue" and close the editor
-    And Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | beta   | git rebase --continue                           |
+      | beta   | git fetch --prune --tags                        |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main --no-update-refs         |
+      |        | git checkout beta                               |
+      | beta   | git rebase --onto main alpha --no-update-refs   |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git branch -D alpha                             |
     And no rebase is in progress
     And the current branch is still "beta"
     And all branches are now synchronized
