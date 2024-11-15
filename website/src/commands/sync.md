@@ -22,9 +22,9 @@ back to the exact state you repo was in before the sync by running
 - safely stashes away uncommitted changes and restores them when done
 - does not pull, push, or merge depending on the configured
   [branch type](../branch-types.md)
-- if the parent branch is unknown, Git Town looks for a pull/merge request for
-  this branch and uses the parent branch from that - otherwise prompts you for
-  the parent
+
+If the parent branch is not known, Git Town looks for a pull/merge request for
+this branch and uses its parent branch. Otherwise it prompts you for the parent.
 
 ### --all / -a
 
