@@ -6,16 +6,21 @@
 The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.
 
-Merge conflicts suck. If you experience too many of them, sync your branches
-more often. When properly configured, "git town sync --all" syncs _all_ your
-local branches with guarantee to never lose changes, even in edge cases. You can
-run it many times per day without thinking about it. If a sync goes wrong, you
-can safely go back to the exact state you repo was in before the sync by running
-[git town undo](undo.md).
+Merge conflicts are never fun and can break your code. Minimize them by syncing
+your branches frequently. Git town knows how to sync many different types of
+branches. When properly configured, "git town sync --all" can synchronize all
+your local branches with guarantee to never lose changes, even in edge cases.
+
+You can run `git sync` many times per day without thinking about it, even in the
+middle of ongoing work. If a sync goes wrong, you can safely go back to the
+exact state you repo was in before the sync by running [git town undo](undo.md).
 
 - pulls and pushes updates from all parent branches and the tracking branch
 - deletes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
+- safely stashes away uncommitted changes and restores them when done
+- does not pull, push, or merge depending on the configured
+  [branch type](../branch-types.md)
 - if the parent branch is unknown, Git Town looks for a pull/merge request for
   this branch and uses the parent branch from that - otherwise prompts you for
   the parent
@@ -28,8 +33,9 @@ parameter makes Git Town sync all local branches.
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to keep your branches in sync with each other and decide
-when to pull in changes from other developers.
+branch at the root of your branch hierarchy. This allows you to keep your
+branches in sync with each other and decide when to pull in changes from other
+developers.
 
 ### --dry-run
 
@@ -62,24 +68,24 @@ against them.
 
 If the repository contains a Git remote called `upstream` and the
 [sync-upstream](../preferences/sync-upstream.md) setting is enabled, Git Town
-also downloads new commits from the upstream main branch.
+also pulls new commits from the upstream's main branch.
 
 [sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
 tags with the `origin` remote.
 
 ### Why does git-sync sometimes update a local branch whose tracking branch was deleted before deleting it?
 
-"git town sync" can delete branches if their tracking branch was deleted at the
-remote. To do so while guaranteeing that it never loses any of your changes,
-"git town sync" needs to prove that the branch to be deleted contains no
-unshipped changes.
+If a remote branch was deleted at the remote, it is considered obsolete and "git
+town sync" will remove its local counterpart. To guarantee that this doesn't
+lose unshipped changes in the local branch, "git town sync" needs to prove that
+the branch to be deleted contains no unshipped changes.
 
-The easiest way to do that is by finding the local branch in sync with its
-tracking branch before running `git fetch`. So, if you run `git town sync`
-regularly, especially before shipping, you will not encounter this problem.
+The easiest way to prove that is when the local branch was in sync with its
+tracking branch before Git Town runs `git fetch`. This is another reason to run
+`git town sync` regularly.
 
 If a local shipped branch is not in sync with its tracking branch on your
 machine, Git Town must check for unshipped local changes by diffing the branch
 to delete against its parent branch. Only branches with an empty diff can be
-deleted safely. For this diff to potentially be empty, Git Town needs to sync
-the branch first, even if it's going to be deleted right afterwards.
+deleted safely. For this to work, Git Town needs to sync the branch first, even
+if it's going to be deleted right afterwards.
