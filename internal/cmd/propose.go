@@ -110,7 +110,7 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 		browser.Open(existingProposalURL, repo.Frontend, repo.Backend)
 		return nil
 	}
-	runProgram := proposeProgram(data)
+	runProgram := proposeProgram(repo, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -298,7 +298,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	}, false, err
 }
 
-func proposeProgram(data proposeData) program.Program {
+func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
@@ -322,6 +322,11 @@ func proposeProgram(data proposeData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
+	branchInfo, has := data.branchInfos.FindByLocalName(data.branchToPropose).Get()
+	if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
+		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToPropose))
+		return prog.Get()
+	}
 	prog.Value.Add(&opcodes.ProposalCreate{
 		Branch:        data.branchToPropose,
 		MainBranch:    data.config.ValidatedConfigData.MainBranch,
