@@ -1,4 +1,4 @@
-Feature: sync a branch whose tracking branch was shipped
+Feature: end-to-end workflow of creating a prototype branch, shipping, and pruning it
 
   This test reproduces the bug in https://github.com/git-town/git-town/issues/4222.
 
