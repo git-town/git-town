@@ -14,7 +14,7 @@ func enterDefaultBranch() *cobra.Command {
 		Use: "default-branch-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.DefaultBranchType(configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}, dialogTestInputs.Next())
+			_, _, err := dialog.DefaultBranchType(configdomain.BranchTypeFeatureBranch, dialogTestInputs.Next())
 			return err
 		},
 	}
