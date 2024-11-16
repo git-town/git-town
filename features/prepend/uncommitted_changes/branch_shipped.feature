@@ -10,7 +10,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And origin ships the "child" branch
+    And origin ships the "child" branch using the squash-merge ship-strategy
     And the current branch is "child"
     And an uncommitted file
     When I run "git-town prepend new"

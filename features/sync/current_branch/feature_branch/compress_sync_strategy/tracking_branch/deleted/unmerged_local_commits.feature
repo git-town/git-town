@@ -10,7 +10,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | shipped | local, origin | shipped commit   |
       |         | local         | unshipped commit |
     And the current branch is "shipped"
-    And origin ships the "shipped" branch
+    And origin ships the "shipped" branch using the squash-merge ship-strategy
     And Git Town setting "sync-feature-strategy" is "compress"
     And an uncommitted file
     When I run "git-town sync"

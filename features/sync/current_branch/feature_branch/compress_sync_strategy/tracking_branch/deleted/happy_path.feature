@@ -13,7 +13,7 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
       | feature-1 | local, origin | feature-1 commit B | feature-1-file | feature 1 content B |
       | feature-2 | local, origin | feature-2 commit   | feature-2-file | feature 2 content   |
     And the current branch is "feature-1"
-    And origin ships the "feature-1" branch
+    And origin ships the "feature-1" branch using the squash-merge ship-strategy
     And Git Town setting "sync-feature-strategy" is "compress"
     And an uncommitted file
     When I run "git-town sync"

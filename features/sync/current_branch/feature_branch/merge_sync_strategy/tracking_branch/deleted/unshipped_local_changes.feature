@@ -9,7 +9,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | BRANCH  | LOCATION      | MESSAGE          |
       | shipped | local, origin | shipped commit   |
       |         | local         | unshipped commit |
-    And origin ships the "shipped" branch
+    And origin ships the "shipped" branch using the squash-merge ship-strategy
     And the current branch is "shipped"
     And an uncommitted file
     When I run "git-town sync"

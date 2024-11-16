@@ -1001,7 +1001,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.OriginRepo.GetOrPanic().RemoveBranch(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step(`^origin ships the "([^"]*)" branch$`, func(ctx context.Context, branchName string) error {
+	sc.Step(`^origin ships the "([^"]*)" branch using the squash-merge ship-strategy$`, func(ctx context.Context, branchName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
