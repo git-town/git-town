@@ -8,7 +8,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | shipped | local, origin | shipped commit |
-    And origin ships the "shipped" branch using the squash-merge ship-strategy
+    And origin ships the "shipped" branch using the "squash-merge" ship-strategy
     And the current branch is "shipped"
     When I run "git-town append new"
 

@@ -12,8 +12,8 @@ Feature: multiple shipped branches
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
       | feature-3 | local, origin | feature-3 commit | feature-3-file | feature 3 content |
-    And origin ships the "feature-1" branch using the squash-merge ship-strategy
-    And origin ships the "feature-2" branch using the squash-merge ship-strategy
+    And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
+    And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-3"
     When I run "git-town sync --all"
 

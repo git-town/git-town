@@ -16,7 +16,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | beta   | local, origin | beta commit | file      | beta content |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "beta"
-    And origin ships the "alpha" branch using the squash-merge ship-strategy
+    And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 
   Scenario: result

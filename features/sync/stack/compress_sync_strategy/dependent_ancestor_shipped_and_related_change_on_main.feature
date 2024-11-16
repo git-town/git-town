@@ -15,7 +15,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
     And Git Town setting "sync-feature-strategy" is "compress"
-    And origin ships the "alpha" branch using the squash-merge ship-strategy
+    And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
       | MESSAGE                    | FILE NAME | FILE CONTENT   |
       | independent commit on main | file      | main content 1 |

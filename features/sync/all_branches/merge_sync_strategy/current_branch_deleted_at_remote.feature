@@ -8,7 +8,7 @@ Feature: sync a branch whose tracking branch was shipped
     And the commits
       | BRANCH  | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature | local, origin | feature-1 commit | feature-1-file | feature 1 content |
-    And origin ships the "feature" branch using the squash-merge ship-strategy
+    And origin ships the "feature" branch using the "squash-merge" ship-strategy
     And the current branch is "feature"
     When I run "git-town sync --all"
 
