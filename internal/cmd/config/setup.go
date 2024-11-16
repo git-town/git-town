@@ -358,7 +358,7 @@ func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototype
 	return config.NormalConfig.SetCreatePrototypeBranches(newValue)
 }
 
-func saveDefaultBranchType(oldValue, newValue configdomain.DefaultBranchType, config config.UnvalidatedConfig) error {
+func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}

@@ -191,7 +191,7 @@ func (self *NormalConfig) SetCreatePrototypeBranches(value configdomain.CreatePr
 }
 
 // SetDefaultBranchTypeLocally updates the locally configured default branch type.
-func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.DefaultBranchType) error {
+func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
 	self.DefaultBranchType = value
 	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDefaultBranchType, value.String())
 }
