@@ -1,4 +1,3 @@
-@smoke
 Feature: sync a branch whose tracking branch was shipped
 
   Background:
