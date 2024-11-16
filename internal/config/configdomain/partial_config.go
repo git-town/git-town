@@ -15,7 +15,7 @@ type PartialConfig struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	CreatePrototypeBranches  Option[CreatePrototypeBranches]
-	DefaultBranchType        Option[DefaultBranchType]
+	DefaultBranchType        Option[BranchType]
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
@@ -81,7 +81,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	perennialRegex, err := ParsePerennialRegex(snapshot[KeyPerennialRegex])
 	ec.Check(err)
-	defaultBranchType, err := ParseDefaultBranchType(snapshot[KeyDefaultBranchType])
+	defaultBranchType, err := ParseBranchType(snapshot[KeyDefaultBranchType])
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
@@ -177,7 +177,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
 		CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
-		DefaultBranchType:        self.DefaultBranchType.GetOrElse(DefaultBranchType{BranchTypeFeatureBranch}),
+		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
 		FeatureRegex:             self.FeatureRegex,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,

@@ -51,7 +51,7 @@ func TestSave(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					CreatePrototypeBranches:  true,
-					DefaultBranchType:        configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch},
+					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 					HostingPlatform:          None[configdomain.HostingPlatform](),
