@@ -45,7 +45,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
-	var defaultBranchType Option[configdomain.DefaultBranchType]
+	var defaultBranchType Option[configdomain.BranchType]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var observedRegex Option[configdomain.ObservedRegex]
@@ -61,7 +61,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 			}
 		}
 		if data.Branches.DefaultType != nil {
-			defaultBranchType, err = configdomain.ParseDefaultBranchType(*data.Branches.DefaultType)
+			defaultBranchType, err = configdomain.ParseBranchType(*data.Branches.DefaultType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
