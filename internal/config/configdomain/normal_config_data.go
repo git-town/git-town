@@ -60,6 +60,13 @@ func (self *NormalConfigData) IsPerennialBranch(branch gitdomain.LocalBranchName
 	return false
 }
 
+func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
+	if slices.Contains(self.PrototypeBranches, branch) {
+		return true
+	}
+	return self.DefaultBranchType == BranchTypePrototypeBranch
+}
+
 func (self *NormalConfigData) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
 	if contributionRegex, has := self.ContributionRegex.Get(); has {
 		return contributionRegex.MatchesBranch(branch)
