@@ -43,6 +43,8 @@ func TestNormalConfig(t *testing.T) {
 				PrototypeBranches: gitdomain.NewLocalBranchNames("proto1"),
 				DefaultBranchType: configdomain.BranchTypeFeatureBranch,
 			}
+			have := config.IsPrototypeBranch(gitdomain.NewLocalBranchName("proto1"))
+			must.True(t, have)
 		})
 	})
 }
