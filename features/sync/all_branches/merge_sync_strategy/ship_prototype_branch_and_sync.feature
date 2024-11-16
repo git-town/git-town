@@ -1,3 +1,4 @@
+@this
 Feature: sync a branch whose tracking branch was shipped
 
   Background:
@@ -10,7 +11,12 @@ Feature: sync a branch whose tracking branch was shipped
       | BRANCH | LOCATION | MESSAGE      |
       | hooks  | local    | hooks commit |
     And the current branch is "hooks"
+    And inspect the repo
     And I ran "git-town propose"
+    And Git Town prints:
+      """
+      branch "hooks" is no longer a prototype branch
+      """
     And origin ships the "hooks" branch
     When I run "git-town sync --all"
 
