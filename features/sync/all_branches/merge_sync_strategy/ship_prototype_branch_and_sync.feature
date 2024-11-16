@@ -1,16 +1,17 @@
-@this
 Feature: sync a branch whose tracking branch was shipped
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME  | TYPE      | PARENT | LOCATIONS     |
-      | hooks | prototype | main   | local, origin |
+    And Git Town setting "default-branch-type" is "prototype"
+    And the origin is "git@github.com:git-town/git-town.git"
+    And tool "open" is installed
+    And I ran "git-town hack hooks"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE      |
-      | hooks  | local, origin | hooks commit |
-    And origin ships the "hooks" branch
+      | BRANCH | LOCATION | MESSAGE      |
+      | hooks  | local    | hooks commit |
     And the current branch is "hooks"
+    And I ran "git-town propose"
+    And origin ships the "hooks" branch
     When I run "git-town sync --all"
 
   Scenario: result
@@ -39,4 +40,10 @@ Feature: sync a branch whose tracking branch was shipped
       |        | git branch hooks {{ sha 'hooks commit' }}   |
       |        | git checkout hooks                          |
     And the current branch is now "hooks"
-    And the initial branches and lineage exist now
+    And the branches are now
+      | REPOSITORY | BRANCHES    |
+      | local      | main, hooks |
+      | origin     | main        |
+    And this lineage exists now
+      | BRANCH | PARENT |
+      | hooks  | main   |
