@@ -16,7 +16,7 @@ type BranchesPrototypeRemove struct {
 
 func (self *BranchesPrototypeRemove) Run(args shared.RunArgs) error {
 	var err error
-	if args.Config.Value.NormalConfig.PrototypeBranches.Contains(self.Branch) {
+	if args.Config.Value.NormalConfig.IsPrototypeBranch(self.Branch) {
 		args.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, self.Branch))
 		err = args.Config.Value.NormalConfig.RemoveFromPrototypeBranches(self.Branch)
 	}
