@@ -64,7 +64,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -89,7 +89,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -118,7 +118,7 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			branchTypes := []configdomain.BranchType{}
 			branchesAndTypes := configdomain.BranchesAndTypes{}
-			defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+			defaultBranchType := configdomain.BranchTypeFeatureBranch
 			regexes := []*regexp.Regexp{}
 			have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 			want := []dialog.SwitchBranchEntry{
@@ -145,7 +145,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -171,7 +171,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -194,7 +194,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, true, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -231,7 +231,7 @@ func TestSwitchBranch(t *testing.T) {
 					perennial: configdomain.BranchTypePerennialBranch,
 					main:      configdomain.BranchTypeMainBranch,
 				}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -266,7 +266,7 @@ func TestSwitchBranch(t *testing.T) {
 					perennial: configdomain.BranchTypePerennialBranch,
 					main:      configdomain.BranchTypeMainBranch,
 				}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes := []*regexp.Regexp{}
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
 				want := []dialog.SwitchBranchEntry{
@@ -297,7 +297,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes, err := regexes.NewRegexes([]string{})
 				must.NoError(t, err)
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
@@ -327,7 +327,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes, err := regexes.NewRegexes([]string{"observed-"})
 				must.NoError(t, err)
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)
@@ -354,7 +354,7 @@ func TestSwitchBranch(t *testing.T) {
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}
-				defaultBranchType := configdomain.DefaultBranchType{BranchType: configdomain.BranchTypeFeatureBranch}
+				defaultBranchType := configdomain.BranchTypeFeatureBranch
 				regexes, err := regexes.NewRegexes([]string{"observed-", "main"})
 				must.NoError(t, err)
 				have := cmd.SwitchBranchEntries(branchInfos, branchTypes, branchesAndTypes, lineage, defaultBranchType, false, regexes)

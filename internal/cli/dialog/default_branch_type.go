@@ -20,7 +20,7 @@ When changing this, you should also set the "feature-regex" setting.
 `
 )
 
-func DefaultBranchType(existingValue configdomain.DefaultBranchType, inputs components.TestInput) (configdomain.DefaultBranchType, bool, error) {
+func DefaultBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, bool, error) {
 	options := []configdomain.BranchType{
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,
@@ -28,8 +28,8 @@ func DefaultBranchType(existingValue configdomain.DefaultBranchType, inputs comp
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch,
 	}
-	cursor := slice.Index(options, existingValue.BranchType).GetOrElse(0)
+	cursor := slice.Index(options, existingValue).GetOrElse(0)
 	selection, aborted, err := components.RadioList(list.NewEntries(options...), cursor, defaultBranchTypeTitle, DefaultBranchTypeHelp, inputs)
 	fmt.Printf(messages.DefaultBranchType, components.FormattedSelection(selection.String(), aborted))
-	return configdomain.DefaultBranchType{BranchType: selection}, aborted, err
+	return selection, aborted, err
 }

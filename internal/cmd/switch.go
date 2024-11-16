@@ -203,7 +203,7 @@ func SwitchBranchCursorPos(entries []dialog.SwitchBranchEntry, initialBranch git
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.DefaultBranchType, allBranches configdomain.AllBranches, regexes []*regexp.Regexp) []dialog.SwitchBranchEntry {
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.BranchType, allBranches configdomain.AllBranches, regexes []*regexp.Regexp) []dialog.SwitchBranchEntry {
 	entries := make([]dialog.SwitchBranchEntry, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
@@ -227,7 +227,7 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.DefaultBranchType, regexes regexes.Regexes) {
+func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.BranchType, regexes regexes.Regexes) {
 	if branchInfos.HasLocalBranch(branch) || allBranches.Enabled() {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
@@ -237,7 +237,7 @@ func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBr
 		}
 		branchType, hasBranchType := branchesAndTypes[branch]
 		if !hasBranchType && len(branchTypes) > 0 {
-			branchType = defaultBranchType.BranchType
+			branchType = defaultBranchType
 		}
 		var hasCorrectBranchType bool
 		if len(branchTypes) == 0 || slices.Contains(branchTypes, branchType) {
