@@ -64,7 +64,7 @@ func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return true
 	}
-	return self.DefaultBranchType.BranchType == BranchTypePrototypeBranch
+	return self.DefaultBranchType == BranchTypePrototypeBranch
 }
 
 func (self *NormalConfigData) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
