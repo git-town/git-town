@@ -113,7 +113,7 @@ type branchData struct {
 	branchInfos       gitdomain.BranchInfos
 	branchesAndTypes  configdomain.BranchesAndTypes
 	colors            colors.DialogColors
-	defaultBranchType configdomain.DefaultBranchType
+	defaultBranchType configdomain.BranchType
 	initialBranchOpt  Option[gitdomain.LocalBranchName]
 	lineage           configdomain.Lineage
 }

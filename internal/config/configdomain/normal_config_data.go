@@ -15,7 +15,7 @@ type NormalConfigData struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	CreatePrototypeBranches  CreatePrototypeBranches
-	DefaultBranchType        DefaultBranchType
+	DefaultBranchType        BranchType
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
@@ -121,7 +121,7 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	if self.MatchesObservedRegex(branch) {
 		return BranchTypeObservedBranch
 	}
-	return self.DefaultBranchType.BranchType
+	return self.DefaultBranchType
 }
 
 func (self *NormalConfigData) ShouldPushNewBranches() bool {
@@ -136,7 +136,7 @@ func DefaultNormalConfig() NormalConfigData {
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		CreatePrototypeBranches:  false,
-		DefaultBranchType:        DefaultBranchType{BranchType: BranchTypeFeatureBranch},
+		DefaultBranchType:        BranchTypeFeatureBranch,
 		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
