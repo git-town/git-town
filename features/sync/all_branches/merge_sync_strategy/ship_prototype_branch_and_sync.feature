@@ -1,5 +1,7 @@
 Feature: sync a branch whose tracking branch was shipped
 
+  This test reproduces the bug in https://github.com/git-town/git-town/issues/4222.
+
   Background:
     Given a Git repo with origin
     And Git Town setting "default-branch-type" is "prototype"
