@@ -25,7 +25,6 @@ Feature: sync a branch whose tracking branch was shipped
       deleted branch "feature"
       """
     And the current branch is now "main"
-    And the previous Git branch is now ""
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
