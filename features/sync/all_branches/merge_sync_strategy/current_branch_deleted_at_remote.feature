@@ -10,7 +10,7 @@ Feature: sync a branch whose tracking branch was shipped
       | feature | local, origin | feature-1 commit | feature-1-file | feature 1 content |
     And origin ships the "feature" branch
     And the current branch is "feature"
-    When I run "git-town sync -a"
+    When I run "git-town sync --all"
 
   Scenario: result
     Then Git Town runs the commands
