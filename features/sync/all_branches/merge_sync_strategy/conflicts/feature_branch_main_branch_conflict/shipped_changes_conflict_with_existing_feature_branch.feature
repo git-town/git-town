@@ -12,7 +12,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       | alpha  | local, origin | alpha commit | conflicting_file | alpha content |
       | beta   | local, origin | beta commit  | conflicting_file | beta content  |
       | gamma  | local, origin | gamma commit | conflicting_file | gamma content |
-    And origin ships the "beta" branch
+    And origin ships the "beta" branch using the "squash-merge" ship-strategy
     And the current branch is "main"
     And an uncommitted file
     When I run "git-town sync --all"
