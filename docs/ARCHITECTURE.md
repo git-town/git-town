@@ -160,8 +160,16 @@ of locating specific concepts by opening the file with the matching name.
 
 #### Newtypes
 
-Git Town's domain model includes many distinct uses for string and other basic
-data types. Clearly distinguishing these uses helps eliminate a whole category
-of potential bugs. Consequently, Git Town's codebase extensively employs the
-newtype pattern, defining specific data types for each domain concept, even if
-they can be represented by a simple `string` or `int`.
+Idiomatic Go code has a tendency for primitive obsession. Git Town's domain
+model includes so many distinct uses for string and other basic data types that
+there is pretty much no protection from the type system left and it becomes too
+easy to mix them up. Git Town's codebase extensively employs the newtype pattern
+by defining specific data types for each domain concept, even if they can be
+represented by a simple `string` or `int`. This ensures that semantically
+correct data is used.
+
+#### Making invalid states unrepresentable
+
+Git Town's contains more and higher-level data structures than in typical Go
+programs. This extra complexity exists to make invalid code result in compiler
+errors. This eliminates entire categories of bugs.
