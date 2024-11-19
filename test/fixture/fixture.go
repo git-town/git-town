@@ -23,10 +23,10 @@ import (
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo OptionP[commands.TestCommands]
+	CoworkerRepo OptionalMutable[commands.TestCommands]
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo OptionP[commands.TestCommands]
+	DevRepo OptionalMutable[commands.TestCommands]
 
 	// Dir defines the local folder in which this Fixture is stored.
 	// This folder also acts as the HOME directory for tests using this Fixture.
@@ -35,24 +35,24 @@ type Fixture struct {
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo OptionP[commands.TestCommands]
+	OriginRepo OptionalMutable[commands.TestCommands]
 
 	// SecondWorktree is the directory that contains an additional workspace.
 	// If this value is nil, the current test setup has no additional workspace.
-	SecondWorktree OptionP[commands.TestCommands]
+	SecondWorktree OptionalMutable[commands.TestCommands]
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo OptionP[commands.TestCommands]
+	SubmoduleRepo OptionalMutable[commands.TestCommands]
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo OptionP[commands.TestCommands]
+	UpstreamRepo OptionalMutable[commands.TestCommands]
 }
 
 // AddCoworkerRepo adds a coworker repository.
 func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.GetOrPanic().TestRunner, self.coworkerRepoPath())
-	self.CoworkerRepo = SomeP(&coworkerRepo)
+	self.CoworkerRepo = MutableSome(&coworkerRepo)
 	initializeWorkspace(&coworkerRepo)
 	coworkerRepo.Verbose = self.DevRepo.GetOrPanic().Verbose
 }
@@ -72,7 +72,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	self.SecondWorktree = SomeP(&commands.TestCommands{
+	self.SecondWorktree = MutableSome(&commands.TestCommands{
 		TestRunner: &runner,
 		Commands:   &gitCommands,
 		Config:     devRepo.Config,
@@ -87,7 +87,7 @@ func (self *Fixture) AddSubmoduleRepo() {
 	}
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRun("git", "config", "--global", "protocol.file.allow", "always")
-	self.SubmoduleRepo = SomeP(&submoduleRepo)
+	self.SubmoduleRepo = MutableSome(&submoduleRepo)
 }
 
 // AddUpstream adds an upstream repository.
@@ -95,7 +95,7 @@ func (self *Fixture) AddUpstream() {
 	devRepo := self.DevRepo.GetOrPanic()
 	upstreamRepo := testruntime.Clone(devRepo.TestRunner, filepath.Join(self.Dir, gitdomain.RemoteUpstream.String()))
 	upstreamRepo.TestRunner.Verbose = devRepo.Verbose
-	self.UpstreamRepo = SomeP(&upstreamRepo)
+	self.UpstreamRepo = MutableSome(&upstreamRepo)
 	devRepo.AddRemote(gitdomain.RemoteUpstream, upstreamRepo.WorkingDir)
 }
 

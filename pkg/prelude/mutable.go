@@ -1,9 +1,9 @@
 package prelude
 
 // Mutable respresents a mutable value.
-// A Mutable always correctly mutates its encapsulated value, even if the Mutable gets copied or passed by reference.
+// A Mutable is always mutable, even if passed by value.
 type Mutable[T any] struct {
-	// the enclosed mutable value, feel free to mutate it directly
+	// the enclosed mutable value, okay to mutate it directly
 	Value *T
 }
 
@@ -11,7 +11,7 @@ func NewMutable[T any](value *T) Mutable[T] {
 	return Mutable[T]{value}
 }
 
-// provides an immutable copy of the enclosed mutable value
-func (self Mutable[T]) Get() T { //nolint:ireturn
+// provides an non-mutable copy of the contained mutable value
+func (self Mutable[T]) Immutable() T { //nolint:ireturn
 	return *self.Value
 }

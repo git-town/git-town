@@ -152,7 +152,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousbranchCandidates,
 	})
-	optimizedProgram := optimizer.Optimize(runProgram.Get())
+	optimizedProgram := optimizer.Optimize(runProgram.Immutable())
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
