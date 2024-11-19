@@ -45,7 +45,7 @@ func Execute(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return nil
 }
 

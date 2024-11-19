@@ -53,9 +53,9 @@ func Finished(args FinishedArgs) error {
 		TouchedBranches:          args.TouchedBranches,
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UndoAPIProgram:           program.Program{},
-		UnfinishedDetails:        NoneP[runstate.UnfinishedRunStateDetails](),
+		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Get(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return statefile.Save(runState, args.RootDir)
 }
 

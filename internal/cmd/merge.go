@@ -326,7 +326,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog.Get()
+	return prog.Immutable()
 }
 
 func validateMergeData(data mergeData) error {

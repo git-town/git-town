@@ -59,13 +59,13 @@ func (self Memoized) AsFixture() Fixture {
 	originRepo := testruntime.New(originDir, self.Dir, "")
 	devRepo := testruntime.New(developerDir, self.Dir, binDir)
 	return Fixture{
-		CoworkerRepo:   NoneP[commands.TestCommands](),
-		DevRepo:        SomeP(&devRepo),
+		CoworkerRepo:   MutableNone[commands.TestCommands](),
+		DevRepo:        MutableSome(&devRepo),
 		Dir:            self.Dir,
-		OriginRepo:     SomeP(&originRepo),
-		SecondWorktree: NoneP[commands.TestCommands](),
-		SubmoduleRepo:  NoneP[commands.TestCommands](),
-		UpstreamRepo:   NoneP[commands.TestCommands](),
+		OriginRepo:     MutableSome(&originRepo),
+		SecondWorktree: MutableNone[commands.TestCommands](),
+		SubmoduleRepo:  MutableNone[commands.TestCommands](),
+		UpstreamRepo:   MutableNone[commands.TestCommands](),
 	}
 }
 
@@ -85,12 +85,12 @@ func (self Memoized) CloneInto(dir string) Fixture {
 	// and connect the main branches again
 	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
 	return Fixture{
-		CoworkerRepo:   NoneP[commands.TestCommands](),
-		DevRepo:        SomeP(&devRepo),
+		CoworkerRepo:   MutableNone[commands.TestCommands](),
+		DevRepo:        MutableSome(&devRepo),
 		Dir:            dir,
-		OriginRepo:     SomeP(&originRepo),
-		SecondWorktree: NoneP[commands.TestCommands](),
-		SubmoduleRepo:  NoneP[commands.TestCommands](),
-		UpstreamRepo:   NoneP[commands.TestCommands](),
+		OriginRepo:     MutableSome(&originRepo),
+		SecondWorktree: MutableNone[commands.TestCommands](),
+		SubmoduleRepo:  MutableNone[commands.TestCommands](),
+		UpstreamRepo:   MutableNone[commands.TestCommands](),
 	}
 }
