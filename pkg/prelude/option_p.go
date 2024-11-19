@@ -5,27 +5,21 @@ import (
 	"fmt"
 )
 
-// MutableOption ("option for a pointer value") is an Option
-// that provides direct access to the encapsulated value
-// by storing and providing a pointer to the value.
-// This is useful for mutable or singleton values,
-// or values that are too large to copy around all the time.
-type MutableOption[T any] struct {
+// OptionalMut represents a value that is both optional and mutable.
+type OptionalMut[T any] struct {
 	Value *T
 }
 
-// Get provides a copy of the contained value
-// as well as an indicator whether that value exists.
-func (self MutableOption[T]) Get() (value *T, hasValue bool) {
+// Get provides null-safe access to the contained value.
+func (self OptionalMut[T]) Get() (value *T, hasValue bool) {
 	if self.IsSome() {
 		return self.Value, true
 	}
 	return nil, false
 }
 
-// GetOrPanic provides a copy of the contained value.
-// Panics if this option contains nothing.
-func (self MutableOption[T]) GetOrPanic() *T {
+// GetOrPanic provides unsafe access to the contained value.
+func (self OptionalMut[T]) GetOrPanic() *T {
 	if value, has := self.Get(); has {
 		return value
 	}
@@ -33,17 +27,17 @@ func (self MutableOption[T]) GetOrPanic() *T {
 }
 
 // IsNone indicates whether this option instance contains nothing.
-func (self MutableOption[T]) IsNone() bool {
+func (self OptionalMut[T]) IsNone() bool {
 	return self.Value == nil
 }
 
 // IsSome indicates whether this option instance contains a value.
-func (self MutableOption[T]) IsSome() bool {
+func (self OptionalMut[T]) IsSome() bool {
 	return self.Value != nil
 }
 
-// MarshalJSON is used when serializing this OptionP to JSON.
-func (self MutableOption[T]) MarshalJSON() ([]byte, error) {
+// MarshalJSON is used when serializing this type to JSON.
+func (self OptionalMut[T]) MarshalJSON() ([]byte, error) {
 	if value, hasValue := self.Get(); hasValue {
 		return json.Marshal(*value)
 	}
@@ -51,30 +45,30 @@ func (self MutableOption[T]) MarshalJSON() ([]byte, error) {
 }
 
 // String provides the string serialization of the contained value.
-// If this option contains nothing, you get an empty string.
-func (self MutableOption[T]) String() string {
+// None gets serialized into an empty string.
+func (self OptionalMut[T]) String() string {
 	return self.StringOr("")
 }
 
 // StringOr provideds the string serialization of the contained value.
-// If this option contains nothing, you get the given alternative string representation.
-func (self MutableOption[T]) StringOr(other string) string {
+// None gets serialized into the given alternative string representation.
+func (self OptionalMut[T]) StringOr(other string) string {
 	if self.IsSome() {
 		return fmt.Sprint(self.Value)
 	}
 	return other
 }
 
-// converts this OptionP to an Option
-func (self MutableOption[T]) ToOption() Option[T] {
+// ToOption provides an immutable copy of this OptionalMut.
+func (self OptionalMut[T]) ToOption() Option[T] {
 	if value, hasValue := self.Get(); hasValue {
 		return Some(*value)
 	}
 	return None[T]()
 }
 
-// UnmarshalJSON is used when de-serializing JSON into an OptionP.
-func (self *MutableOption[T]) UnmarshalJSON(b []byte) error {
+// UnmarshalJSON is used when de-serializing this type from JSON.
+func (self *OptionalMut[T]) UnmarshalJSON(b []byte) error {
 	if string(b) == "null" {
 		self.Value = nil
 		return nil
