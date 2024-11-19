@@ -10,7 +10,7 @@ Feature: syncing a branch whose parent was shipped
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And origin ships the "parent" branch
+    And origin ships the "parent" branch using the "squash-merge" ship-strategy
     And the current branch is "child"
     When I run "git-town sync"
 
