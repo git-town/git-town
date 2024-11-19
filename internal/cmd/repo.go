@@ -59,7 +59,7 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	browser.Open(data.connector.RepositoryURL(), repo.Frontend, repo.Backend)
-	print.Footer(verbose, repo.CommandsCounter.Copy(), repo.FinalMessages.Result())
+	print.Footer(verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return nil
 }
 

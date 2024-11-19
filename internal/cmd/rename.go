@@ -261,7 +261,7 @@ func renameProgram(data renameData) program.Program {
 	result := NewMutable(&program.Program{})
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
-		return result.Copy()
+		return result.Immutable()
 	}
 	result.Value.Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
@@ -320,7 +320,7 @@ func renameProgram(data renameData) program.Program {
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return result.Copy()
+	return result.Immutable()
 }
 
 func updateChildBranchProposalsToBranch(prog *program.Program, proposals []hostingdomain.Proposal, target gitdomain.LocalBranchName) {

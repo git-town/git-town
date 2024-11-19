@@ -55,7 +55,7 @@ func Finished(args FinishedArgs) error {
 		UndoAPIProgram:           program.Program{},
 		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
 	}
-	print.Footer(args.Verbose, args.CommandsCounter.Copy(), args.FinalMessages.Result())
+	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return statefile.Save(runState, args.RootDir)
 }
 

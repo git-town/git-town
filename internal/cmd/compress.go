@@ -284,7 +284,7 @@ func compressProgram(data compressBranchesData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog.Copy()
+	return prog.Immutable()
 }
 
 func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
