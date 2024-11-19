@@ -10,7 +10,7 @@ type OptionalMut[T any] struct {
 	Value *T
 }
 
-// Get provides null-safe access to the contained value.
+// Get provides null-safe mutable access to the contained value.
 func (self OptionalMut[T]) Get() (value *T, hasValue bool) {
 	if self.IsSome() {
 		return self.Value, true
@@ -18,7 +18,7 @@ func (self OptionalMut[T]) Get() (value *T, hasValue bool) {
 	return nil, false
 }
 
-// GetOrPanic provides unsafe access to the contained value.
+// GetOrPanic provides unsafe mutable access to the contained value.
 func (self OptionalMut[T]) GetOrPanic() *T {
 	if value, has := self.Get(); has {
 		return value
