@@ -147,7 +147,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			devRepo.Verbose = true
 		}
 		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
-		fixture.OriginRepo = NoneP[commands.TestCommands]()
+		fixture.OriginRepo = MutableNone[commands.TestCommands]()
 		state := ScenarioState{
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
@@ -680,13 +680,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
 		asserts.NoError(os.Mkdir(envPath, 0o777))
 		fixture := fixture.Fixture{
-			CoworkerRepo:   NoneP[commands.TestCommands](),
-			DevRepo:        NoneP[commands.TestCommands](),
+			CoworkerRepo:   MutableNone[commands.TestCommands](),
+			DevRepo:        MutableNone[commands.TestCommands](),
 			Dir:            envPath,
-			OriginRepo:     NoneP[commands.TestCommands](),
-			SecondWorktree: NoneP[commands.TestCommands](),
-			SubmoduleRepo:  NoneP[commands.TestCommands](),
-			UpstreamRepo:   NoneP[commands.TestCommands](),
+			OriginRepo:     MutableNone[commands.TestCommands](),
+			SecondWorktree: MutableNone[commands.TestCommands](),
+			SubmoduleRepo:  MutableNone[commands.TestCommands](),
+			UpstreamRepo:   MutableNone[commands.TestCommands](),
 		}
 		state := ScenarioState{
 			fixture:              fixture,

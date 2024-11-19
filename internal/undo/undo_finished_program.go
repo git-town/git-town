@@ -45,5 +45,5 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return result.Get()
+	return result.Immutable()
 }
