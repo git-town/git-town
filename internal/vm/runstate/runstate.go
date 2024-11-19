@@ -74,7 +74,7 @@ func (self *RunState) IsFinished() bool {
 
 // MarkAsFinished updates the run state to be marked as finished.
 func (self *RunState) MarkAsFinished() {
-	self.UnfinishedDetails = NoneP[UnfinishedRunStateDetails]()
+	self.UnfinishedDetails = MutableNone[UnfinishedRunStateDetails]()
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.

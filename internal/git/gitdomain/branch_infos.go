@@ -29,7 +29,7 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) MutableOptio
 			}
 		}
 	}
-	return NoneP[BranchInfo]()
+	return MutableNone[BranchInfo]()
 }
 
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
@@ -42,7 +42,7 @@ func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) MutableO
 			}
 		}
 	}
-	return NoneP[BranchInfo]()
+	return MutableNone[BranchInfo]()
 }
 
 func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) MutableOption[BranchInfo] {
@@ -55,7 +55,7 @@ func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) MutableOpt
 	if branchInfoOpt.IsSome() {
 		return branchInfoOpt
 	}
-	return NoneP[BranchInfo]()
+	return MutableNone[BranchInfo]()
 }
 
 func (self BranchInfos) FindMatchingRecord(other BranchInfo) MutableOption[BranchInfo] {
@@ -71,7 +71,7 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) MutableOption[Branc
 			return SomeP(&self[b])
 		}
 	}
-	return NoneP[BranchInfo]()
+	return MutableNone[BranchInfo]()
 }
 
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.

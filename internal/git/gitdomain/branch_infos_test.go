@@ -109,7 +109,7 @@ func TestBranchInfos(t *testing.T) {
 				branch1info,
 			}
 			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("zonk"))
-			must.Eq(t, NoneP[gitdomain.BranchInfo](), have)
+			must.Eq(t, MutableNone[gitdomain.BranchInfo](), have)
 		})
 	})
 
