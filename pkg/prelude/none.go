@@ -1,6 +1,6 @@
 package prelude
 
-// None instantiates an Option of the given type containing nothing.
+// None instantiates an empty Option of the given type.
 func None[T any]() Option[T] {
 	return Option[T]{nil}
 }
