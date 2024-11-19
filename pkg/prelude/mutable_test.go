@@ -28,7 +28,7 @@ func TestMutable(t *testing.T) {
 		counter := gohacks.Counter(0)
 		mutable := NewMutable(&counter)
 		modify(mutable)
-		must.EqOp(t, 1, mutable.Get())
+		must.EqOp(t, 1, mutable.Copy())
 	})
 }
 

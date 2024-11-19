@@ -325,7 +325,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	branchInfo, has := data.branchInfos.FindByLocalName(data.branchToPropose).Get()
 	if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
 		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToPropose))
-		return prog.Get()
+		return prog.Copy()
 	}
 	prog.Value.Add(&opcodes.ProposalCreate{
 		Branch:        data.branchToPropose,
@@ -333,7 +333,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		ProposalBody:  data.proposalBody,
 		ProposalTitle: data.proposalTitle,
 	})
-	return prog.Get()
+	return prog.Copy()
 }
 
 func validateBranchTypeToPropose(branchType configdomain.BranchType) error {

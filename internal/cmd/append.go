@@ -268,5 +268,5 @@ func appendProgram(data appendFeatureData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog.Get()
+	return prog.Copy()
 }

@@ -253,7 +253,7 @@ func deleteProgram(data deleteData) (runProgram, finalUndoProgram program.Progra
 		StashOpenChanges:         hasLocalBranchToDelete && data.initialBranch != localBranchNameToDelete && data.hasOpenChanges,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
-	return prog.Get(), undoProg.Get()
+	return prog.Copy(), undoProg.Copy()
 }
 
 // deleteFeatureBranch deletes the given feature branch everywhere it exists (locally and remotely).

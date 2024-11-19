@@ -67,7 +67,7 @@ func executeDiffParent(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
+	print.Footer(verbose, repo.CommandsCounter.Copy(), repo.FinalMessages.Result())
 	return nil
 }
 

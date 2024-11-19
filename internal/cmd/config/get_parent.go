@@ -58,6 +58,6 @@ func executeGetParent(args []string, verbose configdomain.Verbose) error {
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		fmt.Print(parent)
 	}
-	print.Footer(verbose, repo.CommandsCounter.Get(), repo.FinalMessages.Result())
+	print.Footer(verbose, repo.CommandsCounter.Copy(), repo.FinalMessages.Result())
 	return nil
 }
