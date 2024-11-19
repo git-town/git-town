@@ -1,6 +1,6 @@
 package prelude
 
-// MutableNone instantiates a non-existing MutableOption.
+// MutableNone instantiates an empty MutableOption.
 func MutableNone[T any]() OptionalMut[T] {
 	return OptionalMut[T]{nil}
 }
