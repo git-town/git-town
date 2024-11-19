@@ -14,8 +14,8 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | feature-2 | local, origin | feature-2 commit   | feature-2-file   | feature 2 content   |
       | feature-3 | local, origin | feature-3 commit A | feature-3-file-A | feature 3 content A |
       | feature-3 | local, origin | feature-3 commit B | feature-3-file-B | feature 3 content B |
-    And origin ships the "feature-1" branch
-    And origin ships the "feature-2" branch
+    And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
+    And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-3"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
