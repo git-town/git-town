@@ -10,7 +10,7 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And origin ships the "parent" branch
+    And origin ships the "parent" branch using the "squash-merge" ship-strategy
     And I delete the local "parent" branch manually
     And the current branch is "child"
     When I run "git-town sync"
