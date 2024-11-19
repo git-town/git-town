@@ -79,7 +79,7 @@ func TestBranchInfos(t *testing.T) {
 				branch1info,
 			}
 			have := bis.FindLocalOrRemote(branch1)
-			must.Eq(t, SomeP(&branch1info), have)
+			must.Eq(t, MutableSome(&branch1info), have)
 		})
 		t.Run("has remote name", func(t *testing.T) {
 			t.Parallel()
@@ -94,7 +94,7 @@ func TestBranchInfos(t *testing.T) {
 				branch1info,
 			}
 			have := bis.FindLocalOrRemote(gitdomain.NewLocalBranchName("branch-1"))
-			must.Eq(t, SomeP(&branch1info), have)
+			must.Eq(t, MutableSome(&branch1info), have)
 		})
 		t.Run("no match", func(t *testing.T) {
 			t.Parallel()
@@ -134,7 +134,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			}
 			have := bis.FindMatchingRecord(give)
-			want := SomeP(&bis[0])
+			want := MutableSome(&bis[0])
 			must.Eq(t, want, have)
 		})
 		t.Run("has matching remote name", func(t *testing.T) {
@@ -156,7 +156,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 			}
 			have := bis.FindMatchingRecord(give)
-			want := SomeP(&bis[0])
+			want := MutableSome(&bis[0])
 			must.Eq(t, want, have)
 		})
 	})

@@ -60,9 +60,9 @@ func (self Memoized) AsFixture() Fixture {
 	devRepo := testruntime.New(developerDir, self.Dir, binDir)
 	return Fixture{
 		CoworkerRepo:   MutableNone[commands.TestCommands](),
-		DevRepo:        SomeP(&devRepo),
+		DevRepo:        MutableSome(&devRepo),
 		Dir:            self.Dir,
-		OriginRepo:     SomeP(&originRepo),
+		OriginRepo:     MutableSome(&originRepo),
 		SecondWorktree: MutableNone[commands.TestCommands](),
 		SubmoduleRepo:  MutableNone[commands.TestCommands](),
 		UpstreamRepo:   MutableNone[commands.TestCommands](),
@@ -86,9 +86,9 @@ func (self Memoized) CloneInto(dir string) Fixture {
 	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
 	return Fixture{
 		CoworkerRepo:   MutableNone[commands.TestCommands](),
-		DevRepo:        SomeP(&devRepo),
+		DevRepo:        MutableSome(&devRepo),
 		Dir:            dir,
-		OriginRepo:     SomeP(&originRepo),
+		OriginRepo:     MutableSome(&originRepo),
 		SecondWorktree: MutableNone[commands.TestCommands](),
 		SubmoduleRepo:  MutableNone[commands.TestCommands](),
 		UpstreamRepo:   MutableNone[commands.TestCommands](),

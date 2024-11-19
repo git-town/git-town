@@ -21,11 +21,11 @@ func (self BranchInfos) BranchIsActiveInAnotherWorktree(branch LocalBranchName) 
 }
 
 // FindByLocalName provides the branch with the given name if one exists.
-func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionalMut[BranchInfo] {
+func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionalMutable[BranchInfo] {
 	for bi, branch := range self {
 		if localName, hasLocalName := branch.LocalName.Get(); hasLocalName {
 			if localName == branchName {
-				return SomeP(&self[bi])
+				return MutableSome(&self[bi])
 			}
 		}
 	}
@@ -34,18 +34,18 @@ func (self BranchInfos) FindByLocalName(branchName LocalBranchName) OptionalMut[
 
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) OptionalMut[BranchInfo] {
+func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) OptionalMutable[BranchInfo] {
 	for b, bi := range self {
 		if remoteName, hasRemoteName := bi.RemoteName.Get(); hasRemoteName {
 			if remoteName == remoteBranch {
-				return SomeP(&self[b])
+				return MutableSome(&self[b])
 			}
 		}
 	}
 	return MutableNone[BranchInfo]()
 }
 
-func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionalMut[BranchInfo] {
+func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionalMutable[BranchInfo] {
 	branchInfoOpt := self.FindByLocalName(branchName)
 	if branchInfoOpt.IsSome() {
 		return branchInfoOpt
@@ -58,17 +58,17 @@ func (self BranchInfos) FindLocalOrRemote(branchName LocalBranchName) OptionalMu
 	return MutableNone[BranchInfo]()
 }
 
-func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMut[BranchInfo] {
+func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMutable[BranchInfo] {
 	for b, bi := range self {
 		biLocalName, hasBiLocalName := bi.LocalName.Get()
 		otherLocalName, hasOtherLocalName := other.LocalName.Get()
 		if hasBiLocalName && hasOtherLocalName && biLocalName == otherLocalName {
-			return SomeP(&self[b])
+			return MutableSome(&self[b])
 		}
 		biRemoteName, hasBiRemoteName := bi.RemoteName.Get()
 		otherRemoteName, hasOtherRemoteName := other.RemoteName.Get()
 		if hasBiRemoteName && hasOtherRemoteName && biRemoteName == otherRemoteName {
-			return SomeP(&self[b])
+			return MutableSome(&self[b])
 		}
 	}
 	return MutableNone[BranchInfo]()
