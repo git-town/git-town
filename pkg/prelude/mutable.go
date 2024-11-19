@@ -1,9 +1,9 @@
 package prelude
 
 // Mutable respresents a mutable value.
-// A Mutable always correctly mutates its encapsulated value, even if the Mutable gets copied or passed by reference.
+// A Mutable is always mutable, even if passed by value.
 type Mutable[T any] struct {
-	// the enclosed mutable value, feel free to mutate it directly
+	// the enclosed mutable value, okay to mutate it directly
 	Value *T
 }
 
