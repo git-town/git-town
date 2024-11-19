@@ -38,6 +38,7 @@ main() {
 	echo "I have successfully:"
 	echo "- downloaded $URL"
 	echo "- extracted the Git Town $VERSION binary to $DEST_PATH"
+	echo "- made the Git Town binary executable"
 
 	# unpack the archive
 	rm -rf "$TMP_DIR"
@@ -102,6 +103,7 @@ download_and_extract() {
 
 	mkdir -p "$DEST"
 	mv "$TMP_DIR/$FILENAME" "$DEST"
+	chmod +x "$DEST/$FILENAME"
 }
 
 executable_filename() {
