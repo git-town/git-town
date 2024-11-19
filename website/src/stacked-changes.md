@@ -224,10 +224,15 @@ Branch stacks are more susceptible to phantom merge conflicts than regular
 branches. Don't forget to populate changes across all branches in your stack by
 running `git town sync --stack` or `git town sync --all`.
 
-#### Avoid unnecessary chaining
+#### Avoid unnecessary stacking
 
-If your feature branches don't depend on each other, put them in (independent)
-top-level feature branches. This way you can ship them in any order.
+To reduce merge conflicts, feature branches should not diverge too much from the
+main development branch. Stacking multiple changes on top of each other
+amplifies this divergence. Overly "tall" stacks are therefore an anti-pattern to
+avoid. It's often better to work in independent top-level feature branches by
+default, and only stack branches if the changes they contain really depend on
+each other. This way you can get your changes reviewed and shipped concurrently
+and in any order, i.e. faster and with fewer merge conflicts.
 
 #### Organize branch chains in the order you want to ship
 
