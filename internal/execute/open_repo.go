@@ -31,7 +31,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			cmd := exec.Command("uname", "-a")
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
-			cmd.Run()
+			_ = cmd.Run()
 		}
 	}
 	backendRunner := subshell.BackendRunner{
