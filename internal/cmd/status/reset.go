@@ -17,7 +17,7 @@ func resetRunstateCommand() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: statusResetDesc,
 		Long:  cmdhelpers.Long(statusResetDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return executeStatusReset()
 		},
 	}
