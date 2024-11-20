@@ -9,6 +9,10 @@
 - Various stability improvements ([#4216](https://github.com/git-town/git-town/pull/4216))
 - `git town ship` no longer closes child proposals when using the `fast-forward` ship-strategy ([#4210](https://github.com/git-town/git-town/issues/4210))
 
+#### Contributors
+
+Shoutout to @EngHabu, @kevgo, @stephenwade, @thatch, @tranhl for contributing feedback, ideas, documentation, and code to 20 shipped PRs and 6 resolved issues!
+
 ## 16.6.0 (2024-11-12)
 
 #### New Features
