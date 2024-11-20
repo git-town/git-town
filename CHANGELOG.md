@@ -4,10 +4,10 @@
 
 #### Bug Fixes
 
-- Bash-based installer makes the binary executable ([#4231](https://github.com/git-town/git-town/pull/4231))
-- `git town propose` no longer opens the browser when proposing a branch that was deleted at the remote ([#4171](https://github.com/git-town/git-town/issues/4171))
-- Various stability improvements ([#4216](https://github.com/git-town/git-town/pull/4216))
 - `git town ship` no longer closes child proposals when using the `fast-forward` ship-strategy ([#4210](https://github.com/git-town/git-town/issues/4210))
+- `git town propose` no longer opens the browser when proposing a branch that was deleted at the remote ([#4171](https://github.com/git-town/git-town/issues/4171))
+- Bash-based installer makes the binary executable ([#4231](https://github.com/git-town/git-town/pull/4231))
+- Stability improvements ([#4216](https://github.com/git-town/git-town/pull/4216))
 
 #### Contributors
 
