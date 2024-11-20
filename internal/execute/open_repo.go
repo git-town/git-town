@@ -27,12 +27,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if args.Verbose {
 		fmt.Println("Git Town " + config.GitTownVersion)
 		fmt.Println("OS:", runtime.GOOS)
-		if runtime.GOOS != "windows" {
-			cmd := exec.Command("uname", "-a")
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			_ = cmd.Run()
+		var cmd *exec.Cmd
+		if runtime.GOOS == "windows" {
+			cmd = exec.Command("cmd", "/c", "ver")
+		} else {
+			cmd = exec.Command("uname", "-a")
 		}
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		_ = cmd.Run()
 	}
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
