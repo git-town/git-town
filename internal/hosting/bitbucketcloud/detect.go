@@ -1,4 +1,4 @@
-package bitbucket
+package bitbucketcloud
 
 import "github.com/git-town/git-town/v16/internal/git/giturl"
 

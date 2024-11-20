@@ -1,10 +1,10 @@
-package bitbucket_test
+package bitbucketcloud_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v16/internal/git/giturl"
-	"github.com/git-town/git-town/v16/internal/hosting/bitbucket"
+	"github.com/git-town/git-town/v16/internal/hosting/bitbucketcloud"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,7 +18,7 @@ func TestDetect(t *testing.T) {
 	for give, want := range tests {
 		url, has := giturl.Parse(give).Get()
 		must.True(t, has)
-		have := bitbucket.Detect(url)
+		have := bitbucketcloud.Detect(url)
 		must.EqOp(t, want, have)
 	}
 }
