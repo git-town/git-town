@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
+	"runtime"
 
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -24,6 +26,13 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	commandsCounter := NewMutable(new(gohacks.Counter))
 	if args.Verbose {
 		fmt.Println("Git Town " + config.GitTownVersion)
+		fmt.Println("OS:", runtime.GOOS)
+		if runtime.GOOS != "windows" {
+			cmd := exec.Command("uname", "-a")
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			cmd.Run()
+		}
 	}
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
