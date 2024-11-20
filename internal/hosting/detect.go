@@ -3,7 +3,7 @@ package hosting
 import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
-	"github.com/git-town/git-town/v16/internal/hosting/bitbucket"
+	"github.com/git-town/git-town/v16/internal/hosting/bitbucketcloud"
 	"github.com/git-town/git-town/v16/internal/hosting/gitea"
 	"github.com/git-town/git-town/v16/internal/hosting/github"
 	"github.com/git-town/git-town/v16/internal/hosting/gitlab"
@@ -15,7 +15,7 @@ func Detect(remoteURL giturl.Parts, userOverride Option[configdomain.HostingPlat
 		return userOverride
 	}
 	detectors := map[configdomain.HostingPlatform]func(giturl.Parts) bool{
-		configdomain.HostingPlatformBitbucket: bitbucket.Detect,
+		configdomain.HostingPlatformBitbucket: bitbucketcloud.Detect,
 		configdomain.HostingPlatformGitea:     gitea.Detect,
 		configdomain.HostingPlatformGitHub:    github.Detect,
 		configdomain.HostingPlatformGitLab:    gitlab.Detect,

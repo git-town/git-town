@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting/bitbucket"
+	"github.com/git-town/git-town/v16/internal/hosting/bitbucketcloud"
 	"github.com/git-town/git-town/v16/internal/hosting/gitea"
 	"github.com/git-town/git-town/v16/internal/hosting/github"
 	"github.com/git-town/git-town/v16/internal/hosting/gitlab"
@@ -24,7 +24,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	var connector hostingdomain.Connector
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
-		connector = bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword:     config.NormalConfig.BitbucketAppPassword,
 			HostingPlatform: hostingPlatform,
 			Log:             log,
