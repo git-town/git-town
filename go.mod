@@ -1,6 +1,8 @@
 module github.com/git-town/git-town/v16
 
-go 1.22
+go 1.22.0
+
+toolchain go1.22.3
 
 require (
 	code.gitea.io/sdk/gitea v0.19.0
@@ -12,6 +14,7 @@ require (
 	github.com/cucumber/messages/go/v21 v21.0.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dustin/go-humanize v1.0.1
+	github.com/gfleury/go-bitbucket-v1 v0.0.0-20240917142304-df385efaac68
 	github.com/google/go-cmp v0.6.0
 	github.com/google/go-github/v58 v58.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
