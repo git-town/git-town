@@ -85,7 +85,7 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 }
 
 func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return Some(self.updateProposalSource)
+	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
@@ -203,14 +203,6 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 		return err
 	}
 	self.log.Ok()
-	return nil
-}
-
-func (self Connector) updateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	// TODO
-	sourceName := source.String()
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(sourceName))
-	self.log.Failed("unsupported operation")
 	return nil
 }
 
