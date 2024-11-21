@@ -73,7 +73,7 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
-		os.Stdout.Write(bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n'}))
+		os.Stdout.Write(bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n', '\n'}))
 	}
 	return outputText, err
 }
