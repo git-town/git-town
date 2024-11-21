@@ -28,10 +28,10 @@ Feature: stack that changes the same file in multiple commits per branch
       | beta   | git fetch --prune --tags                        |
       |        | git checkout main                               |
       | main   | git rebase origin/main --no-update-refs         |
-      |        | git checkout beta                               |
-      | beta   | git rebase --onto main alpha --no-update-refs   |
-      |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase --onto main alpha --no-update-refs   |
       |        | git branch -D alpha                             |
+      |        | git checkout beta                               |
+      | beta   | git push --force-with-lease --force-if-includes |
     And no rebase is in progress
     And the current branch is still "beta"
     And all branches are now synchronized

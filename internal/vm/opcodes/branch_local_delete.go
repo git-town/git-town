@@ -12,5 +12,9 @@ type BranchLocalDelete struct {
 }
 
 func (self *BranchLocalDelete) Run(args shared.RunArgs) error {
+	err := args.Git.RebaseOnto(args.Frontend, self.Branch.BranchName(), args.Config.Value.ValidatedConfigData.MainBranch, args.Config.Value.NormalConfig.GitVersion)
+	if err != nil {
+		return err
+	}
 	return args.Git.DeleteLocalBranch(args.Frontend, self.Branch)
 }
