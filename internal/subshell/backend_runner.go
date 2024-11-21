@@ -1,6 +1,7 @@
 package subshell
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -72,7 +73,7 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 		time.Sleep(concurrentGitRetryDelay)
 	}
 	if self.Verbose && len(outputBytes) > 0 {
-		os.Stdout.Write(outputBytes)
+		os.Stdout.Write(bytes.ReplaceAll(outputBytes, []byte{0x00}, []byte{'\n'}))
 	}
 	return outputText, err
 }
