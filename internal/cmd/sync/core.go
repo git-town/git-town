@@ -115,7 +115,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 
 	// remove outdated lineage
-	if err = data.config.NormalConfig.RemoveOutdatedConfiguration(data.branchInfos.LocalBranches().Names()); err != nil {
+	if err = data.config.NormalConfig.RemoveDeletedBranchesFromLineage(data.branchInfos.LocalBranches().Names()); err != nil {
 		return err
 	}
 	if err = data.config.NormalConfig.RemovePerenialAncestors(repo.FinalMessages); err != nil {

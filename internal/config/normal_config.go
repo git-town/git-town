@@ -89,6 +89,18 @@ func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
 }
 
+// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
+func (self *NormalConfig) RemoveDeletedBranchesFromLineage(localBranches gitdomain.LocalBranchNames) error {
+	for _, entry := range self.Lineage.Entries() {
+		hasChildBranch := localBranches.Contains(entry.Child)
+		hasParentBranch := localBranches.Contains(entry.Parent)
+		if !hasChildBranch || !hasParentBranch {
+			self.RemoveParent(entry.Child)
+		}
+	}
+	return nil
+}
+
 func (self *NormalConfig) RemoveFeatureRegex() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
 }
@@ -121,18 +133,6 @@ func (self *NormalConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBran
 func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
 	self.PrototypeBranches = slice.Remove(self.PrototypeBranches, branch)
 	return self.SetPrototypeBranches(self.PrototypeBranches)
-}
-
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for _, entry := range self.Lineage.Entries() {
-		hasChildBranch := localBranches.Contains(entry.Child)
-		hasParentBranch := localBranches.Contains(entry.Parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.RemoveParent(entry.Child)
-		}
-	}
-	return nil
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
