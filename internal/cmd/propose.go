@@ -157,6 +157,7 @@ type proposeData struct {
 	existingProposalURL Option[string]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
+	nonExistingBranches gitdomain.LocalBranchNames
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposalBody        gitdomain.ProposalBody
@@ -254,7 +255,8 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -289,6 +291,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 		existingProposalURL: existingProposalURL,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
+		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposalBody:        bodyText,

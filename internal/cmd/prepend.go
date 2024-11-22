@@ -136,6 +136,7 @@ type prependData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	newParentCandidates gitdomain.LocalBranchNames
+	nonExistingBranches gitdomain.LocalBranchNames
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[hostingdomain.Proposal]
@@ -216,7 +217,8 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -240,6 +242,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
+		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,

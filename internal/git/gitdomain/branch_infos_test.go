@@ -544,7 +544,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
-		have, err := bs.Select(gitdomain.NewLocalBranchName("one"), gitdomain.NewLocalBranchName("three"))
+		have, nonExisting := bs.Select(gitdomain.NewLocalBranchName("one"), gitdomain.NewLocalBranchName("three"))
 		want := gitdomain.BranchInfos{
 			gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName("one")),
@@ -561,7 +561,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		}
-		must.NoError(t, err)
 		must.Eq(t, want, have)
+		must.Eq(t, nonExisting, gitdomain.LocalBranchNames(nil))
 	})
 }

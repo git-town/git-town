@@ -195,6 +195,7 @@ type syncData struct {
 	dialogTestInputs         components.TestInputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	nonExistingBranches      gitdomain.LocalBranchNames
 	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch           Option[gitdomain.LocalBranchName]
 	remotes                  gitdomain.Remotes
@@ -325,7 +326,9 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if detached {
 		allBranchNamesToSync = validatedConfig.RemovePerennials(allBranchNamesToSync)
 	}
-	branchesToSync, err := BranchesToSync(allBranchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	// remove branches that don't exist anymore because they were deleted manually by the user
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
+	branchesToSync, err := BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -338,6 +341,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		dialogTestInputs:         dialogTestInputs,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		nonExistingBranches:      nonExistingBranches,
 		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
 		previousBranch:           previousBranchOpt,
 		remotes:                  remotes,
@@ -346,18 +350,13 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	}, false, err
 }
 
-// determines the complete info needed to sync the given branches
-func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapshot gitdomain.BranchesSnapshot, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) ([]configdomain.BranchToSync, error) {
-	branchInfosToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync...)
+func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitdomain.BranchInfos, repo execute.OpenRepoResult, mainBranch gitdomain.LocalBranchName) ([]configdomain.BranchToSync, error) {
 	result := make([]configdomain.BranchToSync, len(branchInfosToSync))
-	if err != nil {
-		return result, err
-	}
-	for b, branchInfoToSync := range branchInfosToSync {
-		branchNameToSync := branchInfoToSync.GetLocalOrRemoteName()
+	for b, branchInfo := range branchInfosToSync {
+		branchNameToSync := branchInfo.GetLocalOrRemoteName()
 		if branchNameToSync.LocalName() == mainBranch {
 			result[b] = configdomain.BranchToSync{
-				BranchInfo:         branchInfoToSync,
+				BranchInfo:         branchInfo,
 				FirstCommitMessage: None[gitdomain.CommitMessage](),
 			}
 			continue
@@ -366,10 +365,10 @@ func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 		if !hasParentName {
 			parentLocalName = mainBranch
 		}
-		parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindLocalOrRemote(parentLocalName).Get()
+		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName).Get()
 		if !hasParentBranchInfo {
 			result[b] = configdomain.BranchToSync{
-				BranchInfo:         branchInfoToSync,
+				BranchInfo:         branchInfo,
 				FirstCommitMessage: None[gitdomain.CommitMessage](),
 			}
 			continue
@@ -380,7 +379,7 @@ func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 			return result, err
 		}
 		result[b] = configdomain.BranchToSync{
-			BranchInfo:         branchInfoToSync,
+			BranchInfo:         branchInfo,
 			FirstCommitMessage: firstCommitMessage,
 		}
 	}
