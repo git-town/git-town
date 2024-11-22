@@ -123,8 +123,8 @@ func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBran
 	return self.SetPrototypeBranches(self.PrototypeBranches)
 }
 
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
+// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
+func (self *NormalConfig) RemoveDeletedBranchesFromLineage(localBranches gitdomain.LocalBranchNames) error {
 	for _, entry := range self.Lineage.Entries() {
 		hasChildBranch := localBranches.Contains(entry.Child)
 		hasParentBranch := localBranches.Contains(entry.Parent)
