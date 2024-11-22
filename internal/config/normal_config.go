@@ -86,6 +86,8 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 }
 
 func (self *NormalConfig) CutBranchFromLineage(branch gitdomain.LocalBranchName) error {
+	// it should not simply delete lineage entries for non-existing branches,
+	// but remove the non-existing branch from the lineage so that its children are now children of its parent
 	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
 	for _, childName := range self.LocalGitConfig.Lineage.Children(branch) {
 		if hasParent {
@@ -96,6 +98,18 @@ func (self *NormalConfig) CutBranchFromLineage(branch gitdomain.LocalBranchName)
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
+}
+
+// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
+func (self *NormalConfig) RemoveDeletedBranchesFromLineage(localBranches gitdomain.LocalBranchNames) error {
+	for _, entry := range self.Lineage.Entries() {
+		hasChildBranch := localBranches.Contains(entry.Child)
+		hasParentBranch := localBranches.Contains(entry.Parent)
+		if !hasChildBranch || !hasParentBranch {
+			self.RemoveParent(entry.Child)
+		}
+	}
+	return nil
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
@@ -130,20 +144,6 @@ func (self *NormalConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBran
 func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
 	self.PrototypeBranches = slice.Remove(self.PrototypeBranches, branch)
 	return self.SetPrototypeBranches(self.PrototypeBranches)
-}
-
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	// it should not simply delete lineage entries for non-existing branches,
-	// but remove the non-existing branch from the lineage so that its children are now children of its parent
-	for _, entry := range self.Lineage.Entries() {
-		hasChildBranch := localBranches.Contains(entry.Child)
-		hasParentBranch := localBranches.Contains(entry.Parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.RemoveParent(entry.Child)
-		}
-	}
-	return nil
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
