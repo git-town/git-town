@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -11,6 +12,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
@@ -136,6 +139,19 @@ func (self *NormalConfig) RemoveOutdatedConfiguration(localBranches gitdomain.Lo
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.LocalGitConfig.Lineage.RemoveBranch(branch)
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
+}
+
+func (self *NormalConfig) RemovePerenialAncestors(finalMessages stringslice.Collector) error {
+	for _, perennialBranch := range self.PerennialBranches {
+		if self.Lineage.Parent(perennialBranch).IsSome() {
+			if err := self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch)); err != nil {
+				return err
+			}
+			self.Lineage.RemoveBranch(perennialBranch)
+			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
+		}
+	}
+	return nil
 }
 
 func (self *NormalConfig) RemovePerennialBranches() {
