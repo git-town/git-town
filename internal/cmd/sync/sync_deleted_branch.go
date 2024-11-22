@@ -42,12 +42,14 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 		gitdomain.SyncStatusBehind,
 		gitdomain.SyncStatusLocalOnly:
 		syncDeleteLocalBranchProgram(prog, branch, args)
-	case gitdomain.SyncStatusOtherWorktree:
-	case gitdomain.SyncStatusRemoteOnly:
+	case
+		gitdomain.SyncStatusOtherWorktree,
+		gitdomain.SyncStatusRemoteOnly:
 		return
-	case gitdomain.SyncStatusAhead:
-	case gitdomain.SyncStatusDeletedAtRemote:
-	case gitdomain.SyncStatusNotInSync:
+	case
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusDeletedAtRemote,
+		gitdomain.SyncStatusNotInSync:
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 		pullParentBranchOfCurrentFeatureBranchOpcode(pullParentBranchOfCurrentFeatureBranchOpcodeArgs{
 			branch:             branch,
