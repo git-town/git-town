@@ -12,10 +12,8 @@ import (
 	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/config/gitconfig"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -120,7 +118,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err = data.config.NormalConfig.RemoveOutdatedConfiguration(data.branchInfos.LocalBranches().Names()); err != nil {
 		return err
 	}
-	if err = cleanupPerennialParentEntries(data.config.NormalConfig.Lineage, data.config.NormalConfig.PerennialBranches, data.config.NormalConfig.GitConfig, repo.FinalMessages); err != nil {
+	if err = data.config.NormalConfig.RemovePerenialAncestors(repo.FinalMessages); err != nil {
 		return err
 	}
 
@@ -385,18 +383,4 @@ func BranchesToSync(branchNamesToSync gitdomain.LocalBranchNames, branchesSnapsh
 		}
 	}
 	return result, nil
-}
-
-// cleanupPerennialParentEntries removes outdated entries from the configuration.
-func cleanupPerennialParentEntries(lineage configdomain.Lineage, perennialBranches gitdomain.LocalBranchNames, access gitconfig.Access, finalMessages stringslice.Collector) error {
-	for _, perennialBranch := range perennialBranches {
-		if lineage.Parent(perennialBranch).IsSome() {
-			if err := access.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch)); err != nil {
-				return err
-			}
-			lineage.RemoveBranch(perennialBranch)
-			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
-		}
-	}
-	return nil
 }
