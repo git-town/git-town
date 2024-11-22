@@ -21,7 +21,7 @@ func shipProgramFastForward(prog Mutable[program.Program], sharedData sharedShip
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {
-		prog.Value.Add(&opcodes.BranchParentDelete{Branch: sharedData.branchNameToShip})
+		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
 	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.NormalConfig.IsOnline() {
