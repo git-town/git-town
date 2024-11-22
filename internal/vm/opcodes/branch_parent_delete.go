@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// BranchParentDelete removes the parent branch entry in the Git Town configuration.
 type BranchParentDelete struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
