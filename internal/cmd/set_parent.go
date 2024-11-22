@@ -224,7 +224,7 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
 		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
-		prog.Add(&opcodes.BranchParentDelete{Branch: data.initialBranch})
+		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		connector, hasConnector := data.connector.Get()

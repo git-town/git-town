@@ -59,7 +59,6 @@ func Types() []shared.Opcode {
 		&BranchEnsureShippableChanges{},
 		&BranchLocalDelete{},
 		&BranchLocalRename{},
-		&BranchParentDelete{},
 		&BranchRemoteCreate{},
 		&BranchRemoteSetToSHA{},
 		&BranchRemoteSetToSHAIfNeeded{},
