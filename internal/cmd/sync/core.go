@@ -123,7 +123,6 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err = cleanupPerennialParentEntries(data.config.NormalConfig.Lineage, data.config.NormalConfig.PerennialBranches, data.config.NormalConfig.GitConfig, repo.FinalMessages); err != nil {
 		return err
 	}
-
 	runProgram := NewMutable(&program.Program{})
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
