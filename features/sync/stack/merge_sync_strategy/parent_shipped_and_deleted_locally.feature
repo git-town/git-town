@@ -15,7 +15,6 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
     And the current branch is "child"
     When I run "git-town sync"
 
-  @debug
   @this
   Scenario: result
     Then Git Town runs the commands

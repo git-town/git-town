@@ -85,16 +85,16 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 	return self.GitConfig.RemoteURL(remote)
 }
 
-func (self *NormalConfig) CutBranchFromLineage(branch gitdomain.LocalBranchName) error {
-	// it should not simply delete lineage entries for non-existing branches,
-	// but remove the non-existing branch from the lineage so that its children are now children of its parent
-	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
-	for _, childName := range self.LocalGitConfig.Lineage.Children(branch) {
-		if hasParent {
-			self.LocalGitConfig.Lineage.
-		}
-	}
-}
+// func (self *NormalConfig) CutBranchFromLineage(branch gitdomain.LocalBranchName) error {
+// 	// it should not simply delete lineage entries for non-existing branches,
+// 	// but remove the non-existing branch from the lineage so that its children are now children of its parent
+// 	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
+// 	for _, childName := range self.LocalGitConfig.Lineage.Children(branch) {
+// 		if hasParent {
+// 			self.LocalGitConfig.Lineage.
+// 		}
+// 	}
+// }
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
