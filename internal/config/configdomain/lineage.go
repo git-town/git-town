@@ -212,14 +212,6 @@ func (self Lineage) Parent(branch gitdomain.LocalBranchName) Option[gitdomain.Lo
 
 // RemoveBranch removes the given branch completely from this lineage.
 func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) {
-	parent, hasParent := self.Parent(branch).Get()
-	for _, childName := range self.Children(branch) {
-		if hasParent {
-			self.data[childName] = parent
-		} else {
-			delete(self.data, childName)
-		}
-	}
 	delete(self.data, branch)
 }
 
