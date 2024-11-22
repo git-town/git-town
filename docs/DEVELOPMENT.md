@@ -118,8 +118,9 @@ make cukethis
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
 GitLab or Bitbucket address. This causes `git push` operations in this test to
 also go to GitHub. To prevent this, set an environment variable
-`GIT_TOWN_REMOTE` with the desired value of the `origin` remote, and Git Town
-will use that value instead of what is configured in the repo.
+`GIT_TOWN_REMOTE` with the desired value of the development remote (the "origin"
+remote), and Git Town will use that value instead of what is configured in the
+repo.
 
 If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
@@ -129,7 +130,7 @@ To pause an end-to-end test so that you have time to inspect the status of the
 Git repository created by the test, add the step `And inspect the repo`. The
 test runner will pause and print the path of the test workspace. You can `cd`
 into that path in a separate terminal window and inspect the repos there. The
-developer's repo is in the `repo` folder. The origin repo is in the `origin`
+developer's repo is in the `repo` folder. The dev repo is in the `origin`
 folder.
 
 To see all commit SHAs of the repo, add the `And inspect the commits` step.
