@@ -113,9 +113,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err != nil || exit {
 		return err
 	}
-	if err = data.config.NormalConfig.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages); err != nil {
-		return err
-	}
+	data.config.NormalConfig.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	runProgram := NewMutable(&program.Program{})
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,

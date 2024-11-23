@@ -76,12 +76,9 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
-func (self *NormalConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) error {
-	err := self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
-	if err != nil {
-		return err
-	}
-	return self.RemovePerennialAncestors(finalMessages)
+func (self *NormalConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
+	self.RemovePerennialAncestors(finalMessages)
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -117,7 +114,7 @@ func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 }
 
 // RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) error {
+func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) {
 	for _, nonExistingBranch := range nonExistingBranches {
 		self.CleanupBranchFromLineage(nonExistingBranch)
 	}
@@ -128,7 +125,6 @@ func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain
 			self.RemoveParent(entry.Child)
 		}
 	}
-	return nil
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
@@ -171,17 +167,14 @@ func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }
 
-func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) error {
+func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
-			if err := self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch)); err != nil {
-				return err
-			}
+			self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
 			self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}
-	return nil
 }
 
 func (self *NormalConfig) RemovePerennialBranches() {

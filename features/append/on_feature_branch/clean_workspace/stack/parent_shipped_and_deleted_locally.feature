@@ -15,7 +15,6 @@ Feature: appending to a branch whose parent was shipped and the local branch del
     And the current branch is "child"
     When I run "git-town append new"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
@@ -41,11 +40,13 @@ Feature: appending to a branch whose parent was shipped and the local branch del
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
+      | new    | git checkout child                              |
       | child  | git reset --hard {{ sha 'child commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
+      | child  | git branch -D new                               |
     And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
