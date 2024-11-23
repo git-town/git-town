@@ -163,21 +163,21 @@ func TestLineage(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("Branches", func(t *testing.T) {
+	t.Run("BranchesWithParents", func(t *testing.T) {
 		t.Parallel()
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
 			lineage.Add("branch-1", "branch-2")
 			lineage.Add("branch-3", "branch-4")
-			have := lineage.Branches()
+			have := lineage.BranchesWithParents()
 			want := gitdomain.NewLocalBranchNames("branch-1", "branch-3")
 			must.Eq(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
-			have := lineage.Branches()
+			have := lineage.BranchesWithParents()
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})

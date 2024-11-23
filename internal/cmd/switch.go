@@ -211,7 +211,7 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 		layoutBranches(&entries, root, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
 	}
 	// add branches not in the lineage
-	branchesInLineage := lineage.Branches()
+	branchesInLineage := lineage.BranchesWithParents()
 	for _, branchInfo := range branchInfos {
 		localBranch := branchInfo.LocalBranchName()
 		if slices.Contains(roots, localBranch) {
