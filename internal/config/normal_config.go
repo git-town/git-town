@@ -120,7 +120,6 @@ func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain
 	for _, entry := range self.Lineage.Entries() {
 		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
 		hasParentBranch := branchInfos.HasLocalBranch(entry.Parent)
-		fmt.Println("11111111111111111111111111111111111111111111111", entry.Child, hasChildBranch, entry.Parent, hasParentBranch)
 		if !hasChildBranch || !hasParentBranch {
 			self.RemoveParent(entry.Child)
 		}
