@@ -106,13 +106,6 @@ func (self Lineage) BranchNames() gitdomain.LocalBranchNames {
 	return result
 }
 
-// provides all branches for which the parent is known
-func (self Lineage) Branches() gitdomain.LocalBranchNames {
-	var result gitdomain.LocalBranchNames = maps.Keys(self.data)
-	result.Sort()
-	return result
-}
-
 // BranchesAndAncestors provides the full lineage for the branches with the given names,
 // including the branches themselves.
 func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
@@ -121,6 +114,13 @@ func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames)
 		result = slice.AppendAllMissing(result, self.Ancestors(branchName)...)
 	}
 	return self.OrderHierarchically(result)
+}
+
+// provides all branches for which the parent is known
+func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
+	var result gitdomain.LocalBranchNames = maps.Keys(self.data)
+	result.Sort()
+	return result
 }
 
 // Children provides the names of all branches that have the given branch as their parent.
