@@ -163,7 +163,7 @@ func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }
 
-func (self *NormalConfig) RemovePerenialAncestors(finalMessages stringslice.Collector) error {
+func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) error {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
 			if err := self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch)); err != nil {
