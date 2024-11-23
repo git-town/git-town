@@ -36,12 +36,14 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                |
-      | child  | git reset --hard {{ sha 'child commit' }}              |
-      |        | git push --force-with-lease --force-if-includes        |
-      |        | git checkout main                                      |
-      | main   | git reset --hard {{ sha 'initial commit' }}            |
-      |        | git branch parent {{ sha-before-run 'parent commit' }} |
-      |        | git checkout child                                     |
+      | BRANCH | COMMAND                                         |
+      | child  | git reset --hard {{ sha 'child commit' }}       |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout main                               |
+      | main   | git reset --hard {{ sha 'initial commit' }}     |
+      |        | git checkout child                              |
     And the current branch is still "child"
-    And the initial branches and lineage exist now
+    And the branches are now
+      | REPOSITORY    | BRANCHES    |
+      | local, origin | main, child |
+    And the initial lineage exists now
