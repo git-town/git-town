@@ -132,7 +132,6 @@ type appendFeatureData struct {
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	nonExistingBranches       gitdomain.LocalBranchNames
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
 	prototype                 configdomain.Prototype
@@ -210,7 +209,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchInfosToSync, _ := branchesSnapshot.Branches.Select(branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
@@ -227,7 +226,6 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
-		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
