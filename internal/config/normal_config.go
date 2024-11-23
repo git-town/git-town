@@ -62,16 +62,17 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	// it should not simply delete lineage entries for non-existing branches,
 	// but remove the non-existing branch from the lineage so that its children are now children of its parent
 	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
-	for _, childName := range self.LocalGitConfig.Lineage.Children(branch) {
+	children := self.Lineage.Children(branch)
+	for _, child := range children {
 		if hasParent {
-			self.LocalGitConfig.Lineage.Add(parent, childName)
-			_ = self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent), childName.String())
+			self.Lineage.Add(child, parent)
+			_ = self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 		} else {
-			self.LocalGitConfig.Lineage.RemoveBranch(childName)
+			self.Lineage.RemoveBranch(child)
 			_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
 		}
 	}
-	self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	self.Lineage.RemoveBranch(branch)
 	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
@@ -115,8 +116,11 @@ func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain
 		if !hasLocalBranch && !hasRemoteBranch {
 			self.CleanupBranchFromLineage(entry.Child)
 		}
+	}
+	for _, entry := range self.Lineage.Entries() {
 		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
 		hasParentBranch := branchInfos.HasLocalBranch(entry.Parent)
+		fmt.Println("11111111111111111111111111111111111111111111111", entry.Child, hasChildBranch, entry.Parent, hasParentBranch)
 		if !hasChildBranch || !hasParentBranch {
 			self.RemoveParent(entry.Child)
 		}
