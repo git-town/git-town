@@ -10,9 +10,10 @@ Feature: on a feature branch with a clean workspace but without main branch
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And I run "git branch -d main"
+    And I ran "git branch -d main"
     When I run "git-town hack new"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                    |

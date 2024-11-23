@@ -76,8 +76,8 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
-func (self *NormalConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
-	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
+func (self *NormalConfig) CleanupLineage(nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
+	self.RemoveDeletedBranchesFromLineage(nonExistingBranches)
 	self.RemovePerennialAncestors(finalMessages)
 }
 
@@ -114,13 +114,13 @@ func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 }
 
 // RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) {
+func (self *NormalConfig) RemoveDeletedBranchesFromLineage(nonExistingBranches gitdomain.LocalBranchNames) {
 	for _, nonExistingBranch := range nonExistingBranches {
 		self.CleanupBranchFromLineage(nonExistingBranch)
 	}
 	for _, entry := range self.Lineage.Entries() {
-		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
-		hasParentBranch := branchInfos.HasLocalBranch(entry.Parent)
+		hasChildBranch := nonExistingBranches.Contains(entry.Child)
+		hasParentBranch := nonExistingBranches.Contains(entry.Parent)
 		if !hasChildBranch || !hasParentBranch {
 			self.RemoveParent(entry.Child)
 		}
