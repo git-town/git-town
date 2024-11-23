@@ -76,6 +76,14 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
+func (self *NormalConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) error {
+	err := self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
+	if err != nil {
+		return err
+	}
+	return self.RemovePerennialAncestors(finalMessages)
+}
+
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.

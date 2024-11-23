@@ -113,12 +113,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err != nil || exit {
 		return err
 	}
-
-	// remove outdated lineage
-	if err = data.config.NormalConfig.RemoveDeletedBranchesFromLineage(data.branchInfos, data.nonExistingBranches); err != nil {
-		return err
-	}
-	if err = data.config.NormalConfig.RemovePerennialAncestors(repo.FinalMessages); err != nil {
+	if err = data.config.NormalConfig.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages); err != nil {
 		return err
 	}
 	runProgram := NewMutable(&program.Program{})
