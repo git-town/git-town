@@ -109,13 +109,9 @@ func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 }
 
 // RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos) error {
-	for _, entry := range self.Lineage.Entries() {
-		hasLocalBranch := branchInfos.HasLocalBranch(entry.Child)
-		hasRemoteBranch := branchInfos.HasMatchingTrackingBranchFor(entry.Child)
-		if !hasLocalBranch && !hasRemoteBranch {
-			self.CleanupBranchFromLineage(entry.Child)
-		}
+func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) error {
+	for _, nonExistingBranch := range nonExistingBranches {
+		self.CleanupBranchFromLineage(nonExistingBranch)
 	}
 	for _, entry := range self.Lineage.Entries() {
 		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
