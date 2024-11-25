@@ -151,7 +151,7 @@ func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
-			self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
+			_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
 			self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
