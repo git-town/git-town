@@ -21,7 +21,7 @@ Feature: stacked changes where all ancestor branches aren't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
-  Scenario:
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git fetch --prune --tags              |

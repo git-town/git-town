@@ -22,7 +22,7 @@ Feature: stacked changes where an ancestor branch isn't local
 
   @debug
   @this
-  Scenario:
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | gamma  | git fetch --prune --tags              |
