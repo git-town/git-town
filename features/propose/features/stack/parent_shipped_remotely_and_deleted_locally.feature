@@ -35,7 +35,7 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
-    Then "open" launches a new proposal with this url in my browser:
+    And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/child?expand=1
       """
