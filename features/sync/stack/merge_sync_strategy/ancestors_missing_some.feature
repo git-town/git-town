@@ -20,8 +20,6 @@ Feature: stacked changes where an ancestor branch isn't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
@@ -41,7 +39,6 @@ Feature: stacked changes where an ancestor branch isn't local
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | origin        | origin main commit                                     |
       | alpha  | local, origin | local alpha commit                                     |
-      |        |               | origin main commit                                     |
       |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
       |        |               | origin alpha commit                                    |
       |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |

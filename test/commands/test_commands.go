@@ -81,9 +81,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 			continue
 		}
 		// TODO: decide which parent we want to use here.
-		// Options:
-		// 1. Use the oldest existing local parent branch
-		// 2. Use the oldest existing remote parent branch
+		// use the oldest existing local or remote branch
 		parent := self.ExistingParent(branch, lineage)
 		if parent.IsNone() {
 			// TODO: use the oldest remote parent branch
@@ -95,7 +93,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []git.Commit {
 	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
@@ -238,15 +236,18 @@ func (self *TestCommands) CurrentCommitMessage() string {
 }
 
 // provides the first ancestor of the given branch that actually exists in the repo
-func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
 		parentOpt := lineage.Parent(branch)
 		parent, hasParent := parentOpt.Get()
 		if !hasParent {
-			return None[gitdomain.LocalBranchName]()
+			return None[gitdomain.BranchName]()
 		}
 		if self.BranchExists(self, parent) {
-			return Some(parent)
+			return Some(parent.BranchName())
+		}
+		if self.BranchExistsRemotely(self, parent) {
+			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
 		}
 		branch = parent
 	}
