@@ -13,8 +13,8 @@ type ValidatedConfig struct {
 	ValidatedConfigData configdomain.ValidatedConfigData
 }
 
-func (self *ValidatedConfig) CleanupLineage(nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
-	self.RemoveDeletedBranchesFromLineage(nonExistingBranches)
+func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
 	self.NormalConfig.RemovePerennialAncestors(finalMessages)
 }
 
@@ -48,13 +48,13 @@ func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 }
 
 // RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
-func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(nonExistingBranches gitdomain.LocalBranchNames) {
+func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) {
 	for _, nonExistingBranch := range nonExistingBranches {
 		self.NormalConfig.CleanupBranchFromLineage(nonExistingBranch)
 	}
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
-		hasChildBranch := nonExistingBranches.Contains(entry.Child)
-		hasParentBranch := nonExistingBranches.Contains(entry.Parent)
+		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
+		hasParentBranch := branchInfos.HasLocalBranch(entry.Parent)
 		parentIsPerennial := self.IsMainOrPerennialBranch(entry.Parent)
 		if (!hasChildBranch || !hasParentBranch) && !parentIsPerennial {
 			self.NormalConfig.RemoveParent(entry.Child)

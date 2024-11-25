@@ -240,7 +240,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 
 func appendProgram(finalMessages stringslice.Collector, data appendFeatureData) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
