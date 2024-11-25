@@ -80,12 +80,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 			// branch is checked out in another workspace --> skip here
 			continue
 		}
-		// TODO: decide which parent we want to use here.
-		// use the oldest existing local or remote branch
 		parent := self.ExistingParent(branch, lineage)
-		if parent.IsNone() {
-			// TODO: use the oldest remote parent branch
-		}
 		commits := self.CommitsInBranch(branch, parent, fields)
 		result = append(result, commits...)
 	}

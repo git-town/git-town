@@ -13,11 +13,6 @@ type ValidatedConfig struct {
 	ValidatedConfigData configdomain.ValidatedConfigData
 }
 
-func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
-	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
-	self.NormalConfig.RemovePerennialAncestors(finalMessages)
-}
-
 func EmptyValidatedConfig() ValidatedConfig {
 	return ValidatedConfig{} //exhaustruct:ignore
 }
@@ -35,6 +30,11 @@ func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchName
 		result[branch] = self.BranchType(branch)
 	}
 	return result
+}
+
+func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
+	self.NormalConfig.RemovePerennialAncestors(finalMessages)
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
