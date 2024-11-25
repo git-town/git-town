@@ -20,6 +20,8 @@ Feature: stacked changes where an ancestor branch isn't local
     And I ran "git branch -d beta"
     When I run "git-town sync"
 
+  @debug
+  @this
   Scenario:
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |

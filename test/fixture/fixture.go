@@ -1,6 +1,7 @@
 package fixture
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -129,22 +130,31 @@ func (self *Fixture) Branches() datatable.DataTable {
 func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
-	localCommits := self.DevRepo.GetOrPanic().Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
+	var mainBranch gitdomain.BranchName
+	mainIsLocal := self.DevRepo.Value.BranchExists(self.DevRepo.Value, "main")
+	fmt.Println("11111111111111111111111111111111111111111 Main is local", mainIsLocal)
+	if mainIsLocal {
+		mainBranch = gitdomain.NewLocalBranchName("main").BranchName()
+	} else {
+		mainBranch = gitdomain.NewRemoteBranchName("origin/main").BranchName()
+	}
+	fmt.Println("11111111111111111111111111111111111111111 MainBranch", mainBranch)
+	localCommits := self.DevRepo.GetOrPanic().Commits(fields, mainBranch, lineage)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
-		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
+		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originCommits := originRepo.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
+		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
 		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
-		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
+		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
-		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
+		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewBranchName("main"), lineage)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
 	return builder.Table(fields)
