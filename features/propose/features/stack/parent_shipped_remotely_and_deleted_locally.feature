@@ -17,7 +17,6 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
