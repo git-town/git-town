@@ -26,9 +26,7 @@ Feature: deleting a branch whose parent was shipped and the local branch deleted
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | parent | main   |
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

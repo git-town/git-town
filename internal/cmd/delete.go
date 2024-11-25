@@ -79,7 +79,7 @@ func executeDelete(args []string, dryRun configdomain.DryRun, verbose configdoma
 	if err != nil {
 		return err
 	}
-	runProgram, finalUndoProgram := deleteProgram(data)
+	runProgram, finalUndoProgram := deleteProgram(repo, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -125,6 +125,7 @@ type deleteData struct {
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
+	nonExistingBranches      gitdomain.LocalBranchNames
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches []hostingdomain.Proposal
 	stashSize                gitdomain.StashSize
@@ -211,6 +212,8 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		OldBranch:                  branchNameToDelete,
 		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
 	})
+	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	return deleteData{
 		branchToDeleteInfo:       *branchToDelete,
 		branchToDeleteType:       branchTypeToDelete,
@@ -222,14 +225,16 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
+		nonExistingBranches:      nonExistingBranches,
 		previousBranch:           previousBranchOpt,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
 	}, false, nil
 }
 
-func deleteProgram(data deleteData) (runProgram, finalUndoProgram program.Program) {
+func deleteProgram(repo execute.OpenRepoResult, data deleteData) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, repo.FinalMessages)
 	undoProg := NewMutable(&program.Program{})
 	switch data.branchToDeleteType {
 	case
