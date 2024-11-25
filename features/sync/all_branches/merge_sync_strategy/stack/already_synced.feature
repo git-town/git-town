@@ -34,6 +34,7 @@ Feature: sync a stack making independent changes
     And an uncommitted file
     When I run "git-town sync --all"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
