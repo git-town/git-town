@@ -17,7 +17,7 @@ Feature: detached sync of the entire branch stack
     And the current branch is "alpha"
     When I run "git-town sync --stack --detached"
 
-  Scenario:
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git fetch --prune --tags              |
