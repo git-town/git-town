@@ -17,7 +17,7 @@ Feature: stacked changes
     And the current branch is "child"
     When I run "git-town sync"
 
-  Scenario:
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | child  | git fetch --prune --tags                |
