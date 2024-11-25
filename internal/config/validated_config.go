@@ -58,8 +58,8 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 		if nonExistingChildBranch || nonExistingParentBranch {
 			self.NormalConfig.RemoveParent(entry.Child)
 		}
-		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
-		hasParentBranch := branchInfos.HasMatchingTrackingBranchFor(entry.Parent)
+		hasChildBranch := branchInfos.HasBranch(entry.Child)
+		hasParentBranch := branchInfos.HasBranch(entry.Parent)
 		if !hasChildBranch || !hasParentBranch {
 			self.NormalConfig.RemoveParent(entry.Child)
 		}

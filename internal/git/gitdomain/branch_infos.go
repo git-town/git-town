@@ -73,6 +73,22 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMutable[Bra
 	return MutableNone[BranchInfo]()
 }
 
+func (self BranchInfos) HasBranch(branch LocalBranchName) bool {
+	for _, branchInfo := range self {
+		if localName, hasLocalName := branchInfo.LocalName.Get(); hasLocalName {
+			if localName == branch {
+				return true
+			}
+		}
+		if trackingName, hasTrackingBranch := branchInfo.RemoteName.Get(); hasTrackingBranch {
+			if trackingName.LocalBranchName() == branch {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
 func (self BranchInfos) HasLocalBranch(branch LocalBranchName) bool {
 	for _, bi := range self {
