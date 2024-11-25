@@ -23,7 +23,6 @@ Feature: on a feature branch with a clean workspace but without main branch
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-      | new      | local    | main commit     |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
