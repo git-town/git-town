@@ -90,7 +90,7 @@ func executePrepend(args []string, detached configdomain.Detached, dryRun config
 	if err != nil || exit {
 		return err
 	}
-	runProgram := prependProgram(data)
+	runProgram := prependProgram(repo, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -253,9 +253,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	}, false, fc.Err
 }
 
-func prependProgram(data prependData) program.Program {
+func prependProgram(repo execute.OpenRepoResult, data prependData) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
+		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
 			Config:              data.config,

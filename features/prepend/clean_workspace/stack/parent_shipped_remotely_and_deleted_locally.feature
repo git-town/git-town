@@ -15,7 +15,6 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
     And the current branch is "child"
     When I run "git-town prepend new"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
