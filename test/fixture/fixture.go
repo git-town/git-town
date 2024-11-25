@@ -1,7 +1,6 @@
 package fixture
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -130,7 +129,6 @@ func (self *Fixture) Branches() datatable.DataTable {
 func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
-	fmt.Println("1111111111111111111111111111111111111111111111", lineage)
 	localCommits := self.DevRepo.GetOrPanic().Commits(fields, gitdomain.NewLocalBranchName("main"), lineage)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
