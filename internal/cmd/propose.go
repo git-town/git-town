@@ -303,6 +303,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
 		Config:              data.config,
