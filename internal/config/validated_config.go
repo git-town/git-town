@@ -55,8 +55,8 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(nonExistingBranche
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
 		hasChildBranch := nonExistingBranches.Contains(entry.Child)
 		hasParentBranch := nonExistingBranches.Contains(entry.Parent)
-		childIsPerennial := self.IsMainOrPerennialBranch(entry.Child)
-		if (!hasChildBranch || !hasParentBranch) && !childIsPerennial {
+		parentIsPerennial := self.IsMainOrPerennialBranch(entry.Parent)
+		if (!hasChildBranch || !hasParentBranch) && !parentIsPerennial {
 			self.NormalConfig.RemoveParent(entry.Child)
 		}
 	}
