@@ -53,10 +53,14 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 		self.NormalConfig.CleanupBranchFromLineage(nonExistingBranch)
 	}
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
+		nonExistingChildBranch := nonExistingBranches.Contains(entry.Child)
+		nonExistingParentBranch := nonExistingBranches.Contains(entry.Parent)
+		if nonExistingChildBranch || nonExistingParentBranch {
+			self.NormalConfig.RemoveParent(entry.Child)
+		}
 		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
-		hasParentBranch := branchInfos.HasLocalBranch(entry.Parent)
-		parentIsPerennial := self.IsMainOrPerennialBranch(entry.Parent)
-		if (!hasChildBranch || !hasParentBranch) && !parentIsPerennial {
+		hasParentBranch := branchInfos.HasMatchingTrackingBranchFor(entry.Parent)
+		if !hasChildBranch || !hasParentBranch {
 			self.NormalConfig.RemoveParent(entry.Child)
 		}
 	}

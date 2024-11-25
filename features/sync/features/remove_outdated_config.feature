@@ -1,6 +1,5 @@
 Feature: automatically remove outdated git-town configuration
 
-  @this
   Scenario: automatically remove outdated lineage information
     Given a Git repo with origin
     And I ran "git-town hack feature"
