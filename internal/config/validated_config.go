@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -10,6 +11,11 @@ import (
 type ValidatedConfig struct {
 	NormalConfig        NormalConfig
 	ValidatedConfigData configdomain.ValidatedConfigData
+}
+
+func (self *ValidatedConfig) CleanupLineage(nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
+	self.RemoveDeletedBranchesFromLineage(nonExistingBranches)
+	self.NormalConfig.RemovePerennialAncestors(finalMessages)
 }
 
 func EmptyValidatedConfig() ValidatedConfig {
@@ -39,6 +45,21 @@ func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranc
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
+}
+
+// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
+func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(nonExistingBranches gitdomain.LocalBranchNames) {
+	for _, nonExistingBranch := range nonExistingBranches {
+		self.NormalConfig.CleanupBranchFromLineage(nonExistingBranch)
+	}
+	for _, entry := range self.NormalConfig.Lineage.Entries() {
+		hasChildBranch := nonExistingBranches.Contains(entry.Child)
+		hasParentBranch := nonExistingBranches.Contains(entry.Parent)
+		childIsPerennial := self.IsMainOrPerennialBranch(entry.Child)
+		if (!hasChildBranch || !hasParentBranch) && !childIsPerennial {
+			self.NormalConfig.RemoveParent(entry.Child)
+		}
+	}
 }
 
 // provides this collection without the perennial branch at the root

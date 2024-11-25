@@ -76,11 +76,6 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
-func (self *NormalConfig) CleanupLineage(nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
-	self.RemoveDeletedBranchesFromLineage(nonExistingBranches)
-	self.RemovePerennialAncestors(finalMessages)
-}
-
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -111,20 +106,6 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
-}
-
-// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveDeletedBranchesFromLineage(nonExistingBranches gitdomain.LocalBranchNames) {
-	for _, nonExistingBranch := range nonExistingBranches {
-		self.CleanupBranchFromLineage(nonExistingBranch)
-	}
-	for _, entry := range self.Lineage.Entries() {
-		hasChildBranch := nonExistingBranches.Contains(entry.Child)
-		hasParentBranch := nonExistingBranches.Contains(entry.Parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.RemoveParent(entry.Child)
-		}
-	}
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
