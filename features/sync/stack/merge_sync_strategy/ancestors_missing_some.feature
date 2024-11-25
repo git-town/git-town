@@ -44,7 +44,6 @@ Feature: stacked changes where an ancestor branch isn't local
       |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
       | beta   | origin        | origin beta commit                                     |
       | gamma  | local, origin | local gamma commit                                     |
-      |        |               | origin beta commit                                     |
       |        |               | Merge remote-tracking branch 'origin/beta' into gamma  |
       |        |               | local alpha commit                                     |
       |        |               | origin main commit                                     |
