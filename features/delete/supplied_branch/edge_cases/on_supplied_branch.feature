@@ -22,7 +22,8 @@ Feature: delete the current branch
       |         | git add -A                                                |
       |         | git commit -m "Committing open changes on deleted branch" |
       |         | git checkout main                                         |
-      | main    | git branch -D current                                     |
+      | main    | git rebase --onto main current                            |
+      |         | git branch -D current                                     |
     And the current branch is now "main"
     And no uncommitted files exist now
     And the branches are now
