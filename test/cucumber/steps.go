@@ -1614,6 +1614,19 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^the uncommitted file has content:$`, func(ctx context.Context, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		msg := devRepo.HasFile(
+			state.uncommittedFileName.GetOrPanic(),
+			content.Content,
+		)
+		if len(msg) > 0 {
+			return errors.New(msg)
+		}
+		return nil
+	})
+
 	sc.Step(`^the uncommitted file is stashed$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

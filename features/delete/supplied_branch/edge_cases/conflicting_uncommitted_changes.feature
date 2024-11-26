@@ -26,15 +26,26 @@ Feature: delete another than the current branch
       |        | git rebase --onto main dead |
       |        | git branch -D dead          |
       |        | git stash pop               |
+    And Git Town prints the error:
+      """
+      conflicts between your uncommmitted changes and the main branch
+      """
     And the current branch is still "good"
-    And the uncommitted file still exists
+    And the uncommitted file has content:
+      """
+      <<<<<<< Updated upstream
+      default file content
+      =======
+      conflicting content
+      >>>>>>> Stashed changes
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
-      | good   | local, origin | good commit        |
+      | good   | origin        | good commit        |
     And this lineage exists now
       | BRANCH | PARENT |
       | good   | main   |
