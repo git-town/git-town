@@ -22,7 +22,8 @@ Feature: delete the current prototype branch
       |           | git add -A                                       |
       |           | git commit -m "Committing WIP for git town undo" |
       |           | git checkout previous                            |
-      | previous  | git branch -D prototype                          |
+      | previous  | git rebase --onto main prototype                 |
+      |           | git branch -D prototype                          |
     And the current branch is now "previous"
     And no uncommitted files exist now
     And the branches are now
