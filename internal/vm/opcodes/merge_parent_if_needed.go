@@ -42,14 +42,14 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
-		parentIsRemote := branchInfos.HasMatchingTrackingBranchFor(parent)
-		if parentIsRemote {
-			parentTrackingBranch := parent.AtRemote(gitdomain.RemoteOrigin)
-			program = append(program, &MergeParent{
-				CurrentParent:      parentTrackingBranch.BranchName(),
-				OriginalParentName: self.OriginalParentName,
-				OriginalParentSHA:  self.OriginalParentSHA,
-			})
+		if parentBranchInfo, hasRemoteParent := branchInfos.FindLocalOrRemote(parent).Get(); hasRemoteParent {
+			if parentTrackingBranch, has := parentBranchInfo.RemoteName.Get(); has {
+				program = append(program, &MergeParent{
+					CurrentParent:      parentTrackingBranch.BranchName(),
+					OriginalParentName: self.OriginalParentName,
+					OriginalParentSHA:  self.OriginalParentSHA,
+				})
+			}
 		}
 		branch = parent
 	}
