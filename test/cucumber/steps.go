@@ -708,7 +708,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
 
-	sc.Step(`in a separate terminal I create branch "([^"]+)" with commits`, func(ctx context.Context, branchName string, table *godog.Table) {
+	sc.Step(`^in a separate terminal I create branch "([^"]+)" with commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		existingBranch := devRepo.CurrentBranchCache.Value()

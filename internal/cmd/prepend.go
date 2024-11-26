@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -90,7 +91,7 @@ func executePrepend(args []string, detached configdomain.Detached, dryRun config
 	if err != nil || exit {
 		return err
 	}
-	runProgram := prependProgram(data)
+	runProgram := prependProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -136,6 +137,7 @@ type prependData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	newParentCandidates gitdomain.LocalBranchNames
+	nonExistingBranches gitdomain.LocalBranchNames
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[hostingdomain.Proposal]
@@ -216,7 +218,8 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -240,6 +243,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
+		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,
@@ -250,9 +254,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	}, false, fc.Err
 }
 
-func prependProgram(data prependData) program.Program {
+func prependProgram(data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
+		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
 			Config:              data.config,

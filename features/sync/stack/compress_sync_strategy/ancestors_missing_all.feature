@@ -39,8 +39,7 @@ Feature: stacked changes where all ancestor branches aren't local
       | main   | origin        | origin main commit  |
       | alpha  | origin        | origin alpha commit |
       | beta   | origin        | origin beta commit  |
-      | gamma  | local, origin | origin beta commit  |
-      |        |               | local gamma commit  |
+      | gamma  | local, origin | local gamma commit  |
 
   Scenario: undo
     When I run "git-town undo"
