@@ -12,11 +12,12 @@ Feature: the parent of the branch to delete was deleted remotely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git push origin :beta    |
-      |        | git checkout alpha       |
-      | alpha  | git branch -D beta       |
+      | BRANCH | COMMAND                     |
+      | beta   | git fetch --prune --tags    |
+      |        | git push origin :beta       |
+      |        | git checkout alpha          |
+      | alpha  | git rebase --onto main beta |
+      |        | git branch -D beta          |
     And the current branch is now "alpha"
     And the branches are now
       | REPOSITORY | BRANCHES    |
