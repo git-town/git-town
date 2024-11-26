@@ -48,8 +48,9 @@ Feature: syncing a grandchild branch with conflicts using the "compress" strateg
     And the current branch is now "grandchild"
     When I run "git-town delete"
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                     |
-      | grandchild | git fetch --prune --tags    |
-      |            | git push origin :grandchild |
-      |            | git checkout main           |
-      | main       | git branch -D grandchild    |
+      | BRANCH     | COMMAND                           |
+      | grandchild | git fetch --prune --tags          |
+      |            | git push origin :grandchild       |
+      |            | git checkout main                 |
+      | main       | git rebase --onto main grandchild |
+      |            | git branch -D grandchild          |
