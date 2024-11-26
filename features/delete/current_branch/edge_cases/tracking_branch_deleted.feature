@@ -23,7 +23,8 @@ Feature: the branch to delete has a deleted tracking branch
       |        | git add -A                                       |
       |        | git commit -m "Committing WIP for git town undo" |
       |        | git checkout other                               |
-      | other  | git branch -D old                                |
+      | other  | git rebase --onto main old                       |
+      |        | git branch -D old                                |
     And the current branch is now "other"
     And no uncommitted files exist now
     And these commits exist now
