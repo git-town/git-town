@@ -41,7 +41,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
       |              | git stash pop      |
     And the current branch is still "contribution"
     And the uncommitted file still exists
-    And no rebase is in progress
+    And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -68,7 +68,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
     And the current branch is still "contribution"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
@@ -87,7 +87,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
     And the current branch is still "contribution"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |

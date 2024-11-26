@@ -61,7 +61,7 @@ Feature: stack that changes the same file in multiple commits per branch
       | BRANCH | COMMAND                                         |
       | beta   | git rebase --continue                           |
       |        | git push --force-with-lease --force-if-includes |
-    And no rebase is in progress
+    And no rebase is now in progress
     And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now

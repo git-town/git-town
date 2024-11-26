@@ -963,7 +963,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^no rebase is in progress$`, func(ctx context.Context) error {
+	sc.Step(`^no rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)

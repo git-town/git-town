@@ -49,7 +49,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git stash pop     |
     And the current branch is still "feature"
     And the uncommitted file still exists
-    And no rebase is in progress
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
