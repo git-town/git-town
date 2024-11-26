@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -94,7 +95,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 	if err != nil || exit {
 		return err
 	}
-	runProgram := renameProgram(repo, data)
+	runProgram := renameProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -261,9 +262,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}, false, err
 }
 
-func renameProgram(repo execute.OpenRepoResult, data renameData) program.Program {
+func renameProgram(data renameData, finalMessages stringslice.Collector) program.Program {
 	result := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, repo.FinalMessages)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
 		return result.Immutable()
