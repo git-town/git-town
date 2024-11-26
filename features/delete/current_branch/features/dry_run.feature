@@ -23,7 +23,8 @@ Feature: dry-run deleting the current feature branch
       |         | git add -A                                       |
       |         | git commit -m "Committing WIP for git town undo" |
       |         | git checkout other                               |
-      | other   | git branch -D current                            |
+      | other   | git rebase --onto main current                   |
+      |         | git branch -D current                            |
     And the current branch is still "current"
     And the uncommitted file still exists
     And the initial commits exist now
