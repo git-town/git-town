@@ -22,7 +22,8 @@ Feature: delete the current observed branch
       |          | git add -A                                       |
       |          | git commit -m "Committing WIP for git town undo" |
       |          | git checkout feature                             |
-      | feature  | git branch -D observed                           |
+      | feature  | git rebase --onto main observed                  |
+      |          | git branch -D observed                           |
     And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
