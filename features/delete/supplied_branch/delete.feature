@@ -18,13 +18,14 @@ Feature: delete another than the current branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | good   | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git push origin :dead    |
-      |        | git branch -D dead       |
-      |        | git stash pop            |
+      | BRANCH | COMMAND                     |
+      | good   | git fetch --prune --tags    |
+      |        | git add -A                  |
+      |        | git stash                   |
+      |        | git push origin :dead       |
+      |        | git rebase --onto main dead |
+      |        | git branch -D dead          |
+      |        | git stash pop               |
     And the current branch is still "good"
     And the uncommitted file still exists
     And the branches are now
@@ -38,6 +39,7 @@ Feature: delete another than the current branch
       | BRANCH | PARENT |
       | good   | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
