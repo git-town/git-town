@@ -1647,12 +1647,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		hasFile := devRepo.HasFile(
+		msg := devRepo.HasFile(
 			state.uncommittedFileName.GetOrPanic(),
 			state.uncommittedContent.GetOrPanic(),
 		)
-		if len(hasFile) > 0 {
-			return errors.New(hasFile)
+		if len(msg) > 0 {
+			return errors.New(msg)
 		}
 		return nil
 	})
