@@ -856,7 +856,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
 		if hasDevRepo {
-			// TESTING
 			state.CaptureState()
 			updateInitialSHAs(state)
 		}
@@ -1356,7 +1355,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		// TESTING
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
 		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
 		if errCount == 0 {
