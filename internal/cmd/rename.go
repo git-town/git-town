@@ -138,7 +138,7 @@ type renameData struct {
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	newBranch                gitdomain.LocalBranchName
-	nonExistingBranches      gitdomain.LocalBranchNames
+	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	oldBranch                gitdomain.BranchInfo
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposal                 Option[hostingdomain.Proposal]

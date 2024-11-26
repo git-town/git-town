@@ -157,7 +157,7 @@ type proposeData struct {
 	existingProposalURL Option[string]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
-	nonExistingBranches gitdomain.LocalBranchNames
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposalBody        gitdomain.ProposalBody
