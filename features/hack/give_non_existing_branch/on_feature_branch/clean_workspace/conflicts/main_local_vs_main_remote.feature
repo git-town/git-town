@@ -36,7 +36,7 @@ Feature: conflicts between the main branch and its tracking branch
       | main   | git rebase --abort    |
       |        | git checkout existing |
     And the current branch is now "existing"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the initial commits exist now
 
   Scenario: continue with unresolved conflict

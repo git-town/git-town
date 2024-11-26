@@ -45,7 +45,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | git stash pop     |
     And the current branch is still "prototype"
     And the uncommitted file still exists
-    And no rebase is in progress
+    And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -72,7 +72,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | local, origin | conflicting origin commit                                      |
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
     And the current branch is still "prototype"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
@@ -92,7 +92,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | local, origin | conflicting origin commit                                      |
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
     And the current branch is still "prototype"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
