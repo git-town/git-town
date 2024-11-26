@@ -20,7 +20,8 @@ Feature: delete a local branch
       |         | git add -A                                       |
       |         | git commit -m "Committing WIP for git town undo" |
       |         | git checkout other                               |
-      | other   | git branch -D current                            |
+      | other   | git rebase --onto main current                   |
+      |         | git branch -D current                            |
     And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
