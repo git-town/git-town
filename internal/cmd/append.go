@@ -89,7 +89,7 @@ func executeAppend(arg string, detached configdomain.Detached, dryRun configdoma
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(repo.FinalMessages, data)
+	runProgram := appendProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -238,7 +238,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}, false, fc.Err
 }
 
-func appendProgram(finalMessages stringslice.Collector, data appendFeatureData) program.Program {
+func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 	if !data.hasOpenChanges {
