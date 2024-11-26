@@ -59,8 +59,6 @@ func (self *NormalConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBran
 
 // removes the given branch from the lineage, and updates its children
 func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchName) {
-	// it should not simply delete lineage entries for non-existing branches,
-	// but remove the non-existing branch from the lineage so that its children are now children of its parent
 	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
 	children := self.Lineage.Children(branch)
 	for _, child := range children {
