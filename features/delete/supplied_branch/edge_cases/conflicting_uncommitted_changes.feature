@@ -1,4 +1,4 @@
-@smoke
+@this
 Feature: delete another than the current branch
 
   Background:
@@ -14,7 +14,6 @@ Feature: delete another than the current branch
       | good   | local, origin | good commit        | file             |
     And the current branch is "good"
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
-    And inspect the repo
     When I run "git-town delete dead"
 
   Scenario: result
@@ -40,17 +39,21 @@ Feature: delete another than the current branch
       | BRANCH | PARENT |
       | good   | main   |
 
-  # @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                     |
-      | good   | git add -A                                  |
-      |        | git stash                                   |
-      |        | git branch dead {{ sha 'dead-end commit' }} |
-      |        | git push -u origin dead                     |
-      |        | git stash pop                               |
+      | BRANCH | COMMAND                                              |
+      | good   | git add -A                                           |
+      |        | git commit -m "Committing open changes to undo them" |
+      |        | git branch dead {{ sha 'dead-end commit' }}          |
+      |        | git push -u origin dead                              |
+      |        | git stash pop                                        |
     And the current branch is still "good"
-    And the uncommitted file still exists
-    And the initial commits exist now
+    And the uncommitted file does not exist anymore
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                              |
+      | main   | local, origin | conflicting commit                   |
+      | dead   | local, origin | dead-end commit                      |
+      | good   | local         | Committing open changes to undo them |
+      |        | origin        | good commit                          |
     And the initial branches and lineage exist now
