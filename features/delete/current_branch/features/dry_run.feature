@@ -17,14 +17,14 @@ Feature: dry-run deleting the current feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                          |
-      | current | git fetch --prune --tags                         |
-      |         | git push origin :current                         |
-      |         | git add -A                                       |
-      |         | git commit -m "Committing WIP for git town undo" |
-      |         | git checkout other                               |
-      | other   | git rebase --onto main current                   |
-      |         | git branch -D current                            |
+      | BRANCH  | COMMAND                                                   |
+      | current | git fetch --prune --tags                                  |
+      |         | git push origin :current                                  |
+      |         | git add -A                                                |
+      |         | git commit -m "Committing open changes on deleted branch" |
+      |         | git checkout other                                        |
+      | other   | git rebase --onto main current                            |
+      |         | git branch -D current                                     |
     And the current branch is still "current"
     And the uncommitted file still exists
     And the initial commits exist now
