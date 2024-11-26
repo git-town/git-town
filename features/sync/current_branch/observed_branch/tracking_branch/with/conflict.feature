@@ -41,7 +41,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
       |          | git stash pop      |
     And the current branch is still "observed"
     And the uncommitted file still exists
-    And no rebase is in progress
+    And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -67,7 +67,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
     And the current branch is still "observed"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |
@@ -85,7 +85,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
     And the current branch is still "observed"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |

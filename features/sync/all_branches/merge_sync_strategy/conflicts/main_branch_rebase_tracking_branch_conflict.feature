@@ -70,7 +70,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is now "main"
     And the uncommitted file still exists
-    And no rebase is in progress
+    And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
