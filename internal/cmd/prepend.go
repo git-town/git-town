@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -90,7 +91,7 @@ func executePrepend(args []string, detached configdomain.Detached, dryRun config
 	if err != nil || exit {
 		return err
 	}
-	runProgram := prependProgram(repo, data)
+	runProgram := prependProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -253,10 +254,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	}, false, fc.Err
 }
 
-func prependProgram(repo execute.OpenRepoResult, data prependData) program.Program {
+func prependProgram(data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
-		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
+		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
 			Config:              data.config,
