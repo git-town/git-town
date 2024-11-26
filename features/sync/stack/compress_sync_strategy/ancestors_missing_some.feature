@@ -43,11 +43,9 @@ Feature: stacked changes where an ancestor branch isn't local
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | origin        | origin main commit |
-      | alpha  | local, origin | origin main commit |
-      |        |               | local alpha commit |
+      | alpha  | local, origin | local alpha commit |
       | beta   | origin        | origin beta commit |
-      | gamma  | local, origin | origin beta commit |
-      |        |               | local gamma commit |
+      | gamma  | local, origin | local gamma commit |
 
   Scenario: undo
     When I run "git-town undo"

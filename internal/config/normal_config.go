@@ -21,7 +21,7 @@ type NormalConfig struct {
 	configdomain.NormalConfigData
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          configdomain.DryRun                // whether to only print the Git commands but not execute them
-	GitConfig       gitconfig.Access                   // access to the Git configuration settings
+	GitConfig       gitconfig.Access                   // access to the Git configuration settings // TODO: rename to GitConfigAccess
 	GitVersion      git.Version                        // version of the installed Git executable
 	GlobalGitConfig configdomain.PartialConfig         // content of the global Git configuration
 	LocalGitConfig  configdomain.PartialConfig         // content of the local Git configuration
@@ -57,6 +57,23 @@ func (self *NormalConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBran
 	return self.SetPrototypeBranches(append(self.PrototypeBranches, branches...))
 }
 
+// removes the given branch from the lineage, and updates its children
+func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchName) {
+	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
+	children := self.Lineage.Children(branch)
+	for _, child := range children {
+		if hasParent {
+			self.Lineage.Add(child, parent)
+			_ = self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+		} else {
+			self.Lineage.RemoveBranch(child)
+			_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
+		}
+	}
+	self.Lineage.RemoveBranch(branch)
+	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
+}
+
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -87,18 +104,6 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
-}
-
-// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
-func (self *NormalConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos) error {
-	for _, entry := range self.Lineage.Entries() {
-		hasChildBranch := branchInfos.HasLocalBranch(entry.Child)
-		hasParentBranch := branchInfos.HasLocalBranch(entry.Parent)
-		if !hasChildBranch || !hasParentBranch {
-			self.RemoveParent(entry.Child)
-		}
-	}
-	return nil
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
@@ -141,17 +146,14 @@ func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }
 
-func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) error {
+func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
-			if err := self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch)); err != nil {
-				return err
-			}
+			_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
 			self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}
-	return nil
 }
 
 func (self *NormalConfig) RemovePerennialBranches() {

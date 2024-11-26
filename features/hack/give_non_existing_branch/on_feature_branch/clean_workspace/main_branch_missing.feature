@@ -10,7 +10,7 @@ Feature: on a feature branch with a clean workspace but without main branch
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And I run "git branch -d main"
+    And I ran "git branch -d main"
     When I run "git-town hack new"
 
   Scenario: result
@@ -23,7 +23,6 @@ Feature: on a feature branch with a clean workspace but without main branch
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-      | new      | local    | main commit     |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

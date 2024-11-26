@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -94,7 +95,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 	if err != nil || exit {
 		return err
 	}
-	runProgram := renameProgram(data)
+	runProgram := renameProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -137,6 +138,7 @@ type renameData struct {
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	newBranch                gitdomain.LocalBranchName
+	nonExistingBranches      gitdomain.LocalBranchNames
 	oldBranch                gitdomain.BranchInfo
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposal                 Option[hostingdomain.Proposal]
@@ -232,6 +234,8 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
+	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
 	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
@@ -249,6 +253,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		newBranch:                newBranchName,
+		nonExistingBranches:      nonExistingBranches,
 		oldBranch:                *oldBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposalOpt,
@@ -257,8 +262,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}, false, err
 }
 
-func renameProgram(data renameData) program.Program {
+func renameProgram(data renameData, finalMessages stringslice.Collector) program.Program {
 	result := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
 		return result.Immutable()

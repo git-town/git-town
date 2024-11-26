@@ -3,7 +3,6 @@ package gitdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
@@ -72,6 +71,22 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) OptionalMutable[Bra
 		}
 	}
 	return MutableNone[BranchInfo]()
+}
+
+func (self BranchInfos) HasBranch(branch LocalBranchName) bool {
+	for _, branchInfo := range self {
+		if localName, hasLocalName := branchInfo.LocalName.Get(); hasLocalName {
+			if localName == branch {
+				return true
+			}
+		}
+		if trackingName, hasTrackingBranch := branchInfo.RemoteName.Get(); hasTrackingBranch {
+			if trackingName.LocalBranchName() == branch {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
@@ -146,21 +161,21 @@ func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 }
 
 // Select provides the BranchInfos with the given names.
-func (self BranchInfos) Select(names ...LocalBranchName) (BranchInfos, error) {
-	result := make(BranchInfos, len(names))
-	for n, name := range names {
+func (self BranchInfos) Select(names ...LocalBranchName) (result BranchInfos, nonExisting LocalBranchNames) {
+	result = make(BranchInfos, 0, len(names))
+	for _, name := range names {
 		if branchInfo, has := self.FindByLocalName(name).Get(); has {
-			result[n] = *branchInfo
+			result = append(result, *branchInfo)
 			continue
 		}
 		remoteName := name.AtRemote(RemoteOrigin)
 		if branchInfo, has := self.FindByRemoteName(remoteName).Get(); has {
-			result[n] = *branchInfo
+			result = append(result, *branchInfo)
 			continue
 		}
-		return result, fmt.Errorf(messages.BranchDoesntExist, name)
+		nonExisting = append(nonExisting, name)
 	}
-	return result, nil
+	return result, nonExisting
 }
 
 func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
