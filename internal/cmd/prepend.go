@@ -137,7 +137,7 @@ type prependData struct {
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	newParentCandidates gitdomain.LocalBranchNames
-	nonExistingBranches gitdomain.LocalBranchNames
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[hostingdomain.Proposal]
