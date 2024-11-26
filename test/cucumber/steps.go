@@ -1618,7 +1618,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) {
+	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		hasFile := devRepo.HasFile(
@@ -1626,8 +1626,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 			state.uncommittedContent.GetOrPanic(),
 		)
 		if len(hasFile) > 0 {
-			panic(hasFile)
+			return errors.New(hasFile)
 		}
+		return nil
 	})
 
 	sc.Step(`^this lineage exists now$`, func(ctx context.Context, input *godog.Table) error {
