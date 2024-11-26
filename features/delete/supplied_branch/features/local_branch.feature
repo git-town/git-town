@@ -20,7 +20,8 @@ Feature: local branch
       | dead   | git add -A                                                |
       |        | git commit -m "Committing open changes on deleted branch" |
       |        | git checkout main                                         |
-      | main   | git branch -D dead                                        |
+      | main   | git rebase --onto main dead                               |
+      |        | git branch -D dead                                        |
     And the current branch is now "main"
     And no uncommitted files exist now
     And the branches are now
