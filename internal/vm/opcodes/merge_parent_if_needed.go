@@ -26,24 +26,24 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		if !hasParent {
 			break
 		}
-		parentIsLocal := branchInfos.HasLocalBranch(parent)
-		if parentIsLocal {
-			var parentToMerge gitdomain.BranchName
-			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				parentToMerge = parent.TrackingBranch().BranchName()
-			} else {
-				parentToMerge = parent.BranchName()
+		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent).Get(); hasParentInfo {
+			parentIsLocal := parentBranchInfo.LocalName.IsSome()
+			if parentIsLocal {
+				var parentToMerge gitdomain.BranchName
+				if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
+					parentToMerge = parent.TrackingBranch().BranchName()
+				} else {
+					parentToMerge = parent.BranchName()
+				}
+				program = append(program, &MergeParent{
+					CurrentParent:      parentToMerge,
+					OriginalParentName: self.OriginalParentName,
+					OriginalParentSHA:  self.OriginalParentSHA,
+				})
+				break
 			}
-			program = append(program, &MergeParent{
-				CurrentParent:      parentToMerge,
-				OriginalParentName: self.OriginalParentName,
-				OriginalParentSHA:  self.OriginalParentSHA,
-			})
-			break
-		}
-		// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
-		if parentBranchInfo, hasRemoteParent := branchInfos.FindLocalOrRemote(parent).Get(); hasRemoteParent {
-			if parentTrackingBranch, has := parentBranchInfo.RemoteName.Get(); has {
+			// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
+			if parentTrackingBranch, parentHasTrackingBranch := parentBranchInfo.RemoteName.Get(); parentHasTrackingBranch {
 				program = append(program, &MergeParent{
 					CurrentParent:      parentTrackingBranch.BranchName(),
 					OriginalParentName: self.OriginalParentName,
