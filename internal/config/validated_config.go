@@ -47,7 +47,6 @@ func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
 }
 
-// RemoveDeletedBranchesFromLineage removes outdated Git Town configuration.
 func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) {
 	for _, nonExistingBranch := range nonExistingBranches {
 		self.NormalConfig.CleanupBranchFromLineage(nonExistingBranch)
