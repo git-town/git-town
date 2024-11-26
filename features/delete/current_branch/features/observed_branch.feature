@@ -17,12 +17,12 @@ Feature: delete the current observed branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                          |
-      | observed | git fetch --prune --tags                         |
-      |          | git add -A                                       |
-      |          | git commit -m "Committing WIP on deleted branch" |
-      |          | git checkout feature                             |
-      | feature  | git branch -D observed                           |
+      | BRANCH   | COMMAND                                                   |
+      | observed | git fetch --prune --tags                                  |
+      |          | git add -A                                                |
+      |          | git commit -m "Committing open changes on deleted branch" |
+      |          | git checkout feature                                      |
+      | feature  | git branch -D observed                                    |
     And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
@@ -40,10 +40,10 @@ Feature: delete the current observed branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                          |
-      | feature  | git branch observed {{ sha 'Committing WIP on deleted branch' }} |
-      |          | git checkout observed                                            |
-      | observed | git reset --soft HEAD~1                                          |
+      | BRANCH   | COMMAND                                                                   |
+      | feature  | git branch observed {{ sha 'Committing open changes on deleted branch' }} |
+      |          | git checkout observed                                                     |
+      | observed | git reset --soft HEAD~1                                                   |
     And the current branch is now "observed"
     And the uncommitted file still exists
     And the initial commits exist now
