@@ -16,11 +16,11 @@ Feature: local branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                          |
-      | dead   | git add -A                                       |
-      |        | git commit -m "Committing WIP for git town undo" |
-      |        | git checkout main                                |
-      | main   | git branch -D dead                               |
+      | BRANCH | COMMAND                                                   |
+      | dead   | git add -A                                                |
+      |        | git commit -m "Committing open changes on deleted branch" |
+      |        | git checkout main                                         |
+      | main   | git branch -D dead                                        |
     And the current branch is now "main"
     And no uncommitted files exist now
     And the branches are now
@@ -36,10 +36,10 @@ Feature: local branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                      |
-      | main   | git branch dead {{ sha 'Committing WIP for git town undo' }} |
-      |        | git checkout dead                                            |
-      | dead   | git reset --soft HEAD~1                                      |
+      | BRANCH | COMMAND                                                               |
+      | main   | git branch dead {{ sha 'Committing open changes on deleted branch' }} |
+      |        | git checkout dead                                                     |
+      | dead   | git reset --soft HEAD~1                                               |
     And the current branch is now "dead"
     And the uncommitted file still exists
     And the initial commits exist now

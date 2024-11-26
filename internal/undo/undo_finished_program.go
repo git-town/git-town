@@ -21,7 +21,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.Value.Add(&opcodes.ChangesStage{})
 		result.Value.Add(&opcodes.CommitWithMessage{
 			AuthorOverride: None[gitdomain.Author](),
-			Message:        gitdomain.CommitMessage("Committing WIP for git town undo"),
+			Message:        gitdomain.CommitMessage("Committing open changes to undo them"),
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
