@@ -18,7 +18,7 @@ Feature: local branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                          |
       | dead   | git add -A                                       |
-      |        | git commit -m "Committing WIP for git town undo" |
+      |        | git commit -m "Committing WIP on deleted branch" |
       |        | git checkout main                                |
       | main   | git branch -D dead                               |
     And the current branch is now "main"
@@ -37,7 +37,7 @@ Feature: local branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                      |
-      | main   | git branch dead {{ sha 'Committing WIP for git town undo' }} |
+      | main   | git branch dead {{ sha 'Committing WIP on deleted branch' }} |
       |        | git checkout dead                                            |
       | dead   | git reset --soft HEAD~1                                      |
     And the current branch is now "dead"

@@ -22,7 +22,7 @@ Feature: delete the current feature branch
       | current | git fetch --prune --tags                         |
       |         | git push origin :current                         |
       |         | git add -A                                       |
-      |         | git commit -m "Committing WIP for git town undo" |
+      |         | git commit -m "Committing WIP on deleted branch" |
       |         | git checkout other                               |
       | other   | git branch -D current                            |
     And the current branch is now "other"
@@ -42,7 +42,7 @@ Feature: delete the current feature branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
       | other   | git push origin {{ sha 'current commit' }}:refs/heads/current   |
-      |         | git branch current {{ sha 'Committing WIP for git town undo' }} |
+      |         | git branch current {{ sha 'Committing WIP on deleted branch' }} |
       |         | git checkout current                                            |
       | current | git reset --soft HEAD~1                                         |
     And the current branch is now "current"

@@ -18,7 +18,7 @@ Feature: delete a local branch
       | BRANCH  | COMMAND                                          |
       | current | git fetch --prune --tags                         |
       |         | git add -A                                       |
-      |         | git commit -m "Committing WIP for git town undo" |
+      |         | git commit -m "Committing WIP on deleted branch" |
       |         | git checkout other                               |
       | other   | git branch -D current                            |
     And the current branch is now "other"
@@ -34,7 +34,7 @@ Feature: delete a local branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                         |
-      | other   | git branch current {{ sha 'Committing WIP for git town undo' }} |
+      | other   | git branch current {{ sha 'Committing WIP on deleted branch' }} |
       |         | git checkout current                                            |
       | current | git reset --soft HEAD~1                                         |
     And the current branch is now "current"

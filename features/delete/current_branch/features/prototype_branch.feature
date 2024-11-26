@@ -20,7 +20,7 @@ Feature: delete the current prototype branch
       | prototype | git fetch --prune --tags                         |
       |           | git push origin :prototype                       |
       |           | git add -A                                       |
-      |           | git commit -m "Committing WIP for git town undo" |
+      |           | git commit -m "Committing WIP on deleted branch" |
       |           | git checkout previous                            |
       | previous  | git branch -D prototype                          |
     And the current branch is now "previous"
@@ -40,7 +40,7 @@ Feature: delete the current prototype branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                           |
       | previous  | git push origin {{ sha 'prototype commit' }}:refs/heads/prototype |
-      |           | git branch prototype {{ sha 'Committing WIP for git town undo' }} |
+      |           | git branch prototype {{ sha 'Committing WIP on deleted branch' }} |
       |           | git checkout prototype                                            |
       | prototype | git reset --soft HEAD~1                                           |
     And the current branch is now "prototype"

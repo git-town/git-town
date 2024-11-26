@@ -21,7 +21,7 @@ Feature: dry-run deleting the current feature branch
       | current | git fetch --prune --tags                         |
       |         | git push origin :current                         |
       |         | git add -A                                       |
-      |         | git commit -m "Committing WIP for git town undo" |
+      |         | git commit -m "Committing WIP on deleted branch" |
       |         | git checkout other                               |
       | other   | git branch -D current                            |
     And the current branch is still "current"

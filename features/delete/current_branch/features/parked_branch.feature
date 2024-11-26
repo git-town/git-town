@@ -21,7 +21,7 @@ Feature: delete the current parked branch
       | parked  | git fetch --prune --tags                         |
       |         | git push origin :parked                          |
       |         | git add -A                                       |
-      |         | git commit -m "Committing WIP for git town undo" |
+      |         | git commit -m "Committing WIP on deleted branch" |
       |         | git checkout feature                             |
       | feature | git branch -D parked                             |
     And the current branch is now "feature"
@@ -41,7 +41,7 @@ Feature: delete the current parked branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                        |
       | feature | git push origin {{ sha 'parked commit' }}:refs/heads/parked    |
-      |         | git branch parked {{ sha 'Committing WIP for git town undo' }} |
+      |         | git branch parked {{ sha 'Committing WIP on deleted branch' }} |
       |         | git checkout parked                                            |
       | parked  | git reset --soft HEAD~1                                        |
     And the current branch is now "parked"

@@ -22,7 +22,7 @@ Feature: delete a branch within a branch chain
       | beta   | git fetch --prune --tags                         |
       |        | git push origin :beta                            |
       |        | git add -A                                       |
-      |        | git commit -m "Committing WIP for git town undo" |
+      |        | git commit -m "Committing WIP on deleted branch" |
       |        | git checkout alpha                               |
       | alpha  | git branch -D beta                               |
     And Git Town prints:
@@ -48,7 +48,7 @@ Feature: delete a branch within a branch chain
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                      |
       | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta      |
-      |        | git branch beta {{ sha 'Committing WIP for git town undo' }} |
+      |        | git branch beta {{ sha 'Committing WIP on deleted branch' }} |
       |        | git checkout beta                                            |
       | beta   | git reset --soft HEAD~1                                      |
     And the current branch is now "beta"

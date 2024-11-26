@@ -20,7 +20,7 @@ Feature: delete the current observed branch
       | BRANCH   | COMMAND                                          |
       | observed | git fetch --prune --tags                         |
       |          | git add -A                                       |
-      |          | git commit -m "Committing WIP for git town undo" |
+      |          | git commit -m "Committing WIP on deleted branch" |
       |          | git checkout feature                             |
       | feature  | git branch -D observed                           |
     And the current branch is now "feature"
@@ -41,7 +41,7 @@ Feature: delete the current observed branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                          |
-      | feature  | git branch observed {{ sha 'Committing WIP for git town undo' }} |
+      | feature  | git branch observed {{ sha 'Committing WIP on deleted branch' }} |
       |          | git checkout observed                                            |
       | observed | git reset --soft HEAD~1                                          |
     And the current branch is now "observed"

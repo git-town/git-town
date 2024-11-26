@@ -21,7 +21,7 @@ Feature: the branch to delete has a deleted tracking branch
       | BRANCH | COMMAND                                          |
       | old    | git fetch --prune --tags                         |
       |        | git add -A                                       |
-      |        | git commit -m "Committing WIP for git town undo" |
+      |        | git commit -m "Committing WIP on deleted branch" |
       |        | git checkout other                               |
       | other  | git branch -D old                                |
     And the current branch is now "other"
@@ -40,7 +40,7 @@ Feature: the branch to delete has a deleted tracking branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                     |
-      | other  | git branch old {{ sha 'Committing WIP for git town undo' }} |
+      | other  | git branch old {{ sha 'Committing WIP on deleted branch' }} |
       |        | git checkout old                                            |
       | old    | git reset --soft HEAD~1                                     |
     And the current branch is now "old"
