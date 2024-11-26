@@ -1,3 +1,4 @@
+@this
 Feature: don't sync tags while deleting branches
 
   Background:
@@ -15,11 +16,12 @@ Feature: don't sync tags while deleting branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | current | git fetch --prune --no-tags |
-      |         | git push origin :current    |
-      |         | git checkout main           |
-      | main    | git branch -D current       |
+      | BRANCH  | COMMAND                        |
+      | current | git fetch --prune --no-tags    |
+      |         | git push origin :current       |
+      |         | git checkout main              |
+      | main    | git rebase --onto main current |
+      |         | git branch -D current          |
     And the initial tags exist now
 
   Scenario: undo
