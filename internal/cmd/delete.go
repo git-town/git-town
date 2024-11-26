@@ -126,7 +126,7 @@ type deleteData struct {
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
-	nonExistingBranches      gitdomain.LocalBranchNames
+	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	previousBranch           Option[gitdomain.LocalBranchName]
 	proposalsOfChildBranches []hostingdomain.Proposal
 	stashSize                gitdomain.StashSize
