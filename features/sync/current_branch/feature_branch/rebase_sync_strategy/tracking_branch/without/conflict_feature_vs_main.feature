@@ -75,7 +75,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And no rebase is in progress
+    And no rebase is now in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
