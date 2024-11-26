@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// BranchDeleteIfEmptyAtRuntime allows running different opcodes based on a condition evaluated at runtime.
+// BranchDeleteIfEmptyAtRuntime deletes the given branch if it has no content at runtime.
 type BranchDeleteIfEmptyAtRuntime struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
@@ -30,7 +30,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	} else {
 		args.PrependOpcodes(
 			&CheckoutParentOrMain{Branch: self.Branch},
-			&BranchLocalDelete{Branch: self.Branch},
+			&BranchLocalDeleteContent{Branch: self.Branch},
 			&LineageBranchRemove{
 				Branch: self.Branch,
 			},

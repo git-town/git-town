@@ -55,6 +55,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchEnsureShippableChanges{Branch: "branch", Parent: "parent"},
 				&opcodes.BranchLocalDelete{Branch: "branch"},
+				&opcodes.BranchLocalDeleteContent{Branch: "branch"},
 				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
 				&opcodes.BranchRemoteCreate{Branch: "branch", SHA: "123456"},
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
@@ -220,6 +221,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchLocalDelete"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchLocalDeleteContent"
     },
     {
       "data": {

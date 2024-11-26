@@ -6,11 +6,15 @@ import (
 )
 
 // BranchLocalDeleteContent deletes the branch with the given name.
-type BranchLocalDelete struct {
+type BranchLocalDeleteContent struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *BranchLocalDelete) Run(args shared.RunArgs) error {
+func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
+	err := args.Git.RebaseOnto(args.Frontend, self.Branch.BranchName(), args.Config.Value.ValidatedConfigData.MainBranch)
+	if err != nil {
+		return err
+	}
 	return args.Git.DeleteLocalBranch(args.Frontend, self.Branch)
 }
