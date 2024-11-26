@@ -8,8 +8,9 @@ Feature: ask for missing parent branch information
     And the current branch is "branch"
     When I run "git-town delete"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | branch | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git branch -D branch     |
+      | BRANCH | COMMAND                       |
+      | branch | git fetch --prune --tags      |
+      |        | git checkout main             |
+      | main   | git rebase --onto main branch |
+      |        | git branch -D branch          |
     And no lineage exists now
