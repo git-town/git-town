@@ -52,14 +52,14 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 		self.NormalConfig.CleanupBranchFromLineage(nonExistingBranch)
 	}
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
-		childBranchDoesntExist := nonExistingBranches.Contains(entry.Child)
-		parentBranchDoesntExist := nonExistingBranches.Contains(entry.Parent)
-		if childBranchDoesntExist || parentBranchDoesntExist {
+		childDoesntExist := nonExistingBranches.Contains(entry.Child)
+		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
+		if childDoesntExist || parentDoesntExist {
 			self.NormalConfig.RemoveParent(entry.Child)
 		}
-		childBranchExists := branchInfos.HasBranch(entry.Child)
-		hasParentExists := branchInfos.HasBranch(entry.Parent)
-		if !childBranchExists || !hasParentExists {
+		childExists := branchInfos.HasBranch(entry.Child)
+		parentExists := branchInfos.HasBranch(entry.Parent)
+		if !childExists || !parentExists {
 			self.NormalConfig.RemoveParent(entry.Child)
 		}
 	}
