@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// BranchLocalDeleteContent deletes the branch with the given name.
+// BranchLocalDelete deletes the branch with the given name.
 type BranchLocalDelete struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
