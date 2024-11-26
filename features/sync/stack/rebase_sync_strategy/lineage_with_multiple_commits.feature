@@ -27,7 +27,6 @@ Feature: stack that changes the same file in multiple commits per branch
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
-      |        | git rebase --onto main alpha            |
       |        | git branch -D alpha                     |
       |        | git checkout beta                       |
       | beta   | git rebase main --no-update-refs        |
