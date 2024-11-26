@@ -1,4 +1,3 @@
-@this
 Feature: don't sync tags while deleting branches
 
   Background:
