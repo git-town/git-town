@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/slice"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -79,7 +80,7 @@ func executeDelete(args []string, dryRun configdomain.DryRun, verbose configdoma
 	if err != nil {
 		return err
 	}
-	runProgram, finalUndoProgram := deleteProgram(repo, data)
+	runProgram, finalUndoProgram := deleteProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -232,9 +233,9 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	}, false, nil
 }
 
-func deleteProgram(repo execute.OpenRepoResult, data deleteData) (runProgram, finalUndoProgram program.Program) {
+func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, repo.FinalMessages)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	undoProg := NewMutable(&program.Program{})
 	switch data.branchToDeleteType {
 	case
