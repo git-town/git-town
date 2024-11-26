@@ -68,15 +68,16 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) []git.Commit {
+func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchName, lineage configdomain.Lineage) []git.Commit {
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
-	branches, err := self.LocalBranchesMainFirst(mainBranch)
+	branches, err := self.LocalBranchesMainFirst(mainBranch.LocalName())
 	asserts.NoError(err)
 	var result []git.Commit
 	for _, branch := range branches {
 		if strings.HasPrefix(branch.String(), "+ ") {
+			// branch is checked out in another workspace --> skip here
 			continue
 		}
 		parent := self.ExistingParent(branch, lineage)
@@ -87,7 +88,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBra
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], fields []string) []git.Commit {
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []git.Commit {
 	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
@@ -230,15 +231,18 @@ func (self *TestCommands) CurrentCommitMessage() string {
 }
 
 // provides the first ancestor of the given branch that actually exists in the repo
-func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
 		parentOpt := lineage.Parent(branch)
 		parent, hasParent := parentOpt.Get()
 		if !hasParent {
-			return None[gitdomain.LocalBranchName]()
+			return None[gitdomain.BranchName]()
 		}
 		if self.BranchExists(self, parent) {
-			return Some(parent)
+			return Some(parent.BranchName())
+		}
+		if self.BranchExistsRemotely(self, parent) {
+			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
 		}
 		branch = parent
 	}

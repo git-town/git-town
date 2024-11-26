@@ -39,13 +39,11 @@ Feature: stacked changes where an ancestor branch isn't local
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | origin        | origin main commit                                     |
       | alpha  | local, origin | local alpha commit                                     |
-      |        |               | origin main commit                                     |
       |        |               | Merge remote-tracking branch 'origin/main' into alpha  |
       |        |               | origin alpha commit                                    |
       |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
       | beta   | origin        | origin beta commit                                     |
       | gamma  | local, origin | local gamma commit                                     |
-      |        |               | origin beta commit                                     |
       |        |               | Merge remote-tracking branch 'origin/beta' into gamma  |
       |        |               | local alpha commit                                     |
       |        |               | origin main commit                                     |

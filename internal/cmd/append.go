@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/execute"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/hosting"
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
@@ -88,7 +89,7 @@ func executeAppend(arg string, detached configdomain.Detached, dryRun configdoma
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data)
+	runProgram := appendProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -132,6 +133,7 @@ type appendFeatureData struct {
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
+	nonExistingBranches       gitdomain.LocalBranchNames
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
 	prototype                 configdomain.Prototype
@@ -209,7 +211,8 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchesToSync, err := sync.BranchesToSync(branchNamesToSync, branchesSnapshot, repo, validatedConfig.ValidatedConfigData.MainBranch)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
 	}
@@ -225,6 +228,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		newBranchParentCandidates: initialAndAncestors,
+		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
@@ -234,8 +238,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}, false, fc.Err
 }
 
-func appendProgram(data appendFeatureData) program.Program {
+func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
