@@ -18,6 +18,7 @@ Feature: proposing a branch that was deleted at the remote
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
+      |         | git rebase --onto main feature          |
       |         | git branch -D feature                   |
     And Git Town prints:
       """
