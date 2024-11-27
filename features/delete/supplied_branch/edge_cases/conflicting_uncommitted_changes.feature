@@ -43,7 +43,7 @@ Feature: delete another than the current branch
     Then Git Town runs the commands
       | BRANCH | COMMAND        |
       | good   | git stash drop |
-    Then the branches are now
+    And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And these commits exist now
