@@ -34,6 +34,10 @@ Feature: stack that changes the same file in multiple commits per branch
       """
       CONFLICT (add/add): Merge conflict in favorite-fruit
       """
+    And Git Town prints an error like:
+      """
+      could not apply .* alpha commit 1
+      """
     And a rebase is now in progress
 
   Scenario: resolve and continue
