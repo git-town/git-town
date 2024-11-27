@@ -24,14 +24,15 @@ Feature: stack that changes the same file in multiple commits per branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git rebase --onto main alpha            |
-      |        | git branch -D alpha                     |
-      |        | git checkout beta                       |
-      | beta   | git rebase main --no-update-refs        |
+      | BRANCH | COMMAND                                         |
+      | beta   | git fetch --prune --tags                        |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main --no-update-refs         |
+      |        | git rebase --onto main alpha                    |
+      |        | git branch -D alpha                             |
+      |        | git checkout beta                               |
+      | beta   | git rebase main --no-update-refs                |
+      |        | git push --force-with-lease --force-if-includes |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in favorite-fruit
