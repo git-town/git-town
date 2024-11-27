@@ -41,6 +41,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | COMMAND                       |
       | main   | git rebase --continue         |
       |        | git push                      |
+      |        | git rebase --onto main alpha  |
       |        | git branch -D alpha           |
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
