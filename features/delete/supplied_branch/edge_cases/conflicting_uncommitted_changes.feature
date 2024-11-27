@@ -15,7 +15,6 @@ Feature: delete another than the current branch
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town delete dead"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
@@ -56,6 +55,7 @@ Feature: delete another than the current branch
       | BRANCH | PARENT |
       | good   | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -71,6 +71,7 @@ Feature: delete another than the current branch
       | BRANCH | LOCATION      | MESSAGE                              |
       | main   | local, origin | conflicting commit                   |
       | dead   | local, origin | dead-end commit                      |
-      | good   | local         | Committing open changes to undo them |
+      | good   | local         | good commit                          |
+      |        |               | Committing open changes to undo them |
       |        | origin        | good commit                          |
     And the initial branches and lineage exist now
