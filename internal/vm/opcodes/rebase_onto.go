@@ -7,8 +7,8 @@ import (
 
 // rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
 type RebaseOnto struct {
-	BranchToRebaseOnto      gitdomain.BranchName
 	BranchToRebaseAgainst   gitdomain.LocalBranchName
+	BranchToRebaseOnto      gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

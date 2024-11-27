@@ -8,8 +8,8 @@ import (
 
 // deletes the given branch including all commits
 type BranchLocalDeleteContent struct {
-	BranchToRebaseOnto      gitdomain.BranchName
 	BranchToDelete          gitdomain.LocalBranchName
+	BranchToRebaseOnto      gitdomain.BranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -17,8 +17,13 @@ func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
 	switch args.Config.Value.NormalConfig.SyncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyRebase:
 		args.PrependOpcodes(
-			&RebaseOnto{BranchToRebaseOnto: self.BranchToRebaseOnto, BranchToRebaseAgainst: self.BranchToDelete},
-			&BranchLocalDelete{Branch: self.BranchToDelete},
+			&RebaseOnto{
+				BranchToRebaseAgainst: self.BranchToDelete,
+				BranchToRebaseOnto:    self.BranchToRebaseOnto,
+			},
+			&BranchLocalDelete{
+				Branch: self.BranchToDelete,
+			},
 		)
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.PrependOpcodes(
