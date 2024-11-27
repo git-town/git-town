@@ -7,14 +7,15 @@ Feature: delete another than the current branch
       | good | feature | main   | local, origin |
       | dead | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE            | FILE NAME        |
-      | main   | local, origin | conflicting commit | conflicting_file |
-      | dead   | local, origin | dead-end commit    | file             |
-      | good   | local, origin | good commit        | file             |
+      | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
+      | main   | local, origin | conflicting commit | conflicting_file | main content |
+      | dead   | local, origin | dead-end commit    | file             | dead content |
+      | good   | local, origin | good commit        | file             | good content |
     And the current branch is "good"
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town delete dead"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
@@ -33,18 +34,24 @@ Feature: delete another than the current branch
     And the uncommitted file has content:
       """
       <<<<<<< Updated upstream
-      default file content
+      main content
       =======
       conflicting content
       >>>>>>> Stashed changes
       """
-    And the branches are now
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND        |
+      | good   | git stash drop |
+    Then the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
-      | good   | origin        | good commit        |
+      | good   | local         | good commit        |
+      |        | origin        | good commit        |
     And this lineage exists now
       | BRANCH | PARENT |
       | good   | main   |
