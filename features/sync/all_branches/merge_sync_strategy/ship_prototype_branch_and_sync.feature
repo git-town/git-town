@@ -30,6 +30,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       | hooks  | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
+      |        | git rebase --onto main hooks            |
       |        | git branch -D hooks                     |
       |        | git push --tags                         |
     And Git Town prints:

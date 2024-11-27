@@ -21,6 +21,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git checkout main                       |
       | main       | git rebase origin/main --no-update-refs |
       |            | git push                                |
+      |            | git rebase --onto main child            |
       |            | git branch -D child                     |
       |            | git checkout grandchild                 |
       | grandchild | git merge --no-edit --ff main           |
@@ -46,8 +47,9 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And the current branch is now "grandchild"
     When I run "git-town delete"
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                     |
-      | grandchild | git fetch --prune --tags    |
-      |            | git push origin :grandchild |
-      |            | git checkout main           |
-      | main       | git branch -D grandchild    |
+      | BRANCH     | COMMAND                           |
+      | grandchild | git fetch --prune --tags          |
+      |            | git push origin :grandchild       |
+      |            | git checkout main                 |
+      | main       | git rebase --onto main grandchild |
+      |            | git branch -D grandchild          |

@@ -15,10 +15,11 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                    |
-      | contribution | git fetch --prune --tags   |
-      |              | git checkout main          |
-      | main         | git branch -D contribution |
+      | BRANCH       | COMMAND                             |
+      | contribution | git fetch --prune --tags            |
+      |              | git checkout main                   |
+      | main         | git rebase --onto main contribution |
+      |              | git branch -D contribution          |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

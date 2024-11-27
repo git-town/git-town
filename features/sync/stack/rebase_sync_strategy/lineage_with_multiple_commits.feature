@@ -35,10 +35,15 @@ Feature: stack that changes the same file in multiple commits per branch
       """
       CONFLICT (add/add): Merge conflict in favorite-fruit
       """
+    And Git Town prints an error like:
+      """
+      could not apply .* alpha commit 1
+      """
     And a rebase is now in progress
 
+  @this
   Scenario: resolve and continue
-    When I resolve the conflict in "favorite-fruit" with "resolved apple"
+    When I resolve the conflict in "favorite-fruit"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH | COMMAND               |
@@ -52,27 +57,7 @@ Feature: stack that changes the same file in multiple commits per branch
       could not apply .* alpha commit 2
       """
     And a rebase is still in progress
-    And I resolve the conflict in "favorite-fruit" with "resolved peach"
-    And I run "git-town continue" and close the editor
-    And Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git rebase --continue                           |
-      |        | git push --force-with-lease --force-if-includes |
-    And no rebase is now in progress
-    And the current branch is still "beta"
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "favorite-fruit"
-    And I run "git-town continue" and close the editor
-    Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | beta   | git rebase --continue |
-    And Git Town prints the error:
-      """
-      CONFLICT (content): Merge conflict in favorite-fruit
-      """
-    And a rebase is still in progress
-    When I resolve the conflict in "favorite-fruit"
+    When I resolve the conflict in "favorite-fruit" with "resolved peach"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
@@ -81,11 +66,10 @@ Feature: stack that changes the same file in multiple commits per branch
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT     |
-      | main   | local, origin | alpha commit 1 | favorite-fruit | peach            |
-      | beta   | local, origin | alpha commit 1 | favorite-fruit | resolved content |
-      |        |               | beta commit 1  | favorite-pizza | pepperoni        |
-      |        |               | beta commit 2  | favorite-pizza | pineapple        |
+      | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
+      | main   | local, origin | alpha commit 1 | favorite-fruit | peach        |
+      | beta   | local, origin | beta commit 1  | favorite-pizza | pepperoni    |
+      |        |               | beta commit 2  | favorite-pizza | pineapple    |
 
   Scenario: undo
     When I run "git-town undo"

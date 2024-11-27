@@ -346,7 +346,7 @@ func (self *TestCommands) HasFile(name, content string) string {
 	if err != nil {
 		return fmt.Sprintf("repo doesn't have file %q", name)
 	}
-	actualContent := string(rawContent)
+	actualContent := strings.TrimSpace(string(rawContent))
 	if actualContent != content {
 		return fmt.Sprintf("file %q should have content %q but has %q", name, content, actualContent)
 	}

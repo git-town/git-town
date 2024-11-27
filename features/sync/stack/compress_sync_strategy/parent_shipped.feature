@@ -23,6 +23,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       | child  | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
+      |        | git rebase --onto main parent           |
       |        | git branch -D parent                    |
       |        | git checkout child                      |
       | child  | git merge --no-edit --ff main           |

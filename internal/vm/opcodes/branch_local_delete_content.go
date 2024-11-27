@@ -5,16 +5,19 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
-// BranchLocalDeleteContent deletes the branch with the given name.
+// deletes the given branch including all commits
 type BranchLocalDeleteContent struct {
-	Branch                  gitdomain.LocalBranchName
+	BranchToRebaseOnto      gitdomain.BranchName
+	BranchToDelete          gitdomain.LocalBranchName
+	BranchToBeOn            gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.Branch.BranchName(), args.Config.Value.ValidatedConfigData.MainBranch)
-	if err != nil {
-		return err
-	}
-	return args.Git.DeleteLocalBranch(args.Frontend, self.Branch)
+	args.PrependOpcodes(
+		&CheckoutIfNeeded{Branch: self.BranchToBeOn},
+		&RebaseOnto{BranchToRebaseOnto: self.BranchToRebaseOnto, BranchToRebaseAgainst: self.BranchToDelete},
+		&BranchLocalDelete{Branch: self.BranchToDelete},
+	)
+	return nil
 }

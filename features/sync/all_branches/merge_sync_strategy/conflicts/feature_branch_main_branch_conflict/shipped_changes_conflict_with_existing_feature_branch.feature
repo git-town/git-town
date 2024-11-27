@@ -45,7 +45,8 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git merge --no-edit --ff origin/alpha |
       |        | git push                              |
       |        | git checkout main                     |
-      | main   | git branch -D beta                    |
+      | main   | git rebase --onto main beta           |
+      |        | git branch -D beta                    |
       |        | git checkout gamma                    |
       | gamma  | git merge --no-edit --ff main         |
     And Git Town prints something like:

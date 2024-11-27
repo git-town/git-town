@@ -19,6 +19,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | prototype | git fetch --prune --tags                |
       |           | git checkout main                       |
       | main      | git rebase origin/main --no-update-refs |
+      |           | git rebase --onto main prototype        |
       |           | git branch -D prototype                 |
     And the current branch is now "main"
     And these commits exist now
