@@ -546,8 +546,8 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) RebaseOnto(runner gitdomain.Runner, target gitdomain.BranchName, main gitdomain.LocalBranchName) error {
-	args := []string{"rebase", "--onto", main.String(), target.String()}
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName) error {
+	args := []string{"rebase", "--onto", branchToRebaseOnto.String(), branchToRebaseAgainst.String()}
 	return runner.Run("git", args...)
 }
 

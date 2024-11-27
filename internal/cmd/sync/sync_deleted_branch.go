@@ -75,7 +75,7 @@ func syncDeleteLocalBranchProgram(prog Mutable[program.Program], branch gitdomai
 		},
 		&opcodes.BranchLocalDeleteContent{
 			BranchToDelete:     branch,
-			BranchToRebaseOnto: args.Config.ValidatedConfigData.MainBranch.BranchName(),
+			BranchToRebaseOnto: args.Config.ValidatedConfigData.MainBranch,
 		},
 		&opcodes.MessageQueue{
 			Message: fmt.Sprintf(messages.BranchDeleted, branch),

@@ -34,7 +34,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 			},
 			&BranchLocalDeleteContent{
 				BranchToDelete:     self.Branch,
-				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch.BranchName(),
+				BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch,
 			},
 			&LineageBranchRemove{
 				Branch: self.Branch,

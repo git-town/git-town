@@ -7,8 +7,8 @@ import (
 
 // rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
 type RebaseOnto struct {
-	BranchToRebaseAgainst   gitdomain.LocalBranchName
-	BranchToRebaseOnto      gitdomain.BranchName
+	BranchToRebaseAgainst   gitdomain.BranchName
+	BranchToRebaseOnto      gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -19,5 +19,5 @@ func (self *RebaseOnto) AbortProgram() []shared.Opcode {
 }
 
 func (self *RebaseOnto) Run(args shared.RunArgs) error {
-	return args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto, self.BranchToRebaseAgainst)
+	return args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto)
 }
