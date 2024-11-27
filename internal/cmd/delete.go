@@ -290,7 +290,10 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 			}
 			prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
 		}
-		prog.Value.Add(&opcodes.BranchLocalDeleteContent{Branch: localBranchToDelete})
+		prog.Value.Add(&opcodes.BranchLocalDeleteContent{
+			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch.BranchName(),
+			BranchToDelete:     localBranchToDelete,
+		})
 		if data.dryRun.IsFalse() {
 			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
 				Branch:  localBranchToDelete,

@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
@@ -9,15 +10,20 @@ import (
 type BranchLocalDeleteContent struct {
 	BranchToRebaseOnto      gitdomain.BranchName
 	BranchToDelete          gitdomain.LocalBranchName
-	BranchToBeOn            gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
-	args.PrependOpcodes(
-		&CheckoutIfNeeded{Branch: self.BranchToBeOn},
-		&RebaseOnto{BranchToRebaseOnto: self.BranchToRebaseOnto, BranchToRebaseAgainst: self.BranchToDelete},
-		&BranchLocalDelete{Branch: self.BranchToDelete},
-	)
+	switch args.Config.Value.NormalConfig.SyncFeatureStrategy {
+	case configdomain.SyncFeatureStrategyRebase:
+		args.PrependOpcodes(
+			&RebaseOnto{BranchToRebaseOnto: self.BranchToRebaseOnto, BranchToRebaseAgainst: self.BranchToDelete},
+			&BranchLocalDelete{Branch: self.BranchToDelete},
+		)
+	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
+		args.PrependOpcodes(
+			&BranchLocalDelete{Branch: self.BranchToDelete},
+		)
+	}
 	return nil
 }

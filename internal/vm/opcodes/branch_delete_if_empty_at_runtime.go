@@ -30,7 +30,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	} else {
 		args.PrependOpcodes(
 			&CheckoutParentOrMain{Branch: self.Branch},
-			&BranchLocalDeleteContent{Branch: self.Branch},
+			&BranchLocalDeleteContent{BranchToDelete: self.Branch, BranchToRebaseOnto: args.Config.Value.ValidatedConfigData.MainBranch.BranchName()},
 			&LineageBranchRemove{
 				Branch: self.Branch,
 			},
