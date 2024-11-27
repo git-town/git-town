@@ -16,10 +16,11 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | observed | git fetch --prune --tags |
-      |          | git checkout main        |
-      | main     | git branch -D observed   |
+      | BRANCH   | COMMAND                         |
+      | observed | git fetch --prune --tags        |
+      |          | git checkout main               |
+      | main     | git rebase --onto main observed |
+      |          | git branch -D observed          |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

@@ -19,6 +19,7 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | parked | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
+      |        | git rebase --onto main parked           |
       |        | git branch -D parked                    |
     And the current branch is now "main"
     And these commits exist now
