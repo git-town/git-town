@@ -55,7 +55,6 @@ Feature: delete another than the current branch
       | BRANCH | PARENT |
       | good   | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
