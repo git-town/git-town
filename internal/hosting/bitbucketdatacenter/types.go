@@ -1,104 +1,90 @@
+//nolint:tagliatelle // we integrate with remote APIs only
 package bitbucketdatacenter
 
 type PullRequestResponse struct {
-	Values        []PullRequest `json:"values"`
-	Size          int           `json:"size"`
 	IsLastPage    bool          `json:"isLastPage"`
-	NextPageStart int           `json:"nextPageStart"`
-	Start         int           `json:"start"`
 	Limit         int           `json:"limit"`
+	NextPageStart int           `json:"nextPageStart"`
+	Size          int           `json:"size"`
+	Start         int           `json:"start"`
+	Values        []PullRequest `json:"values"`
 }
 
 type User struct {
-	Slug         string `json:"slug"`
-	EmailAddress string `json:"emailAddress"`
 	Active       bool   `json:"active"`
-	Name         string `json:"name"`
-	Id           int    `json:"id"`
-	Type         string `json:"type"`
 	DisplayName  string `json:"displayName"`
+	EmailAddress string `json:"emailAddress"`
+	ID           int    `json:"id"`
+	Name         string `json:"name"`
+	Slug         string `json:"slug"`
+	Type         string `json:"type"`
 }
 
 type Participant struct {
-	User               User   `json:"user"`
-	LastReviewedCommit string `json:"lastReviewedCommit"`
 	Approved           bool   `json:"approved"`
-	Status             string `json:"status"`
+	LastReviewedCommit string `json:"lastReviewedCommit"`
 	Role               string `json:"role"`
+	Status             string `json:"status"`
+	User               User   `json:"user"`
 }
 
 type PullRequest struct {
+	Closed       bool          `json:"closed"`
 	ClosedDate   int64         `json:"closedDate"`
+	CreatedDate  int64         `json:"createdDate"`
+	Description  string        `json:"description"`
+	Draft        bool          `json:"draft"`
 	FromRef      Ref           `json:"fromRef"`
+	ID           int           `json:"id"`
+	Locked       bool          `json:"locked"`
+	Open         bool          `json:"open"`
 	Participants []Participant `json:"participants"`
 	Reviewers    []Participant `json:"reviewers"`
-	CreatedDate  int64         `json:"createdDate"`
+	State        string        `json:"state"`
+	Title        string        `json:"title"`
 	ToRef        Ref           `json:"toRef"`
-	Draft        bool          `json:"draft"`
 	UpdatedDate  int64         `json:"updatedDate"`
 	Version      int           `json:"version"`
-	Locked       bool          `json:"locked"`
-	Description  string        `json:"description"`
-	Closed       bool          `json:"closed"`
-	Title        string        `json:"title"`
-	Id           int           `json:"id"`
-	State        string        `json:"state"`
-	Open         bool          `json:"open"`
 }
 
 type Project struct {
 	Avatar      string `json:"avatar"`
 	Description string `json:"description"`
-	Namespace   string `json:"namespace"`
-	Scope       string `json:"scope"`
-	Name        string `json:"name"`
+	ID          int    `json:"id"`
 	Key         string `json:"key"`
-	Id          int    `json:"id"`
-	Type        string `json:"type"`
+	Name        string `json:"name"`
+	Namespace   string `json:"namespace"`
 	Public      bool   `json:"public"`
+	Scope       string `json:"scope"`
+	Type        string `json:"type"`
 }
 
 type Ref struct {
-	DisplayId    string `json:"displayId"`
+	DisplayID    string `json:"displayId"`
+	ID           string `json:"id"`
 	LatestCommit string `json:"latestCommit"`
 	Repository   struct {
-		HierarchyId   string `json:"hierarchyId"`
-		ScmId         string `json:"scmId"`
-		Slug          string `json:"slug"`
-		StatusMessage string `json:"statusMessage"`
-		Archived      bool   `json:"archived"`
-		Forkable      bool   `json:"forkable"`
-		DefaultBranch string `json:"defaultBranch"`
-		Partition     int    `json:"partition"`
-		RelatedLinks  struct {
-		} `json:"relatedLinks"`
-		Project     Project `json:"project"`
-		Description string  `json:"description"`
-		Scope       string  `json:"scope"`
-		Origin      struct {
-			HierarchyId   string `json:"hierarchyId"`
-			ScmId         string `json:"scmId"`
-			Slug          string `json:"slug"`
-			StatusMessage string `json:"statusMessage"`
-			Archived      bool   `json:"archived"`
-			Forkable      bool   `json:"forkable"`
-			DefaultBranch string `json:"defaultBranch"`
-			Partition     int    `json:"partition"`
-			RelatedLinks  struct {
-			} `json:"relatedLinks"`
-			Project     Project `json:"project"`
-			Description string  `json:"description"`
-			Scope       string  `json:"scope"`
-			Name        string  `json:"name"`
-			Id          int     `json:"id"`
-			State       string  `json:"state"`
-			Public      bool    `json:"public"`
-		} `json:"origin"`
-		Name   string `json:"name"`
-		Id     int    `json:"id"`
-		State  string `json:"state"`
-		Public bool   `json:"public"`
+		Repository
+		Origin Repository `json:"origin"`
 	} `json:"repository"`
-	Id   string `json:"id"`
 	Type string `json:"type"`
+}
+
+type Repository struct {
+	Archived      bool     `json:"archived"`
+	DefaultBranch string   `json:"defaultBranch"`
+	Description   string   `json:"description"`
+	Forkable      bool     `json:"forkable"`
+	HierarchyID   string   `json:"hierarchyId"`
+	ID            int      `json:"id"`
+	Name          string   `json:"name"`
+	Partition     int      `json:"partition"`
+	Project       Project  `json:"project"`
+	Public        bool     `json:"public"`
+	RelatedLinks  struct{} `json:"relatedLinks"`
+	ScmID         string   `json:"scmId"`
+	Scope         string   `json:"scope"`
+	Slug          string   `json:"slug"`
+	State         string   `json:"state"`
+	StatusMessage string   `json:"statusMessage"`
 }

@@ -3,6 +3,8 @@ package bitbucketdatacenter
 import (
 	"context"
 	"fmt"
+	"net/url"
+
 	"github.com/carlmjohnson/requests"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
@@ -12,30 +14,29 @@ import (
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"net/url"
 )
 
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
 	hostingdomain.Data
 	log      print.Logger
-	username string
 	token    string
+	username string
 }
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) (Connector, error) {
+func NewConnector(args NewConnectorArgs) Connector {
 	return Connector{
 		Data: hostingdomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		username: args.UserName.String(),
-		token:    args.AppPassword.String(),
 		log:      args.Log,
-	}, nil
+		token:    args.AppPassword.String(),
+		username: args.UserName.String(),
+	}
 }
 
 type NewConnectorArgs struct {
@@ -86,19 +87,28 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
+func (self Connector) apiBaseURL() string {
+	return fmt.Sprintf(
+		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
+		self.Hostname,
+		self.Organization,
+		self.Repository,
+	)
+}
+
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 
 	ctx := context.TODO()
 
-	fromRefId := fmt.Sprintf("refs/heads/%v", branch)
-	toRefId := fmt.Sprintf("refs/heads/%v", target)
+	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
+	toRefID := fmt.Sprintf("refs/heads/%v", target)
 
-	resp := PullRequestResponse{}
+	var resp PullRequestResponse
 
 	err := requests.URL(self.apiBaseURL()).
 		BasicAuth(self.username, self.token).
-		Param("at", toRefId).
+		Param("at", toRefID).
 		ToJSON(&resp).
 		Fetch(ctx)
 	if err != nil {
@@ -114,7 +124,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	var needle *PullRequest
 
 	for _, pr := range resp.Values {
-		if pr.FromRef.Id == fromRefId && pr.ToRef.Id == toRefId {
+		if pr.FromRef.ID == fromRefID && pr.ToRef.ID == toRefID {
 			needle = &pr
 			break
 		}
@@ -129,15 +139,6 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(proposal), nil
-}
-
-func (self Connector) apiBaseURL() string {
-	return fmt.Sprintf(
-		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
-		self.Hostname,
-		self.Organization,
-		self.Repository,
-	)
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
@@ -160,9 +161,9 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 func parsePullRequest(pullRequest PullRequest, repoURL string) hostingdomain.Proposal {
 	return hostingdomain.Proposal{
 		MergeWithAPI: false,
-		Number:       pullRequest.Id,
-		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayId),
-		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayId),
+		Number:       pullRequest.ID,
+		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
 		Title:        pullRequest.Title,
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest),
 	}
