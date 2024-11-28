@@ -40,7 +40,7 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "beta" toRefId the "origin" remote
+      there is already a branch "beta" at the "origin" remote
       """
     And the current branch is still "alpha"
     And the initial branches and lineage exist now

@@ -11,7 +11,7 @@ Feature: dry-run proposing changes
     And the origin is "git@github.com:git-town/git-town.git"
 
   Scenario: a PR for this branch exists already
-    Given a proposal for this branch exists toRefId "https://github.com/git-town/git-town/pull/123"
+    Given a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
     When I run "git-town propose --dry-run"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                            |

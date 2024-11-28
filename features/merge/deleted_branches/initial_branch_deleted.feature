@@ -1,4 +1,4 @@
-Feature: merging a branch that was deleted toRefId the remote
+Feature: merging a branch that was deleted at the remote
 
   Background:
     Given a Git repo with origin
@@ -20,7 +20,7 @@ Feature: merging a branch that was deleted toRefId the remote
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "beta" was deleted toRefId the remote
+      branch "beta" was deleted at the remote
       """
     And the current branch is still "beta"
     And the initial commits exist now

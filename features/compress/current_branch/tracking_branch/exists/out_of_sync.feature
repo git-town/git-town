@@ -50,7 +50,7 @@ Feature: cannot compress branches that are out of sync
     And the initial commits exist now
     And the initial branches and lineage exist now
 
-  Scenario: branch is deleted toRefId remote
+  Scenario: branch is deleted at remote
     Given the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |

@@ -15,7 +15,7 @@ Feature: already existing remote branch
       | old    | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "existing" toRefId the "origin" remote
+      there is already a branch "existing" at the "origin" remote
       """
 
   Scenario: undo

@@ -9,10 +9,10 @@ repository in your browser. Git Town can display repositories hosted on
 
 ### Positional arguments
 
-When called without arguments, the _repo_ command shows the repository toRefId the
+When called without arguments, the _repo_ command shows the repository at the
 `origin` remote.
 
-When called with an argument, it shows the repository toRefId the remote with the
+When called with an argument, it shows the repository at the remote with the
 given name.
 
 ### Configuration

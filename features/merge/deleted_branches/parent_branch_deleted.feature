@@ -20,7 +20,7 @@ Feature: merging a branch whose parent was deleted remotely
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "alpha" was deleted toRefId the remote
+      branch "alpha" was deleted at the remote
       """
     And the current branch is still "beta"
     And the initial commits exist now

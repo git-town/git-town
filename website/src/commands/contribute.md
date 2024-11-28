@@ -28,7 +28,7 @@ To make branches "alpha" and "beta" contribution branches:
 git town contribute alpha beta
 ```
 
-Check out a remote branch (that exists toRefId origin but not on your local machine)
+Check out a remote branch (that exists at origin but not on your local machine)
 and make it a contribution branch:
 
 ```fish

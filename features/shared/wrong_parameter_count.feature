@@ -16,14 +16,14 @@ Feature: too few or many parameters
       | completions arg1      | unknown completion type: "arg1"                    |
       | config arg1           | unknown command "arg1" for "git-town config"       |
       | config setup arg1     | unknown command "arg1" for "git-town config setup" |
-      | delete arg1 arg2      | accepts toRefId most 1 arg(s), received 2               |
-      | offline arg1 arg2     | accepts toRefId most 1 arg(s), received 2               |
+      | delete arg1 arg2      | accepts at most 1 arg(s), received 2               |
+      | offline arg1 arg2     | accepts at most 1 arg(s), received 2               |
       | propose arg1          | unknown command "arg1" for "git-town propose"      |
       | prepend               | accepts 1 arg(s), received 0                       |
       | rename                | accepts between 1 and 2 arg(s), received 0         |
       | rename arg1 arg2 arg3 | accepts between 1 and 2 arg(s), received 3         |
-      | repo arg1 arg2        | accepts toRefId most 1 arg(s), received 2               |
+      | repo arg1 arg2        | accepts at most 1 arg(s), received 2               |
       | set-parent arg1       | unknown command "arg1" for "git-town set-parent"   |
-      | ship arg1 arg2        | accepts toRefId most 1 arg(s), received 2               |
+      | ship arg1 arg2        | accepts at most 1 arg(s), received 2               |
       | sync arg1             | unknown command "arg1" for "git-town sync"         |
       | --version arg1        | unknown command "arg1" for "git-town"              |

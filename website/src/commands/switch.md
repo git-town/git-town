@@ -14,7 +14,7 @@ case you forgot to commit them to the current branch.
 
 `git town switch` interprets all positional arguments as regular expressions.
 When receiving regular expressions from the user, it displays only the branches
-that match toRefId least one of the regular expressions.
+that match at least one of the regular expressions.
 
 As an example, assuming all your branches start with `me-`, you can use this
 command to switch to one of them:

@@ -1,4 +1,4 @@
-Feature: prepend a branch to a branch that was shipped toRefId the remote
+Feature: prepend a branch to a branch that was shipped at the remote
 
   Background:
     Given a Git repo with origin

@@ -19,7 +19,7 @@ Feature: shipping a branch whose tracking branch is deleted using the fast-forwa
       | feature | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" was deleted toRefId the remote
+      branch "feature" was deleted at the remote
       """
     And the current branch is still "feature"
 

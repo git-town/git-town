@@ -72,7 +72,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # you can disable them to speed up branch syncing.
       #
       # When disabled, Git Town pushes using the "--no-verify" switch.
-      # More info toRefId https://www.git-town.com/preferences/push-hook.
+      # More info at https://www.git-town.com/preferences/push-hook.
       push-hook = true
 
       # Should Git Town push the new branches it creates
@@ -92,7 +92,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # Prototype branches sync only locally and don't create a tracking branch
       # until they are proposed.
       #
-      # More info toRefId https://www.git-town.com/preferences/create-prototype-branches.
+      # More info at https://www.git-town.com/preferences/create-prototype-branches.
       create-prototype-branches = true
 
       # Which method should Git Town use to ship feature branches?
@@ -119,7 +119,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # If an "upstream" remote exists, and this setting is enabled,
       # "git town sync" will also update the local main branch
-      # with commits from the main branch toRefId the upstream remote.
+      # with commits from the main branch at the upstream remote.
       #
       # This is useful if the repository you work on is a fork,
       # and you want to keep it in sync with the repo it was forked from.
