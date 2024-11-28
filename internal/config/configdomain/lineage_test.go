@@ -354,6 +354,22 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("HasDescendents", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has a descendent", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			lineage.Add(one, two)
+			must.True(t, lineage.HasDescendents(two))
+		})
+		t.Run("has no descendent", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			lineage.Add(one, two)
+			must.False(t, lineage.HasDescendents(one))
+		})
+	})
+
 	t.Run("HasParents", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a parent", func(t *testing.T) {
