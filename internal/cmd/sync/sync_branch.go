@@ -18,6 +18,17 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
+	// new algorithm:
+	//
+	// rebase sync strategy:
+	// - if tracking branch deleted --> do nothing with this branch
+	// - if parent branch has deleted tracking branch:
+	//   - pull tracking branch
+	//   - git rebase --onto main <parent>
+	//   - force-push with lease the local branch to origin
+	// - else: normal sync
+	//
+	// merge/compress sync strategy: normal behavior
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
