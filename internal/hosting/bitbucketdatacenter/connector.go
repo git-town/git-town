@@ -72,7 +72,7 @@ func (self Connector) RepositoryURL() string {
 }
 
 func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	return Some(self.searchProposal)
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
@@ -132,6 +132,49 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 
 	if needle == nil {
 		self.log.Success("no PR found matching source and target branch")
+		return None[hostingdomain.Proposal](), nil
+	}
+
+	proposal := parsePullRequest(*needle, self.RepositoryURL())
+
+	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
+	return Some(proposal), nil
+}
+
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+	self.log.Start(messages.APIProposalLookupStart)
+
+	ctx := context.TODO()
+
+	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
+
+	var resp PullRequestResponse
+
+	err := requests.URL(self.apiBaseURL()).
+		BasicAuth(self.username, self.token).
+		ToJSON(&resp).
+		Fetch(ctx)
+	if err != nil {
+		self.log.Failed(err.Error())
+		return None[hostingdomain.Proposal](), err
+	}
+
+	if len(resp.Values) == 0 {
+		self.log.Success("none")
+		return None[hostingdomain.Proposal](), nil
+	}
+
+	var needle *PullRequest
+
+	for _, pr := range resp.Values {
+		if pr.FromRef.ID == fromRefID {
+			needle = &pr
+			break
+		}
+	}
+
+	if needle == nil {
+		self.log.Success("no PR found matching source branch")
 		return None[hostingdomain.Proposal](), nil
 	}
 
