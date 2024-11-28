@@ -31,10 +31,9 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 
 	merge/compress sync strategy: normal behavior
 	*/
-	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
-	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
+		hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
