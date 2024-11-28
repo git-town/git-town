@@ -1,4 +1,4 @@
-Feature: sync perennial branch that was deleted at the remote
+Feature: sync perennial branch that was deleted toRefId the remote
 
   Background:
     Given a Git repo with origin

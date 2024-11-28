@@ -1,4 +1,4 @@
-Feature: display the repo at another remote
+Feature: display the repo toRefId another remote
 
   Scenario: upstream remote
     Given a Git repo with origin

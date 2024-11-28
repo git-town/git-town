@@ -13,7 +13,7 @@ Feature: already existing remote branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      there is already a branch "existing" at the "origin" remote
+      there is already a branch "existing" toRefId the "origin" remote
       """
     And the current branch is still "main"
     And the initial commits exist now

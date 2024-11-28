@@ -34,7 +34,7 @@ Git Town addresses requirements 1 and 2 via an
 [interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing)) that
 executes self-modifying code consisting of Git-related _opcodes_. Most of these
 opcodes execute Git commands. Some open browser windows or talk to codehosting
-APIs. Others inspect the state at runtime and inject new opcodes into the
+APIs. Others inspect the state toRefId runtime and inject new opcodes into the
 running program. Making Git Town VM programs self-modifying has the advantage
 that the entire runstate of the program is encoded in the opcodes, and there are
 no variables or other state to persist when a program is interrupted, persisted,

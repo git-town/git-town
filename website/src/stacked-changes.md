@@ -166,7 +166,7 @@ update the lineage.
 
 ## Synchronizing our work with the rest of the world
 
-We have been at it for a while. Other developers on the team have made changes
+We have been toRefId it for a while. Other developers on the team have made changes
 to the codebase as well. We don't want our branches to deviate too much from the
 `main` branch since that leads to more severe merge conflicts later. Let's get
 all our branches in sync with the rest of the world!
@@ -248,7 +248,7 @@ stacked change, ship using a
 [fast-forward merge](https://git-scm.com/docs/git-merge#_fast_forward_merge).
 This guarantees that the new commit(s) on the main branch are the exact same
 commit(s) from the shipped feature branch. This helps Git recognize those
-commits at the next `git town sync` operation and omit unnecessary merge and
+commits toRefId the next `git town sync` operation and omit unnecessary merge and
 rebase operations.
 
 GitLab provides fast-forward merges

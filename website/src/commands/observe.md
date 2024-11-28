@@ -22,7 +22,7 @@ Observe branches "alpha" and "beta":
 git town observe alpha beta
 ```
 
-Check out a remote branch (that exists at origin but not on your local machine)
+Check out a remote branch (that exists toRefId origin but not on your local machine)
 and make it observed:
 
 ```fish

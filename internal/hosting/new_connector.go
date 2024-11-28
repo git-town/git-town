@@ -34,14 +34,15 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), nil
 	case configdomain.HostingPlatformBitbucketDatacenter:
-		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
+		var err error
+		connector, err = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:     config.NormalConfig.BitbucketAppPassword,
 			HostingPlatform: hostingPlatform,
 			Log:             log,
 			RemoteURL:       remoteURL,
 			UserName:        config.NormalConfig.BitbucketUsername,
 		})
-		return Some(connector), nil
+		return Some(connector), err
 	case configdomain.HostingPlatformGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GiteaToken,

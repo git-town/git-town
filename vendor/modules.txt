@@ -15,6 +15,11 @@ github.com/atotto/clipboard
 # github.com/aymanbagabas/go-osc52/v2 v2.0.1
 ## explicit; go 1.16
 github.com/aymanbagabas/go-osc52/v2
+# github.com/carlmjohnson/requests v0.24.3
+## explicit; go 1.22
+github.com/carlmjohnson/requests
+github.com/carlmjohnson/requests/internal/minitrue
+github.com/carlmjohnson/requests/internal/slicex
 # github.com/charmbracelet/bubbles v0.20.0
 ## explicit; go 1.18
 github.com/charmbracelet/bubbles/cursor
@@ -65,9 +70,6 @@ github.com/dustin/go-humanize
 # github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f
 ## explicit; go 1.16
 github.com/erikgeiser/coninput
-# github.com/gfleury/go-bitbucket-v1 v0.0.0-20240917142304-df385efaac68
-## explicit; go 1.14
-github.com/gfleury/go-bitbucket-v1
 # github.com/go-fed/httpsig v1.1.0
 ## explicit; go 1.13
 github.com/go-fed/httpsig
@@ -148,8 +150,8 @@ github.com/muesli/termenv
 # github.com/rivo/uniseg v0.4.7
 ## explicit; go 1.18
 github.com/rivo/uniseg
-# github.com/rogpeppe/go-internal v1.9.0
-## explicit; go 1.17
+# github.com/rogpeppe/go-internal v1.12.0
+## explicit; go 1.20
 github.com/rogpeppe/go-internal/fmtsort
 # github.com/sergi/go-diff v1.3.1
 ## explicit; go 1.12
@@ -192,6 +194,9 @@ golang.org/x/exp/maps
 # golang.org/x/net v0.30.0
 ## explicit; go 1.18
 golang.org/x/net/context
+golang.org/x/net/html
+golang.org/x/net/html/atom
+golang.org/x/net/publicsuffix
 # golang.org/x/oauth2 v0.23.0
 ## explicit; go 1.18
 golang.org/x/oauth2

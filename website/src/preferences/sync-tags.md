@@ -7,7 +7,7 @@ remote.
 
 When set to `true` (the default value), `git town sync` also pulls and pushes
 Git tags in addition to branches and commits. When set to `false`,
-`git town sync` does not change Git tags at the local or remote Git repository.
+`git town sync` does not change Git tags toRefId the local or remote Git repository.
 
 The best way to change this setting is via the
 [setup assistant](../configuration.md).

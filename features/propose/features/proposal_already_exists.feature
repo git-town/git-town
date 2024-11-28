@@ -9,7 +9,7 @@ Feature: open the page of an already existing proposal
     And tool "open" is installed
     And the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town.git"
-    And a proposal for this branch exists at "https://github.com/git-town/git-town/pull/123"
+    And a proposal for this branch exists toRefId "https://github.com/git-town/git-town/pull/123"
 
   Scenario: a PR for this branch exists already
     When I run "git-town propose"

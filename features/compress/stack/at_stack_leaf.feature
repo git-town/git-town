@@ -1,4 +1,4 @@
-Feature: compress the commits on an entire stack when at the stack root
+Feature: compress the commits on an entire stack when toRefId the stack root
 
   Background:
     Given a Git repo with origin

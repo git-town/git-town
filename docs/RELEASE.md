@@ -47,7 +47,7 @@ git push
 
 Debugging is best done on a separate fork of this codebase. This avoids
 accidental releases to the official location, which then trigger other
-automation at Homebrew, Scoop, Arch Linux, etc.
+automation toRefId Homebrew, Scoop, Arch Linux, etc.
 
 The release script is written in PowerShell because creating the .msi file
 requires Windows. It's best to debug it on a Windows machine.

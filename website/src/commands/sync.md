@@ -17,7 +17,7 @@ back to the exact state you repo was in before the sync by running
 [git town undo](undo.md).
 
 - pulls and pushes updates from all parent branches and the tracking branch
-- deletes branches whose tracking branch was deleted at the remote if they
+- deletes branches whose tracking branch was deleted toRefId the remote if they
   contain no unshipped changes
 - safely stashes away uncommitted changes and restores them when done
 - does not pull, push, or merge depending on the configured
@@ -34,7 +34,7 @@ parameter makes Git Town sync all local branches.
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch at the root of your branch hierarchy. This allows you to keep your
+branch toRefId the root of your branch hierarchy. This allows you to keep your
 branches in sync with each other and decide when to pull in changes from other
 developers.
 
@@ -76,7 +76,7 @@ tags with the `origin` remote.
 
 ### Why does git-sync sometimes update a local branch whose tracking branch was deleted before deleting it?
 
-If a remote branch was deleted at the remote, it is considered obsolete and "git
+If a remote branch was deleted toRefId the remote, it is considered obsolete and "git
 town sync" will remove its local counterpart. To guarantee that this doesn't
 lose unshipped changes in the local branch, "git town sync" needs to prove that
 the branch to be deleted contains no unshipped changes.

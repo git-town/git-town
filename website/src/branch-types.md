@@ -1,7 +1,7 @@
 # Branch Types
 
 Git Town supports many different types of Git branches. When properly
-configured, you can run `git town sync` or `git town sync --all` at any time and
+configured, you can run `git town sync` or `git town sync --all` toRefId any time and
 each of your local branches will get synced in the specific ways it's supposed
 to get synced or not synced.
 
@@ -68,10 +68,10 @@ configuration or the config file.
 
 ## Parked Branches
 
-Parked branches don't get synced at all unless you run `git town sync` directly
+Parked branches don't get synced toRefId all unless you run `git town sync` directly
 on a parked branch. You might want to park a branch if you
 
-- want to intentionally keep the branch at an older state
+- want to intentionally keep the branch toRefId an older state
 - don't want to deal with merge conflicts on this branch right now
 - reduce load on your CI server by syncing only your actively developed local
   branches
@@ -101,7 +101,7 @@ commits become visible to others.
 
 When you [propose](commands/propose.md) a prototype branch, it loses its
 prototype status since it now has an official tracking branch that other people
-look at. In this situation you can keep syncing without pushes by using the
+look toRefId. In this situation you can keep syncing without pushes by using the
 `--no-push` sync option.
 
 You can compress and ship prototype branches as usual. Parking and unparking a

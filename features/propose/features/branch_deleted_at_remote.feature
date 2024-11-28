@@ -1,5 +1,5 @@
 @skipWindows
-Feature: proposing a branch that was deleted at the remote
+Feature: proposing a branch that was deleted toRefId the remote
 
   Background:
     Given a Git repo with origin
@@ -21,7 +21,7 @@ Feature: proposing a branch that was deleted at the remote
       |         | git branch -D feature                   |
     And Git Town prints:
       """
-      branch "feature" was deleted at the remote
+      branch "feature" was deleted toRefId the remote
       """
     And the current branch is now "main"
     And these branches exist now

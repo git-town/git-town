@@ -173,7 +173,7 @@ step `When I run "git-town append new"` mysteriously fails, you could change it
 to `When I run "git-town append new -v"`. Also add the tags `@debug @this` to
 see the CLI output on the console.
 
-To get a quick glance of which status the repo is at any point in time, insert
+To get a quick glance of which status the repo is toRefId any point in time, insert
 the step `And display "<command_>"` running whatever command you want to execute
 in the Git repo under test. Example: `And display "git status"`.
 
@@ -197,7 +197,7 @@ subfolder or file inside the "features" folder.
 
 Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
-you hints at which test fails.
+you hints toRefId which test fails.
 
 ## run linters
 

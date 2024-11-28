@@ -2,13 +2,8 @@ package bitbucketdatacenter
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	bitbucketv1 "github.com/gfleury/go-bitbucket-v1"
-	"net/url"
-	"strconv"
-
-	"github.com/git-town/git-town/v16/internal/cli/colors"
+	"github.com/carlmjohnson/requests"
 	"github.com/git-town/git-town/v16/internal/cli/print"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -17,31 +12,30 @@ import (
 	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"net/url"
 )
 
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
 	hostingdomain.Data
-	log    print.Logger
-	client *bitbucketv1.APIClient
+	log      print.Logger
+	username string
+	token    string
 }
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewConnector(args NewConnectorArgs) Connector {
-	client := bitbucketv1.NewAPIClient(
-		context.WithValue(context.TODO(), bitbucketv1.ContextBasicAuth, bitbucketv1.BasicAuth{UserName: args.UserName.String(), Password: args.AppPassword.String()}),
-		bitbucketv1.NewConfiguration(args.RemoteURL.Host),
-	)
+func NewConnector(args NewConnectorArgs) (Connector, error) {
 	return Connector{
 		Data: hostingdomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		client: client,
-		log:    args.Log,
-	}
+		username: args.UserName.String(),
+		token:    args.AppPassword.String(),
+		log:      args.Log,
+	}, nil
 }
 
 type NewConnectorArgs struct {
@@ -77,11 +71,11 @@ func (self Connector) RepositoryURL() string {
 }
 
 func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	return Some(self.searchProposal)
+	return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
-	return Some(self.squashMergeProposal)
+	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
 func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
@@ -89,45 +83,61 @@ func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gi
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return Some(self.updateProposalTarget)
+	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 
-	// TODO filter for source/target branch
-	resp, err := self.client.DefaultApi.GetPullRequestsPage(
-		self.Organization, self.Repository, nil,
-	)
+	ctx := context.TODO()
+
+	fromRefId := fmt.Sprintf("refs/heads/%v", branch)
+	toRefId := fmt.Sprintf("refs/heads/%v", target)
+
+	resp := PullRequestResponse{}
+
+	err := requests.URL(self.apiBaseURL()).
+		BasicAuth(self.username, self.token).
+		Param("at", toRefId).
+		ToJSON(&resp).
+		Fetch(ctx)
 	if err != nil {
 		self.log.Failed(err.Error())
 		return None[hostingdomain.Proposal](), err
 	}
 
-	prs, err := bitbucketv1.GetPullRequestsResponse(resp)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-
-	size := len(prs)
-	switch {
-	case size == 0:
+	if len(resp.Values) == 0 {
 		self.log.Success("none")
 		return None[hostingdomain.Proposal](), nil
-	case size > 1:
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
+	}
+
+	var needle *PullRequest
+
+	for _, pr := range resp.Values {
+		if pr.FromRef.Id == fromRefId && pr.ToRef.Id == toRefId {
+			needle = &pr
+			break
+		}
+	}
+
+	if needle == nil {
+		self.log.Success("no PR found matching source and target branch")
 		return None[hostingdomain.Proposal](), nil
 	}
 
-	proposal, err := parsePullRequest(prs[0], self.RepositoryURL())
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), nil
-	}
+	proposal := parsePullRequest(*needle, self.RepositoryURL())
 
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(proposal), nil
+}
+
+func (self Connector) apiBaseURL() string {
+	return fmt.Sprintf(
+		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
+		self.Hostname,
+		self.Organization,
+		self.Repository,
+	)
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
@@ -147,80 +157,13 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
-	self.log.Start(messages.APIProposalLookupStart)
-
-	// TODO filter for source branch
-	resp, err := self.client.DefaultApi.GetPullRequestsPage(
-		self.Organization, self.Repository, nil,
-	)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-
-	prs, err := bitbucketv1.GetPullRequestsResponse(resp)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
-	}
-
-	size := len(prs)
-	switch {
-	case size == 0:
-		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
-	case size > 1:
-		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size, branch))
-		return None[hostingdomain.Proposal](), nil
-	}
-
-	proposal, err := parsePullRequest(prs[0], self.RepositoryURL())
-	if err != nil {
-		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), nil
-	}
-
-	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(proposal), nil
-}
-
-func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
-	if number <= 0 {
-		return errors.New(messages.ProposalNoNumberGiven)
-	}
-	self.log.Start(messages.HostingBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
-	_, err := self.client.DefaultApi.Merge(
-		self.Organization,
-		self.Repository,
-		number,
-		nil,
-		nil, // TODO include message
-		nil,
-	)
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
-}
-
-func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	// TODO
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	self.log.Failed("unsupported operation")
-	return nil
-}
-
-func parsePullRequest(pullRequest bitbucketv1.PullRequest, repoURL string) (result hostingdomain.Proposal, err error) {
+func parsePullRequest(pullRequest PullRequest, repoURL string) hostingdomain.Proposal {
 	return hostingdomain.Proposal{
 		MergeWithAPI: false,
-		Number:       pullRequest.ID,
-		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
-		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
+		Number:       pullRequest.Id,
+		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayId),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayId),
 		Title:        pullRequest.Title,
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest),
-	}, nil
+	}
 }

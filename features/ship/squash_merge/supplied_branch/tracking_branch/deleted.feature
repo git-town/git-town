@@ -1,4 +1,4 @@
-Feature: branch was deleted at the remote
+Feature: branch was deleted toRefId the remote
 
   Background:
     Given a Git repo with origin
@@ -20,7 +20,7 @@ Feature: branch was deleted at the remote
       | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "feature" was deleted at the remote
+      branch "feature" was deleted toRefId the remote
       """
 
   Scenario: undo

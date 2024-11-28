@@ -13,7 +13,7 @@ Feature: already existing remote branch
     Then Git Town runs no commands
     And Git Town prints the error:
       """
-      there is already a branch "existing" at the "origin" remote
+      there is already a branch "existing" toRefId the "origin" remote
       """
     And the current branch is still "main"
     And no commits exist now

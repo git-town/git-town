@@ -28,7 +28,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       |         | git stash pop                           |
     And Git Town prints:
       """
-      Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
+      Branch "shipped" was deleted toRefId the remote but the local branch contains unshipped changes.
       """
     And the current branch is still "shipped"
     And the uncommitted file still exists
