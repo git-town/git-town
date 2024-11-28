@@ -13,7 +13,8 @@ import (
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	originalParentName := args.Config.NormalConfig.Lineage.Parent(localName)
 	originalParentSHA := None[gitdomain.SHA]()
-	if parentName, hasParentName := originalParentName.Get(); hasParentName {
+	parentName, hasParentName := originalParentName.Get()
+	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
@@ -24,9 +25,17 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	- tracking branch of parent is gone && sync-feature-strategy is "rebase" --> rebase-onto the parent and then delete it
 
 	*/
+	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
+	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
+	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
+	parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parentName).Get()
+	parentTrackingBranchGone := parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	switch {
+	case trackingBranchGone && rebaseSyncStrategy && hasDescendents:
+		// do nothing here, we will delete this branch when syncing the parent
+	case hasParentName && hasParentBranchInfo && parentTrackingBranchGone && rebaseSyncStrategy:
+		// TODO: rebase-onto the parent branch, then delete it
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
