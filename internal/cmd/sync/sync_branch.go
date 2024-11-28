@@ -20,17 +20,9 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	/* new algorithm:
 
-	if deleted:
-	  if rebase sync strategy:
-		  if has child branch --> do nothing
-			if no child branch --> delete the branch like normal
-	- if parent branch has deleted tracking branch:
-	  - pull tracking branch
-	  - git rebase --onto main <parent>
-	  - force-push with lease the local branch to origin
-	- else: normal sync
+	- tracking branch is gone && sync-feature-strategy is "rebase" && branch has a descendent --> do nothing
+	- tracking branch of parent is gone && sync-feature-strategy is "rebase" --> rebase-onto the parent and then delete it
 
-	merge/compress sync strategy: normal behavior
 	*/
 	switch {
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
