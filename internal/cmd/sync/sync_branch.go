@@ -22,7 +22,8 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 
 	if deleted:
 	  if rebase sync strategy:
-			if tracking branch deleted --> do nothing with this branch
+		  if has child branch --> do nothing
+			if no child branch --> delete the branch like normal
 	- if parent branch has deleted tracking branch:
 	  - pull tracking branch
 	  - git rebase --onto main <parent>
