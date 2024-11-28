@@ -884,14 +884,14 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 			continue
 		}
 		var branchName string
-		var sha gitdomain.SHA
+		var sha Option[gitdomain.SHA]
 		if parts[1] == "detached" {
 			parts := spaceRE.Split(line[2:], 6)
 			branchName = parts[4]
-			sha = gitdomain.NewSHA(parts[4])
+			sha = Some(gitdomain.NewSHA(parts[4]))
 		} else {
 			branchName = parts[0]
-			sha = gitdomain.NewSHA(parts[1])
+			sha = Some(gitdomain.NewSHA(parts[1]))
 		}
 		remoteText := parts[2]
 		if line[0] == '*' {
@@ -902,7 +902,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 		case line[0] == '+':
 			result = append(result, gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
-				LocalSHA:   Some(sha),
+				LocalSHA:   sha,
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
 				RemoteName: trackingBranchName,
 				RemoteSHA:  None[gitdomain.SHA](),
@@ -910,7 +910,7 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 		case isLocalBranchName(branchName):
 			result = append(result, gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
-				LocalSHA:   Some(sha),
+				LocalSHA:   sha,
 				SyncStatus: syncStatus,
 				RemoteName: trackingBranchName,
 				RemoteSHA:  None[gitdomain.SHA](), // will be added later
@@ -918,14 +918,14 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 		default:
 			remoteBranchName := gitdomain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
 			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
-				existingBranchWithTracking.RemoteSHA = Some(sha)
+				existingBranchWithTracking.RemoteSHA = sha
 			} else {
 				result = append(result, gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 					RemoteName: Some(remoteBranchName),
-					RemoteSHA:  Some(sha),
+					RemoteSHA:  sha,
 				})
 			}
 		}
@@ -934,24 +934,19 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 }
 
 func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.SyncStatus, trackingBranchName Option[gitdomain.RemoteBranchName]) {
-	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
-	if isInSync {
+	if isInSync, trackingBranchName := IsInSync(branchName, remoteText); isInSync {
 		return gitdomain.SyncStatusUpToDate, trackingBranchName
 	}
-	isGone, trackingBranchName := IsRemoteGone(branchName, remoteText)
-	if isGone {
+	if isGone, trackingBranchName := IsRemoteGone(branchName, remoteText); isGone {
 		return gitdomain.SyncStatusDeletedAtRemote, trackingBranchName
 	}
-	IsAhead, trackingBranchName := IsAhead(branchName, remoteText)
-	if IsAhead {
+	if isAhead, trackingBranchName := IsAhead(branchName, remoteText); isAhead {
 		return gitdomain.SyncStatusNotInSync, trackingBranchName
 	}
-	IsBehind, trackingBranchName := IsBehind(branchName, remoteText)
-	if IsBehind {
+	if isBehind, trackingBranchName := IsBehind(branchName, remoteText); isBehind {
 		return gitdomain.SyncStatusNotInSync, trackingBranchName
 	}
-	IsAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText)
-	if IsAheadAndBehind {
+	if isAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText); isAheadAndBehind {
 		return gitdomain.SyncStatusNotInSync, trackingBranchName
 	}
 	if strings.HasPrefix(branchName, "remotes/") {
