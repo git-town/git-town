@@ -20,6 +20,7 @@ You can use one of these values for the hosting platform setting:
 - `gitlab`
 - `gitea`
 - `bitbucket`
+- `bitbucket-datacenter`
 
 ## config file
 
