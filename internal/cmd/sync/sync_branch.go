@@ -32,9 +32,12 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentTrackingBranchGone := parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	switch {
 	case trackingBranchGone && rebaseSyncStrategy && hasDescendents:
-		// do nothing here, we will delete this branch when syncing the parent
+		// do nothing here, we will remove this branch when syncing its descendent
 	case hasParentName && hasParentBranchInfo && parentTrackingBranchGone && rebaseSyncStrategy:
-		// TODO: rebase-onto the parent branch, then delete it
+		// pull the tracking branch
+		// onto-rebase against the parent branch
+		// delete the parent branch
+		// force-push the branch to origin
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
