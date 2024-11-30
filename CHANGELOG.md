@@ -10,7 +10,7 @@
 
 - Fixes a regression where branches shipped at the remote were no longer cleaned up ([#4222](https://github.com/git-town/git-town/issues/4222))
 - Fixes a regression where branches that were shipped at the remote and deleted manually on the local machine were no longer cleaned up ([#4132](https://github.com/git-town/git-town/issues/4132))
-- Correctly handles spaces in Git metadata ([#4240](https://github.com/git-town/git-town/pull/4240)
+- Correctly handles leading and trailing spaces in Git metadata branch lists ([#4240](https://github.com/git-town/git-town/pull/4240)
 - `git town status reset` now works even if the persisted status is invalid ([#4236](https://github.com/git-town/git-town/pull/4236))
 
 #### Contributors
