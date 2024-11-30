@@ -18,8 +18,8 @@ func (self ShipDeleteTrackingBranch) String() string {
 	return strconv.FormatBool(bool(self))
 }
 
-func ParseShipDeleteTrackingBranch(value, source string) (Option[ShipDeleteTrackingBranch], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source)
+func ParseShipDeleteTrackingBranch(value string, source Key) (Option[ShipDeleteTrackingBranch], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(ShipDeleteTrackingBranch(parsed)), err
 	}
