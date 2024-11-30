@@ -81,7 +81,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("hosting platform override", format.StringSetting(config.NormalConfig.HostingPlatform.String()))
+	print.Entry("hosting platform override", format.OptionalStringerSetting(config.NormalConfig.HostingPlatform))
 	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
