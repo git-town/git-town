@@ -13,6 +13,10 @@
 - correctly handles spaces in Git metadata ([#4240](https://github.com/git-town/git-town/pull/4240)
 - `git town status reset` now works even if the persisted status is invalid ([#4236](https://github.com/git-town/git-town/pull/4236))
 
+#### Contributors
+
+Shoutout to @Crocmagnon, @alexdavid, @kevgo, @ruudk, @stephenwade for contributing feedback, ideas, documentation, and code to 26 shipped pull requests and 6 resolved issues!
+
 ## 16.6.1 (2024-11-20)
 
 #### Bug Fixes
