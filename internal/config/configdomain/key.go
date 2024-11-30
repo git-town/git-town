@@ -9,7 +9,7 @@ import (
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.
-type Key string
+type Key string //nolint: recvcheck
 
 // ConfigSetting contains a key-value pair for a configuration setting.
 type ConfigSetting struct {
@@ -24,11 +24,11 @@ type ConfigUpdate struct {
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
-func (self *Key) MarshalJSON() ([]byte, error) {
+func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.String())
 }
 
-func (self *Key) String() string { return string(*self) }
+func (self Key) String() string { return string(self) }
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
