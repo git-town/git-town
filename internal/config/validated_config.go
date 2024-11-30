@@ -66,7 +66,7 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 }
 
 // provides this collection without the perennial branch at the root
-func (self ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
+func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
 	if len(stack) == 0 {
 		return stack
 	}
