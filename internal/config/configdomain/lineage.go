@@ -19,12 +19,20 @@ import (
 // branch --> its parent
 // Lineage only contains branches that have ancestors.
 type Lineage struct {
-	data map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
+	data LineageData
 }
+
+type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
 
 func NewLineage() Lineage {
 	return Lineage{
-		data: make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName),
+		data: make(LineageData),
+	}
+}
+
+func NewLineageWith(data LineageData) Lineage {
+	return Lineage{
+		data: data,
 	}
 }
 

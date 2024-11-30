@@ -16,58 +16,34 @@ func TestLineage(t *testing.T) {
 	two := gitdomain.NewLocalBranchName("two")
 	three := gitdomain.NewLocalBranchName("three")
 
-	t.Run("Add", func(t *testing.T) {
-		t.Parallel()
-		t.Run("empty", func(t *testing.T) {
-			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			branch := gitdomain.NewLocalBranchName("branch")
-			parent := gitdomain.NewLocalBranchName("parent")
-			builder.Add(branch, parent)
-			have, has := builder.Lineage().Parent(branch).Get()
-			must.True(t, has)
-			must.Eq(t, parent, have)
-		})
-		t.Run("entry already exists", func(t *testing.T) {
-			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			branch := gitdomain.NewLocalBranchName("branch")
-			parent := gitdomain.NewLocalBranchName("parent")
-			builder.Add(branch, parent)
-			builder.Add(branch, parent)
-			lineage := builder.Lineage()
-			must.EqOp(t, 1, lineage.Len())
-			have, has := lineage.Parent(branch).Get()
-			must.True(t, has)
-			must.Eq(t, parent, have)
-		})
-	})
-
 	t.Run("Ancestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(three, two)
-			builder.Add(two, one)
-			builder.Add(one, main)
-			have := builder.Lineage().Ancestors(three)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				three: two,
+				two:   one,
+				one:   main,
+			})
+			have := lineage.Ancestors(three)
 			want := gitdomain.LocalBranchNames{main, one, two}
 			must.Eq(t, want, have)
 		})
 		t.Run("one ancestor", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().Ancestors(one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Ancestors(one)
 			want := gitdomain.LocalBranchNames{main}
 			must.Eq(t, want, have)
 		})
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().Ancestors(two)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Ancestors(two)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -77,27 +53,30 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(three, two)
-			builder.Add(two, one)
-			builder.Add(one, main)
-			have := builder.Lineage().AncestorsWithoutRoot(three)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				three: two,
+				two:   one,
+				one:   main,
+			})
+			have := lineage.AncestorsWithoutRoot(three)
 			want := gitdomain.LocalBranchNames{one, two}
 			must.Eq(t, want, have)
 		})
 		t.Run("one ancestor", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().AncestorsWithoutRoot(one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.AncestorsWithoutRoot(one)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().AncestorsWithoutRoot(two)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.AncestorsWithoutRoot(two)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -105,9 +84,10 @@ func TestLineage(t *testing.T) {
 
 	t.Run("BranchAndAncestors", func(t *testing.T) {
 		t.Parallel()
-		builder := configdomain.NewLineageBuilder()
-		builder.Add(one, main)
-		have := builder.Lineage().BranchAndAncestors(one)
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			one: main,
+		})
+		have := lineage.BranchAndAncestors(one)
 		want := gitdomain.LocalBranchNames{main, one}
 		must.Eq(t, want, have)
 	})
@@ -123,19 +103,20 @@ func TestLineage(t *testing.T) {
 		})
 		t.Run("one branch and root exist", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().BranchLineageWithoutRoot(one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.BranchLineageWithoutRoot(one)
 			want := gitdomain.LocalBranchNames{one}
 			must.Eq(t, want, have)
 		})
 		t.Run("multiple branches", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+				two: one,
+			})
 			want := gitdomain.LocalBranchNames{one, two}
-			lineage := builder.Lineage()
 			t.Run("given root", func(t *testing.T) {
 				t.Parallel()
 				have := lineage.BranchLineageWithoutRoot(main)
@@ -156,11 +137,12 @@ func TestLineage(t *testing.T) {
 
 	t.Run("BranchNames", func(t *testing.T) {
 		t.Parallel()
-		builder := configdomain.NewLineageBuilder()
-		builder.Add(one, main)
-		builder.Add(two, main)
-		builder.Add(three, main)
-		have := builder.Lineage().BranchNames()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			one:   main,
+			two:   main,
+			three: main,
+		})
+		have := lineage.BranchNames()
 		want := gitdomain.LocalBranchNames{one, three, two}
 		must.Eq(t, want, have)
 	})
@@ -169,10 +151,11 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add("branch-1", "branch-2")
-			builder.Add("branch-3", "branch-4")
-			have := builder.Lineage().BranchesWithParents()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				"branch-1": "branch-2",
+				"branch-3": "branch-4",
+			})
+			have := lineage.BranchesWithParents()
 			want := gitdomain.NewLocalBranchNames("branch-1", "branch-3")
 			must.Eq(t, want, have)
 		})
@@ -189,34 +172,37 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("deep lineage, multiple branches", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
 			give := gitdomain.LocalBranchNames{two, one}
-			have := builder.Lineage().BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give)
 			want := gitdomain.LocalBranchNames{main, one, two}
 			must.Eq(t, want, have)
 		})
 		t.Run("deep lineage, multiple branches out of order", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
 			give := gitdomain.LocalBranchNames{one, two, main, three}
-			have := builder.Lineage().BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give)
 			want := gitdomain.LocalBranchNames{main, one, two, three}
 			must.Eq(t, want, have)
 		})
 		t.Run("deep lineage, single branch", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
 			give := gitdomain.LocalBranchNames{three}
-			have := builder.Lineage().BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give)
 			want := gitdomain.LocalBranchNames{main, one, two, three}
 			must.Eq(t, want, have)
 		})
@@ -225,15 +211,16 @@ func TestLineage(t *testing.T) {
 			first := gitdomain.NewLocalBranchName("first")
 			second := gitdomain.NewLocalBranchName("second")
 			third := gitdomain.NewLocalBranchName("third")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
-			builder.Add(first, main)
-			builder.Add(second, first)
-			builder.Add(third, second)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:    main,
+				two:    one,
+				three:  two,
+				first:  main,
+				second: first,
+				third:  second,
+			})
 			give := gitdomain.LocalBranchNames{main, first, one, second, third, three, two}
-			have := builder.Lineage().BranchesAndAncestors(give)
+			have := lineage.BranchesAndAncestors(give)
 			want := gitdomain.LocalBranchNames{main, first, second, third, one, two, three}
 			must.Eq(t, want, have)
 		})
@@ -245,19 +232,21 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			twoA := gitdomain.NewLocalBranchName("twoA")
 			twoB := gitdomain.NewLocalBranchName("twoB")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(twoA, one)
-			builder.Add(twoB, one)
-			have := builder.Lineage().Children(one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				twoA: one,
+				twoB: one,
+			})
+			have := lineage.Children(one)
 			want := gitdomain.LocalBranchNames{twoA, twoB}
 			must.Eq(t, want, have)
 		})
 		t.Run("provides only the immediate children, i.e. no grandchildren", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(two, one)
-			builder.Add(three, two)
-			have := builder.Lineage().Children(one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two:   one,
+				three: two,
+			})
+			have := lineage.Children(one)
 			want := gitdomain.LocalBranchNames{two}
 			must.Eq(t, want, have)
 		})
@@ -276,10 +265,11 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			branch := gitdomain.NewLocalBranchName("branch")
 			other := gitdomain.NewLocalBranchName("other")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(branch, main)
-			builder.Add(other, main)
-			have := builder.Lineage().Descendants(branch)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch: main,
+				other:  main,
+			})
+			have := lineage.Descendants(branch)
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -289,12 +279,13 @@ func TestLineage(t *testing.T) {
 			child1 := gitdomain.NewLocalBranchName("child1")
 			child2 := gitdomain.NewLocalBranchName("child2")
 			other := gitdomain.NewLocalBranchName("other")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(branch, main)
-			builder.Add(child1, branch)
-			builder.Add(child2, branch)
-			builder.Add(other, main)
-			have := builder.Lineage().Descendants(branch)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch: main,
+				child1: branch,
+				child2: branch,
+				other:  main,
+			})
+			have := lineage.Descendants(branch)
 			want := gitdomain.LocalBranchNames{child1, child2}
 			must.Eq(t, want, have)
 		})
@@ -308,16 +299,17 @@ func TestLineage(t *testing.T) {
 			child2a := gitdomain.NewLocalBranchName("child2a")
 			child2b := gitdomain.NewLocalBranchName("child2b")
 			other := gitdomain.NewLocalBranchName("other")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(branch, main)
-			builder.Add(child1, branch)
-			builder.Add(child1a, child1)
-			builder.Add(child1b, child1)
-			builder.Add(child2, branch)
-			builder.Add(child2a, child2)
-			builder.Add(child2b, child2)
-			builder.Add(other, main)
-			have := builder.Lineage().Descendants(branch)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch:  main,
+				child1:  branch,
+				child1a: child1,
+				child1b: child1,
+				child2:  branch,
+				child2a: child2,
+				child2:  child2,
+				other:   main,
+			})
+			have := lineage.Descendants(branch)
 			want := gitdomain.LocalBranchNames{child1, child1a, child1b, child2, child2a, child2b}
 			must.Eq(t, want, have)
 		})
@@ -331,10 +323,11 @@ func TestLineage(t *testing.T) {
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
 			branch3 := gitdomain.NewLocalBranchName("branch-3")
 			branch4 := gitdomain.NewLocalBranchName("branch-4")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(branch1, branch2)
-			builder.Add(branch3, branch4)
-			have := builder.Lineage().Entries()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1: branch2,
+				branch3: branch4,
+			})
+			have := lineage.Entries()
 			want := []configdomain.LineageEntry{
 				{
 					Child:  branch1,
@@ -360,9 +353,10 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("has a parent", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(two, one)
-			must.True(t, builder.Lineage().HasParents(two))
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two: one,
+			})
+			must.True(t, lineage.HasParents(two))
 		})
 		t.Run("has no parent", func(t *testing.T) {
 			t.Parallel()
@@ -375,24 +369,27 @@ func TestLineage(t *testing.T) {
 		t.Run("recognizes greatgrandparent", func(t *testing.T) {
 			t.Parallel()
 			four := gitdomain.NewLocalBranchName("four")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(four, three)
-			builder.Add(three, two)
-			builder.Add(two, one)
-			must.True(t, builder.Lineage().IsAncestor(one, four))
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				four: three,
+				four: three,
+				two:  one,
+			})
+			must.True(t, lineage.IsAncestor(one, four))
 		})
 		t.Run("child branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(two, one)
-			must.True(t, builder.Lineage().IsAncestor(one, two))
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two: one,
+			})
+			must.True(t, lineage.IsAncestor(one, two))
 		})
 		t.Run("unrelated branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(two, one)
-			builder.Add(three, one)
-			must.False(t, builder.Lineage().IsAncestor(two, three))
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two:   one,
+				three: one,
+			})
+			must.False(t, lineage.IsAncestor(two, three))
 		})
 	})
 
@@ -405,9 +402,10 @@ func TestLineage(t *testing.T) {
 		})
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add("branch-1", "branch-2")
-			must.False(t, builder.Lineage().IsEmpty())
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				"branch-1": "branch-2",
+			})
+			must.False(t, lineage.IsEmpty())
 		})
 	})
 
@@ -420,28 +418,33 @@ func TestLineage(t *testing.T) {
 		})
 		t.Run("populated", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add("branch-1", "branch-2")
-			builder.Add("branch-3", "branch-4")
-			must.EqOp(t, 2, builder.Lineage().Len())
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				"branch-1": "branch-2",
+				"branch-3": "branch-4",
+			})
+			must.EqOp(t, 2, lineage.Len())
 		})
 	})
 
 	t.Run("Merge", func(t *testing.T) {
 		t.Parallel()
-		builder1 := configdomain.NewLineageBuilder()
-		builder1.Add("one", "main")
-		builder1.Add("two", "one")
-		builder2 := configdomain.NewLineageBuilder()
-		builder2.Add("alpha", "main")
-		builder2.Add("beta", "alpha")
-		haveMerged := builder1.Lineage().Merge(builder2.Lineage())
-		wantBuilder := configdomain.NewLineageBuilder()
-		wantBuilder.Add("one", "main")
-		wantBuilder.Add("two", "one")
-		wantBuilder.Add("alpha", "main")
-		wantBuilder.Add("beta", "alpha")
-		must.Eq(t, wantBuilder.Lineage(), haveMerged)
+		lineage1 := configdomain.NewLineageWith(configdomain.LineageData{
+			"one": "main",
+			"two": "one",
+		})
+		lineage2 := configdomain.NewLineageWith(configdomain.LineageData{
+			"alpha": "main",
+			"beta":  "alpha",
+		})
+		haveMerged := lineage1.Merge(lineage2)
+		want := configdomain.NewLineageWith(configdomain.LineageData{
+
+			"one":   "main",
+			"two":   "one",
+			"alpha": "main",
+			"beta":  "alpha",
+		})
+		must.Eq(t, want, haveMerged)
 	})
 
 	t.Run("OrderHierarchically", func(t *testing.T) {
@@ -450,14 +453,14 @@ func TestLineage(t *testing.T) {
 			first := gitdomain.NewLocalBranchName("first")
 			second := gitdomain.NewLocalBranchName("second")
 			third := gitdomain.NewLocalBranchName("third")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
-			builder.Add(first, main)
-			builder.Add(second, first)
-			builder.Add(third, second)
-			lineage := builder.Lineage()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:    main,
+				two:    one,
+				three:  two,
+				first:  main,
+				second: first,
+				third:  second,
+			})
 			give := lineage.BranchNames()
 			want := gitdomain.LocalBranchNames{first, second, third, one, two, three}
 			have := lineage.OrderHierarchically(give)
@@ -466,25 +469,27 @@ func TestLineage(t *testing.T) {
 		t.Run("single lineage", func(t *testing.T) {
 			t.Parallel()
 			four := gitdomain.NewLocalBranchName("four")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
-			builder.Add(four, three)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+				four:  three,
+			})
 			give := gitdomain.LocalBranchNames{four, one}
 			want := gitdomain.LocalBranchNames{one, four}
-			have := builder.Lineage().OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give)
 			must.Eq(t, want, have)
 		})
 		t.Run("elements out of order", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			builder.Add(two, one)
-			builder.Add(three, two)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
 			give := gitdomain.LocalBranchNames{one, two, main, three}
 			want := gitdomain.LocalBranchNames{main, one, two, three}
-			have := builder.Lineage().OrderHierarchically(give)
+			have := lineage.OrderHierarchically(give)
 			must.Eq(t, want, have)
 		})
 		t.Run("perennial branches", func(t *testing.T) {
@@ -508,9 +513,10 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("feature branch", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().Parent(one)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Parent(one)
 			want := Some(main)
 			must.Eq(t, want, have)
 		})
@@ -539,45 +545,48 @@ func TestLineage(t *testing.T) {
 			branch1a := gitdomain.NewLocalBranchName("branch-1a")
 			branch1b := gitdomain.NewLocalBranchName("branch-1b")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
-			haveBuilder := configdomain.NewLineageBuilder()
-			haveBuilder.Add(branch1, main)
-			haveBuilder.Add(branch1a, branch1)
-			haveBuilder.Add(branch1b, branch1)
-			haveBuilder.Add(branch2, main)
-			have := haveBuilder.Lineage()
+			have := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1:  main,
+				branch1a: branch1,
+				branch1b: branch1,
+				branch2:  main,
+			})
 			have = have.RemoveBranch(branch1)
-			wantBuilder := configdomain.NewLineageBuilder()
-			wantBuilder.Add(branch1a, branch1)
-			wantBuilder.Add(branch1b, branch1)
-			wantBuilder.Add(branch2, main)
-			must.Eq(t, wantBuilder.Lineage(), have)
+			want := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1a: branch1,
+				branch1b: branch1,
+				branch2:  main,
+			})
+			must.Eq(t, want, have)
 		})
 		t.Run("branch is a child branch", func(t *testing.T) {
 			t.Parallel()
 			main := gitdomain.NewLocalBranchName("main")
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
-			haveBuilder := configdomain.NewLineageBuilder()
-			haveBuilder.Add(branch1, main)
-			haveBuilder.Add(branch2, main)
-			have := haveBuilder.Lineage()
+			have := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1: main,
+				branch2: main,
+			})
 			have = have.RemoveBranch(branch1)
-			wantBuilder := configdomain.NewLineageBuilder()
-			wantBuilder.Add(branch2, main)
-			must.Eq(t, wantBuilder.Lineage(), have)
+			want := configdomain.NewLineageWith(configdomain.LineageData{
+				branch2: main,
+			})
+			must.Eq(t, want, have)
 		})
 		t.Run("branch is not in lineage", func(t *testing.T) {
 			t.Parallel()
 			main := gitdomain.NewLocalBranchName("main")
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
-			haveBuilder := configdomain.NewLineageBuilder()
-			haveBuilder.Add(branch1, main)
-			have := haveBuilder.Lineage()
+			have := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1: main,
+			})
 			have = have.RemoveBranch(branch2)
-			wantBuilder := configdomain.NewLineageBuilder()
-			wantBuilder.Add(branch1, main)
-			must.Eq(t, wantBuilder.Lineage(), have)
+			want := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1: main,
+			})
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -588,20 +597,22 @@ func TestLineage(t *testing.T) {
 			prod := gitdomain.NewLocalBranchName("prod")
 			hotfix1 := gitdomain.NewLocalBranchName("hotfix1")
 			hotfix2 := gitdomain.NewLocalBranchName("hotfix2")
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(two, one)
-			builder.Add(one, main)
-			builder.Add(hotfix1, prod)
-			builder.Add(hotfix2, prod)
-			have := builder.Lineage().Roots()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				two:     one,
+				one:     main,
+				hotfix1: prod,
+				hotfix2: prod,
+			})
+			have := lineage.Roots()
 			want := gitdomain.LocalBranchNames{main, prod}
 			must.Eq(t, want, have)
 		})
 		t.Run("no stacked changes", func(t *testing.T) {
 			t.Parallel()
-			builder := configdomain.NewLineageBuilder()
-			builder.Add(one, main)
-			have := builder.Lineage().Roots()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.Roots()
 			want := gitdomain.LocalBranchNames{main}
 			must.Eq(t, want, have)
 		})
@@ -611,6 +622,33 @@ func TestLineage(t *testing.T) {
 			have := lineage.Roots()
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("Set", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.NewLocalBranchName("branch")
+			parent := gitdomain.NewLocalBranchName("parent")
+			lineage := configdomain.NewLineage()
+			lineage = lineage.Set(branch, parent)
+			have, has := lineage.Parent(branch).Get()
+			must.True(t, has)
+			must.Eq(t, parent, have)
+		})
+		t.Run("entry already exists", func(t *testing.T) {
+			t.Parallel()
+			branch := gitdomain.NewLocalBranchName("branch")
+			parent := gitdomain.NewLocalBranchName("parent")
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch: parent,
+			})
+			lineage = lineage.Set(branch, parent)
+			must.EqOp(t, 1, lineage.Len())
+			have, has := lineage.Parent(branch).Get()
+			must.True(t, has)
+			must.Eq(t, parent, have)
 		})
 	})
 }

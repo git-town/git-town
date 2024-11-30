@@ -62,7 +62,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("branch-1", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -70,7 +70,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PushHook:          false,
 					PerennialBranches: gitdomain.LocalBranchNames{},
 				},
@@ -216,7 +216,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -225,7 +225,7 @@ func TestChanges(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PushHook:          false,
 				},
 			},
@@ -311,7 +311,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -319,7 +319,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -400,7 +400,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -408,7 +408,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -473,7 +473,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -481,7 +481,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -571,7 +571,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -579,7 +579,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          true,
 				},
@@ -707,7 +707,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -715,7 +715,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          true,
 				},
@@ -821,7 +821,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -829,7 +829,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -926,7 +926,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -934,7 +934,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1049,7 +1049,7 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -1057,7 +1057,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1150,7 +1150,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -1158,7 +1158,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1251,7 +1251,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -1259,7 +1259,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1340,7 +1340,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -1348,7 +1348,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1431,7 +1431,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -1439,7 +1439,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1517,7 +1517,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		builder := configdomain.NewLineageBuilder()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
 		builder.Add("feature-branch", "main")
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -1525,7 +1525,7 @@ func TestChanges(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           builder.Lineage(),
+					Lineage:           lineage(),
 					PerennialBranches: gitdomain.LocalBranchNames{},
 					PushHook:          false,
 				},
