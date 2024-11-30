@@ -306,7 +306,7 @@ func TestLineage(t *testing.T) {
 				child1b: child1,
 				child2:  branch,
 				child2a: child2,
-				child2:  child2,
+				child2b: child2,
 				other:   main,
 			})
 			have := lineage.Descendants(branch)
@@ -370,9 +370,9 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			four := gitdomain.NewLocalBranchName("four")
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
-				four: three,
-				four: three,
-				two:  one,
+				four:  three,
+				three: two,
+				two:   one,
 			})
 			must.True(t, lineage.IsAncestor(one, four))
 		})
