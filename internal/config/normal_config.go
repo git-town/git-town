@@ -66,11 +66,11 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 			self.Lineage = self.Lineage.Set(child, parent)
 			_ = self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 		} else {
-			self.Lineage.RemoveBranch(child)
+			self.Lineage = self.Lineage.RemoveBranch(child)
 			_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
 		}
 	}
-	self.Lineage.RemoveBranch(branch)
+	self.Lineage = self.Lineage.RemoveBranch(branch)
 	_ = self.GitConfig.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
@@ -142,7 +142,7 @@ func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBran
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
-	self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	self.LocalGitConfig.Lineage = self.LocalGitConfig.Lineage.RemoveBranch(branch)
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }
 
@@ -150,7 +150,7 @@ func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Col
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
 			_ = self.GitConfig.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
-			self.Lineage.RemoveBranch(perennialBranch)
+			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}

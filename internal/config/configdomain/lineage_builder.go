@@ -7,9 +7,9 @@ type LineageBuilder struct {
 }
 
 func NewLineageBuilder() LineageBuilder {
-	data := new(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName)
+	data := make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName)
 	return LineageBuilder{
-		data: *data,
+		data: data,
 	}
 }
 

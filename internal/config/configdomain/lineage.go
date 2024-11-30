@@ -225,6 +225,7 @@ func (self Lineage) Roots() gitdomain.LocalBranchNames {
 }
 
 func (self Lineage) Set(branch, parent gitdomain.LocalBranchName) Lineage {
+	self = self.initializeIfNeeded()
 	self.data[branch] = parent
 	return self
 }
@@ -236,4 +237,11 @@ func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames
 	for _, child := range self.Children(currentBranch) {
 		self.addChildrenHierarchically(result, child, allBranches)
 	}
+}
+
+func (self Lineage) initializeIfNeeded() Lineage {
+	if self.data == nil {
+		self.data = make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName)
+	}
+	return self
 }
