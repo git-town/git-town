@@ -114,6 +114,16 @@ func (f *Pretty) Failed(pickle *messages.Pickle, step *messages.PickleStep, matc
 	f.printStep(pickle, step)
 }
 
+// Failed captures failed step.
+func (f *Pretty) Ambiguous(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition, err error) {
+	f.Base.Ambiguous(pickle, step, match, err)
+
+	f.Lock.Lock()
+	defer f.Lock.Unlock()
+
+	f.printStep(pickle, step)
+}
+
 // Pending captures pending step.
 func (f *Pretty) Pending(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition) {
 	f.Base.Pending(pickle, step, match)
@@ -267,6 +277,9 @@ func (f *Pretty) printOutlineExample(pickle *messages.Pickle, backgroundSteps in
 		// determine example row status
 		switch {
 		case result.Status == failed:
+			errorMsg = result.Err.Error()
+			clr = result.Status.Color()
+		case result.Status == ambiguous:
 			errorMsg = result.Err.Error()
 			clr = result.Status.Color()
 		case result.Status == undefined || result.Status == pending:

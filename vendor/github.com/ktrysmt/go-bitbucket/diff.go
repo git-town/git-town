@@ -32,8 +32,38 @@ type DiffStat struct {
 }
 
 func (d *Diff) GetDiff(do *DiffOptions) (interface{}, error) {
-	urlStr := d.c.requestUrl("/repositories/%s/%s/diff/%s", do.Owner, do.RepoSlug, do.Spec)
-	return d.c.executeRaw("GET", urlStr, "diff")
+
+	params := url.Values{}
+	if do.FromPullRequestID > 0 {
+		params.Add("from_pullrequest_id", strconv.Itoa(do.FromPullRequestID))
+	}
+
+	if do.Whitespace {
+		params.Add("ignore_whitespace", strconv.FormatBool(do.Whitespace))
+	}
+
+	if do.Context > 0 {
+		params.Add("context", strconv.Itoa(do.Context))
+	}
+
+	if do.Path != "" {
+		params.Add("path", do.Path)
+	}
+
+	if !do.Binary {
+		params.Add("binary", strconv.FormatBool(do.Binary))
+	}
+
+	if !do.Renames {
+		params.Add("renames", strconv.FormatBool(do.Renames))
+	}
+
+	if do.Topic {
+		params.Add("topic", strconv.FormatBool(do.Topic))
+	}
+
+	urlStr := d.c.requestUrl("/repositories/%s/%s/diff/%s?%s", do.Owner, do.RepoSlug, do.Spec, params.Encode())
+	return d.c.executeRaw("GET", urlStr, "")
 }
 
 func (d *Diff) GetPatch(do *DiffOptions) (interface{}, error) {

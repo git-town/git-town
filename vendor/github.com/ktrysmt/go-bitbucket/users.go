@@ -1,7 +1,9 @@
 package bitbucket
 
 type Users struct {
-	c *Client
+	c       *Client
+	SSHKeys *SSHKeys
+	users
 }
 
 func (u *Users) Get(t string) (*User, error) {
