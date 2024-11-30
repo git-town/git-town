@@ -30,12 +30,6 @@ func NewLineage() Lineage {
 	}
 }
 
-func NewLineageWith(data LineageData) Lineage {
-	return Lineage{
-		data: data,
-	}
-}
-
 func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (Lineage, error) {
 	result := NewLineage()
 	for key, value := range snapshot.LineageEntries() {
@@ -62,6 +56,12 @@ func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, remove
 		result = result.Set(child, parent)
 	}
 	return result, nil
+}
+
+func NewLineageWith(data LineageData) Lineage {
+	return Lineage{
+		data: data,
+	}
 }
 
 // Ancestors provides the names of all parent branches of the branch with the given name.
