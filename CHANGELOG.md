@@ -1,5 +1,18 @@
 # Git Town Changelog
 
+## 16.7.0 (2024-11-30)
+
+#### New Features
+
+- Support for BitBucket Datacenter ([#4239](https://github.com/git-town/git-town/pull/4239))
+
+#### Bug Fixes
+
+- fixes a regression where branches shipped at the remote were no longer cleaned up ([#4222](https://github.com/git-town/git-town/issues/4222))
+- fixes a regression where branches that were shipped at the remote and deleted manually on the local machine were no longer cleaned up ([#4132](https://github.com/git-town/git-town/issues/4132))
+- correctly handles spaces in Git metadata ([#4240](https://github.com/git-town/git-town/pull/4240)
+- `git town status reset` now works even if the persisted status is invalid ([#4236](https://github.com/git-town/git-town/pull/4236))
+
 ## 16.6.1 (2024-11-20)
 
 #### Bug Fixes
