@@ -92,10 +92,11 @@ func (self AliasesModel) RotateCurrentEntry() AliasesModel {
 }
 
 // SelectAll checks all entries in the list.
-func (self *AliasesModel) SelectAll() {
+func (self AliasesModel) SelectAll() AliasesModel {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionGT
 	}
+	return self
 }
 
 // SelectNone unchecks all entries in the list.
@@ -123,7 +124,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.String() {
 	case "a":
-		self.SelectAll()
+		self = self.SelectAll()
 	case "n":
 		self.SelectNone()
 	case "o":

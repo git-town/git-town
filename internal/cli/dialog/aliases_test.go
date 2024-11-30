@@ -228,7 +228,7 @@ func TestAliases(t *testing.T) {
 				dialog.AliasSelectionNone,
 			},
 		}
-		model.SelectAll()
+		model = model.SelectAll()
 		want := []dialog.AliasSelection{
 			dialog.AliasSelectionGT,
 			dialog.AliasSelectionGT,
