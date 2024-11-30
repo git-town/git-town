@@ -79,8 +79,9 @@ func (self PerennialBranchesModel) DisableCurrentEntry() PerennialBranchesModel 
 }
 
 // enableCurrentEntry checks the currently selected list entry.
-func (self *PerennialBranchesModel) EnableCurrentEntry() {
+func (self PerennialBranchesModel) EnableCurrentEntry() PerennialBranchesModel {
 	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
+	return self
 }
 
 func (self PerennialBranchesModel) Init() tea.Cmd {
@@ -88,12 +89,12 @@ func (self PerennialBranchesModel) Init() tea.Cmd {
 }
 
 // isRowChecked indicates whether the row with the given number is checked or not.
-func (self *PerennialBranchesModel) IsRowChecked(row int) bool {
+func (self PerennialBranchesModel) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
 // isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self *PerennialBranchesModel) IsSelectedRowChecked() bool {
+func (self PerennialBranchesModel) IsSelectedRowChecked() bool {
 	return self.IsRowChecked(self.Cursor)
 }
 
@@ -103,7 +104,7 @@ func (self PerennialBranchesModel) ToggleCurrentEntry() PerennialBranchesModel {
 	if self.IsRowChecked(self.Cursor) {
 		self = self.DisableCurrentEntry()
 	} else {
-		self.EnableCurrentEntry()
+		self = self.EnableCurrentEntry()
 	}
 	return self
 }
