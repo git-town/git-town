@@ -63,7 +63,7 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	children := self.Lineage.Children(branch)
 	for _, child := range children {
 		if hasParent {
-			self.Lineage.Add(child, parent)
+			self.Lineage = self.Lineage.Set(child, parent)
 			_ = self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 		} else {
 			self.Lineage.RemoveBranch(child)
@@ -238,7 +238,7 @@ func (self *NormalConfig) SetParent(branch, parentBranch gitdomain.LocalBranchNa
 	if self.DryRun {
 		return nil
 	}
-	self.Lineage.Add(branch, parentBranch)
+	self.Lineage = self.Lineage.Set(branch, parentBranch)
 	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch), parentBranch.String())
 }
 

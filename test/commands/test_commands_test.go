@@ -160,9 +160,9 @@ func TestTestCommands(t *testing.T) {
 		runtime.Config.Reload()
 		must.False(t, runtime.Config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.NormalConfig.Lineage
-		lineageWant := configdomain.NewLineage()
+		lineageWant := configdomain.NewLineageBuilder()
 		lineageWant.Add(gitdomain.NewLocalBranchName("f1"), gitdomain.NewLocalBranchName("main"))
-		must.Eq(t, lineageWant, lineageHave)
+		must.Eq(t, lineageWant.Lineage(), lineageHave)
 	})
 
 	t.Run("CreateFile", func(t *testing.T) {
