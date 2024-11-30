@@ -31,6 +31,15 @@ func TestDetect(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("custom URL, override to BitBucket Datacenter", func(t *testing.T) {
+		t.Parallel()
+		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
+		must.True(t, has)
+		have := hosting.Detect(url, Some(configdomain.HostingPlatformBitbucketDatacenter))
+		want := Some(configdomain.HostingPlatformBitbucketDatacenter)
+		must.Eq(t, want, have)
+	})
+
 	t.Run("Gitea SAAS, no override", func(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@gitea.com:git-town/docs.git").Get()

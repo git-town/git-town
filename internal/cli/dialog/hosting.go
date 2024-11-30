@@ -38,11 +38,12 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 type hostingPlatformEntry string
 
 const (
-	hostingPlatformAutoDetect hostingPlatformEntry = "auto-detect"
-	hostingPlatformBitBucket  hostingPlatformEntry = "BitBucket"
-	hostingPlatformGitea      hostingPlatformEntry = "Gitea"
-	hostingPlatformGitHub     hostingPlatformEntry = "GitHub"
-	hostingPlatformGitLab     hostingPlatformEntry = "GitLab"
+	hostingPlatformAutoDetect          hostingPlatformEntry = "auto-detect"
+	hostingPlatformBitBucket           hostingPlatformEntry = "BitBucket"
+	hostingPlatformBitBucketDatacenter hostingPlatformEntry = "BitBucket-Datacenter"
+	hostingPlatformGitea               hostingPlatformEntry = "Gitea"
+	hostingPlatformGitHub              hostingPlatformEntry = "GitHub"
+	hostingPlatformGitLab              hostingPlatformEntry = "GitLab"
 )
 
 func (entry hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingPlatform] {
@@ -51,6 +52,8 @@ func (entry hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingP
 		return None[configdomain.HostingPlatform]()
 	case hostingPlatformBitBucket:
 		return Some(configdomain.HostingPlatformBitbucket)
+	case hostingPlatformBitBucketDatacenter:
+		return Some(configdomain.HostingPlatformBitbucketDatacenter)
 	case hostingPlatformGitea:
 		return Some(configdomain.HostingPlatformGitea)
 	case hostingPlatformGitHub:

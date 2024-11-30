@@ -14,10 +14,11 @@ type HostingPlatform string
 func (self HostingPlatform) String() string { return string(self) }
 
 const (
-	HostingPlatformBitbucket = HostingPlatform("bitbucket")
-	HostingPlatformGitHub    = HostingPlatform("github")
-	HostingPlatformGitLab    = HostingPlatform("gitlab")
-	HostingPlatformGitea     = HostingPlatform("gitea")
+	HostingPlatformBitbucket           = HostingPlatform("bitbucket")
+	HostingPlatformBitbucketDatacenter = HostingPlatform("bitbucket-datacenter")
+	HostingPlatformGitHub              = HostingPlatform("github")
+	HostingPlatformGitLab              = HostingPlatform("gitlab")
+	HostingPlatformGitea               = HostingPlatform("gitea")
 )
 
 // ParseHostingPlatform provides the HostingPlatform enum matching the given text.
@@ -38,6 +39,7 @@ func ParseHostingPlatform(platformName string) (Option[HostingPlatform], error) 
 func hostingPlatforms() []HostingPlatform {
 	return []HostingPlatform{
 		HostingPlatformBitbucket,
+		HostingPlatformBitbucketDatacenter,
 		HostingPlatformGitHub,
 		HostingPlatformGitLab,
 		HostingPlatformGitea,
