@@ -62,7 +62,7 @@ type PerennialBranchesModel struct {
 }
 
 // checkedEntries provides all checked list entries.
-func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
+func (self PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for e, entry := range self.Entries {
 		if self.IsRowChecked(e) {
