@@ -18,8 +18,8 @@ func (self PushNewBranches) String() string {
 	return strconv.FormatBool(bool(self))
 }
 
-func ParsePushNewBranches(value, source string) (Option[PushNewBranches], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source)
+func ParsePushNewBranches(value string, source Key) (Option[PushNewBranches], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(PushNewBranches(parsed)), err
 	}

@@ -19,8 +19,8 @@ func (self CreatePrototypeBranches) String() string {
 }
 
 // deserializes the given Git configuration value into a CreatePrototypeBranches instance
-func ParseCreatePrototypeBranches(value, source string) (Option[CreatePrototypeBranches], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source)
+func ParseCreatePrototypeBranches(value string, source Key) (Option[CreatePrototypeBranches], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(CreatePrototypeBranches(parsed)), err
 	}

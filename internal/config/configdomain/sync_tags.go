@@ -22,8 +22,8 @@ func (self SyncTags) String() string {
 	return strconv.FormatBool(self.IsTrue())
 }
 
-func ParseSyncTags(value, source string) (Option[SyncTags], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source)
+func ParseSyncTags(value string, source Key) (Option[SyncTags], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncTags(parsed)), err
 	}
