@@ -19,8 +19,8 @@ func (self PushHook) String() string {
 	return strconv.FormatBool(bool(self))
 }
 
-func ParsePushHook(value, source string) (Option[PushHook], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source)
+func ParsePushHook(value string, source Key) (Option[PushHook], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(PushHook(parsed)), err
 	}
