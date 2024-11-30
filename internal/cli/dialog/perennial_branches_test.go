@@ -22,7 +22,7 @@ func TestPerennialBranches(t *testing.T) {
 				},
 				Selections: []int{1, 2, 3},
 			}
-			model.DisableCurrentEntry()
+			model = model.DisableCurrentEntry()
 			wantSelections := []int{1, 3}
 			must.Eq(t, wantSelections, model.Selections)
 		})
@@ -34,7 +34,7 @@ func TestPerennialBranches(t *testing.T) {
 				},
 				Selections: []int{1, 3},
 			}
-			model.DisableCurrentEntry()
+			model = model.DisableCurrentEntry()
 			wantSelections := []int{1, 3}
 			must.Eq(t, wantSelections, model.Selections)
 		})
@@ -124,11 +124,11 @@ func TestPerennialBranches(t *testing.T) {
 			Selections: []int{1, 3},
 		}
 		// enable the selected entry
-		model.ToggleCurrentEntry()
+		model = model.ToggleCurrentEntry()
 		wantSelections := []int{1, 3, 2}
 		must.Eq(t, wantSelections, model.Selections)
 		// disable the selected entry
-		model.ToggleCurrentEntry()
+		model = model.ToggleCurrentEntry()
 		wantSelections = []int{1, 3}
 		must.Eq(t, wantSelections, model.Selections)
 	})

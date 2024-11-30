@@ -73,8 +73,9 @@ func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames 
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.
-func (self *PerennialBranchesModel) DisableCurrentEntry() {
+func (self PerennialBranchesModel) DisableCurrentEntry() PerennialBranchesModel {
 	self.Selections = slice.Remove(self.Selections, self.Cursor)
+	return self
 }
 
 // enableCurrentEntry checks the currently selected list entry.
@@ -98,12 +99,13 @@ func (self *PerennialBranchesModel) IsSelectedRowChecked() bool {
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self *PerennialBranchesModel) ToggleCurrentEntry() {
+func (self PerennialBranchesModel) ToggleCurrentEntry() PerennialBranchesModel {
 	if self.IsRowChecked(self.Cursor) {
-		self.DisableCurrentEntry()
+		self = self.DisableCurrentEntry()
 	} else {
 		self.EnableCurrentEntry()
 	}
+	return self
 }
 
 func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -116,14 +118,14 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.ToggleCurrentEntry()
+		self = self.ToggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
 		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.ToggleCurrentEntry()
+		self = self.ToggleCurrentEntry()
 		return self, nil
 	}
 	return self, nil
