@@ -100,10 +100,11 @@ func (self AliasesModel) SelectAll() AliasesModel {
 }
 
 // SelectNone unchecks all entries in the list.
-func (self *AliasesModel) SelectNone() {
+func (self AliasesModel) SelectNone() AliasesModel {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionNone
 	}
+	return self
 }
 
 func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -126,7 +127,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	case "a":
 		self = self.SelectAll()
 	case "n":
-		self.SelectNone()
+		self = self.SelectNone()
 	case "o":
 		self = self.RotateCurrentEntry()
 		return self, nil
