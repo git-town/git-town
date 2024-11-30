@@ -2,7 +2,7 @@ RTA_VERSION = 0.7.1  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "16.6.1"
+RELEASE_VERSION := "16.7.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
