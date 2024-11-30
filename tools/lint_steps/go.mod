@@ -1,3 +1,3 @@
 module github.com/git-town/git-town/tools/lint_steps
 
-go 1.22.3
+go 1.22
