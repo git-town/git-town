@@ -18,8 +18,8 @@ func (self SyncUpstream) String() string {
 	return strconv.FormatBool(bool(self))
 }
 
-func ParseSyncUpstream(value, source string) (Option[SyncUpstream], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source)
+func ParseSyncUpstream(value string, source Key) (Option[SyncUpstream], error) {
+	parsedOpt, err := gohacks.ParseBool(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncUpstream(parsed)), err
 	}
