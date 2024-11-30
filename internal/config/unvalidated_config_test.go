@@ -19,9 +19,10 @@ func TestUnvalidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			repo.CreateFeatureBranch("branch", "main")
 			repo.Config.Reload()
-			want := configdomain.NewLineageBuilder()
-			want.Add("branch", "main")
-			must.Eq(t, want.Lineage(), repo.Config.NormalConfig.Lineage)
+			want := configdomain.NewLineageWith(configdomain.LineageData{
+				"branch": "main",
+			})
+			must.Eq(t, want, repo.Config.NormalConfig.Lineage)
 		})
 		t.Run("contribution branches changed", func(t *testing.T) {
 			t.Parallel()

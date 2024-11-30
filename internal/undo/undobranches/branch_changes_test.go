@@ -63,14 +63,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("branch-1", "main")
+			"branch-1": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PushHook:          false,
 					PerennialBranches: gitdomain.LocalBranchNames{},
 				},
@@ -217,7 +218,8 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -225,7 +227,7 @@ func TestChanges(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PushHook:          false,
 				},
 			},
@@ -312,14 +314,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -401,14 +404,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -474,14 +478,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -572,14 +577,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          true,
 				},
@@ -708,14 +714,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          true,
 				},
@@ -822,14 +829,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -927,14 +935,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1050,14 +1059,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1151,14 +1161,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1252,14 +1263,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1341,14 +1353,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1432,14 +1445,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 					PushHook:          false,
 				},
@@ -1518,14 +1532,15 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantChanges, haveChanges)
 		lineage := configdomain.NewLineageWith(configdomain.LineageData{
-		builder.Add("feature-branch", "main")
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					Lineage:           lineage(),
+					Lineage:           lineage,
 					PerennialBranches: gitdomain.LocalBranchNames{},
 					PushHook:          false,
 				},
