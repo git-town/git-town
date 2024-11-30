@@ -11,10 +11,10 @@ import (
 
 //nolint:gosec
 const (
-	bitbucketAppPasswordTitle = `Bitbucket App Password`
+	bitbucketAppPasswordTitle = `Bitbucket App Password/Token`
 	bitbucketAppPasswordHelp  = `
 Git Town can update pull requests and ship branches on Bitbucket for you.
-To enable this, please enter a Bitbucket App Password.
+To enable this, please enter a Bitbucket App Password or token.
 This is not your normal account password.
 More info at https://www.git-town.com/preferences/bitbucket-app-password.
 
@@ -28,7 +28,7 @@ func BitbucketAppPassword(oldValue Option[configdomain.BitbucketAppPassword], in
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketAppPasswordHelp,
-		Prompt:        "Bitbucket App Password: ",
+		Prompt:        "Bitbucket App Password/Token: ",
 		TestInput:     inputs,
 		Title:         bitbucketAppPasswordTitle,
 	})
