@@ -206,7 +206,7 @@ func (self Lineage) Parent(branch gitdomain.LocalBranchName) Option[gitdomain.Lo
 }
 
 // RemoveBranch removes the given branch completely from this lineage.
-func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) Lineage { // TODO: make callsites use the result
+func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) Lineage {
 	delete(self.data, branch)
 	return self
 }
