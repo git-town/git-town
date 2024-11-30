@@ -9,7 +9,7 @@ import (
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.
-type Key string //nolint: recvcheck
+type Key string //nolint: recvcheck // MarshalJSON and UnmarshalJSON require different receiver types
 
 // ConfigSetting contains a key-value pair for a configuration setting.
 type ConfigSetting struct {
