@@ -202,9 +202,9 @@ Feature: show the configuration
         feature regex: (not set)
         parked branches: (none)
         contribution branches: (none)
-        contribution regex: (none)
+        contribution regex: (not set)
         observed branches: (none)
-        observed regex: (none)
+        observed regex: (not set)
 
       Configuration:
         offline: no
