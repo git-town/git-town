@@ -154,7 +154,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	}
 	if platform, has := determineHostingPlatform(config, data.userInput.config.NormalConfig.HostingPlatform).Get(); has {
 		switch platform {
-		case configdomain.HostingPlatformBitbucket:
+		case configdomain.HostingPlatformBitbucket, configdomain.HostingPlatformBitbucketDatacenter:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err

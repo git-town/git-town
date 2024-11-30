@@ -14,16 +14,19 @@ func TestNewHostingPlatform(t *testing.T) {
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.HostingPlatform]{
-			"":          None[configdomain.HostingPlatform](),
-			"bitbucket": Some(configdomain.HostingPlatformBitbucket),
-			"BitBucket": Some(configdomain.HostingPlatformBitbucket),
-			"BITBUCKET": Some(configdomain.HostingPlatformBitbucket),
-			"github":    Some(configdomain.HostingPlatformGitHub),
-			"GitHub":    Some(configdomain.HostingPlatformGitHub),
-			"gitlab":    Some(configdomain.HostingPlatformGitLab),
-			"GitLab":    Some(configdomain.HostingPlatformGitLab),
-			"gitea":     Some(configdomain.HostingPlatformGitea),
-			"Gitea":     Some(configdomain.HostingPlatformGitea),
+			"":                     None[configdomain.HostingPlatform](),
+			"bitbucket":            Some(configdomain.HostingPlatformBitbucket),
+			"BitBucket":            Some(configdomain.HostingPlatformBitbucket),
+			"BITBUCKET":            Some(configdomain.HostingPlatformBitbucket),
+			"bitbucket-datacenter": Some(configdomain.HostingPlatformBitbucketDatacenter),
+			"BitBucket-Datacenter": Some(configdomain.HostingPlatformBitbucketDatacenter),
+			"BITBUCKET-DATACENTER": Some(configdomain.HostingPlatformBitbucketDatacenter),
+			"github":               Some(configdomain.HostingPlatformGitHub),
+			"GitHub":               Some(configdomain.HostingPlatformGitHub),
+			"gitlab":               Some(configdomain.HostingPlatformGitLab),
+			"GitLab":               Some(configdomain.HostingPlatformGitLab),
+			"gitea":                Some(configdomain.HostingPlatformGitea),
+			"Gitea":                Some(configdomain.HostingPlatformGitea),
 		}
 		for give, want := range tests {
 			have, err := configdomain.ParseHostingPlatform(give)

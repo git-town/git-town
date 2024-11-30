@@ -15,6 +15,7 @@ Feature: unsupported hosting platform
 
       This command requires hosting on one of these services:
       * Bitbucket
+      * Bitbucket datacenter
       * GitHub
       * GitLab
       * Gitea
