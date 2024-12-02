@@ -19,12 +19,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
-	/* new algorithm:
-
-	- tracking branch is gone && sync-feature-strategy is "rebase" && branch has a descendent --> do nothing
-	- tracking branch of parent is gone && sync-feature-strategy is "rebase" --> rebase-onto the parent and then delete it
-
-	*/
 	trackingBranchIsGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
