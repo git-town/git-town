@@ -24,6 +24,8 @@ Feature: append a branch when the previous branch is active in another worktree
     And the previous Git branch is now "current"
     And no commits exist now
 
+  @debug
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
