@@ -33,10 +33,12 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentToDeleteName, hasParentToDelete := args.ParentToDelete.Get()
 	switch {
 	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && args.ParentToDelete.IsNone():
-		args.ParentToDelete = Some(localName)
 		// do nothing here, we will remove this branch after having synced its descendent
+		args.ParentToDelete = Some(localName)
 	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && args.ParentToDelete.IsSome():
-		// ???
+		// here the current branch needs to be deleted, and its parent needs to be deleted as well
+		// what to do here?
+		// TODO: add an E2E test that reproduces this
 	case hasParentName && hasParentBranchInfo && parentTrackingBranchIsGone && rebaseSyncStrategy && hasParentToDelete && parentToDeleteName == parentName:
 		args.Program.Value.Add(
 			&opcodes.PushCurrentBranchIfLocal{
@@ -58,10 +60,10 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 				Branch: parentToDeleteName,
 			},
 		)
-	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
+	case trackingBranchIsGone && !rebaseSyncStrategy:
 		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
-		// Git Town doesn't sync branches that are active in another worktree
+		// cannot sync branches that are active in another worktree
 	default:
 		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
 	}
