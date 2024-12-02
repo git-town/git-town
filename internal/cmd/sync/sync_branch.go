@@ -25,19 +25,39 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	- tracking branch of parent is gone && sync-feature-strategy is "rebase" --> rebase-onto the parent and then delete it
 
 	*/
-	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
-	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
+	trackingBranchIsGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
+	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindByLocalName(parentName).Get()
-	parentTrackingBranchGone := parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
+	parentTrackingBranchIsGone := parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
+	parentToDeleteName, hasParentToDelete := args.ParentToDelete.Get()
 	switch {
-	case trackingBranchGone && rebaseSyncStrategy && hasDescendents:
-		// do nothing here, we will remove this branch when syncing its descendent
-	case hasParentName && hasParentBranchInfo && parentTrackingBranchGone && rebaseSyncStrategy:
-		// pull the tracking branch
-		// onto-rebase against the parent branch
-		// delete the parent branch
-		// force-push the branch to origin
+	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && args.ParentToDelete.IsNone():
+		args.ParentToDelete = Some(localName)
+		// do nothing here, we will remove this branch after having synced its descendent
+	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && args.ParentToDelete.IsSome():
+		// ???
+	case hasParentName && hasParentBranchInfo && parentTrackingBranchIsGone && rebaseSyncStrategy && hasParentToDelete && parentToDeleteName == parentName:
+		args.Program.Value.Add(
+			&opcodes.PushCurrentBranchIfLocal{
+				CurrentBranch: localName,
+			},
+			&opcodes.RebaseOnto{
+				BranchToRebaseAgainst: parentName.BranchName(),
+				BranchToRebaseOnto:    args.Config.ValidatedConfigData.MainBranch,
+			},
+			&opcodes.PushCurrentBranchForceIfNeeded{
+				ForceIfIncludes: false,
+			},
+		)
+	case
+		rebaseSyncStrategy && !hasParentToDelete,
+		rebaseSyncStrategy && hasParentToDelete && parentToDeleteName != parentName:
+		args.Program.Value.Add(
+			&opcodes.BranchLocalDelete{
+				Branch: parentToDeleteName,
+			},
+		)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
@@ -52,7 +72,8 @@ type BranchProgramArgs struct {
 	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
-	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
+	ParentToDelete      Option[gitdomain.LocalBranchName] // the parent to delete later after removing it via "git rebase --onto" from its child branches
+	PrefetchBranchInfos gitdomain.BranchInfos             // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
 	PushBranches        configdomain.PushBranches
 	Remotes             gitdomain.Remotes
