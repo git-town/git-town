@@ -438,7 +438,6 @@ func TestLineage(t *testing.T) {
 		})
 		haveMerged := lineage1.Merge(lineage2)
 		want := configdomain.NewLineageWith(configdomain.LineageData{
-
 			"one":   "main",
 			"two":   "one",
 			"alpha": "main",
