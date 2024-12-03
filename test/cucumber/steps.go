@@ -359,6 +359,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return err
 	})
 
+	sc.Step(`^file "([^"]*)" (?:now|still) has content like$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actualContent := strings.TrimSpace(devRepo.FileContent(file))
+		regex := regexp.MustCompile("(?m)" + strings.TrimSpace(expectedContent.Content))
+		if !regex.MatchString(actualContent) {
+			return fmt.Errorf("file content does not match\n\nEXPECTED VS ACTUAL:\n\n%q\n%q\n", expectedContent.Content, actualContent)
+		}
+		return nil
+	})
+
 	sc.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

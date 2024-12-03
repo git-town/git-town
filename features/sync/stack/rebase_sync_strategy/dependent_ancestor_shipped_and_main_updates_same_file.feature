@@ -34,21 +34,27 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       """
     And a rebase is now in progress
 
-  @debug
   @this
   Scenario: resolve and continue
     When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                          |
-      | main   | git rebase --continue            |
-      |        | git push                         |
-      |        | git branch -D alpha              |
-      |        | git checkout beta                |
-      | beta   | git rebase main --no-update-refs |
+      | BRANCH | COMMAND                      |
+      | main   | git rebase --continue        |
+      |        | git push                     |
+      |        | git checkout beta            |
+      | beta   | git rebase --onto main alpha |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
+      """
+    And file "file" now has content like
+      """
+      <<<<<<< HEAD
+      resolved main content
+      =======
+      beta content
+      >>>>>>> .* \(beta commit\)
       """
     And a rebase is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
