@@ -12,11 +12,10 @@ Feature: previous Git branch is in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                        |
-      | current | git fetch --prune --tags       |
-      |         | git checkout main              |
-      | main    | git rebase --onto main current |
-      |         | git branch -D current          |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git checkout main        |
+      | main    | git branch -D current    |
     And the current branch is now "main"
     And the previous Git branch is now "main"
 

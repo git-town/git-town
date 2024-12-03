@@ -13,14 +13,14 @@ Feature: don't sync tags while deleting branches
     And Git Town setting "sync-tags" is "false"
     When I run "git-town delete"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                        |
-      | current | git fetch --prune --no-tags    |
-      |         | git push origin :current       |
-      |         | git checkout main              |
-      | main    | git rebase --onto main current |
-      |         | git branch -D current          |
+      | BRANCH  | COMMAND                     |
+      | current | git fetch --prune --no-tags |
+      |         | git push origin :current    |
+      |         | git checkout main           |
+      | main    | git branch -D current       |
     And the initial tags exist now
 
   Scenario: undo

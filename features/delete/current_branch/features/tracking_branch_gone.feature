@@ -23,8 +23,7 @@ Feature: deleting a branch whose tracking branch is gone
       |         | git add -A                                                |
       |         | git commit -m "Committing open changes on deleted branch" |
       |         | git checkout other                                        |
-      | other   | git rebase --onto main current                            |
-      |         | git branch -D current                                     |
+      | other   | git branch -D current                                     |
     And the current branch is now "other"
     And no uncommitted files exist now
     And the branches are now
