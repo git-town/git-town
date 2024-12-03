@@ -16,12 +16,11 @@ Feature: local repository
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                      |
-      | good   | git add -A                   |
-      |        | git stash                    |
-      |        | git rebase --onto main other |
-      |        | git branch -D other          |
-      |        | git stash pop                |
+      | BRANCH | COMMAND             |
+      | good   | git add -A          |
+      |        | git stash           |
+      |        | git branch -D other |
+      |        | git stash pop       |
     And the current branch is still "good"
     And the uncommitted file still exists
     And the branches are now
