@@ -15,12 +15,11 @@ Feature: sync perennial branch that was deleted at the remote
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH      | COMMAND                            |
-      | perennial-1 | git fetch --prune --tags           |
-      |             | git checkout main                  |
-      | main        | git rebase --onto main perennial-1 |
-      |             | git branch -D perennial-1          |
-      |             | git push --tags                    |
+      | BRANCH      | COMMAND                   |
+      | perennial-1 | git fetch --prune --tags  |
+      |             | git checkout main         |
+      | main        | git branch -D perennial-1 |
+      |             | git push --tags           |
     And Git Town prints:
       """
       deleted branch "perennial-1"
