@@ -304,7 +304,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
-	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+	sync.BranchesProgram(data.branchesToSync, NewMutable(&sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
@@ -312,7 +312,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		Remotes:             data.remotes,
 		Program:             prog,
 		PushBranches:        true,
-	})
+	}))
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
 		prog.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: data.branchToPropose})
 	}

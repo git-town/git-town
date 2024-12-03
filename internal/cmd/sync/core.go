@@ -115,7 +115,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	runProgram := NewMutable(&program.Program{})
-	BranchesProgram(data.branchesToSync, BranchProgramArgs{
+	BranchesProgram(data.branchesToSync, NewMutable(&BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
@@ -123,7 +123,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		Program:             runProgram,
 		PushBranches:        pushBranches,
 		Remotes:             data.remotes,
-	})
+	}))
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {
