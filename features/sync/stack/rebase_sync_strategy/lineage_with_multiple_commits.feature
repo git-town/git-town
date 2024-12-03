@@ -21,7 +21,6 @@ Feature: stack that changes the same file in multiple commits per branch
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
@@ -44,7 +43,8 @@ Feature: stack that changes the same file in multiple commits per branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
-      | beta   | git rebase --abort                                     |
+      | beta   | git reset --hard {{ sha 'beta commit 2' }}             |
+      |        | git push --force-with-lease --force-if-includes        |
       |        | git checkout main                                      |
       | main   | git reset --hard {{ sha 'initial commit' }}            |
       |        | git branch alpha {{ sha-before-run 'alpha commit 2' }} |
