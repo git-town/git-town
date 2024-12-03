@@ -41,8 +41,7 @@ Feature: delete a parent branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
-      | gamma  | local         | gamma commit |
-      |        | origin        | beta commit  |
+      | gamma  | local, origin | beta commit  |
       |        |               | gamma commit |
     And this lineage exists now
       | BRANCH | PARENT |
