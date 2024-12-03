@@ -20,8 +20,7 @@ Feature: in a local repo
       | feature | git add -A                                                |
       |         | git commit -m "Committing open changes on deleted branch" |
       |         | git checkout main                                         |
-      | main    | git rebase --onto main feature                            |
-      |         | git branch -D feature                                     |
+      | main    | git branch -D feature                                     |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY | BRANCHES    |

@@ -22,8 +22,7 @@ Feature: delete the current observed branch
       |          | git add -A                                                |
       |          | git commit -m "Committing open changes on deleted branch" |
       |          | git checkout feature                                      |
-      | feature  | git rebase --onto main observed                           |
-      |          | git branch -D observed                                    |
+      | feature  | git branch -D observed                                    |
     And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now

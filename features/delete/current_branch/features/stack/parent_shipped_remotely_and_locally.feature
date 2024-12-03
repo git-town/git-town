@@ -17,12 +17,11 @@ Feature: deleting a branch whose parent was shipped and the local branch deleted
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                      |
-      | child  | git fetch --prune --tags     |
-      |        | git push origin :child       |
-      |        | git checkout main            |
-      | main   | git rebase --onto main child |
-      |        | git branch -D child          |
+      | BRANCH | COMMAND                  |
+      | child  | git fetch --prune --tags |
+      |        | git push origin :child   |
+      |        | git checkout main        |
+      | main   | git branch -D child      |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |

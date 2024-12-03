@@ -23,8 +23,7 @@ Feature: delete the current parked branch
       |         | git add -A                                                |
       |         | git commit -m "Committing open changes on deleted branch" |
       |         | git checkout feature                                      |
-      | feature | git rebase --onto main parked                             |
-      |         | git branch -D parked                                      |
+      | feature | git branch -D parked                                      |
     And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now

@@ -24,8 +24,7 @@ Feature: delete a branch within a branch chain
       |        | git add -A                                                |
       |        | git commit -m "Committing open changes on deleted branch" |
       |        | git checkout alpha                                        |
-      | alpha  | git rebase --onto main beta                               |
-      |        | git branch -D beta                                        |
+      | alpha  | git branch -D beta                                        |
     And Git Town prints:
       """
       branch "gamma" is now a child of "alpha"

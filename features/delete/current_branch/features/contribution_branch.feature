@@ -22,8 +22,7 @@ Feature: delete the current contribution branch
       |              | git add -A                                                |
       |              | git commit -m "Committing open changes on deleted branch" |
       |              | git checkout feature                                      |
-      | feature      | git rebase --onto main contribution                       |
-      |              | git branch -D contribution                                |
+      | feature      | git branch -D contribution                                |
     And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
