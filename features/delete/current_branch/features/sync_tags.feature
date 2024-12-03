@@ -13,7 +13,6 @@ Feature: don't sync tags while deleting branches
     And Git Town setting "sync-tags" is "false"
     When I run "git-town delete"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
