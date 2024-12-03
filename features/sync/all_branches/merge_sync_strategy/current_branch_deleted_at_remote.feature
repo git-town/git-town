@@ -18,7 +18,6 @@ Feature: sync a branch whose tracking branch was shipped
       | feature | git fetch --prune --tags                |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
-      |         | git rebase --onto main feature          |
       |         | git branch -D feature                   |
       |         | git push --tags                         |
     And Git Town prints:
