@@ -21,7 +21,6 @@ Feature: the branch was shipped manually on the local machine
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
       |        | git push                                |
-      |        | git rebase --onto main feature          |
       |        | git branch -D feature                   |
       |        | git push --tags                         |
     And the current branch is still "main"
