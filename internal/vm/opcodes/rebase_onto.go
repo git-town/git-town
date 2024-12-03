@@ -18,6 +18,11 @@ func (self *RebaseOnto) AbortProgram() []shared.Opcode {
 	}
 }
 
+func (self *RebaseOnto) ContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&RebaseContinueIfNeeded{},
+	}
+}
 func (self *RebaseOnto) Run(args shared.RunArgs) error {
 	return args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto)
 }

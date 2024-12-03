@@ -363,7 +363,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
-		regex := regexp.MustCompile("(?m)" + strings.TrimSpace(expectedContent.Content))
+		regex := regexp.MustCompile(strings.TrimSpace(expectedContent.Content))
 		if !regex.MatchString(actualContent) {
 			return fmt.Errorf("file content does not match\n\nEXPECTED VS ACTUAL:\n\n%q\n%q\n", expectedContent.Content, actualContent)
 		}

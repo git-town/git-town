@@ -34,7 +34,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       """
     And a rebase is now in progress
 
-  @this
   Scenario: resolve and continue
     When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor
@@ -60,9 +59,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git rebase --continue                           |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND                     |
+      | beta   | git rebase --continue       |
+      |        | git push --force-with-lease |
+      |        | git branch -D alpha         |
     And all branches are now synchronized
     And the current branch is now "beta"
     And these commits exist now
