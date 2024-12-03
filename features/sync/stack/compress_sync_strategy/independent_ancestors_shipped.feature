@@ -26,9 +26,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | feature-3 | git fetch --prune --tags                  |
       |           | git checkout main                         |
       | main      | git rebase origin/main --no-update-refs   |
-      |           | git rebase --onto main feature-1          |
       |           | git branch -D feature-1                   |
-      |           | git rebase --onto main feature-2          |
       |           | git branch -D feature-2                   |
       |           | git checkout feature-3                    |
       | feature-3 | git merge --no-edit --ff main             |
