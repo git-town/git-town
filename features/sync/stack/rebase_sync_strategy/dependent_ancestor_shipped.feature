@@ -21,14 +21,14 @@ Feature: shipped the head branch of a synced stack with dependent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git fetch --prune --tags                        |
-      |        | git checkout main                               |
-      | main   | git rebase origin/main --no-update-refs         |
-      |        | git branch -D alpha                             |
-      |        | git checkout beta                               |
-      | beta   | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND                                 |
+      | beta   | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout beta                       |
+      | beta   | git rebase --onto main alpha            |
+      |        | git push --force-with-lease             |
+      |        | git branch -D alpha                     |
     And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now
