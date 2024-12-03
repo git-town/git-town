@@ -26,7 +26,6 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
       |           | git stash                               |
       |           | git checkout main                       |
       | main      | git rebase origin/main --no-update-refs |
-      |           | git rebase --onto main feature-1        |
       |           | git branch -D feature-1                 |
       |           | git stash pop                           |
     And Git Town prints:
