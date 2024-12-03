@@ -120,6 +120,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseBranch{Branch: "branch"},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
+				&opcodes.RebaseOnto{BranchToRebaseAgainst: "branch-1", BranchToRebaseOnto: "branch-2"},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch"},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
@@ -224,8 +225,8 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "BranchToRebaseOnto": "main",
-        "BranchToDelete": "branch"
+        "BranchToDelete": "branch",
+        "BranchToRebaseOnto": "main"
       },
       "type": "BranchLocalDeleteContent"
     },
@@ -632,6 +633,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
+    },
+    {
+      "data": {
+        "BranchToRebaseAgainst": "branch-1",
+        "BranchToRebaseOnto": "branch-2"
+      },
+      "type": "RebaseOnto"
     },
     {
       "data": {

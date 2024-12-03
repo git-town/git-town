@@ -34,6 +34,8 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       """
     And a rebase is now in progress
 
+  @debug
+  @this
   Scenario: resolve and continue
     When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor

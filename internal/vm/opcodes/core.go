@@ -117,6 +117,7 @@ func Types() []shared.Opcode {
 		&RebaseBranch{},
 		&RebaseContinue{},
 		&RebaseContinueIfNeeded{},
+		&RebaseOnto{},
 		&RebaseParentIfNeeded{},
 		&RebaseTrackingBranch{},
 		&ProposalCreate{},
