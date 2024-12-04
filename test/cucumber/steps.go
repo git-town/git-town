@@ -359,6 +359,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return err
 	})
 
+	sc.Step(`^file "([^"]*)" (?:now|still) has content like$`, func(ctx context.Context, file string, expectedContent *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		actualContent := strings.TrimSpace(devRepo.FileContent(file))
+		regex := regexp.MustCompile(strings.TrimSpace(expectedContent.Content))
+		if !regex.MatchString(actualContent) {
+			return fmt.Errorf("file content does not match\n\nEXPECTED VS ACTUAL:\n\n%q\n%q\n", expectedContent.Content, actualContent)
+		}
+		return nil
+	})
+
 	sc.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -1021,24 +1032,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy and resolves the merge conflict in "([^"]+)" with "([^"]+)" and commits as "([^"]+)"$`, func(ctx context.Context, branchName, fileName, fileContent, commitMessage string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		branchToShip := gitdomain.NewLocalBranchName(branchName)
-		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		originRepo.CheckoutBranch("main")
-		err := originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
-		if err == nil {
-			panic("expected a merge conflict here")
-		}
-		originRepo.CreateFile(fileName, fileContent)
-		originRepo.StageFiles("-A")
-		err = originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
-		asserts.NoError(err)
-		originRepo.RemoveBranch(branchToShip)
-		originRepo.CheckoutBranch("initial")
-		return nil
-	})
-
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
@@ -1617,6 +1610,32 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the tags$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.CreateTags(table)
+	})
+
+	sc.Step(`^the uncommitted file does not exist anymore$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		hasFile := devRepo.HasFile(
+			state.uncommittedFileName.GetOrPanic(),
+			state.uncommittedContent.GetOrPanic(),
+		)
+		if len(hasFile) == 0 {
+			return errors.New("uncommitted file still exists")
+		}
+		return nil
+	})
+
+	sc.Step(`^the uncommitted file has content:$`, func(ctx context.Context, content *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		msg := devRepo.HasFile(
+			state.uncommittedFileName.GetOrPanic(),
+			content.Content,
+		)
+		if len(msg) > 0 {
+			return errors.New(msg)
+		}
+		return nil
 	})
 
 	sc.Step(`^the uncommitted file is stashed$`, func(ctx context.Context) error {

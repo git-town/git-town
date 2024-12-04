@@ -5,12 +5,20 @@ Feature: delete a parent branch
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
-      | beta  | feature | alpha  | local, origin |
-      | gamma | feature | beta   | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
-      | beta   | local, origin | beta commit  |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     |
+      | beta   | local, origin | beta commit |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | gamma | feature | beta   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE      |
       | gamma  | local, origin | gamma commit |
     And the current branch is "gamma"
     And an uncommitted file
@@ -33,7 +41,8 @@ Feature: delete a parent branch
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
-      | gamma  | local, origin | gamma commit |
+      | gamma  | local, origin | beta commit  |
+      |        |               | gamma commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |

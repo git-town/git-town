@@ -14,6 +14,7 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
     And origin deletes the "observed" branch
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |

@@ -242,7 +242,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 	if !data.hasOpenChanges {
-		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
+		sync.BranchesProgram(data.branchesToSync, NewMutable(&sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
@@ -250,7 +250,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			Program:             prog,
 			Remotes:             data.remotes,
 			PushBranches:        true,
-		})
+		}))
 	}
 	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newBranchParentCandidates,

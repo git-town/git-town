@@ -27,56 +27,24 @@ Feature: stack that changes the same file in multiple commits per branch
       | beta   | git fetch --prune --tags                |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
-      |        | git branch -D alpha                     |
       |        | git checkout beta                       |
-      | beta   | git rebase main --no-update-refs        |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in favorite-fruit
-      """
-    And Git Town prints an error like:
-      """
-      could not apply .* alpha commit 1
-      """
-    And a rebase is now in progress
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "favorite-fruit" with "resolved apple"
-    And I run "git-town continue" and close the editor
-    Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | beta   | git rebase --continue |
-    And Git Town prints the error:
-      """
-      CONFLICT (content): Merge conflict in favorite-fruit
-      """
-    And Git Town prints an error like:
-      """
-      could not apply .* alpha commit 2
-      """
-    And a rebase is still in progress
-    And I resolve the conflict in "favorite-fruit" with "resolved peach"
-    And I run "git-town continue" and close the editor
-    And Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git rebase --continue                           |
-      |        | git push --force-with-lease --force-if-includes |
+      | beta   | git rebase --onto main alpha            |
+      |        | git push --force-with-lease             |
+      |        | git branch -D alpha                     |
     And no rebase is now in progress
-    And the current branch is still "beta"
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT   |
-      | main   | local, origin | alpha commit 1 | favorite-fruit | peach          |
-      | beta   | local, origin | alpha commit 1 | favorite-fruit | resolved apple |
-      |        |               | alpha commit 2 | favorite-fruit | resolved peach |
-      |        |               | beta commit 1  | favorite-pizza | pepperoni      |
-      |        |               | beta commit 2  | favorite-pizza | pineapple      |
+      | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
+      | main   | local, origin | alpha commit 1 | favorite-fruit | peach        |
+      | beta   | local, origin | beta commit 1  | favorite-pizza | pepperoni    |
+      |        |               | beta commit 2  | favorite-pizza | pineapple    |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                |
-      | beta   | git rebase --abort                                     |
+      | beta   | git reset --hard {{ sha 'beta commit 2' }}             |
+      |        | git push --force-with-lease --force-if-includes        |
       |        | git checkout main                                      |
       | main   | git reset --hard {{ sha 'initial commit' }}            |
       |        | git branch alpha {{ sha-before-run 'alpha commit 2' }} |

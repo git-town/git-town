@@ -1,5 +1,4 @@
-@smoke
-Feature: delete the given branch
+Feature: delete another than the current branch
 
   Background:
     Given a Git repo with origin
@@ -8,11 +7,12 @@ Feature: delete the given branch
       | good | feature | main   | local, origin |
       | dead | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE         | FILE NAME |
-      | dead   | local, origin | dead-end commit | file      |
-      | good   | local, origin | good commit     | file      |
+      | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
+      | main   | local, origin | conflicting commit | conflicting_file | main content |
+      | dead   | local, origin | dead-end commit    | file             | dead content |
+      | good   | local, origin | good commit        | file             | good content |
     And the current branch is "good"
-    And an uncommitted file
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town delete dead"
 
   Scenario: result
@@ -25,13 +25,17 @@ Feature: delete the given branch
       |        | git branch -D dead       |
       |        | git stash pop            |
     And the current branch is still "good"
-    And the uncommitted file still exists
+    And the uncommitted file has content:
+      """
+      conflicting content
+      """
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | good   | local, origin | good commit |
+      | BRANCH | LOCATION      | MESSAGE            |
+      | main   | local, origin | conflicting commit |
+      | good   | local, origin | good commit        |
     And this lineage exists now
       | BRANCH | PARENT |
       | good   | main   |
@@ -47,5 +51,9 @@ Feature: delete the given branch
       |        | git stash pop                               |
     And the current branch is still "good"
     And the uncommitted file still exists
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE            |
+      | main   | local, origin | conflicting commit |
+      | dead   | local, origin | dead-end commit    |
+      | good   | local, origin | good commit        |
     And the initial branches and lineage exist now

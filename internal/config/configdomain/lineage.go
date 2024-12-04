@@ -159,6 +159,15 @@ func (self Lineage) Entries() []LineageEntry {
 	return result
 }
 
+func (self Lineage) HasDescendents(branch gitdomain.LocalBranchName) bool {
+	for _, parent := range self.data {
+		if parent == branch {
+			return true
+		}
+	}
+	return false
+}
+
 // HasParents returns whether or not the given branch has at least one parent.
 func (self Lineage) HasParents(branch gitdomain.LocalBranchName) bool {
 	for child := range self.data {
