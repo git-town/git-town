@@ -32,7 +32,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "branch-2" branch using the "squash-merge" ship-strategy and resolves the merge conflict in "file" with "content 2" and commits as "commit 2"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
@@ -48,6 +47,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | branch-4 | git rebase branch-3 --no-update-refs            |
       |          | git push --force-with-lease --force-if-includes |
     And the current branch is now "branch-4"
+    And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | main     | local, origin | commit 1 | file      | content 1    |
