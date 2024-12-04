@@ -57,17 +57,13 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		// We sync a branch whose parent was deleted.
 		// We need to remove the commits of the parent from this branch.
 		args.Value.Program.Value.Add(
-			&opcodes.CheckoutIfNeeded{
-				Branch: localName,
-			},
+			&opcodes.CheckoutIfNeeded{Branch: localName},
 			&opcodes.PullCurrentBranch{},
 			&opcodes.RebaseOnto{
 				BranchToRebaseAgainst: parentName.BranchName(),
 				BranchToRebaseOnto:    args.Value.Config.ValidatedConfigData.MainBranch,
 			},
-			&opcodes.PushCurrentBranchForceIfNeeded{
-				ForceIfIncludes: false,
-			},
+			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false},
 		)
 	case rebaseSyncStrategy && hasParentToDelete && parentToDeleteName != parentName:
 		// We sync a branch that has a different parent than the branch currently marked to be deleted.
