@@ -36,47 +36,31 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	fmt.Println("1111111111111111111111111111111 ParentToDelete", hasParentToDelete, parentToDeleteName)
 	fmt.Println("1111111111111111111111111111111 hasDescendents", hasDescendents)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
-	if hasParentToDelete && parentToDeleteName != parentName {
+	if hasParentToDelete && ((hasParentName && parentToDeleteName != parentName) || (!hasParentName)) {
 		// we have synced branches whose parent should be deleted before,
-		// and now we sync a branch with a new parent.
+		// and now we sync a branch with a new parent or with no parent.
 		// It's time to delete the parent to delete now.
 		args.Value.Program.Value.Add(
+			&opcodes.CheckoutIfNeeded{Branch: localName},
 			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
 			&opcodes.LineageBranchRemove{Branch: parentToDeleteName},
 		)
 	}
 	switch {
-	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && !hasParentToDelete:
+	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
 		// This branch needs to be deleted and its commits removed from all descendent branches.
-		// To do that, we mark it to be deleted here, sync its descendents, and then delete this branch.
+		// To do that, we mark it to be deleted here, sync its descendents to remove the commits of this branch,
+		// and when that is done we will delete this branch.
 		// More info at https://github.com/git-town/git-town/issues/4189.
 		args.Value.ParentToDelete = Some(localName)
-	case trackingBranchIsGone && rebaseSyncStrategy && hasParentToDelete && parentToDeleteName != parentName:
-		// T
-		// TODO: delete the parentTrackingBranchIsGone
-		fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBB")
-		args.Value.Program.Value.Add(
-			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
-		)
-		args.Value.ParentToDelete = None[gitdomain.LocalBranchName]()
-	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && hasParentToDelete:
-		fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCC")
-		// NOTE: here the current branch needs to be deleted, and its parent needs to be deleted as well.
-		// We delete the parent right now.
-		// This isn't 100% technically correct, but keeps the implementation simpler, and is hopefully good enough to cover all real-world use cases.
-		args.Value.Program.Value.Add(
-			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
-			&opcodes.LineageBranchRemove{Branch: parentToDeleteName},
-		)
-		args.Value.ParentToDelete = Some(localName)
-	case hasParentName && parentTrackingBranchIsGone && rebaseSyncStrategy && hasParentToDelete && parentToDeleteName == parentName:
+	case rebaseSyncStrategy && hasParentName && parentTrackingBranchIsGone && hasParentToDelete && parentToDeleteName == parentName:
+		// We sync a branch whose parent was deleted.
+		// We need to remove the commits of the parent from this branch.
 		args.Value.Program.Value.Add(
 			&opcodes.CheckoutIfNeeded{
 				Branch: localName,
 			},
-			&opcodes.PushCurrentBranchIfLocal{
-				CurrentBranch: localName,
-			},
+			&opcodes.PullCurrentBranch{},
 			&opcodes.RebaseOnto{
 				BranchToRebaseAgainst: parentName.BranchName(),
 				BranchToRebaseOnto:    args.Value.Config.ValidatedConfigData.MainBranch,
@@ -86,18 +70,14 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			},
 		)
 	case rebaseSyncStrategy && hasParentToDelete && parentToDeleteName != parentName:
+		// We sync a branch that has a different parent than the branch currently marked to be deleted.
+		// It's time to delete the marked branch now since all its descendents have been synced.
 		args.Value.Program.Value.Add(
-			&opcodes.BranchLocalDelete{
-				Branch: parentToDeleteName,
-			},
-			&opcodes.LineageBranchRemove{
-				Branch: parentToDeleteName,
-			},
+			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
+			&opcodes.LineageBranchRemove{Branch: parentToDeleteName},
 		)
 		args.Value.ParentToDelete = None[gitdomain.LocalBranchName]()
-	case
-		rebaseSyncStrategy && !hasParentToDelete && trackingBranchIsGone,
-		!rebaseSyncStrategy && trackingBranchIsGone:
+	case trackingBranchIsGone:
 		deletedBranchProgram(args.Value.Program, localName, originalParentName, originalParentSHA, *args.Value)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree

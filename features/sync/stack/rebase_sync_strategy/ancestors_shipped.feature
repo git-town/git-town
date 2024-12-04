@@ -25,7 +25,7 @@ Feature: shipped parent branches in a stacked change
       | feature-4 | feature | feature-3 | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
-      | feature-4 | local, origin | feature-3 commit | feature-3-file | feature 3 content |
+      | feature-4 | local, origin | feature-4 commit | feature-4-file | feature 4 content |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
