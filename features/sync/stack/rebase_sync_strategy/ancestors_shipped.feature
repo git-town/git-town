@@ -40,9 +40,9 @@ Feature: shipped parent branches in a stacked change
       | feature-3 | git fetch --prune --tags                |
       |           | git checkout main                       |
       | main      | git rebase origin/main --no-update-refs |
-      |           | git branch -D feature-1                 |
       |           | git checkout feature-3                  |
-      | feature-3 | git rebase --onto main feature-2        |
+      | feature-3 | git pull                                |
+      |           | git rebase --onto main feature-2        |
       |           | git push --force-with-lease             |
       |           | git branch -D feature-2                 |
     # And Git Town prints:
