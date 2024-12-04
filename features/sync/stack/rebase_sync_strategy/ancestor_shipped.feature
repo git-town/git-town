@@ -14,11 +14,25 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | gamma | feature | beta   | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
+      | gamma  | local, origin | gamma commit | file      | gamma content |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | delta | feature | gamma  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
+      | delta  | local, origin | delta commit | file      | delta content |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "beta"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
+    And origin ships the "beta" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
