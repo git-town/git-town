@@ -37,7 +37,13 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	fmt.Println("1111111111111111111111111111111 hasDescendents", hasDescendents)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
 	if hasParentToDelete && parentToDeleteName != parentName {
-		// there was a parent
+		// we have synced branches whose parent should be deleted before,
+		// and now we sync a branch with a new parent.
+		// It's time to delete the parent to delete now.
+		args.Value.Program.Value.Add(
+			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
+			&opcodes.LineageBranchRemove{Branch: parentToDeleteName},
+		)
 	}
 	switch {
 	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && !hasParentToDelete:
