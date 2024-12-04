@@ -19,12 +19,8 @@ func BranchesProgram(branchesToSync []configdomain.BranchToSync, args Mutable[Br
 	}
 	if parentToDelete, hasParentToDelete := args.Value.ParentToDelete.Get(); hasParentToDelete {
 		args.Value.Program.Value.Add(
-			&opcodes.BranchLocalDelete{
-				Branch: parentToDelete,
-			},
-			&opcodes.LineageBranchRemove{
-				Branch: parentToDelete,
-			},
+			&opcodes.BranchLocalDelete{Branch: parentToDelete},
+			&opcodes.LineageBranchRemove{Branch: parentToDelete},
 		)
 		args.Value.ParentToDelete = None[gitdomain.LocalBranchName]()
 	}
