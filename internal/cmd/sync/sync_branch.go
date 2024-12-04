@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -28,14 +30,39 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		parentTrackingBranchIsGone = parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	}
 	parentToDeleteName, hasParentToDelete := args.Value.ParentToDelete.Get()
+	fmt.Println("1111111111111111111111111111111 branch to sync", localName)
+	fmt.Println("1111111111111111111111111111111 trackingBranchIsGone", trackingBranchIsGone)
+	fmt.Println("1111111111111111111111111111111 parentTrackingBranchIsGone", parentTrackingBranchIsGone)
+	fmt.Println("1111111111111111111111111111111 ParentToDelete", hasParentToDelete, parentToDeleteName)
+	fmt.Println("1111111111111111111111111111111 hasDescendents", hasDescendents)
+	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
+	if hasParentToDelete && parentToDeleteName != parentName {
+		// there was a parent
+	}
 	switch {
-	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && args.Value.ParentToDelete.IsNone():
-		// do nothing here, we will remove this branch after having synced its descendent
+	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && !hasParentToDelete:
+		// This branch needs to be deleted and its commits removed from all descendent branches.
+		// To do that, we mark it to be deleted here, sync its descendents, and then delete this branch.
+		// More info at https://github.com/git-town/git-town/issues/4189.
 		args.Value.ParentToDelete = Some(localName)
-	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && args.Value.ParentToDelete.IsSome():
-		// here the current branch needs to be deleted, and its parent needs to be deleted as well
-		// what to do here?
-		// TODO: add an E2E test that reproduces this
+	case trackingBranchIsGone && rebaseSyncStrategy && hasParentToDelete && parentToDeleteName != parentName:
+		// T
+		// TODO: delete the parentTrackingBranchIsGone
+		fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBB")
+		args.Value.Program.Value.Add(
+			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
+		)
+		args.Value.ParentToDelete = None[gitdomain.LocalBranchName]()
+	case trackingBranchIsGone && rebaseSyncStrategy && hasDescendents && hasParentToDelete:
+		fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCC")
+		// NOTE: here the current branch needs to be deleted, and its parent needs to be deleted as well.
+		// We delete the parent right now.
+		// This isn't 100% technically correct, but keeps the implementation simpler, and is hopefully good enough to cover all real-world use cases.
+		args.Value.Program.Value.Add(
+			&opcodes.BranchLocalDelete{Branch: parentToDeleteName},
+			&opcodes.LineageBranchRemove{Branch: parentToDeleteName},
+		)
+		args.Value.ParentToDelete = Some(localName)
 	case hasParentName && parentTrackingBranchIsGone && rebaseSyncStrategy && hasParentToDelete && parentToDeleteName == parentName:
 		args.Value.Program.Value.Add(
 			&opcodes.CheckoutIfNeeded{
@@ -72,6 +99,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, *args.Value)
 	}
 	args.Value.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
+	fmt.Println("444444444444444444444444444444444444444444444444444444444", args.Value.Program)
 }
 
 type BranchProgramArgs struct {

@@ -18,6 +18,7 @@ Feature: shipped parent branches in a stacked change
     And the current branch is "feature-3"
     When I run "git-town sync"
 
+  @debug
   @this
   Scenario: result
     Then Git Town runs the commands
@@ -26,20 +27,27 @@ Feature: shipped parent branches in a stacked change
       |           | git checkout main                       |
       | main      | git rebase origin/main --no-update-refs |
       |           | git branch -D feature-1                 |
-      |           | git branch -D feature-2                 |
       |           | git checkout feature-3                  |
-    And Git Town prints:
-      """
-      deleted branch "feature-1"
-      """
-    And Git Town prints:
-      """
-      deleted branch "feature-2"
-      """
+      | feature-3 | git rebase --onto main feature-2        |
+      |           | git push --force-with-lease             |
+      |           | git branch -D feature-2                 |
+    # And Git Town prints:
+    #   """
+    #   deleted branch "feature-1"
+    #   """
+    # And Git Town prints:
+    #   """
+    #   deleted branch "feature-2"
+    #   """
     And the current branch is still "feature-3"
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | main      | local, origin | feature-1 commit |
+      |           |               | feature-2 commit |
+      | feature-3 | local, origin | feature-3 commit |
     And this lineage exists now
       | BRANCH    | PARENT |
       | feature-3 | main   |

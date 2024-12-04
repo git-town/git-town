@@ -14,7 +14,7 @@ func BranchesProgram(branchesToSync []configdomain.BranchToSync, args Mutable[Br
 	for _, branchToSync := range branchesToSync {
 		if localBranchName, hasLocalBranch := branchToSync.BranchInfo.LocalName.Get(); hasLocalBranch {
 			BranchProgram(localBranchName, branchToSync.BranchInfo, branchToSync.FirstCommitMessage, args)
-			fmt.Println("333333333333333333333333333333333333333333", args.Value.ParentToDelete)
+			fmt.Println("333333333333 parentToDelete", args.Value.ParentToDelete)
 		}
 	}
 	if parentToDelete, hasParentToDelete := args.Value.ParentToDelete.Get(); hasParentToDelete {
