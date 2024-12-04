@@ -3,16 +3,30 @@ Feature: shipped parent branches in a stacked change
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME      | TYPE    | PARENT    | LOCATIONS     |
-      | feature-1 | feature | main      | local, origin |
-      | feature-2 | feature | feature-1 | local, origin |
-      | feature-3 | feature | feature-2 | local, origin |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |
+    And the branches
+      | NAME      | TYPE    | PARENT    | LOCATIONS     |
+      | feature-2 | feature | feature-1 | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
+    And the branches
+      | NAME      | TYPE    | PARENT    | LOCATIONS     |
+      | feature-3 | feature | feature-2 | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-3 | local, origin | feature-3 commit | feature-3-file | feature 3 content |
+    And the branches
+      | NAME      | TYPE    | PARENT    | LOCATIONS     |
+      | feature-4 | feature | feature-3 | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
+      | feature-4 | local, origin | feature-3 commit | feature-3-file | feature 3 content |
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-3"
