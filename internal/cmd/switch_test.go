@@ -54,9 +54,10 @@ func TestSwitchBranch(t *testing.T) {
 				alpha := gitdomain.NewLocalBranchName("alpha")
 				beta := gitdomain.NewLocalBranchName("beta")
 				main := gitdomain.NewLocalBranchName("main")
-				lineage := configdomain.NewLineage()
-				lineage.Add(alpha, main)
-				lineage.Add(beta, main)
+				lineage := configdomain.NewLineageWith(configdomain.LineageData{
+					alpha: main,
+					beta:  main,
+				})
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -79,9 +80,10 @@ func TestSwitchBranch(t *testing.T) {
 				alpha := gitdomain.NewLocalBranchName("alpha")
 				beta := gitdomain.NewLocalBranchName("beta")
 				main := gitdomain.NewLocalBranchName("main")
-				lineage := configdomain.NewLineage()
-				lineage.Add(alpha, main)
-				lineage.Add(beta, main)
+				lineage := configdomain.NewLineageWith(configdomain.LineageData{
+					alpha: main,
+					beta:  main,
+				})
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusOtherWorktree},
@@ -107,9 +109,10 @@ func TestSwitchBranch(t *testing.T) {
 			beta := gitdomain.NewLocalBranchName("beta")
 			perennial1 := gitdomain.NewLocalBranchName("perennial-1")
 			main := gitdomain.NewLocalBranchName("main")
-			lineage := configdomain.NewLineage()
-			lineage.Add(alpha, main)
-			lineage.Add(beta, main)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				alpha: main,
+				beta:  main,
+			})
 			branchInfos := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{LocalName: Some(alpha), SyncStatus: gitdomain.SyncStatusLocalOnly},
 				gitdomain.BranchInfo{LocalName: Some(beta), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -159,9 +162,10 @@ func TestSwitchBranch(t *testing.T) {
 				child := gitdomain.NewLocalBranchName("child")
 				grandchild := gitdomain.NewLocalBranchName("grandchild")
 				main := gitdomain.NewLocalBranchName("main")
-				lineage := configdomain.NewLineage()
-				lineage.Add(child, main)
-				lineage.Add(grandchild, child)
+				lineage := configdomain.NewLineageWith(configdomain.LineageData{
+					child:      main,
+					grandchild: child,
+				})
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -185,8 +189,9 @@ func TestSwitchBranch(t *testing.T) {
 				local := gitdomain.NewLocalBranchName("local")
 				remote := gitdomain.NewRemoteBranchName("origin/remote")
 				main := gitdomain.NewLocalBranchName("main")
-				lineage := configdomain.NewLineage()
-				lineage.Add(local, main)
+				lineage := configdomain.NewLineageWith(configdomain.LineageData{
+					local: main,
+				})
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{RemoteName: Some(remote), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(local), SyncStatus: gitdomain.SyncStatusLocalOnly},

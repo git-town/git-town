@@ -62,8 +62,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("branch-1", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"branch-1": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -216,8 +217,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -311,8 +313,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -400,8 +403,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -473,8 +477,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -571,8 +576,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -707,8 +713,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -821,8 +828,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -926,8 +934,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -1049,8 +1058,9 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -1150,8 +1160,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -1251,8 +1262,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -1340,8 +1352,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -1431,8 +1444,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
@@ -1517,8 +1531,9 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		lineage := configdomain.NewLineage()
-		lineage.Add("feature-branch", "main")
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"feature-branch": "main",
+		})
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
 				MainBranch: "main",
