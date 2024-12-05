@@ -71,7 +71,7 @@ func (self AliasesModel) Init() tea.Cmd {
 }
 
 // RotateCurrentEntry switches the status of the currently selected list entry to the next status.
-func (self *AliasesModel) RotateCurrentEntry() {
+func (self AliasesModel) RotateCurrentEntry() AliasesModel {
 	var newSelection AliasSelection
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
@@ -88,20 +88,23 @@ func (self *AliasesModel) RotateCurrentEntry() {
 		newSelection = AliasSelectionNone
 	}
 	self.CurrentSelections[self.Cursor] = newSelection
+	return self
 }
 
 // SelectAll checks all entries in the list.
-func (self *AliasesModel) SelectAll() {
+func (self AliasesModel) SelectAll() AliasesModel {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionGT
 	}
+	return self
 }
 
 // SelectNone unchecks all entries in the list.
-func (self *AliasesModel) SelectNone() {
+func (self AliasesModel) SelectNone() AliasesModel {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionNone
 	}
+	return self
 }
 
 func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -114,7 +117,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.RotateCurrentEntry()
+		self = self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
 		self.Status = list.StatusDone
@@ -122,11 +125,11 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.String() {
 	case "a":
-		self.SelectAll()
+		self = self.SelectAll()
 	case "n":
-		self.SelectNone()
+		self = self.SelectNone()
 	case "o":
-		self.RotateCurrentEntry()
+		self = self.RotateCurrentEntry()
 		return self, nil
 	}
 	return self, nil

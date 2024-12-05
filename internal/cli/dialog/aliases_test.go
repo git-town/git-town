@@ -134,13 +134,13 @@ func TestAliases(t *testing.T) {
 				},
 			}
 			// rotate the first time to set to "checked"
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want := []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate a second time to set to "unchecked"
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
 			}
@@ -163,13 +163,13 @@ func TestAliases(t *testing.T) {
 				},
 			}
 			// rotate the first time to uncheck
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want := []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate the second time to check again
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 			}
@@ -192,19 +192,19 @@ func TestAliases(t *testing.T) {
 				},
 			}
 			// rotate the first time to check
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want := []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate the second time to uncheck
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate a third time to set to "other" again
-			model.RotateCurrentEntry()
+			model = model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionOther,
 			}
@@ -228,7 +228,7 @@ func TestAliases(t *testing.T) {
 				dialog.AliasSelectionNone,
 			},
 		}
-		model.SelectAll()
+		model = model.SelectAll()
 		want := []dialog.AliasSelection{
 			dialog.AliasSelectionGT,
 			dialog.AliasSelectionGT,
@@ -253,7 +253,7 @@ func TestAliases(t *testing.T) {
 				dialog.AliasSelectionGT,
 			},
 		}
-		model.SelectNone()
+		model = model.SelectNone()
 		want := []dialog.AliasSelection{
 			dialog.AliasSelectionNone,
 			dialog.AliasSelectionNone,

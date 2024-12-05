@@ -23,8 +23,8 @@ func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullC
 	}
 }
 
-func (self BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
-	result := maps.Keys(self)
+func (self *BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
+	result := maps.Keys(*self)
 	slices.Sort(result)
 	return result
 }
