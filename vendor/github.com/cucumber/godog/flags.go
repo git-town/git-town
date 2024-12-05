@@ -121,7 +121,7 @@ func BindFlags(prefix string, set *flag.FlagSet, opt *Options) {
 	set.BoolVar(&opt.ShowStepDefinitions, prefix+"definitions", defShowStepDefinitions, "Print all available step definitions.")
 	set.BoolVar(&opt.ShowStepDefinitions, prefix+"d", defShowStepDefinitions, "Print all available step definitions.")
 	set.BoolVar(&opt.StopOnFailure, prefix+"stop-on-failure", defStopOnFailure, "Stop processing on first failed scenario.")
-	set.BoolVar(&opt.Strict, prefix+"strict", defStrict, "Fail suite when there are pending or undefined steps.")
+	set.BoolVar(&opt.Strict, prefix+"strict", defStrict, "Fail suite when there are pending or undefined or ambiguous steps.")
 	set.BoolVar(&opt.NoColors, prefix+"no-colors", defNoColors, "Disable ansi colors.")
 	set.Var(&randomSeed{&opt.Randomize}, prefix+"random", descRandomOption)
 	set.BoolVar(&opt.ShowHelp, "godog.help", false, "Show usage help.")
