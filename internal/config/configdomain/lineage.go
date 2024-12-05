@@ -19,12 +19,14 @@ import (
 // branch --> its parent
 // Lineage only contains branches that have ancestors.
 type Lineage struct {
-	data map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
+	data LineageData
 }
+
+type LineageData map[gitdomain.LocalBranchName]gitdomain.LocalBranchName
 
 func NewLineage() Lineage {
 	return Lineage{
-		data: make(map[gitdomain.LocalBranchName]gitdomain.LocalBranchName),
+		data: make(LineageData),
 	}
 }
 
@@ -51,15 +53,15 @@ func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, remove
 			_ = removeLocalConfigValue(NewParentKey(child))
 		}
 		parent := gitdomain.NewLocalBranchName(value)
-		result.Add(child, parent)
+		result = result.Set(child, parent)
 	}
 	return result, nil
 }
 
-func (self Lineage) Add(branch, parent gitdomain.LocalBranchName) Lineage {
-	self = self.initializeIfNeeded()
-	self.data[branch] = parent
-	return self
+func NewLineageWith(data LineageData) Lineage {
+	return Lineage{
+		data: data,
+	}
 }
 
 // Ancestors provides the names of all parent branches of the branch with the given name.
@@ -212,8 +214,9 @@ func (self Lineage) Parent(branch gitdomain.LocalBranchName) Option[gitdomain.Lo
 }
 
 // RemoveBranch removes the given branch completely from this lineage.
-func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) {
+func (self Lineage) RemoveBranch(branch gitdomain.LocalBranchName) Lineage {
 	delete(self.data, branch)
+	return self
 }
 
 // Roots provides the branches with children and no parents.
@@ -227,6 +230,12 @@ func (self Lineage) Roots() gitdomain.LocalBranchNames {
 	}
 	roots.Sort()
 	return roots
+}
+
+func (self Lineage) Set(branch, parent gitdomain.LocalBranchName) Lineage {
+	self = self.initializeIfNeeded()
+	self.data[branch] = parent
+	return self
 }
 
 func (self Lineage) addChildrenHierarchically(result *gitdomain.LocalBranchNames, currentBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames) {
