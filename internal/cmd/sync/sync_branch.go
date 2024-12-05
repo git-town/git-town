@@ -39,7 +39,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	fmt.Println("1111111111111111111111111111111 hasDescendents", hasDescendents)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
 	if hasParentToRemove && rebaseSyncStrategy {
-		fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 		removeParentCommits(removeParentArgs{
 			program:           args.Value.Program,
 			branch:            localName,
@@ -50,19 +49,15 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	}
 	switch {
 	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
-		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 		args.Value.BranchesToDelete.Add(localName)
 	case trackingBranchIsGone:
-		fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
 		deletedBranchProgram(args.Value.Program, localName, originalParentName, originalParentSHA, *args.Value)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		fmt.Println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, *args.Value)
 	}
 	args.Value.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
-	fmt.Println("444444444444444444444444444444444444444444444444444444444", args.Value.Program)
 }
 
 type BranchProgramArgs struct {
