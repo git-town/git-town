@@ -38,19 +38,19 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	fmt.Println("1111111111111111111111111111111 parentTrackingBranchIsGone", parentTrackingBranchIsGone)
 	fmt.Println("1111111111111111111111111111111 hasDescendents", hasDescendents)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
+	if hasParentToRemove && rebaseSyncStrategy {
+		fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+		removeParentCommits(removeParentArgs{
+			program:           args.Value.Program,
+			branch:            localName,
+			parent:            parentToRemove.BranchName(),
+			rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
+			hasTrackingBranch: branchInfo.HasTrackingBranch(),
+		})
+	}
 	switch {
 	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
 		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-		if hasParentToRemove {
-			fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-			removeParentCommits(removeParentArgs{
-				program:           args.Value.Program,
-				branch:            localName,
-				parent:            parentToRemove.BranchName(),
-				rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
-				hasTrackingBranch: branchInfo.HasTrackingBranch(),
-			})
-		}
 		args.Value.BranchesToDelete.Add(localName)
 	case trackingBranchIsGone:
 		fmt.Println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")

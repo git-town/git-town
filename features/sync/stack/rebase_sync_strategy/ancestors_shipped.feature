@@ -29,7 +29,7 @@ Feature: shipped parent branches in a stacked change
     And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
-    And the current branch is "feature-3"
+    And the current branch is "feature-4"
     When I run "git-town sync"
 
   @debug
@@ -37,25 +37,34 @@ Feature: shipped parent branches in a stacked change
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | feature-3 | git fetch --prune --tags                        |
+      | feature-4 | git fetch --prune --tags                        |
       |           | git checkout main                               |
       | main      | git rebase origin/main --no-update-refs         |
       |           | git checkout feature-2                          |
       | feature-2 | git rebase --onto main feature-1                |
       |           | git checkout feature-3                          |
-      | feature-3 | git rebase feature-2 --no-update-refs           |
+      | feature-3 | git pull                                        |
+      |           | git rebase --onto main feature-2                |
+      |           | git push --force-with-lease                     |
+      |           | git rebase feature-2 --no-update-refs           |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git checkout feature-4                          |
+      | feature-4 | git pull                                        |
+      |           | git rebase --onto main feature-2                |
+      |           | git push --force-with-lease                     |
+      |           | git rebase feature-3 --no-update-refs           |
       |           | git push --force-with-lease --force-if-includes |
       |           | git branch -D feature-1                         |
       |           | git branch -D feature-2                         |
-    # And Git Town prints:
-    #   """
-    #   deleted branch "feature-1"
-    #   """
+    And Git Town prints:
+      """
+      deleted branch "feature-1"
+      """
     # And Git Town prints:
     #   """
     #   deleted branch "feature-2"
     #   """
-    And the current branch is still "feature-3"
+    And the current branch is still "feature-4"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-3, feature-4 |
@@ -64,13 +73,11 @@ Feature: shipped parent branches in a stacked change
       | main      | local, origin | feature-1 commit |
       |           |               | feature-1 commit |
       | feature-3 | local, origin | feature-3 commit |
-      | feature-4 | local, origin | feature-1 commit |
-      |           |               | feature-2 commit |
-      |           |               | feature-3 commit |
-      |           |               | feature-4 commit |
+      | feature-4 | local, origin | feature-4 commit |
     And this lineage exists now
-      | BRANCH    | PARENT |
-      | feature-3 | main   |
+      | BRANCH    | PARENT    |
+      | feature-3 | main      |
+      | feature-4 | feature-3 |
 
   Scenario: undo
     When I run "git-town undo"
