@@ -83,7 +83,9 @@ func Hardwrap(s string, limit int, preserveSpace bool) string {
 			}
 
 			buf.WriteByte(b[i])
-			curWidth++
+			if action == parser.PrintAction {
+				curWidth++
+			}
 		default:
 			buf.WriteByte(b[i])
 		}
@@ -349,6 +351,9 @@ func Wrap(s string, limit int, breakpoints string) string {
 					curWidth++
 				}
 			default:
+				if curWidth == limit {
+					addNewline()
+				}
 				word.WriteRune(r)
 				wordLen++
 
