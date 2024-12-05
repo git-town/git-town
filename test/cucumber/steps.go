@@ -1398,7 +1398,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-
 	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
