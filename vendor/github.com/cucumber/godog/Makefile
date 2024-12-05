@@ -2,21 +2,32 @@
 
 VERS ?= $(shell git symbolic-ref -q --short HEAD || git describe --tags --exact-match)
 
-FOUND_GO_VERSION := $(shell go version)
-EXPECTED_GO_VERSION = 1.17
+GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
+GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
+MINIMUM_SUPPORTED_GO_MAJOR_VERSION = 1
+MINIMUM_SUPPORTED_GO_MINOR_VERSION = 16
+GO_VERSION_VALIDATION_ERR_MSG = Go version $(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) is not supported, please update to at least $(MINIMUM_SUPPORTED_GO_MAJOR_VERSION).$(MINIMUM_SUPPORTED_GO_MINOR_VERSION)
+
 .PHONY: check-go-version
 check-go-version:
-	@$(if $(findstring ${EXPECTED_GO_VERSION}, ${FOUND_GO_VERSION}),(exit 0),(echo Wrong go version! Please install ${EXPECTED_GO_VERSION}; exit 1))
+	@if [ $(GO_MAJOR_VERSION) -gt $(MINIMUM_SUPPORTED_GO_MAJOR_VERSION) ]; then \
+		exit 0 ;\
+	elif [ $(GO_MAJOR_VERSION) -lt $(MINIMUM_SUPPORTED_GO_MAJOR_VERSION) ]; then \
+		echo '$(GO_VERSION_VALIDATION_ERR_MSG)';\
+		exit 1; \
+	elif [ $(GO_MINOR_VERSION) -lt $(MINIMUM_SUPPORTED_GO_MINOR_VERSION) ] ; then \
+		echo '$(GO_VERSION_VALIDATION_ERR_MSG)';\
+		exit 1; \
+	fi
 
 test: check-go-version
 	@echo "running all tests"
-	@go install ./...
 	@go fmt ./...
-	@go run honnef.co/go/tools/cmd/staticcheck@v0.2.2 github.com/cucumber/godog
-	@go run honnef.co/go/tools/cmd/staticcheck@v0.2.2 github.com/cucumber/godog/cmd/godog
+	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.7 github.com/cucumber/godog
+	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.7 github.com/cucumber/godog/cmd/godog
 	go vet ./...
 	go test -race ./...
-	godog -f progress -c 4
+	go run ./cmd/godog -f progress -c 4
 
 gherkin:
 	@if [ -z "$(VERS)" ]; then echo "Provide gherkin version like: 'VERS=commit-hash'"; exit 1; fi

@@ -7,7 +7,7 @@ to give you a grounding in some of the basic concepts. You could also watch [thi
 
 We want you to feel safe to make mistakes, and ask questions. If anything in this guide or anywhere else in the codebase doesn't make sense to you, please let us know! It's through your feedback that we can make this codebase more welcoming, so we'll be glad to hear thoughts.
 
-You can chat with us in the [#committers-go](https://cucumberbdd.slack.com/archives/CA5NJPDJ4) channel in our [community Slack], or feel free to [raise an issue] if you're experiencing any friction trying make your contribution.
+You can chat with us in the `#committers` channel in our [community Discord](https://cucumber.io/docs/community/get-in-touch/#discord), or feel free to [raise an issue] if you're experiencing any friction trying make your contribution.
 
 ## Setup
 
@@ -20,7 +20,7 @@ Once that's done, try running the tests:
 If everything passes, you're ready to hack!
 
 [install go]: https://golang.org/doc/install
-[community Slack]: https://cucumber.io/community#slack
+[community Discord]: https://cucumber.io/community#discord
 [raise an issue]: https://github.com/cucumber/godog/issues/new/choose
 
 ## Changing dependencies
