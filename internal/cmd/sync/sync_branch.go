@@ -43,7 +43,13 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 		if shouldDeleteParent {
 			fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-			removeParentCommits(args.Value.Program, localName, parentName.BranchName(), args.Value.Config.ValidatedConfigData.MainBranch)
+			removeParentCommits(removeParentArgs{
+				program:           args.Value.Program,
+				branch:            localName,
+				parent:            parentName.BranchName(),
+				rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
+				hasTrackingBranch: branchInfo.HasTrackingBranch(),
+			})
 		}
 		args.Value.BranchesToDelete.Add(localName)
 	case trackingBranchIsGone:
@@ -175,16 +181,30 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 	}
 }
 
-func removeParentCommits(program Mutable[program.Program], branch gitdomain.LocalBranchName, parent gitdomain.BranchName, rebaseOnto gitdomain.LocalBranchName) {
-	program.Value.Add(
-		&opcodes.CheckoutIfNeeded{Branch: branch},
-		&opcodes.PullCurrentBranch{},
+func removeParentCommits(args removeParentArgs) {
+	args.program.Value.Add(
+		&opcodes.CheckoutIfNeeded{Branch: args.branch},
+	)
+	if args.hasTrackingBranch {
+		args.program.Value.Add(
+			&opcodes.PullCurrentBranch{},
+		)
+	}
+	args.program.Value.Add(
 		&opcodes.RebaseOnto{
-			BranchToRebaseAgainst: parent,
-			BranchToRebaseOnto:    rebaseOnto,
+			BranchToRebaseAgainst: args.parent,
+			BranchToRebaseOnto:    args.rebaseOnto,
 		},
 		&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false},
 	)
+}
+
+type removeParentArgs struct {
+	program           Mutable[program.Program]
+	branch            gitdomain.LocalBranchName
+	parent            gitdomain.BranchName
+	rebaseOnto        gitdomain.LocalBranchName
+	hasTrackingBranch bool
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
