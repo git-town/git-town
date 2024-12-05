@@ -126,7 +126,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (self Fixture) CommitTable(fields []string) datatable.DataTable {
+func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
 	var mainBranch gitdomain.BranchName
@@ -184,7 +184,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (self Fixture) CreateTags(table *godog.Table) {
+func (self *Fixture) CreateTags(table *godog.Table) {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
 		log.Fatalf("tag table must have columns NAME and LOCATION")
@@ -204,12 +204,12 @@ func (self Fixture) CreateTags(table *godog.Table) {
 	}
 }
 
-func (self Fixture) Delete() {
+func (self *Fixture) Delete() {
 	os.RemoveAll(self.Dir)
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (self Fixture) TagTable() datatable.DataTable {
+func (self *Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
 	localTags := self.DevRepo.GetOrPanic().Tags()
 	builder.AddMany(localTags, "local")
@@ -230,7 +230,7 @@ func binPath(rootDir string) string {
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
-func (self Fixture) coworkerRepoPath() string {
+func (self *Fixture) coworkerRepoPath() string {
 	return filepath.Join(self.Dir, "coworker")
 }
 
@@ -252,6 +252,6 @@ func originRepoPath(rootDir string) string {
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.
-func (self Fixture) submoduleRepoPath() string {
+func (self *Fixture) submoduleRepoPath() string {
 	return filepath.Join(self.Dir, "submodule")
 }
