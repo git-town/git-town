@@ -8,6 +8,16 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 
 ## Unreleased
 
+## [v0.15.0]
+
+### Added
+- Improved the type checking of step return types and improved the error messages - ([647](https://github.com/cucumber/godog/pull/647) - [johnlon](https://github.com/johnlon))
+- Ambiguous step definitions will now be detected when strict mode is activated - ([636](https://github.com/cucumber/godog/pull/636)/([648](https://github.com/cucumber/godog/pull/648) - [johnlon](https://github.com/johnlon))
+- Provide support for attachments / embeddings including a new example in the examples dir - ([623](https://github.com/cucumber/godog/pull/623) - [johnlon](https://github.com/johnlon))
+
+### Changed
+- Formatters now have a `Close` method and associated `io.Writer` changed to `io.WriteCloser`.
+
 ## [v0.14.1]
 
 ### Added
@@ -231,6 +241,7 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 ### Changed
 - Changed code references to DATA-DOG/godog to cucumber/godog to help get things building correctly. ([mxygem](https://github.com/mxygem))
 
+[v0.15.0]: https://github.com/cucumber/godog/compare/v0.14.1...v0.15.0
 [v0.14.1]: https://github.com/cucumber/godog/compare/v0.14.0...v0.14.1
 [v0.14.0]: https://github.com/cucumber/godog/compare/v0.13.0...v0.14.0
 [v0.13.0]: https://github.com/cucumber/godog/compare/v0.12.6...v0.13.0

@@ -38,7 +38,7 @@ type Options struct {
 	// Stops on the first failure
 	StopOnFailure bool
 
-	// Fail suite when there are pending or undefined steps
+	// Fail suite when there are pending or undefined or ambiguous steps
 	Strict bool
 
 	// Forces ansi color stripping

@@ -50,13 +50,7 @@ See the [releasing guide] for release flow details.
 
 ## Getting help
 
-We have a [community Slack] where you can chat with other users, developers, and BDD practitioners.
-
-Here are some useful channels to try:
-
-- [#help-godog](https://cucumberbdd.slack.com/archives/CTNL1JCVA) - General Godog Adoption Help
-- [#committers-go](https://cucumberbdd.slack.com/archives/CA5NJPDJ4) - Golang focused Cucumber Contributors
-- [#committers](https://cucumberbdd.slack.com/archives/C62D0FK0E) - General Cucumber Contributors
+We have a [community Discord](https://cucumber.io/docs/community/get-in-touch/#discord) where you can chat with other users, developers, and BDD practitioners.
 
 ## Examples
 
@@ -291,6 +285,10 @@ Whether the user is a dumb website user or an API developer, who may understand 
 When steps are orthogonal and small, you can combine them just like you do with Unix tools. Look how to simplify or remove ones, which can be composed.
 
 `TestFeatures` acts as a regular Go test, so you can leverage your IDE facilities to run and debug it.
+
+### Attachments
+
+An example showing how to make attachments (aka embeddings) to the results is shown in [_examples/attachments](/_examples/attachments/)
 
 ## Code of Conduct
 
@@ -579,4 +577,7 @@ A simple example can be [found here](/_examples/custom-formatter).
 [license]: https://en.wikipedia.org/wiki/MIT_License "The MIT license"
 [contributing guide]: https://github.com/cucumber/godog/blob/main/CONTRIBUTING.md
 [releasing guide]: https://github.com/cucumber/godog/blob/main/RELEASING.md
-[community Slack]: https://cucumber.io/community#slack
+[community Discord]: https://cucumber.io/community#discord
+
+
+

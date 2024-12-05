@@ -36,6 +36,7 @@ var (
 	skipped   = models.Skipped
 	undefined = models.Undefined
 	pending   = models.Pending
+	ambiguous = models.Ambiguous
 )
 
 type sortFeaturesByName []*models.Feature

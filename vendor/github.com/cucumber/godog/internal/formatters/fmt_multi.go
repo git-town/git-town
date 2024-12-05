@@ -97,6 +97,13 @@ func (r repeater) Pending(pickle *messages.Pickle, step *messages.PickleStep, de
 	}
 }
 
+// Ambiguous triggers Ambiguous for all added formatters.
+func (r repeater) Ambiguous(pickle *messages.Pickle, step *messages.PickleStep, definition *formatters.StepDefinition, err error) {
+	for _, f := range r {
+		f.Ambiguous(pickle, step, definition, err)
+	}
+}
+
 // Summary triggers Summary for all added formatters.
 func (r repeater) Summary() {
 	for _, f := range r {
