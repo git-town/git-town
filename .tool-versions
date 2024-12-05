@@ -8,7 +8,7 @@ govulncheck 1.1.3
 depth 1.2.1
 dprint 0.47.2
 gofumpt 0.7.0
-golangci-lint 1.61.0
+golangci-lint 1.62.2
 goreleaser 1.26.2
 mdbook 0.4.40
 node 20.17.0
