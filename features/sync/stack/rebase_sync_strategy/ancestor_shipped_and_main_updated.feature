@@ -55,6 +55,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |          |               | commit 2 | file      | content 2    |
       | branch-3 | local, origin | commit 3 | file      | content 3    |
       | branch-4 | local, origin | commit 4 | file      | content 4    |
+
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
