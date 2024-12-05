@@ -6,7 +6,6 @@ linters:
     - dogsled # nothing we can do about this one
     - dupl # too many false positives
     - err113 # this leads to lots of unnecessary allocations and boilerplate
-    - execinquery # deprecated
     - exportloopref # deprecated
     - exhaustruct # we call this separately from golangci-lint via "make lint-smoke"
     - forbidigo # Git Town prints a lot to the CLI
@@ -18,7 +17,6 @@ linters:
     - gocyclo # we keep track of this via code reviews
     - godot # comments don't really need to read like prose, we don't use the godoc web UI
     - godox # we allow todo comments
-    - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - inamedparam # we are okay with concise interfaces
     - lll # we aren't enforcing a line length at this point
     - maintidx # we keep complexity under check with code reviews

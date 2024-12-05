@@ -1374,7 +1374,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
-		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
+		initialCommits := state.initialCommits.GetOrPanic()
+		errDiff, errCount := initialCommits.EqualDataTable(currentCommits)
 		if errCount == 0 {
 			return nil
 		}
@@ -1400,7 +1401,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
-		errDiff, errCount := state.initialTags.GetOrPanic().EqualDataTable(currentTags)
+		initialTags := state.initialTags.GetOrPanic()
+		errDiff, errCount := initialTags.EqualDataTable(currentTags)
 		if errCount == 0 {
 			return nil
 		}

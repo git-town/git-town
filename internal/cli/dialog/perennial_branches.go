@@ -62,7 +62,7 @@ type PerennialBranchesModel struct {
 }
 
 // checkedEntries provides all checked list entries.
-func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
+func (self PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for e, entry := range self.Entries {
 		if self.IsRowChecked(e) {
@@ -73,13 +73,15 @@ func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames 
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.
-func (self *PerennialBranchesModel) DisableCurrentEntry() {
+func (self PerennialBranchesModel) DisableCurrentEntry() PerennialBranchesModel {
 	self.Selections = slice.Remove(self.Selections, self.Cursor)
+	return self
 }
 
 // enableCurrentEntry checks the currently selected list entry.
-func (self *PerennialBranchesModel) EnableCurrentEntry() {
+func (self PerennialBranchesModel) EnableCurrentEntry() PerennialBranchesModel {
 	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
+	return self
 }
 
 func (self PerennialBranchesModel) Init() tea.Cmd {
@@ -87,23 +89,24 @@ func (self PerennialBranchesModel) Init() tea.Cmd {
 }
 
 // isRowChecked indicates whether the row with the given number is checked or not.
-func (self *PerennialBranchesModel) IsRowChecked(row int) bool {
+func (self PerennialBranchesModel) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
 // isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self *PerennialBranchesModel) IsSelectedRowChecked() bool {
+func (self PerennialBranchesModel) IsSelectedRowChecked() bool {
 	return self.IsRowChecked(self.Cursor)
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self *PerennialBranchesModel) ToggleCurrentEntry() {
+func (self PerennialBranchesModel) ToggleCurrentEntry() PerennialBranchesModel {
 	if self.IsRowChecked(self.Cursor) {
-		self.DisableCurrentEntry()
+		self = self.DisableCurrentEntry()
 	} else {
-		self.EnableCurrentEntry()
+		self = self.EnableCurrentEntry()
 	}
+	return self
 }
 
 func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -116,14 +119,14 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.ToggleCurrentEntry()
+		self = self.ToggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
 		self.Status = list.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.ToggleCurrentEntry()
+		self = self.ToggleCurrentEntry()
 		return self, nil
 	}
 	return self, nil
