@@ -208,6 +208,7 @@ func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates 
 		if candidates.Contains(parent) {
 			return Some(parent)
 		}
+		branch = parent
 	}
 }
 

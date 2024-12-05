@@ -449,6 +449,24 @@ func TestLineage(t *testing.T) {
 			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{})
 			must.Eq(t, None[gitdomain.LocalBranchName](), have)
 		})
+		t.Run("candidates contains branch", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
+			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{two, three})
+			must.Eq(t, Some(three), have)
+		})
+		t.Run("candidates not in lineage", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one: main,
+			})
+			have := lineage.LatestAncestor(two, gitdomain.LocalBranchNames{three})
+			must.Eq(t, None[gitdomain.LocalBranchName](), have)
+		})
 	})
 
 	t.Run("Len", func(t *testing.T) {
