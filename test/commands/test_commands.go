@@ -420,7 +420,7 @@ func (self *TestCommands) RemoveBranch(name gitdomain.LocalBranchName) {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (self *TestCommands) RemoveMainBranchConfiguration() {
-	self.MustRun("git", "config", "--unset", string(configdomain.KeyMainBranch))
+	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
