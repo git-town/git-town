@@ -79,6 +79,20 @@ func containsFunc[A, B any](slice []A, item B, eq func(a A, b B) bool) bool {
 	return found
 }
 
+func containsSubsetFunc[A, B any](slice []A, items []B, eq func(a A, b B) bool) (ok bool, missing B) {
+OUTER:
+	for _, target := range items {
+		var item A
+		for _, item = range slice {
+			if eq(item, target) {
+				continue OUTER
+			}
+		}
+		return false, target
+	}
+	return true, missing
+}
+
 func isNil(a any) bool {
 	// comparable check only works for simple types
 	if a == nil {
@@ -456,6 +470,36 @@ func SliceNotContainsFunc[A, B any](slice []A, item B, eq func(a A, b B) bool) (
 	return
 }
 
+func SliceContainsAllOp[C comparable](slice, items []C) (s string) {
+	if len(slice) != len(items) {
+		s = "expected slice and items to contain same number of elements\n"
+		s += bullet("len(slice): %d\n", len(slice))
+		s += bullet("len(items): %d\n", len(items))
+		return s
+	}
+	return SliceContainsSubsetOp(slice, items)
+}
+
+func SliceContainsAllFunc[A, B any](slice []A, items []B, eq func(a A, b B) bool) (s string) {
+	if len(slice) != len(items) {
+		s = "expected slice and items to contain same number of elements\n"
+		s += bullet("len(slice): %d\n", len(slice))
+		s += bullet("len(items): %d\n", len(items))
+		return s
+	}
+	return SliceContainsSubsetFunc(slice, items, eq)
+}
+
+func SliceContainsAllEqual[E interfaces.EqualFunc[E]](slice, items []E) (s string) {
+	if len(slice) != len(items) {
+		s = "expected slice and items to contain same number of elements\n"
+		s += bullet("len(slice): %d\n", len(slice))
+		s += bullet("len(items): %d\n", len(items))
+		return s
+	}
+	return SliceContainsSubsetEqual(slice, items)
+}
+
 func SliceContainsAll[A any](slice, items []A, opts ...cmp.Option) (s string) {
 	if len(slice) != len(items) {
 		s = "expected slice and items to contain same number of elements\n"
@@ -464,6 +508,40 @@ func SliceContainsAll[A any](slice, items []A, opts ...cmp.Option) (s string) {
 		return s
 	}
 	return SliceContainsSubset(slice, items, opts...)
+}
+
+func SliceContainsSubsetOp[C comparable](slice, items []C) (s string) {
+OUTER:
+	for _, target := range items {
+		var item C
+		for _, item = range slice {
+			if target == item {
+				continue OUTER
+			}
+		}
+		s = "expected slice to contain missing item via == operator\n"
+		s += bullet("slice is missing %#v\n", item)
+		return
+	}
+	return
+}
+
+func SliceContainsSubsetFunc[A, B any](slice []A, items []B, eq func(a A, b B) bool) (s string) {
+	ok, missing := containsSubsetFunc(slice, items, eq)
+	if !ok {
+		s = "expected slice to contain missing item via 'eq' function\n"
+		s += bullet("slice is missing %#v\n", missing)
+	}
+	return
+}
+
+func SliceContainsSubsetEqual[E interfaces.EqualFunc[E]](slice, items []E) (s string) {
+	ok, missing := containsSubsetFunc(slice, items, E.Equal)
+	if !ok {
+		s = "expected slice to contain missing item via .Equal method\n"
+		s += bullet("slice is missing %#v\n", missing)
+	}
+	return
 }
 
 func SliceContainsSubset[A any](slice, items []A, opts ...cmp.Option) (s string) {

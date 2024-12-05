@@ -3,6 +3,7 @@ package bitbucket
 import (
 	"errors"
 	"fmt"
+	"net/url"
 )
 
 //"github.com/k0kubun/pp"
@@ -35,16 +36,21 @@ func (r *Repositories) ListForAccount(ro *RepositoriesOptions) (*RepositoriesRes
 		urlPath += fmt.Sprintf("/%s", ro.Owner)
 	}
 	urlStr := r.c.requestUrl(urlPath)
+	urlAsUrl, err := url.Parse(urlStr)
+	if err != nil {
+		return nil, err
+	}
+	q := urlAsUrl.Query()
 	if ro.Role != "" {
-		urlStr += "?role=" + ro.Role
+		q.Set("role", ro.Role)
 	}
 	if ro.Keyword != nil && *ro.Keyword != "" {
-		if ro.Role == "" {
-			urlStr += "?"
-		}
 		// https://developer.atlassian.com/cloud/bitbucket/rest/intro/#operators
-		urlStr += fmt.Sprintf("q=full_name ~ \"%s\"", *ro.Keyword)
+		query := fmt.Sprintf("full_name ~ \"%s\"", *ro.Keyword)
+		q.Set("q", query)
 	}
+	urlAsUrl.RawQuery = q.Encode()
+	urlStr = urlAsUrl.String()
 	repos, err := r.c.executePaginated("GET", urlStr, "", ro.Page)
 	if err != nil {
 		return nil, err
