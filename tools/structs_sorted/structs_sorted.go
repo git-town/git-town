@@ -13,6 +13,7 @@ import (
 var (
 	// file paths to ignore
 	ignorePaths = []string{ //nolint:gochecknoglobals
+		"internal/config/configdomain/lineage_test.go",
 		"src/config/configfile/data.go",
 		"tools/structs_sorted/test.go",
 		"vendor/",
@@ -23,6 +24,8 @@ var (
 		"BranchSpan",
 		"Change",
 		"InconsistentChange",
+		"Lineage",
+		"LineageData",
 		"Parts",
 	}
 )

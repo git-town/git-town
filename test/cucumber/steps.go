@@ -1032,6 +1032,24 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy and resolves the merge conflict in "([^"]+)" with "([^"]+)" and commits as "([^"]+)"$`, func(ctx context.Context, branchName, fileName, fileContent, commitMessage string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		branchToShip := gitdomain.NewLocalBranchName(branchName)
+		originRepo := state.fixture.OriginRepo.GetOrPanic()
+		originRepo.CheckoutBranch("main")
+		err := originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
+		if err == nil {
+			panic("expected a merge conflict here")
+		}
+		originRepo.CreateFile(fileName, fileContent)
+		originRepo.StageFiles("-A")
+		err = originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
+		asserts.NoError(err)
+		originRepo.RemoveBranch(branchToShip)
+		originRepo.CheckoutBranch("initial")
+		return nil
+	})
+
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {

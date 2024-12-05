@@ -42,7 +42,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 				proposalOpt, _ := searchProposals(branchToVerify)
 				if proposal, hasProposal := proposalOpt.Get(); hasProposal {
 					parent := proposal.Target
-					additionalLineage.Add(branchToVerify, parent)
+					additionalLineage = additionalLineage.Set(branchToVerify, parent)
 					branchesToVerify = append(branchesToVerify, parent)
 					continue
 				}
@@ -66,7 +66,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 		case ParentOutcomePerennialBranch:
 			additionalPerennials = append(additionalPerennials, branchToVerify)
 		case ParentOutcomeSelectedParent:
-			additionalLineage.Add(branchToVerify, selectedBranch)
+			additionalLineage = additionalLineage.Set(branchToVerify, selectedBranch)
 			branchesToVerify = append(branchesToVerify, selectedBranch)
 		}
 	}

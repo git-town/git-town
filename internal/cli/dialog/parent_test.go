@@ -22,10 +22,11 @@ func TestParent(t *testing.T) {
 			branch3 := gitdomain.NewLocalBranchName("branch-3")
 			main := gitdomain.NewLocalBranchName("main")
 			localBranches := gitdomain.LocalBranchNames{branch1, branch2, branch3, main}
-			lineage := configdomain.NewLineage()
-			lineage.Add(branch1, main)
-			lineage.Add(branch2, main)
-			lineage.Add(branch3, main)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1: main,
+				branch2: main,
+				branch3: main,
+			})
 			have := dialog.ParentCandidateNames(dialog.ParentArgs{
 				Branch:          branch2,
 				DefaultChoice:   main,
@@ -46,12 +47,13 @@ func TestParent(t *testing.T) {
 			branch3 := gitdomain.NewLocalBranchName("branch-3")
 			main := gitdomain.NewLocalBranchName("main")
 			localBranches := gitdomain.LocalBranchNames{branch1, branch1a, branch2, branch2a, branch3, main}
-			lineage := configdomain.NewLineage()
-			lineage.Add(branch1, main)
-			lineage.Add(branch1a, branch1)
-			lineage.Add(branch2, main)
-			lineage.Add(branch2a, branch2)
-			lineage.Add(branch3, main)
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				branch1:  main,
+				branch1a: branch1,
+				branch2:  main,
+				branch2a: branch2,
+				branch3:  main,
+			})
 			have := dialog.ParentCandidateNames(dialog.ParentArgs{
 				Branch:          branch2,
 				DefaultChoice:   main,
