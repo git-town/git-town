@@ -1,6 +1,5 @@
 Feature: reset the configuration
 
-  @this
   Scenario: with configuration
     Given a Git repo with origin
     And the branches
