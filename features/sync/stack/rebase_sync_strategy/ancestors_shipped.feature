@@ -32,7 +32,6 @@ Feature: shipped parent branches in a stacked change
     And the current branch is "feature-4"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
@@ -59,10 +58,10 @@ Feature: shipped parent branches in a stacked change
       """
       deleted branch "feature-1"
       """
-    # And Git Town prints:
-    #   """
-    #   deleted branch "feature-2"
-    #   """
+    And Git Town prints:
+      """
+      deleted branch "feature-2"
+      """
     And the current branch is still "feature-4"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
