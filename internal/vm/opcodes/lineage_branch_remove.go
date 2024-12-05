@@ -21,6 +21,6 @@ func (self *LineageBranchRemove) Run(args shared.RunArgs) error {
 		}
 	}
 	args.PrependOpcodes(&LineageParentRemove{Branch: self.Branch})
-	args.Config.Value.NormalConfig.Lineage.RemoveBranch(self.Branch)
+	args.Config.Value.NormalConfig.Lineage = args.Config.Value.NormalConfig.Lineage.RemoveBranch(self.Branch)
 	return nil
 }
