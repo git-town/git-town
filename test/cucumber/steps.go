@@ -599,10 +599,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, name, value string) error {
+	sc.Step(`^global Git setting "rebase.updateRefs" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.Key(name), value)
+		key := configdomain.Key("rebase.updateRefs")
+		return devRepo.Config.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeGlobal, key, value)
 	})
 
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
@@ -1367,7 +1368,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial commits exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentCommits := state.fixture.CommitTable(state.initialCommits.GetOrPanic().Cells[0])
-		errDiff, errCount := state.initialCommits.GetOrPanic().EqualDataTable(currentCommits)
+		initialCommits := state.initialCommits.GetOrPanic()
+		errDiff, errCount := initialCommits.EqualDataTable(currentCommits)
 		if errCount == 0 {
 			return nil
 		}
@@ -1393,7 +1395,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the initial tags exist now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		currentTags := state.fixture.TagTable()
-		errDiff, errCount := state.initialTags.GetOrPanic().EqualDataTable(currentTags)
+		initialTags := state.initialTags.GetOrPanic()
+		errDiff, errCount := initialTags.EqualDataTable(currentTags)
 		if errCount == 0 {
 			return nil
 		}

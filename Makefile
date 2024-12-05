@@ -1,4 +1,4 @@
-RTA_VERSION = 0.7.1  # run-that-app version to use
+RTA_VERSION = 0.8.1  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -144,6 +144,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v IsGitRepo \
 	                                                           | grep -v Memoized.AsFixture \
 																														 | grep -v NewCommitMessages \
+	                                                           | grep -v NewLineageWith \
 	                                                           | grep -v NewSHAs \
 	                                                           | grep -v NewSet \
 	                                                           | grep -v Paniced \

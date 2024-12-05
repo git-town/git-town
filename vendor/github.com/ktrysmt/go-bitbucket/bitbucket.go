@@ -426,9 +426,16 @@ func (b *BranchRestrictionsOptions) WithContext(ctx context.Context) *BranchRest
 }
 
 type DiffOptions struct {
-	Owner    string `json:"owner"`
-	RepoSlug string `json:"repo_slug"`
-	Spec     string `json:"spec"`
+	Owner             string `json:"owner"`
+	RepoSlug          string `json:"repo_slug"`
+	Spec              string `json:"spec"`
+	Context           int    `json:"context"`
+	Path              string `json:"path"`
+	FromPullRequestID int    `json:"from_pullrequest_id"`
+	Whitespace        bool   `json:"ignore_whitespace"`
+	Binary            bool   `json:"binary"`
+	Renames           bool   `json:"renames"`
+	Topic             bool   `json:"topic"`
 }
 
 type DiffStatOptions struct {
@@ -437,14 +444,15 @@ type DiffStatOptions struct {
 	Spec              string `json:"spec"`
 	FromPullRequestID int    `json:"from_pullrequest_id"`
 	Whitespace        bool   `json:"ignore_whitespace"`
-	Merge             bool   `json:"merge"`
-	Path              string `json:"path"`
-	Renames           bool   `json:"renames"`
-	Topic             bool   `json:"topic"`
-	PageNum           int    `json:"page"`
-	Pagelen           int    `json:"pagelen"`
-	MaxDepth          int    `json:"max_depth"`
-	Fields            []string
+	// Deprecated: Merge is deprecated use Topic
+	Merge    bool   `json:"merge"`
+	Path     string `json:"path"`
+	Renames  bool   `json:"renames"`
+	Topic    bool   `json:"topic"`
+	PageNum  int    `json:"page"`
+	Pagelen  int    `json:"pagelen"`
+	MaxDepth int    `json:"max_depth"`
+	Fields   []string
 }
 
 type WebhooksOptions struct {
@@ -654,4 +662,11 @@ type DeployKeyOptions struct {
 func (dk *DeployKeyOptions) WithContext(ctx context.Context) *DeployKeyOptions {
 	dk.ctx = ctx
 	return dk
+}
+
+type SSHKeyOptions struct {
+	Owner    string `json:"owner"`
+	Uuid     string `json:"uuid"`
+	Label    string `json:"label"`
+	Key      string `json:"key"`
 }

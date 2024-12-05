@@ -1,18 +1,18 @@
-actionlint 1.7.3
+actionlint 1.7.4
 alphavet 0.1.0
 exhaustruct 3.3.0
 deadcode 0.16.1
 ireturn 0.3.0
-ghokin 3.6.0
+ghokin 3.7.0
 govulncheck 1.1.3
 depth 1.2.1
-dprint 0.47.2
+dprint 0.47.5
 gofumpt 0.7.0
-golangci-lint 1.61.0
+golangci-lint 1.62.2
 goreleaser 1.26.2
-mdbook 0.4.40
+mdbook 0.4.43
 node 20.17.0
 scc 3.4.0
 shellcheck system 0.10.0
-shfmt 3.9.0
+shfmt 3.10.0
 staticcheck 2024.1.1
