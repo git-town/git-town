@@ -195,8 +195,12 @@ func removeParentCommits(args removeParentArgs) {
 			BranchToRebaseAgainst: args.parent,
 			BranchToRebaseOnto:    args.rebaseOnto,
 		},
-		&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false},
 	)
+	if args.hasTrackingBranch {
+		args.program.Value.Add(
+			&opcodes.ForcePush{ForceIfIncludes: false},
+		)
+	}
 }
 
 type removeParentArgs struct {

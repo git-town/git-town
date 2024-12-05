@@ -36,15 +36,17 @@ Feature: shipped parent branches in a stacked change
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                 |
-      | feature-3 | git fetch --prune --tags                |
-      |           | git checkout main                       |
-      | main      | git rebase origin/main --no-update-refs |
-      |           | git checkout feature-3                  |
-      | feature-3 | git pull                                |
-      |           | git rebase --onto main feature-2        |
-      |           | git push --force-with-lease             |
-      |           | git branch -D feature-2                 |
+      | BRANCH    | COMMAND                                         |
+      | feature-3 | git fetch --prune --tags                        |
+      |           | git checkout main                               |
+      | main      | git rebase origin/main --no-update-refs         |
+      |           | git checkout feature-2                          |
+      | feature-2 | git rebase --onto main feature-1                |
+      |           | git checkout feature-3                          |
+      | feature-3 | git rebase feature-2 --no-update-refs           |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git branch -D feature-1                         |
+      |           | git branch -D feature-2                         |
     # And Git Town prints:
     #   """
     #   deleted branch "feature-1"
