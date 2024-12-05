@@ -42,7 +42,7 @@ github.com/charmbracelet/x/term
 # github.com/cucumber/gherkin/go/v26 v26.2.0
 ## explicit; go 1.19
 github.com/cucumber/gherkin/go/v26
-# github.com/cucumber/godog v0.15.0
+# github.com/cucumber/godog v0.14.1
 ## explicit; go 1.16
 github.com/cucumber/godog
 github.com/cucumber/godog/colors

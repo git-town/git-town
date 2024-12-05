@@ -153,31 +153,6 @@ func (f *Events) step(pickle *messages.Pickle, pickleStep *messages.PickleStep) 
 	if pickleStepResult.Err != nil {
 		errMsg = pickleStepResult.Err.Error()
 	}
-
-	if pickleStepResult.Attachments != nil {
-		for _, attachment := range pickleStepResult.Attachments {
-
-			f.event(&struct {
-				Event           string `json:"event"`
-				Location        string `json:"location"`
-				Timestamp       int64  `json:"timestamp"`
-				ContentEncoding string `json:"contentEncoding"`
-				FileName        string `json:"fileName"`
-				MimeType        string `json:"mimeType"`
-				Body            string `json:"body"`
-			}{
-				"Attachment",
-				fmt.Sprintf("%s:%d", pickle.Uri, step.Location.Line),
-				utils.TimeNowFunc().UnixNano() / nanoSec,
-				messages.AttachmentContentEncoding_BASE64.String(),
-				attachment.Name,
-				attachment.MimeType,
-				string(attachment.Data),
-			})
-
-		}
-	}
-
 	f.event(&struct {
 		Event     string `json:"event"`
 		Location  string `json:"location"`
@@ -198,7 +173,7 @@ func (f *Events) step(pickle *messages.Pickle, pickleStep *messages.PickleStep) 
 		pickleStepResults := f.Storage.MustGetPickleStepResultsByPickleID(pickle.Id)
 		for _, stepResult := range pickleStepResults {
 			switch stepResult.Status {
-			case passed, failed, undefined, pending, ambiguous:
+			case passed, failed, undefined, pending:
 				status = stepResult.Status.String()
 			}
 		}
@@ -311,16 +286,6 @@ func (f *Events) Failed(pickle *messages.Pickle, step *messages.PickleStep, matc
 // Pending captures pending step.
 func (f *Events) Pending(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition) {
 	f.Base.Pending(pickle, step, match)
-
-	f.Lock.Lock()
-	defer f.Lock.Unlock()
-
-	f.step(pickle, step)
-}
-
-// Ambiguous captures ambiguous step.
-func (f *Events) Ambiguous(pickle *messages.Pickle, step *messages.PickleStep, match *formatters.StepDefinition, err error) {
-	f.Base.Ambiguous(pickle, step, match, err)
 
 	f.Lock.Lock()
 	defer f.Lock.Unlock()

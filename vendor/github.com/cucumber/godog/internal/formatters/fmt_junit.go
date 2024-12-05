@@ -117,12 +117,6 @@ func (f *JUnit) buildJUNITPackageSuite() JunitPackageSuite {
 					tc.Failure = &junitFailure{
 						Message: fmt.Sprintf("Step %s: %s", pickleStep.Text, stepResult.Err),
 					}
-				case ambiguous:
-					tc.Status = ambiguous.String()
-					tc.Error = append(tc.Error, &junitError{
-						Type:    "ambiguous",
-						Message: fmt.Sprintf("Step %s", pickleStep.Text),
-					})
 				case skipped:
 					tc.Error = append(tc.Error, &junitError{
 						Type:    "skipped",

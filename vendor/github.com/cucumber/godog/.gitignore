@@ -9,5 +9,3 @@ Gopkg.toml
 .vscode
 
 _artifacts
-
-vendor

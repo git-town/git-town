@@ -16,9 +16,9 @@ var typeOfBytes = reflect.TypeOf([]byte(nil))
 
 // matchable errors
 var (
-	ErrUnmatchedStepArgumentNumber = errors.New("func expected more arguments than given")
+	ErrUnmatchedStepArgumentNumber = errors.New("func received more arguments than expected")
 	ErrCannotConvert               = errors.New("cannot convert argument")
-	ErrUnsupportedParameterType    = errors.New("func has unsupported parameter type")
+	ErrUnsupportedArgumentType     = errors.New("unsupported argument type")
 )
 
 // StepDefinition ...
@@ -36,9 +36,6 @@ type StepDefinition struct {
 var typeOfContext = reflect.TypeOf((*context.Context)(nil)).Elem()
 
 // Run a step with the matched arguments using reflect
-// Returns one of ...
-// (context, error)
-// (context, godog.Steps)
 func (sd *StepDefinition) Run(ctx context.Context) (context.Context, interface{}) {
 	var values []reflect.Value
 
@@ -164,8 +161,7 @@ func (sd *StepDefinition) Run(ctx context.Context) (context.Context, interface{}
 
 				return ctx, fmt.Errorf(`%w %d: "%v" of type "%T" to *messages.PickleTable`, ErrCannotConvert, i, arg, arg)
 			default:
-				// the error here is that the declared function has an unsupported param type - really this ought to be trapped at registration ti,e
-				return ctx, fmt.Errorf("%w: the data type of parameter %d type *%s is not supported", ErrUnsupportedParameterType, i, param.Elem().String())
+				return ctx, fmt.Errorf("%w: the argument %d type %T is not supported %s", ErrUnsupportedArgumentType, i, arg, param.Elem().String())
 			}
 		case reflect.Slice:
 			switch param {
@@ -176,13 +172,10 @@ func (sd *StepDefinition) Run(ctx context.Context) (context.Context, interface{}
 				}
 				values = append(values, reflect.ValueOf([]byte(s)))
 			default:
-				// the problem is the function decl is not using a support slice type as the param
-				return ctx, fmt.Errorf("%w: the slice parameter %d type []%s is not supported", ErrUnsupportedParameterType, i, param.Elem().Kind())
+				return ctx, fmt.Errorf("%w: the slice argument %d type %s is not supported", ErrUnsupportedArgumentType, i, param.Kind())
 			}
-		case reflect.Struct:
-			return ctx, fmt.Errorf("%w: the struct parameter %d type %s is not supported", ErrUnsupportedParameterType, i, param.String())
 		default:
-			return ctx, fmt.Errorf("%w: the parameter %d type %s is not supported", ErrUnsupportedParameterType, i, param.Kind())
+			return ctx, fmt.Errorf("%w: the argument %d type %s is not supported", ErrUnsupportedArgumentType, i, param.Kind())
 		}
 	}
 
@@ -191,43 +184,17 @@ func (sd *StepDefinition) Run(ctx context.Context) (context.Context, interface{}
 		return ctx, nil
 	}
 
-	// Note that the step fn return types were validated at Initialise in test_context.go stepWithKeyword()
-
-	// single return value may be one of ...
-	// error
-	// context.Context
-	// godog.Steps
-	result0 := res[0].Interface()
 	if len(res) == 1 {
+		r := res[0].Interface()
 
-		// if the single return value is a context then just return it
-		if ctx, ok := result0.(context.Context); ok {
+		if ctx, ok := r.(context.Context); ok {
 			return ctx, nil
 		}
 
-		// return type is presumably one of nil, "error" or "Steps" so place it into second return position
-		return ctx, result0
+		return ctx, res[0].Interface()
 	}
 
-	// multi-value value return must be
-	//  (context, error) and the context value must not be nil
-	if ctx, ok := result0.(context.Context); ok {
-		return ctx, res[1].Interface()
-	}
-
-	result1 := res[1].Interface()
-	errMsg := ""
-	if result1 != nil {
-		errMsg = fmt.Sprintf(", step def also returned an error: %v", result1)
-	}
-
-	text := sd.StepDefinition.Expr.String()
-
-	if result0 == nil {
-		panic(fmt.Sprintf("step definition '%v' with return type (context.Context, error) must not return <nil> for the context.Context value%s", text, errMsg))
-	}
-
-	panic(fmt.Errorf("step definition '%v' has return type (context.Context, error), but found %v rather than a context.Context value%s", text, result0, errMsg))
+	return res[0].Interface().(context.Context), res[1].Interface()
 }
 
 func (sd *StepDefinition) shouldBeString(idx int) (string, error) {
