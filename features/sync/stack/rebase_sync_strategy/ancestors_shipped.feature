@@ -57,8 +57,8 @@ Feature: shipped parent branches in a stacked change
     #   """
     And the current branch is still "feature-3"
     And the branches are now
-      | REPOSITORY    | BRANCHES        |
-      | local, origin | main, feature-3 |
+      | REPOSITORY    | BRANCHES                   |
+      | local, origin | main, feature-3, feature-4 |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | feature-1 commit |
