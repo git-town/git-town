@@ -1,7 +1,10 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
 
@@ -12,5 +15,6 @@ type BranchLocalDelete struct {
 }
 
 func (self *BranchLocalDelete) Run(args shared.RunArgs) error {
+	args.FinalMessages.Add(fmt.Sprintf(messages.BranchDeleted, self.Branch))
 	return args.Git.DeleteLocalBranch(args.Frontend, self.Branch)
 }

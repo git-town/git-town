@@ -1,11 +1,8 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
@@ -76,9 +73,6 @@ func syncDeleteLocalBranchProgram(prog Mutable[program.Program], branch gitdomai
 		&opcodes.BranchLocalDeleteContent{
 			BranchToDelete:     branch,
 			BranchToRebaseOnto: args.Config.ValidatedConfigData.MainBranch,
-		},
-		&opcodes.MessageQueue{
-			Message: fmt.Sprintf(messages.BranchDeleted, branch),
 		},
 	)
 }

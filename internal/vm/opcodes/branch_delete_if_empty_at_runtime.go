@@ -39,9 +39,7 @@ func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 			&LineageBranchRemove{
 				Branch: self.Branch,
 			},
-			&MessageQueue{
-				Message: fmt.Sprintf(messages.BranchDeleted, self.Branch),
-			})
+		)
 	}
 	return nil
 }
