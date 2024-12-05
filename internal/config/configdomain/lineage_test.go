@@ -427,6 +427,30 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("LatestAncestor", func(t *testing.T) {
+		t.Parallel()
+		t.Run("happy path", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
+			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{one, two})
+			must.Eq(t, Some(two), have)
+		})
+		t.Run("no candidates", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				one:   main,
+				two:   one,
+				three: two,
+			})
+			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{})
+			must.Eq(t, None[gitdomain.LocalBranchName](), have)
+		})
+	})
+
 	t.Run("Len", func(t *testing.T) {
 		t.Parallel()
 		t.Run("empty", func(t *testing.T) {

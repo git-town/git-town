@@ -30,9 +30,9 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	if hasParentBranchInfo {
 		parentTrackingBranchIsGone = parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	}
-	shouldDeleteParent := hasParentName && args.Value.BranchesToDelete.Contains(parentName)
+	parentToRemove, hasParentToRemove := args.Value.Config.NormalConfig.Lineage.LatestAncestor(localName, args.Value.BranchesToDelete.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
 	fmt.Println("1111111111111111111111111111111 branch to sync", localName)
-	fmt.Println("1111111111111111111111111111111 BranchesToDelete, shouldDeleteParent", args.Value.BranchesToDelete, shouldDeleteParent)
+	fmt.Println("1111111111111111111111111111111 hasParentToRemove, parentToRemove", hasParentToRemove, parentToRemove)
 	fmt.Println("1111111111111111111111111111111 hasParentName, parentName", hasParentName, parentName)
 	fmt.Println("1111111111111111111111111111111 trackingBranchIsGone", trackingBranchIsGone)
 	fmt.Println("1111111111111111111111111111111 parentTrackingBranchIsGone", parentTrackingBranchIsGone)
@@ -41,12 +41,12 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	switch {
 	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
 		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-		if shouldDeleteParent {
+		if hasParentToRemove {
 			fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 			removeParentCommits(removeParentArgs{
 				program:           args.Value.Program,
 				branch:            localName,
-				parent:            parentName.BranchName(),
+				parent:            parentToRemove.BranchName(),
 				rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
 				hasTrackingBranch: branchInfo.HasTrackingBranch(),
 			})

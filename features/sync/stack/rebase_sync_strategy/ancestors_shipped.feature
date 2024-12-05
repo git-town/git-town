@@ -62,8 +62,12 @@ Feature: shipped parent branches in a stacked change
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | feature-1 commit |
-      |           |               | feature-2 commit |
+      |           |               | feature-1 commit |
       | feature-3 | local, origin | feature-3 commit |
+      | feature-4 | local, origin | feature-1 commit |
+      |           |               | feature-2 commit |
+      |           |               | feature-3 commit |
+      |           |               | feature-4 commit |
     And this lineage exists now
       | BRANCH    | PARENT |
       | feature-3 | main   |
