@@ -487,10 +487,3 @@ func underlineColorString(c Color) string {
 	}
 	return defaultUnderlineColorAttr
 }
-
-func shift(v uint32) uint32 {
-	if v > 0xff {
-		return v >> 8
-	}
-	return v
-}

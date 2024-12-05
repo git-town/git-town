@@ -36,7 +36,7 @@ func apiBaseUrl() (*url.URL, error) {
 
 type Client struct {
 	Auth         *auth
-	Users        users
+	Users        *Users
 	User         user
 	Teams        teams
 	Repositories *Repositories
@@ -191,7 +191,10 @@ func injectClient(a *auth) *Client {
 		Downloads:          &Downloads{c: c},
 		DeployKeys:         &DeployKeys{c: c},
 	}
-	c.Users = &Users{c: c}
+	c.Users = &Users{
+		c: c,
+		SSHKeys:  &SSHKeys{c: c},
+	}
 	c.User = &User{c: c}
 	c.Teams = &Teams{c: c}
 	c.Workspaces = &Workspace{c: c, Repositories: c.Repositories, Permissions: &Permission{c: c}}
