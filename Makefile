@@ -144,6 +144,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v IsGitRepo \
 	                                                           | grep -v Memoized.AsFixture \
 																														 | grep -v NewCommitMessages \
+	                                                           | grep -v NewLineageWith \
 	                                                           | grep -v NewSHAs \
 	                                                           | grep -v NewSet \
 	                                                           | grep -v Paniced \
