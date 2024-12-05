@@ -277,7 +277,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 				PushBranches:       true,
 			})
 	}
-	branchesToDelete := set.Set[gitdomain.LocalBranchName]{}
+	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, NewMutable(&sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
 		BranchesToDelete:    branchesToDelete,

@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -244,6 +245,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	if !data.hasOpenChanges {
 		sync.BranchesProgram(data.branchesToSync, NewMutable(&sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
+			BranchesToDelete:    set.New[gitdomain.LocalBranchName](),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
