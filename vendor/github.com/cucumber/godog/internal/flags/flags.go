@@ -39,7 +39,7 @@ built-in formatters are:
 
 	flagSet.BoolVarP(&opts.ShowStepDefinitions, prefix+"definitions", "d", opts.ShowStepDefinitions, "print all available step definitions")
 	flagSet.BoolVar(&opts.StopOnFailure, prefix+"stop-on-failure", opts.StopOnFailure, "stop processing on first failed scenario")
-	flagSet.BoolVar(&opts.Strict, prefix+"strict", opts.Strict, "fail suite when there are pending or undefined steps")
+	flagSet.BoolVar(&opts.Strict, prefix+"strict", opts.Strict, "fail suite when there are pending or undefined or ambiguous steps")
 
 	flagSet.Int64Var(&opts.Randomize, prefix+"random", opts.Randomize, `randomly shuffle the scenario execution order
   --random
