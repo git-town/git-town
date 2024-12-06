@@ -1634,19 +1634,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.CreateTags(table)
 	})
 
-	sc.Step(`^the uncommitted file does not exist anymore$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		hasFile := devRepo.HasFile(
-			state.uncommittedFileName.GetOrPanic(),
-			state.uncommittedContent.GetOrPanic(),
-		)
-		if len(hasFile) == 0 {
-			return errors.New("uncommitted file still exists")
-		}
-		return nil
-	})
-
 	sc.Step(`^the uncommitted file has content:$`, func(ctx context.Context, content *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
