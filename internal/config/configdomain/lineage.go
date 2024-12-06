@@ -191,10 +191,6 @@ func (self Lineage) IsEmpty() bool {
 	return self.data == nil || self.Len() == 0
 }
 
-func (self Lineage) Len() int {
-	return len(self.data)
-}
-
 // provides the branch from candidates that is the youngest ancestor of the given branch
 func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
 	if candidates.Contains(branch) {
@@ -210,6 +206,10 @@ func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates 
 		}
 		branch = parent
 	}
+}
+
+func (self Lineage) Len() int {
+	return len(self.data)
 }
 
 // provides a new Lineage that consists of entries from both this and the given Lineage

@@ -1,8 +1,6 @@
 package sync
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/config"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -25,26 +23,15 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	trackingBranchIsGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Value.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Value.Config.NormalConfig.Lineage.HasDescendents(localName)
-	parentBranchInfo, hasParentBranchInfo := args.Value.BranchInfos.FindByLocalName(parentName).Get()
-	parentTrackingBranchIsGone := false
-	if hasParentBranchInfo {
-		parentTrackingBranchIsGone = parentBranchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
-	}
 	parentToRemove, hasParentToRemove := args.Value.Config.NormalConfig.Lineage.LatestAncestor(localName, args.Value.BranchesToDelete.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
-	fmt.Println("1111111111111111111111111111111 branch to sync", localName)
-	fmt.Println("1111111111111111111111111111111 hasParentToRemove, parentToRemove", hasParentToRemove, parentToRemove)
-	fmt.Println("1111111111111111111111111111111 hasParentName, parentName", hasParentName, parentName)
-	fmt.Println("1111111111111111111111111111111 trackingBranchIsGone", trackingBranchIsGone)
-	fmt.Println("1111111111111111111111111111111 parentTrackingBranchIsGone", parentTrackingBranchIsGone)
-	fmt.Println("1111111111111111111111111111111 hasDescendents", hasDescendents)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
 	if hasParentToRemove && rebaseSyncStrategy {
 		removeParentCommits(removeParentArgs{
-			program:           args.Value.Program,
 			branch:            localName,
-			parent:            parentToRemove.BranchName(),
-			rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
 			hasTrackingBranch: branchInfo.HasTrackingBranch(),
+			parent:            parentToRemove.BranchName(),
+			program:           args.Value.Program,
+			rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
 		})
 	}
 	switch {
