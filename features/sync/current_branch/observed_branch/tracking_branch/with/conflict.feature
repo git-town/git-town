@@ -75,7 +75,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git -c core.editor=true rebase --continue" and close the editor
+    And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND       |
