@@ -27,6 +27,7 @@ Feature: deleting a branch that conflicts with the main branch
     And the current branch is "feature-2"
     When I run "git-town delete"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                          |
