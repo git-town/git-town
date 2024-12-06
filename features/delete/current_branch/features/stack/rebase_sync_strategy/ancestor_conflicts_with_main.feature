@@ -47,6 +47,11 @@ Feature: deleting a branch that conflicts with the main branch
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT |
+      | main      | local, origin | main commit      | file      | main content |
+      | feature-1 | local, origin | feature-1 commit | file      | content 1    |
+      | feature-3 | local, origin | feature-3 commit | file      | content 3    |
     And this lineage exists now
       | BRANCH    | PARENT    |
       | feature-1 | main      |
