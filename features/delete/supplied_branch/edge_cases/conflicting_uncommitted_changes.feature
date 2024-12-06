@@ -1,4 +1,3 @@
-@this
 Feature: delete another than the current branch
 
   Background:
