@@ -28,7 +28,7 @@ Feature: shipped parent branches in a stacked change
       | feature-4 | local, origin | feature-4 commit | feature-4-file | feature 4 content |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
-    And origin ships the "feature-2" branch using the "squash-merge" ship-strategy
+    And origin ships the "feature-2" branch using the "squash-merge" ship-strategy as "feature-2 commit"
     And the current branch is "feature-4"
     When I run "git-town sync"
 
@@ -44,8 +44,6 @@ Feature: shipped parent branches in a stacked change
       | feature-3 | git pull                                        |
       |           | git rebase --onto main feature-2                |
       |           | git push --force-with-lease                     |
-      |           | git rebase feature-2 --no-update-refs           |
-      |           | git push --force-with-lease --force-if-includes |
       |           | git checkout feature-4                          |
       | feature-4 | git pull                                        |
       |           | git rebase --onto main feature-2                |
@@ -69,7 +67,7 @@ Feature: shipped parent branches in a stacked change
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | feature-1 commit |
-      |           |               | feature-1 commit |
+      |           |               | feature-2 commit |
       | feature-3 | local, origin | feature-3 commit |
       | feature-4 | local, origin | feature-4 commit |
     And this lineage exists now

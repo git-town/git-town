@@ -48,6 +48,8 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		})
 	}
 	switch {
+	case hasParentToRemove && parentToRemove == parentName && trackingBranchIsGone && hasDescendents:
+		args.Value.BranchesToDelete.Add(localName)
 	case hasParentToRemove && parentToRemove == parentName:
 		// nothing to do here, we already synced with the parent
 	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
