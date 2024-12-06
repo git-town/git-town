@@ -1,3 +1,4 @@
+@this
 Feature: shipped branch with multiple descendents
 
   Background:

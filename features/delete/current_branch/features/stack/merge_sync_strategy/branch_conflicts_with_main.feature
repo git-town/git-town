@@ -1,3 +1,4 @@
+@this
 Feature: deleting a branch that conflicts with the main branch
 
   Background:
@@ -23,7 +24,7 @@ Feature: deleting a branch that conflicts with the main branch
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT |
       | feature-3 | local, origin | feature-3 commit | file      | content 3    |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "merge"
     And the current branch is "feature-2"
     When I run "git-town delete"
 
