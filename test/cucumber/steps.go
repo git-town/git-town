@@ -375,7 +375,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
 		regex := regexp.MustCompile(strings.TrimSpace(expectedContent.Content))
 		if !regex.MatchString(actualContent) {
-			return fmt.Errorf("file content does not match\n\nEXPECTED VS ACTUAL:\n\n%q\n%q\n", expectedContent.Content, actualContent)
+			return fmt.Errorf("file content does not match\n\nEXPECTED VS ACTUAL:\n\n%q\n%q", expectedContent.Content, actualContent)
 		}
 		return nil
 	})
