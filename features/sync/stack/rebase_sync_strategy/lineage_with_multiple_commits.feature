@@ -28,7 +28,8 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout beta                       |
-      | beta   | git rebase --onto main alpha            |
+      | beta   | git pull                                |
+      |        | git rebase --onto main alpha            |
       |        | git push --force-with-lease             |
       |        | git branch -D alpha                     |
     And no rebase is now in progress
