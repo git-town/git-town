@@ -59,9 +59,9 @@ Feature: handle conflicts between the current observed branch and its tracking b
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | observed | git rebase --continue |
-      |          | git stash pop         |
+      | BRANCH   | COMMAND                                   |
+      | observed | git -c core.editor=true rebase --continue |
+      |          | git stash pop                             |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
