@@ -33,13 +33,13 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the current branch is "branch-4"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-4 | git fetch --prune --tags                        |
       |          | git checkout main                               |
       | main     | git rebase origin/main --no-update-refs         |
+      |          | git push                                        |
       |          | git branch -D branch-1                          |
       |          | git branch -D branch-2                          |
       |          | git checkout branch-3                           |
@@ -51,11 +51,12 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the current branch is now "branch-4"
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | main     | local, origin | commit 1 | file      | content 1    |
-      |          |               | commit 2 | file      | content 2    |
-      | branch-3 | local, origin | commit 3 | file      | content 3    |
-      | branch-4 | local, origin | commit 4 | file      | content 4    |
+      | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT |
+      | main     | local, origin | commit 1          | file      | content 1    |
+      |          |               | commit 2          | file      | content 2    |
+      |          |               | additional commit | new_file  |              |
+      | branch-3 | local, origin | commit 3          | file      | content 3    |
+      | branch-4 | local, origin | commit 4          | file      | content 4    |
 
   Scenario: undo
     When I run "git-town undo"
@@ -67,20 +68,18 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |          | git checkout branch-4                               |
       | branch-4 | git reset --hard {{ sha-before-run 'commit 4' }}    |
       |          | git push --force-with-lease --force-if-includes     |
-      |          | git checkout main                                   |
-      | main     | git reset --hard {{ sha 'initial commit' }}         |
       |          | git branch branch-1 {{ sha-before-run 'commit 1' }} |
       |          | git branch branch-2 {{ sha-before-run 'commit 2' }} |
-      |          | git checkout branch-4                               |
     And the current branch is still "branch-4"
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
-      | main     | origin        | commit 1 | file      | content 1    |
-      |          |               | commit 2 | file      | content 2    |
-      | branch-1 | local         | commit 1 | file      | content 1    |
-      | branch-2 | local         | commit 2 | file      | content 2    |
-      | branch-3 | local, origin | commit 3 | file      | content 3    |
-      |          | origin        | commit 1 | file      | content 1    |
-      |          |               | commit 2 | file      | content 2    |
-      | branch-4 | local, origin | commit 4 | file      | content 4    |
+      | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT |
+      | main     | local, origin | commit 1          | file      | content 1    |
+      |          |               | commit 2          | file      | content 2    |
+      |          |               | additional commit | new_file  |              |
+      | branch-1 | local         | commit 1          | file      | content 1    |
+      | branch-2 | local         | commit 2          | file      | content 2    |
+      | branch-3 | local, origin | commit 3          | file      | content 3    |
+      |          | origin        | commit 1          | file      | content 1    |
+      |          |               | commit 2          | file      | content 2    |
+      | branch-4 | local, origin | commit 4          | file      | content 4    |
     And the initial branches and lineage exist now
