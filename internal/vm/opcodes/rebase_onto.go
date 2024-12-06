@@ -39,6 +39,7 @@ func (self *RebaseOnto) Run(args shared.RunArgs) error {
 		}
 		for _, conflictingFile := range conflictingFiles {
 			_ = args.Git.CheckoutTheirVersion(args.Frontend, conflictingFile.CurrentBranchChange.FilePath)
+			_ = args.Git.StageFiles(args.Frontend, conflictingFile.CurrentBranchChange.FilePath)
 		}
 		_ = args.Git.ContinueRebase(args.Frontend)
 	}
