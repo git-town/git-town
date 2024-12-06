@@ -68,19 +68,20 @@ Feature: shipped branch with multiple descendents
       | feature-1a | main   |
       | feature-1b | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                                         |
-      | main       | git checkout feature-1a                         |
-      | feature-1a | git reset --hard {{ sha 'feature-1a commit' }}  |
-      |            | git push --force-with-lease --force-if-includes |
-      |            | git checkout feature-1b                         |
-      | feature-1b | git reset --hard {{ sha 'feature-1b commit' }}  |
-      |            | git push --force-with-lease --force-if-includes |
-      |            | git checkout main                               |
-      | main       | git reset --hard {{ sha 'initial commit' }}     |
-      |            | git branch feature-1 {{ 'feature-1 commit' }}   |
-      |            | git checkout feature-1                          |
-    And the current branch is still "feature-4"
+      | BRANCH     | COMMAND                                           |
+      | main       | git checkout feature-1a                           |
+      | feature-1a | git reset --hard {{ sha 'feature-1a commit' }}    |
+      |            | git push --force-with-lease --force-if-includes   |
+      |            | git checkout feature-1b                           |
+      | feature-1b | git reset --hard {{ sha 'feature-1b commit' }}    |
+      |            | git push --force-with-lease --force-if-includes   |
+      |            | git checkout main                                 |
+      | main       | git reset --hard {{ sha 'initial commit' }}       |
+      |            | git branch feature-1 {{ sha 'feature-1 commit' }} |
+      |            | git checkout feature-1                            |
+    And the current branch is still "feature-1"
     And the initial branches and lineage exist now
