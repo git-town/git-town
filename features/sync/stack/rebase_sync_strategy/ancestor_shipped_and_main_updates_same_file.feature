@@ -17,8 +17,8 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
-      | MESSAGE                    | FILE NAME | FILE CONTENT   |
-      | independent commit on main | file      | main content 1 |
+      | MESSAGE                    | FILE NAME | FILE CONTENT |
+      | independent commit on main | file      | main content |
     And the current branch is "beta"
     When I run "git-town sync"
 
@@ -71,10 +71,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git checkout beta  |
     And the current branch is still "beta"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT   |
-      | main   | local         | independent commit on main | file      | main content 1 |
-      |        | origin        | alpha commit               | file      | alpha content  |
-      | alpha  | local         | alpha commit               | file      | alpha content  |
-      | beta   | local, origin | beta commit                | file      | beta content   |
-      |        | origin        | alpha commit               | file      | alpha content  |
+      | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT  |
+      | main   | local         | independent commit on main | file      | main content  |
+      |        | origin        | alpha commit               | file      | alpha content |
+      | alpha  | local         | alpha commit               | file      | alpha content |
+      | beta   | local, origin | beta commit                | file      | beta content  |
+      |        | origin        | alpha commit               | file      | alpha content |
     And the initial branches and lineage exist now
