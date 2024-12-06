@@ -11,6 +11,7 @@ Feature: deleting a branch that conflicts with the main branch
       | main   | local, origin | main commit   | conflicting_file | main content   |
       | parent | local, origin | parent commit | parent_file      | parent content |
       | child  | local, origin | child commit  | conflicting_file | child content  |
+    And Git Town setting "sync-feature-strategy" is "merge"
     And the current branch is "child"
     When I run "git-town delete"
 
