@@ -84,7 +84,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

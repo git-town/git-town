@@ -38,12 +38,12 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                          |
-      | main   | git rebase --continue            |
-      |        | git push                         |
-      |        | git branch -D alpha              |
-      |        | git checkout beta                |
-      | beta   | git rebase main --no-update-refs |
+      | BRANCH | COMMAND                                   |
+      | main   | git -c core.editor=true rebase --continue |
+      |        | git push                                  |
+      |        | git branch -D alpha                       |
+      |        | git checkout beta                         |
+      | beta   | git rebase main --no-update-refs          |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
@@ -53,7 +53,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | beta   | git rebase --continue                           |
+      | beta   | git -c core.editor=true rebase --continue       |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is now "beta"

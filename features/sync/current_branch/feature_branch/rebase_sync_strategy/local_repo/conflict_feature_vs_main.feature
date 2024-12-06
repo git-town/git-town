@@ -61,9 +61,9 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git rebase --continue |
-      |         | git stash pop         |
+      | BRANCH  | COMMAND                                   |
+      | feature | git -c core.editor=true rebase --continue |
+      |         | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
