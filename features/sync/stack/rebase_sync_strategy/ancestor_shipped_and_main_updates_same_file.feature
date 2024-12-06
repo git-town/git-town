@@ -17,8 +17,8 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     And Git Town setting "sync-feature-strategy" is "rebase"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add this commit to the "main" branch
-      | MESSAGE                    | FILE NAME | FILE CONTENT   |
-      | independent commit on main | file      | main content 1 |
+      | MESSAGE                    | FILE NAME | FILE CONTENT |
+      | independent commit on main | file      | main content |
     And the current branch is "beta"
     When I run "git-town sync"
 
@@ -42,7 +42,8 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | main   | git rebase --continue        |
       |        | git push                     |
       |        | git checkout beta            |
-      | beta   | git rebase --onto main alpha |
+      | beta   | git pull                     |
+      |        | git rebase --onto main alpha |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
