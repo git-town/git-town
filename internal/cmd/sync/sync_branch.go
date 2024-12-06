@@ -52,7 +52,6 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 		// nothing to do here, we already synced with the parent
 	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
 		args.Value.BranchesToDelete.Add(localName)
-	// case rebaseSyncStrategy &&
 	case trackingBranchIsGone:
 		deletedBranchProgram(args.Value.Program, localName, originalParentName, originalParentSHA, *args.Value)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
