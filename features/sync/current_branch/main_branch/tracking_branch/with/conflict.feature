@@ -53,11 +53,11 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | main   | git rebase --continue |
-      |        | git push              |
-      |        | git push --tags       |
-      |        | git stash pop         |
+      | BRANCH | COMMAND                                   |
+      | main   | git -c core.editor=true rebase --continue |
+      |        | git push                                  |
+      |        | git push --tags                           |
+      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "main"
     And the uncommitted file still exists
@@ -67,7 +67,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue" and close the editor
+    And I run "git -c core.editor=true rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND         |

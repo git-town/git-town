@@ -59,11 +59,11 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | qa     | git rebase --continue |
-      |        | git push              |
-      |        | git push --tags       |
-      |        | git stash pop         |
+      | BRANCH | COMMAND                                   |
+      | qa     | git -c core.editor=true rebase --continue |
+      |        | git push                                  |
+      |        | git push --tags                           |
+      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress
@@ -74,7 +74,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue" and close the editor
+    And I run "git -c core.editor=true rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND         |

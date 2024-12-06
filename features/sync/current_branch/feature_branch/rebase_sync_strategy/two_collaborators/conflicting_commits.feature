@@ -60,7 +60,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -90,7 +90,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

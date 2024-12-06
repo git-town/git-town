@@ -72,14 +72,14 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
@@ -94,7 +94,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue" and enter "resolved conflict between main and feature branch" for the commit message
+    And I run "git -c core.editor=true rebase --continue" and enter "resolved conflict between main and feature branch" for the commit message
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -104,7 +104,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized

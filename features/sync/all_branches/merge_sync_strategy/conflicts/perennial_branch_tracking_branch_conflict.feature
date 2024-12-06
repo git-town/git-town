@@ -89,15 +89,15 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                  |
-      | beta   | git rebase --continue                    |
-      |        | git push                                 |
-      |        | git checkout gamma                       |
-      | gamma  | git rebase origin/gamma --no-update-refs |
-      |        | git checkout main                        |
-      | main   | git rebase origin/main --no-update-refs  |
-      |        | git push --tags                          |
-      |        | git stash pop                            |
+      | BRANCH | COMMAND                                   |
+      | beta   | git -c core.editor=true rebase --continue |
+      |        | git push                                  |
+      |        | git checkout gamma                        |
+      | gamma  | git rebase origin/gamma --no-update-refs  |
+      |        | git checkout main                         |
+      | main   | git rebase origin/main --no-update-refs   |
+      |        | git push --tags                           |
+      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is now "main"
     And the uncommitted file still exists
@@ -105,7 +105,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue" and close the editor
+    And I run "git -c core.editor=true rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                  |
