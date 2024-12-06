@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -115,15 +116,16 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	runProgram := NewMutable(&program.Program{})
-	BranchesProgram(data.branchesToSync, BranchProgramArgs{
+	BranchesProgram(data.branchesToSync, NewMutable(&BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchesToDelete:    set.New[gitdomain.LocalBranchName](),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
 		PushBranches:        pushBranches,
 		Remotes:             data.remotes,
-	})
+	}))
 	previousbranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	finalBranchCandidates := gitdomain.LocalBranchNames{data.initialBranch}
 	if previousBranch, hasPreviousBranch := data.previousBranch.Get(); hasPreviousBranch {

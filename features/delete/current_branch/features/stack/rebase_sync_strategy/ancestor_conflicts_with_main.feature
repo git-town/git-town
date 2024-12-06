@@ -29,11 +29,18 @@ Feature: deleting a branch that conflicts with the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                    |
-      | feature-2 | git fetch --prune --tags   |
-      |           | git push origin :feature-2 |
-      |           | git checkout main          |
-      | main      | git branch -D feature-2    |
+      | BRANCH    | COMMAND                                   |
+      | feature-2 | git fetch --prune --tags                  |
+      |           | git push origin :feature-2                |
+      |           | git checkout feature-3                    |
+      | feature-3 | git pull                                  |
+      |           | git rebase --onto main feature-2          |
+      |           | git checkout --theirs file                |
+      |           | git add file                              |
+      |           | git -c core.editor=true rebase --continue |
+      |           | git push --force-with-lease               |
+      |           | git checkout main                         |
+      | main      | git branch -D feature-2                   |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
@@ -42,8 +49,7 @@ Feature: deleting a branch that conflicts with the main branch
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT |
       | main      | local, origin | main commit      | file      | main content |
       | feature-1 | local, origin | feature-1 commit | file      | content 1    |
-      | feature-3 | local, origin | feature-2 commit | file      | content 2    |
-      |           |               | feature-3 commit | file      | content 3    |
+      | feature-3 | local, origin | feature-3 commit | file      | content 3    |
     And this lineage exists now
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -52,10 +58,13 @@ Feature: deleting a branch that conflicts with the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                           |
-      | main   | git branch feature-2 {{ sha 'feature-2 commit' }} |
-      |        | git push -u origin feature-2                      |
-      |        | git checkout feature-2                            |
+      | BRANCH    | COMMAND                                           |
+      | main      | git checkout feature-3                            |
+      | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}     |
+      |           | git push --force-with-lease --force-if-includes   |
+      |           | git branch feature-2 {{ sha 'feature-2 commit' }} |
+      |           | git push -u origin feature-2                      |
+      |           | git checkout feature-2                            |
     And the current branch is still "feature-2"
     And the branches are now
       | REPOSITORY    | BRANCHES                              |

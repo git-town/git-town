@@ -7,30 +7,53 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/opcodes"
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/pkg/set"
 )
 
 // BranchProgram syncs the given branch.
-func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	originalParentName := args.Config.NormalConfig.Lineage.Parent(localName)
+func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args Mutable[BranchProgramArgs]) {
+	originalParentName := args.Value.Config.NormalConfig.Lineage.Parent(localName)
 	originalParentSHA := None[gitdomain.SHA]()
-	if parentName, hasParentName := originalParentName.Get(); hasParentName {
-		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+	parentName, hasParentName := originalParentName.Get()
+	if hasParentName {
+		if parentBranchInfo, hasParentBranchInfo := args.Value.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
-	switch {
-	case branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
-		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
-	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
-		// Git Town doesn't sync branches that are active in another worktree
-	default:
-		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
+	trackingBranchIsGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
+	rebaseSyncStrategy := args.Value.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
+	hasDescendents := args.Value.Config.NormalConfig.Lineage.HasDescendents(localName)
+	parentToRemove, hasParentToRemove := args.Value.Config.NormalConfig.Lineage.LatestAncestor(localName, args.Value.BranchesToDelete.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
+	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
+	if hasParentToRemove && rebaseSyncStrategy {
+		RemoveParentCommits(RemoveParentArgs{
+			Branch:            localName,
+			HasTrackingBranch: branchInfo.HasTrackingBranch(),
+			Parent:            parentToRemove.BranchName(),
+			Program:           args.Value.Program,
+			RebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
+		})
 	}
-	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
+	switch {
+	case hasParentToRemove && parentToRemove == parentName && trackingBranchIsGone && hasDescendents:
+		args.Value.BranchesToDelete.Add(localName)
+	case hasParentToRemove && parentToRemove == parentName:
+		// nothing to do here, we already synced with the parent
+	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
+		args.Value.BranchesToDelete.Add(localName)
+	case trackingBranchIsGone:
+		deletedBranchProgram(args.Value.Program, localName, originalParentName, originalParentSHA, *args.Value)
+	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
+		// cannot sync branches that are active in another worktree
+	default:
+		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, *args.Value)
+	}
+	args.Value.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
+	BranchInfos         gitdomain.BranchInfos              // the initial BranchInfos, after "git fetch" ran
+	BranchesToDelete    set.Set[gitdomain.LocalBranchName] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
@@ -142,6 +165,36 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 	case configdomain.SyncFeatureStrategyCompress:
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
 	}
+}
+
+func RemoveParentCommits(args RemoveParentArgs) {
+	args.Program.Value.Add(
+		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
+	)
+	if args.HasTrackingBranch {
+		args.Program.Value.Add(
+			&opcodes.PullCurrentBranch{},
+		)
+	}
+	args.Program.Value.Add(
+		&opcodes.RebaseOnto{
+			BranchToRebaseAgainst: args.Parent,
+			BranchToRebaseOnto:    args.RebaseOnto,
+		},
+	)
+	if args.HasTrackingBranch {
+		args.Program.Value.Add(
+			&opcodes.ForcePush{ForceIfIncludes: false},
+		)
+	}
+}
+
+type RemoveParentArgs struct {
+	Branch            gitdomain.LocalBranchName
+	HasTrackingBranch bool
+	Parent            gitdomain.BranchName
+	Program           Mutable[program.Program]
+	RebaseOnto        gitdomain.LocalBranchName
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.

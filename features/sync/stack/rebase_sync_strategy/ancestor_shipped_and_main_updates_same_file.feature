@@ -41,20 +41,29 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | COMMAND                                   |
       | main   | git -c core.editor=true rebase --continue |
       |        | git push                                  |
-      |        | git branch -D alpha                       |
       |        | git checkout beta                         |
-      | beta   | git rebase main --no-update-refs          |
+      | beta   | git pull                                  |
+      |        | git rebase --onto main alpha              |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file
+      """
+    And file "file" now has content like
+      """
+      <<<<<<< HEAD
+      resolved main content
+      =======
+      beta content
+      >>>>>>> .* \(beta commit\)
       """
     And a rebase is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git -c core.editor=true rebase --continue       |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND                                   |
+      | beta   | git -c core.editor=true rebase --continue |
+      |        | git push --force-with-lease               |
+      |        | git branch -D alpha                       |
     And all branches are now synchronized
     And the current branch is now "beta"
     And these commits exist now

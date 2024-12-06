@@ -119,6 +119,10 @@ func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) e
 	return runner.Run("git", "checkout", "--ours", file)
 }
 
+func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string) error {
+	return runner.Run("git", "checkout", "--theirs", file)
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
@@ -542,6 +546,12 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 	if version.HasRebaseUpdateRefs() {
 		args = append(args, "--no-update-refs")
 	}
+	return runner.Run("git", args...)
+}
+
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName) error {
+	args := []string{"rebase", "--onto", branchToRebaseOnto.String(), branchToRebaseAgainst.String()}
 	return runner.Run("git", args...)
 }
 

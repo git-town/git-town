@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -276,15 +277,24 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 				PushBranches:       true,
 			})
 	}
-	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
+	branchesToDelete := set.New[gitdomain.LocalBranchName]()
+	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, NewMutable(&sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
+		BranchesToDelete:    branchesToDelete,
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             prog,
 		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
 		Remotes:             data.remotes,
-	})
+	}))
+	for _, branchToDelete := range branchesToDelete.Values() {
+		prog.Value.Add(
+			&opcodes.BranchLocalDelete{Branch: branchToDelete},
+			&opcodes.LineageBranchRemove{Branch: branchToDelete},
+		)
+	}
+	// TODO: if it doesn't exist yet, add E2E test that merges a branch which was deleted at the remote
 	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsFalse() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
 		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
