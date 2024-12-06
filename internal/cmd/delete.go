@@ -262,7 +262,6 @@ func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runPro
 	return prog.Immutable(), undoProg.Immutable()
 }
 
-// deleteFeatureBranch deletes the given feature branch everywhere it exists (locally and remotely).
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
 	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
 	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.IsOnline() {
@@ -272,7 +271,6 @@ func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data d
 	deleteLocalBranch(prog, finalUndoProgram, data)
 }
 
-// deleteFeatureBranch deletes the given feature branch everywhere it exists (locally and remotely).
 func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
 	if localBranchToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get(); hasLocalBranchToDelete {
 		if data.initialBranch == localBranchToDelete {
