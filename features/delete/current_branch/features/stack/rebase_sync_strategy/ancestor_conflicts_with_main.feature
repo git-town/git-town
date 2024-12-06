@@ -25,30 +25,32 @@ Feature: deleting a branch that conflicts with the main branch
       | feature-3 | local, origin | feature-3 commit | file      | content 3    |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "feature-2"
+    # And inspect the repo
     When I run "git-town delete"
 
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                          |
-      | feature-2 | git fetch --prune --tags         |
-      |           | git push origin :feature-2       |
-      |           | git checkout feature-3           |
-      | feature-3 | git pull                         |
-      |           | git rebase --onto main feature-2 |
-    And Git Town prints an error like:
-      """
-      CONFLICT (content): Merge conflict in file
-      error: could not apply .*... feature-3 commit
-      """
-    And the current branch is now "feature-3"
-  # And the branches are now
-  #   | REPOSITORY    | BRANCHES                   |
-  #   | local, origin | main, feature-1, feature-3 |
-  # And this lineage exists now
-  #   | BRANCH    | PARENT    |
-  #   | feature-1 | main      |
-  #   | feature-3 | feature-1 |
+      | BRANCH    | COMMAND                                   |
+      | feature-2 | git fetch --prune --tags                  |
+      |           | git push origin :feature-2                |
+      |           | git checkout feature-3                    |
+      | feature-3 | git pull                                  |
+      |           | git rebase --onto main feature-2          |
+      |           | git add -A                                |
+      |           | git -c core.editor=true rebase --continue |
+      |           | git push --force-with-lease               |
+      |           | git checkout main                         |
+      | main      | git rebase --onto main feature-2          |
+      |           | git branch -D feature-2                   |
+    And the current branch is now "main"
+    And the branches are now
+      | REPOSITORY    | BRANCHES                   |
+      | local, origin | main, feature-1, feature-3 |
+    And this lineage exists now
+      | BRANCH    | PARENT    |
+      | feature-1 | main      |
+      | feature-3 | feature-1 |
 
   Scenario: undo
     When I run "git-town undo"
