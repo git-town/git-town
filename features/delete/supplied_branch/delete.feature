@@ -1,4 +1,3 @@
-@this
 @smoke
 Feature: delete the given branch
 
