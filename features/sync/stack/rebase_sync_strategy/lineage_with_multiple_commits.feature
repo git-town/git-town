@@ -23,15 +23,15 @@ Feature: stack that changes the same file in multiple commits per branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout beta                       |
-      | beta   | git pull                                |
-      |        | git rebase --onto main alpha            |
-      |        | git push --force-with-lease             |
-      |        | git branch -D alpha                     |
+      | BRANCH | COMMAND                                   |
+      | beta   | git fetch --prune --tags                  |
+      |        | git checkout main                         |
+      | main   | git rebase origin/main --no-update-refs   |
+      |        | git checkout beta                         |
+      | beta   | git pull                                  |
+      |        | git -c core.editor=true rebase --continue |
+      |        | git push --force-with-lease               |
+      |        | git branch -D alpha                       |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
