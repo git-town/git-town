@@ -68,7 +68,6 @@ Feature: shipped branch with multiple descendents
       | feature-1a | main   |
       | feature-1b | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
