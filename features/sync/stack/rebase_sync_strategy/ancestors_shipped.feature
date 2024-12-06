@@ -79,12 +79,16 @@ Feature: shipped parent branches in a stacked change
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                      |
+      | feature-4 | git checkout feature-3                                       |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                |
+      |           | git push --force-with-lease --force-if-includes              |
+      |           | git checkout feature-4                                       |
+      | feature-4 | git reset --hard {{ sha 'feature-4 commit' }}                |
       |           | git push --force-with-lease --force-if-includes              |
       |           | git checkout main                                            |
       | main      | git reset --hard {{ sha 'initial commit' }}                  |
       |           | git branch feature-1 {{ sha-before-run 'feature-1 commit' }} |
       |           | git branch feature-2 {{ sha-before-run 'feature-2 commit' }} |
-      |           | git checkout feature-3                                       |
-    And the current branch is still "feature-3"
+      |           | git checkout feature-4                                       |
+    And the current branch is still "feature-4"
     And the initial branches and lineage exist now
