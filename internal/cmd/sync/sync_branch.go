@@ -52,11 +52,11 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
+	BranchInfos         gitdomain.BranchInfos              // the initial BranchInfos, after "git fetch" ran
+	BranchesToDelete    set.Set[gitdomain.LocalBranchName] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
-	BranchesToDelete    set.Set[gitdomain.LocalBranchName] // branches that should be deleted after the branches are all synced
-	PrefetchBranchInfos gitdomain.BranchInfos              // BranchInfos before "git fetch" ran
+	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
 	PushBranches        configdomain.PushBranches
 	Remotes             gitdomain.Remotes
@@ -190,11 +190,11 @@ func removeParentCommits(args removeParentArgs) {
 }
 
 type removeParentArgs struct {
-	program           Mutable[program.Program]
 	branch            gitdomain.LocalBranchName
-	parent            gitdomain.BranchName
-	rebaseOnto        gitdomain.LocalBranchName
 	hasTrackingBranch bool
+	parent            gitdomain.BranchName
+	program           Mutable[program.Program]
+	rebaseOnto        gitdomain.LocalBranchName
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
