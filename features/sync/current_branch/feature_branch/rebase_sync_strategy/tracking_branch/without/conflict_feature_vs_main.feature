@@ -70,7 +70,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And all branches are now synchronized
@@ -87,7 +87,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase --continue                           |
+      | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
       |         | git stash pop                                   |
     And the current branch is still "feature"

@@ -44,8 +44,8 @@ Feature: stack that changes the same file in multiple commits per branch
     When I resolve the conflict in "favorite-fruit" with "resolved apple"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | beta   | git rebase --continue |
+      | BRANCH | COMMAND                                   |
+      | beta   | git -c core.editor=true rebase --continue |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in favorite-fruit
@@ -59,7 +59,7 @@ Feature: stack that changes the same file in multiple commits per branch
     And I run "git-town continue" and close the editor
     And Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | beta   | git rebase --continue                           |
+      | beta   | git -c core.editor=true rebase --continue       |
       |        | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And the current branch is still "beta"

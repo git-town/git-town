@@ -59,10 +59,10 @@ Feature: handle conflicts between the current contribution branch and its tracki
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH       | COMMAND               |
-      | contribution | git rebase --continue |
-      |              | git push              |
-      |              | git stash pop         |
+      | BRANCH       | COMMAND                                   |
+      | contribution | git -c core.editor=true rebase --continue |
+      |              | git push                                  |
+      |              | git stash pop                             |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
