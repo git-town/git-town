@@ -286,8 +286,23 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 				finalUndoProgram.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToDelete})
 				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
 			}
-			prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
 		}
+		// delete the commits of this branch from all descendents
+		if data.config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase {
+			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToDelete)
+			for _, descendent := range descendents {
+				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
+					sync.RemoveParentCommits(sync.RemoveParentArgs{
+						Branch:            descendent,
+						HasTrackingBranch: branchInfo.HasTrackingBranch(),
+						Parent:            localBranchToDelete.BranchName(),
+						Program:           prog,
+						RebaseOnto:        data.config.ValidatedConfigData.MainBranch,
+					})
+				}
+			}
+		}
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
 		prog.Value.Add(&opcodes.BranchLocalDeleteContent{
 			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,
 			BranchToDelete:     localBranchToDelete,

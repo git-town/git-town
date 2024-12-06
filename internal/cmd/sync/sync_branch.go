@@ -26,12 +26,12 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentToRemove, hasParentToRemove := args.Value.Config.NormalConfig.Lineage.LatestAncestor(localName, args.Value.BranchesToDelete.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
 	if hasParentToRemove && rebaseSyncStrategy {
-		removeParentCommits(removeParentArgs{
-			branch:            localName,
-			hasTrackingBranch: branchInfo.HasTrackingBranch(),
-			parent:            parentToRemove.BranchName(),
-			program:           args.Value.Program,
-			rebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
+		RemoveParentCommits(RemoveParentArgs{
+			Branch:            localName,
+			HasTrackingBranch: branchInfo.HasTrackingBranch(),
+			Parent:            parentToRemove.BranchName(),
+			Program:           args.Value.Program,
+			RebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
 		})
 	}
 	switch {
@@ -167,34 +167,34 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 	}
 }
 
-func removeParentCommits(args removeParentArgs) {
-	args.program.Value.Add(
-		&opcodes.CheckoutIfNeeded{Branch: args.branch},
+func RemoveParentCommits(args RemoveParentArgs) {
+	args.Program.Value.Add(
+		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
 	)
-	if args.hasTrackingBranch {
-		args.program.Value.Add(
+	if args.HasTrackingBranch {
+		args.Program.Value.Add(
 			&opcodes.PullCurrentBranch{},
 		)
 	}
-	args.program.Value.Add(
+	args.Program.Value.Add(
 		&opcodes.RebaseOnto{
-			BranchToRebaseAgainst: args.parent,
-			BranchToRebaseOnto:    args.rebaseOnto,
+			BranchToRebaseAgainst: args.Parent,
+			BranchToRebaseOnto:    args.RebaseOnto,
 		},
 	)
-	if args.hasTrackingBranch {
-		args.program.Value.Add(
+	if args.HasTrackingBranch {
+		args.Program.Value.Add(
 			&opcodes.ForcePush{ForceIfIncludes: false},
 		)
 	}
 }
 
-type removeParentArgs struct {
-	branch            gitdomain.LocalBranchName
-	hasTrackingBranch bool
-	parent            gitdomain.BranchName
-	program           Mutable[program.Program]
-	rebaseOnto        gitdomain.LocalBranchName
+type RemoveParentArgs struct {
+	Branch            gitdomain.LocalBranchName
+	HasTrackingBranch bool
+	Parent            gitdomain.BranchName
+	Program           Mutable[program.Program]
+	RebaseOnto        gitdomain.LocalBranchName
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.

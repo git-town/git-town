@@ -33,24 +33,22 @@ Feature: deleting a branch that conflicts with the main branch
       | BRANCH    | COMMAND                          |
       | feature-2 | git fetch --prune --tags         |
       |           | git push origin :feature-2       |
-      |           | git checkout main                |
-      | main      | git rebase --onto main feature-2 |
-      |           | git branch -D feature-2          |
-    # TODO: make this work
-    # | feature-2 | git fetch --prune --tags         |
-    # |           | git push origin :feature-2       |
-    # |           | git checkout feature-3           |
-    # | feature-3 | git rebase --onto main feature-2 |
-    # |           | git checkout main                |
-    # | main      | git branch -D feature-2          |
-    And the current branch is now "main"
-    And the branches are now
-      | REPOSITORY    | BRANCHES                   |
-      | local, origin | main, feature-1, feature-3 |
-    And this lineage exists now
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-3 | feature-1 |
+      |           | git checkout feature-3           |
+      | feature-3 | git pull                         |
+      |           | git rebase --onto main feature-2 |
+    And Git Town prints an error like:
+      """
+      CONFLICT (content): Merge conflict in file
+      error: could not apply .*... feature-3 commit
+      """
+    And the current branch is now "feature-3"
+  # And the branches are now
+  #   | REPOSITORY    | BRANCHES                   |
+  #   | local, origin | main, feature-1, feature-3 |
+  # And this lineage exists now
+  #   | BRANCH    | PARENT    |
+  #   | feature-1 | main      |
+  #   | feature-3 | feature-1 |
 
   Scenario: undo
     When I run "git-town undo"
