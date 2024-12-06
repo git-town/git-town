@@ -1,5 +1,6 @@
+@this
 @smoke
-Feature: delete another than the current branch
+Feature: delete the given branch
 
   Background:
     Given a Git repo with origin
@@ -8,12 +9,11 @@ Feature: delete another than the current branch
       | good | feature | main   | local, origin |
       | dead | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE            | FILE NAME        |
-      | main   | local, origin | conflicting commit | conflicting_file |
-      | dead   | local, origin | dead-end commit    | file             |
-      | good   | local, origin | good commit        | file             |
+      | BRANCH | LOCATION      | MESSAGE         | FILE NAME |
+      | dead   | local, origin | dead-end commit | file      |
+      | good   | local, origin | good commit     | file      |
     And the current branch is "good"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file
     When I run "git-town delete dead"
 
   Scenario: result
@@ -31,9 +31,8 @@ Feature: delete another than the current branch
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, origin | conflicting commit |
-      | good   | local, origin | good commit        |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | good   | local, origin | good commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | good   | main   |
