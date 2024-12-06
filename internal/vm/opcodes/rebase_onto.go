@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
 )
@@ -31,7 +33,13 @@ func (self *RebaseOnto) Run(args shared.RunArgs) error {
 		// The branch that gets rebased onto will be deleted.
 		// We therefore don't need to bother the user with resolving the merge conflict
 		// and can resolve it ourselves.
-		_ = args.Git.StageFiles(args.Frontend, "-A")
+		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
+		if err != nil {
+			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
+		}
+		for _, conflictingFile := range conflictingFiles {
+			_ = args.Git.CheckoutTheirVersion(args.Frontend, conflictingFile.CurrentBranchChange.FilePath)
+		}
 		_ = args.Git.ContinueRebase(args.Frontend)
 	}
 	return nil

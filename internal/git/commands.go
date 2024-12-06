@@ -119,6 +119,10 @@ func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) e
 	return runner.Run("git", "checkout", "--ours", file)
 }
 
+func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string) error {
+	return runner.Run("git", "checkout", "--theirs", file)
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
