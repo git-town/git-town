@@ -46,7 +46,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file" in the other worktree
-    And I run "git -c core.editor=true rebase --continue" in the other worktree and enter "resolved commit" for the commit message
+    And I run "git rebase --continue" in the other worktree and enter "resolved commit" for the commit message
     And I run "git-town continue" in the other worktree
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |

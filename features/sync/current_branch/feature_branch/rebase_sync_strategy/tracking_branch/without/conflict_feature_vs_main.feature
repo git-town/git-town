@@ -101,7 +101,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git -c core.editor=true rebase --continue" and enter "resolved commit" for the commit message
+    And I run "git rebase --continue" and enter "resolved commit" for the commit message
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
