@@ -62,7 +62,8 @@ func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBra
 	}
 	for _, conflictInfo := range conflictInfos {
 		originalParentInfo, hasOriginalParentInfo := conflictInfo.Parent.Get()
-		if !hasOriginalParentInfo || conflictInfo.Current.Permission != originalParentInfo.Permission {
+		currentInfo, hasCurrentInfo := conflictInfo.Current.Get()
+		if !hasOriginalParentInfo || !hasCurrentInfo || currentInfo.Permission != originalParentInfo.Permission {
 			continue
 		}
 		if !reflect.DeepEqual(conflictInfo.Main, conflictInfo.Parent) {
@@ -70,7 +71,7 @@ func DetectPhantomMergeConflicts(conflictInfos []FileConflictFullInfo, parentBra
 			continue
 		}
 		result = append(result, PhantomMergeConflict{
-			FilePath: conflictInfo.Current.FilePath,
+			FilePath: currentInfo.FilePath,
 		})
 	}
 	return result
