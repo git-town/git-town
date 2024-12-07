@@ -71,16 +71,16 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 		want := []git.FileConflictQuickInfo{
 			{
 				BaseChange: None[git.BlobInfo](),
-				CurrentBranchChange: git.BlobInfo{
+				CurrentBranchChange: Some(git.BlobInfo{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
-				},
-				IncomingChange: git.BlobInfo{
+				}),
+				IncomingChange: Some(git.BlobInfo{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
-				},
+				}),
 			},
 		}
 		must.NoError(t, err)
@@ -96,16 +96,16 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 		want := []git.FileConflictQuickInfo{
 			{
 				BaseChange: None[git.BlobInfo](),
-				CurrentBranchChange: git.BlobInfo{
+				CurrentBranchChange: Some(git.BlobInfo{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
-				},
-				IncomingChange: git.BlobInfo{
+				}),
+				IncomingChange: Some(git.BlobInfo{
 					FilePath:   "file",
 					Permission: "100755",
 					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
-				},
+				}),
 			},
 		}
 		must.NoError(t, err)

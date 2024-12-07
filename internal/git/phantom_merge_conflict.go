@@ -14,8 +14,8 @@ import (
 // quick information about a file with merge conflicts
 type FileConflictQuickInfo struct {
 	BaseChange          Option[BlobInfo] // info about the base version of the file (when 3-way merging)
-	CurrentBranchChange BlobInfo         // info about the content of the file on the branch where the merge conflict occurs
-	IncomingChange      BlobInfo         // info about the content of the file on the branch being merged in
+	CurrentBranchChange Option[BlobInfo] // info about the content of the file on the branch where the merge conflict occurs, None == file is deleted here
+	IncomingChange      Option[BlobInfo] // info about the content of the file on the branch being merged in, None == file is being deleted here
 }
 
 // describes the content of a file in Git
@@ -124,8 +124,8 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 	result := []FileConflictQuickInfo{}
 	filePathOpt := None[string]()
 	baseChangeOpt := None[BlobInfo]()
-	currentBranchChangeOpt := None[BlobInfo]()
-	incomingChangeOpt := None[BlobInfo]()
+	currentBranchChange := None[BlobInfo]()
+	incomingChange := None[BlobInfo]()
 	for _, line := range stringslice.Lines(output) {
 		line = strings.TrimSpace(line)
 		if len(line) == 0 {
@@ -137,38 +137,30 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 		}
 		filePath, hasFilePath := filePathOpt.Get()
 		if !hasFilePath || file != filePath {
-			currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
-			incomingChange, hasIncomingChange := incomingChangeOpt.Get()
-			if hasCurrentBranchChange && hasIncomingChange {
-				result = append(result, FileConflictQuickInfo{
-					BaseChange:          baseChangeOpt,
-					CurrentBranchChange: currentBranchChange,
-					IncomingChange:      incomingChange,
-				})
-			}
+			result = append(result, FileConflictQuickInfo{
+				BaseChange:          baseChangeOpt,
+				CurrentBranchChange: currentBranchChange,
+				IncomingChange:      incomingChange,
+			})
 			filePathOpt = Some(file)
 			baseChangeOpt = None[BlobInfo]()
-			currentBranchChangeOpt = None[BlobInfo]()
-			incomingChangeOpt = None[BlobInfo]()
+			currentBranchChange = None[BlobInfo]()
+			incomingChange = None[BlobInfo]()
 		}
 		switch stage {
 		case UnmergedStageBase:
 			baseChangeOpt = Some(change)
 		case UnmergedStageCurrentBranch:
-			currentBranchChangeOpt = Some(change)
+			currentBranchChange = Some(change)
 		case UnmergedStageIncoming:
-			incomingChangeOpt = Some(change)
+			incomingChange = Some(change)
 		}
 	}
-	currentBranchChange, hasCurrentBranchChange := currentBranchChangeOpt.Get()
-	incomingChange, hasIncomingChange := incomingChangeOpt.Get()
-	if hasCurrentBranchChange && hasIncomingChange {
-		result = append(result, FileConflictQuickInfo{
-			BaseChange:          baseChangeOpt,
-			CurrentBranchChange: currentBranchChange,
-			IncomingChange:      incomingChange,
-		})
-	}
+	result = append(result, FileConflictQuickInfo{
+		BaseChange:          baseChangeOpt,
+		CurrentBranchChange: currentBranchChange,
+		IncomingChange:      incomingChange,
+	})
 	return result, nil
 }
 
