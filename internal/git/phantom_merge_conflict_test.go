@@ -87,7 +87,7 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("some files deleted", func(t *testing.T) {
+	t.Run("file deleted on current branch", func(t *testing.T) {
 		t.Parallel()
 		give := `
 			100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 1	file
@@ -95,17 +95,42 @@ func TestParseLsFilesUnmergedOutput(t *testing.T) {
 		have, err := git.ParseLsFilesUnmergedOutput(give)
 		want := []git.FileConflictQuickInfo{
 			{
-				BaseChange: None[git.BlobInfo](),
-				CurrentBranchChange: Some(git.BlobInfo{
+				BaseChange: Some(git.BlobInfo{
 					FilePath:   "file",
 					Permission: "100755",
-					SHA:        "c887ff2255bb9e9440f9456bcf8d310bc8d718d4",
+					SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
 				}),
+				CurrentBranchChange: None[git.BlobInfo](),
 				IncomingChange: Some(git.BlobInfo{
 					FilePath:   "file",
 					Permission: "100755",
-					SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
+					SHA:        "554e589880fc9e46b8b313499d325337187b1ee1",
 				}),
+			},
+		}
+		must.NoError(t, err)
+		must.Eq(t, want, have)
+	})
+
+	t.Run("file deleted on incoming branch", func(t *testing.T) {
+		t.Parallel()
+		give := `
+			100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 1	file
+			100755 554e589880fc9e46b8b313499d325337187b1ee1 2	file`
+		have, err := git.ParseLsFilesUnmergedOutput(give)
+		want := []git.FileConflictQuickInfo{
+			{
+				BaseChange: Some(git.BlobInfo{
+					FilePath:   "file",
+					Permission: "100755",
+					SHA:        "9f8f8acb41baba910c147c21eb61c55cf6d0447b",
+				}),
+				CurrentBranchChange: Some(git.BlobInfo{
+					FilePath:   "file",
+					Permission: "100755",
+					SHA:        "554e589880fc9e46b8b313499d325337187b1ee1",
+				}),
+				IncomingChange: None[git.BlobInfo](),
 			},
 		}
 		must.NoError(t, err)
