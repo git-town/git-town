@@ -137,7 +137,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 			return []FileConflictQuickInfo{}, err
 		}
 		filePath, hasFilePath := filePathOpt.Get()
-		if !hasFilePath || file != filePath {
+		if hasFilePath && file != filePath {
 			result = append(result, FileConflictQuickInfo{
 				BaseChange:          baseChange,
 				CurrentBranchChange: currentBranchChange,
