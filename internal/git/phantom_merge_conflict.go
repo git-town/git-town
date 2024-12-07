@@ -124,7 +124,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 	// 100755 ece1e56bf2125e5b114644258872f04bc375ba69 3	file
 	result := []FileConflictQuickInfo{}
 	filePathOpt := None[string]()
-	baseChangeOpt := None[BlobInfo]()
+	baseChange := None[BlobInfo]()
 	currentBranchChange := None[BlobInfo]()
 	incomingChange := None[BlobInfo]()
 	for _, line := range stringslice.Lines(output) {
@@ -139,18 +139,18 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 		filePath, hasFilePath := filePathOpt.Get()
 		if !hasFilePath || file != filePath {
 			result = append(result, FileConflictQuickInfo{
-				BaseChange:          baseChangeOpt,
+				BaseChange:          baseChange,
 				CurrentBranchChange: currentBranchChange,
 				IncomingChange:      incomingChange,
 			})
 			filePathOpt = Some(file)
-			baseChangeOpt = None[BlobInfo]()
+			baseChange = None[BlobInfo]()
 			currentBranchChange = None[BlobInfo]()
 			incomingChange = None[BlobInfo]()
 		}
 		switch stage {
 		case UnmergedStageBase:
-			baseChangeOpt = Some(change)
+			baseChange = Some(change)
 		case UnmergedStageCurrentBranch:
 			currentBranchChange = Some(change)
 		case UnmergedStageIncoming:
@@ -158,7 +158,7 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 		}
 	}
 	result = append(result, FileConflictQuickInfo{
-		BaseChange:          baseChangeOpt,
+		BaseChange:          baseChange,
 		CurrentBranchChange: currentBranchChange,
 		IncomingChange:      incomingChange,
 	})
