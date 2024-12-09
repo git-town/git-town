@@ -39,8 +39,10 @@ func (self *RebaseOnto) Run(args shared.RunArgs) error {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}
 		for _, conflictingFile := range conflictingFiles {
-			_ = args.Git.CheckoutTheirVersion(args.Frontend, conflictingFile.CurrentBranchChange.FilePath)
-			_ = args.Git.StageFiles(args.Frontend, conflictingFile.CurrentBranchChange.FilePath)
+			if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
+				_ = args.Git.CheckoutTheirVersion(args.Frontend, conflictingChange.FilePath)
+				_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
+			}
 		}
 		_ = args.Git.ContinueRebase(args.Frontend)
 	}

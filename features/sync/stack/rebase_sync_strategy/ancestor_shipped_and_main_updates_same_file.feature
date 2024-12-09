@@ -44,24 +44,9 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git checkout beta                         |
       | beta   | git pull                                  |
       |        | git rebase --onto main alpha              |
-    And Git Town prints the error:
-      """
-      CONFLICT (content): Merge conflict in file
-      """
-    And file "file" now has content like
-      """
-      <<<<<<< HEAD
-      resolved main content
-      =======
-      beta content
-      >>>>>>> .* \(beta commit\)
-      """
-    And a rebase is now in progress
-    When I resolve the conflict in "file" with "resolved beta content"
-    And I run "git-town continue" and close the editor
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                   |
-      | beta   | git -c core.editor=true rebase --continue |
+      |        | git checkout --theirs file                |
+      |        | git add file                              |
+      |        | git -c core.editor=true rebase --continue |
       |        | git push --force-with-lease               |
       |        | git branch -D alpha                       |
     And all branches are now synchronized
@@ -70,7 +55,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT          |
       | main   | local, origin | alpha commit               | file      | alpha content         |
       |        |               | independent commit on main | file      | resolved main content |
-      | beta   | local, origin | beta commit                | file      | resolved beta content |
+      | beta   | local, origin | beta commit                | file      | beta content          |
 
   Scenario: undo
     When I run "git-town undo"
