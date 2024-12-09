@@ -10,6 +10,7 @@ import (
 
 func TestParseLsFilesUnmergedLine(t *testing.T) {
 	t.Parallel()
+
 	t.Run("base stage", func(t *testing.T) {
 		t.Parallel()
 		give := `100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 1	file`
@@ -26,6 +27,7 @@ func TestParseLsFilesUnmergedLine(t *testing.T) {
 		wantPath := "file"
 		must.Eq(t, wantPath, havePath)
 	})
+
 	t.Run("current branch stage", func(t *testing.T) {
 		t.Parallel()
 		give := `100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 2	file`
@@ -42,6 +44,7 @@ func TestParseLsFilesUnmergedLine(t *testing.T) {
 		wantPath := "file"
 		must.Eq(t, wantPath, havePath)
 	})
+
 	t.Run("incoming stage", func(t *testing.T) {
 		t.Parallel()
 		give := `100755 9f8f8acb41baba910c147c21eb61c55cf6d0447b 3	file`
@@ -62,6 +65,7 @@ func TestParseLsFilesUnmergedLine(t *testing.T) {
 
 func TestParseLsFilesUnmergedOutput(t *testing.T) {
 	t.Parallel()
+
 	t.Run("conflicting changes", func(t *testing.T) {
 		t.Parallel()
 		give := `
