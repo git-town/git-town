@@ -226,11 +226,11 @@ func TestBackendCommands(t *testing.T) {
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Current: git.BlobInfo{
+					Current: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
-					},
+					}),
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
@@ -253,11 +253,11 @@ func TestBackendCommands(t *testing.T) {
 						Permission: "100644",
 						SHA:        "111111",
 					}),
-					Current: git.BlobInfo{
+					Current: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "111111",
-					},
+					}),
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
@@ -278,11 +278,11 @@ func TestBackendCommands(t *testing.T) {
 						Permission: "100644",
 						SHA:        "222222",
 					}),
-					Current: git.BlobInfo{
+					Current: Some(git.BlobInfo{
 						FilePath:   "file",
 						Permission: "100755",
 						SHA:        "222222",
-					},
+					}),
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
@@ -303,11 +303,11 @@ func TestBackendCommands(t *testing.T) {
 						Permission: "100755",
 						SHA:        "111111",
 					}),
-					Current: git.BlobInfo{
+					Current: Some(git.BlobInfo{
 						FilePath:   "file-2",
 						Permission: "100755",
 						SHA:        "111111",
-					},
+					}),
 				},
 			}
 			have := git.DetectPhantomMergeConflicts(fullInfos, Some(gitdomain.NewLocalBranchName("alpha")), "main")
