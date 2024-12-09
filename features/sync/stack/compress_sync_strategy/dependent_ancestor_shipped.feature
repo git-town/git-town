@@ -19,8 +19,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |

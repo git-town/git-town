@@ -157,11 +157,13 @@ func ParseLsFilesUnmergedOutput(output string) ([]FileConflictQuickInfo, error) 
 			incomingChange = Some(change)
 		}
 	}
-	result = append(result, FileConflictQuickInfo{
-		BaseChange:          baseChange,
-		CurrentBranchChange: currentBranchChange,
-		IncomingChange:      incomingChange,
-	})
+	if baseChange.IsSome() || currentBranchChange.IsSome() || incomingChange.IsSome() {
+		result = append(result, FileConflictQuickInfo{
+			BaseChange:          baseChange,
+			CurrentBranchChange: currentBranchChange,
+			IncomingChange:      incomingChange,
+		})
+	}
 	return result, nil
 }
 
