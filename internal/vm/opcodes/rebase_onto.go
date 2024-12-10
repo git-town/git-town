@@ -34,7 +34,6 @@ func (self *RebaseOnto) Run(args shared.RunArgs) error {
 		// We therefore don't need to bother the user with resolving the merge conflict
 		// and can resolve it ourselves.
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
-		fmt.Println("1111111111111111111111111111111111111111111111111111111111111111111", conflictingFiles)
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
 		}
@@ -42,10 +41,8 @@ func (self *RebaseOnto) Run(args shared.RunArgs) error {
 			if conflictingChange, has := conflictingFile.CurrentBranchChange.Get(); has {
 				_ = args.Git.CheckoutTheirVersion(args.Frontend, conflictingChange.FilePath)
 				_ = args.Git.StageFiles(args.Frontend, conflictingChange.FilePath)
-			} else {
-				if baseChange, has := conflictingFile.BaseChange.Get(); has {
-					_ = args.Git.RemoveFile(args.Frontend, baseChange.FilePath)
-				}
+			} else if baseChange, has := conflictingFile.BaseChange.Get(); has {
+				_ = args.Git.RemoveFile(args.Frontend, baseChange.FilePath)
 			}
 		}
 		_ = args.Git.ContinueRebase(args.Frontend)

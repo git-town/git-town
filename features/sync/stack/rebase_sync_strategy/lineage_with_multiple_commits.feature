@@ -21,7 +21,6 @@ Feature: stack that changes the same file in multiple commits per branch
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 
-  # @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
