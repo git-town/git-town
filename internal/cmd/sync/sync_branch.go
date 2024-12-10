@@ -26,7 +26,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
 	if hasParentToRemove && rebaseSyncStrategy {
-		RemoveParentCommits(RemoveParentArgs{
+		RemoveParentCommits(RemoveParentCommitsArgs{
 			Branch:            localName,
 			HasTrackingBranch: branchInfo.HasTrackingBranch(),
 			Parent:            parentToRemove.BranchName(),
@@ -167,7 +167,7 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 	}
 }
 
-func RemoveParentCommits(args RemoveParentArgs) {
+func RemoveParentCommits(args RemoveParentCommitsArgs) {
 	args.Program.Value.Add(
 		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
 	)
@@ -189,7 +189,7 @@ func RemoveParentCommits(args RemoveParentArgs) {
 	}
 }
 
-type RemoveParentArgs struct {
+type RemoveParentCommitsArgs struct {
 	Branch            gitdomain.LocalBranchName
 	HasTrackingBranch bool
 	Parent            gitdomain.BranchName
