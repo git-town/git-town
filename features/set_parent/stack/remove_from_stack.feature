@@ -25,6 +25,7 @@ Feature: remove a branch from a stack
       Selected parent branch for "branch-2": main
       """
     And Git Town runs no commands
+    And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
