@@ -40,14 +40,20 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |          | git checkout main                               |
       | main     | git rebase origin/main --no-update-refs         |
       |          | git push                                        |
+      |          | git checkout branch-2                           |
+      | branch-2 | git rebase --onto main branch-1                 |
+      |          | git checkout branch-3                           |
+      | branch-3 | git pull                                        |
+      |          | git rebase --onto main branch-2                 |
+      |          | git push --force-with-lease                     |
+      |          | git checkout branch-4                           |
+      | branch-4 | git pull                                        |
+      |          | git rebase --onto main branch-2                 |
+      |          | git push --force-with-lease                     |
+      |          | git rebase branch-3 --no-update-refs            |
+      |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D branch-1                          |
       |          | git branch -D branch-2                          |
-      |          | git checkout branch-3                           |
-      | branch-3 | git rebase main --no-update-refs                |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-4                           |
-      | branch-4 | git rebase branch-3 --no-update-refs            |
-      |          | git push --force-with-lease --force-if-includes |
     And the current branch is now "branch-4"
     And all branches are now synchronized
     And these commits exist now

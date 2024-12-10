@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -115,8 +116,10 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	runProgram := NewMutable(&program.Program{})
+	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,

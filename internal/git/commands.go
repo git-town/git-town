@@ -119,6 +119,10 @@ func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) e
 	return runner.Run("git", "checkout", "--ours", file)
 }
 
+func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string) error {
+	return runner.Run("git", "checkout", "--theirs", file)
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
@@ -549,6 +553,11 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 	return runner.Run("git", args...)
 }
 
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName) error {
+	return runner.Run("git", "rebase", "--onto", branchToRebaseOnto.String(), branchToRebaseAgainst.String())
+}
+
 // Remotes provides the names of all Git remotes in this repository.
 func (self *Commands) Remotes(querier gitdomain.Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
@@ -579,6 +588,10 @@ func (self *Commands) RemoveBitbucketAppPassword(runner gitdomain.Runner) error 
 
 func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
+}
+
+func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
+	return runner.Run("git", "rm", fileName)
 }
 
 // RemoveGitAlias removes the given Git alias.

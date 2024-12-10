@@ -5,6 +5,7 @@ import (
 )
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
+// TODO: rename to PushCurrentBranchForce
 type ForcePush struct {
 	ForceIfIncludes         bool
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
