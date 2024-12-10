@@ -26,6 +26,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/vm/program"
 	"github.com/git-town/git-town/v16/internal/vm/runstate"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -304,8 +305,10 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
+	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.preFetchBranchInfos,

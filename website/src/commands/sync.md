@@ -19,6 +19,9 @@ back to the exact state you repo was in before the sync by running
 - pulls and pushes updates from all parent branches and the tracking branch
 - deletes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
+- removes commits from deleted branches from their descendent branches, unless
+  when using the
+  [merge sync strategy](../preferences/sync-feature-strategy.md#merge).
 - safely stashes away uncommitted changes and restores them when done
 - does not pull, push, or merge depending on the configured
   [branch type](../branch-types.md)
