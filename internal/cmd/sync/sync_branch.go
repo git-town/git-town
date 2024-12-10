@@ -23,8 +23,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
-	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
-	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
+	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
 	if hasParentToRemove && rebaseSyncStrategy {
 		RemoveParentCommits(RemoveParentCommitsArgs{
 			Branch:            localName,
