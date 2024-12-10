@@ -14,7 +14,7 @@ type NormalConfigData struct {
 	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
-	CreatePrototypeBranches  CreatePrototypeBranches
+	NewBranchType            BranchType
 	DefaultBranchType        BranchType
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
@@ -135,7 +135,7 @@ func DefaultNormalConfig() NormalConfigData {
 		BitbucketUsername:        None[BitbucketUsername](),
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
-		CreatePrototypeBranches:  false,
+		NewBranchType:            BranchTypeFeatureBranch,
 		DefaultBranchType:        BranchTypeFeatureBranch,
 		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),

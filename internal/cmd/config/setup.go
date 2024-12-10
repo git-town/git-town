@@ -208,7 +208,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.NormalConfig.CreatePrototypeBranches, aborted, err = dialog.CreatePrototypeBranches(config.NormalConfig.CreatePrototypeBranches, data.dialogInputs.Next())
+	data.userInput.config.NormalConfig.NewBranchType, aborted, err = dialog.NewBranchType(config.NormalConfig.NewBranchType, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -295,7 +295,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
-	fc.Check(saveCreatePrototypeBranches(oldConfig.NormalConfig.CreatePrototypeBranches, userInput.config.NormalConfig.CreatePrototypeBranches, oldConfig))
+	fc.Check(saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig))
 	fc.Check(saveHostingPlatform(oldConfig.NormalConfig.HostingPlatform, userInput.config.NormalConfig.HostingPlatform, gitCommands, frontend))
 	fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
 	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
@@ -351,11 +351,11 @@ func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsern
 	return gitCommands.RemoveBitbucketUsername(frontend)
 }
 
-func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototypeBranches, config config.UnvalidatedConfig) error {
+func saveNewBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetCreatePrototypeBranches(newValue)
+	return config.NormalConfig.SetNewBranchType(newValue)
 }
 
 func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {

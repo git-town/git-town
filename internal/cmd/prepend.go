@@ -286,8 +286,22 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
-	if data.prototype.IsTrue() || data.config.NormalConfig.CreatePrototypeBranches.IsTrue() {
+	if data.prototype.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+	}
+	switch data.config.NormalConfig.NewBranchType {
+	case configdomain.BranchTypePrototypeBranch:
+		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+	case configdomain.BranchTypeContributionBranch:
+		prog.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.targetBranch})
+	case configdomain.BranchTypeFeatureBranch:
+	case configdomain.BranchTypeMainBranch:
+	case configdomain.BranchTypeObservedBranch:
+		prog.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.targetBranch})
+	case configdomain.BranchTypeParkedBranch:
+		prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
+	case configdomain.BranchTypePerennialBranch:
+		prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
 	}
 	proposal, hasProposal := data.proposal.Get()
 	if data.remotes.HasOrigin() && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShouldPushNewBranches() || hasProposal) {
