@@ -259,16 +259,17 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
-		sync.BranchesProgram(data.branchesToSync, NewMutable(&sync.BranchProgramArgs{
+		branchesToDelete := set.New[gitdomain.LocalBranchName]()
+		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
-			BranchesToDelete:    set.New[gitdomain.LocalBranchName](),
+			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
 			PushBranches:        true,
 			Remotes:             data.remotes,
-		}))
+		})
 	}
 	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newParentCandidates,

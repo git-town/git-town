@@ -278,16 +278,16 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 			})
 	}
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
-	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, NewMutable(&sync.BranchProgramArgs{
+	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
 		BranchInfos:         data.branchesSnapshot.Branches,
-		BranchesToDelete:    branchesToDelete,
+		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             prog,
 		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
 		Remotes:             data.remotes,
-	}))
+	})
 	for _, branchToDelete := range branchesToDelete.Values() {
 		prog.Value.Add(
 			&opcodes.BranchLocalDelete{Branch: branchToDelete},

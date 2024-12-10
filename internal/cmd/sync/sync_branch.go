@@ -11,49 +11,49 @@ import (
 )
 
 // BranchProgram syncs the given branch.
-func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args Mutable[BranchProgramArgs]) {
-	originalParentName := args.Value.Config.NormalConfig.Lineage.Parent(localName)
+func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+	originalParentName := args.Config.NormalConfig.Lineage.Parent(localName)
 	originalParentSHA := None[gitdomain.SHA]()
 	parentName, hasParentName := originalParentName.Get()
 	if hasParentName {
-		if parentBranchInfo, hasParentBranchInfo := args.Value.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
 	trackingBranchIsGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
-	rebaseSyncStrategy := args.Value.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
-	hasDescendents := args.Value.Config.NormalConfig.Lineage.HasDescendents(localName)
-	parentToRemove, hasParentToRemove := args.Value.Config.NormalConfig.Lineage.LatestAncestor(localName, args.Value.BranchesToDelete.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
+	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
+	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
+	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get() //   args.Value.BranchesToDelete.Contains(parentName)
 	// TODO: add an E2E test where a branch has two child branches, and then the branch gets shipped at origin
 	if hasParentToRemove && rebaseSyncStrategy {
 		RemoveParentCommits(RemoveParentArgs{
 			Branch:            localName,
 			HasTrackingBranch: branchInfo.HasTrackingBranch(),
 			Parent:            parentToRemove.BranchName(),
-			Program:           args.Value.Program,
-			RebaseOnto:        args.Value.Config.ValidatedConfigData.MainBranch,
+			Program:           args.Program,
+			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch,
 		})
 	}
 	switch {
 	case hasParentToRemove && parentToRemove == parentName && trackingBranchIsGone && hasDescendents:
-		args.Value.BranchesToDelete.Add(localName)
+		args.BranchesToDelete.Value.Add(localName)
 	case hasParentToRemove && parentToRemove == parentName:
 		// nothing to do here, we already synced with the parent
 	case rebaseSyncStrategy && trackingBranchIsGone && hasDescendents:
-		args.Value.BranchesToDelete.Add(localName)
+		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchIsGone:
-		deletedBranchProgram(args.Value.Program, localName, originalParentName, originalParentSHA, *args.Value)
+		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, *args.Value)
+		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
 	}
-	args.Value.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
+	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos              // the initial BranchInfos, after "git fetch" ran
-	BranchesToDelete    set.Set[gitdomain.LocalBranchName] // branches that should be deleted after the branches are all synced
+	BranchInfos         gitdomain.BranchInfos                       // the initial BranchInfos, after "git fetch" ran
+	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
