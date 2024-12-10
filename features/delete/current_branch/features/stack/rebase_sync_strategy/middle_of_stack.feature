@@ -2,9 +2,6 @@ Feature: deleting a branch that conflicts with the main branch
 
   Background:
     Given a Git repo with origin
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
-      | main   | local, origin | main commit | file      | main content |
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
@@ -35,8 +32,7 @@ Feature: deleting a branch that conflicts with the main branch
       |           | git checkout feature-3                    |
       | feature-3 | git pull                                  |
       |           | git rebase --onto main feature-2          |
-      |           | git checkout --theirs file                |
-      |           | git add file                              |
+      |           | git rm file                               |
       |           | git -c core.editor=true rebase --continue |
       |           | git push --force-with-lease               |
       |           | git checkout main                         |
@@ -45,11 +41,6 @@ Feature: deleting a branch that conflicts with the main branch
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
-    And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME | FILE CONTENT |
-      | main      | local, origin | main commit      | file      | main content |
-      | feature-1 | local, origin | feature-1 commit | file      | content 1    |
-      | feature-3 | local, origin | feature-3 commit | file      | content 3    |
     And this lineage exists now
       | BRANCH    | PARENT    |
       | feature-1 | main      |

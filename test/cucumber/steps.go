@@ -456,20 +456,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^Git Town prints an error like:$`, func(ctx context.Context, expected *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.runExitCodeChecked = true
-		regex := regexp.MustCompile(expected.Content)
-		have := stripansi.Strip(state.runOutput.GetOrPanic())
-		if !regex.MatchString(have) {
-			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput.GetOrDefault())
-		}
-		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
-			return fmt.Errorf("unexpected exit code %d", exitCode)
-		}
-		return nil
-	})
-
 	sc.Step(`^Git Town prints no output$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		output := state.runOutput.GetOrPanic()
@@ -1032,6 +1018,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 			panic("expected a merge conflict here")
 		}
 		originRepo.CreateFile(fileName, fileContent)
+		originRepo.StageFiles("-A")
+		err = originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
+		asserts.NoError(err)
+		originRepo.RemoveBranch(branchToShip)
+		originRepo.CheckoutBranch("initial")
+		return nil
+	})
+
+	sc.Step(`^origin ships the "([^"]*)" branch using the "squash-merge" ship-strategy as "([^"]+)"$`, func(ctx context.Context, branchName, commitMessage string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		branchToShip := gitdomain.NewLocalBranchName(branchName)
+		originRepo := state.fixture.OriginRepo.GetOrPanic()
+		originRepo.CheckoutBranch("main")
+		err := originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
+		asserts.NoError(err)
 		originRepo.StageFiles("-A")
 		err = originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
 		asserts.NoError(err)
