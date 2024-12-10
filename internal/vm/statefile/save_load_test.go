@@ -55,6 +55,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchEnsureShippableChanges{Branch: "branch", Parent: "parent"},
 				&opcodes.BranchLocalDelete{Branch: "branch"},
+				&opcodes.BranchLocalDeleteContent{BranchToDelete: "branch", BranchToRebaseOnto: "main"},
 				&opcodes.BranchLocalRename{NewName: "new", OldName: "old"},
 				&opcodes.BranchRemoteCreate{Branch: "branch", SHA: "123456"},
 				&opcodes.BranchRemoteSetToSHA{Branch: "branch", SetToSHA: "222222"},
@@ -119,6 +120,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseBranch{Branch: "branch"},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
+				&opcodes.RebaseOnto{BranchToRebaseAgainst: "branch-1", BranchToRebaseOnto: "branch-2"},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch"},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
@@ -220,6 +222,13 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchLocalDelete"
+    },
+    {
+      "data": {
+        "BranchToDelete": "branch",
+        "BranchToRebaseOnto": "main"
+      },
+      "type": "BranchLocalDeleteContent"
     },
     {
       "data": {
@@ -624,6 +633,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "RebaseContinueIfNeeded"
+    },
+    {
+      "data": {
+        "BranchToRebaseAgainst": "branch-1",
+        "BranchToRebaseOnto": "branch-2"
+      },
+      "type": "RebaseOnto"
     },
     {
       "data": {

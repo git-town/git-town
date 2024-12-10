@@ -7,7 +7,8 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-// a simple generic Set implementation
+// Set implements a simple generic Set implementation.
+// The zero value is not valid. Use set.New to create new instances.
 type Set[T cmp.Ordered] map[T]struct{}
 
 func New[T cmp.Ordered](values ...T) Set[T] {

@@ -9,6 +9,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And the commits
       | BRANCH     | LOCATION | MESSAGE                       | FILE NAME        | FILE CONTENT       |
       | main       | local    | conflicting main commit       | conflicting_file | main content       |
+      | child      | local    | child commit                  | child_file       | child content      |
       | grandchild | local    | conflicting grandchild commit | conflicting_file | grandchild content |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And origin deletes the "child" branch
@@ -17,38 +18,23 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                                 |
-      | child      | git fetch --prune --tags                |
-      |            | git checkout main                       |
-      | main       | git rebase origin/main --no-update-refs |
-      |            | git push                                |
-      |            | git branch -D child                     |
-      |            | git checkout grandchild                 |
-      | grandchild | git rebase main --no-update-refs        |
-    And Git Town prints the error:
-      """
-      exit status 1
-      """
-    And Git Town prints the error:
-      """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
-      To continue by skipping the current branch, run "git town skip".
-      """
-    And the current branch is now "grandchild"
-    And a rebase is now in progress
-
-  Scenario: skip the grandchild merge conflict and delete the grandchild branch
-    When I run "git-town skip"
-    Then Git Town runs the commands
-      | BRANCH     | COMMAND            |
-      | grandchild | git rebase --abort |
-      |            | git push --tags    |
-    And the current branch is now "grandchild"
-    When I run "git-town delete"
-    Then Git Town runs the commands
-      | BRANCH     | COMMAND                     |
-      | grandchild | git fetch --prune --tags    |
-      |            | git push origin :grandchild |
-      |            | git checkout main           |
-      | main       | git branch -D grandchild    |
+      | BRANCH     | COMMAND                                   |
+      | child      | git fetch --prune --tags                  |
+      |            | git checkout main                         |
+      | main       | git rebase origin/main --no-update-refs   |
+      |            | git push                                  |
+      |            | git checkout grandchild                   |
+      | grandchild | git pull                                  |
+      |            | git rebase --onto main child              |
+      |            | git checkout --theirs conflicting_file    |
+      |            | git add conflicting_file                  |
+      |            | git -c core.editor=true rebase --continue |
+      |            | git push --force-with-lease               |
+      |            | git branch -D child                       |
+      |            | git push --tags                           |
+    And no rebase is now in progress
+    And all branches are now synchronized
+    And these commits exist now
+      | BRANCH     | LOCATION      | MESSAGE                       | FILE NAME        | FILE CONTENT       |
+      | main       | local, origin | conflicting main commit       | conflicting_file | main content       |
+      | grandchild | local, origin | conflicting grandchild commit | conflicting_file | grandchild content |
