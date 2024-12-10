@@ -270,6 +270,12 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			PushBranches:        true,
 			Remotes:             data.remotes,
 		})
+		for _, branchToDelete := range branchesToDelete.Values() {
+			prog.Value.Add(
+				&opcodes.BranchLocalDelete{Branch: branchToDelete},
+				&opcodes.LineageBranchRemove{Branch: branchToDelete},
+			)
+		}
 	}
 	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newParentCandidates,
