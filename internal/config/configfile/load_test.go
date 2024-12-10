@@ -15,16 +15,20 @@ func TestConfigfile(t *testing.T) {
 		t.Run("complete content", func(t *testing.T) {
 			t.Parallel()
 			give := `
+create-prototype-branches = true
 push-hook = true
 push-new-branches = true
 ship-delete-tracking-branch = false
 ship-strategy = "api"
 sync-tags = false
 sync-upstream = true
-create-prototype-branches = true
 
 [branches]
 main = "main"
+contribution-regex = "^gittown-"
+default-type = "prototype"
+feature-regex = "^kg-"
+observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
 
@@ -39,11 +43,15 @@ prototype-branches = "compress"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
+			contributionRegex := "^gittown-"
 			createPrototypeBranches := true
+			createDefaultType := "prototype"
+			featureRegex := "^kg-"
 			github := "github"
 			githubCom := "github.com"
 			main := "main"
 			merge := "merge"
+			observedRegex := `^dependabot\/`
 			pushNewBranches := true
 			pushHook := true
 			rebase := "rebase"
@@ -55,9 +63,13 @@ prototype-branches = "compress"
 			syncUpstream := true
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main:           &main,
-					Perennials:     []string{"public", "staging"},
-					PerennialRegex: &releaseRegex,
+					ContributionRegex: &contributionRegex,
+					DefaultType:       &createDefaultType,
+					FeatureRegex:      &featureRegex,
+					Main:              &main,
+					ObservedRegex:     &observedRegex,
+					PerennialRegex:    &releaseRegex,
+					Perennials:        []string{"public", "staging"},
 				},
 				Hosting: &configfile.Hosting{
 					Platform:       &github,
