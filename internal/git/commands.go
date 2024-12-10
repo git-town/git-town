@@ -220,7 +220,6 @@ func (self *Commands) ContentBlobInfo(querier gitdomain.Querier, branch gitdomai
 // ContinueRebase continues the currently ongoing rebase.
 func (self *Commands) ContinueRebase(runner gitdomain.Runner) error {
 	return runner.Run("git", "-c", "core.editor=true", "rebase", "--continue")
-	// TODO: move "-c core.editor=true" to the end
 }
 
 // CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
