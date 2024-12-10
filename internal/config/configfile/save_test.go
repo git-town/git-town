@@ -157,7 +157,7 @@ perennial-regex = ""
 # creates when you run "git town hack", "append", or "prepend".
 #
 # More info at https://www.git-town.com/preferences/new-branch-type.
-new-branch-type = "feature"
+new-branch-type = "prototype"
 
 [hosting]
 
