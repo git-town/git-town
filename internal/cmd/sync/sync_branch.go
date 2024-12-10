@@ -25,10 +25,10 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
 	if hasParentToRemove && rebaseSyncStrategy {
-		RemoveParentCommits(RemoveParentCommitsArgs{
+		RemoveAncestorCommits(RemoveParentCommitsArgs{
 			Branch:            localName,
 			HasTrackingBranch: branchInfo.HasTrackingBranch(),
-			Parent:            parentToRemove.BranchName(),
+			Ancestor:          parentToRemove.BranchName(),
 			Program:           args.Program,
 			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch,
 		})
@@ -166,7 +166,7 @@ func pushFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.Lo
 	}
 }
 
-func RemoveParentCommits(args RemoveParentCommitsArgs) {
+func RemoveAncestorCommits(args RemoveParentCommitsArgs) {
 	args.Program.Value.Add(
 		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
 	)
@@ -177,7 +177,7 @@ func RemoveParentCommits(args RemoveParentCommitsArgs) {
 	}
 	args.Program.Value.Add(
 		&opcodes.RebaseOnto{
-			BranchToRebaseAgainst: args.Parent,
+			BranchToRebaseAgainst: args.Ancestor,
 			BranchToRebaseOnto:    args.RebaseOnto,
 		},
 	)
@@ -191,7 +191,7 @@ func RemoveParentCommits(args RemoveParentCommitsArgs) {
 type RemoveParentCommitsArgs struct {
 	Branch            gitdomain.LocalBranchName
 	HasTrackingBranch bool
-	Parent            gitdomain.BranchName
+	Ancestor          gitdomain.BranchName
 	Program           Mutable[program.Program]
 	RebaseOnto        gitdomain.LocalBranchName
 }
