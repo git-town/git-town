@@ -119,6 +119,10 @@ func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) e
 	return runner.Run("git", "checkout", "--ours", file)
 }
 
+func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string) error {
+	return runner.Run("git", "checkout", "--theirs", file)
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
@@ -216,6 +220,7 @@ func (self *Commands) ContentBlobInfo(querier gitdomain.Querier, branch gitdomai
 // ContinueRebase continues the currently ongoing rebase.
 func (self *Commands) ContinueRebase(runner gitdomain.Runner) error {
 	return runner.Run("git", "-c", "core.editor=true", "rebase", "--continue")
+	// TODO: move "-c core.editor=true" to the end
 }
 
 // CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
@@ -549,6 +554,12 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 	return runner.Run("git", args...)
 }
 
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName) error {
+	args := []string{"rebase", "--onto", branchToRebaseOnto.String(), branchToRebaseAgainst.String()}
+	return runner.Run("git", args...)
+}
+
 // Remotes provides the names of all Git remotes in this repository.
 func (self *Commands) Remotes(querier gitdomain.Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
@@ -579,6 +590,10 @@ func (self *Commands) RemoveBitbucketAppPassword(runner gitdomain.Runner) error 
 
 func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
+}
+
+func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
+	return runner.Run("git", "rm", fileName)
 }
 
 // RemoveGitAlias removes the given Git alias.
