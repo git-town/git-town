@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"slices"
 
@@ -266,6 +267,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
+	fmt.Println("1111111111111111111111111111111111111111111111", data.config.NormalConfig.NewBranchType)
 	if data.prototype.IsTrue() || data.config.NormalConfig.NewBranchType == configdomain.BranchTypePrototypeBranch {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	}
