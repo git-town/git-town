@@ -45,7 +45,7 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.NormalConfig.PerennialRegex))
 	result.WriteString("\n[create]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.NewBranchTypeHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("new-branch-type = %q\n\n", config.NormalConfig.NewBranchType))
+	result.WriteString(fmt.Sprintf("new-branch-type = %q\n", config.NormalConfig.NewBranchType))
 	result.WriteString("\n[hosting]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp)) + "\n")
 	if platform, has := config.NormalConfig.HostingPlatform.Get(); has {
