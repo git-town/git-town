@@ -25,13 +25,19 @@ Feature: remove a branch from a stack
       Selected parent branch for "branch-2": main
       """
     And Git Town runs no commands
+    And the current branch is still "branch-2"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
       | branch-2 | main     |
       | branch-3 | branch-2 |
-    And the current branch is still "branch-2"
+    And the branches contain these files:
+      | BRANCH   | NAME   |
+      | branch-1 | file_1 |
+      | branch-2 | file_2 |
+      | branch-3 | file_2 |
+      |          | file_3 |
 
   Scenario: undo
     When I run "git-town undo"
