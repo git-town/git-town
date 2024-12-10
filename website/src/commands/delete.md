@@ -6,6 +6,10 @@ The _delete_ command deletes the given branch from the local and remote
 repository and updates proposals of its child branches to the parent of the
 deleted branch. It does not remove perennial branches.
 
+Commits made by the deleted branch get removed from all its descendents, unless
+when using the
+[merge sync strategy](../preferences/sync-feature-strategy.md#merge).
+
 ### Positional arguments
 
 When called without arguments, the _delete_ command deletes the feature branch
