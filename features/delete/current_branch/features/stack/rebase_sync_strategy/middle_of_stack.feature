@@ -22,7 +22,6 @@ Feature: deleting a branch that conflicts with the main branch
       | feature-3 | local, origin | feature-3 commit | file      | content 3    |
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is "feature-2"
-    # And inspect the repo
     When I run "git-town delete"
 
   Scenario: result
