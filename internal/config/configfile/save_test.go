@@ -153,13 +153,11 @@ perennial-regex = ""
 
 [create]
 
-# The "create-prototype-branches" setting determines whether Git Town
-# always creates prototype branches.
-# Prototype branches sync only locally and don't create a tracking branch
-# until they are proposed.
+# The "new-branch-type" setting determines which branch type Git Town
+# creates when you run "git town hack", "append", or "prepend".
 #
-# More info at https://www.git-town.com/preferences/create-prototype-branches.
-create-prototype-branches = true
+# More info at https://www.git-town.com/preferences/new-branch-type.
+new-branch-type = "feature"
 
 [hosting]
 
