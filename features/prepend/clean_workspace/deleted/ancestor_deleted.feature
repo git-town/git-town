@@ -15,7 +15,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
     And the current branch is "branch-2"
     When I run "git-town prepend new"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                 |
@@ -30,7 +29,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |          | git checkout -b new main                |
     And Git Town prints:
       """
-      deleted branch "branch-2"
+      deleted branch "branch-1"
       """
     And Git Town prints:
       """
@@ -38,25 +37,20 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
     And the current branch is now "new"
     And the branches are now
-      | REPOSITORY | BRANCHES          |
-      | local      | main, new, parent |
-      | origin     | main, parent      |
+      | REPOSITORY | BRANCHES            |
+      | local      | main, branch-2, new |
+      | origin     | main, branch-2      |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | new    | parent |
-      | parent | main   |
+      | BRANCH   | PARENT |
+      | branch-2 | new    |
+      | new      | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | new    | git checkout parent                             |
-      | parent | git reset --hard {{ sha 'parent commit' }}      |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
-      | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git branch child {{ sha 'child commit' }}       |
-      |        | git checkout child                              |
-      | child  | git branch -D new                               |
-    And the current branch is now "child"
+      | BRANCH   | COMMAND                                  |
+      | new      | git branch branch-1 {{ sha 'commit 1' }} |
+      |          | git checkout branch-2                    |
+      | branch-2 | git branch -D new                        |
+    And the current branch is now "branch-2"
     And the initial branches and lineage exist now
