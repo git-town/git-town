@@ -26,9 +26,9 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
 	if hasParentToRemove && rebaseSyncStrategy {
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+			Ancestor:          parentToRemove.BranchName(),
 			Branch:            localName,
 			HasTrackingBranch: branchInfo.HasTrackingBranch(),
-			Ancestor:          parentToRemove.BranchName(),
 			Program:           args.Program,
 			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch,
 		})
@@ -189,9 +189,9 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 }
 
 type RemoveAncestorCommitsArgs struct {
+	Ancestor          gitdomain.BranchName
 	Branch            gitdomain.LocalBranchName
 	HasTrackingBranch bool
-	Ancestor          gitdomain.BranchName
 	Program           Mutable[program.Program]
 	RebaseOnto        gitdomain.LocalBranchName
 }

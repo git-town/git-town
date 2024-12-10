@@ -293,9 +293,9 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 			for _, descendent := range descendents {
 				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
 					sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+						Ancestor:          localBranchToDelete.BranchName(),
 						Branch:            descendent,
 						HasTrackingBranch: branchInfo.HasTrackingBranch(),
-						Ancestor:          localBranchToDelete.BranchName(),
 						Program:           prog,
 						RebaseOnto:        data.config.ValidatedConfigData.MainBranch,
 					})
