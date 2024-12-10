@@ -21,6 +21,7 @@ Feature: stack that changes the same file in multiple commits per branch
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 
+  # @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
@@ -32,6 +33,7 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git rebase --onto main alpha            |
       |        | git push --force-with-lease             |
       |        | git branch -D alpha                     |
+    And the current branch is still "beta"
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
