@@ -592,6 +592,10 @@ func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
 }
 
+func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
+	return runner.Run("git", "rm", fileName)
+}
+
 // RemoveGitAlias removes the given Git alias.
 func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
