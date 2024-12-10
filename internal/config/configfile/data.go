@@ -3,12 +3,15 @@ package configfile
 // Data defines the Go equivalent of the TOML file content.
 type Data struct {
 	Branches                 *Branches     `toml:"branches"`
+	Create                   *Create       `toml:"create"`
 	CreatePrototypeBranches  *bool         `toml:"create-prototype-branches"`
 	Hosting                  *Hosting      `toml:"hosting"`
 	PushHook                 *bool         `toml:"push-hook"`
 	PushNewbranches          *bool         `toml:"push-new-branches"`
+	Ship                     *Ship         `toml:"ship"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-tracking-branch"`
 	ShipStrategy             *string       `toml:"ship-strategy"`
+	Sync                     *Sync         `toml:"sync"`
 	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
 	SyncTags                 *bool         `toml:"sync-tags"`
 	SyncUpstream             *bool         `toml:"sync-upstream"`
@@ -28,6 +31,11 @@ func (self Branches) IsEmpty() bool {
 	return self.Main == nil && len(self.Perennials) == 0
 }
 
+type Create struct {
+	NewBranchType    *string `toml:"new-branch-type"`
+	ShareNewBranches *string `toml:"share-new-branches"`
+}
+
 type Hosting struct {
 	OriginHostname *string `toml:"origin-hostname"`
 	Platform       *string `toml:"platform"`
@@ -35,6 +43,20 @@ type Hosting struct {
 
 func (self Hosting) IsEmpty() bool {
 	return self.Platform == nil && self.OriginHostname == nil
+}
+
+type Ship struct {
+	DeleteTrackingBranch *bool   `toml:"delete-tracking-branch"`
+	Strategy             *string `toml:"strategy"`
+}
+
+type Sync struct {
+	PushHook          *bool   `toml:"push-hook"`
+	FeatureStrategy   *string `toml:"feature-strategy"`
+	PerennialStrategy *string `toml:"perennial-strategy"`
+	PrototypeStrategy *string `toml:"prototype-strategy"`
+	Tags              *bool   `toml:"tags"`
+	Upstream          *bool   `toml:"upstream"`
 }
 
 type SyncStrategy struct {

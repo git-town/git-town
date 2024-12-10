@@ -87,7 +87,7 @@ main = "main"
 default = "observed"
 contribution-regex = "^gittown-"
 feature-regex = "^kg-"
-observed-regex = "^dependabot\/"
+observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
 
