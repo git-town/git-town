@@ -294,7 +294,6 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 			&opcodes.LineageBranchRemove{Branch: branchToDelete},
 		)
 	}
-	// TODO: if it doesn't exist yet, add E2E test that merges a branch which was deleted at the remote
 	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsFalse() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
 		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
