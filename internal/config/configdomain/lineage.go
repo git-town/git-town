@@ -197,11 +197,11 @@ func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates 
 		if candidates.Contains(branch) {
 			return Some(branch)
 		}
-		parent, hasParent := self.Parent(branch).Get()
-		if !hasParent {
+		if parent, hasParent := self.Parent(branch).Get(); hasParent {
+			branch = parent
+		} else {
 			return None[gitdomain.LocalBranchName]()
 		}
-		branch = parent
 	}
 }
 
