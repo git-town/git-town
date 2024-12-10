@@ -12,7 +12,7 @@ func TestConfigfile(t *testing.T) {
 
 	t.Run("parse", func(t *testing.T) {
 		t.Parallel()
-		t.Run("complete content", func(t *testing.T) {
+		t.Run("old format", func(t *testing.T) {
 			t.Parallel()
 			give := `
 push-hook = true
@@ -36,6 +36,80 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 prototype-branches = "compress"
+`[1:]
+			have, err := configfile.Decode(give)
+			must.NoError(t, err)
+			createPrototypeBranches := true
+			github := "github"
+			githubCom := "github.com"
+			main := "main"
+			merge := "merge"
+			pushNewBranches := true
+			pushHook := true
+			rebase := "rebase"
+			compress := "compress"
+			releaseRegex := "release-.*"
+			shipDeleteTrackingBranch := false
+			shipStrategy := "api"
+			syncTags := false
+			syncUpstream := true
+			want := configfile.Data{
+				Branches: &configfile.Branches{
+					Main:           &main,
+					Perennials:     []string{"public", "staging"},
+					PerennialRegex: &releaseRegex,
+				},
+				Hosting: &configfile.Hosting{
+					Platform:       &github,
+					OriginHostname: &githubCom,
+				},
+				SyncStrategy: &configfile.SyncStrategy{
+					FeatureBranches:   &merge,
+					PerennialBranches: &rebase,
+					PrototypeBranches: &compress,
+				},
+				CreatePrototypeBranches:  &createPrototypeBranches,
+				PushHook:                 &pushHook,
+				PushNewbranches:          &pushNewBranches,
+				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
+				ShipStrategy:             &shipStrategy,
+				SyncTags:                 &syncTags,
+				SyncUpstream:             &syncUpstream,
+			}
+			must.Eq(t, want, *have)
+		})
+
+		t.Run("new format", func(t *testing.T) {
+			t.Parallel()
+			give := `
+[branches]
+main = "main"
+default = "observed"
+contribution-regex = "^gittown-"
+feature-regex = "^kg-"
+observed-regex = "^dependabot\/"
+perennials = [ "public", "staging" ]
+perennial-regex = "release-.*"
+
+[create]
+new-branch-type = "prototype"
+share-new-branches = "push"
+
+[hosting]
+platform = "github"
+origin-hostname = "github.com"
+
+[ship]
+delete-tracking-branch = false
+strategy = "api"
+
+[sync]
+push-hook = true
+feature-strategy = "merge"
+perennial-strategy = "rebase"
+prototype-strategy = "compress"
+tags = false
+upstream = true
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
