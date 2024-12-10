@@ -66,6 +66,13 @@ func syncDeleteLocalBranchProgram(prog Mutable[program.Program], branch gitdomai
 		Lineage: args.Config.NormalConfig.Lineage,
 		Program: prog,
 	})
-	prog.Value.Add(&opcodes.CheckoutParentOrMain{Branch: branch})
-	prog.Value.Add(&opcodes.BranchLocalDelete{Branch: branch})
+	prog.Value.Add(
+		&opcodes.CheckoutParentOrMain{
+			Branch: branch,
+		},
+		&opcodes.BranchLocalDeleteContent{
+			BranchToDelete:     branch,
+			BranchToRebaseOnto: args.Config.ValidatedConfigData.MainBranch,
+		},
+	)
 }

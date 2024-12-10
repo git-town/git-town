@@ -162,6 +162,15 @@ func (self Lineage) Entries() []LineageEntry {
 	return result
 }
 
+func (self Lineage) HasDescendents(branch gitdomain.LocalBranchName) bool {
+	for _, parent := range self.data {
+		if parent == branch {
+			return true
+		}
+	}
+	return false
+}
+
 // HasParents returns whether or not the given branch has at least one parent.
 func (self Lineage) HasParents(branch gitdomain.LocalBranchName) bool {
 	for child := range self.data {
@@ -180,6 +189,20 @@ func (self Lineage) IsAncestor(ancestor, other gitdomain.LocalBranchName) bool {
 
 func (self Lineage) IsEmpty() bool {
 	return self.data == nil || self.Len() == 0
+}
+
+// provides the branch from candidates that is the youngest ancestor of the given branch
+func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
+	for {
+		if candidates.Contains(branch) {
+			return Some(branch)
+		}
+		if parent, hasParent := self.Parent(branch).Get(); hasParent {
+			branch = parent
+		} else {
+			return None[gitdomain.LocalBranchName]()
+		}
+	}
 }
 
 func (self Lineage) Len() int {
