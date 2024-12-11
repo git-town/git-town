@@ -47,8 +47,10 @@ Feature: remove a branch from a stack
     And the branches contain these files:
       | BRANCH   | NAME   |
       | branch-1 | file_1 |
-      | branch-2 | file_2 |
-      | branch-3 | file_2 |
+      | branch-2 | file_1 |
+      |          | file_2 |
+      | branch-3 | file_1 |
+      |          | file_2 |
       |          | file_3 |
 
   Scenario: undo

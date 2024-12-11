@@ -1108,20 +1108,31 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the branches contain these files:$`, func(ctx context.Context, godogTable *godog.Table) {
+	sc.Step(`^the branches contain these files:$`, func(ctx context.Context, godogTable *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		repo := state.fixture.DevRepo.GetOrPanic()
 		branches := asserts.Check1(repo.LocalBranches())
 		haveTable := datatable.DataTable{}
 		haveTable.AddRow("BRANCH", "NAME")
 		for _, branch := range branches {
-			files := repo.FilesInBranch(branch)
-			for _, file := range files {
-				haveTable.AddRow(branch.String(), file)
+			repo.CheckoutBranch(branch)
+			firstFileInBranch := true
+			for _, file := range repo.FilesInWorkspace() {
+				if firstFileInBranch {
+					haveTable.AddRow(branch.String(), file)
+					firstFileInBranch = false
+				} else {
+					haveTable.AddRow("", file)
+				}
 			}
 		}
 		wantTable := datatable.FromGherkin(godogTable)
-		haveTable.EqualDataTable(wantTable)
+		diff, errCnt := haveTable.EqualDataTable(wantTable)
+		if errCnt > 0 {
+			fmt.Println(diff)
+			return fmt.Errorf(fmt.Sprintf("found %d differences", errCnt))
+		}
+		return nil
 	})
 
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
