@@ -14,7 +14,6 @@ type NormalConfigData struct {
 	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
-	CreatePrototypeBranches  CreatePrototypeBranches
 	DefaultBranchType        BranchType
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
@@ -23,6 +22,7 @@ type NormalConfigData struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
+	NewBranchType            BranchType
 	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline
@@ -135,7 +135,6 @@ func DefaultNormalConfig() NormalConfigData {
 		BitbucketUsername:        None[BitbucketUsername](),
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
-		CreatePrototypeBranches:  false,
 		DefaultBranchType:        BranchTypeFeatureBranch,
 		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),
@@ -144,6 +143,7 @@ func DefaultNormalConfig() NormalConfigData {
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  NewLineage(),
+		NewBranchType:            BranchTypeFeatureBranch,
 		ObservedBranches:         gitdomain.LocalBranchNames{},
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,

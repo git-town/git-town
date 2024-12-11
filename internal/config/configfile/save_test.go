@@ -50,12 +50,12 @@ func TestSave(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					CreatePrototypeBranches:  true,
 					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 					HostingPlatform:          None[configdomain.HostingPlatform](),
 					Lineage:                  configdomain.NewLineage(),
+					NewBranchType:            configdomain.BranchTypePrototypeBranch,
 					ObservedBranches:         gitdomain.LocalBranchNames{},
 					Offline:                  false,
 					ParkedBranches:           gitdomain.LocalBranchNames{},
@@ -99,14 +99,6 @@ push-hook = true
 # and Git Town will create the missing tracking branch
 # on the first run of "git town sync".
 push-new-branches = false
-
-# The "create-prototype-branches" setting determines whether Git Town
-# always creates prototype branches.
-# Prototype branches sync only locally and don't create a tracking branch
-# until they are proposed.
-#
-# More info at https://www.git-town.com/preferences/create-prototype-branches.
-create-prototype-branches = true
 
 # Which method should Git Town use to ship feature branches?
 #
@@ -158,6 +150,14 @@ perennials = ["one", "two"]
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
+
+[create]
+
+# The "new-branch-type" setting determines which branch type Git Town
+# creates when you run "git town hack", "append", or "prepend".
+#
+# More info at https://www.git-town.com/preferences/new-branch-type.
+new-branch-type = "prototype"
 
 [hosting]
 
@@ -228,14 +228,6 @@ push-hook = true
 # on the first run of "git town sync".
 push-new-branches = false
 
-# The "create-prototype-branches" setting determines whether Git Town
-# always creates prototype branches.
-# Prototype branches sync only locally and don't create a tracking branch
-# until they are proposed.
-#
-# More info at https://www.git-town.com/preferences/create-prototype-branches.
-create-prototype-branches = false
-
 # Which method should Git Town use to ship feature branches?
 #
 # Options:
@@ -286,6 +278,14 @@ perennials = []
 #
 # If you are not sure, leave this empty.
 perennial-regex = ""
+
+[create]
+
+# The "new-branch-type" setting determines which branch type Git Town
+# creates when you run "git town hack", "append", or "prepend".
+#
+# More info at https://www.git-town.com/preferences/new-branch-type.
+new-branch-type = "feature"
 
 [hosting]
 
