@@ -312,6 +312,19 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
+func (self *TestCommands) FilesInWorkspace() []string {
+	files := asserts.NoError1(os.ReadDir(self.WorkingDir))
+	result := make([]string, 0, len(files))
+	for _, file := range files {
+		fileName := file.Name()
+		if fileName == ".git" {
+			continue
+		}
+		result = append(result, fileName)
+	}
+	return result
+}
+
 func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configdomain.Key) Option[string] {
 	args := []string{"config"}
 	switch scope {
@@ -326,19 +339,6 @@ func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configd
 		return None[string]()
 	}
 	return Some(output)
-}
-
-func (self *TestCommands) FilesInWorkspace() []string {
-	files := asserts.NoError1(os.ReadDir(self.WorkingDir))
-	result := make([]string, 0, len(files))
-	for _, file := range files {
-		fileName := file.Name()
-		if fileName == ".git" {
-			continue
-		}
-		result = append(result, fileName)
-	}
-	return result
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
