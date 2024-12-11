@@ -224,8 +224,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
-		asserts.NoError(err)
+		repoStatus := asserts.NoError1(devRepo.RepoStatus(devRepo.TestRunner))
 		if !repoStatus.RebaseInProgress {
 			return errors.New("expected rebase in progress")
 		}
@@ -340,8 +339,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		aliasableCommand := configdomain.AliasableCommand(name)
-		have, err := devRepo.LoadGitAlias(aliasableCommand)
-		asserts.NoError(err)
+		have := asserts.NoError1(devRepo.LoadGitAlias(aliasableCommand))
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -410,8 +408,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town is not configured$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		err := devRepo.RemovePerennialBranchConfiguration()
-		asserts.NoError(err)
+		asserts.NoError(devRepo.RemovePerennialBranchConfiguration())
 		devRepo.RemoveMainBranchConfiguration()
 	})
 
@@ -852,8 +849,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
 			devRepo.Config.Reload()
 		} else {
-			parts, err := shellquote.Split(command)
-			asserts.NoError(err)
+			parts := asserts.NoError1(shellquote.Split(command))
 			cmd, args := parts[0], parts[1:]
 			subProcess := exec.Command(cmd, args...) // #nosec
 			subProcess.Dir = state.fixture.Dir
@@ -872,8 +868,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
-		answers, err := helpers.TableToInputEnv(input)
-		asserts.NoError(err)
+		answers := asserts.NoError1(helpers.TableToInputEnv(input))
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
 		}
@@ -953,8 +948,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus, err := devRepo.RepoStatus(devRepo.TestRunner)
-		asserts.NoError(err)
+		repoStatus := asserts.NoError1(devRepo.RepoStatus(devRepo.TestRunner))
 		if repoStatus.RebaseInProgress {
 			return errors.New("expected no rebase in progress")
 		}
@@ -992,17 +986,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		commitMessage, err := originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main")
-		asserts.NoError(err)
+		commitMessage := asserts.NoError1(originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
 		if commitMessage.IsNone() {
 			return errors.New("branch to ship contains no commits")
 		}
 		originRepo.CheckoutBranch("main")
-		err = originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
-		asserts.NoError(err)
+		asserts.NoError(originRepo.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		err = originRepo.Commit(originRepo.TestRunner, commitMessage, false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
-		asserts.NoError(err)
+		asserts.NoError(originRepo.Commit(originRepo.TestRunner, commitMessage, false, gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -1019,8 +1010,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		originRepo.CreateFile(fileName, fileContent)
 		originRepo.StageFiles("-A")
-		err = originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
-		asserts.NoError(err)
+		asserts.NoError(originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -1031,11 +1021,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch("main")
-		err := originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
-		asserts.NoError(err)
+		asserts.NoError(originRepo.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		err = originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>"))
-		asserts.NoError(err)
+		asserts.NoError(originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -1080,8 +1068,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
 				if parent, hasParent := branchSetup.Parent.Get(); hasParent {
-					err := repoToCreateBranchIn.Config.NormalConfig.SetParent(branchSetup.Name, parent)
-					asserts.NoError(err)
+					asserts.NoError(repoToCreateBranchIn.Config.NormalConfig.SetParent(branchSetup.Name, parent))
 				}
 			}
 			if len(branchSetup.Locations) > 1 {
@@ -1278,8 +1265,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		syncFeatureStrategy, err := configdomain.ParseSyncFeatureStrategy(value)
-		asserts.NoError(err)
+		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value))
 		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.NormalConfig.SetSyncFeatureStrategy(syncFeatureStrategy.GetOrPanic())
 	})
 
@@ -1672,8 +1658,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSize, err := devRepo.StashSize(devRepo.TestRunner)
-		asserts.NoError(err)
+		stashSize := asserts.NoError1(devRepo.StashSize(devRepo.TestRunner))
 		if stashSize != 1 {
 			return fmt.Errorf("expected 1 stash but found %d", stashSize)
 		}
