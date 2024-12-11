@@ -27,6 +27,7 @@ Feature: remove a branch from a stack
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
 
+  @this
   Scenario: result
     Then Git Town prints:
       """
