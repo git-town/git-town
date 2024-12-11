@@ -32,13 +32,7 @@ Feature: remove a branch from a stack
       """
       Selected parent branch for "branch-2": <none> (perennial branch)
       """
-    And Git Town runs the commands
-      | BRANCH   | COMMAND                                      |
-      | branch-2 | git checkout branch-3                        |
-      | branch-3 | git pull                                     |
-      |          | git rebase --onto branch-2 branch-2 branch-3 |
-      |          | git push --force-with-lease                  |
-      |          | git checkout branch-2                        |
+    And Git Town runs no commands
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |

@@ -23,7 +23,6 @@ Feature: remove a branch from a stack
       | branch-3 | local, origin | commit 3 | file_3    |
     And the current branch is "branch-2"
     And local Git Town setting "sync-feature-strategy" is "rebase"
-    # And inspect the repo
     When I run "git-town set-parent" and enter into the dialog:
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
@@ -58,7 +57,6 @@ Feature: remove a branch from a stack
       | branch-2 | file_2 |
       | branch-3 | file_2 |
       |          | file_3 |
-  # And inspect the repo
 
   Scenario: undo
     When I run "git-town undo"
