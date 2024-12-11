@@ -54,7 +54,6 @@ _Commands to deal with merge conflicts._
 
 _Commands that help install Git Town on your computer._
 
-- git town aliases - add or remove shorter aliases for Git Town commands
 - [git town completion](commands/completions.md) - generate completion scripts
   for Bash, zsh, fish & PowerShell.
 
