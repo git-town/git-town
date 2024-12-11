@@ -27,7 +27,6 @@ Feature: remove a branch from a stack
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
 
-  @this
   Scenario: result
     Then Git Town prints:
       """
@@ -40,7 +39,7 @@ Feature: remove a branch from a stack
       |          | git push --force-with-lease                  |
       |          | git checkout branch-3                        |
       | branch-3 | git pull                                     |
-      |          | git rebase --onto branch-1 branch-2 branch-3 |
+      |          | git rebase --onto branch-2 branch-2 branch-3 |
       |          | git push --force-with-lease                  |
       |          | git checkout branch-2                        |
     And the current branch is still "branch-2"
