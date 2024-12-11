@@ -14,7 +14,7 @@ Feature: remove a branch from a stack
       | branch-2 | local, origin | existing commit | file_2    |
       | branch-3 | local, origin | existing commit | file_3    |
     And the current branch is "branch-2"
-    And local Git Town setting "sync-strategy" is "merge"
+    And local Git Town setting "sync-strategy" is "compress"
     When I run "git-town set-parent" and enter into the dialog:
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
