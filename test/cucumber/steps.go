@@ -224,7 +224,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus := asserts.Check1(devRepo.RepoStatus(devRepo.TestRunner))
+		repoStatus := asserts.NoError1(devRepo.RepoStatus(devRepo.TestRunner))
 		if !repoStatus.RebaseInProgress {
 			return errors.New("expected rebase in progress")
 		}
@@ -339,7 +339,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		aliasableCommand := configdomain.AliasableCommand(name)
-		have := asserts.Check1(devRepo.LoadGitAlias(aliasableCommand))
+		have := asserts.NoError1(devRepo.LoadGitAlias(aliasableCommand))
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -849,7 +849,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
 			devRepo.Config.Reload()
 		} else {
-			parts := asserts.Check1(shellquote.Split(command))
+			parts := asserts.NoError1(shellquote.Split(command))
 			cmd, args := parts[0], parts[1:]
 			subProcess := exec.Command(cmd, args...) // #nosec
 			subProcess.Dir = state.fixture.Dir
@@ -868,7 +868,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
-		answers := asserts.Check1(helpers.TableToInputEnv(input))
+		answers := asserts.NoError1(helpers.TableToInputEnv(input))
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
 		}
@@ -948,7 +948,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus := asserts.Check1(devRepo.RepoStatus(devRepo.TestRunner))
+		repoStatus := asserts.NoError1(devRepo.RepoStatus(devRepo.TestRunner))
 		if repoStatus.RebaseInProgress {
 			return errors.New("expected no rebase in progress")
 		}
@@ -986,7 +986,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		commitMessage := asserts.Check1(originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
+		commitMessage := asserts.NoError1(originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
 		if commitMessage.IsNone() {
 			return errors.New("branch to ship contains no commits")
 		}
@@ -1238,7 +1238,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		syncFeatureStrategy := asserts.Check1(configdomain.ParseSyncFeatureStrategy(value))
+		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value))
 		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.NormalConfig.SetSyncFeatureStrategy(syncFeatureStrategy.GetOrPanic())
 	})
 
@@ -1631,7 +1631,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSize := asserts.Check1(devRepo.StashSize(devRepo.TestRunner))
+		stashSize := asserts.NoError1(devRepo.StashSize(devRepo.TestRunner))
 		if stashSize != 1 {
 			return fmt.Errorf("expected 1 stash but found %d", stashSize)
 		}
