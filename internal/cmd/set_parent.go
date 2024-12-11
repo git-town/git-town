@@ -219,12 +219,49 @@ func verifySetParentData(data setParentData) error {
 
 func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
 	proposal, hasProposal := data.proposal.Get()
+	// update lineage
 	switch dialogOutcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
 		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
+		switch data.config.NormalConfig.SyncFeatureStrategy {
+		case configdomain.SyncFeatureStrategyMerge:
+		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
+			// remove commits from descendents
+			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+			for _, descendent := range descendents {
+				prog.Add(
+					&opcodes.CheckoutIfNeeded{
+						Branch: descendent,
+					},
+				)
+				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
+				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					prog.Add(
+						&opcodes.PullCurrentBranch{},
+					)
+				}
+				prog.Add(
+					&opcodes.RebaseOnto{
+						BranchToRebaseAgainst: descendent.BranchName(),
+						BranchToRebaseOnto:    data.initialBranch,
+						Upstream:              Some(data.initialBranch),
+					},
+				)
+				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					prog.Add(
+						&opcodes.ForcePush{ForceIfIncludes: false},
+					)
+				}
+			}
+			prog.Add(
+				&opcodes.CheckoutIfNeeded{
+					Branch: data.initialBranch,
+				},
+			)
+		}
 	case dialog.ParentOutcomeSelectedParent:
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		connector, hasConnector := data.connector.Get()
@@ -236,7 +273,9 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				ProposalNumber: proposal.Number,
 			})
 		}
+		// update commits
 		switch data.config.NormalConfig.SyncFeatureStrategy {
+		case configdomain.SyncFeatureStrategyMerge:
 		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
 			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
 			hasRemoteBranch, _, _ := initialBranchInfo.HasRemoteBranch()
@@ -290,7 +329,6 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					Branch: data.initialBranch,
 				},
 			)
-		case configdomain.SyncFeatureStrategyMerge:
 		}
 	}
 	return prog, false
