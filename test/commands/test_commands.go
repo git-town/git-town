@@ -336,7 +336,7 @@ func (self *TestCommands) FilesInWorkspace() []string {
 		if fileName == ".git" {
 			continue
 		}
-		result = append(result, file.Name())
+		result = append(result, fileName)
 	}
 	return result
 }
