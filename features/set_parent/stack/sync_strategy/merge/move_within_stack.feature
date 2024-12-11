@@ -13,26 +13,29 @@ Feature: remove a branch from a stack
       | branch-1 | local, origin | existing commit | file_1    |
       | branch-2 | local, origin | existing commit | file_2    |
       | branch-3 | local, origin | existing commit | file_3    |
-    And the current branch is "branch-2"
+    And the current branch is "branch-3"
     And local Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS       |
-      | parent branch of child | down enter |
+      | DIALOG                 | KEYS                 |
+      | parent branch of child | down down down enter |
 
-  @this
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "branch-2": main
+      Selected parent branch for "branch-3": branch-1
+      """
+    And Git Town prints:
+      """
+      branch "branch-3" is now a child of "branch-1"
       """
     And Git Town runs no commands
-    And the current branch is still "branch-2"
+    And the current branch is still "branch-3"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
-      | branch-2 | main     |
-      | branch-3 | branch-2 |
+      | branch-2 | branch-1 |
+      | branch-3 | branch-1 |
     And the branches contain these files:
       | BRANCH   | NAME   |
       | branch-1 | file_1 |
@@ -43,6 +46,6 @@ Feature: remove a branch from a stack
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
+    And the current branch is still "branch-3"
     And the initial commits exist now
     And the initial branches and lineage exist now
