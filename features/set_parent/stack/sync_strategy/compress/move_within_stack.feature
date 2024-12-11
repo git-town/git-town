@@ -36,14 +36,17 @@ Feature: remove a branch from a stack
       """
       branch "branch-3" is now a child of "branch-1"
       """
-    And Git Town runs no commands
+    And Git Town runs the commands
+      | BRANCH   | COMMAND                                      |
+      | branch-3 | git pull                                     |
+      |          | git rebase --onto branch-1 branch-2 branch-3 |
+      |          | git push --force-with-lease                  |
     And the current branch is still "branch-3"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 2 |
-      | branch-3 | local, origin | commit 2 |
-      |          |               | commit 3 |
+      | branch-3 | local, origin | commit 3 |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
@@ -55,12 +58,14 @@ Feature: remove a branch from a stack
       | branch-2 | file_1 |
       |          | file_2 |
       | branch-3 | file_1 |
-      |          | file_2 |
       |          | file_3 |
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    And Git Town runs the commands
+      | BRANCH   | COMMAND                                         |
+      | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
+      |          | git push --force-with-lease --force-if-includes |
     And the current branch is still "branch-3"
     And the initial commits exist now
     And the initial branches and lineage exist now
