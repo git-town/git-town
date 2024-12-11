@@ -226,42 +226,6 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 	case dialog.ParentOutcomePerennialBranch:
 		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
-		switch data.config.NormalConfig.SyncFeatureStrategy {
-		case configdomain.SyncFeatureStrategyMerge:
-		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
-			// remove commits from descendents
-			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
-			for _, descendent := range descendents {
-				prog.Add(
-					&opcodes.CheckoutIfNeeded{
-						Branch: descendent,
-					},
-				)
-				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
-					prog.Add(
-						&opcodes.PullCurrentBranch{},
-					)
-				}
-				prog.Add(
-					&opcodes.RebaseOnto{
-						BranchToRebaseAgainst: descendent.BranchName(),
-						BranchToRebaseOnto:    data.initialBranch,
-						Upstream:              Some(data.initialBranch),
-					},
-				)
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
-					prog.Add(
-						&opcodes.ForcePush{ForceIfIncludes: false},
-					)
-				}
-			}
-			prog.Add(
-				&opcodes.CheckoutIfNeeded{
-					Branch: data.initialBranch,
-				},
-			)
-		}
 	case dialog.ParentOutcomeSelectedParent:
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		connector, hasConnector := data.connector.Get()
