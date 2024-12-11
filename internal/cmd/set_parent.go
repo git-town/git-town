@@ -245,10 +245,12 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					&opcodes.PullCurrentBranch{},
 				)
 			}
+			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 			prog.Add(
 				&opcodes.RebaseOnto{
 					BranchToRebaseAgainst: data.initialBranch.BranchName(),
 					BranchToRebaseOnto:    selectedBranch,
+					Upstream:              parentOpt,
 				},
 			)
 			if hasInitialBranchInfo && hasRemoteBranch {
@@ -256,7 +258,12 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					&opcodes.ForcePush{ForceIfIncludes: false},
 				)
 			}
-			if parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get(); hasParent {
+			if parent, hasParent := parentOpt.Get(); hasParent {
+				children := data.config.NormalConfig.Lineage.Children(data.initialBranch)
+				for _, child := range children {
+					prog.Add(&opcodes.LineageParentSet{Branch: child, Parent: parent})
+				}
+				// remove commits from descendents
 				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
 				for _, descendent := range descendents {
 					prog.Add(
@@ -274,6 +281,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 						&opcodes.RebaseOnto{
 							BranchToRebaseAgainst: descendent.BranchName(),
 							BranchToRebaseOnto:    parent,
+							Upstream:              Some(data.initialBranch),
 						},
 					)
 					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
