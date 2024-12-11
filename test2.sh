@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ~/demo-repo
+
 # Step 1: Switch to branch-2
 git checkout branch-2
 
