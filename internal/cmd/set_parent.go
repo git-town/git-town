@@ -237,9 +237,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			})
 		}
 		switch data.config.NormalConfig.SyncFeatureStrategy {
-		case
-			configdomain.SyncFeatureStrategyCompress,
-			configdomain.SyncFeatureStrategyRebase:
+		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
 			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
 			hasRemoteBranch, _, _ := initialBranchInfo.HasRemoteBranch()
 			if hasInitialBranchInfo && hasRemoteBranch {
@@ -258,6 +256,38 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					&opcodes.ForcePush{ForceIfIncludes: false},
 				)
 			}
+			if parent, hasParent := data.config.NormalConfig.Lineage.Parent(data.initialBranch).Get(); hasParent {
+				descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+				for _, descendent := range descendents {
+					prog.Add(
+						&opcodes.CheckoutIfNeeded{
+							Branch: descendent,
+						},
+					)
+					descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
+					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+						prog.Add(
+							&opcodes.PullCurrentBranch{},
+						)
+					}
+					prog.Add(
+						&opcodes.RebaseOnto{
+							BranchToRebaseAgainst: descendent.BranchName(),
+							BranchToRebaseOnto:    parent,
+						},
+					)
+					if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+						prog.Add(
+							&opcodes.ForcePush{ForceIfIncludes: false},
+						)
+					}
+				}
+			}
+			prog.Add(
+				&opcodes.CheckoutIfNeeded{
+					Branch: data.initialBranch,
+				},
+			)
 		case configdomain.SyncFeatureStrategyMerge:
 		}
 	}

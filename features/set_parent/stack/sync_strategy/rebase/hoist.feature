@@ -34,15 +34,21 @@ Feature: remove a branch from a stack
       Selected parent branch for "branch-2": main
       """
     And Git Town runs the commands
-      | BRANCH   | COMMAND                         |
-      | branch-2 | git pull                        |
-      |          | git rebase --onto main branch-2 |
-      |          | git push --force-with-lease     |
+      | BRANCH   | COMMAND                                      |
+      | branch-2 | git pull                                     |
+      |          | git rebase --onto main branch-2              |
+      |          | git push --force-with-lease                  |
+      |          | git checkout branch-3                        |
+      | branch-3 | git pull                                     |
+      |          | git rebase --onto branch-1 branch-2 branch-3 |
+      |          | git push --force-with-lease                  |
+      |          | git checkout branch-2                        |
+    And inspect the repo
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
-      | branch-2 | local, origin | commit 1 |
+      | branch-2 | local, origin | commit 2 |
       | branch-3 | local, origin | commit 3 |
     And this lineage exists now
       | BRANCH   | PARENT   |
