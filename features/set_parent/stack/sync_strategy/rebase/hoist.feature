@@ -23,25 +23,25 @@ Feature: remove a branch from a stack
       | branch-3 | local, origin | commit 3 | file_3    |
     And the current branch is "branch-2"
     And local Git Town setting "sync-feature-strategy" is "rebase"
+    # And inspect the repo
     When I run "git-town set-parent" and enter into the dialog:
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
 
+  @this
   Scenario: result
     Then Git Town prints:
       """
       Selected parent branch for "branch-2": main
       """
     And Git Town runs the commands
-      | BRANCH   | COMMAND                                      |
-      | branch-2 | git pull                                     |
-      |          | git rebase --onto main branch-1 branch-2     |
-      |          | git push --force-with-lease                  |
-      |          | git checkout branch-3                        |
-      | branch-3 | git pull                                     |
-      |          | git rebase --onto branch-2 branch-2 branch-3 |
-      |          | git push --force-with-lease                  |
-      |          | git checkout branch-2                        |
+      | BRANCH   | COMMAND                                  |
+      | branch-2 | git rebase --onto main branch-1 branch-2 |
+      |          | git push --force-with-lease              |
+      |          | git checkout branch-3                    |
+      | branch-3 | git rebase branch-2 --no-update-refs     |
+      |          | git push --force-with-lease              |
+      |          | git checkout branch-2                    |
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
@@ -58,9 +58,9 @@ Feature: remove a branch from a stack
       | BRANCH   | NAME   |
       | branch-1 | file_1 |
       | branch-2 | file_2 |
-      | branch-3 | file_1 |
-      |          | file_2 |
+      | branch-3 | file_2 |
       |          | file_3 |
+  # And inspect the repo
 
   Scenario: undo
     When I run "git-town undo"

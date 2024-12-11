@@ -10,7 +10,7 @@ git rebase --onto main branch-1 branch-2
 
 # Step 3: Update branch-3 to continue from branch-2
 git checkout branch-3
-git rebase branch-2
+git rebase branch-2 --no-update-refs
 
 # Verification
 git log --graph --oneline --all

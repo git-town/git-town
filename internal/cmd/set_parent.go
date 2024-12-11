@@ -243,11 +243,6 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
 			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
 			hasRemoteBranch, _, _ := initialBranchInfo.HasRemoteBranch()
-			if hasInitialBranchInfo && hasRemoteBranch {
-				prog.Add(
-					&opcodes.PullCurrentBranch{},
-				)
-			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 			prog.Add(
 				&opcodes.RebaseOnto{
@@ -270,16 +265,9 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					},
 				)
 				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
-				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
-					prog.Add(
-						&opcodes.PullCurrentBranch{},
-					)
-				}
 				prog.Add(
-					&opcodes.RebaseOnto{
-						BranchToRebaseAgainst: descendent.BranchName(),
-						BranchToRebaseOnto:    data.initialBranch,
-						Upstream:              Some(data.initialBranch),
+					&opcodes.RebaseBranch{
+						Branch: data.initialBranch.BranchName(),
 					},
 				)
 				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
