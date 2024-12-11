@@ -242,7 +242,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 		case configdomain.SyncFeatureStrategyMerge:
 		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
 			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
-			hasRemoteBranch, _, _ := initialBranchInfo.HasRemoteBranch()
+			hasRemoteBranch := hasInitialBranchInfo && initialBranchInfo.RemoteName.IsSome()
 			if hasRemoteBranch {
 				prog.Add(
 					&opcodes.PullCurrentBranch{},
@@ -256,7 +256,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					Upstream:              parentOpt,
 				},
 			)
-			if hasInitialBranchInfo && hasRemoteBranch {
+			if hasRemoteBranch {
 				prog.Add(
 					&opcodes.ForcePush{ForceIfIncludes: true},
 				)
