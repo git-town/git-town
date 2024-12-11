@@ -223,11 +223,9 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
-		// TODO: if rebase or compress, use rebase-onto
 		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
-		// TODO: if rebase or compress, use rebase-onto
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		connector, hasConnector := data.connector.Get()
 		connectorCanUpdateProposalTarget := hasConnector && connector.UpdateProposalTargetFn().IsSome()
