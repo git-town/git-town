@@ -72,8 +72,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
-	branches, err := self.LocalBranchesMainFirst(mainBranch.LocalName())
-	asserts.NoError(err)
+	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch.LocalName()))
 	var result []git.Commit
 	for _, branch := range branches {
 		if strings.HasPrefix(branch.String(), "+ ") {
@@ -128,8 +127,7 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) {
-	err := self.CreateAndCheckoutBranchWithParent(self, name, parent)
-	asserts.NoError(err)
+	asserts.NoError(self.CreateAndCheckoutBranchWithParent(self, name, parent))
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
@@ -255,9 +253,7 @@ func (self *TestCommands) Fetch() {
 
 // FileContent provides the current content of a file.
 func (self *TestCommands) FileContent(filename string) string {
-	content, err := self.FileContentErr(filename)
-	asserts.NoError(err)
-	return content
+	return asserts.NoError1(self.FileContentErr(filename))
 }
 
 // FileContent provides the current content of a file.
@@ -293,8 +289,7 @@ func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []stri
 func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := self.LocalBranchesMainFirst(mainBranch)
-	asserts.NoError(err)
+	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch))
 	var lastBranch gitdomain.LocalBranchName
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)

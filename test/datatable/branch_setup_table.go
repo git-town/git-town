@@ -30,9 +30,7 @@ func ParseBranchSetupTable(table *godog.Table) []BranchSetup {
 			case "NAME":
 				name = Some(gitdomain.NewLocalBranchName(cell.Value))
 			case "TYPE":
-				var err error
-				branchType, err = configdomain.ParseBranchType(cell.Value)
-				asserts.NoError(err)
+				branchType = asserts.NoError1(configdomain.ParseBranchType(cell.Value))
 			case "PARENT":
 				if len(cell.Value) > 0 {
 					parent = Some(gitdomain.NewLocalBranchName(cell.Value))

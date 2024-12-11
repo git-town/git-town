@@ -120,19 +120,15 @@ func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exit
 }
 
 func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (output string, exitCode int) {
-	parts, err := shellquote.Split(fullCmd)
-	asserts.NoError(err)
+	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
-	output, exitCode, err = self.QueryWithCode(opts, cmd, args...)
-	asserts.NoError(err)
+	output, exitCode = asserts.NoError2(self.QueryWithCode(opts, cmd, args...))
 	return output, exitCode
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
 func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
-	output, err := self.QueryWith(opts, cmd, args...)
-	asserts.NoError(err)
-	return output
+	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
 // Run runs the given command with the given arguments.
@@ -160,8 +156,7 @@ func (self *TestRunner) QueryString(fullCmd string) (output string, err error) {
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (output string, err error) {
-	parts, err := shellquote.Split(fullCmd)
-	asserts.NoError(err)
+	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
 	return self.QueryWith(opts, cmd, args...)
 }
