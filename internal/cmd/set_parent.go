@@ -30,7 +30,7 @@ import (
 
 const setParentCmd = "set-parent"
 
-const setParentDesc = "Prompt to set the parent branch for the current branch"
+const setParentDesc = "Set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
