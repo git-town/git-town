@@ -37,9 +37,9 @@ Feature: remove a branch from a stack
       branch "branch-3" is now a child of "branch-1"
       """
     And Git Town runs the commands
-      | BRANCH   | COMMAND                                      |
-      | branch-3 | git rebase --onto branch-1 branch-2 branch-3 |
-      |          | git push --force-with-lease                  |
+      | BRANCH   | COMMAND                                         |
+      | branch-3 | git rebase --onto branch-1 branch-2 branch-3    |
+      |          | git push --force-with-lease --force-if-includes |
     And the current branch is still "branch-3"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
