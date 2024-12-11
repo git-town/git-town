@@ -27,7 +27,6 @@ Feature: remove a branch from a stack
       | DIALOG                 | KEYS                 |
       | parent branch of child | down down down enter |
 
-  @this
   Scenario: result
     Then Git Town prints:
       """
@@ -39,7 +38,12 @@ Feature: remove a branch from a stack
       """
     And Git Town runs no commands
     And the current branch is still "branch-3"
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE  |
+      | branch-1 | local, origin | commit 1 |
+      | branch-2 | local, origin | commit 2 |
+      | branch-3 | local, origin | commit 2 |
+      |          |               | commit 3 |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
