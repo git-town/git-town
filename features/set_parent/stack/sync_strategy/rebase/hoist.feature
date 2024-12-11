@@ -27,18 +27,22 @@ Feature: remove a branch from a stack
       | DIALOG                 | KEYS     |
       | parent branch of child | up enter |
 
+  @this
   Scenario: result
     Then Git Town prints:
       """
       Selected parent branch for "branch-2": main
       """
-    And Git Town runs no commands
+    And Git Town runs the commands
+      | BRANCH   | COMMAND                         |
+      | branch-2 | git pull                        |
+      |          | git rebase --onto main branch-2 |
+      |          | git push --force-with-lease     |
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 1 |
-      |          |               | commit 2 |
       | branch-3 | local, origin | commit 3 |
     And this lineage exists now
       | BRANCH   | PARENT   |
@@ -49,8 +53,7 @@ Feature: remove a branch from a stack
       | BRANCH   | NAME   |
       | branch-1 | file_1 |
       | branch-2 | file_2 |
-      | branch-3 | file_2 |
-      |          | file_3 |
+      | branch-3 | file_3 |
 
   Scenario: undo
     When I run "git-town undo"

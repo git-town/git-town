@@ -236,6 +236,30 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				ProposalNumber: proposal.Number,
 			})
 		}
+		switch data.config.NormalConfig.SyncFeatureStrategy {
+		case
+			configdomain.SyncFeatureStrategyCompress,
+			configdomain.SyncFeatureStrategyRebase:
+			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
+			hasRemoteBranch, _, _ := initialBranchInfo.HasRemoteBranch()
+			if hasInitialBranchInfo && hasRemoteBranch {
+				prog.Add(
+					&opcodes.PullCurrentBranch{},
+				)
+			}
+			prog.Add(
+				&opcodes.RebaseOnto{
+					BranchToRebaseAgainst: data.initialBranch.BranchName(),
+					BranchToRebaseOnto:    selectedBranch,
+				},
+			)
+			if hasInitialBranchInfo && hasRemoteBranch {
+				prog.Add(
+					&opcodes.ForcePush{ForceIfIncludes: false},
+				)
+			}
+		case configdomain.SyncFeatureStrategyMerge:
+		}
 	}
 	return prog, false
 }
