@@ -217,15 +217,17 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
+func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
 	proposal, hasProposal := data.proposal.Get()
-	switch outcome {
+	switch dialogOutcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
+		// TODO: if rebase or compress, use rebase-onto
 		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
+		// TODO: if rebase or compress, use rebase-onto
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
 		connector, hasConnector := data.connector.Get()
 		connectorCanUpdateProposalTarget := hasConnector && connector.UpdateProposalTargetFn().IsSome()
