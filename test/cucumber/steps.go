@@ -1116,8 +1116,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		haveTable.AddRow("BRANCH", "NAME")
 		for _, branch := range branches {
 			repo.CheckoutBranch(branch)
+			firstFileInBranch := true
 			for _, file := range repo.FilesInWorkspace() {
-				haveTable.AddRow(branch.String(), file)
+				if firstFileInBranch {
+					haveTable.AddRow(branch.String(), file)
+					firstFileInBranch = false
+				} else {
+					haveTable.AddRow("", file)
+				}
 			}
 		}
 		wantTable := datatable.FromGherkin(godogTable)
