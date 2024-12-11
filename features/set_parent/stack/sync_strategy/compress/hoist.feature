@@ -39,7 +39,6 @@ Feature: remove a branch from a stack
       | branch-3 | file_2 |
       |          | file_3 |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
