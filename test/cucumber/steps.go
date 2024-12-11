@@ -1117,7 +1117,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		diff, errCnt := haveTable.EqualDataTable(wantTable)
 		if errCnt > 0 {
 			fmt.Println(diff)
-			return fmt.Errorf(fmt.Sprintf("found %d differences", errCnt))
+			return fmt.Errorf("found %d differences", errCnt)
 		}
 		return nil
 	})
