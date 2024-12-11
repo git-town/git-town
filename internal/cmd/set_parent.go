@@ -217,9 +217,9 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
+func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
 	proposal, hasProposal := data.proposal.Get()
-	switch outcome {
+	switch dialogOutcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
