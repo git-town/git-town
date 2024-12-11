@@ -16,9 +16,10 @@ Feature: remove a branch from a stack
     And the current branch is "branch-2"
     And local Git Town setting "sync-feature-strategy" is "merge"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS     |
-      | parent branch of child | up enter |
+      | DIALOG                 | KEYS       |
+      | parent branch of child | down enter |
 
+  @this
   Scenario: result
     Then Git Town prints:
       """
