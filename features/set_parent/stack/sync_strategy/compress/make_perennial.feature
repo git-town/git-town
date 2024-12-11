@@ -39,9 +39,10 @@ Feature: remove a branch from a stack
       | branch-3 | file_2 |
       |          | file_3 |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "child"
+    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial branches and lineage exist now
