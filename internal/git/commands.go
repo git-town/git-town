@@ -554,8 +554,13 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName) error {
-	return runner.Run("git", "rebase", "--onto", branchToRebaseOnto.String(), branchToRebaseAgainst.String())
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName, upstream Option[gitdomain.LocalBranchName]) error {
+	args := []string{"rebase", "--onto", branchToRebaseOnto.String()}
+	if upstream, hasUpstream := upstream.Get(); hasUpstream {
+		args = append(args, upstream.String())
+	}
+	args = append(args, branchToRebaseAgainst.String())
+	return runner.Run("git", args...)
 }
 
 // Remotes provides the names of all Git remotes in this repository.
