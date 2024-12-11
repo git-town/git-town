@@ -333,6 +333,19 @@ func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configd
 	return Some(output)
 }
 
+func (self *TestCommands) FilesInWorkspace() []string {
+	files := asserts.Check1(os.ReadDir(self.WorkingDir))
+	result := make([]string, 0, len(files))
+	for _, file := range files {
+		fileName := file.Name()
+		if fileName == ".git" {
+			continue
+		}
+		result = append(result, file.Name())
+	}
+	return result
+}
+
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
 func (self *TestCommands) HasBranchesOutOfSync() (bool, string) {
 	output := self.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
