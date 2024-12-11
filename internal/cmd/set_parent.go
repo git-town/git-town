@@ -30,7 +30,7 @@ import (
 
 const setParentCmd = "set-parent"
 
-const setParentDesc = "Prompt to set the parent branch for the current branch"
+const setParentDesc = "Set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -217,9 +217,10 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
+func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
 	proposal, hasProposal := data.proposal.Get()
-	switch outcome {
+	// update lineage
+	switch dialogOutcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
@@ -235,6 +236,63 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 				OldBranch:      proposal.Target,
 				ProposalNumber: proposal.Number,
 			})
+		}
+		// update commits
+		switch data.config.NormalConfig.SyncFeatureStrategy {
+		case configdomain.SyncFeatureStrategyMerge:
+		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
+			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
+			hasRemoteBranch := hasInitialBranchInfo && initialBranchInfo.HasTrackingBranch()
+			if hasRemoteBranch {
+				prog.Add(
+					&opcodes.PullCurrentBranch{},
+				)
+			}
+			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
+			prog.Add(
+				&opcodes.RebaseOnto{
+					BranchToRebaseAgainst: data.initialBranch.BranchName(),
+					BranchToRebaseOnto:    selectedBranch,
+					Upstream:              parentOpt,
+				},
+			)
+			if hasRemoteBranch {
+				prog.Add(
+					&opcodes.ForcePush{ForceIfIncludes: true},
+				)
+			}
+			// remove commits from descendents
+			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+			for _, descendent := range descendents {
+				prog.Add(
+					&opcodes.CheckoutIfNeeded{
+						Branch: descendent,
+					},
+				)
+				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
+				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					prog.Add(
+						&opcodes.PullCurrentBranch{},
+					)
+				}
+				prog.Add(
+					&opcodes.RebaseOnto{
+						BranchToRebaseAgainst: descendent.BranchName(),
+						BranchToRebaseOnto:    data.initialBranch,
+						Upstream:              parentOpt,
+					},
+				)
+				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					prog.Add(
+						&opcodes.ForcePush{ForceIfIncludes: true},
+					)
+				}
+			}
+			prog.Add(
+				&opcodes.CheckoutIfNeeded{
+					Branch: data.initialBranch,
+				},
+			)
 		}
 	}
 	return prog, false

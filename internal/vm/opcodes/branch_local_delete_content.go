@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/vm/shared"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
 
 // deletes the given branch including all commits
@@ -20,6 +21,7 @@ func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
 			&RebaseOnto{
 				BranchToRebaseAgainst: self.BranchToDelete.BranchName(),
 				BranchToRebaseOnto:    self.BranchToRebaseOnto,
+				Upstream:              None[gitdomain.LocalBranchName](),
 			},
 			&BranchLocalDelete{
 				Branch: self.BranchToDelete,

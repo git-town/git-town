@@ -179,6 +179,7 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 		&opcodes.RebaseOnto{
 			BranchToRebaseAgainst: args.Ancestor,
 			BranchToRebaseOnto:    args.RebaseOnto,
+			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
 	if args.HasTrackingBranch {

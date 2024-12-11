@@ -88,8 +88,7 @@ func findAllUsedSteps() []string {
 		if filepath.Ext(path) != ".feature" {
 			return nil
 		}
-		fileContent, err := os.ReadFile(path)
-		asserts.NoError(err)
+		fileContent := asserts.NoError1(os.ReadFile(path))
 		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
 			result.Add(stepInFile)
 		}

@@ -17,8 +17,7 @@ const (
 var stepUsageRE *regexp.Regexp //nolint:gochecknoglobals
 
 func main() {
-	stepsFileBytes, err := os.ReadFile(filePath)
-	asserts.NoError(err)
+	stepsFileBytes := asserts.NoError1(os.ReadFile(filePath))
 	stepsFileText := string(stepsFileBytes)
 
 	malformattedStepDefs := CheckStepDefinitions(stepsFileText)
