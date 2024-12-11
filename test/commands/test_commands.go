@@ -329,7 +329,7 @@ func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configd
 }
 
 func (self *TestCommands) FilesInWorkspace() []string {
-	files := asserts.Check1(os.ReadDir(self.WorkingDir))
+	files := asserts.NoError1(os.ReadDir(self.WorkingDir))
 	result := make([]string, 0, len(files))
 	for _, file := range files {
 		fileName := file.Name()
