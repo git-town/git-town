@@ -1108,17 +1108,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the branches contain these files:$`, func(ctx context.Context, table *godog.Table) {
+	sc.Step(`^the branches contain these files:$`, func(ctx context.Context, godogTable *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
 		repo := state.fixture.DevRepo.GetOrPanic()
-		branches, err := repo.LocalBranches()
-		asserts.NoError(err)
-		branchesTable := datatable.DataTable{}
-		branchesTable.AddRow("BRANCH", "NAME")
+		branches := asserts.Check(repo.LocalBranches())
+		haveTable := datatable.DataTable{}
+		haveTable.AddRow("BRANCH", "NAME")
 		for _, branch := range branches {
-			files := repo.
+			files := repo.FilesInBranch(branch)
+			for _, file := range files {
+				haveTable.AddRow(branch.String(), file)
+			}
 		}
+		wantTable := datatable.FromGherkin(godogTable)
+		haveTable.EqualDataTable(wantTable)
 	})
 
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
