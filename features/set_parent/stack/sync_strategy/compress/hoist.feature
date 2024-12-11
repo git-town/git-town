@@ -64,7 +64,14 @@ Feature: remove a branch from a stack
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    And Git Town runs the commands
+      | BRANCH   | COMMAND                                         |
+      | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-3                           |
+      | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
     And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial branches and lineage exist now
