@@ -264,12 +264,14 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 						Branch: descendent,
 					},
 				)
-				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
 				prog.Add(
-					&opcodes.RebaseBranch{
-						Branch: data.initialBranch.BranchName(),
+					&opcodes.RebaseOnto{
+						BranchToRebaseAgainst: descendent.BranchName(),
+						BranchToRebaseOnto:    data.initialBranch,
+						Upstream:              parentOpt,
 					},
 				)
+				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
 				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
 					prog.Add(
 						&opcodes.ForcePush{ForceIfIncludes: false},
