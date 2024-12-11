@@ -38,8 +38,7 @@ Feature: remove a branch from a stack
       """
     And Git Town runs the commands
       | BRANCH   | COMMAND                                      |
-      | branch-3 | git pull                                     |
-      |          | git rebase --onto branch-1 branch-2 branch-3 |
+      | branch-3 | git rebase --onto branch-1 branch-2 branch-3 |
       |          | git push --force-with-lease                  |
     And the current branch is still "branch-3"
     And these commits exist now
