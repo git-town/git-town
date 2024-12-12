@@ -66,6 +66,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		return emptyOpenRepoResult(), err
 	}
 	localSnapshot, localConfig, err := configGitAccess.LoadLocal(true)
+	fmt.Println("333333333333333333333333333", localConfig.NewBranchType)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}

@@ -91,8 +91,8 @@ func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig
 	fmt.Println("222222222222222222222222222222222 empty", result.NewBranchType)
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = result.Merge(configFile)
+		fmt.Println("222222222222222222222222222222222 configfile", result.NewBranchType)
 	}
-	fmt.Println("222222222222222222222222222222222 configfile", result.NewBranchType)
 	result = result.Merge(globalGitConfig)
 	fmt.Println("222222222222222222222222222222222 global", result.NewBranchType)
 	result = result.Merge(localGitConfig)
