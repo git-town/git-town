@@ -11,7 +11,7 @@ Feature: create a new branch when prototype branches are configured via Git meta
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And Git Town setting "new-branch-type" is "true"
+    And Git Town setting "new-branch-type" is "prototype"
     When I run "git-town hack new"
 
   Scenario: result
