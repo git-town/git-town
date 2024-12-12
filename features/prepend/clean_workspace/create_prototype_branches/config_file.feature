@@ -11,7 +11,7 @@ Feature: prepend a new branch when prototype branches are configured via config 
       | old    | local, origin | old commit |
     And the committed configuration file:
       """
-      create-prototype-branches = true
+      new-branch-type = "prototype"
       """
     When I run "git-town prepend parent"
 

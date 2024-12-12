@@ -32,6 +32,9 @@ observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
 
+[create]
+new-branch-type = "prototype"
+
 [hosting]
 platform = "github"
 origin-hostname = "github.com"
@@ -51,6 +54,7 @@ prototype-branches = "compress"
 			githubCom := "github.com"
 			main := "main"
 			merge := "merge"
+			newBranchType := "prototype"
 			observedRegex := `^dependabot\/`
 			pushNewBranches := true
 			pushHook := true
@@ -70,6 +74,9 @@ prototype-branches = "compress"
 					ObservedRegex:     &observedRegex,
 					PerennialRegex:    &releaseRegex,
 					Perennials:        []string{"public", "staging"},
+				},
+				Create: &configfile.Create{
+					NewBranchType: &newBranchType,
 				},
 				Hosting: &configfile.Hosting{
 					Platform:       &github,
