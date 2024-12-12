@@ -1,5 +1,5 @@
 @smoke
-Feature: on a feature branch with a clean workspace
+Feature: creating a new prototype branch
 
   Background:
     Given a Git repo with origin
