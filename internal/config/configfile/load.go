@@ -17,6 +17,7 @@ import (
 func Decode(text string) (*Data, error) {
 	var result Data
 	_, err := toml.Decode(text, &result)
+	fmt.Println("1111111111111111111111111111111111111111", *result.CreatePrototypeBranches)
 	return &result, err
 }
 
