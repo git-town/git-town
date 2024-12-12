@@ -1,4 +1,5 @@
-Feature: create a new branch when prototype branches are configured via config file
+@smoke
+Feature: create a new branch when prototype branches are configured via Git metadata
 
   Background:
     Given a Git repo with origin
@@ -10,10 +11,7 @@ Feature: create a new branch when prototype branches are configured via config f
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And the committed configuration file:
-      """
-      create-prototype-branches = true
-      """
+    And Git Town setting "new-branch-type" is "true"
     When I run "git-town hack new"
 
   Scenario: result
@@ -28,7 +26,7 @@ Feature: create a new branch when prototype branches are configured via config f
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
-      | existing | local, origin | existing commit |
+      | existing | local         | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
