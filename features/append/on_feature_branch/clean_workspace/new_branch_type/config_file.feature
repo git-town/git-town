@@ -1,4 +1,3 @@
-@this
 Feature: create prototype branches by default
 
   Background:
@@ -12,6 +11,7 @@ Feature: create prototype branches by default
     And the current branch is "existing"
     And the committed configuration file:
       """
+      [create]
       new-branch-type = "prototype"
       """
     When I run "git-town append new"

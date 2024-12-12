@@ -98,6 +98,15 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
 	}
+	if data.Create != nil {
+		if data.Create.NewBranchType != nil {
+			parsed, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+			newBranchType = parsed
+		}
+	}
 	var hostingPlatform Option[configdomain.HostingPlatform]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	if data.Hosting != nil {
