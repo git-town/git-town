@@ -270,18 +270,19 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	fmt.Println("1111111111111111111111111111111111111111111111", data.config.NormalConfig.NewBranchType)
 	if data.prototype.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
-	}
-	switch data.config.NormalConfig.NewBranchType {
-	case configdomain.BranchTypeContributionBranch:
-		prog.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.targetBranch})
-	case configdomain.BranchTypeFeatureBranch:
-	case configdomain.BranchTypeMainBranch:
-	case configdomain.BranchTypeObservedBranch:
-		prog.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.targetBranch})
-	case configdomain.BranchTypeParkedBranch:
-		prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
-	case configdomain.BranchTypePerennialBranch:
-		prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
+	} else {
+		switch data.config.NormalConfig.NewBranchType {
+		case configdomain.BranchTypeContributionBranch:
+			prog.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.targetBranch})
+		case configdomain.BranchTypeFeatureBranch:
+		case configdomain.BranchTypeMainBranch:
+		case configdomain.BranchTypeObservedBranch:
+			prog.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.targetBranch})
+		case configdomain.BranchTypeParkedBranch:
+			prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
+		case configdomain.BranchTypePerennialBranch:
+			prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
+		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
