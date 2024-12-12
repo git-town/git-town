@@ -1,4 +1,4 @@
-Feature: create feature branches by default
+Feature: append a new branch when feature branches are configured via the config file
 
   Background:
     Given a Git repo with origin

@@ -1,4 +1,4 @@
-Feature: create parked branches by default
+Feature: append a new branch when parked branches are configured
 
   Background:
     Given a Git repo with origin

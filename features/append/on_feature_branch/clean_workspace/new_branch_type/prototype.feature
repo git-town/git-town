@@ -1,4 +1,4 @@
-Feature: append a new branch when prototype branches are configured via Git metadata
+Feature: append a new branch when prototype branches are configured
 
   Background:
     Given a Git repo with origin
