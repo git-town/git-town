@@ -1,4 +1,4 @@
-Feature: auto-create prototype branches when prepending
+Feature: prepend a new branch when prototype branches are configured via Git metadata
 
   Background:
     Given a Git repo with origin

@@ -1,4 +1,4 @@
-Feature: creating a new prototype branch
+Feature: create a new branch when prototype branches are configured via config file
 
   Background:
     Given a Git repo with origin
