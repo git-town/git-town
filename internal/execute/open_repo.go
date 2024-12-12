@@ -73,7 +73,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	configFile, err := configfile.Load(rootDir)
+	configFile, err := configfile.Load(rootDir, finalMessages)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
