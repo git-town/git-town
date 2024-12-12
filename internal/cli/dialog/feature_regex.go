@@ -13,7 +13,8 @@ const (
 	featureRegexTitle = `Regular expression for feature branches`
 	FeatureRegexHelp  = `
 Branches matching this regular expression are treated as feature branches.
-This setting is effective only when used together with the "default-branch-type" setting.
+This setting is effective only when the "default-branch-type" setting is
+set to something different than "feature".
 
 `
 )
