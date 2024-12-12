@@ -82,7 +82,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
 			Runner: &testRunner,
 		},
