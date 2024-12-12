@@ -12,6 +12,7 @@ Feature: auto-creating a prototype branch when appending
     And Git Town setting "create-prototype-branches" is "true"
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
@@ -24,6 +25,8 @@ Feature: auto-creating a prototype branch when appending
       |          | git checkout -b new                      |
     And the current branch is now "new"
     And branch "new" is now prototype
+    And Git Town setting "create-prototype-branches" now doesn't exist
+    And Git Town setting "new-branch-type" is now "prototype"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
