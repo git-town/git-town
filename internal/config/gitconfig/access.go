@@ -93,7 +93,7 @@ func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdom
 }
 
 // updates a custom Git alias (not set up by Git Town)
-func (self *Access) UpdateDeprecatedCustomSetting(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
+func (self *Access) UpdateExternalGitTownAlias(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
 	err := self.SetConfigValue(scope, key, newValue)
 	if err != nil {
@@ -157,7 +157,7 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					configKey = update.After.Key
 					value = update.After.Value
 				} else if IsGitTownAlias(value) && value == update.Before.Value {
-					self.UpdateDeprecatedCustomSetting(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
+					self.UpdateExternalGitTownAlias(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
 				}
