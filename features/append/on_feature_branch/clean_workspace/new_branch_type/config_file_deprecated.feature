@@ -1,4 +1,4 @@
-Feature: create prototype branches by default
+Feature: append a new branch when prototype branches are configured via a deprecated setting in the config file
 
   Background:
     Given a Git repo with origin

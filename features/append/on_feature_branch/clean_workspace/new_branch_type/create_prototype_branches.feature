@@ -1,4 +1,4 @@
-Feature: upgrades the deprecated "create-prototype-branches" setting
+Feature: append a new branch when prototype branches are configured via a deprecated setting in Git metadata
 
   Background:
     Given a Git repo with origin
