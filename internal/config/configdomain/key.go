@@ -58,11 +58,11 @@ const (
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
-	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
+	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
@@ -109,7 +109,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyBitbucketUsername,
 	KeyContributionBranches,
 	KeyContributionRegex,
-	KeyCreatePrototypeBranches,
+	KeyDeprecatedCreatePrototypeBranches,
 	KeyDefaultBranchType,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,
@@ -209,6 +209,16 @@ var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
 		After: ConfigSetting{
 			Key:   KeyAliasRename,
 			Value: "town rename",
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "true",
+		},
+		After: ConfigSetting{
+			Key:   KeyDefaultBranchType,
+			Value: "prototype",
 		},
 	},
 }

@@ -156,7 +156,7 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
-				} else if value == update.Before.Value {
+				} else if strings.HasPrefix(update.Before.Value, "town ") && value == update.Before.Value {
 					self.UpdateDeprecatedCustomSetting(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value

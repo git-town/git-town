@@ -103,7 +103,7 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 }
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
-	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
