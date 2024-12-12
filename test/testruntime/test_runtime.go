@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/git"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/gohacks/cache"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/git-town/git-town/v16/test/commands"
 	testshell "github.com/git-town/git-town/v16/test/subshell"
@@ -86,11 +87,12 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		Access: gitconfig.Access{
 			Runner: &testRunner,
 		},
-		ConfigFile:   None[configdomain.PartialConfig](),
-		DryRun:       false,
-		GitVersion:   git.Version{Major: 2, Minor: 38},
-		GlobalConfig: configdomain.EmptyPartialConfig(),
-		LocalConfig:  configdomain.EmptyPartialConfig(),
+		ConfigFile:    None[configdomain.PartialConfig](),
+		DryRun:        false,
+		FinalMessages: stringslice.NewCollector(),
+		GitVersion:    git.Version{Major: 2, Minor: 38},
+		GlobalConfig:  configdomain.EmptyPartialConfig(),
+		LocalConfig:   configdomain.EmptyPartialConfig(),
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
