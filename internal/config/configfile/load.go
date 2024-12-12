@@ -97,6 +97,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	var newBranchType Option[configdomain.BranchType]
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
+		// !!!
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
