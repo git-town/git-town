@@ -73,17 +73,19 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
+	finalMessages := stringslice.NewCollector()
 	configFile, err := configfile.Load(rootDir, finalMessages)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access:       configGitAccess,
-		ConfigFile:   configFile,
-		DryRun:       args.DryRun,
-		GitVersion:   gitVersion,
-		GlobalConfig: globalConfig,
-		LocalConfig:  localConfig,
+	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+		Access:        configGitAccess,
+		ConfigFile:    configFile,
+		DryRun:        args.DryRun,
+		FinalMessages: finalMessages,
+		GitVersion:    gitVersion,
+		GlobalConfig:  globalConfig,
+		LocalConfig:   localConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,

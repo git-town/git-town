@@ -106,9 +106,8 @@ func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, 
 	return unvalidatedConfig, normalConfig
 }
 
-func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := MergeConfigs(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
-	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       args.ConfigFile,
@@ -120,14 +119,15 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, str
 			NormalConfigData: normalConfig,
 		},
 		UnvalidatedConfig: unvalidatedConfig,
-	}, finalMessages
+	}
 }
 
 type NewUnvalidatedConfigArgs struct {
-	Access       gitconfig.Access
-	ConfigFile   Option[configdomain.PartialConfig]
-	DryRun       configdomain.DryRun
-	GitVersion   git.Version
-	GlobalConfig configdomain.PartialConfig
-	LocalConfig  configdomain.PartialConfig
+	Access        gitconfig.Access
+	ConfigFile    Option[configdomain.PartialConfig]
+	DryRun        configdomain.DryRun
+	FinalMessages stringslice.Collector
+	GitVersion    git.Version
+	GlobalConfig  configdomain.PartialConfig
+	LocalConfig   configdomain.PartialConfig
 }
