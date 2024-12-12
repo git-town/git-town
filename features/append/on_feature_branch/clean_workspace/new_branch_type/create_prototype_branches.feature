@@ -22,6 +22,10 @@ Feature: append a new branch when prototype branches are configured via a deprec
       | existing | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
+    And Git Town prints:
+      """
+      Upgrading deprecated local setting "git-town.create-prototype-branches" to "git-town.new-branch-type"
+      """
     And the current branch is now "new"
     And branch "new" is now prototype
     And Git Town setting "create-prototype-branches" now doesn't exist
