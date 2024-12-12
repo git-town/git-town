@@ -74,7 +74,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Local:  localSnapshot,
 	}
 	finalMessages := stringslice.NewCollector()
-	configFile, err := configfile.Load(rootDir, finalMessages)
+	configFile, err := configfile.Load(rootDir)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
