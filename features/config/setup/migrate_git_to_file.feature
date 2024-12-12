@@ -36,7 +36,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync-tags                                 | enter |
       | enable push-new-branches                  | enter |
       | disable the push hook                     | enter |
-      | create-prototype-branches                 | enter |
+      | new-branch-type                           | enter |
       | ship-strategy                             | enter |
       | ship-delete-tracking-branch               | enter |
       | save config to config file                | enter |
@@ -56,7 +56,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "default-branch-type" is still "observed"
     And local Git Town setting "push-new-branches" now doesn't exist
     And local Git Town setting "push-hook" now doesn't exist
-    And local Git Town setting "create-prototype-branches" now doesn't exist
+    And local Git Town setting "new-branch-type" now doesn't exist
     And local Git Town setting "ship-strategy" now doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
     And the configuration file is now:
