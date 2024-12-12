@@ -1,4 +1,4 @@
-Feature: create prototype branches by default
+Feature: defaults to creating feature branches
 
   Background:
     Given a Git repo with origin
@@ -9,7 +9,6 @@ Feature: create prototype branches by default
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And Git Town setting "new-branch-type" is "prototype"
     When I run "git-town append new"
 
   Scenario: result
@@ -23,7 +22,7 @@ Feature: create prototype branches by default
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"
-    And branch "new" is now prototype
+    And branch "new" is now a feature branch
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |

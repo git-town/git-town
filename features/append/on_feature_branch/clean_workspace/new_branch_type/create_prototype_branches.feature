@@ -1,4 +1,4 @@
-Feature: auto-creating a prototype branch when appending
+Feature: upgrades the deprecated "create-prototype-branches" setting
 
   Background:
     Given a Git repo with origin

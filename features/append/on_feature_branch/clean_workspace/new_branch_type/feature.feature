@@ -1,4 +1,4 @@
-Feature: auto-creating a prototype branch when appending
+Feature: create feature branches by default
 
   Background:
     Given a Git repo with origin
