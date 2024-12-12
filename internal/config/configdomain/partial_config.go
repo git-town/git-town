@@ -211,9 +211,3 @@ func (self PartialConfig) ToUnvalidatedConfig() UnvalidatedConfigData {
 		MainBranch:   self.MainBranch,
 	}
 }
-
-// deserializes the given Git configuration value into a CreatePrototypeBranches instance
-// TODO: delete?
-func ParseCreatePrototypeBranches(value string, source Key) (Option[bool], error) {
-	return gohacks.ParseBool(value, source.String())
-}
