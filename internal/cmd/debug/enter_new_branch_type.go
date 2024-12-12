@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func enterCreatePrototypeBranches() *cobra.Command {
+func enterNewBranchType() *cobra.Command {
 	return &cobra.Command{
 		Use: "create-prototype-branches",
 		RunE: func(_ *cobra.Command, _ []string) error {

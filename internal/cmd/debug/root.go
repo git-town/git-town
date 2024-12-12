@@ -14,7 +14,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterAliases())
 	debugCommand.AddCommand(enterBitbucketAppPassword())
 	debugCommand.AddCommand(enterBitbucketUsername())
-	debugCommand.AddCommand(enterCreatePrototypeBranches())
+	debugCommand.AddCommand(enterNewBranchType())
 	debugCommand.AddCommand(enterDefaultBranch())
 	debugCommand.AddCommand(enterFeatureRegex())
 	debugCommand.AddCommand(enterHostingPlatform())
