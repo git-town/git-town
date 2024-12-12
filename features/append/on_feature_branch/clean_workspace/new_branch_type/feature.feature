@@ -9,7 +9,7 @@ Feature: auto-creating a prototype branch when appending
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And Git Town setting "new-branch-type" is "prototype"
+    And Git Town setting "new-branch-type" is "feature"
     When I run "git-town append new"
 
   Scenario: result
@@ -23,14 +23,13 @@ Feature: auto-creating a prototype branch when appending
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"
-    And branch "new" is now prototype
+    And branch "new" is now a feature branch
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
