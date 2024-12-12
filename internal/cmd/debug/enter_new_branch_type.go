@@ -11,7 +11,7 @@ import (
 
 func enterNewBranchType() *cobra.Command {
 	return &cobra.Command{
-		Use: "create-prototype-branches",
+		Use: "new-branch-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.NewBranchType(configdomain.BranchTypeFeatureBranch, dialogTestInputs.Next())
