@@ -15,8 +15,6 @@ Feature: create prototype branches by default
       """
     When I run "git-town append new"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |

@@ -17,7 +17,6 @@ import (
 func Decode(text string) (*Data, error) {
 	var result Data
 	_, err := toml.Decode(text, &result)
-	fmt.Println("1111111111111111111111111111111111111111", *result.CreatePrototypeBranches)
 	return &result, err
 }
 
@@ -97,7 +96,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	var newBranchType Option[configdomain.BranchType]
 	if data.CreatePrototypeBranches != nil {
-		newBranchType = Some(configdomain.BranchTypeFeatureBranch)
+		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
 	}
 	var hostingPlatform Option[configdomain.HostingPlatform]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
