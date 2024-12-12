@@ -98,7 +98,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var newBranchType Option[configdomain.BranchType]
 	if data.CreatePrototypeBranches != nil {
 		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
-		// !!!
+		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
