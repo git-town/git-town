@@ -29,7 +29,7 @@ Feature: change existing information in Git metadata
       | sync-tags                                 | down enter             |
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
-      | create-prototype-branches                 | down enter             |
+      | new-branch-type                           | down enter             |
       | set ship-strategy to "fast-forward"       | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
@@ -68,7 +68,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
-    And local Git Town setting "create-prototype-branches" is now "true"
+    And local Git Town setting "new-branch-type" is now "parked"
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
     And local Git Town setting "hosting-origin-hostname" is now "code"
@@ -99,7 +99,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
-    And local Git Town setting "create-prototype-branches" now doesn't exist
+    And local Git Town setting "new-branch-type" now doesn't exist
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
