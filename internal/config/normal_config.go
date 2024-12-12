@@ -140,6 +140,10 @@ func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBran
 	return self.SetPrototypeBranches(self.PrototypeBranches)
 }
 
+func (self *NormalConfig) RemoveNewBranchType() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyNewBranchType)
+}
+
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.LocalGitConfig.Lineage = self.LocalGitConfig.Lineage.RemoveBranch(branch)

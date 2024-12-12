@@ -519,6 +519,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	}
 	config.NormalConfig.RemoveCreatePrototypeBranches()
 	config.RemoveMainBranch()
+	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()
 	config.NormalConfig.RemovePerennialRegex()
 	config.NormalConfig.RemovePushNewBranches()
