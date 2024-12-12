@@ -1,6 +1,8 @@
 # new-branch-type configuration setting
 
-The "new-branch-type" setting defines the [type](../branch-types.md) for new branches created using the [git town hack](../commands/hack.md), [append](../commands/append.md), or [prepend](../commands/prepend.md) commands.
+The "new-branch-type" setting defines the [type](../branch-types.md) for new
+branches created using the [git town hack](../commands/hack.md),
+[append](../commands/append.md), or [prepend](../commands/prepend.md) commands.
 
 The best way to change this setting is via the
 [setup assistant](../configuration.md).
@@ -9,6 +11,7 @@ The best way to change this setting is via the
 
 - `feature` (default)
 - `parked`
+- `perennial`
 - `prototype`
 
 ## config file
@@ -22,11 +25,10 @@ new-branch-type = "feature"
 
 ## Git metadata
 
-To configure the type of new branches in Git metadata, run this
-command:
+To configure the type of new branches in Git metadata, run this command:
 
 ```bash
-git config [--global] git-town.new-branch-type <feature|parked|prototype>
+git config [--global] git-town.new-branch-type <feature|parked|perennial|prototype>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
