@@ -1,4 +1,4 @@
-Feature: append a new branch when feature branches are configured via the config file
+Feature: append a new branch when feature branches are configured
 
   Background:
     Given a Git repo with origin
