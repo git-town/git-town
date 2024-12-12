@@ -23,6 +23,7 @@ More info at https://www.git-town.com/preferences/new-branch-type.
 func NewBranchType(existing configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, bool, error) {
 	entries := []configdomain.BranchType{
 		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch,
 	}
 	var defaultPos int
