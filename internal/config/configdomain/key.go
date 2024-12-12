@@ -221,4 +221,14 @@ var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
 			Value: "prototype",
 		},
 	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "false",
+		},
+		After: ConfigSetting{
+			Key:   KeyDefaultBranchType,
+			Value: "feature",
+		},
+	},
 }
