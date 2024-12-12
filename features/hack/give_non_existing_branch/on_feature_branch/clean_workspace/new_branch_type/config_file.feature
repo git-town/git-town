@@ -12,7 +12,8 @@ Feature: create a new branch when prototype branches are configured via config f
       | existing | local    | existing commit |
     And the committed configuration file:
       """
-      create-prototype-branches = true
+      [create]
+      new-branch-type = "prototype"
       """
     When I run "git-town hack new"
 

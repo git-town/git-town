@@ -58,11 +58,11 @@ const (
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
-	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
+	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
@@ -79,6 +79,7 @@ const (
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyHostingPlatform                     = Key("git-town.hosting-platform")
 	KeyMainBranch                          = Key("git-town.main-branch")
+	KeyNewBranchType                       = Key("git-town.new-branch-type")
 	KeyObservedBranches                    = Key("git-town.observed-branches")
 	KeyObservedRegex                       = Key("git-town.observed-regex")
 	KeyOffline                             = Key("git-town.offline")
@@ -108,13 +109,13 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyBitbucketUsername,
 	KeyContributionBranches,
 	KeyContributionRegex,
-	KeyCreatePrototypeBranches,
 	KeyDefaultBranchType,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
+	KeyDeprecatedCreatePrototypeBranches,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
@@ -129,6 +130,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyGitUserEmail,
 	KeyGitUserName,
 	KeyMainBranch,
+	KeyNewBranchType,
 	KeyObservedBranches,
 	KeyObservedRegex,
 	KeyOffline,
@@ -207,6 +209,26 @@ var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
 		After: ConfigSetting{
 			Key:   KeyAliasRename,
 			Value: "town rename",
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "true",
+		},
+		After: ConfigSetting{
+			Key:   KeyNewBranchType,
+			Value: "prototype",
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "false",
+		},
+		After: ConfigSetting{
+			Key:   KeyNewBranchType,
+			Value: "feature",
 		},
 	},
 }

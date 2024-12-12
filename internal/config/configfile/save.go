@@ -28,8 +28,6 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("push-hook = %t\n\n", config.NormalConfig.PushHook))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushNewBranchesHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("push-new-branches = %t\n\n", config.NormalConfig.PushNewBranches))
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.CreatePrototypeBranchesHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("create-prototype-branches = %t\n\n", config.NormalConfig.CreatePrototypeBranches))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("ship-strategy = %q\n\n", config.NormalConfig.ShipStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipDeleteTrackingBranchHelp)) + "\n")
@@ -45,6 +43,9 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(config.NormalConfig.PerennialBranches)) + "\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialRegexHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.NormalConfig.PerennialRegex))
+	result.WriteString("\n[create]\n\n")
+	result.WriteString(TOMLComment(strings.TrimSpace(dialog.NewBranchTypeHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("new-branch-type = %q\n", config.NormalConfig.NewBranchType))
 	result.WriteString("\n[hosting]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp)) + "\n")
 	if platform, has := config.NormalConfig.HostingPlatform.Get(); has {

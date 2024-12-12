@@ -1,4 +1,4 @@
-Feature: append a new branch when prototype branches are configured via the config file
+Feature: append a new branch when prototype branches are configured via a deprecated setting in the config file
 
   Background:
     Given a Git repo with origin
@@ -25,6 +25,11 @@ Feature: append a new branch when prototype branches are configured via the conf
       | existing | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
+    And Git Town prints:
+      """
+      The Git Town configuration file contains the deprecated setting "create-prototype-branches".
+      Please upgrade to the new format: create.new-branch-type = "prototype"
+      """
     And the current branch is now "new"
     And branch "new" is now prototype
     And the initial commits exist now

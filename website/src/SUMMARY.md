@@ -59,6 +59,7 @@
   - [hosting-origin-hostname](preferences/hosting-origin-hostname.md)
   - [hosting-platform](preferences/hosting-platform.md)
   - [main-branch](preferences/main-branch.md)
+  - [new-branch-type](preferences/new-branch-type.md)
   - [observed-branches](preferences/observed-branches.md)
   - [observed-regex](preferences/observed-regex.md)
   - [offline](preferences/offline.md)

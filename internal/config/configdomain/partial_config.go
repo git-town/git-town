@@ -14,7 +14,6 @@ type PartialConfig struct {
 	BitbucketUsername        Option[BitbucketUsername]
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
-	CreatePrototypeBranches  Option[CreatePrototypeBranches]
 	DefaultBranchType        Option[BranchType]
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
@@ -26,6 +25,7 @@ type PartialConfig struct {
 	HostingPlatform          Option[HostingPlatform]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
+	NewBranchType            Option[BranchType]
 	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
@@ -53,7 +53,7 @@ func EmptyPartialConfig() PartialConfig {
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
 	aliases := snapshot.Aliases()
-	createPrototypeBranches, err := ParseCreatePrototypeBranches(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches)
+	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
 	ec.Check(err)
 	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
 	ec.Check(err)
@@ -95,7 +95,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		ContributionRegex:        contributionRegex,
-		CreatePrototypeBranches:  createPrototypeBranches,
 		DefaultBranchType:        defaultBranchType,
 		FeatureRegex:             featureRegex,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
@@ -107,6 +106,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		HostingPlatform:          hostingPlatform,
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
+		NewBranchType:            newBranchType,
 		ObservedBranches:         gitdomain.ParseLocalBranchNames(snapshot[KeyObservedBranches]),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
@@ -137,7 +137,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
-		CreatePrototypeBranches:  other.CreatePrototypeBranches.Or(self.CreatePrototypeBranches),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
@@ -149,6 +148,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		HostingPlatform:          other.HostingPlatform.Or(self.HostingPlatform),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
+		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedBranches:         append(other.ObservedBranches, self.ObservedBranches...),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
@@ -176,7 +176,6 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		BitbucketUsername:        self.BitbucketUsername,
 		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
-		CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
 		FeatureRegex:             self.FeatureRegex,
 		GitHubToken:              self.GitHubToken,
@@ -185,6 +184,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		HostingOriginHostname:    self.HostingOriginHostname,
 		HostingPlatform:          self.HostingPlatform,
 		Lineage:                  self.Lineage,
+		NewBranchType:            self.NewBranchType.GetOrElse(defaults.NewBranchType),
 		ObservedBranches:         self.ObservedBranches,
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),

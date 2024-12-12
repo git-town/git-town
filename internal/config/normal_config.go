@@ -103,7 +103,7 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 }
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
-	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyCreatePrototypeBranches)
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
@@ -138,6 +138,10 @@ func (self *NormalConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBran
 func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
 	self.PrototypeBranches = slice.Remove(self.PrototypeBranches, branch)
 	return self.SetPrototypeBranches(self.PrototypeBranches)
+}
+
+func (self *NormalConfig) RemoveNewBranchType() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeyNewBranchType)
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
@@ -202,12 +206,6 @@ func (self *NormalConfig) SetContributionBranches(branches gitdomain.LocalBranch
 	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyContributionBranches, branches.Join(" "))
 }
 
-// SetCreatePrototypeBranches updates whether Git Town is in offline mode.
-func (self *NormalConfig) SetCreatePrototypeBranches(value configdomain.CreatePrototypeBranches) error {
-	self.CreatePrototypeBranches = value
-	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyCreatePrototypeBranches, value.String())
-}
-
 // SetDefaultBranchTypeLocally updates the locally configured default branch type.
 func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
 	self.DefaultBranchType = value
@@ -218,6 +216,12 @@ func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchT
 func (self *NormalConfig) SetFeatureRegexLocally(value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
 	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
+}
+
+// SetContributionBranches marks the given branches as contribution branches.
+func (self *NormalConfig) SetNewBranchType(value configdomain.BranchType) error {
+	self.NewBranchType = value
+	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
 }
 
 // SetContributionBranches marks the given branches as contribution branches.

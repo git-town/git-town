@@ -26,7 +26,7 @@ Feature: Accepting all default values leads to a working setup
       | sync-tags                   | enter |
       | push-new-branches           | enter |
       | push-hook                   | enter |
-      | create-prototype-branches   | enter |
+      | new-branch-type             | enter |
       | ship-strategy               | enter |
       | ship-delete-tracking-branch | enter |
       | save config to config file  | enter |
@@ -35,7 +35,7 @@ Feature: Accepting all default values leads to a working setup
     Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
-    And local Git Town setting "create-prototype-branches" still doesn't exist
+    And local Git Town setting "new-branch-type" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "default-branch-type" still doesn't exist
@@ -76,14 +76,6 @@ Feature: Accepting all default values leads to a working setup
       # and Git Town will create the missing tracking branch
       # on the first run of "git town sync".
       push-new-branches = false
-
-      # The "create-prototype-branches" setting determines whether Git Town
-      # always creates prototype branches.
-      # Prototype branches sync only locally and don't create a tracking branch
-      # until they are proposed.
-      #
-      # More info at https://www.git-town.com/preferences/create-prototype-branches.
-      create-prototype-branches = false
 
       # Which method should Git Town use to ship feature branches?
       #
@@ -136,6 +128,14 @@ Feature: Accepting all default values leads to a working setup
       # If you are not sure, leave this empty.
       perennial-regex = ""
 
+      [create]
+
+      # The "new-branch-type" setting determines which branch type Git Town
+      # creates when you run "git town hack", "append", or "prepend".
+      #
+      # More info at https://www.git-town.com/preferences/new-branch-type.
+      new-branch-type = "feature"
+
       [hosting]
 
       # Knowing the type of code hosting platform allows Git Town
@@ -178,7 +178,7 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
-    And local Git Town setting "create-prototype-branches" still doesn't exist
+    And local Git Town setting "new-branch-type" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
     And local Git Town setting "hosting-platform" still doesn't exist
