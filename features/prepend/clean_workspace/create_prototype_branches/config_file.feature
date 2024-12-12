@@ -1,4 +1,4 @@
-Feature: prepend a new branch when prototype branches are configured via Git metadata
+Feature: prepend a new branch when prototype branches are configured via config file
 
   Background:
     Given a Git repo with origin
@@ -9,7 +9,10 @@ Feature: prepend a new branch when prototype branches are configured via Git met
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And Git Town setting "create-prototype-branches" is "true"
+    And the committed configuration file:
+      """
+      create-prototype-branches = true
+      """
     When I run "git-town prepend parent"
 
   Scenario: result
