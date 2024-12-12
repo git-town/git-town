@@ -9,6 +9,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v16/internal/messages"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
@@ -20,7 +21,7 @@ func Decode(text string) (*Data, error) {
 	return &result, err
 }
 
-func Load(rootDir gitdomain.RepoRootDir) (Option[configdomain.PartialConfig], error) {
+func Load(rootDir gitdomain.RepoRootDir, finalMessages stringslice.Collector) (Option[configdomain.PartialConfig], error) {
 	configPath := filepath.Join(rootDir.String(), FileName)
 	file, err := os.Open(configPath)
 	if err != nil {
@@ -35,12 +36,12 @@ func Load(rootDir gitdomain.RepoRootDir) (Option[configdomain.PartialConfig], er
 	if err != nil {
 		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, ".git-branches.yml", err)
 	}
-	result, err := Validate(*configFileData)
+	result, err := Validate(*configFileData, finalMessages)
 	return Some(result), err
 }
 
 // Validate converts the given low-level configfile data into high-level config data.
-func Validate(data Data) (configdomain.PartialConfig, error) {
+func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
 	var err error
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var perennialBranches gitdomain.LocalBranchNames
@@ -96,7 +97,17 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	var newBranchType Option[configdomain.BranchType]
 	if data.CreatePrototypeBranches != nil {
-		newBranchType = Some(configdomain.BranchTypeFeatureBranch)
+		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
+		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
+	}
+	if data.Create != nil {
+		if data.Create.NewBranchType != nil {
+			parsed, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+			newBranchType = parsed
+		}
 	}
 	var hostingPlatform Option[configdomain.HostingPlatform]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]

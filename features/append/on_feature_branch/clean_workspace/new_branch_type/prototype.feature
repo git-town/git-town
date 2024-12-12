@@ -1,4 +1,4 @@
-Feature: append a new branch when prototype branches are configured via the config file
+Feature: append a new branch when prototype branches are configured
 
   Background:
     Given a Git repo with origin
@@ -9,11 +9,7 @@ Feature: append a new branch when prototype branches are configured via the conf
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And the committed configuration file:
-      """
-      [create]
-      new-branch-type = "prototype"
-      """
+    And Git Town setting "new-branch-type" is "prototype"
     When I run "git-town append new"
 
   Scenario: result

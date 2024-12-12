@@ -1,4 +1,4 @@
-Feature: append a new branch when prototype branches are configured via Git metadata
+Feature: append a new branch when prototype branches are configured via a deprecated setting in Git metadata
 
   Background:
     Given a Git repo with origin
@@ -22,8 +22,14 @@ Feature: append a new branch when prototype branches are configured via Git meta
       | existing | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
+    And Git Town prints:
+      """
+      Upgrading deprecated local setting "git-town.create-prototype-branches" to "git-town.new-branch-type"
+      """
     And the current branch is now "new"
     And branch "new" is now prototype
+    And Git Town setting "create-prototype-branches" now doesn't exist
+    And Git Town setting "new-branch-type" is now "prototype"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
@@ -39,3 +45,5 @@ Feature: append a new branch when prototype branches are configured via Git meta
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now
+    And Git Town setting "new-branch-type" is still "prototype"
+    And Git Town setting "create-prototype-branches" still doesn't exist
