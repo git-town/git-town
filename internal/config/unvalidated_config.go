@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v16/internal/config/configdomain"
 	"github.com/git-town/git-town/v16/internal/config/gitconfig"
 	"github.com/git-town/git-town/v16/internal/git"
@@ -88,15 +86,11 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 
 func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
 	result := configdomain.EmptyPartialConfig()
-	fmt.Println("222222222222222222222222222222222 empty", result.NewBranchType)
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = result.Merge(configFile)
-		fmt.Println("222222222222222222222222222222222 configfile", result.NewBranchType)
 	}
 	result = result.Merge(globalGitConfig)
-	fmt.Println("222222222222222222222222222222222 global", result.NewBranchType)
 	result = result.Merge(localGitConfig)
-	fmt.Println("222222222222222222222222222222222 local", result.NewBranchType)
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }
 

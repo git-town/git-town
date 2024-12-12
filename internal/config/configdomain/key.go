@@ -217,7 +217,7 @@ var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
 			Value: "true",
 		},
 		After: ConfigSetting{
-			Key:   KeyDefaultBranchType,
+			Key:   KeyNewBranchType,
 			Value: "prototype",
 		},
 	},
@@ -227,7 +227,7 @@ var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
 			Value: "false",
 		},
 		After: ConfigSetting{
-			Key:   KeyDefaultBranchType,
+			Key:   KeyNewBranchType,
 			Value: "feature",
 		},
 	},

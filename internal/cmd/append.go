@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"slices"
 
@@ -267,7 +266,6 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		Branch:    data.targetBranch,
 		Ancestors: data.newBranchParentCandidates,
 	})
-	fmt.Println("1111111111111111111111111111111111111111111111", data.config.NormalConfig.NewBranchType)
 	if data.prototype.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	} else {
@@ -282,6 +280,8 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
 		case configdomain.BranchTypePerennialBranch:
 			prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
+		case configdomain.BranchTypePrototypeBranch:
+			prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
