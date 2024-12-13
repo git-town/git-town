@@ -79,15 +79,6 @@ func TestSave(t *testing.T) {
 # Run "git town config setup" to add additional entries
 # to this file after updating Git Town.
 #
-# The "push-hook" setting determines whether Git Town
-# permits or prevents Git hooks while pushing branches.
-# Hooks are enabled by default. If your Git hooks are slow,
-# you can disable them to speed up branch syncing.
-#
-# When disabled, Git Town pushes using the "--no-verify" switch.
-# More info at https://www.git-town.com/preferences/push-hook.
-push-hook = true
-
 # Should Git Town push the new branches it creates
 # immediately to origin even if they are empty?
 #
@@ -172,6 +163,17 @@ new-branch-type = "prototype"
 # if the auto-detection does not work for you.
 # origin-hostname = ""
 
+[sync]
+
+# The "push-hook" setting determines whether Git Town
+# permits or prevents Git hooks while pushing branches.
+# Hooks are enabled by default. If your Git hooks are slow,
+# you can disable them to speed up branch syncing.
+#
+# When disabled, Git Town pushes using the "--no-verify" switch.
+# More info at https://www.git-town.com/preferences/push-hook.
+push-hook = true
+
 [sync-strategy]
 
 # How should Git Town synchronize feature branches?
@@ -207,15 +209,6 @@ perennial-branches = "rebase"
 # Run "git town config setup" to add additional entries
 # to this file after updating Git Town.
 #
-# The "push-hook" setting determines whether Git Town
-# permits or prevents Git hooks while pushing branches.
-# Hooks are enabled by default. If your Git hooks are slow,
-# you can disable them to speed up branch syncing.
-#
-# When disabled, Git Town pushes using the "--no-verify" switch.
-# More info at https://www.git-town.com/preferences/push-hook.
-push-hook = true
-
 # Should Git Town push the new branches it creates
 # immediately to origin even if they are empty?
 #
@@ -299,6 +292,17 @@ new-branch-type = "feature"
 # of your source code repository. Only change this
 # if the auto-detection does not work for you.
 # origin-hostname = ""
+
+[sync]
+
+# The "push-hook" setting determines whether Git Town
+# permits or prevents Git hooks while pushing branches.
+# Hooks are enabled by default. If your Git hooks are slow,
+# you can disable them to speed up branch syncing.
+#
+# When disabled, Git Town pushes using the "--no-verify" switch.
+# More info at https://www.git-town.com/preferences/push-hook.
+push-hook = true
 
 [sync-strategy]
 

@@ -10,6 +10,7 @@ type Data struct {
 	PushNewbranches          *bool         `toml:"push-new-branches"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-tracking-branch"`
 	ShipStrategy             *string       `toml:"ship-strategy"`
+	Sync                     *Sync         `toml:"sync"`
 	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
 	SyncTags                 *bool         `toml:"sync-tags"`
 	SyncUpstream             *bool         `toml:"sync-upstream"`
@@ -40,6 +41,10 @@ type Hosting struct {
 
 func (self Hosting) IsEmpty() bool {
 	return self.Platform == nil && self.OriginHostname == nil
+}
+
+type Sync struct {
+	PushHook *bool `toml:"push-hook"`
 }
 
 type SyncStrategy struct {

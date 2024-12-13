@@ -39,6 +39,9 @@ new-branch-type = "prototype"
 platform = "github"
 origin-hostname = "github.com"
 
+[sync]
+push-hook = true
+
 [sync-strategy]
 feature-branches = "merge"
 perennial-branches = "rebase"
@@ -81,6 +84,9 @@ prototype-branches = "compress"
 				Hosting: &configfile.Hosting{
 					Platform:       &github,
 					OriginHostname: &githubCom,
+				},
+				Sync: &configfile.Sync{
+					PushHook: &pushHook,
 				},
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,

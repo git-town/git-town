@@ -161,6 +161,11 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.ShipStrategy != nil {
 		shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
 	}
+	if data.Sync != nil {
+		if data.Sync.PushHook != nil {
+			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
+		}
+	}
 	var syncTags Option[configdomain.SyncTags]
 	if data.SyncTags != nil {
 		syncTags = Some(configdomain.SyncTags(*data.SyncTags))
