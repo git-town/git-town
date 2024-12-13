@@ -11,7 +11,6 @@ Here is an example configuration file with the default settings:
 
 ```toml
 push-new-branches = false
-ship-delete-tracking-branch = true
 
 [branches]
 main = ""             # must be set by the user
@@ -23,9 +22,12 @@ platform = ""         # auto-detect
 origin-hostname = ""  # use the hostname in the origin URL
 
 [ship]
+delete-tracking-branch = true
 strategy = "api"
 
 [sync]
+push-hook = true
+tags = true
 upstream = true
 
 [sync-strategy]
