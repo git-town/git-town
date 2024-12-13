@@ -34,6 +34,7 @@ perennial-regex = "release-.*"
 
 [create]
 new-branch-type = "prototype"
+push-new-branches = true
 
 [hosting]
 platform = "github"
@@ -85,7 +86,8 @@ prototype-branches = "compress"
 					Perennials:        []string{"public", "staging"},
 				},
 				Create: &configfile.Create{
-					NewBranchType: &newBranchType,
+					NewBranchType:   &newBranchType,
+					PushNewbranches: &pushNewBranches,
 				},
 				Hosting: &configfile.Hosting{
 					Platform:       &github,

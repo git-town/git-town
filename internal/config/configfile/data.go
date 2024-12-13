@@ -32,7 +32,8 @@ func (self Branches) IsEmpty() bool {
 }
 
 type Create struct {
-	NewBranchType *string `toml:"new-branch-type"`
+	NewBranchType   *string `toml:"new-branch-type"`
+	PushNewbranches *bool   `toml:"push-new-branches"`
 }
 
 type Hosting struct {

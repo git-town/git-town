@@ -51,7 +51,6 @@ Feature: show the configuration
   Scenario: all configured in config file
     And the configuration file:
       """
-      push-new-branches = true
       ship-delete-tracking-branch = true
 
       [branches]
@@ -62,6 +61,9 @@ Feature: show the configuration
       feature-regex = "^user-.*$"
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
+
+      [create]
+      push-new-branches = true
 
       [hosting]
       platform = "github"
@@ -131,7 +133,6 @@ Feature: show the configuration
     And Git Town setting "sync-feature-strategy" is "merge"
     And the configuration file:
       """
-      push-new-branches = true
       ship-delete-tracking-branch = true
 
       [branches]
@@ -142,6 +143,9 @@ Feature: show the configuration
       feature-regex = "^config-feature-.*$"
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
+
+      [create]
+      push-new-branches = true
 
       [hosting]
       platform = "github"

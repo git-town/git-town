@@ -10,16 +10,18 @@ git town config setup
 Here is an example configuration file with the default settings:
 
 ```toml
-push-new-branches = false
-
 [branches]
-main = ""             # must be set by the user
+main = ""                           # must be set by the user
 contribution-regex = ""
 default-type = "feature"
 feature-regex = ""
 observed-regex = ""
-perennials = []
 perennial-regex = ""
+perennials = []
+
+[create]
+new-branch-type = "feature"
+push-new-branches = false
 
 [hosting]
 origin-hostname = ""  # use the hostname in the origin URL
