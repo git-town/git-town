@@ -60,16 +60,6 @@ prototype-branches = "compress"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			createPrototypeBranches := true
-			merge := "merge"
-			pushNewBranches := true
-			pushHook := true
-			rebase := "rebase"
-			compress := "compress"
-			shipDeleteTrackingBranch := false
-			shipStrategy := "api"
-			syncTags := false
-			syncUpstream := true
 			want := configfile.Data{
 				Branches: &configfile.Branches{
 					ContributionRegex: Ptr("^gittown-"),
@@ -96,22 +86,22 @@ prototype-branches = "compress"
 					FeatureStrategy:   Ptr("merge"),
 					PerennialStrategy: Ptr("rebase"),
 					PrototypeStrategy: Ptr("compress"),
-					PushHook:          &pushHook,
-					Tags:              &syncTags,
-					Upstream:          &syncUpstream,
+					PushHook:          Ptr(true),
+					Tags:              Ptr(false),
+					Upstream:          Ptr(true),
 				},
 				SyncStrategy: &configfile.SyncStrategy{
-					FeatureBranches:   &merge,
-					PerennialBranches: &rebase,
-					PrototypeBranches: &compress,
+					FeatureBranches:   Ptr("merge"),
+					PerennialBranches: Ptr("rebase"),
+					PrototypeBranches: Ptr("compress"),
 				},
-				CreatePrototypeBranches:  &createPrototypeBranches,
-				PushHook:                 &pushHook,
-				PushNewbranches:          &pushNewBranches,
-				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
-				ShipStrategy:             &shipStrategy,
-				SyncTags:                 &syncTags,
-				SyncUpstream:             &syncUpstream,
+				CreatePrototypeBranches:  Ptr(true),
+				PushHook:                 Ptr(true),
+				PushNewbranches:          Ptr(true),
+				ShipDeleteTrackingBranch: Ptr(false),
+				ShipStrategy:             Ptr("api"),
+				SyncTags:                 Ptr(false),
+				SyncUpstream:             Ptr(true),
 			}
 			must.Eq(t, want, *have)
 		})
