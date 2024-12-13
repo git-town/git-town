@@ -51,8 +51,6 @@ Feature: show the configuration
   Scenario: all configured in config file
     And the configuration file:
       """
-      ship-delete-tracking-branch = true
-
       [branches]
       main = "main"
       perennials = [ "public", "staging" ]
@@ -70,6 +68,7 @@ Feature: show the configuration
       origin-hostname = "github.com"
 
       [ship]
+      delete-tracking-branch = true
       strategy = "squash-merge"
 
       [sync]

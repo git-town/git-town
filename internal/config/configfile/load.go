@@ -139,7 +139,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			newBranchType = parsed
 		}
 		if data.Create.PushNewbranches != nil {
-			pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
+			pushNewBranches = Some(configdomain.PushNewBranches(*data.Create.PushNewbranches))
 		}
 	}
 	if data.Hosting != nil {
