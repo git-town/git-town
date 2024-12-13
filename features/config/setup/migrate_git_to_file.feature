@@ -65,18 +65,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # Run "git town config setup" to add additional entries
       # to this file after updating Git Town.
-      #
-      # Should Git Town push the new branches it creates
-      # immediately to origin even if they are empty?
-      #
-      # When enabled, you can run "git push" right away
-      # but creating new branches is slower and
-      # it triggers an unnecessary CI run on the empty branch.
-      #
-      # When disabled, many Git Town commands execute faster
-      # and Git Town will create the missing tracking branch
-      # on the first run of "git town sync".
-      push-new-branches = false
 
       [branches]
 
@@ -106,6 +94,18 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # More info at https://www.git-town.com/preferences/new-branch-type.
       new-branch-type = "parked"
+
+      # Should Git Town push the new branches it creates
+      # immediately to origin even if they are empty?
+      #
+      # When enabled, you can run "git push" right away
+      # but creating new branches is slower and
+      # it triggers an unnecessary CI run on the empty branch.
+      #
+      # When disabled, many Git Town commands execute faster
+      # and Git Town will create the missing tracking branch
+      # on the first run of "git town sync".
+      push-new-branches = false
 
       [hosting]
 

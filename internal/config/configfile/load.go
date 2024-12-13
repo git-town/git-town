@@ -42,14 +42,50 @@ func Load(rootDir gitdomain.RepoRootDir, finalMessages stringslice.Collector) (O
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
-	var err error
-	var mainBranch Option[gitdomain.LocalBranchName]
-	var perennialBranches gitdomain.LocalBranchNames
-	var perennialRegex Option[configdomain.PerennialRegex]
+	var err error // TODO: convert to ErrorCollector
+	var contributionRegex Option[configdomain.ContributionRegex]
 	var defaultBranchType Option[configdomain.BranchType]
 	var featureRegex Option[configdomain.FeatureRegex]
-	var contributionRegex Option[configdomain.ContributionRegex]
+	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
+	var hostingPlatform Option[configdomain.HostingPlatform]
+	var mainBranch Option[gitdomain.LocalBranchName]
+	var newBranchType Option[configdomain.BranchType]
 	var observedRegex Option[configdomain.ObservedRegex]
+	var perennialBranches gitdomain.LocalBranchNames
+	var perennialRegex Option[configdomain.PerennialRegex]
+	var pushNewBranches Option[configdomain.PushNewBranches]
+	var pushHook Option[configdomain.PushHook]
+	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
+	var shipStrategy Option[configdomain.ShipStrategy]
+	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
+	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
+	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
+	var syncTags Option[configdomain.SyncTags]
+	var syncUpstream Option[configdomain.SyncUpstream]
+	// load legacy definitions first, so that the proper definitions loaded later override them
+	if data.CreatePrototypeBranches != nil {
+		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
+		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
+	}
+	if data.PushNewbranches != nil {
+		pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
+	}
+	if data.PushHook != nil {
+		pushHook = Some(configdomain.PushHook(*data.PushHook))
+	}
+	if data.ShipDeleteTrackingBranch != nil {
+		shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
+	}
+	if data.ShipStrategy != nil {
+		shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
+	}
+	if data.SyncTags != nil {
+		syncTags = Some(configdomain.SyncTags(*data.SyncTags))
+	}
+	if data.SyncUpstream != nil {
+		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
+	}
+	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
 			mainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
@@ -95,11 +131,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 	}
-	var newBranchType Option[configdomain.BranchType]
-	if data.CreatePrototypeBranches != nil {
-		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
-		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
-	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
 			parsed, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
@@ -108,9 +139,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 			newBranchType = parsed
 		}
+		if data.Create.PushNewbranches != nil {
+			pushNewBranches = Some(configdomain.PushNewBranches(*data.Create.PushNewbranches))
+		}
 	}
-	var hostingPlatform Option[configdomain.HostingPlatform]
-	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
 			hostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
@@ -122,9 +154,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
 	}
-	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
-	var syncPerennialStrategy Option[configdomain.SyncPerennialStrategy]
-	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
@@ -145,22 +174,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 	}
-	var pushNewBranches Option[configdomain.PushNewBranches]
-	if data.PushNewbranches != nil {
-		pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
-	}
-	var pushHook Option[configdomain.PushHook]
-	if data.PushHook != nil {
-		pushHook = Some(configdomain.PushHook(*data.PushHook))
-	}
-	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
-	if data.ShipDeleteTrackingBranch != nil {
-		shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
-	}
-	var shipStrategy Option[configdomain.ShipStrategy]
-	if data.ShipStrategy != nil {
-		shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
-	}
 	if data.Ship != nil {
 		if data.Ship.DeleteTrackingBranch != nil {
 			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
@@ -168,14 +181,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Ship.Strategy != nil {
 			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
 		}
-	}
-	var syncTags Option[configdomain.SyncTags]
-	if data.SyncTags != nil {
-		syncTags = Some(configdomain.SyncTags(*data.SyncTags))
-	}
-	var syncUpstream Option[configdomain.SyncUpstream]
-	if data.SyncUpstream != nil {
-		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
 	if data.Sync != nil {
 		if data.Sync.PushHook != nil {

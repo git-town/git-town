@@ -4,7 +4,7 @@ Feature: print nice error message for invalid config file
     Given a Git repo with origin
     And the configuration file:
       """
-      push-new-branches =
+      wrong =
       """
     When I run "git-town config"
     Then Git Town prints the error:

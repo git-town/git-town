@@ -1,5 +1,3 @@
-push-new-branches = false
-
 [branches]
 main = "main"
 perennials = ["public"]

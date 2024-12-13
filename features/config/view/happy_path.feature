@@ -51,9 +51,6 @@ Feature: show the configuration
   Scenario: all configured in config file
     And the configuration file:
       """
-      push-new-branches = true
-      ship-delete-tracking-branch = true
-
       [branches]
       main = "main"
       perennials = [ "public", "staging" ]
@@ -63,11 +60,15 @@ Feature: show the configuration
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
 
+      [create]
+      push-new-branches = true
+
       [hosting]
       platform = "github"
       origin-hostname = "github.com"
 
       [ship]
+      delete-tracking-branch = true
       strategy = "squash-merge"
 
       [sync]
@@ -131,9 +132,6 @@ Feature: show the configuration
     And Git Town setting "sync-feature-strategy" is "merge"
     And the configuration file:
       """
-      push-new-branches = true
-      ship-delete-tracking-branch = true
-
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
@@ -143,11 +141,15 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
 
+      [create]
+      push-new-branches = true
+
       [hosting]
       platform = "github"
       origin-hostname = "github.com"
 
       [ship]
+      delete-tracking-branch = true
       strategy = "api"
 
       [sync]
