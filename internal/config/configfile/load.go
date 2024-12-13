@@ -42,7 +42,7 @@ func Load(rootDir gitdomain.RepoRootDir, finalMessages stringslice.Collector) (O
 
 // Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
-	var err error // TODO: convert to ErrorCollector
+	var err error
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var defaultBranchType Option[configdomain.BranchType]
 	var featureRegex Option[configdomain.FeatureRegex]

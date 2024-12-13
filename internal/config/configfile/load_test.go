@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v16/internal/config/configfile"
+	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -59,51 +60,42 @@ prototype-branches = "compress"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			contributionRegex := "^gittown-"
 			createPrototypeBranches := true
-			createDefaultType := "prototype"
-			featureRegex := "^kg-"
-			github := "github"
-			githubCom := "github.com"
-			main := "main"
 			merge := "merge"
-			newBranchType := "prototype"
-			observedRegex := `^dependabot\/`
 			pushNewBranches := true
 			pushHook := true
 			rebase := "rebase"
 			compress := "compress"
-			releaseRegex := "release-.*"
 			shipDeleteTrackingBranch := false
 			shipStrategy := "api"
 			syncTags := false
 			syncUpstream := true
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					ContributionRegex: &contributionRegex,
-					DefaultType:       &createDefaultType,
-					FeatureRegex:      &featureRegex,
-					Main:              &main,
-					ObservedRegex:     &observedRegex,
-					PerennialRegex:    &releaseRegex,
+					ContributionRegex: Ptr("^gittown-"),
+					DefaultType:       Ptr("prototype"),
+					FeatureRegex:      Ptr("^kg-"),
+					Main:              Ptr("main"),
+					ObservedRegex:     Ptr(`^dependabot\/`),
+					PerennialRegex:    Ptr("release-.*"),
 					Perennials:        []string{"public", "staging"},
 				},
 				Create: &configfile.Create{
-					NewBranchType:   &newBranchType,
-					PushNewbranches: &pushNewBranches,
+					NewBranchType:   Ptr("prototype"),
+					PushNewbranches: Ptr(true),
 				},
 				Hosting: &configfile.Hosting{
-					Platform:       &github,
-					OriginHostname: &githubCom,
+					Platform:       Ptr("github"),
+					OriginHostname: Ptr("github.com"),
 				},
 				Ship: &configfile.Ship{
-					DeleteTrackingBranch: &shipDeleteTrackingBranch,
-					Strategy:             &shipStrategy,
+					DeleteTrackingBranch: Ptr(false),
+					Strategy:             Ptr("api"),
 				},
 				Sync: &configfile.Sync{
-					FeatureStrategy:   &merge,
-					PerennialStrategy: &rebase,
-					PrototypeStrategy: &compress,
+					FeatureStrategy:   Ptr("merge"),
+					PerennialStrategy: Ptr("rebase"),
+					PrototypeStrategy: Ptr("compress"),
 					PushHook:          &pushHook,
 					Tags:              &syncTags,
 					Upstream:          &syncUpstream,
