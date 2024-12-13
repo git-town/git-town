@@ -154,6 +154,14 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
 	}
+	if data.Ship != nil {
+		if data.Ship.DeleteTrackingBranch != nil {
+			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
+		}
+		if data.Ship.Strategy != nil {
+			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
+		}
+	}
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
@@ -174,15 +182,13 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 	}
-	if data.Ship != nil {
-		if data.Ship.DeleteTrackingBranch != nil {
-			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
-		}
-		if data.Ship.Strategy != nil {
-			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
-		}
-	}
 	if data.Sync != nil {
+		if data.Sync.FeatureStrategy != nil {
+			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+		}
 		if data.Sync.PushHook != nil {
 			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
 		}

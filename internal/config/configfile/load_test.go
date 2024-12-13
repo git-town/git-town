@@ -51,6 +51,7 @@ tags = false
 upstream = true
 
 [sync-strategy]
+feature-branches = "merge"
 perennial-branches = "rebase"
 prototype-branches = "compress"
 `[1:]
@@ -98,9 +99,10 @@ prototype-branches = "compress"
 					Strategy:             &shipStrategy,
 				},
 				Sync: &configfile.Sync{
-					PushHook: &pushHook,
-					Tags:     &syncTags,
-					Upstream: &syncUpstream,
+					FeatureStrategy: &merge,
+					PushHook:        &pushHook,
+					Tags:            &syncTags,
+					Upstream:        &syncUpstream,
 				},
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,
