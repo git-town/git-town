@@ -161,9 +161,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.ShipStrategy != nil {
 		shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
 	}
-	if data.Sync != nil {
-		if data.Sync.PushHook != nil {
-			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
+	if data.Ship != nil {
+		if data.Ship.DeleteTrackingBranch != nil {
+			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.Ship.DeleteTrackingBranch))
+		}
+		if data.Ship.Strategy != nil {
+			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
 		}
 	}
 	var syncTags Option[configdomain.SyncTags]
@@ -173,6 +176,11 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncUpstream Option[configdomain.SyncUpstream]
 	if data.SyncUpstream != nil {
 		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
+	}
+	if data.Sync != nil {
+		if data.Sync.PushHook != nil {
+			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
+		}
 	}
 	return configdomain.PartialConfig{
 		Aliases:                  map[configdomain.AliasableCommand]string{},

@@ -68,17 +68,6 @@ Feature: Accepting all default values leads to a working setup
       # on the first run of "git town sync".
       push-new-branches = false
 
-      # Which method should Git Town use to ship feature branches?
-      #
-      # Options:
-      #
-      # - api: merge the proposal on your code hosting platform via the code hosting API
-      # - fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch
-      # - squash-merge: in your local repo, squash-merge the feature branch into its parent branch
-      #
-      # All options update proposals of child branches and remove the shipped branch locally and remotely.
-      ship-strategy = "api"
-
       # Should "git town sync" sync tags with origin?
       sync-tags = true
 
@@ -131,6 +120,17 @@ Feature: Accepting all default values leads to a working setup
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       delete-tracking-branch = true
+
+      # Which method should Git Town use to ship feature branches?
+      #
+      # Options:
+      #
+      # - api: merge the proposal on your code hosting platform via the code hosting API
+      # - fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch
+      # - squash-merge: in your local repo, squash-merge the feature branch into its parent branch
+      #
+      # All options update proposals of child branches and remove the shipped branch locally and remotely.
+      strategy = "api"
 
       [sync]
 
