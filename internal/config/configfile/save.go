@@ -59,8 +59,8 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("perennial-strategy = %q\n", config.NormalConfig.SyncPerennialStrategy))
 	// TODO: create sync-prototype-strategy dialog and use the help text here
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("prototype-strategy = %q\n", config.NormalConfig.SyncPrototypeStrategy))
+	// result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("prototype-strategy = %q\n\n", config.NormalConfig.SyncPrototypeStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("push-hook = %t\n\n", config.NormalConfig.PushHook))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncTagsHelp)) + "\n")

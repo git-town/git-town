@@ -99,7 +99,7 @@ Feature: show the configuration
         ship strategy: squash-merge
         ship deletes the tracking branch: yes
         sync-feature strategy: rebase
-        sync-perennial strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
         sync tags: no
 
@@ -152,7 +152,7 @@ Feature: show the configuration
 
       [sync]
       feature-strategy = "merge"
-      perennial-strategy = "merge"
+      perennial-strategy = "rebase"
       tags = true
       upstream = true
       """

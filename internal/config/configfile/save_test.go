@@ -166,6 +166,7 @@ feature-strategy = "merge"
 # The only updates they receive are additional commits
 # made to their tracking branch somewhere else.
 perennial-strategy = "rebase"
+prototype-strategy = ""
 
 # The "push-hook" setting determines whether Git Town
 # permits or prevents Git hooks while pushing branches.
@@ -296,6 +297,7 @@ feature-strategy = "merge"
 # The only updates they receive are additional commits
 # made to their tracking branch somewhere else.
 perennial-strategy = "rebase"
+prototype-strategy = "rebase"
 
 # The "push-hook" setting determines whether Git Town
 # permits or prevents Git hooks while pushing branches.
