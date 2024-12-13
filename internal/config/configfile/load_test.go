@@ -45,12 +45,12 @@ delete-tracking-branch = false
 strategy = "api"
 
 [sync]
+feature-strategy = "merge"
 push-hook = true
 tags = false
 upstream = true
 
 [sync-strategy]
-feature-branches = "merge"
 perennial-branches = "rebase"
 prototype-branches = "compress"
 `[1:]

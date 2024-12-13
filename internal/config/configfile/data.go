@@ -51,9 +51,10 @@ type Ship struct {
 }
 
 type Sync struct {
-	PushHook *bool `toml:"push-hook"`
-	Tags     *bool `toml:"tags"`
-	Upstream *bool `toml:"upstream"`
+	FeatureStrategy *string `toml:"feature-strategy"`
+	PushHook        *bool   `toml:"push-hook"`
+	Tags            *bool   `toml:"tags"`
+	Upstream        *bool   `toml:"upstream"`
 }
 
 type SyncStrategy struct {

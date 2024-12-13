@@ -154,6 +154,13 @@ strategy = "squash-merge"
 
 [sync]
 
+# How should Git Town synchronize feature branches?
+# Feature branches are short-lived branches cut from
+# the main branch and shipped back into the main branch.
+# Typically you develop features and bug fixes on them,
+# hence their name.
+feature-strategy = "merge"
+
 # The "push-hook" setting determines whether Git Town
 # permits or prevents Git hooks while pushing branches.
 # Hooks are enabled by default. If your Git hooks are slow,
@@ -177,13 +184,6 @@ tags = true
 upstream = true
 
 [sync-strategy]
-
-# How should Git Town synchronize feature branches?
-# Feature branches are short-lived branches cut from
-# the main branch and shipped back into the main branch.
-# Typically you develop features and bug fixes on them,
-# hence their name.
-feature-branches = "merge"
 
 # How should Git Town synchronize perennial branches?
 # Perennial branches have no parent branch.
@@ -286,6 +286,13 @@ strategy = "api"
 
 [sync]
 
+# How should Git Town synchronize feature branches?
+# Feature branches are short-lived branches cut from
+# the main branch and shipped back into the main branch.
+# Typically you develop features and bug fixes on them,
+# hence their name.
+feature-strategy = "merge"
+
 # The "push-hook" setting determines whether Git Town
 # permits or prevents Git hooks while pushing branches.
 # Hooks are enabled by default. If your Git hooks are slow,
@@ -309,13 +316,6 @@ tags = true
 upstream = true
 
 [sync-strategy]
-
-# How should Git Town synchronize feature branches?
-# Feature branches are short-lived branches cut from
-# the main branch and shipped back into the main branch.
-# Typically you develop features and bug fixes on them,
-# hence their name.
-feature-branches = "merge"
 
 # How should Git Town synchronize perennial branches?
 # Perennial branches have no parent branch.
