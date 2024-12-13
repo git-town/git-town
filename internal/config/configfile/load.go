@@ -190,7 +190,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Sync.PerennialStrategy != nil {
-			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
