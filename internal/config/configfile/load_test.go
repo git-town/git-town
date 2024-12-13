@@ -114,10 +114,9 @@ main = "main"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			main := "main"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main:           &main,
+					Main:           Ptr("main"),
 					Perennials:     nil,
 					PerennialRegex: nil,
 				},
@@ -138,10 +137,9 @@ branches.main = "main"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			main := "main"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main: &main,
+					Main: Ptr("main"),
 				},
 			}
 			must.Eq(t, want, *have)
