@@ -32,6 +32,7 @@ Feature: Accepting all default values leads to a working setup
       | ship-delete-tracking-branch | enter |
       | save config to config file  | enter |
 
+  @this
   Scenario: result
     Then Git Town runs no commands
     And the main branch is still not set
@@ -149,7 +150,7 @@ Feature: Accepting all default values leads to a working setup
       # Prototype branches are feature branches that haven't been proposed yet.
       # Typically they contain  features and bug fixes on them,
       # hence their name.
-      prototype-strategy = "rebase"
+      prototype-strategy = "merge"
 
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
