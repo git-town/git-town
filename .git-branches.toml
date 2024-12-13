@@ -1,6 +1,5 @@
 push-new-branches = false
 ship-strategy = "fast-forward"
-sync-upstream = true
 
 [branches]
 main = "main"
@@ -11,6 +10,7 @@ delete-tracking-branch = false
 
 [sync]
 push-hook = true
+upstream = true
 
 [sync-strategy]
 feature-branches = "merge"

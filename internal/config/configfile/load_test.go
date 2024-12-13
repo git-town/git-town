@@ -44,6 +44,7 @@ delete-tracking-branch = false
 
 [sync]
 push-hook = true
+upstream = true
 
 [sync-strategy]
 feature-branches = "merge"

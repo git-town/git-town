@@ -82,16 +82,6 @@ Feature: Accepting all default values leads to a working setup
       # Should "git town sync" sync tags with origin?
       sync-tags = true
 
-      # Should "git town sync" also fetch updates from the upstream remote?
-      #
-      # If an "upstream" remote exists, and this setting is enabled,
-      # "git town sync" will also update the local main branch
-      # with commits from the main branch at the upstream remote.
-      #
-      # This is useful if the repository you work on is a fork,
-      # and you want to keep it in sync with the repo it was forked from.
-      sync-upstream = true
-
       [branches]
 
       # The main branch is the branch from which you cut new feature branches,
@@ -152,6 +142,16 @@ Feature: Accepting all default values leads to a working setup
       # When disabled, Git Town pushes using the "--no-verify" switch.
       # More info at https://www.git-town.com/preferences/push-hook.
       push-hook = true
+
+      # Should "git town sync" also fetch updates from the upstream remote?
+      #
+      # If an "upstream" remote exists, and this setting is enabled,
+      # "git town sync" will also update the local main branch
+      # with commits from the main branch at the upstream remote.
+      #
+      # This is useful if the repository you work on is a fork,
+      # and you want to keep it in sync with the repo it was forked from.
+      upstream = true
 
       [sync-strategy]
 
