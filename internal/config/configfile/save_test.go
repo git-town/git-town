@@ -102,12 +102,6 @@ push-new-branches = false
 # All options update proposals of child branches and remove the shipped branch locally and remotely.
 ship-strategy = "squash-merge"
 
-# Should "git town ship" delete the tracking branch?
-# You want to disable this if your code hosting platform
-# (GitHub, GitLab, etc) deletes head branches when
-# merging pull requests through its UI.
-ship-delete-tracking-branch = true
-
 # Should "git town sync" sync tags with origin?
 sync-tags = true
 
@@ -162,6 +156,14 @@ new-branch-type = "prototype"
 # of your source code repository. Only change this
 # if the auto-detection does not work for you.
 # origin-hostname = ""
+
+[ship]
+
+# Should "git town ship" delete the tracking branch?
+# You want to disable this if your code hosting platform
+# (GitHub, GitLab, etc) deletes head branches when
+# merging pull requests through its UI.
+delete-tracking-branch = true
 
 [sync]
 
@@ -232,12 +234,6 @@ push-new-branches = false
 # All options update proposals of child branches and remove the shipped branch locally and remotely.
 ship-strategy = "api"
 
-# Should "git town ship" delete the tracking branch?
-# You want to disable this if your code hosting platform
-# (GitHub, GitLab, etc) deletes head branches when
-# merging pull requests through its UI.
-ship-delete-tracking-branch = true
-
 # Should "git town sync" sync tags with origin?
 sync-tags = true
 
@@ -292,6 +288,14 @@ new-branch-type = "feature"
 # of your source code repository. Only change this
 # if the auto-detection does not work for you.
 # origin-hostname = ""
+
+[ship]
+
+# Should "git town ship" delete the tracking branch?
+# You want to disable this if your code hosting platform
+# (GitHub, GitLab, etc) deletes head branches when
+# merging pull requests through its UI.
+delete-tracking-branch = true
 
 [sync]
 

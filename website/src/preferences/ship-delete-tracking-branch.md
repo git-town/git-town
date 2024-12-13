@@ -16,7 +16,14 @@ The best way to change this setting is via the
 ## in config file
 
 ```toml
-ship-delete-tracking-branch = false
+ship.delete-tracking-branch = true
+```
+
+or
+
+```toml
+[ship]
+delete-tracking-branch = true
 ```
 
 ## in Git metadata
