@@ -143,6 +143,7 @@ Feature: Accepting all default values leads to a working setup
       # The only updates they receive are additional commits
       # made to their tracking branch somewhere else.
       perennial-strategy = "rebase"
+      prototype-strategy = "rebase"
 
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
