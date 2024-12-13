@@ -152,7 +152,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       # Perennial branches have no parent branch.
       # The only updates they receive are additional commits
       # made to their tracking branch somewhere else.
-      perennial-branches = "rebase"
+      perennial-strategy = "rebase"
+      prototype-strategy = "rebase"
 
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
