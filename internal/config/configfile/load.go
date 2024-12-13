@@ -62,19 +62,30 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var syncPrototypeStrategy Option[configdomain.SyncPrototypeStrategy]
 	var syncTags Option[configdomain.SyncTags]
 	var syncUpstream Option[configdomain.SyncUpstream]
+	// load legacy definitions first, so that the proper definitions loaded later override them
+	if data.CreatePrototypeBranches != nil {
+		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
+		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
+	}
+	if data.PushNewbranches != nil {
+		pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
+	}
+	if data.PushHook != nil {
+		pushHook = Some(configdomain.PushHook(*data.PushHook))
+	}
+	if data.ShipDeleteTrackingBranch != nil {
+		shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
+	}
+	if data.ShipStrategy != nil {
+		shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
+	}
+	if data.SyncTags != nil {
+		syncTags = Some(configdomain.SyncTags(*data.SyncTags))
+	}
+	if data.SyncUpstream != nil {
+		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
+	}
 	if data.Branches != nil {
-		if data.PushNewbranches != nil {
-			pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
-		}
-		if data.PushHook != nil {
-			pushHook = Some(configdomain.PushHook(*data.PushHook))
-		}
-		if data.ShipDeleteTrackingBranch != nil {
-			shipDeleteTrackingBranch = Some(configdomain.ShipDeleteTrackingBranch(*data.ShipDeleteTrackingBranch))
-		}
-		if data.ShipStrategy != nil {
-			shipStrategy = Some(configdomain.ShipStrategy(*data.ShipStrategy))
-		}
 		if data.Branches.Main != nil {
 			mainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
 		}
@@ -118,10 +129,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
-	}
-	if data.CreatePrototypeBranches != nil {
-		newBranchType = Some(configdomain.BranchTypePrototypeBranch)
-		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
@@ -173,12 +180,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Ship.Strategy != nil {
 			shipStrategy = Some(configdomain.ShipStrategy(*data.Ship.Strategy))
 		}
-	}
-	if data.SyncTags != nil {
-		syncTags = Some(configdomain.SyncTags(*data.SyncTags))
-	}
-	if data.SyncUpstream != nil {
-		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
 	if data.Sync != nil {
 		if data.Sync.PushHook != nil {
