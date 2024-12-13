@@ -32,6 +32,7 @@ Feature: show the configuration from a subfolder
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
+        sync-prototype strategy: merge
         sync with upstream: yes
         sync tags: yes
 
