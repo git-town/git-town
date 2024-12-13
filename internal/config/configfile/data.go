@@ -45,7 +45,8 @@ func (self Hosting) IsEmpty() bool {
 }
 
 type Ship struct {
-	DeleteTrackingBranch *bool `toml:"delete-tracking-branch"`
+	DeleteTrackingBranch *bool   `toml:"delete-tracking-branch"`
+	Strategy             *string `toml:"strategy"`
 }
 
 type Sync struct {

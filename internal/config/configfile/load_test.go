@@ -41,6 +41,7 @@ origin-hostname = "github.com"
 
 [ship]
 delete-tracking-branch = false
+strategy = "api"
 
 [sync]
 push-hook = true
@@ -91,6 +92,7 @@ prototype-branches = "compress"
 				},
 				Ship: &configfile.Ship{
 					DeleteTrackingBranch: &shipDeleteTrackingBranch,
+					Strategy:             &shipStrategy,
 				},
 				Sync: &configfile.Sync{
 					PushHook: &pushHook,

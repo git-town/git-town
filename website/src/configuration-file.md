@@ -22,6 +22,9 @@ perennial-regex = ""
 platform = ""         # auto-detect
 origin-hostname = ""  # use the hostname in the origin URL
 
+[ship]
+strategy = "api"
+
 [sync]
 upstream = true
 

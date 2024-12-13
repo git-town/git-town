@@ -57,7 +57,14 @@ The best way to change this setting is via the
 Set the ship-strategy in the [config file](../configuration-file.md):
 
 ```toml
-ship-strategy = "api"
+ship.strategy = "api"
+```
+
+or
+
+```toml
+[ship]
+strategy = "api"
 ```
 
 ### Git metadata
