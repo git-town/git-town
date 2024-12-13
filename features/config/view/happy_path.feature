@@ -75,7 +75,7 @@ Feature: show the configuration
       [sync]
       feature-strategy = "rebase"
       perennial-strategy = "merge"
-      prototype-strategy = "rebase"
+      prototype-strategy = "compress"
       tags = false
       upstream = true
       """
@@ -102,6 +102,7 @@ Feature: show the configuration
         ship deletes the tracking branch: yes
         sync-feature strategy: rebase
         sync-perennial strategy: merge
+        sync-prototype strategy: compress
         sync with upstream: yes
         sync tags: no
 
@@ -130,6 +131,7 @@ Feature: show the configuration
     And Git Town setting "sync-tags" is "false"
     And Git Town setting "sync-perennial-strategy" is "merge"
     And Git Town setting "sync-feature-strategy" is "merge"
+    And Git Town setting "sync-prototype-strategy" is "compress"
     And the configuration file:
       """
       [branches]
@@ -155,6 +157,7 @@ Feature: show the configuration
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
+      prototype-strategy = "rebase"
       tags = true
       upstream = true
       """
@@ -181,6 +184,7 @@ Feature: show the configuration
         ship deletes the tracking branch: no
         sync-feature strategy: merge
         sync-perennial strategy: merge
+        sync-prototype strategy: compress
         sync with upstream: no
         sync tags: no
 
@@ -222,6 +226,7 @@ Feature: show the configuration
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
+        sync-prototype strategy: merge
         sync with upstream: yes
         sync tags: yes
 
@@ -266,6 +271,7 @@ Feature: show the configuration
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
+        sync-prototype strategy: merge
         sync with upstream: yes
         sync tags: yes
 
