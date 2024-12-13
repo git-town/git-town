@@ -54,7 +54,6 @@ Feature: show the configuration
       push-new-branches = true
       ship-strategy = "squash-merge"
       ship-delete-tracking-branch = true
-      sync-upstream = true
       sync-tags = false
 
       [branches]
@@ -69,6 +68,9 @@ Feature: show the configuration
       [hosting]
       platform = "github"
       origin-hostname = "github.com"
+
+      [sync]
+      upstream = true
 
       [sync-strategy]
       feature-branches = "rebase"
@@ -130,7 +132,6 @@ Feature: show the configuration
       push-new-branches = true
       ship-strategy = "api"
       ship-delete-tracking-branch = true
-      sync-upstream = true
       sync-tags = true
 
       [branches]
@@ -145,6 +146,9 @@ Feature: show the configuration
       [hosting]
       platform = "github"
       origin-hostname = "github.com"
+
+      [sync]
+      upstream = true
 
       [sync-strategy]
       feature-branches = "merge"

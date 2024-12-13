@@ -12,7 +12,6 @@ Here is an example configuration file with the default settings:
 ```toml
 push-new-branches = false
 ship-delete-tracking-branch = true
-sync-upstream = true
 
 [branches]
 main = ""             # must be set by the user
@@ -22,6 +21,9 @@ perennial-regex = ""
 [hosting]
 platform = ""         # auto-detect
 origin-hostname = ""  # use the hostname in the origin URL
+
+[sync]
+upstream = true
 
 [sync-strategy]
 feature-branches = "merge"
