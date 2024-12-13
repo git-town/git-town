@@ -132,8 +132,6 @@ Feature: show the configuration
     And Git Town setting "sync-feature-strategy" is "merge"
     And the configuration file:
       """
-      ship-delete-tracking-branch = true
-
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
@@ -151,6 +149,7 @@ Feature: show the configuration
       origin-hostname = "github.com"
 
       [ship]
+      delete-tracking-branch = true
       strategy = "api"
 
       [sync]
