@@ -24,8 +24,6 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString("# Run \"git town config setup\" to add additional entries\n")
 	result.WriteString("# to this file after updating Git Town.\n")
 	result.WriteString("#\n")
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("push-hook = %t\n\n", config.NormalConfig.PushHook))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushNewBranchesHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("push-new-branches = %t\n\n", config.NormalConfig.PushNewBranches))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipStrategyHelp)) + "\n")
@@ -59,6 +57,9 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	} else {
 		result.WriteString(fmt.Sprintf("origin-hostname = %q\n", config.NormalConfig.HostingOriginHostname))
 	}
+	result.WriteString("\n[sync]\n\n")
+	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("push-hook = %t\n", config.NormalConfig.PushHook))
 	result.WriteString("\n[sync-strategy]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncFeatureStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("feature-branches = %q\n\n", config.NormalConfig.SyncFeatureStrategy))

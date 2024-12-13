@@ -1,4 +1,3 @@
-push-hook = true
 push-new-branches = false
 ship-strategy = "fast-forward"
 ship-delete-tracking-branch = false
@@ -7,6 +6,9 @@ sync-upstream = true
 [branches]
 main = "main"
 perennials = ["public"]
+
+[sync]
+push-hook = true
 
 [sync-strategy]
 feature-branches = "merge"
