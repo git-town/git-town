@@ -161,6 +161,13 @@ strategy = "squash-merge"
 # hence their name.
 feature-strategy = "merge"
 
+# How should Git Town synchronize perennial branches?
+# Perennial branches have no parent branch.
+# The only updates they receive are additional commits
+# made to their tracking branch somewhere else.
+perennial-strategy = "rebase"
+prototype-strategy = ""
+
 # The "push-hook" setting determines whether Git Town
 # permits or prevents Git hooks while pushing branches.
 # Hooks are enabled by default. If your Git hooks are slow,
@@ -182,14 +189,6 @@ tags = true
 # This is useful if the repository you work on is a fork,
 # and you want to keep it in sync with the repo it was forked from.
 upstream = true
-
-[sync-strategy]
-
-# How should Git Town synchronize perennial branches?
-# Perennial branches have no parent branch.
-# The only updates they receive are additional commits
-# made to their tracking branch somewhere else.
-perennial-branches = "rebase"
 `[1:]
 		must.EqOp(t, want, have)
 	})
@@ -293,6 +292,13 @@ strategy = "api"
 # hence their name.
 feature-strategy = "merge"
 
+# How should Git Town synchronize perennial branches?
+# Perennial branches have no parent branch.
+# The only updates they receive are additional commits
+# made to their tracking branch somewhere else.
+perennial-strategy = "rebase"
+prototype-strategy = "rebase"
+
 # The "push-hook" setting determines whether Git Town
 # permits or prevents Git hooks while pushing branches.
 # Hooks are enabled by default. If your Git hooks are slow,
@@ -314,14 +320,6 @@ tags = true
 # This is useful if the repository you work on is a fork,
 # and you want to keep it in sync with the repo it was forked from.
 upstream = true
-
-[sync-strategy]
-
-# How should Git Town synchronize perennial branches?
-# Perennial branches have no parent branch.
-# The only updates they receive are additional commits
-# made to their tracking branch somewhere else.
-perennial-branches = "rebase"
 `[1:]
 		must.EqOp(t, want, have)
 	})

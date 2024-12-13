@@ -33,11 +33,11 @@ strategy = "api"
 
 [sync]
 feature-strategy = "merge"
+perennial-strategy = "rebase"
 push-hook = true
 tags = true
 upstream = true
 
 [sync-strategy]
-perennial-branches = "rebase"
 prototype-branche = "merge"
 ```

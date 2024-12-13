@@ -8,8 +8,6 @@ strategy = "fast-forward"
 
 [sync]
 feature-strategy = "merge"
+perennial-strategy = "rebase"
 push-hook = true
 upstream = true
-
-[sync-strategy]
-perennial-branches = "rebase"

@@ -189,6 +189,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 				return configdomain.EmptyPartialConfig(), err
 			}
 		}
+		if data.Sync.PerennialStrategy != nil {
+			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+		}
 		if data.Sync.PushHook != nil {
 			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
 		}

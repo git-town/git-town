@@ -56,15 +56,17 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString("\n[sync]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncFeatureStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("feature-strategy = %q\n\n", config.NormalConfig.SyncFeatureStrategy))
+	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("perennial-strategy = %q\n", config.NormalConfig.SyncPerennialStrategy))
+	// TODO: create sync-prototype-strategy dialog and use the help text here
+	// result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("prototype-strategy = %q\n\n", config.NormalConfig.SyncPrototypeStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("push-hook = %t\n\n", config.NormalConfig.PushHook))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncTagsHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("tags = %t\n\n", config.NormalConfig.SyncTags))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncUpstreamHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("upstream = %t\n", config.NormalConfig.SyncUpstream))
-	result.WriteString("\n[sync-strategy]\n\n")
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("perennial-branches = %q\n", config.NormalConfig.SyncPerennialStrategy))
 	return result.String()
 }
 
