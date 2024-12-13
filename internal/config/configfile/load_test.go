@@ -100,10 +100,11 @@ prototype-branches = "compress"
 					Strategy:             &shipStrategy,
 				},
 				Sync: &configfile.Sync{
-					FeatureStrategy: &merge,
-					PushHook:        &pushHook,
-					Tags:            &syncTags,
-					Upstream:        &syncUpstream,
+					FeatureStrategy:   &merge,
+					PerennialStrategy: &rebase,
+					PushHook:          &pushHook,
+					Tags:              &syncTags,
+					Upstream:          &syncUpstream,
 				},
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,
