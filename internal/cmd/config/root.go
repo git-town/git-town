@@ -57,7 +57,6 @@ func executeDisplayConfig(verbose configdomain.Verbose) error {
 
 func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
-	// TODO: organize these entries exactly like the config file is organized
 	print.Header("Branches")
 	print.Entry("contribution branches", format.StringsSetting((config.NormalConfig.ContributionBranches.Join(", "))))
 	print.Entry("contribution regex", format.OptionalStringerSetting((config.NormalConfig.ContributionRegex)))
