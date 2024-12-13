@@ -45,6 +45,7 @@ delete-tracking-branch = false
 strategy = "api"
 
 [sync]
+feature-strategy = "merge"
 push-hook = true
 tags = false
 upstream = true
@@ -98,9 +99,10 @@ prototype-branches = "compress"
 					Strategy:             &shipStrategy,
 				},
 				Sync: &configfile.Sync{
-					PushHook: &pushHook,
-					Tags:     &syncTags,
-					Upstream: &syncUpstream,
+					FeatureStrategy: &merge,
+					PushHook:        &pushHook,
+					Tags:            &syncTags,
+					Upstream:        &syncUpstream,
 				},
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,

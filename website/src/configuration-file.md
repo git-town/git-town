@@ -32,12 +32,12 @@ delete-tracking-branch = true
 strategy = "api"
 
 [sync]
+feature-strategy = "merge"
 push-hook = true
 tags = true
 upstream = true
 
 [sync-strategy]
-feature-branches = "merge"
 perennial-branches = "rebase"
 prototype-branche = "merge"
 ```

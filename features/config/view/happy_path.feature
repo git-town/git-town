@@ -72,11 +72,11 @@ Feature: show the configuration
       strategy = "squash-merge"
 
       [sync]
+      feature-strategy = "rebase"
       tags = false
       upstream = true
 
       [sync-strategy]
-      feature-branches = "rebase"
       perennial-branches = "merge"
       """
     When I run "git-town config"
@@ -153,11 +153,11 @@ Feature: show the configuration
       strategy = "api"
 
       [sync]
+      feature-strategy = "merge"
       tags = true
       upstream = true
 
       [sync-strategy]
-      feature-branches = "merge"
       perennial-branches = "merge"
       """
     When I run "git-town config"
