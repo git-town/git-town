@@ -4,6 +4,7 @@ Feature: show the configuration
   Background:
     Given a Git repo with origin
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given Git Town setting "perennial-branches" is "qa staging"
     And Git Town setting "perennial-regex" is "^release-"
@@ -19,34 +20,42 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        main branch: main
-        perennial branches: qa, staging
-        perennial regex: ^release-
-        default branch type: observed
-        feature regex: ^user-.*$
-        parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
+        default branch type: observed
+        feature regex: ^user-.*$
+        main branch: main
         observed branches: observed-1, observed-2
         observed regex: ^dependabot/
+        parked branches: parked-1, parked-2
+        perennial branches: qa, staging
+        perennial regex: ^release-
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: no
-        ship strategy: squash-merge
-        ship deletes the tracking branch: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync-prototype strategy: merge
-        sync with upstream: yes
-        sync tags: yes
 
       Hosting:
-        hosting platform override: (not set)
+        hosting platform: (not set)
+        hostname: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: yes
+        strategy: squash-merge
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
+        sync-prototype strategy: merge
+        sync tags: yes
+        sync with upstream: yes
       """
 
   Scenario: all configured in config file
