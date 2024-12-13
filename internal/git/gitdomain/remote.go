@@ -9,7 +9,7 @@ func NewRemote(id string) Remote {
 			return remote
 		}
 	}
-	return RemoteOther
+	return Remote(id)
 }
 
 // Implementation of the fmt.Stringer interface.
@@ -20,13 +20,11 @@ func (self Remote) String() string {
 const (
 	RemoteNone     = Remote("")
 	RemoteOrigin   = Remote("origin")
-	RemoteOther    = Remote("other")
 	RemoteUpstream = Remote("upstream")
 )
 
 var AllRemotes = []Remote{ //nolint:gochecknoglobals
 	RemoteNone,
 	RemoteOrigin,
-	RemoteOther,
 	RemoteUpstream,
 }
