@@ -195,6 +195,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 				return configdomain.EmptyPartialConfig(), err
 			}
 		}
+		if data.Sync.PrototypeStrategy != nil {
+			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+		}
 		if data.Sync.PushHook != nil {
 			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
 		}

@@ -239,6 +239,7 @@ and will be removed in future versions of Git Town.`
 	SwitchUncommittedChanges      = "uncommitted changes"
 	SyncFeatureBranches           = "Sync feature branches: %s\n"
 	SyncPerennialBranches         = "Sync perennial branches: %s\n"
+	SyncPrototypeBranches         = "Sync prototype branches: %s\n"
 	SyncStatusNotRecognized       = "cannot determine the sync status for Git remote %q and branch name %q"
 	SyncTags                      = "Sync tags: %s\n"
 	SyncWithUpstream              = "Sync with upstream: %s\n"

@@ -14,8 +14,9 @@ func (self SyncPrototypeStrategy) SyncStrategy() SyncStrategy {
 }
 
 const (
-	SyncPrototypeStrategyMerge  = SyncPrototypeStrategy(SyncStrategyMerge)
-	SyncPrototypeStrategyRebase = SyncPrototypeStrategy(SyncStrategyRebase)
+	SyncPrototypeStrategyMerge    = SyncPrototypeStrategy(SyncStrategyMerge)
+	SyncPrototypeStrategyRebase   = SyncPrototypeStrategy(SyncStrategyRebase)
+	SyncPrototypeStrategyCompress = SyncPrototypeStrategy(SyncStrategyCompress)
 )
 
 func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {

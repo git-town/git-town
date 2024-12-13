@@ -21,8 +21,8 @@ In the [config file](../configuration-file.md) the sync-prototype-strategy is
 part of the `[sync-strategy]` section:
 
 ```toml
-[sync-strategy]
-prototype-branches = "merge"
+[sync]
+prototype-strategy = "merge"
 ```
 
 ### Git metadata
