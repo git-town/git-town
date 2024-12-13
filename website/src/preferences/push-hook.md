@@ -17,6 +17,13 @@ To configure the push hook in the
 [configuration file](../configuration-file.md):
 
 ```toml
+sync.push-hook = false
+```
+
+or
+
+```toml
+[sync]
 push-hook = false
 ```
 
