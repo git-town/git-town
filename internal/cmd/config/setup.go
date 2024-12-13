@@ -192,6 +192,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.NormalConfig.SyncPrototypeStrategy, aborted, err = dialog.SyncPrototypeStrategy(config.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.NormalConfig.SyncUpstream, aborted, err = dialog.SyncUpstream(config.NormalConfig.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -309,6 +313,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
 	fc.Check(saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
 	fc.Check(saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig))
+	fc.Check(saveSyncPrototypeStrategy(oldConfig.NormalConfig.SyncPrototypeStrategy, userInput.config.NormalConfig.SyncPrototypeStrategy, oldConfig))
 	fc.Check(saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
 	fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
 	return fc.Err
@@ -498,6 +503,13 @@ func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStra
 	return config.NormalConfig.SetSyncPerennialStrategy(newValue)
 }
 
+func saveSyncPrototypeStrategy(oldValue, newValue configdomain.SyncPrototypeStrategy, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.NormalConfig.SetSyncPrototypeStrategy(newValue)
+}
+
 func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
@@ -528,6 +540,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveShipDeleteTrackingBranch()
 	config.NormalConfig.RemoveSyncFeatureStrategy()
 	config.NormalConfig.RemoveSyncPerennialStrategy()
+	config.NormalConfig.RemoveSyncPrototypeStrategy()
 	config.NormalConfig.RemoveSyncUpstream()
 	config.NormalConfig.RemoveSyncTags()
 	err = saveDefaultBranchType(config.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, config)

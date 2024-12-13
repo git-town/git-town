@@ -153,6 +153,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       # The only updates they receive are additional commits
       # made to their tracking branch somewhere else.
       perennial-strategy = "rebase"
+
+      #
       prototype-strategy = "rebase"
 
       # The "push-hook" setting determines whether Git Town

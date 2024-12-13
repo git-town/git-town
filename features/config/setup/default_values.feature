@@ -22,6 +22,7 @@ Feature: Accepting all default values leads to a working setup
       | origin hostname             | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |
+      | sync-prototype-strategy     | enter |
       | sync-upstream               | enter |
       | sync-tags                   | enter |
       | push-new-branches           | enter |
@@ -143,6 +144,8 @@ Feature: Accepting all default values leads to a working setup
       # The only updates they receive are additional commits
       # made to their tracking branch somewhere else.
       perennial-strategy = "rebase"
+
+      #
       prototype-strategy = "rebase"
 
       # The "push-hook" setting determines whether Git Town
