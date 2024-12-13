@@ -258,7 +258,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			)
 			if hasRemoteBranch {
 				prog.Add(
-					&opcodes.ForcePush{ForceIfIncludes: true},
+					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}
 			// remove commits from descendents
@@ -284,7 +284,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				)
 				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
 					prog.Add(
-						&opcodes.ForcePush{ForceIfIncludes: true},
+						&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 					)
 				}
 			}

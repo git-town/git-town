@@ -22,6 +22,6 @@ func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	args.PrependOpcodes(&ForcePush{ForceIfIncludes: self.ForceIfIncludes})
+	args.PrependOpcodes(&PushCurrentBranchForce{ForceIfIncludes: self.ForceIfIncludes})
 	return nil
 }
