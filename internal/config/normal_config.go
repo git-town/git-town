@@ -192,6 +192,10 @@ func (self *NormalConfig) RemoveSyncPerennialStrategy() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncPerennialStrategy)
 }
 
+func (self *NormalConfig) RemoveSyncPrototypeStrategy() {
+	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncPrototypeStrategy)
+}
+
 func (self *NormalConfig) RemoveSyncTags() {
 	_ = self.GitConfig.RemoveLocalConfigValue(configdomain.KeySyncTags)
 }
@@ -304,6 +308,12 @@ func (self *NormalConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureS
 func (self *NormalConfig) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
 	self.SyncPerennialStrategy = strategy
 	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy, strategy.String())
+}
+
+// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
+func (self *NormalConfig) SetSyncPrototypeStrategy(strategy configdomain.SyncPrototypeStrategy) error {
+	self.SyncPrototypeStrategy = strategy
+	return self.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, strategy.String())
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.

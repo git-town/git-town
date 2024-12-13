@@ -22,6 +22,7 @@ Feature: Accepting all default values leads to a working setup
       | origin hostname             | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |
+      | sync-prototype-strategy     | enter |
       | sync-upstream               | enter |
       | sync-tags                   | enter |
       | push-new-branches           | enter |
@@ -148,7 +149,7 @@ Feature: Accepting all default values leads to a working setup
       # Prototype branches are feature branches that haven't been proposed yet.
       # Typically they contain  features and bug fixes on them,
       # hence their name.
-      prototype-strategy = "rebase"
+      prototype-strategy = "merge"
 
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.

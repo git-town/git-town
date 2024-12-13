@@ -48,6 +48,7 @@ Feature: remove existing configuration in Git metadata
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |
       | sync-feature-strategy                   | down enter                                                        |
       | sync-perennial-strategy                 | down enter                                                        |
+      | sync-prototype-strategy                 | down enter                                                        |
       | sync-upstream                           | down enter                                                        |
       | sync-tags                               | down enter                                                        |
       | enable push-new-branches                | down enter                                                        |

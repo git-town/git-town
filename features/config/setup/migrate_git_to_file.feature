@@ -32,6 +32,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | origin hostname                           | enter |
       | sync-feature-strategy                     | enter |
       | sync-perennial-strategy                   | enter |
+      | sync-prototype-strategy                   | enter |
       | sync-upstream                             | enter |
       | sync-tags                                 | enter |
       | enable push-new-branches                  | enter |
@@ -158,7 +159,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # Prototype branches are feature branches that haven't been proposed yet.
       # Typically they contain  features and bug fixes on them,
       # hence their name.
-      prototype-strategy = "rebase"
+      prototype-strategy = "merge"
 
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
