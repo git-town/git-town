@@ -1,11 +1,13 @@
 push-new-branches = false
 ship-strategy = "fast-forward"
-ship-delete-tracking-branch = false
 sync-upstream = true
 
 [branches]
 main = "main"
 perennials = ["public"]
+
+[ship]
+delete-tracking-branch = false
 
 [sync]
 push-hook = true

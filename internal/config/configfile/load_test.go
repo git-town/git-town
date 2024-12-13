@@ -39,6 +39,9 @@ new-branch-type = "prototype"
 platform = "github"
 origin-hostname = "github.com"
 
+[ship]
+delete-tracking-branch = false
+
 [sync]
 push-hook = true
 
@@ -84,6 +87,9 @@ prototype-branches = "compress"
 				Hosting: &configfile.Hosting{
 					Platform:       &github,
 					OriginHostname: &githubCom,
+				},
+				Ship: &configfile.Ship{
+					DeleteTrackingBranch: &shipDeleteTrackingBranch,
 				},
 				Sync: &configfile.Sync{
 					PushHook: &pushHook,

@@ -28,8 +28,6 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("push-new-branches = %t\n\n", config.NormalConfig.PushNewBranches))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("ship-strategy = %q\n\n", config.NormalConfig.ShipStrategy))
-	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipDeleteTrackingBranchHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("ship-delete-tracking-branch = %t\n\n", config.NormalConfig.ShipDeleteTrackingBranch))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncTagsHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("sync-tags = %t\n\n", config.NormalConfig.SyncTags))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncUpstreamHelp)) + "\n")
@@ -57,6 +55,9 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	} else {
 		result.WriteString(fmt.Sprintf("origin-hostname = %q\n", config.NormalConfig.HostingOriginHostname))
 	}
+	result.WriteString("\n[ship]\n\n")
+	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipDeleteTrackingBranchHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("delete-tracking-branch = %t\n", config.NormalConfig.ShipDeleteTrackingBranch))
 	result.WriteString("\n[sync]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("push-hook = %t\n", config.NormalConfig.PushHook))

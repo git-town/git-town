@@ -79,12 +79,6 @@ Feature: Accepting all default values leads to a working setup
       # All options update proposals of child branches and remove the shipped branch locally and remotely.
       ship-strategy = "api"
 
-      # Should "git town ship" delete the tracking branch?
-      # You want to disable this if your code hosting platform
-      # (GitHub, GitLab, etc) deletes head branches when
-      # merging pull requests through its UI.
-      ship-delete-tracking-branch = true
-
       # Should "git town sync" sync tags with origin?
       sync-tags = true
 
@@ -139,6 +133,14 @@ Feature: Accepting all default values leads to a working setup
       # of your source code repository. Only change this
       # if the auto-detection does not work for you.
       # origin-hostname = ""
+
+      [ship]
+
+      # Should "git town ship" delete the tracking branch?
+      # You want to disable this if your code hosting platform
+      # (GitHub, GitLab, etc) deletes head branches when
+      # merging pull requests through its UI.
+      delete-tracking-branch = true
 
       [sync]
 
