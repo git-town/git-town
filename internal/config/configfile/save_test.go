@@ -91,9 +91,6 @@ func TestSave(t *testing.T) {
 # on the first run of "git town sync".
 push-new-branches = false
 
-# Should "git town sync" sync tags with origin?
-sync-tags = true
-
 [branches]
 
 # The main branch is the branch from which you cut new feature branches,
@@ -166,6 +163,9 @@ strategy = "squash-merge"
 # More info at https://www.git-town.com/preferences/push-hook.
 push-hook = true
 
+# Should "git town sync" sync tags with origin?
+tags = true
+
 # Should "git town sync" also fetch updates from the upstream remote?
 #
 # If an "upstream" remote exists, and this setting is enabled,
@@ -222,9 +222,6 @@ perennial-branches = "rebase"
 # and Git Town will create the missing tracking branch
 # on the first run of "git town sync".
 push-new-branches = false
-
-# Should "git town sync" sync tags with origin?
-sync-tags = true
 
 [branches]
 
@@ -297,6 +294,9 @@ strategy = "api"
 # When disabled, Git Town pushes using the "--no-verify" switch.
 # More info at https://www.git-town.com/preferences/push-hook.
 push-hook = true
+
+# Should "git town sync" sync tags with origin?
+tags = true
 
 # Should "git town sync" also fetch updates from the upstream remote?
 #

@@ -45,6 +45,7 @@ strategy = "api"
 
 [sync]
 push-hook = true
+tags = false
 upstream = true
 
 [sync-strategy]
@@ -96,6 +97,8 @@ prototype-branches = "compress"
 				},
 				Sync: &configfile.Sync{
 					PushHook: &pushHook,
+					Tags:     &syncTags,
+					Upstream: &syncUpstream,
 				},
 				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,

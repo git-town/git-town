@@ -53,7 +53,6 @@ Feature: show the configuration
       """
       push-new-branches = true
       ship-delete-tracking-branch = true
-      sync-tags = false
 
       [branches]
       main = "main"
@@ -72,6 +71,7 @@ Feature: show the configuration
       strategy = "squash-merge"
 
       [sync]
+      tags = false
       upstream = true
 
       [sync-strategy]
@@ -133,7 +133,6 @@ Feature: show the configuration
       """
       push-new-branches = true
       ship-delete-tracking-branch = true
-      sync-tags = true
 
       [branches]
       main = "config-main"
@@ -152,6 +151,7 @@ Feature: show the configuration
       strategy = "api"
 
       [sync]
+      tags = true
       upstream = true
 
       [sync-strategy]

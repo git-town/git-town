@@ -181,6 +181,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Sync.PushHook != nil {
 			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
 		}
+		if data.Sync.Tags != nil {
+			syncTags = Some(configdomain.SyncTags(*data.Sync.Tags))
+		}
+		if data.Sync.Upstream != nil {
+			syncUpstream = Some(configdomain.SyncUpstream(*data.Sync.Upstream))
+		}
 	}
 	return configdomain.PartialConfig{
 		Aliases:                  map[configdomain.AliasableCommand]string{},
