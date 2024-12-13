@@ -17,6 +17,7 @@ Feature: remove an existing code hosting override
       | origin hostname             | enter          |                                             |
       | sync-feature-strategy       | enter          |                                             |
       | sync-perennial-strategy     | enter          |                                             |
+      | sync-prototype-strategy     | enter          |                                             |
       | sync-upstream               | enter          |                                             |
       | sync-tags                   | enter          |                                             |
       | push-new-branches           | enter          |                                             |

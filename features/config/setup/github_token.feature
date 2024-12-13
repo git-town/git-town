@@ -20,6 +20,7 @@ Feature: enter the GitHub API token
       | origin hostname               | enter             |                                             |
       | sync-feature-strategy         | enter             |                                             |
       | sync-perennial-strategy       | enter             |                                             |
+      | sync-prototype-strategy       | enter             |                                             |
       | sync-upstream                 | enter             |                                             |
       | sync-tags                     | enter             |                                             |
       | push-new-branches             | enter             |                                             |
@@ -49,6 +50,7 @@ Feature: enter the GitHub API token
       | origin hostname             | enter                |                                             |
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
+      | sync-prototype-strategy     | enter                |                                             |
       | sync-upstream               | enter                |                                             |
       | sync-tags                   | enter                |                                             |
       | push-new-branches           | enter                |                                             |
@@ -81,6 +83,7 @@ Feature: enter the GitHub API token
       | origin hostname               | enter                               |                                             |
       | sync-feature-strategy         | enter                               |                                             |
       | sync-perennial-strategy       | enter                               |                                             |
+      | sync-prototype-strategy       | enter                               |                                             |
       | sync-upstream                 | enter                               |                                             |
       | sync-tags                     | enter                               |                                             |
       | push-new-branches             | enter                               |                                             |

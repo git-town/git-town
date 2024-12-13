@@ -32,6 +32,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | origin hostname                           | enter |
       | sync-feature-strategy                     | enter |
       | sync-perennial-strategy                   | enter |
+      | sync-prototype-strategy                   | enter |
       | sync-upstream                             | enter |
       | sync-tags                                 | enter |
       | enable push-new-branches                  | enter |
