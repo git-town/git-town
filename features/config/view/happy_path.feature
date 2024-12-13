@@ -73,11 +73,9 @@ Feature: show the configuration
 
       [sync]
       feature-strategy = "rebase"
+      perennial-strategy = "merge"
       tags = false
       upstream = true
-
-      [sync-strategy]
-      perennial-branches = "merge"
       """
     When I run "git-town config"
     Then Git Town prints:
@@ -154,11 +152,9 @@ Feature: show the configuration
 
       [sync]
       feature-strategy = "merge"
+      perennial-strategy = "merge"
       tags = true
       upstream = true
-
-      [sync-strategy]
-      perennial-branches = "merge"
       """
     When I run "git-town config"
     Then Git Town prints:

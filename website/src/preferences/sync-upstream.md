@@ -20,10 +20,6 @@ In the [config file](../configuration-file.md) the sync-upstream setting can be
 set like this:
 
 ```toml
-sync.upstream = true
-```
-
-```toml
 [sync]
 upstream = true
 ```

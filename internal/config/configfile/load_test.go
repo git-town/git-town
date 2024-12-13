@@ -46,6 +46,7 @@ strategy = "api"
 
 [sync]
 feature-strategy = "merge"
+perennial-strategy = "rebase"
 push-hook = true
 tags = false
 upstream = true

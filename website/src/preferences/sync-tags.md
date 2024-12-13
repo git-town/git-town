@@ -18,12 +18,6 @@ In the [config file](../configuration-file.md) the sync-tags setting can be set
 like this:
 
 ```toml
-sync.tags = true
-```
-
-or
-
-```toml
 [sync]
 tags = true
 ```

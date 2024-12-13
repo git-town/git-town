@@ -18,8 +18,8 @@ In the [config file](../configuration-file.md) the sync-perennial-strategy is
 part of the `[sync-strategy]` section:
 
 ```toml
-[sync-strategy]
-perennial-branches = "rebase"
+[sync]
+perennial-strategy = "rebase"
 ```
 
 ## in Git metadata

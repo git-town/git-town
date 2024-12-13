@@ -138,10 +138,16 @@ Feature: Accepting all default values leads to a working setup
       # hence their name.
       feature-strategy = "merge"
 
+      # How should Git Town synchronize perennial branches?
+      # Perennial branches have no parent branch.
+      # The only updates they receive are additional commits
+      # made to their tracking branch somewhere else.
+      perennial-strategy = "rebase"
+
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
       # Hooks are enabled by default. If your Git hooks are slow,
-      # you can disable them to speed up branch syncing.
+       # you can disable them to speed up branch syncing.
       #
       # When disabled, Git Town pushes using the "--no-verify" switch.
       # More info at https://www.git-town.com/preferences/push-hook.
@@ -159,14 +165,6 @@ Feature: Accepting all default values leads to a working setup
       # This is useful if the repository you work on is a fork,
       # and you want to keep it in sync with the repo it was forked from.
       upstream = true
-
-      [sync-strategy]
-
-      # How should Git Town synchronize perennial branches?
-      # Perennial branches have no parent branch.
-      # The only updates they receive are additional commits
-      # made to their tracking branch somewhere else.
-      perennial-branches = "rebase"
       """
 
   Scenario: undo
