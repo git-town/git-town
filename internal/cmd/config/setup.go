@@ -259,7 +259,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.NormalConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
-		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfig, repo.UnvalidatedConfig.NormalConfig.GitVersion),
+		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
 	}, exit, err
 }
 
