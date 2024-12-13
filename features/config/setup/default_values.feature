@@ -147,7 +147,7 @@ Feature: Accepting all default values leads to a working setup
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
       # Hooks are enabled by default. If your Git hooks are slow,
-       # you can disable them to speed up branch syncing.
+      # you can disable them to speed up branch syncing.
       #
       # When disabled, Git Town pushes using the "--no-verify" switch.
       # More info at https://www.git-town.com/preferences/push-hook.
