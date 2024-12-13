@@ -1,5 +1,5 @@
 package prelude
 
-func Ptr[A any](value A) *A {
+func Ptr[T any](value T) *T {
 	return &value
 }
