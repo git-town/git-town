@@ -47,6 +47,7 @@ strategy = "api"
 [sync]
 feature-strategy = "merge"
 perennial-strategy = "rebase"
+prototype-strategy = "compress"
 push-hook = true
 tags = false
 upstream = true
@@ -102,6 +103,7 @@ prototype-branches = "compress"
 				Sync: &configfile.Sync{
 					FeatureStrategy:   &merge,
 					PerennialStrategy: &rebase,
+					PrototypeStrategy: &compress,
 					PushHook:          &pushHook,
 					Tags:              &syncTags,
 					Upstream:          &syncUpstream,

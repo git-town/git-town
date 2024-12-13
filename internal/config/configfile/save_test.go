@@ -166,6 +166,11 @@ feature-strategy = "merge"
 # The only updates they receive are additional commits
 # made to their tracking branch somewhere else.
 perennial-strategy = "rebase"
+
+# How should Git Town synchronize prototype branches?
+# Prototype branches are feature branches that haven't been proposed yet.
+# Typically they contain  features and bug fixes on them,
+# hence their name.
 prototype-strategy = ""
 
 # The "push-hook" setting determines whether Git Town
@@ -297,6 +302,11 @@ feature-strategy = "merge"
 # The only updates they receive are additional commits
 # made to their tracking branch somewhere else.
 perennial-strategy = "rebase"
+
+# How should Git Town synchronize prototype branches?
+# Prototype branches are feature branches that haven't been proposed yet.
+# Typically they contain  features and bug fixes on them,
+# hence their name.
 prototype-strategy = "rebase"
 
 # The "push-hook" setting determines whether Git Town

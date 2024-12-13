@@ -28,6 +28,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterPerennialRegex())
 	debugCommand.AddCommand(enterSyncFeatureStrategy())
 	debugCommand.AddCommand(enterSyncPerennialStrategy())
+	debugCommand.AddCommand(enterSyncPrototypeStrategy())
 	debugCommand.AddCommand(enterSyncUpstream())
 	debugCommand.AddCommand(enterSyncTags())
 	debugCommand.AddCommand(enterPushHookCmd())
