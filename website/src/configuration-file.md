@@ -14,12 +14,16 @@ push-new-branches = false
 
 [branches]
 main = ""             # must be set by the user
+contribution-regex = ""
+default-type = "feature"
+feature-regex = ""
+observed-regex = ""
 perennials = []
 perennial-regex = ""
 
 [hosting]
-platform = ""         # auto-detect
 origin-hostname = ""  # use the hostname in the origin URL
+platform = ""         # auto-detect
 
 [ship]
 delete-tracking-branch = true
@@ -33,4 +37,5 @@ upstream = true
 [sync-strategy]
 feature-branches = "merge"
 perennial-branches = "rebase"
+prototype-branche = "merge"
 ```
