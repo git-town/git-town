@@ -57,7 +57,7 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncFeatureStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("feature-strategy = %q\n\n", config.NormalConfig.SyncFeatureStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("perennial-strategy = %q\n", config.NormalConfig.SyncPerennialStrategy))
+	result.WriteString(fmt.Sprintf("perennial-strategy = %q\n\n", config.NormalConfig.SyncPerennialStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPrototypeStrategyHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("prototype-strategy = %q\n\n", config.NormalConfig.SyncPrototypeStrategy))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp)) + "\n")
