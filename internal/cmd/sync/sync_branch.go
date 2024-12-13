@@ -184,7 +184,7 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 	)
 	if args.HasTrackingBranch {
 		args.Program.Value.Add(
-			&opcodes.ForcePush{ForceIfIncludes: false},
+			&opcodes.PushCurrentBranchForce{ForceIfIncludes: false},
 		)
 	}
 }

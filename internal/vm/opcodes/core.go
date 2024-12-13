@@ -98,7 +98,7 @@ func Types() []shared.Opcode {
 		&ConflictPhantomResolve{},
 		&ConnectorProposalMerge{},
 		&FetchUpstream{},
-		&ForcePush{},
+		&PushCurrentBranchForce{},
 		&LineageBranchRemove{},
 		&LineageParentRemove{},
 		&LineageParentSet{},
