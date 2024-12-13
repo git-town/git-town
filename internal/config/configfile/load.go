@@ -85,6 +85,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.SyncUpstream != nil {
 		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
+	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
 			mainBranch = gitdomain.NewLocalBranchNameOption(*data.Branches.Main)
