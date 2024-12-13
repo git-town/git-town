@@ -38,6 +38,7 @@ Feature: show the configuration
         ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
+        sync-prototype strategy: merge
         sync with upstream: yes
         sync tags: yes
 
@@ -74,6 +75,7 @@ Feature: show the configuration
       [sync]
       feature-strategy = "rebase"
       perennial-strategy = "merge"
+      prototype-strategy = "rebase"
       tags = false
       upstream = true
       """

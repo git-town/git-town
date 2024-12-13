@@ -57,6 +57,7 @@ func executeDisplayConfig(verbose configdomain.Verbose) error {
 
 func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
+	// TODO: organize these entries exactly like the config file is organized
 	print.Header("Branches")
 	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
 	print.Entry("perennial branches", format.StringsSetting((config.NormalConfig.PerennialBranches.Join(", "))))
@@ -77,6 +78,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("ship deletes the tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.IsTrue()))
 	print.Entry("sync-feature strategy", config.NormalConfig.SyncFeatureStrategy.String())
 	print.Entry("sync-perennial strategy", config.NormalConfig.SyncPerennialStrategy.String())
+	print.Entry("sync-prototype strategy", config.NormalConfig.SyncPrototypeStrategy.String())
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	fmt.Println()
