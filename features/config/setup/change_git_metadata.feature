@@ -19,6 +19,7 @@ Feature: change existing information in Git metadata
       | change the perennial branches             | space down space enter |
       | enter a perennial regex                   | 3 3 6 6 enter          |
       | default branch type                       | down enter             |
+      | dev-remote                                | enter                  |
       | feature regex                             | u s e r enter          |
       | set github as hosting service             | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
@@ -69,6 +70,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
+    And local Git Town setting "dev-remote" is now "origin"
     And local Git Town setting "new-branch-type" is now "parked"
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"

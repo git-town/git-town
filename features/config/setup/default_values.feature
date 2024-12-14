@@ -17,6 +17,7 @@ Feature: Accepting all default values leads to a working setup
       | perennial branches          | enter |
       | perennial regex             | enter |
       | default branch type         | enter |
+      | dev-remote                  | enter |
       | feature regex               | enter |
       | hosting platform            | enter |
       | origin hostname             | enter |
@@ -36,6 +37,7 @@ Feature: Accepting all default values leads to a working setup
     Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
+    And local Git Town setting "dev-remote" still doesn't exist
     And local Git Town setting "new-branch-type" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
@@ -99,6 +101,11 @@ Feature: Accepting all default values leads to a working setup
       push-new-branches = false
 
       [hosting]
+
+      # Which remote should Git Town use for development?
+      #
+      # Typically that's the "origin" remote.
+      dev-remote = "origin"
 
       # Knowing the type of code hosting platform allows Git Town
       # to open browser URLs and talk to the code hosting API.
@@ -187,6 +194,7 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
+    And local Git Town setting "dev-remote" still doesn't exist
     And local Git Town setting "new-branch-type" still doesn't exist
     And local Git Town setting "main-branch" still doesn't exist
     And local Git Town setting "perennial-branches" still doesn't exist
