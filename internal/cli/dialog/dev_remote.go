@@ -22,7 +22,7 @@ Typically that's the "origin" remote.
 
 func DevRemote(existingValue gitdomain.Remote, options gitdomain.Remotes, inputs components.TestInput) (gitdomain.Remote, bool, error) {
 	cursor := slice.Index(options, existingValue).GetOrElse(0)
-	selection, aborted, err := components.RadioList(list.NewEntries(options...), cursor, defaultBranchTypeTitle, DefaultBranchTypeHelp, inputs)
+	selection, aborted, err := components.RadioList(list.NewEntries(options...), cursor, DevRemoteTypeTitle, DevRemoteHelp, inputs)
 	fmt.Printf(messages.DevRemote, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }
