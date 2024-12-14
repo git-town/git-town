@@ -450,6 +450,11 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "description"))
 }
 
+func (self *TestCommands) RenameRemote(oldName, newName string) {
+	self.RemotesCache.Invalidate()
+	self.MustRun("git", "remote", "rename", oldName, newName)
+}
+
 // SHAForCommit provides the SHA for the commit with the given name.
 func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	output := self.MustQuery("git", "reflog", "--format=%h %s")
