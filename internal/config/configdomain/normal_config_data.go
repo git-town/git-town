@@ -15,6 +15,7 @@ type NormalConfigData struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        BranchType
+	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
@@ -136,6 +137,7 @@ func DefaultNormalConfig() NormalConfigData {
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		DefaultBranchType:        BranchTypeFeatureBranch,
+		DevRemote:                gitdomain.Remote("origin"),
 		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),

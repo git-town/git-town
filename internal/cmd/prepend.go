@@ -193,7 +193,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

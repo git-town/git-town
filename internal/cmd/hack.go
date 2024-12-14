@@ -231,7 +231,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 			branchesToValidate = targetBranches
 		}
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

@@ -181,6 +181,7 @@ and will be removed in future versions of Git Town.`
 	PushHook                = "Push hook: %s\n"
 	PushNewBranches         = "Push new branches: %s\n"
 	RebaseProblem           = "cannot determine rebase in progress: %w"
+	RemoteEmpty             = "the given dev-remote is empty"
 	RemoteExistsProblem     = "cannot determine if remote %q exists: %w"
 	RemotesProblem          = "cannot determine remotes: %w"
 	RenameBranchDeprecation = `DEPRECATION NOTICE

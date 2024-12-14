@@ -24,6 +24,7 @@ new-branch-type = "feature"
 push-new-branches = false
 
 [hosting]
+dev-remote = "origin"
 origin-hostname = ""  # use the hostname in the origin URL
 platform = ""         # auto-detect
 
