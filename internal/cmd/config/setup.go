@@ -148,6 +148,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, config.NormalConfig.Remotes, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.NormalConfig.HostingPlatform, aborted, err = dialog.HostingPlatform(config.NormalConfig.HostingPlatform, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
