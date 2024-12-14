@@ -107,6 +107,10 @@ func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
 
+func (self *NormalConfig) RemoveDevRemote() {
+	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyDevRemote)
+}
+
 func (self *NormalConfig) RemoveFeatureRegex() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
 }
@@ -215,6 +219,12 @@ func (self *NormalConfig) SetContributionBranches(branches gitdomain.LocalBranch
 func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
 	self.DefaultBranchType = value
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDefaultBranchType, value.String())
+}
+
+// SetDefaultBranchTypeLocally updates the locally configured default branch type.
+func (self *NormalConfig) SetDevRemote(value gitdomain.Remote) error {
+	self.DevRemote = value
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
 }
 
 // SetFeatureRegexLocally updates the locally configured feature regex.
