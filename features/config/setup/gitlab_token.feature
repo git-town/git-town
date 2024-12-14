@@ -14,8 +14,8 @@ Feature: enter the GitLab API token
       | perennial branches            |                   | no input here since the dialog doesn't show |
       | perennial regex               | enter             |                                             |
       | default branch type           | enter             |                                             |
-      | dev-remote                    | enter             |                                             |
       | feature regex                 | enter             |                                             |
+      | dev-remote                    | enter             |                                             |
       | hosting platform: auto-detect | enter             |                                             |
       | gitlab token                  | 1 2 3 4 5 6 enter |                                             |
       | origin hostname               | enter             |                                             |
@@ -45,8 +45,8 @@ Feature: enter the GitLab API token
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | default branch type         | enter             |                                             |
-      | dev-remote                  | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | dev-remote                  | enter             |                                             |
       | hosting platform            | up enter          |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | origin hostname             | enter             |                                             |

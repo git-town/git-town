@@ -19,8 +19,8 @@ Feature: change existing information in Git metadata
       | change the perennial branches             | space down space enter |
       | enter a perennial regex                   | 3 3 6 6 enter          |
       | default branch type                       | down enter             |
-      | dev-remote                                | enter                  |
       | feature regex                             | u s e r enter          |
+      | dev-remote                                | enter                  |
       | set github as hosting service             | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
       | origin hostname                           | c o d e enter          |

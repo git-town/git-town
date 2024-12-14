@@ -28,8 +28,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       | perennial branches                        | enter |
       | perennial regex                           | enter |
       | default branch type                       | enter |
-      | dev-remote                                | enter |
       | feature regex                             | enter |
+      | dev-remote                                | enter |
       | hosting service                           | enter |
       | origin hostname                           | enter |
       | sync-feature-strategy                     | enter |

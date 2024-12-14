@@ -12,8 +12,8 @@ Feature: override an existing Git alias
       | perennial branches          | enter   |
       | perennial regex             | enter   |
       | default branch type         | enter   |
-      | dev-remote                  | enter   |
       | feature regex               | enter   |
+      | dev-remote                  | enter   |
       | hosting platform            | enter   |
       | origin hostname             | enter   |
       | sync-feature-strategy       | enter   |

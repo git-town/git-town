@@ -23,6 +23,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "perennial-regex" is "qa.*"
     And local Git Town setting "feature-regex" is "user.*"
     And local Git Town setting "default-branch-type" is "observed"
+    And local Git Town setting "dev-remote" is "origin"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
     And local Git Town setting "hosting-origin-hostname" is "code"
@@ -44,6 +45,7 @@ Feature: remove existing configuration in Git metadata
       | remove the perennial regex              | backspace backspace backspace backspace enter                     |
       | default branch type                     | down enter                                                        |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
+      | dev-remote                              | enter                                                             |
       | remove hosting service override         | up up up enter                                                    |
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |
       | sync-feature-strategy                   | down enter                                                        |
@@ -87,6 +89,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is still "main"
     And the perennial branches are now "production"
+    And local Git Town setting "dev-remote" is now "origin"
     And local Git Town setting "new-branch-type" is now "prototype"
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
