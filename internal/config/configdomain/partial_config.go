@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
 	"github.com/git-town/git-town/v16/internal/gohacks/mapstools"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
 )
@@ -51,14 +50,11 @@ func EmptyPartialConfig() PartialConfig {
 }
 
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
-	ec := gohacks.ErrorCollector{}
+	ec := ErrorCollector{}
 	aliases := snapshot.Aliases()
-	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
-	ec.Check(err)
-	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
-	ec.Check(err)
-	offline, err := ParseOffline(snapshot[KeyOffline], KeyOffline)
-	ec.Check(err)
+	newBranchType := C(ec, P(ParseBranchType(snapshot[KeyNewBranchType])))
+	hostingPlatform := C(ec, P(ParseHostingPlatform(snapshot[KeyHostingPlatform])))
+	offline := C(ec, P(ParseOffline(snapshot[KeyOffline], KeyOffline)))
 	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
 	ec.Check(err)
 	pushNewBranches, err := ParsePushNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches)

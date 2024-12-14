@@ -1,4 +1,4 @@
-package gohacks
+package prelude
 
 import "fmt"
 
