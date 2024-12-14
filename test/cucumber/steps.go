@@ -180,7 +180,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^an additional "([^"]+)" remote with URL "([^"]+)"$`, func(ctx context.Context, remote, url string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.AddRemote(gitdomain.NewRemote(remote), url)
+		devRepo.AddRemote(gitdomain.Remote(remote), url)
 	})
 
 	sc.Step(`^an uncommitted file$`, func(ctx context.Context) {

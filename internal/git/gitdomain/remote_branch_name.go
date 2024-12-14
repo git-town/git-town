@@ -38,7 +38,7 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	parts := strings.SplitN(string(self), "/", 2)
-	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
+	return Remote(parts[0]), NewLocalBranchName(parts[1])
 }
 
 func (self RemoteBranchName) Remote() Remote {

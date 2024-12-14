@@ -66,7 +66,7 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
 	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
-		remoteOpt = Some(gitdomain.NewRemote(args[0]))
+		remoteOpt = gitdomain.NewRemote(args[0])
 	} else {
 		remoteOpt = Some(gitdomain.RemoteOrigin)
 	}

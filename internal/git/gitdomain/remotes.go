@@ -6,9 +6,11 @@ import "slices"
 type Remotes []Remote
 
 func NewRemotes(remotes ...string) Remotes {
-	result := make(Remotes, len(remotes))
-	for r, remote := range remotes {
-		result[r] = NewRemote(remote)
+	result := make(Remotes, 0, len(remotes))
+	for _, remoteName := range remotes {
+		if remote, hasRemote := NewRemote(remoteName).Get(); hasRemote {
+			result = append(result, remote)
+		}
 	}
 	return result
 }

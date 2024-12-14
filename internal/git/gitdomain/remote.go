@@ -1,15 +1,20 @@
 package gitdomain
 
+import (
+	"strings"
+
+	. "github.com/git-town/git-town/v16/pkg/prelude"
+)
+
 // Remote represents a Git remote.
 type Remote string
 
-func NewRemote(id string) Remote {
-	for _, remote := range AllRemotes {
-		if id == remote.String() {
-			return remote
-		}
+func NewRemote(id string) Option[Remote] {
+	id = strings.TrimSpace(id)
+	if len(id) == 0 {
+		return None[Remote]()
 	}
-	return Remote(id)
+	return Some(Remote(id))
 }
 
 // Implementation of the fmt.Stringer interface.
@@ -21,8 +26,3 @@ const (
 	RemoteOrigin   = Remote("origin")
 	RemoteUpstream = Remote("upstream")
 )
-
-var AllRemotes = []Remote{ //nolint:gochecknoglobals
-	RemoteOrigin,
-	RemoteUpstream,
-}
