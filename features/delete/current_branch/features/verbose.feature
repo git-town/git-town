@@ -13,7 +13,6 @@ Feature: display all executed Git commands
       | other   | local, origin | other commit   |
     And the current branch is "current" and the previous branch is "other"
 
-  @this
   Scenario: result
     When I run "git-town delete --verbose"
     Then Git Town runs the commands
