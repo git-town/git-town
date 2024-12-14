@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/test/asserts"
+	"github.com/git-town/git-town/v16/test/git"
 	"github.com/shoenig/test/must"
 )
 
@@ -60,7 +61,7 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		remoteBranch := gitdomain.NewRemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
-		must.EqOp(t, "origin", remote)
+		must.EqOp(t, git.REMOTE_ORIGIN, remote)
 		must.EqOp(t, gitdomain.NewLocalBranchName("branch"), localBranch)
 	})
 

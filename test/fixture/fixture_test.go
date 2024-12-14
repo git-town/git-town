@@ -25,7 +25,7 @@ func TestFixture(t *testing.T) {
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
 		devRepo := cloned.DevRepo.GetOrPanic()
-		devRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
+		devRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), git.REMOTE_ORIGIN)
 	})
 
 	t.Run("Branches", func(t *testing.T) {
