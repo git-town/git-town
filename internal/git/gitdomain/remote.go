@@ -18,13 +18,11 @@ func (self Remote) String() string {
 }
 
 const (
-	RemoteNone     = Remote("")
 	RemoteOrigin   = Remote("origin")
 	RemoteUpstream = Remote("upstream")
 )
 
 var AllRemotes = []Remote{ //nolint:gochecknoglobals
-	RemoteNone,
 	RemoteOrigin,
 	RemoteUpstream,
 }
