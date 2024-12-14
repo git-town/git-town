@@ -36,8 +36,6 @@ Feature: change existing information in Git metadata
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -72,7 +70,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
-    And local Git Town setting "dev-remote" is now "origin"
+    And local Git Town setting "dev-remote" now doesn't exist
     And local Git Town setting "new-branch-type" is now "parked"
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
