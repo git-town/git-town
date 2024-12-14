@@ -30,7 +30,7 @@ func TestLocalBranchName(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
 		want := gitdomain.NewRemoteBranchName("origin/branch")
-		must.EqOp(t, want, branch.TrackingBranch())
+		must.EqOp(t, want, branch.TrackingBranch("origin"))
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {

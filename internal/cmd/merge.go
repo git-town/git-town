@@ -340,7 +340,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 
 func validateMergeData(data mergeData) error {
 	// ensure parent isn't deleted at remote
-	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch).Get()
+	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.parentBranch)
 	}
@@ -351,7 +351,7 @@ func validateMergeData(data mergeData) error {
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
 	// ensure branch isn't deleted at remote
-	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch).Get()
+	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasBranchInfo {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
 	}

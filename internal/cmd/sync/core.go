@@ -256,7 +256,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -319,7 +319,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if detached {
 		allBranchNamesToSync = validatedConfig.RemovePerennials(allBranchNamesToSync)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(allBranchNamesToSync...)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, allBranchNamesToSync...)
 	branchesToSync, err := BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
@@ -357,7 +357,7 @@ func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitd
 		if !hasParentName {
 			parentLocalName = mainBranch
 		}
-		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName).Get()
+		parentBranchInfo, hasParentBranchInfo := allBranchInfos.FindLocalOrRemote(parentLocalName, repo.UnvalidatedConfig.NormalConfig.DevRemote).Get()
 		if !hasParentBranchInfo {
 			result[b] = configdomain.BranchToSync{
 				BranchInfo:         branchInfo,

@@ -179,7 +179,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
@@ -212,7 +212,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err

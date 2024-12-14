@@ -16,7 +16,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	originalParentSHA := None[gitdomain.SHA]()
 	parentName, hasParentName := originalParentName.Get()
 	if hasParentName {
-		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}

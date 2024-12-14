@@ -210,7 +210,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return deleteData{
 		branchToDeleteInfo:       *branchToDelete,
 		branchToDeleteType:       branchTypeToDelete,

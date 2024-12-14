@@ -77,8 +77,9 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
+// TODO: rename to DevURL
 func (self *NormalConfig) OriginURL() Option[giturl.Parts] {
-	return self.RemoteURL(gitdomain.RemoteOrigin)
+	return self.RemoteURL(self.DevRemote)
 }
 
 // RemoteURL provides the URL for the given remote.

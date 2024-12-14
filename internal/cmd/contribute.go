@@ -69,7 +69,7 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = validateContributeData(data); err != nil {
+	if err = validateContributeData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
@@ -151,7 +151,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	}, err
 }
 
-func validateContributeData(data contributeData) error {
+func validateContributeData(data contributeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToMark {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
@@ -167,7 +167,7 @@ func validateContributeData(data contributeData) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

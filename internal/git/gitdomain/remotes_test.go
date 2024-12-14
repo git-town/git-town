@@ -14,7 +14,7 @@ func TestRemotes(t *testing.T) {
 		t.Parallel()
 		t.Run("origin remote exists", func(t *testing.T) {
 			t.Parallel()
-			remotes := gitdomain.Remotes{gitdomain.RemoteOrigin}
+			remotes := gitdomain.Remotes{"origin"}
 			must.True(t, remotes.HasOrigin())
 		})
 		t.Run("origin remote does not exist", func(t *testing.T) {
@@ -33,7 +33,7 @@ func TestRemotes(t *testing.T) {
 		})
 		t.Run("upstream remote does not exist", func(t *testing.T) {
 			t.Parallel()
-			remotes := gitdomain.Remotes{gitdomain.RemoteOrigin}
+			remotes := gitdomain.Remotes{"origin"}
 			must.False(t, remotes.HasUpstream())
 		})
 	})
