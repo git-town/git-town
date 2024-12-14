@@ -142,7 +142,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
-		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
+		builder.AddMany(originCommits, testgit.REMOTE_ORIGIN.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
 		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
@@ -213,7 +213,7 @@ func (self *Fixture) TagTable() datatable.DataTable {
 	builder.AddMany(localTags, "local")
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originTags := originRepo.Tags()
-		builder.AddMany(originTags, gitdomain.RemoteOrigin.String())
+		builder.AddMany(originTags, testgit.REMOTE_ORIGIN.String())
 	}
 	return builder.Table()
 }
@@ -246,7 +246,7 @@ func initializeWorkspace(repo *commands.TestCommands) {
 }
 
 func originRepoPath(rootDir string) string {
-	return filepath.Join(rootDir, gitdomain.RemoteOrigin.String())
+	return filepath.Join(rootDir, testgit.REMOTE_ORIGIN.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.

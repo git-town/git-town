@@ -156,7 +156,7 @@ func TestFixture(t *testing.T) {
 				FileName:    "local-origin.md",
 				Message:     "local-origin",
 			})
-			clonedDevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.RemoteOrigin)
+			clonedDevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), git.REMOTE_ORIGIN)
 			cloned.OriginRepo.GetOrPanic().CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
 				FileContent: "two",

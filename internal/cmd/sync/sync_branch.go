@@ -64,7 +64,7 @@ type BranchProgramArgs struct {
 // LocalBranchProgram provides the program to sync a local branch.
 func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
-	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
+	if isMainOrPerennialBranch && !args.Remotes.HasDev(args.Config.NormalConfig.DevRemote) {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
@@ -113,7 +113,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			trackingBranchName: branchInfo.RemoteName,
 		})
 	}
-	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
+	if args.PushBranches.IsTrue() && args.Remotes.HasDev(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})

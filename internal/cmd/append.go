@@ -259,7 +259,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if data.remotes.HasOrigin() && data.config.NormalConfig.ShouldPushNewBranches() && data.config.NormalConfig.IsOnline() {
+	if data.remotes.HasDev(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShouldPushNewBranches() && data.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{

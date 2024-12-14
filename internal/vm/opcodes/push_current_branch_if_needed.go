@@ -13,7 +13,7 @@ type PushCurrentBranchIfNeeded struct {
 }
 
 func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch)
+	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
 		return err
 	}

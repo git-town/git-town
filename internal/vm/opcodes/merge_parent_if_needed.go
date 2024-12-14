@@ -26,12 +26,12 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		if !hasParent {
 			break
 		}
-		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent).Get(); hasParentInfo {
+		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value.NormalConfig.DevRemote).Get(); hasParentInfo {
 			parentIsLocal := parentBranchInfo.LocalName.IsSome()
 			if parentIsLocal {
 				var parentToMerge gitdomain.BranchName
 				if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-					parentToMerge = parent.TrackingBranch().BranchName()
+					parentToMerge = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 				} else {
 					parentToMerge = parent.BranchName()
 				}

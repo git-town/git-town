@@ -305,7 +305,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		}
 	}
 	proposal, hasProposal := data.proposal.Get()
-	if data.remotes.HasOrigin() && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShouldPushNewBranches() || hasProposal) {
+	if data.remotes.HasDev(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShouldPushNewBranches() || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	connector, hasConnector := data.connector.Get()
