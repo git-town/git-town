@@ -32,7 +32,7 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("AtRemote", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.AtRemote(git.REMOTE_ORIGIN)
+		have := branch.AtRemote(git.RemoteOrigin)
 		want := gitdomain.NewRemoteBranchName("origin/branch")
 		must.EqOp(t, want, have)
 	})
@@ -149,7 +149,7 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("TrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.TrackingBranch(git.REMOTE_ORIGIN)
+		have := branch.TrackingBranch(git.RemoteOrigin)
 		want := gitdomain.NewRemoteBranchName("origin/branch")
 		must.EqOp(t, want, have)
 	})

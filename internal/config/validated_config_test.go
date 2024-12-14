@@ -94,7 +94,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.NormalConfig.RemoteURL(git.REMOTE_ORIGIN).Get()
+			have, has := repo.Config.NormalConfig.RemoteURL(git.RemoteOrigin).Get()
 			must.True(t, has)
 			must.EqOp(t, want, have)
 		}

@@ -80,8 +80,8 @@ func (self Memoized) CloneInto(dir string) Fixture {
 	devRepo := testruntime.New(developerDir, dir, binDir)
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	devRepo.MustRun("git", "remote", "remove", testgit.REMOTE_ORIGIN.String())
-	devRepo.AddRemote(testgit.REMOTE_ORIGIN, originDir)
+	devRepo.MustRun("git", "remote", "remove", testgit.RemoteOrigin.String())
+	devRepo.AddRemote(testgit.RemoteOrigin, originDir)
 	devRepo.Fetch()
 	// and connect the main branches again
 	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
