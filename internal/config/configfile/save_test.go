@@ -123,6 +123,9 @@ push-new-branches = false
 
 [hosting]
 
+# Which remote should Git Town use for development?
+#
+# Typically that's the "origin" remote.
 dev-remote = "fork"
 
 # Knowing the type of code hosting platform allows Git Town
@@ -261,6 +264,9 @@ push-new-branches = false
 
 [hosting]
 
+# Which remote should Git Town use for development?
+#
+# Typically that's the "origin" remote.
 dev-remote = "origin"
 
 # Knowing the type of code hosting platform allows Git Town
