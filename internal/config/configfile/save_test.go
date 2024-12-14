@@ -51,6 +51,7 @@ func TestSave(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
+					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 					HostingPlatform:          None[configdomain.HostingPlatform](),
@@ -121,6 +122,8 @@ new-branch-type = "prototype"
 push-new-branches = false
 
 [hosting]
+
+dev-remote = "fork"
 
 # Knowing the type of code hosting platform allows Git Town
 # to open browser URLs and talk to the code hosting API.
@@ -257,6 +260,8 @@ new-branch-type = "feature"
 push-new-branches = false
 
 [hosting]
+
+dev-remote = "origin"
 
 # Knowing the type of code hosting platform allows Git Town
 # to open browser URLs and talk to the code hosting API.
