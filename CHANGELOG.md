@@ -2,7 +2,7 @@
 
 ## 17.0.0 (2024-12-16)
 
-Git Town v17 modernizes some outdated concepts that were already documented. As always with major new Git Town releases, all changes are backwards compatible, so Git Town users don't need to change anything. The major version bump is merely a signal that you might need to updates some of your own tooling around Git Town.
+Git Town v17 modernizes some outdated concepts that were already documented. As always with major new Git Town releases, all changes are backwards compatible, so Git Town users don't need to change anything. The major version bump is merely a signal that you might need to update some of your own tooling around Git Town.
 
 #### BREAKING CHANGES
 
