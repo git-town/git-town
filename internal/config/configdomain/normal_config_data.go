@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -190,8 +189,6 @@ func (self *NormalConfigData) SetByKey(key Key, value string) {
 	case KeySyncPrototypeStrategy:
 	case KeySyncTags:
 	case KeySyncUpstream:
-	default:
-		panic(fmt.Sprintf("unexpected configdomain.Key: %#v", key))
 	}
 }
 
