@@ -1,6 +1,6 @@
 package opcodes
 
-import "github.com/git-town/git-town/v16/internal/vm/shared"
+import "github.com/git-town/git-town/v17/internal/vm/shared"
 
 // RebaseAbort represents aborting on ongoing merge conflict.
 // This opcode is used in the abort scripts for Git Town commands.

@@ -1,10 +1,10 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/gohacks/mapstools"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/gohacks/mapstools"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.

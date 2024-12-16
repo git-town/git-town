@@ -1,8 +1,8 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 )
 
 // PerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.

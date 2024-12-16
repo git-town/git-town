@@ -3,8 +3,8 @@ package list_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 
