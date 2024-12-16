@@ -114,11 +114,12 @@ func (self *Fixture) Branches() datatable.DataTable {
 	}
 	originBranches := asserts.NoError1(originRepo.LocalBranches())
 	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	originName := self.DevRepo.Value.Config.NormalConfig.DevRemote.String()
 	if localBranchesJoined == originBranchesJoined {
-		result.AddRow("local, origin", localBranchesJoined)
+		result.AddRow("local, "+originName, localBranchesJoined)
 	} else {
 		result.AddRow("local", localBranchesJoined)
-		result.AddRow("origin", originBranchesJoined)
+		result.AddRow(originName, originBranchesJoined)
 	}
 	return result
 }
