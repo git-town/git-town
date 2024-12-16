@@ -1,6 +1,6 @@
 Feature: sync a branch to a custom dev-remote
 
-  Background: I fetch updates while resolving merge conflicts
+  Background:
     Given a Git repo with origin
     And I rename the "origin" remote to "fork"
     And Git Town setting "dev-remote" is "fork"
