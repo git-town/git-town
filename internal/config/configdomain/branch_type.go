@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 type BranchType int

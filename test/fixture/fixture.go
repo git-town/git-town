@@ -7,17 +7,17 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/asserts"
-	"github.com/git-town/git-town/v16/test/commands"
-	"github.com/git-town/git-town/v16/test/datatable"
-	testgit "github.com/git-town/git-town/v16/test/git"
-	"github.com/git-town/git-town/v16/test/helpers"
-	"github.com/git-town/git-town/v16/test/subshell"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
+	"github.com/git-town/git-town/v17/test/commands"
+	"github.com/git-town/git-town/v17/test/datatable"
+	testgit "github.com/git-town/git-town/v17/test/git"
+	"github.com/git-town/git-town/v17/test/helpers"
+	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.

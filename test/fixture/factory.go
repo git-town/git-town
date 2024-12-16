@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v16/test/filesystem"
-	"github.com/git-town/git-town/v16/test/helpers"
+	"github.com/git-town/git-town/v17/test/filesystem"
+	"github.com/git-town/git-town/v17/test/helpers"
 )
 
 // Factory manages the Git setup for the entire test suite.

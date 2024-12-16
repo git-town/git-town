@@ -2,7 +2,7 @@ RTA_VERSION = 0.8.1  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "16.7.0"
+RELEASE_VERSION := "17.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
@@ -15,7 +15,7 @@ cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v16/internal/cmd.version=-dev -X github.com/git-town/git-town/v16/internal/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v17/internal/cmd.version=-dev -X github.com/git-town/git-town/v17/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: install  # creates a flamegraph for the end-to-end tests
@@ -78,7 +78,7 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
-# @tools/rta ireturn --reject="github.com/git-town/git-town/v16/pkg/prelude.Option" github.com/git-town/git-town/...
+# @tools/rta ireturn --reject="github.com/git-town/git-town/v17/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
@@ -133,7 +133,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
-	@tools/rta deadcode -test github.com/git-town/git-town/v16 | grep -v BranchExists \
+	@tools/rta deadcode -test github.com/git-town/git-town/v17 | grep -v BranchExists \
 	                                                           | grep -v 'Create$$' \
 	                                                           | grep -v CreateFile \
 	                                                           | grep -v CreateGitTown \

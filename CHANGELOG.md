@@ -1,5 +1,34 @@
 # Git Town Changelog
 
+## 17.0.0 (2024-12-16)
+
+Git Town v17 modernizes some outdated concepts that were already documented. As always with major new Git Town releases, all changes are backwards compatible, so Git Town users don't need to change anything. The major version bump is merely a signal that you might need to update some of your own tooling around Git Town.
+
+#### BREAKING CHANGES
+
+- The configuration setting `create-prototype-branches` gets generalized into `new-branch-type`, which allows giving new branches all available branch types ([#3913](https://github.com/git-town/git-town/issues/3913)).
+- The output of `git town config` now displays data organized in more sections ([#3866](https://github.com/git-town/git-town/issues/3866)).
+- The config file gets generated without comments now, improving its readability ([#4335](https://github.com/git-town/git-town/pull/4335))
+- The output of `git town config` now indicates more precisely whether an configuration setting is not provided or empty ([#4265](https://github.com/git-town/git-town/pull/4265)).
+
+#### New Features
+
+- When removing a branch, `git town sync` and `git town delete` now also remove the changes of those branches from their descendents ([#4189](https://github.com/git-town/git-town/issues/4189)).
+- `git town set-parent` now also removes the changes from former parent branches ([#3473](https://github.com/git-town/git-town/issues/3473)).
+- Git Town can now auto-resolve merge conflicts that include deleted files ([#4289](https://github.com/git-town/git-town/pull/4289)).
+- The name of the Git remote used for development is now configurable ([#4165](https://github.com/git-town/git-town/issues/4165)).
+- The setup assistant (`git town config setup`) now asks for the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
+- `git town config` now displays the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
+
+#### Bug Fixes
+
+- Git Town no longer pops up the editor when continuing a command that got stuck in a rebase in certain situations ([#4285](https://github.com/git-town/git-town/pull/4285)).
+- Now only updates Git aliases when auto-updating of outdated configuration entries that aren't Git Town settings ([#4304](https://github.com/git-town/git-town/pull/4304)).
+
+#### Contributors
+
+Shoutout to @Crocmagnon, @WhosNickDoglio, @alphatroya, @avaz, @erik-rw, @kevgo, @koppor, @matthewgonzalez, @mklauer, @nishchay-manwani-glean, @pandvan, @ruudk, @sheldonhull, @smaldored, @stephenwade for contributing feedback, ideas, documentation, and code to 70 shipped PRs and 13 resolved issues!
+
 ## 16.7.0 (2024-11-30)
 
 #### New Features

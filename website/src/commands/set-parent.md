@@ -2,8 +2,9 @@
 
 > _git town set-parent_
 
-The _set-parent_ command changes the parent branch for the current branch and
-updates associated proposals. You select the new parent through a visual dialog.
+The _set-parent_ command changes the parent branch for the current branch. You
+select the new parent through a visual dialog. Updates associated proposals and
+removes commits from former parent branches.
 
 Since set-parent changes commits, you are strongly advised to sync your branches
 before running this command.

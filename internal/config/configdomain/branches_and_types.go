@@ -3,7 +3,7 @@ package configdomain
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"golang.org/x/exp/maps"
 )
 

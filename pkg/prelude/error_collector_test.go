@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	. "github.com/git-town/git-town/v16/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

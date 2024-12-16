@@ -1,7 +1,7 @@
 // Package optimizer optimizes VM programs.
 package optimizer
 
-import "github.com/git-town/git-town/v16/internal/vm/program"
+import "github.com/git-town/git-town/v17/internal/vm/program"
 
 // Optimize improves the performance of the given program by re-arranging its opcodes.
 // It doesn't change the behavior of the program.

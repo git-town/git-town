@@ -3,7 +3,7 @@ package print
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
 )
 
 // The Logger logger logs activities of a particular component on the CLI.

@@ -3,7 +3,7 @@ package configdomain
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 )
 
 // ValidatedConfigData is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
