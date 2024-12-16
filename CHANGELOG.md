@@ -2,6 +2,8 @@
 
 ## 17.0.0 (2024-12-16)
 
+Git Town v17 modernizes some outdated concepts. As always with major new Git Town releases, everything auto-updates, so Git Town users don't need to change anything. The major version is only a signal.
+
 #### BREAKING CHANGES
 
 - The configuration setting `create-prototype-branches` gets generalized into `new-branch-type`, which allows giving new branches all available branch types ([#3913](https://github.com/git-town/git-town/issues/3913)).
