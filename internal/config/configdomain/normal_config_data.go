@@ -188,7 +188,6 @@ func (self *NormalConfigData) SetByKey(key Key, value string) {
 	case KeySyncFeatureStrategy:
 	case KeySyncPerennialStrategy:
 	case KeySyncPrototypeStrategy:
-	case KeySyncStrategy:
 	case KeySyncTags:
 	case KeySyncUpstream:
 	default:

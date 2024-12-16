@@ -34,7 +34,6 @@ Feature: ship to a custom dev remote
       | main   | local, fork | feature done |
     And no lineage exists now
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
