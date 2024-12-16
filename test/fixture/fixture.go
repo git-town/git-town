@@ -142,7 +142,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
-		builder.AddMany(originCommits, testgit.RemoteOrigin.String())
+		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
 		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)

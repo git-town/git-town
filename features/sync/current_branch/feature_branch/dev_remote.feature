@@ -28,8 +28,8 @@ Feature: sync a branch to a custom dev-remote
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, branch |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE |
-      | branch | local, origin | commit  |
+      | BRANCH | LOCATION    | MESSAGE |
+      | branch | local, fork | commit  |
 
   Scenario: undo
     When I run "git-town undo"
