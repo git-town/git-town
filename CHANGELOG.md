@@ -4,14 +4,24 @@
 
 #### BREAKING CHANGES
 
+- The configuration setting `create-prototype-branches` gets generalized into `new-branch-type`, which allows giving new branches all available branch types ([#3913](https://github.com/git-town/git-town/issues/3913)).
 - The output of `git town config` now displays data organized in more sections ([#3866](https://github.com/git-town/git-town/issues/3866)).
+- The config file gets generated without comments now, improving its readability ([#4335](https://github.com/git-town/git-town/pull/4335))
+- The output of `git town config` now indicates more precisely whether an configuration setting is not provided or empty ([#4265](https://github.com/git-town/git-town/pull/4265)).
 
 #### New Features
 
+- `git town sync` and `git town delete` now remove the changes of branches that get removed from all their descendents ([#4189](https://github.com/git-town/git-town/issues/4189)).
+- `git town set-parent` now removes the changes from the branches that are no longer parent branches ([#3473](https://github.com/git-town/git-town/issues/3473)).
+- Git Town can now auto-resolve merge conflicts that include deleted files ([#4289](https://github.com/git-town/git-town/pull/4289)).
 - The name of the Git remote used for development is now configurable ([#4165](https://github.com/git-town/git-town/issues/4165)).
 - The setup assistant (`git town config setup`) now asks for the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
 - `git town config` now displays the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
 
+#### Bug Fixes
+
+- Git Town no longer pops up the editor when continuing a command that got stuck in a rebase ([#4285](https://github.com/git-town/git-town/pull/4285)).
+- Now only updates Git aliases when auto-updating of outdated configuration entries that aren't Git Town settings ([#4304](https://github.com/git-town/git-town/pull/4304)).
 
 ## 16.7.0 (2024-11-30)
 
