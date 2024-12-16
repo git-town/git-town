@@ -1,5 +1,18 @@
 # Git Town Changelog
 
+## 17.0.0 (2024-12-16)
+
+#### BREAKING CHANGES
+
+- The output of `git town config` now displays data organized in more sections ([#3866](https://github.com/git-town/git-town/issues/3866)).
+
+#### New Features
+
+- The name of the Git remote used for development is now configurable ([#4165](https://github.com/git-town/git-town/issues/4165)).
+- The setup assistant (`git town config setup`) now asks for the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
+- `git town config` now displays the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
+
+
 ## 16.7.0 (2024-11-30)
 
 #### New Features
