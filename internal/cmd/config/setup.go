@@ -106,8 +106,8 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	if originURL, hasOriginURL := config.NormalConfig.OriginURL().Get(); hasOriginURL {
-		return hosting.Detect(originURL, userChoice)
+	if devURL, hasDevURL := config.NormalConfig.DevURL().Get(); hasDevURL {
+		return hosting.Detect(devURL, userChoice)
 	}
 	return None[configdomain.HostingPlatform]()
 }
