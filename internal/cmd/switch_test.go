@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/regexes"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/test/git"
 	"github.com/shoenig/test/must"
 )
 
@@ -167,11 +168,11 @@ func TestSwitchBranch(t *testing.T) {
 					grandchild: child,
 				})
 				branchInfos := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
+					gitdomain.BranchInfo{RemoteName: Some(child.AtRemote(git.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusRemoteOnly},
 					gitdomain.BranchInfo{LocalName: Some(grandchild), SyncStatus: gitdomain.SyncStatusLocalOnly},
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusLocalOnly},
-					gitdomain.BranchInfo{LocalName: Some(grandchild), RemoteName: Some(grandchild.AtRemote(gitdomain.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusUpToDate},
+					gitdomain.BranchInfo{LocalName: None[gitdomain.LocalBranchName](), RemoteName: Some(child.AtRemote(git.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusLocalOnly},
+					gitdomain.BranchInfo{LocalName: Some(grandchild), RemoteName: Some(grandchild.AtRemote(git.RemoteOrigin)), SyncStatus: gitdomain.SyncStatusUpToDate},
 				}
 				branchTypes := []configdomain.BranchType{}
 				branchesAndTypes := configdomain.BranchesAndTypes{}

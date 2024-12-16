@@ -240,7 +240,7 @@ func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, linea
 			return Some(parent.BranchName())
 		}
 		if self.BranchExistsRemotely(self, parent) {
-			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
+			return Some(parent.AtRemote(git.RemoteOrigin).BranchName())
 		}
 		branch = parent
 	}
@@ -448,6 +448,11 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 	asserts.NoError(os.RemoveAll(fullPath))
 	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "COMMIT_EDITMSG"))
 	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "description"))
+}
+
+func (self *TestCommands) RenameRemote(oldName, newName string) {
+	self.RemotesCache.Invalidate()
+	self.MustRun("git", "remote", "rename", oldName, newName)
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.

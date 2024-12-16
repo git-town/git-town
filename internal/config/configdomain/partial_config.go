@@ -14,6 +14,7 @@ type PartialConfig struct {
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        Option[BranchType]
+	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
@@ -92,6 +93,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,
+		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
@@ -134,6 +136,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
+		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
@@ -173,6 +176,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
+		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
 		FeatureRegex:             self.FeatureRegex,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,

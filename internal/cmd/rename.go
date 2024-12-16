@@ -190,7 +190,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if !hasOldBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -230,12 +230,12 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,

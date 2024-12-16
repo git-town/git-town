@@ -52,6 +52,7 @@
   - [contribution-regex](preferences/contribution-regex.md)
   - [create-prototype-branches](preferences/create-prototype-branches.md)
   - [default-branch-type](preferences/default-branch-type.md)
+  - [dev-remote](preferences/dev-remote.md)
   - [feature-regex](preferences/feature-regex.md)
   - [gitea-token](preferences/gitea-token.md)
   - [github-token](preferences/github-token.md)

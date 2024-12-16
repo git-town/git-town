@@ -24,7 +24,7 @@ func BranchesToMark(args []string, branchesSnapshot gitdomain.BranchesSnapshot, 
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToMark.Add(branch, &config)
-		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch()).Get()
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch(config.NormalConfig.DevRemote)).Get()
 		if hasBranchInfo && branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			branchToCheckout = Some(branch)
 		} else {

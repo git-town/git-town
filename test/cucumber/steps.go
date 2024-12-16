@@ -146,7 +146,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if helpers.HasTag(scenarioTags, "@debug") {
 			devRepo.Verbose = true
 		}
-		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
+		devRepo.RemoveRemote(git.RemoteOrigin)
 		fixture.OriginRepo = MutableNone[commands.TestCommands]()
 		state := ScenarioState{
 			fixture:              fixture,
@@ -586,6 +586,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
 		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
+		devRepo.Config.NormalConfig.SetByKey(key, value)
 		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, key, value)
 	})
 
@@ -733,6 +734,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Config.Reload()
+	})
+
+	sc.Step(`^I rename the "([^"]+)" remote to "([^"]+)"$`, func(ctx context.Context, oldName, newName string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.RenameRemote(oldName, newName)
 	})
 
 	sc.Step(`^I resolve the conflict in "([^"]*)" in the other worktree$`, func(ctx context.Context, filename string) {
@@ -1074,7 +1081,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			if len(branchSetup.Locations) > 1 {
 				switch {
 				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
-					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
+					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, git.RemoteOrigin)
 				default:
 					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
 				}
@@ -1216,7 +1223,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			coworkerRepo.StageFiles(commit.FileName)
 			coworkerRepo.CommitStagedChanges(commit.Message)
 		}
-		coworkerRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+		coworkerRepo.PushBranchToRemote(branch, git.RemoteOrigin)
 	})
 
 	sc.Step(`^the coworker pushes these commits to the "([^"]+)" branch$`, func(ctx context.Context, branchName string, table *godog.Table) {

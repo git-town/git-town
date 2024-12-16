@@ -62,7 +62,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = validateParkData(data); err != nil {
+	if err = validateParkData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
@@ -141,7 +141,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	}, err
 }
 
-func validateParkData(data parkData) error {
+func validateParkData(data parkData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToPark {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
@@ -157,7 +157,7 @@ func validateParkData(data parkData) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

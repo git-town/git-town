@@ -26,7 +26,7 @@ func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
 	if parentIsLocal {
 		target = parent.BranchName()
 	} else {
-		target = parent.TrackingBranch().BranchName()
+		target = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 	}
 	args.PrependOpcodes(&BranchReset{Target: target})
 	return nil

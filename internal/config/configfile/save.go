@@ -36,6 +36,8 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushNewBranchesHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("push-new-branches = %t\n", config.NormalConfig.PushNewBranches))
 	result.WriteString("\n[hosting]\n\n")
+	result.WriteString(TOMLComment(strings.TrimSpace(dialog.DevRemoteHelp)) + "\n")
+	result.WriteString(fmt.Sprintf("dev-remote = %q\n\n", config.NormalConfig.DevRemote.String()))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp)) + "\n")
 	if platform, has := config.NormalConfig.HostingPlatform.Get(); has {
 		result.WriteString(fmt.Sprintf("platform = %q\n\n", platform))

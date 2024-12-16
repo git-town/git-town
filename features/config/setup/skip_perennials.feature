@@ -13,6 +13,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | perennial regex             | enter      |                                             |
       | default branch type         | enter      |                                             |
       | feature regex               | enter      |                                             |
+      | dev-remote                  | enter      |                                             |
       | hosting platform            | enter      |                                             |
       | origin hostname             | enter      |                                             |
       | sync-feature-strategy       | enter      |                                             |

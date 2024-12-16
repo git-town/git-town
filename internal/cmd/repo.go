@@ -68,7 +68,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	if len(args) > 0 {
 		remoteOpt = gitdomain.NewRemote(args[0])
 	} else {
-		remoteOpt = Some(gitdomain.RemoteOrigin)
+		remoteOpt = Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
 	}
 	remote, hasRemote := remoteOpt.Get()
 	if !hasRemote {

@@ -60,7 +60,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = validatePrototypeData(data); err != nil {
+	if err = validatePrototypeData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToPrototype.Keys()
@@ -139,9 +139,9 @@ func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototy
 	}, err
 }
 
-func validatePrototypeData(data prototypeData) error {
+func validatePrototypeData(data prototypeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToPrototype {
-		if !data.branchInfos.HasLocalBranch(branchName) && !data.branchInfos.HasMatchingTrackingBranchFor(branchName) {
+		if !data.branchInfos.HasLocalBranch(branchName) && !data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

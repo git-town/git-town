@@ -15,8 +15,12 @@ func NewRemotes(remotes ...string) Remotes {
 	return result
 }
 
-func (self Remotes) HasOrigin() bool {
-	return slices.Contains(self, RemoteOrigin)
+func (self Remotes) Contains(remote Remote) bool {
+	return slices.Contains(self, remote)
+}
+
+func (self Remotes) HasDev(devRemote Remote) bool {
+	return self.Contains(devRemote)
 }
 
 func (self Remotes) HasUpstream() bool {

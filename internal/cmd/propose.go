@@ -207,7 +207,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -256,7 +256,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err

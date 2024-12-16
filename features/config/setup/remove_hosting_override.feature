@@ -13,6 +13,7 @@ Feature: remove an existing code hosting override
       | perennial regex             | enter          |                                             |
       | default branch type         | enter          |                                             |
       | feature regex               | enter          |                                             |
+      | dev-remote                  | enter          |                                             |
       | hosting platform            | up up up enter |                                             |
       | origin hostname             | enter          |                                             |
       | sync-feature-strategy       | enter          |                                             |

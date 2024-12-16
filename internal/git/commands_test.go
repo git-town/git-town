@@ -183,7 +183,7 @@ func TestBackendCommands(t *testing.T) {
 			main := gitdomain.NewLocalBranchName("main")
 			repo.CheckoutBranch(main)
 			repo.CreateAndCheckoutFeatureBranch(branch, main.Location())
-			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+			repo.PushBranchToRemote(branch, testgit.RemoteOrigin)
 			have := repo.CurrentBranchHasTrackingBranch(repo)
 			must.True(t, have)
 		})
@@ -397,11 +397,11 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file_3",
 				Message:  "commit message 3",
 			})
-			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
+			repo.PushBranchToRemote(branch, testgit.RemoteOrigin)
 			repo.CheckoutBranch(main.LocalBranchName())
 			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
 			must.NoError(t, err)
-			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.BranchName())
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch(testgit.RemoteOrigin).BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
@@ -1026,10 +1026,10 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		runtime.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
+		runtime.AddRemote(testgit.RemoteOrigin, origin.WorkingDir)
 		remotes, err := runtime.Commands.Remotes(runtime.TestRunner)
 		must.NoError(t, err)
-		must.Eq(t, gitdomain.Remotes{gitdomain.RemoteOrigin}, remotes)
+		must.Eq(t, gitdomain.Remotes{testgit.RemoteOrigin}, remotes)
 	})
 
 	t.Run("RootDirectory", func(t *testing.T) {
@@ -1065,9 +1065,9 @@ func TestBackendCommands(t *testing.T) {
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
 			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
-			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", testgit.RemoteOrigin, false)
 			must.NoError(t, err)
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", testgit.RemoteOrigin)
 			must.NoError(t, err)
 			must.False(t, shouldPush)
 		})
@@ -1077,7 +1077,7 @@ func TestBackendCommands(t *testing.T) {
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
 			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
-			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", testgit.RemoteOrigin, false)
 			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
 				Branch:      "branch",
@@ -1085,7 +1085,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "local_file",
 				Message:     "add local file",
 			})
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", testgit.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -1095,7 +1095,7 @@ func TestBackendCommands(t *testing.T) {
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
 			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
-			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", testgit.RemoteOrigin, false)
 			must.NoError(t, err)
 			origin.CreateCommit(testgit.Commit{
 				Branch:      "branch",
@@ -1104,7 +1104,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", testgit.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -1114,7 +1114,7 @@ func TestBackendCommands(t *testing.T) {
 			local := testruntime.Clone(origin.TestRunner, t.TempDir())
 			err := local.CreateAndCheckoutBranch(local.TestRunner, "branch")
 			must.NoError(t, err)
-			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
+			err = local.CreateTrackingBranch(local.TestRunner, "branch", testgit.RemoteOrigin, false)
 			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
 				Branch:      "branch",
@@ -1129,7 +1129,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", testgit.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})

@@ -10,6 +10,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "perennial-regex" is "release-.*"
     And local Git Town setting "feature-regex" is "user-.*"
     And local Git Town setting "default-branch-type" is "observed"
+    And local Git Town setting "dev-remote" is "fork"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "new-branch-type" is "prototype"
@@ -28,6 +29,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | perennial regex                           | enter |
       | default branch type                       | enter |
       | feature regex                             | enter |
+      | dev-remote                                | enter |
       | hosting service                           | enter |
       | origin hostname                           | enter |
       | sync-feature-strategy                     | enter |
@@ -110,6 +112,11 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [hosting]
 
+      # Which remote should Git Town use for development?
+      #
+      # Typically that's the "origin" remote.
+      dev-remote = "origin"
+
       # Knowing the type of code hosting platform allows Git Town
       # to open browser URLs and talk to the code hosting API.
       # Most people can leave this on "auto-detect".
@@ -187,6 +194,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is now "main"
+    And local Git Town setting "dev-remote" is now "fork"
     And local Git Town setting "new-branch-type" is now "prototype"
     And local Git Town setting "perennial-regex" is now "release-.*"
     And local Git Town setting "feature-regex" is now "user-.*"

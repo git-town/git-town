@@ -72,6 +72,7 @@ const (
 	KeyDeprecatedPushVerify                = Key("git-town.push-verify")
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
+	KeyDevRemote                           = Key("git-town.dev-remote")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
@@ -122,6 +123,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
 	KeyDeprecatedSyncStrategy,
+	KeyDevRemote,
 	KeyFeatureRegex,
 	KeyGiteaToken,
 	KeyGithubToken,

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
 	"github.com/git-town/git-town/v16/internal/git/giturl"
 	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v16/test/git"
 	"github.com/git-town/git-town/v16/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -93,7 +94,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.NormalConfig.RemoteURL(gitdomain.RemoteOrigin).Get()
+			have, has := repo.Config.NormalConfig.RemoteURL(git.RemoteOrigin).Get()
 			must.True(t, has)
 			must.EqOp(t, want, have)
 		}

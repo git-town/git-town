@@ -68,7 +68,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validateObserveData(data)
+	err = validateObserveData(data, repo)
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	}, err
 }
 
-func validateObserveData(data observeData) error {
+func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToObserve {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
@@ -167,7 +167,7 @@ func validateObserveData(data observeData) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

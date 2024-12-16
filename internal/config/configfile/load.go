@@ -45,6 +45,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var err error
 	var contributionRegex Option[configdomain.ContributionRegex]
 	var defaultBranchType Option[configdomain.BranchType]
+	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var hostingPlatform Option[configdomain.HostingPlatform]
@@ -144,6 +145,9 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Hosting != nil {
+		if data.Hosting.DevRemote != nil {
+			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
+		}
 		if data.Hosting.Platform != nil {
 			hostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
 			if err != nil {
@@ -218,6 +222,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,
+		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		GitHubToken:              None[configdomain.GitHubToken](),
 		GitLabToken:              None[configdomain.GitLabToken](),

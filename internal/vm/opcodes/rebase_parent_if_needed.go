@@ -26,7 +26,7 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		if parentIsLocal {
 			var branchToRebase gitdomain.BranchName
 			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				branchToRebase = parent.TrackingBranch().BranchName()
+				branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 			} else {
 				branchToRebase = parent.BranchName()
 			}
@@ -36,7 +36,7 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-		parentTrackingName := parent.AtRemote(gitdomain.RemoteOrigin)
+		parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
 		program = append(program, &RebaseBranch{
 			Branch: parentTrackingName.BranchName(),
 		})

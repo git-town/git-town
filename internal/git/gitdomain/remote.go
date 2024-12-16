@@ -23,6 +23,5 @@ func (self Remote) String() string {
 }
 
 const (
-	RemoteOrigin   = Remote("origin")
 	RemoteUpstream = Remote("upstream")
 )

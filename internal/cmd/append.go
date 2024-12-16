@@ -179,7 +179,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
@@ -187,7 +187,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -212,7 +212,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
 	}
-	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(branchNamesToSync...)
+	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
@@ -259,7 +259,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if data.remotes.HasOrigin() && data.config.NormalConfig.ShouldPushNewBranches() && data.config.NormalConfig.IsOnline() {
+	if data.remotes.HasDev(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShouldPushNewBranches() && data.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{

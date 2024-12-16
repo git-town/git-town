@@ -114,11 +114,12 @@ func (self *Fixture) Branches() datatable.DataTable {
 	}
 	originBranches := asserts.NoError1(originRepo.LocalBranches())
 	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	originName := self.DevRepo.Value.Config.NormalConfig.DevRemote.String()
 	if localBranchesJoined == originBranchesJoined {
-		result.AddRow("local, origin", localBranchesJoined)
+		result.AddRow("local, "+originName, localBranchesJoined)
 	} else {
 		result.AddRow("local", localBranchesJoined)
-		result.AddRow("origin", originBranchesJoined)
+		result.AddRow(originName, originBranchesJoined)
 	}
 	return result
 }
@@ -142,7 +143,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
-		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
+		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
 		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
@@ -213,7 +214,7 @@ func (self *Fixture) TagTable() datatable.DataTable {
 	builder.AddMany(localTags, "local")
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originTags := originRepo.Tags()
-		builder.AddMany(originTags, gitdomain.RemoteOrigin.String())
+		builder.AddMany(originTags, testgit.RemoteOrigin.String())
 	}
 	return builder.Table()
 }
@@ -246,7 +247,7 @@ func initializeWorkspace(repo *commands.TestCommands) {
 }
 
 func originRepoPath(rootDir string) string {
-	return filepath.Join(rootDir, gitdomain.RemoteOrigin.String())
+	return filepath.Join(rootDir, testgit.RemoteOrigin.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.
