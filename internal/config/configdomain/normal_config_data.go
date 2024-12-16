@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v16/internal/git/gitdomain"
@@ -123,6 +124,76 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 		return BranchTypeObservedBranch
 	}
 	return self.DefaultBranchType
+}
+
+func (self *NormalConfigData) SetByKey(key Key, value string) {
+	switch key {
+	case KeyDevRemote:
+		self.DevRemote = gitdomain.Remote(value)
+	case KeyAliasAppend:
+	case KeyAliasCompress:
+	case KeyAliasContribute:
+	case KeyAliasDelete:
+	case KeyAliasDiffParent:
+	case KeyAliasHack:
+	case KeyAliasObserve:
+	case KeyAliasPark:
+	case KeyAliasPrepend:
+	case KeyAliasPropose:
+	case KeyAliasRename:
+	case KeyAliasRepo:
+	case KeyAliasSetParent:
+	case KeyAliasShip:
+	case KeyAliasSync:
+	case KeyBitbucketAppPassword:
+	case KeyBitbucketUsername:
+	case KeyContributionBranches:
+	case KeyContributionRegex:
+	case KeyDefaultBranchType:
+	case KeyDeprecatedAliasKill:
+	case KeyDeprecatedAliasRenameBranch:
+	case KeyDeprecatedCodeHostingDriver:
+	case KeyDeprecatedCodeHostingOriginHostname:
+	case KeyDeprecatedCodeHostingPlatform:
+	case KeyDeprecatedCreatePrototypeBranches:
+	case KeyDeprecatedMainBranchName:
+	case KeyDeprecatedNewBranchPushFlag:
+	case KeyDeprecatedPerennialBranchNames:
+	case KeyDeprecatedPullBranchStrategy:
+	case KeyDeprecatedPushVerify:
+	case KeyDeprecatedShipDeleteRemoteBranch:
+	case KeyDeprecatedSyncStrategy:
+	case KeyFeatureRegex:
+	case KeyGitUserEmail:
+	case KeyGitUserName:
+	case KeyGiteaToken:
+	case KeyGithubToken:
+	case KeyGitlabToken:
+	case KeyHostingOriginHostname:
+	case KeyHostingPlatform:
+	case KeyMainBranch:
+	case KeyNewBranchType:
+	case KeyObservedBranches:
+	case KeyObservedRegex:
+	case KeyObsoleteSyncBeforeShip:
+	case KeyOffline:
+	case KeyParkedBranches:
+	case KeyPerennialBranches:
+	case KeyPerennialRegex:
+	case KeyPrototypeBranches:
+	case KeyPushHook:
+	case KeyPushNewBranches:
+	case KeyShipDeleteTrackingBranch:
+	case KeyShipStrategy:
+	case KeySyncFeatureStrategy:
+	case KeySyncPerennialStrategy:
+	case KeySyncPrototypeStrategy:
+	case KeySyncStrategy:
+	case KeySyncTags:
+	case KeySyncUpstream:
+	default:
+		panic(fmt.Sprintf("unexpected configdomain.Key: %#v", key))
+	}
 }
 
 func (self *NormalConfigData) ShouldPushNewBranches() bool {

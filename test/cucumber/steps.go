@@ -586,6 +586,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unknown config key: %q", name)
 		}
 		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
+		devRepo.Config.NormalConfig.SetByKey(key, value)
 		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, key, value)
 	})
 
@@ -1358,8 +1359,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		// verify initial branches
 		currentBranches := state.fixture.Branches()
 		initialBranches := state.initialBranches.GetOrPanic()
-		// fmt.Printf("\nINITIAL:\n%s\n", initialBranches.String())
-		// fmt.Printf("NOW:\n%s\n", currentBranches.String())
+		fmt.Println("11111111111111111111111111111111111111111111111111")
+		fmt.Printf("\nINITIAL:\n%s\n", initialBranches.String())
+		fmt.Printf("NOW:\n%s\n", currentBranches.String())
 		diff, errorCount := currentBranches.EqualDataTable(initialBranches)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)

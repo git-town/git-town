@@ -31,7 +31,6 @@ Feature: sync a branch to a custom dev-remote
       | BRANCH | LOCATION    | MESSAGE |
       | branch | local, fork | commit  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands

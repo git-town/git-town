@@ -27,13 +27,14 @@ Feature: ship to a custom dev remote
       |         | git branch -D feature           |
     And the current branch is now "main"
     And the branches are now
-      | REPOSITORY    | BRANCHES |
-      | local, origin | main     |
+      | REPOSITORY  | BRANCHES |
+      | local, fork | main     |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, origin | feature done |
+      | BRANCH | LOCATION    | MESSAGE      |
+      | main   | local, fork | feature done |
     And no lineage exists now
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -41,12 +42,12 @@ Feature: ship to a custom dev remote
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git push -u origin feature                    |
+      |        | git push -u fork feature                      |
       |        | git checkout feature                          |
     And the current branch is now "feature"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, origin | feature done          |
-      |         |               | Revert "feature done" |
-      | feature | local, origin | feature commit        |
+      | BRANCH  | LOCATION    | MESSAGE               |
+      | main    | local, fork | feature done          |
+      |         |             | Revert "feature done" |
+      | feature | local, fork | feature commit        |
     And the initial branches and lineage exist now
