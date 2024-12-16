@@ -16,7 +16,7 @@ This guide is for maintainers who make releases of Git Town.
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
     - update `github.com/git-town/git-town/v17/` everywhere in this repo
-    - update `github.com/git-town/git-town/v16` (without trailing slash)
+    - update `github.com/git-town/git-town/v17` (without trailing slash)
 - ship the branch
 - `git sync --all && git checkout public && git merge main && git push && git checkout main && git branch -d public`
 - wait for Netlify to publish the website:
