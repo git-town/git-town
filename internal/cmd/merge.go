@@ -174,7 +174,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return mergeData{}, false, err
 	}
@@ -267,7 +267,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	if data.parentBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
 		sync.FeatureTrackingBranchProgram(
-			data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
+			data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
 			data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 			sync.FeatureTrackingArgs{
 				FirstCommitMessage: data.parentBranchFirstCommitMessage,
@@ -325,7 +325,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	})
 	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsFalse() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
-			Branch: data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
+			Branch: data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -340,7 +340,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 
 func validateMergeData(data mergeData) error {
 	// ensure parent isn't deleted at remote
-	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch).Get()
+	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.parentBranch)
 	}
@@ -351,7 +351,7 @@ func validateMergeData(data mergeData) error {
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
 	// ensure branch isn't deleted at remote
-	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch).Get()
+	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasBranchInfo {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
 	}

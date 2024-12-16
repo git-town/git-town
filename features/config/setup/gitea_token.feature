@@ -15,6 +15,7 @@ Feature: enter the Gitea API token
       | perennial regex               | enter             |                                             |
       | default branch type           | enter             |                                             |
       | feature regex                 | enter             |                                             |
+      | dev-remote                    | enter             |                                             |
       | hosting platform: auto-detect | enter             |                                             |
       | gitea token                   | 1 2 3 4 5 6 enter |                                             |
       | origin hostname               | enter             |                                             |
@@ -45,6 +46,7 @@ Feature: enter the Gitea API token
       | perennial regex             | enter             |                                             |
       | default branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | dev-remote                  | enter             |                                             |
       | hosting platform            | down down enter   |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
       | origin hostname             | enter             |                                             |

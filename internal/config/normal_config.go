@@ -74,11 +74,11 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	_ = self.GitConfigAccess.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
-// OriginURL provides the URL for the "origin" remote.
+// DevURL provides the URL for the development remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
-func (self *NormalConfig) OriginURL() Option[giturl.Parts] {
-	return self.RemoteURL(gitdomain.RemoteOrigin)
+func (self *NormalConfig) DevURL() Option[giturl.Parts] {
+	return self.RemoteURL(self.DevRemote)
 }
 
 // RemoteURL provides the URL for the given remote.
@@ -104,6 +104,10 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
+}
+
+func (self *NormalConfig) RemoveDevRemote() {
+	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyDevRemote)
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
@@ -214,6 +218,12 @@ func (self *NormalConfig) SetContributionBranches(branches gitdomain.LocalBranch
 func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
 	self.DefaultBranchType = value
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDefaultBranchType, value.String())
+}
+
+// SetDefaultBranchTypeLocally updates the locally configured default branch type.
+func (self *NormalConfig) SetDevRemote(value gitdomain.Remote) error {
+	self.DevRemote = value
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
 }
 
 // SetFeatureRegexLocally updates the locally configured feature regex.

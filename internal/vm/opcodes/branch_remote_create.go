@@ -13,5 +13,5 @@ type BranchRemoteCreate struct {
 }
 
 func (self *BranchRemoteCreate) Run(args shared.RunArgs) error {
-	return args.Git.CreateRemoteBranch(args.Frontend, self.SHA, self.Branch, args.Config.Value.NormalConfig.NoPushHook())
+	return args.Git.CreateRemoteBranch(args.Frontend, self.SHA, self.Branch, args.Config.Value.NormalConfig.DevRemote, args.Config.Value.NormalConfig.NoPushHook())
 }

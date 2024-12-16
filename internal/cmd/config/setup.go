@@ -93,6 +93,7 @@ type setupData struct {
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
+	remotes       gitdomain.Remotes
 	userInput     userInput
 }
 
@@ -105,8 +106,8 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	if originURL, hasOriginURL := config.NormalConfig.OriginURL().Get(); hasOriginURL {
-		return hosting.Detect(originURL, userChoice)
+	if devURL, hasDevURL := config.NormalConfig.DevURL().Get(); hasDevURL {
+		return hosting.Detect(devURL, userChoice)
 	}
 	return None[configdomain.HostingPlatform]()
 }
@@ -145,6 +146,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		return aborted, err
 	}
 	data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -254,13 +259,21 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
+	if err != nil {
+		return data, exit, err
+	}
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, exit, err
+	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.NormalConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
+		remotes:       remotes,
 		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
-	}, exit, err
+	}, exit, nil
 }
 
 func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
@@ -306,6 +319,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
 	fc.Check(savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
 	fc.Check(saveDefaultBranchType(oldConfig.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
+	fc.Check(saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig))
 	fc.Check(saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
 	fc.Check(savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
 	fc.Check(savePushNewBranches(oldConfig.NormalConfig.PushNewBranches, userInput.config.NormalConfig.PushNewBranches, oldConfig))
@@ -368,6 +382,13 @@ func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config co
 		return nil
 	}
 	return config.NormalConfig.SetDefaultBranchTypeLocally(newValue)
+}
+
+func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.NormalConfig.SetDevRemote(newValue)
 }
 
 func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
@@ -530,6 +551,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 		return err
 	}
 	config.NormalConfig.RemoveCreatePrototypeBranches()
+	config.NormalConfig.RemoveDevRemote()
 	config.RemoveMainBranch()
 	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()

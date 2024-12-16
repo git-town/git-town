@@ -13,8 +13,9 @@ Feature: enter the GitHub API token
       | main branch                   | enter             |                                             |
       | perennial branches            |                   | no input here since the dialog doesn't show |
       | perennial regex               | enter             |                                             |
-      | feature regex                 | enter             |                                             |
       | default branch type           | enter             |                                             |
+      | feature regex                 | enter             |                                             |
+      | dev-remote                    | enter             |                                             |
       | hosting platform: auto-detect | enter             |                                             |
       | github token                  | 1 2 3 4 5 6 enter |                                             |
       | origin hostname               | enter             |                                             |
@@ -45,6 +46,7 @@ Feature: enter the GitHub API token
       | perennial regex             | enter                |                                             |
       | default branch type         | enter                |                                             |
       | feature regex               | enter                |                                             |
+      | dev-remote                  | enter                |                                             |
       | hosting platform            | down down down enter |                                             |
       | github token                | 1 2 3 4 5 6 enter    |                                             |
       | origin hostname             | enter                |                                             |
@@ -78,6 +80,7 @@ Feature: enter the GitHub API token
       | perennial regex               | enter                               |                                             |
       | default branch type           | enter                               |                                             |
       | feature regex                 | enter                               |                                             |
+      | dev-remote                    | enter                               |                                             |
       | hosting platform: auto-detect | enter                               |                                             |
       | github token                  | backspace backspace backspace enter |                                             |
       | origin hostname               | enter                               |                                             |

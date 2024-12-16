@@ -252,12 +252,12 @@ func (self *Commands) CreateBranch(runner gitdomain.Runner, name gitdomain.Local
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, gitdomain.RemoteOrigin.String(), localSHA.String()+":refs/heads/"+branch.String())
+	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
 	return runner.Run("git", args...)
 }
 
@@ -659,7 +659,8 @@ func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdo
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
 func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
-	return runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
+	remote := branch.Remote()
+	return runner.Run("git", "push", "--force-with-lease", remote.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
@@ -726,8 +727,8 @@ func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname config
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch().String())
+func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch(devRemote).String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}

@@ -37,6 +37,7 @@ type Create struct {
 }
 
 type Hosting struct {
+	DevRemote      *string `toml:"dev-remote"`
 	OriginHostname *string `toml:"origin-hostname"`
 	Platform       *string `toml:"platform"`
 }

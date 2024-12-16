@@ -166,7 +166,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if branchToDelete.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDelete)
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -210,7 +210,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return deleteData{
 		branchToDeleteInfo:       *branchToDelete,
 		branchToDeleteType:       branchTypeToDelete,
