@@ -13,8 +13,8 @@ Git Town v17 modernizes some outdated concepts that were already documented. As 
 
 #### New Features
 
-- `git town sync` and `git town delete` now remove the changes of branches that get removed from all their descendents ([#4189](https://github.com/git-town/git-town/issues/4189)).
-- `git town set-parent` now removes the changes from the branches that are no longer parent branches ([#3473](https://github.com/git-town/git-town/issues/3473)).
+- When removing a branch, `git town sync` and `git town delete` now also remove the changes of those branches from their descendents ([#4189](https://github.com/git-town/git-town/issues/4189)).
+- `git town set-parent` now also removes the changes from former parent branches ([#3473](https://github.com/git-town/git-town/issues/3473)).
 - Git Town can now auto-resolve merge conflicts that include deleted files ([#4289](https://github.com/git-town/git-town/pull/4289)).
 - The name of the Git remote used for development is now configurable ([#4165](https://github.com/git-town/git-town/issues/4165)).
 - The setup assistant (`git town config setup`) now asks for the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
