@@ -95,7 +95,6 @@ const (
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
 	KeySyncPerennialStrategy               = Key("git-town.sync-perennial-strategy")
 	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
-	KeySyncStrategy                        = Key("git-town.sync-strategy")
 	KeySyncTags                            = Key("git-town.sync-tags")
 	KeySyncUpstream                        = Key("git-town.sync-upstream")
 	KeyGitUserEmail                        = Key("user.email")
@@ -146,7 +145,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
 	KeySyncPrototypeStrategy,
-	KeySyncStrategy,
 	KeySyncTags,
 	KeySyncUpstream,
 }
