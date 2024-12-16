@@ -25,8 +25,8 @@ Feature: sync a branch to a custom dev-remote
     And all branches are now synchronized
     And the current branch is still "branch"
     And these branches exist now
-      | REPOSITORY    | BRANCHES     |
-      | local, origin | main, branch |
+      | REPOSITORY  | BRANCHES     |
+      | local, fork | main, branch |
     And these commits exist now
       | BRANCH | LOCATION    | MESSAGE |
       | branch | local, fork | commit  |
