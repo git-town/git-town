@@ -22,7 +22,7 @@ Git Town v17 modernizes some outdated concepts that were already documented. As 
 
 #### Bug Fixes
 
-- Git Town no longer pops up the editor when continuing a command that got stuck in a rebase ([#4285](https://github.com/git-town/git-town/pull/4285)).
+- Git Town no longer pops up the editor when continuing a command that got stuck in a rebase in certain situations ([#4285](https://github.com/git-town/git-town/pull/4285)).
 - Now only updates Git aliases when auto-updating of outdated configuration entries that aren't Git Town settings ([#4304](https://github.com/git-town/git-town/pull/4304)).
 
 #### Contributors
