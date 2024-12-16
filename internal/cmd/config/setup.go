@@ -149,7 +149,6 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
-	// TODO: make this dialog work, then add the step to enter the dev-remote to all E2E tests for the setup assistant.
 	data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
