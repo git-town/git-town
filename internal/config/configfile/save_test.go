@@ -345,31 +345,4 @@ upstream = true
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("TOMLComment", func(t *testing.T) {
-		t.Parallel()
-		t.Run("empty", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("")
-			want := ""
-			must.Eq(t, want, have)
-		})
-		t.Run("single line", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1")
-			want := "# line 1"
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple lines", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3")
-			want := "# line 1\n# line 2\n# line 3"
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple lines with terminating newline", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3\n")
-			want := "# line 1\n# line 2\n# line 3\n#"
-			must.Eq(t, want, have)
-		})
-	})
 }
