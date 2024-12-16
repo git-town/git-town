@@ -74,7 +74,7 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	_ = self.GitConfigAccess.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
-// DevURL provides the URL for the "origin" remote.
+// DevURL provides the URL for the development remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) DevURL() Option[giturl.Parts] {
