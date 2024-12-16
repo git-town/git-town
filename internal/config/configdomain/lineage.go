@@ -6,12 +6,12 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/cli/colors"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v16/internal/gohacks/slice"
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v17/internal/gohacks/slice"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"golang.org/x/exp/maps"
 )
 

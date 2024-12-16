@@ -1,7 +1,7 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v16/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/program"
 )
 
 func DetermineUndoConfigProgram(initialConfigSnapshot, finalConfigSnapshot ConfigSnapshot) program.Program {

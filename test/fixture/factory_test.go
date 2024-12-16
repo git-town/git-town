@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v16/test/fixture"
+	"github.com/git-town/git-town/v17/test/fixture"
 	"github.com/shoenig/test/must"
 )
 

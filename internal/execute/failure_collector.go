@@ -1,8 +1,8 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
 )
 
 // FailureCollector is an ErrorCollector wrapper that provides convenience functions to check fallible domain types.

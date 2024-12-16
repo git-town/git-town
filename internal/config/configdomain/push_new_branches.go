@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // PushNewBranches indicates whether newly created branches should be pushed to the remote or not.
