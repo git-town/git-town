@@ -23,6 +23,10 @@
 - Git Town no longer pops up the editor when continuing a command that got stuck in a rebase ([#4285](https://github.com/git-town/git-town/pull/4285)).
 - Now only updates Git aliases when auto-updating of outdated configuration entries that aren't Git Town settings ([#4304](https://github.com/git-town/git-town/pull/4304)).
 
+#### Contributors
+
+Shoutout to @Crocmagnon, @WhosNickDoglio, @alphatroya, @avaz, @erik-rw, @kevgo, @koppor, @matthewgonzalez, @mklauer, @nishchay-manwani-glean, @pandvan, @ruudk, @sheldonhull, @smaldored, @stephenwade for contributing feedback, ideas, documentation, and code to 70 shipped PRs and 13 resolved issues!
+
 ## 16.7.0 (2024-11-30)
 
 #### New Features
