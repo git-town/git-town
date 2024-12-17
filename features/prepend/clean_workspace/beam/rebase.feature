@@ -10,8 +10,9 @@ Feature: prepend a branch to a feature branch
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |
       | old    | local, origin | commit 2 |
+      | old    | local, origin | commit 3 |
     And the current branch is "old"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git Town setting "sync-feature-strategy" is "rebase"
     And inspect the repo
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | KEYS             |
