@@ -51,6 +51,7 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 		subProcess.Dir = dir
 	}
 	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+	subProcess.Env = append(subProcess.Environ(), `GIT_CONFIG_PARAMETERS='core.abbrev=40'`)
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
 	var outputBytes []byte
