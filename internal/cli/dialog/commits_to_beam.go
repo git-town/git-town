@@ -37,9 +37,9 @@ func CommitsToBeam(commits []gitdomain.Commit, inputs components.TestInput) (git
 		return gitdomain.Commits{}, false, err
 	}
 	result := dialogResult.(commitsToBeamModel) //nolint:forcetypeassert
-	selectedCommits := result.CheckedEntries()
-	fmt.Printf(messages.CommitsSelected, len(selectedCommits))
-	return selectedCommits, result.Aborted(), nil
+	selectedBranches := result.CheckedEntries()
+	fmt.Printf(messages.CommitsSelected, len(selectedBranches))
+	return selectedBranches, result.Aborted(), nil
 }
 
 type commitsToBeamEntry gitdomain.Commit
@@ -140,19 +140,19 @@ func (self commitsToBeamModel) View() string {
 		WindowSize:   components.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
-		entry := self.Entries[i]
+		branch := self.Entries[i]
 		selected := self.Cursor == i
 		checked := self.IsRowChecked(i)
 		s.WriteString(self.EntryNumberStr(i))
 		switch {
 		case selected && checked:
-			s.WriteString(self.Colors.Selection.Styled("> [x] " + entry.Text))
+			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.Text))
 		case selected && !checked:
-			s.WriteString(self.Colors.Selection.Styled("> [ ] " + entry.Text))
+			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case !selected && checked:
-			s.WriteString(self.selectedColor.Styled("  [x] " + entry.Text))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
-			s.WriteString("  [ ] " + entry.Text)
+			s.WriteString("  [ ] " + branch.Text)
 		}
 		s.WriteRune('\n')
 	}

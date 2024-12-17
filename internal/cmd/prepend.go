@@ -339,7 +339,11 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	}
 	// TODO
 	// beam commits to new parent branch
-
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
+		)
+	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
