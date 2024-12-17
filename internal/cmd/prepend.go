@@ -292,7 +292,6 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			Remotes:             data.remotes,
 		})
 	}
-
 	prog.Value.Add(&opcodes.BranchCreateAndCheckoutExistingParent{
 		Ancestors: data.newParentCandidates,
 		Branch:    data.targetBranch,
