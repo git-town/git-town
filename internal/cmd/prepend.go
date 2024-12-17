@@ -6,6 +6,7 @@ import (
 	"os"
 	"slices"
 
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/flags"
 	"github.com/git-town/git-town/v17/internal/cli/print"
@@ -94,7 +95,7 @@ func executePrepend(args []string, beam configdomain.Beam, detached configdomain
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, detached, dryRun, prototype, verbose)
+	data, exit, err := determinePrependData(args, repo, beam, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -136,6 +137,7 @@ type prependData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      []configdomain.BranchToSync
+	commitsToBeam       []gitdomain.Commit
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
@@ -150,11 +152,12 @@ type prependData struct {
 	proposal            Option[hostingdomain.Proposal]
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
+	shasToBeam          Option[gitdomain.SHAs]
 	stashSize           gitdomain.StashSize
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -186,6 +189,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
@@ -195,10 +202,6 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
-	}
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
@@ -221,6 +224,22 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil || exit {
 		return data, exit, err
 	}
+	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
+	parent, hasParent := parentOpt.Get()
+	if !hasParent {
+		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
+	}
+	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, parent)
+	if err != nil {
+		return data, false, err
+	}
+	commitsToBeam := []gitdomain.Commit{}
+	if beam {
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, dialogTestInputs.Next())
+	}
+	if err != nil || exit {
+		return data, exit, err
+	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
@@ -230,11 +249,6 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil {
 		return data, false, err
 	}
-	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
-	parent, hasParent := parentOpt.Get()
-	if !hasParent {
-		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
-	}
 	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
@@ -242,6 +256,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
+		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
