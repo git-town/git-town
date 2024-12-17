@@ -11,12 +11,13 @@ Feature: prepend a branch to a feature branch
       | old    | local, origin | commit 1 |
       | old    | local, origin | commit 2 |
       | old    | local, origin | commit 3 |
+      | old    | local, origin | commit 4 |
     And the current branch is "old"
     And Git Town setting "sync-feature-strategy" is "rebase"
-    And inspect the repo
+    # And inspect the repo
     When I run "git-town prepend parent --beam" and enter into the dialog:
-      | KEYS             |
-      | down space enter |
+      | KEYS                             |
+      | down space down down space enter |
 
   @this
   Scenario: result
@@ -33,6 +34,7 @@ Feature: prepend a branch to a feature branch
       |        | git push --force-with-lease                     |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
+      |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
