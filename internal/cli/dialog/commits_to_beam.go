@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	shasToBeamTitle = `Select the commits to beam into %s`
+	commitsToBeamTitle = `Select the commits to beam into %s`
 )
 
 // PerennialBranches lets the user update the perennial branches.
@@ -131,9 +131,8 @@ func (self commitsToBeamModel) View() string {
 	}
 	s := strings.Builder{}
 	s.WriteRune('\n')
-	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
+	s.WriteString(self.Colors.Title.Styled(commitsToBeamTitle))
 	s.WriteRune('\n')
-	s.WriteString(PerennialBranchesHelp)
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
 		ElementCount: len(self.Entries),

@@ -11,8 +11,11 @@ Feature: prepend a branch to a feature branch
       | old    | local, origin | commit 1 |
       | old    | local, origin | commit 2 |
     And the current branch is "old"
-    When I run "git-town prepend --pick parent"
+    And inspect the repo
+    When I run "git-town prepend parent --beam"
 
+  @debug
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
