@@ -337,6 +337,9 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			ProposalNumber: proposal.Number,
 		})
 	}
+	// TODO
+	// beam commits to new parent branch
+
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
