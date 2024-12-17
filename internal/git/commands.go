@@ -185,7 +185,7 @@ func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch, 
 }
 
 func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdomain.Commits, error) {
-	output, err := querier.QueryTrim("git", "log", "--pretty=format:%h %s", "-10")
+	output, err := querier.QueryTrim("git", "log", "--pretty=format:%H %s", "-10")
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
