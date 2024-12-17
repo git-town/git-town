@@ -235,7 +235,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, parent, dialogTestInputs.Next())
 	}
 	if err != nil || exit {
 		return data, exit, err

@@ -16,12 +16,12 @@ import (
 )
 
 const (
-	commitsToBeamTitle = `Select the commits to beam into %s`
+	commitsToBeamTitle = `Select the commits to beam into branch %s`
 )
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func CommitsToBeam(commits []gitdomain.Commit, inputs components.TestInput) (gitdomain.Commits, bool, error) {
+func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.Commits, bool, error) {
 	entries := make([]commitsToBeamEntry, len(commits))
 	for c, commit := range commits {
 		entries[c] = commitsToBeamEntry(commit)
@@ -30,6 +30,7 @@ func CommitsToBeam(commits []gitdomain.Commit, inputs components.TestInput) (git
 		List:          list.NewList(list.NewEntries(entries...), 0),
 		Selections:    []int{},
 		selectedColor: colors.Green(),
+		targetBranch:  targetBranch,
 	})
 	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()
@@ -50,6 +51,7 @@ func (self commitsToBeamEntry) String() string {
 
 type commitsToBeamModel struct {
 	list.List[commitsToBeamEntry]
+	targetBranch  gitdomain.LocalBranchName
 	Selections    []int
 	selectedColor termenv.Style
 }
@@ -131,7 +133,7 @@ func (self commitsToBeamModel) View() string {
 	}
 	s := strings.Builder{}
 	s.WriteRune('\n')
-	s.WriteString(self.Colors.Title.Styled(commitsToBeamTitle))
+	s.WriteString(self.Colors.Title.Styled(fmt.Sprintf(commitsToBeamTitle, self.selectedColor.Styled(self.targetBranch.String()))))
 	s.WriteRune('\n')
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
