@@ -12,7 +12,7 @@ Feature: prepend a branch to a feature branch
       | old    | local, origin | commit 2 |
     And the current branch is "old"
     And Git Town setting "sync-feature-strategy" is "compress"
-    # And inspect the repo
+    And inspect the repo
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | KEYS             |
       | down space enter |
@@ -20,18 +20,18 @@ Feature: prepend a branch to a feature branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | old    | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout old                        |
-      | old    | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/old     |
-      |        | git reset --soft main                   |
-      |        | git commit -m "commit 1"                |
-      |        | git push --force-with-lease             |
-      |        | git checkout -b parent main             |
-      | parent | git cherry-pick {{ sha 'commit 2' }}    |
+      | BRANCH | COMMAND                                         |
+      | old    | git fetch --prune --tags                        |
+      |        | git checkout main                               |
+      | main   | git rebase origin/main --no-update-refs         |
+      |        | git checkout old                                |
+      | old    | git merge --no-edit --ff main                   |
+      |        | git merge --no-edit --ff origin/old             |
+      |        | git reset --soft main                           |
+      |        | git commit -m "commit 1"                        |
+      |        | git push --force-with-lease                     |
+      |        | git checkout -b parent main                     |
+      | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
