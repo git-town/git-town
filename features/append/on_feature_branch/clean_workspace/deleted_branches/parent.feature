@@ -45,6 +45,7 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       | child  | local, origin | child commit                   |
       |        |               | Merge branch 'main' into child |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
