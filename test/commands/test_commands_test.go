@@ -402,7 +402,7 @@ func TestTestCommands(t *testing.T) {
 		shas := repo.SHAsForCommit("commit")
 		must.EqOp(t, 1, len(shas))
 		sha := shas.First()
-		must.EqOp(t, 7, len(sha))
+		must.EqOp(t, 40, len(sha))
 	})
 
 	t.Run("UncommittedFiles", func(t *testing.T) {
