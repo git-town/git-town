@@ -45,22 +45,22 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 
 type commitsToBeamEntry gitdomain.Commit
 
-func (self commitsToBeamEntry) String() string {
-	return self.Message.String()
+func (entry commitsToBeamEntry) String() string {
+	return entry.Message.String()
 }
 
 type commitsToBeamModel struct {
 	list.List[commitsToBeamEntry]
-	targetBranch  gitdomain.LocalBranchName
 	Selections    []int
 	selectedColor termenv.Style
+	targetBranch  gitdomain.LocalBranchName
 }
 
 // checkedEntries provides all checked list entries.
-func (model commitsToBeamModel) CheckedEntries() []gitdomain.Commit {
+func (self commitsToBeamModel) CheckedEntries() []gitdomain.Commit {
 	result := []gitdomain.Commit{}
-	for e, entry := range model.Entries {
-		if model.IsRowChecked(e) {
+	for e, entry := range self.Entries {
+		if self.IsRowChecked(e) {
 			result = append(result, gitdomain.Commit(entry.Data))
 		}
 	}
@@ -79,7 +79,7 @@ func (self commitsToBeamModel) EnableCurrentEntry() commitsToBeamModel {
 	return self
 }
 
-func (self commitsToBeamModel) Init() tea.Cmd {
+func (model commitsToBeamModel) Init() tea.Cmd {
 	return nil
 }
 
