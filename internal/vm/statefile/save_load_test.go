@@ -101,8 +101,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.Merge{Branch: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParent{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
@@ -111,7 +111,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
-				&opcodes.PushCurrentBranch{CurrentBranch: "branch"},
+				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
@@ -516,19 +516,19 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentParent": "parent",
-        "OriginalParentName": "original-parent",
-        "OriginalParentSHA": "123456"
-      },
-      "type": "MergeParent"
-    },
-    {
-      "data": {
         "Branch": "branch",
         "OriginalParentName": "original-parent",
         "OriginalParentSHA": "123456"
       },
       "type": "MergeParentIfNeeded"
+    },
+    {
+      "data": {
+        "CurrentParent": "parent",
+        "OriginalParentName": "original-parent",
+        "OriginalParentSHA": "123456"
+      },
+      "type": "MergeParentResolvePhantomConflicts"
     },
     {
       "data": {
@@ -590,9 +590,7 @@ func TestLoadSave(t *testing.T) {
       "type": "PullCurrentBranch"
     },
     {
-      "data": {
-        "CurrentBranch": "branch"
-      },
+      "data": {},
       "type": "PushCurrentBranch"
     },
     {

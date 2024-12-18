@@ -74,9 +74,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Local:  localSnapshot,
 	}
 	finalMessages := stringslice.NewCollector()
-	configFile, err := configfile.Load(rootDir, finalMessages)
+	configFile, err := configfile.Load(rootDir, configfile.FileName, finalMessages)
 	if err != nil {
 		return emptyOpenRepoResult(), err
+	}
+	if configFile.IsNone() {
+		configFile, err = configfile.Load(rootDir, configfile.AlternativeFileName, finalMessages)
+		if err != nil {
+			return emptyOpenRepoResult(), err
+		}
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access:        configGitAccess,
