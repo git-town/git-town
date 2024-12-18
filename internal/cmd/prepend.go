@@ -365,11 +365,18 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
 	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
 		switch syncStrategy {
 		case configdomain.SyncStrategyCompress:
 		case configdomain.SyncStrategyMerge:
+			prog.Value.Add(
+				&opcodes.MergeParent{
+					CurrentParent:      parentName.BranchName(),
+					OriginalParentName: Option{},
+					OriginalParentSHA:  Option{},
+				},
+			)
 		case configdomain.SyncStrategyRebase:
 		}
 	}
