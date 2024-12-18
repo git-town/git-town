@@ -34,6 +34,7 @@ func shouldIgnorePath(path string) bool {
 	return strings.HasPrefix(path, "vendor/") ||
 		path == "internal/config/configdomain/push_hook.go" ||
 		path == "internal/config/configdomain/offline.go" ||
+		path == "internal/cli/dialog/commits_to_beam.go" ||
 		path == "internal/cli/dialog/hosting.go" ||
 		path == "internal/cli/print/logger.go" ||
 		path == "internal/cli/dialog/switch_branch.go" ||
