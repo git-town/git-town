@@ -1,5 +1,5 @@
 @smoke
-Feature: prepend a branch to a feature branch using the "rebase" sync strategy
+Feature: prepend a branch to a feature branch using the "merge" sync strategy
 
   Background:
     Given a Git repo with origin
@@ -13,11 +13,13 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | old    | local, origin | commit 3 |
       | old    | local, origin | commit 4 |
     And the current branch is "old"
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git Town setting "sync-feature-strategy" is "merge"
+    # And inspect the repo
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | KEYS                             |
       | down space down down space enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
@@ -25,8 +27,8 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git checkout main                               |
       | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout old                                |
-      | old    | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
+      | old    | git merge --no-edit --ff main                   |
+      |        | git merge --no-edit --ff origin/old             |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
       |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
