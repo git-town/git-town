@@ -57,10 +57,10 @@ type commitsToBeamModel struct {
 }
 
 // checkedEntries provides all checked list entries.
-func (self commitsToBeamModel) CheckedEntries() []gitdomain.Commit {
+func (model commitsToBeamModel) CheckedEntries() []gitdomain.Commit {
 	result := []gitdomain.Commit{}
-	for e, entry := range self.Entries {
-		if self.IsRowChecked(e) {
+	for e, entry := range model.Entries {
+		if model.IsRowChecked(e) {
 			result = append(result, gitdomain.Commit(entry.Data))
 		}
 	}
