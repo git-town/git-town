@@ -52,7 +52,7 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
-	output := self.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
+	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
@@ -88,7 +88,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []git.Commit {
-	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
+	args := []string{"log", "--format=%H|%s|%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
 	} else {
@@ -457,7 +457,7 @@ func (self *TestCommands) RenameRemote(oldName, newName string) {
 
 // SHAForCommit provides the SHA for the commit with the given name.
 func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
-	output := self.MustQuery("git", "reflog", "--format=%h %s")
+	output := self.MustQuery("git", "reflog", "--format=%H %s")
 	if output == "" {
 		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
 	}
