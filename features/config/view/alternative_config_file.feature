@@ -1,9 +1,7 @@
 Feature: show the configuration when using an alternative config file
 
-  Background:
-    Given a Git repo with origin
-
   Scenario: all configured in config file with alternative filename
+    Given a Git repo with origin
     And file ".git-town.toml" with content
       """
       [branches]
