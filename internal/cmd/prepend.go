@@ -344,12 +344,12 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		)
 	}
 	if len(data.commitsToBeam) > 0 {
-		// simple sync the initial branch with the newly created branch
+		// sync the new parent branch with the initial branch
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(data.targetBranch, initialBranchType)
+		syncWithParent(data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.targetBranch},
 		)
@@ -365,8 +365,13 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType) {
-	switch afterBeamToParentSyncStrategy(parentName) {
+func syncWithParent(parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
+		switch syncStrategy {
+		case configdomain.SyncStrategyCompress:
+		case configdomain.SyncStrategyMerge:
+		case configdomain.SyncStrategyRebase:
+		}
 	}
 }
 
