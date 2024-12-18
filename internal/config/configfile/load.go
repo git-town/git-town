@@ -30,11 +30,11 @@ func Load(rootDir gitdomain.RepoRootDir, finalMessages stringslice.Collector) (O
 	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileCannotRead, FileName, err)
 	}
 	configFileData, err := Decode(string(bytes))
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, FileName, err)
 	}
 	result, err := Validate(*configFileData, finalMessages)
 	return Some(result), err
