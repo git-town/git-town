@@ -10,17 +10,13 @@ import (
 	"github.com/git-town/git-town/v17/internal/cli/dialog"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/flags"
-	"github.com/git-town/git-town/v17/internal/cli/print"
 	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/execute"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/hosting"
 	"github.com/git-town/git-town/v17/internal/messages"
 	"github.com/git-town/git-town/v17/internal/regexes"
-	"github.com/git-town/git-town/v17/internal/validate"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -115,7 +111,7 @@ func executeSwitch(args []string, allBranches configdomain.AllBranches, verbose 
 type switchData struct {
 	branchNames        gitdomain.LocalBranchNames
 	branchesSnapshot   gitdomain.BranchesSnapshot
-	config             config.ValidatedConfig
+	config             config.UnvalidatedConfig
 	dialogInputs       components.TestInputs
 	initialBranch      gitdomain.LocalBranchName
 	lineage            configdomain.Lineage
@@ -153,29 +149,6 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
-	if err != nil {
-		return data, false, err
-	}
-	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
-	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranches)
-	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
-		Backend:            repo.Backend,
-		BranchesAndTypes:   branchesAndTypes,
-		BranchesSnapshot:   branchesSnapshot,
-		BranchesToValidate: localBranches,
-		Connector:          connector,
-		DialogTestInputs:   dialogTestInputs,
-		Frontend:           repo.Frontend,
-		Git:                repo.Git,
-		LocalBranches:      localBranches,
-		RepoStatus:         repoStatus,
-		TestInputs:         dialogTestInputs,
-		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
-	})
-	if err != nil || exit {
-		return data, exit, err
-	}
 	regexes, err := regexes.NewRegexes(args)
 	if err != nil {
 		return data, false, err
@@ -183,10 +156,10 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 	return switchData{
 		branchNames:        branchesSnapshot.Branches.Names(),
 		branchesSnapshot:   branchesSnapshot,
-		config:             validatedConfig,
+		config:             repo.UnvalidatedConfig,
 		dialogInputs:       dialogTestInputs,
 		initialBranch:      initialBranch,
-		lineage:            validatedConfig.NormalConfig.Lineage,
+		lineage:            repo.UnvalidatedConfig.NormalConfig.Lineage,
 		regexes:            regexes,
 		uncommittedChanges: repoStatus.OpenChanges,
 	}, false, err

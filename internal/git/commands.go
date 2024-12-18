@@ -772,7 +772,7 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 
 // Version indicates whether the needed Git version is installed.
 func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
-	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
+	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
