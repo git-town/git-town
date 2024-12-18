@@ -368,22 +368,16 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
 	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
 		switch syncStrategy {
-		case configdomain.SyncStrategyCompress:
-		case configdomain.SyncStrategyMerge:
+		case configdomain.SyncStrategyCompress,
+			configdomain.SyncStrategyMerge:
 			prog.Value.Add(
-				&opcodes.MergeParent{
-					Parent: parentName.BranchName(),
-				},
+				&opcodes.MergeParent{Parent: parentName.BranchName()},
 				&opcodes.PushCurrentBranch{},
 			)
 		case configdomain.SyncStrategyRebase:
 			prog.Value.Add(
-				&opcodes.RebaseBranch{
-					Branch: parentName.BranchName(),
-				},
-				&opcodes.PushCurrentBranchForce{
-					ForceIfIncludes: true,
-				},
+				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
+				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 			)
 		}
 	}

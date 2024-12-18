@@ -1,5 +1,5 @@
 @smoke
-Feature: prepend a branch to a feature branch using the "merge" sync strategy
+Feature: prepend a branch to a feature branch using the "compress" sync strategy
 
   Background:
     Given a Git repo with origin
@@ -13,11 +13,12 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | old    | local, origin | commit 3 |
       | old    | local, origin | commit 4 |
     And the current branch is "old"
-    And Git Town setting "sync-feature-strategy" is "merge"
+    And Git Town setting "sync-feature-strategy" is "compress"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | KEYS                             |
       | down space down down space enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
@@ -27,6 +28,9 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | git checkout old                                |
       | old    | git merge --no-edit --ff main                   |
       |        | git merge --no-edit --ff origin/old             |
+      |        | git reset --soft main                           |
+      |        | git commit -m "commit 1"                        |
+      |        | git push --force-with-lease                     |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
       |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
@@ -38,9 +42,6 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
-      |        |               | commit 2                       |
-      |        |               | commit 3                       |
-      |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       |        | origin        | commit 2                       |
       |        |               | commit 4                       |
