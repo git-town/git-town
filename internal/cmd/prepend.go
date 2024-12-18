@@ -374,9 +374,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 				&opcodes.MergeParent{
 					Parent: parentName.BranchName(),
 				},
-				&opcodes.PushCurrentBranch{
-					CurrentBranch: "",
-				},
+				&opcodes.PushCurrentBranch{},
 			)
 		case configdomain.SyncStrategyRebase:
 			prog.Value.Add(
