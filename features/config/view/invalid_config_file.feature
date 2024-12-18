@@ -9,5 +9,5 @@ Feature: print nice error message for invalid config file
     When I run "git-town config"
     Then Git Town prints the error:
       """
-      the configuration file ".git-branches.yml" does not contain TOML-formatted content
+      the configuration file ".git-branches.toml" does not contain TOML-formatted content
       """
