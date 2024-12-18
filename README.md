@@ -78,6 +78,8 @@ development. Supports mono-repos and stacked changes. Check out
 
 #### Advanced development commands
 
+- [branch](https://www.git-town.com/commands/branch) - display the local branch
+  hierarchy
 - [compress](https://www.git-town.com/commands/compress.html) - squash all
   commits on feature branches down to a single commit
 - [delete](https://www.git-town.com/commands/delete.html) - remove a feature
