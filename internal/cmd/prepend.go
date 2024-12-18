@@ -337,8 +337,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			ProposalNumber: proposal.Number,
 		})
 	}
-	// TODO
-	// beam commits to new parent branch
+	// move commits to new parent branch
 	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
 			&opcodes.CherryPick{SHA: commitToBeam.SHA},
