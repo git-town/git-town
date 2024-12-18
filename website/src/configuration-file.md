@@ -1,7 +1,7 @@
 # Git Town Configuration File
 
 Git Town can be configured through a configuration file with named
-**.git-branches.toml**. To create one, execute:
+**.git-branches.toml** or **.git-town.toml**. To create one, execute:
 
 ```
 git town config setup
