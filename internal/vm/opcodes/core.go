@@ -108,7 +108,7 @@ func Types() []shared.Opcode {
 		&Merge{},
 		&MergeAbort{},
 		&MergeContinue{},
-		&MergeParent{},
+		&MergeParentResolvePhantomConflicts{},
 		&MergeParentIfNeeded{},
 		&MergeSquashProgram{},
 		&MessageQueue{},
