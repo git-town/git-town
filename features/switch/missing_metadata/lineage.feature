@@ -1,7 +1,6 @@
 @messyoutput
 Feature: switch branches that have no lineage information
 
-  @this
   Scenario: repo contains a branch without known parent
     Given a Git repo with origin
     And the branches
