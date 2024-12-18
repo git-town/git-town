@@ -1,4 +1,3 @@
-@smoke
 Feature: show the configuration when stored in an alternative config file
 
   Background:
