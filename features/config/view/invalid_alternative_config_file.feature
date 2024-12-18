@@ -1,4 +1,3 @@
-@this
 Feature: print nice error message for invalid alternative config file
 
   Scenario: Config file with alternative filename and invalid TOML content
