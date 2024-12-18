@@ -343,15 +343,17 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
 	}
-	// simple sync the initial branch with the newly created branch
-	prog.Value.Add(
-		&opcodes.Checkout{Branch: data.initialBranch},
-	)
-	initialBranchType := data.config.BranchType(data.initialBranch)
-	syncWithParent(data.targetBranch, initialBranchType)
-	prog.Value.Add(
-		&opcodes.Checkout{Branch: data.targetBranch},
-	)
+	if len(data.commitsToBeam) > 0 {
+		// simple sync the initial branch with the newly created branch
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
+		initialBranchType := data.config.BranchType(data.initialBranch)
+		syncWithParent(data.targetBranch, initialBranchType)
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.targetBranch},
+		)
+	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
