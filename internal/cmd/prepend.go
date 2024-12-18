@@ -349,7 +349,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
+		syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.targetBranch},
 		)
@@ -372,9 +372,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 		case configdomain.SyncStrategyMerge:
 			prog.Value.Add(
 				&opcodes.MergeParent{
-					CurrentParent:      parentName.BranchName(),
-					OriginalParentName: Option{},
-					OriginalParentSHA:  Option{},
+					Parent: parentName.BranchName(),
 				},
 			)
 		case configdomain.SyncStrategyRebase:
