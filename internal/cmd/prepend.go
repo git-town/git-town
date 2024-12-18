@@ -152,7 +152,6 @@ type prependData struct {
 	proposal            Option[hostingdomain.Proposal]
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
-	shasToBeam          Option[gitdomain.SHAs]
 	stashSize           gitdomain.StashSize
 	targetBranch        gitdomain.LocalBranchName
 }
