@@ -1,4 +1,4 @@
-Feature: show the configuration when stored in an alternative config file
+Feature: show the configuration when using an alternative config file
 
   Background:
     Given a Git repo with origin
