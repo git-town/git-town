@@ -19,7 +19,6 @@ Feature: prepend a branch to a feature branch
       | KEYS                             |
       | down space down down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
