@@ -337,13 +337,21 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			ProposalNumber: proposal.Number,
 		})
 	}
-	// TODO
-	// beam commits to new parent branch
+	// move commits to new parent branch
 	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
 			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
 	}
+	// simple sync the initial branch with the newly created branch
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.initialBranch},
+	)
+	initialBranchType := data.config.BranchType(data.initialBranch)
+	syncWithParent(data.targetBranch, initialBranchType)
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.targetBranch},
+	)
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
@@ -352,4 +360,29 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog.Immutable()
+}
+
+// basic sync of the current branch with its parent after beaming some commits into the parent
+func syncWithParent(parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType) {
+	switch afterBeamToParentSyncStrategy(parentName) {
+	}
+}
+
+// provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
+func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config configdomain.NormalConfigData) Option[configdomain.SyncStrategy] {
+	switch branchType {
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
+		return None[configdomain.SyncStrategy]()
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch:
+		return Some(config.SyncFeatureStrategy.SyncStrategy())
+	case configdomain.BranchTypePrototypeBranch:
+		return Some(config.SyncPrototypeStrategy.SyncStrategy())
+	}
+	panic("unhandled branch type: " + branchType.String())
 }

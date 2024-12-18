@@ -27,18 +27,20 @@ Feature: prepend a branch to a feature branch
       |        | git checkout main                               |
       | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout old                                |
-      | old    | git merge --no-edit --ff main                   |
-      |        | git merge --no-edit --ff origin/old             |
-      |        | git reset --soft main                           |
-      |        | git commit -m "commit 1"                        |
-      |        | git push --force-with-lease                     |
+      | old    | git rebase main --no-update-refs                |
+      |        | git push --force-with-lease --force-if-includes |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
       |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
     And the current branch is now "parent"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
+      | BRANCH | LOCATION      | MESSAGE  |
+      | old    | local, origin | commit 1 |
+      |        |               | commit 2 |
+      |        |               | commit 3 |
+      |        |               | commit 4 |
+      | parent | local         | commit 2 |
+      |        |               | commit 4 |
     And this lineage exists now
       | BRANCH | PARENT |
       | old    | parent |
