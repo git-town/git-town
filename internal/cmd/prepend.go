@@ -380,6 +380,9 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 				&opcodes.RebaseBranch{
 					Branch: parentName.BranchName(),
 				},
+				&opcodes.PushCurrentBranchForce{
+					ForceIfIncludes: true,
+				},
 			)
 		}
 	}

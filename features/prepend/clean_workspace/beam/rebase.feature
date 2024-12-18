@@ -19,7 +19,6 @@ Feature: prepend a branch to a feature branch
       | KEYS                             |
       | down space down down space enter |
 
-  @debug
   @this
   Scenario: result
     Then Git Town runs the commands
@@ -35,13 +34,14 @@ Feature: prepend a branch to a feature branch
       |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
       |        | git checkout old                                |
       | old    | git rebase parent --no-update-refs              |
+      |        | git push --force-with-lease --force-if-includes |
       |        | git checkout parent                             |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |
-      |        |               | commit 2 |
       |        |               | commit 3 |
+      |        | origin        | commit 2 |
       |        |               | commit 4 |
       | parent | local         | commit 2 |
       |        |               | commit 4 |
