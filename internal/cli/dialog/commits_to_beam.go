@@ -79,7 +79,7 @@ func (self commitsToBeamModel) EnableCurrentEntry() commitsToBeamModel {
 	return self
 }
 
-func (model commitsToBeamModel) Init() tea.Cmd {
+func (self commitsToBeamModel) Init() tea.Cmd {
 	return nil
 }
 
