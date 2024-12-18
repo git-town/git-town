@@ -35,7 +35,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 				} else {
 					parentToMerge = parent.BranchName()
 				}
-				program = append(program, &MergeParent{
+				program = append(program, &MergeParentResolvePhantomConflicts{
 					CurrentParent:      parentToMerge,
 					OriginalParentName: self.OriginalParentName,
 					OriginalParentSHA:  self.OriginalParentSHA,
@@ -44,7 +44,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 			}
 			// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
 			if parentTrackingBranch, parentHasTrackingBranch := parentBranchInfo.RemoteName.Get(); parentHasTrackingBranch {
-				program = append(program, &MergeParent{
+				program = append(program, &MergeParentResolvePhantomConflicts{
 					CurrentParent:      parentTrackingBranch.BranchName(),
 					OriginalParentName: self.OriginalParentName,
 					OriginalParentSHA:  self.OriginalParentSHA,
