@@ -376,6 +376,11 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 				},
 			)
 		case configdomain.SyncStrategyRebase:
+			prog.Value.Add(
+				&opcodes.RebaseBranch{
+					Branch: parentName.BranchName(),
+				},
+			)
 		}
 	}
 }

@@ -33,6 +33,9 @@ Feature: prepend a branch to a feature branch
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
       |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
+      |        | git checkout old                                |
+      | old    | git rebase parent --no-update-refs              |
+      |        | git checkout parent                             |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
