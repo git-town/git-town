@@ -74,7 +74,7 @@ development. Supports mono-repos and stacked changes. Check out
 - [offline](https://www.git-town.com/commands/offline.html) - start or stop
   running in offline mode
 - [completions](https://www.git-town.com/commands/completions) -
-  auto-completions for bash, zsh, fish, or PowerShell
+  auto-completions for bash, zsh, fish, and PowerShell
 
 #### Advanced development commands
 
