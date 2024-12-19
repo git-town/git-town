@@ -66,9 +66,11 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND                                         |
+      | parent | git checkout old                                |
+      | old    | git reset --hard {{ sha 'commit 4' }}           |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git branch -D parent                            |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now
