@@ -109,13 +109,13 @@ func (self checkListModel[S]) View() string {
 	}
 	s := strings.Builder{}
 	s.WriteRune('\n')
-	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
+	s.WriteString(self.Colors.Title.Styled(self.title))
 	s.WriteRune('\n')
-	s.WriteString(PerennialBranchesHelp)
+	s.WriteString(self.help)
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
 		ElementCount: len(self.Entries),
-		WindowSize:   components.WindowSize,
+		WindowSize:   WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
 		branch := self.Entries[i]
@@ -128,7 +128,7 @@ func (self checkListModel[S]) View() string {
 		case selected && !checked:
 			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case !selected && checked:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
+			s.WriteString(self.Colors.Selection.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
 			s.WriteString("  [ ] " + branch.Text)
 		}
