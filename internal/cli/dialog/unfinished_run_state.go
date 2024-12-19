@@ -34,15 +34,6 @@ const (
 	ResponseUndo     = Response("undo")     // undo the unfinished run state
 )
 
-type unfinishedRunstateDialogEntry struct {
-	response Response
-	text     string
-}
-
-func (self unfinishedRunstateDialogEntry) String() string {
-	return self.text
-}
-
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
 func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput components.TestInput) (Response, bool, error) {
 	entries := list.Entries[Response]{
