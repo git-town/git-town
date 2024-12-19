@@ -2,6 +2,8 @@
 
 ### 17.1.0 (2024-12-19)
 
+Git Town 17.1 releases critical updates that unblock users.
+
 #### New Features
 
 - The configuration file can now also be named ".git-town.toml", in addition to ".git-branches.toml" ([#4343](https://github.com/git-town/git-town/issues/4343)).
@@ -12,6 +14,10 @@
 #### Bug Fixes
 
 - The setup assistant now allows configuring a "BitBucket-Datacenter" setup ([#4360](https://github.com/git-town/git-town/pull/4360)).
+
+#### Contributors
+
+Shoutout to @kevgo, @lud-wj, @pratikpc, @ruudk, @stephenwade for contributing feedback, ideas, documentation, and code to 28 shipped PRs and 5 resolved issues!
 
 ## 17.0.0 (2024-12-16)
 
