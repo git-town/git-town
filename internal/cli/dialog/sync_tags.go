@@ -31,7 +31,7 @@ func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (conf
 			Text:    "no, don't sync Git tags",
 		},
 	}
-	defaultPos := DialogPosition(entries, existing)
+	defaultPos := list.DialogPosition(entries, existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err

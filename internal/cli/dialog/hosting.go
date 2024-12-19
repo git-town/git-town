@@ -54,7 +54,7 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 			Text:    "GitLab",
 		},
 	}
-	cursor := DialogPosition(entries, existingValue)
+	cursor := list.DialogPosition(entries, existingValue)
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
 	return newValue, aborted, err

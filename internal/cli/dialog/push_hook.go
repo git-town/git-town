@@ -42,7 +42,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 			Text:    "disabled: don't run Git hooks when pushing branches",
 		},
 	}
-	defaultPos := DialogPosition(entries, existing)
+	defaultPos := list.DialogPosition(entries, existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err

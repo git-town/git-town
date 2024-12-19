@@ -38,7 +38,7 @@ func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs c
 			Text:    "compress the branch after merging parent and tracking",
 		},
 	}
-	defaultPos := DialogPosition(entries, existing)
+	defaultPos := list.DialogPosition(entries, existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPrototypeStrategyMerge, aborted, err
