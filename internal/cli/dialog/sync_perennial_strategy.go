@@ -33,7 +33,7 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs c
 			Text:    "rebase perennial branches against their tracking branch",
 		},
 	}
-	defaultPos := list.DialogPosition(entries, existing)
+	defaultPos := entries.IndexOfData(existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err

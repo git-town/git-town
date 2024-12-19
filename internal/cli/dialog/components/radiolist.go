@@ -12,7 +12,7 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+func RadioList[S comparable](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),
 		help:  help,
@@ -27,7 +27,7 @@ func RadioList[S any](entries list.Entries[S], cursor int, title, help string, i
 	return result.SelectedData(), result.Aborted(), nil
 }
 
-type radioListModel[S any] struct {
+type radioListModel[S comparable] struct {
 	list.List[S]
 	help  string // help text to display before the radio list
 	title string // title to display before the help text

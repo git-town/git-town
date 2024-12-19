@@ -39,7 +39,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 			Text:    `compress the branch after merging parent and tracking`,
 		},
 	}
-	defaultPos := list.DialogPosition(entries, existing)
+	defaultPos := entries.IndexOfData(existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err

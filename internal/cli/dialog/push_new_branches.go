@@ -40,7 +40,7 @@ func PushNewBranches(existing configdomain.PushNewBranches, inputs components.Te
 			Text:    "no, new branches remain local until synced",
 		},
 	}
-	defaultPos := list.DialogPosition(entries, existing)
+	defaultPos := entries.IndexOfData(existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
