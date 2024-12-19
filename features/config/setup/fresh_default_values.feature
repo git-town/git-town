@@ -1,4 +1,4 @@
-@messyoutput @this
+@messyoutput
 Feature: Accepting all default values in a brand-new Git repo leads to a working setup
 
   Background:
