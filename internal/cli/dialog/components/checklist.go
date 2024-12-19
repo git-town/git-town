@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 )
 
-// CheckList lets the user select zero to many of the given entries.
+// CheckList lets the user select zero, one, or many of the given entries.
 func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(CheckListModel[S]{
 		List:       list.NewList(entries, 0),
