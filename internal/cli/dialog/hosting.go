@@ -54,7 +54,9 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 			Text:    "GitLab",
 		},
 	}
-	cursor := entries.IndexOf(existingValue)
+	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[configdomain.HostingPlatform]) bool {
+		return optA.Equal(optB)
+	})
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
 	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
 	return newValue, aborted, err

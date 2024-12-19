@@ -47,7 +47,7 @@ Feature: remove existing configuration in Git metadata
       | default branch type                     | down enter                                                        |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
       | dev-remote                              | enter                                                             |
-      | remove hosting service override         | up up up enter                                                    |
+      | remove hosting service override         | up up up up enter                                                 |
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |
       | sync-feature-strategy                   | down enter                                                        |
       | sync-perennial-strategy                 | down enter                                                        |

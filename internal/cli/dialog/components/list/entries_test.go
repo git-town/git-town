@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -30,5 +31,29 @@ func TestEntries(t *testing.T) {
 			}
 			must.False(t, entries.AllDisabled())
 		})
+	})
+
+	t.Run("IndexOf", func(t *testing.T) {
+		t.Parallel()
+		entries := list.Entries[Option[configdomain.HostingPlatform]]{
+			{
+				Data:    None[configdomain.HostingPlatform](),
+				Enabled: true,
+				Text:    "auto-detect",
+			},
+			{
+				Data:    Some(configdomain.HostingPlatformGitHub),
+				Enabled: true,
+				Text:    "Github",
+			},
+			{
+				Data:    Some(configdomain.HostingPlatformGitLab),
+				Enabled: true,
+				Text:    "GitLab",
+			},
+		}
+		have := entries.IndexOf(Some(configdomain.HostingPlatformGitHub))
+		want := 1
+		must.EqOp(t, want, have)
 	})
 }

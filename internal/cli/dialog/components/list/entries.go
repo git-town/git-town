@@ -40,6 +40,16 @@ func (self Entries[S]) IndexOf(needle S) int {
 	return 0
 }
 
+// provides the position of the given needle in this list
+func (self Entries[S]) IndexOfFunc(needle S, isEqualFn func(a, b S) bool) int {
+	for e, entry := range self {
+		if isEqualFn(entry.Data, needle) {
+			return e
+		}
+	}
+	return 0
+}
+
 // narrower type needed to use the NewEntries convenience function
 type ComparableStringer interface {
 	comparable
