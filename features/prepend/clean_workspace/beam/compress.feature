@@ -49,6 +49,22 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |
+    When I run "git town sync"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                 |
+      | parent | git fetch --prune --tags                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git checkout parent                     |
+      | parent | git merge --no-edit --ff main           |
+      |        | git push -u origin parent               |
+    And the current branch is now "parent"
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                        |
+      | old    | local, origin | commit 1                       |
+      |        |               | Merge branch 'parent' into old |
+      | parent | local, origin | commit 2                       |
+      |        |               | commit 4                       |
 
   Scenario: undo
     When I run "git-town undo"
