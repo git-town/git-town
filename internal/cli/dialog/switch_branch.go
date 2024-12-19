@@ -176,9 +176,9 @@ func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.En
 	result := make(list.Entries[SwitchBranchEntry], len(switchBranchEntries))
 	for e, entry := range switchBranchEntries {
 		result[e] = list.Entry[SwitchBranchEntry]{
-			Data:    entry,
-			Enabled: !entry.OtherWorktree,
-			Text:    entry.String(),
+			Data:     entry,
+			Disabled: entry.OtherWorktree,
+			Text:     entry.String(),
 		}
 	}
 	return result

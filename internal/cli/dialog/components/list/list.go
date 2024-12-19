@@ -102,7 +102,7 @@ func (self *List[S]) MoveCursorDown() {
 		} else {
 			self.Cursor = 0
 		}
-		if self.SelectedEntry().Enabled {
+		if !self.SelectedEntry().Disabled {
 			return
 		}
 	}
@@ -118,7 +118,7 @@ func (self *List[S]) MoveCursorUp() {
 		} else {
 			self.Cursor = len(self.Entries) - 1
 		}
-		if self.SelectedEntry().Enabled {
+		if !self.SelectedEntry().Disabled {
 			return
 		}
 	}
@@ -134,14 +134,14 @@ func (self *List[S]) MovePageDown() {
 	}
 	// search for the next selected entry downwards
 	for self.Cursor < len(self.Entries)-1 {
-		if self.SelectedEntry().Enabled {
+		if !self.SelectedEntry().Disabled {
 			return
 		}
 		self.Cursor += 1
 	}
 	// here there are no selected entries until the end of the list --> go up until we find a selected entry
 	for {
-		if self.SelectedEntry().Enabled {
+		if !self.SelectedEntry().Disabled {
 			return
 		}
 		self.Cursor -= 1
@@ -158,14 +158,14 @@ func (self *List[S]) MovePageUp() {
 	}
 	// search for the next selected entry upwards
 	for self.Cursor > 0 {
-		if self.SelectedEntry().Enabled {
+		if !self.SelectedEntry().Disabled {
 			return
 		}
 		self.Cursor -= 1
 	}
 	// here there are no selected entries until the start of the list --> go down until we find a selected entry
 	for {
-		if self.SelectedEntry().Enabled {
+		if !self.SelectedEntry().Disabled {
 			return
 		}
 		self.Cursor += 1
