@@ -293,7 +293,7 @@ func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bo
 // CurrentBranch provides the currently checked out branch.
 func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
-	output, err := querier.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err := querier.QueryTrim("git", "branch", "--show-current")
 	if err == nil && output != "HEAD" {
 		return gitdomain.NewLocalBranchName(output), nil
 	}
