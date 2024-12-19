@@ -15,9 +15,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
-const (
-	commitsToBeamTitle = `Select the commits to beam into branch %s`
-)
+const commitsToBeamTitle = `Select the commits to beam into branch %s`
 
 // lets the user select commits to beam to the target branch
 func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.Commits, bool, error) {
