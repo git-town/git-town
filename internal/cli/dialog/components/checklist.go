@@ -1,69 +1,40 @@
-package dialog
+package components
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v17/internal/cli/colors"
-	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/gohacks/slice"
-	"github.com/git-town/git-town/v17/internal/messages"
-	"github.com/muesli/termenv"
 )
 
-const (
-	perennialBranchesTitle = `Perennial branches`
-	PerennialBranchesHelp  = `
-Perennial branches are long-lived branches.
-They are never shipped and have no ancestors.
-Typically, perennial branches have names like
-"development", "staging", "qa", "production", etc.
-
-See also the "perennial-regex" setting.
-
-`
-)
-
-// PerennialBranches lets the user update the perennial branches.
-// This includes asking the user and updating the respective settings based on the user selection.
-func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchNames, bool, error) {
-	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
-	if len(perennialCandidates) == 0 {
-		return gitdomain.LocalBranchNames{}, false, nil
-	}
-	program := tea.NewProgram(PerennialBranchesModel{
-		List:          list.NewList(list.NewEntries(perennialCandidates...), 0),
-		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
-		selectedColor: colors.Green(),
+// CheckList lets the user select zero to many of the given entries.
+func CheckList[S comparable](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
+	program := tea.NewProgram(checkListModel[S]{
+		List:  list.NewList(entries, cursor),
+		help:  help,
+		title: title,
 	})
-	components.SendInputs(inputs, program)
+	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	if err != nil {
-		return gitdomain.LocalBranchNames{}, false, err
+		return []S{}, false, err
 	}
-	result := dialogResult.(PerennialBranchesModel) //nolint:forcetypeassert
-	selectedBranches := result.CheckedEntries()
-	selectionText := strings.Join(selectedBranches.Strings(), ", ")
-	if selectionText == "" {
-		selectionText = "(none)"
-	}
-	fmt.Printf(messages.PerennialBranches, components.FormattedSelection(selectionText, result.Aborted()))
-	return selectedBranches, result.Aborted(), nil
+	result := dialogResult.(checkListModel[S]) //nolint:forcetypeassert
+	return result.CheckedEntries(), result.Aborted(), nil
 }
 
-type PerennialBranchesModel struct {
-	list.List[gitdomain.LocalBranchName]
-	Selections    []int
-	selectedColor termenv.Style
+type checkListModel[S comparable] struct {
+	list.List[S]
+	Selections []int
+	help       string // help text to display before the checklist
+	title      string // title to display before the help text
 }
 
 // checkedEntries provides all checked list entries.
-func (self PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames{}
+func (self checkListModel[S]) CheckedEntries() []S {
+	result := []S{}
 	for e, entry := range self.Entries {
 		if self.IsRowChecked(e) {
 			result = append(result, entry.Data)
@@ -73,34 +44,34 @@ func (self PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.
-func (self PerennialBranchesModel) DisableCurrentEntry() PerennialBranchesModel {
+func (self checkListModel[S]) DisableCurrentEntry() checkListModel[S] {
 	self.Selections = slice.Remove(self.Selections, self.Cursor)
 	return self
 }
 
 // enableCurrentEntry checks the currently selected list entry.
-func (self PerennialBranchesModel) EnableCurrentEntry() PerennialBranchesModel {
+func (self checkListModel[S]) EnableCurrentEntry() checkListModel[S] {
 	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
 	return self
 }
 
-func (self PerennialBranchesModel) Init() tea.Cmd {
+func (self checkListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
 // isRowChecked indicates whether the row with the given number is checked or not.
-func (self PerennialBranchesModel) IsRowChecked(row int) bool {
+func (self checkListModel[S]) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
 // isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self PerennialBranchesModel) IsSelectedRowChecked() bool {
+func (self checkListModel[S]) IsSelectedRowChecked() bool {
 	return self.IsRowChecked(self.Cursor)
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self PerennialBranchesModel) ToggleCurrentEntry() PerennialBranchesModel {
+func (self checkListModel[S]) ToggleCurrentEntry() checkListModel[S] {
 	if self.IsRowChecked(self.Cursor) {
 		self = self.DisableCurrentEntry()
 	} else {
@@ -109,7 +80,7 @@ func (self PerennialBranchesModel) ToggleCurrentEntry() PerennialBranchesModel {
 	return self
 }
 
-func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self checkListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -132,7 +103,7 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	return self, nil
 }
 
-func (self PerennialBranchesModel) View() string {
+func (self checkListModel[S]) View() string {
 	if self.Status != list.StatusActive {
 		return ""
 	}
