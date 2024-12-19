@@ -1,15 +1,8 @@
 package list
 
-import "fmt"
-
 // Entry is an entry in a List instance.
-type Entry[S fmt.Stringer] struct {
+type Entry[S comparable] struct {
 	Data    S
-	Enabled bool
+	Enabled bool // TODO: reverse to Disabled, make optional, then remove from all the instantiations of Entry
 	Text    string
-}
-
-// implement fmt.Stringer interface
-func (self Entry[S]) String() string {
-	return self.Text
 }
