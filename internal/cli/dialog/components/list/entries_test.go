@@ -35,6 +35,24 @@ func TestEntries(t *testing.T) {
 
 	t.Run("IndexOf", func(t *testing.T) {
 		t.Parallel()
+		t.Run("works with correctly comparable types", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingPlatform]{
+				{
+					Data:    configdomain.HostingPlatformGitHub,
+					Enabled: true,
+					Text:    "Github",
+				},
+				{
+					Data:    configdomain.HostingPlatformGitLab,
+					Enabled: true,
+					Text:    "GitLab",
+				},
+			}
+			have := entries.IndexOf(configdomain.HostingPlatformGitLab)
+			want := 1
+			must.EqOp(t, want, have)
+		})
 		t.Run("does not work with options", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[configdomain.HostingPlatform]]{
