@@ -10,9 +10,9 @@ import (
 )
 
 // CheckList lets the user select zero to many of the given entries.
-func CheckList[S comparable](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
+func CheckList[S comparable](entries list.Entries[S], title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(checkListModel[S]{
-		List:  list.NewList(entries, cursor),
+		List:  list.NewList(entries, 0),
 		help:  help,
 		title: title,
 	})
@@ -128,7 +128,7 @@ func (self checkListModel[S]) View() string {
 		case selected && !checked:
 			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case !selected && checked:
-			s.WriteString(self.Colors.Selection.Styled("  [x] " + branch.Text))
+			s.WriteString(self.Colors.Initial.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
 			s.WriteString("  [ ] " + branch.Text)
 		}

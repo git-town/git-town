@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v17/internal/cli/colors"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
@@ -35,24 +34,14 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	program := tea.NewProgram(PerennialBranchesModel{
-		List:          list.NewList(list.NewEntries(perennialCandidates...), 0),
-		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
-		selectedColor: colors.Green(),
-	})
-	components.SendInputs(inputs, program)
-	dialogResult, err := program.Run()
-	if err != nil {
-		return gitdomain.LocalBranchNames{}, false, err
-	}
-	result := dialogResult.(PerennialBranchesModel) //nolint:forcetypeassert
-	selectedBranches := result.CheckedEntries()
-	selectionText := strings.Join(selectedBranches.Strings(), ", ")
+	selectedBranchesList, aborted, err := components.CheckList(list.NewEntries(perennialCandidates...), perennialBranchesTitle, PerennialBranchesHelp, inputs)
+	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
+	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf(messages.PerennialBranches, components.FormattedSelection(selectionText, result.Aborted()))
-	return selectedBranches, result.Aborted(), nil
+	fmt.Printf(messages.PerennialBranches, components.FormattedSelection(selectionText, aborted))
+	return selectedBranches, aborted, err
 }
 
 type PerennialBranchesModel struct {
