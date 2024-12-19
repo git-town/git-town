@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
@@ -25,54 +24,36 @@ All options update proposals of child branches and remove the shipped branch loc
 `
 )
 
-const (
-	ShipStrategyEntryAPI         shipStrategyEntry = `api: merge the proposal on your code hosting platform via the code hosting API`
-	ShipStrategyEntryFastForward shipStrategyEntry = `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`
-	ShipStrategyEntrySquashMerge shipStrategyEntry = `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`
-)
-
 func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, bool, error) {
-	entries := []shipStrategyEntry{
-		ShipStrategyEntryAPI,
-		ShipStrategyEntryFastForward,
-		ShipStrategyEntrySquashMerge,
+	entries := list.Entries[configdomain.ShipStrategy]{
+		{
+			Data:    configdomain.ShipStrategyAPI,
+			Enabled: true,
+			Text:    `api: merge the proposal on your code hosting platform via the code hosting API`,
+		},
+		{
+			Data:    configdomain.ShipStragegyFastForward,
+			Enabled: true,
+			Text:    `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`,
+		},
+		{
+			Data:    configdomain.ShipStrategySquashMerge,
+			Enabled: true,
+			Text:    `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`,
+		},
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.ShipStrategyAPI, aborted, err
 	}
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Short(), aborted))
-	return selection.ShipStrategy(), aborted, err
+	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.String(), aborted))
+	return selection, aborted, err
 }
 
-type shipStrategyEntry string
-
-func (self shipStrategyEntry) ShipStrategy() configdomain.ShipStrategy {
-	switch self {
-	case ShipStrategyEntryAPI:
-		return configdomain.ShipStrategyAPI
-	case ShipStrategyEntryFastForward:
-		return configdomain.ShipStragegyFastForward
-	case ShipStrategyEntrySquashMerge:
-		return configdomain.ShipStrategySquashMerge
-	}
-	panic("unhandled shipStrategyEntry: " + self)
-}
-
-func (self shipStrategyEntry) Short() string {
-	start, _, _ := strings.Cut(self.String(), ":")
-	return start
-}
-
-func (self shipStrategyEntry) String() string {
-	return string(self)
-}
-
-func shipStrategyEntryIndex(entries []shipStrategyEntry, needle configdomain.ShipStrategy) int {
-	needleText := needle.String()
+func shipStrategyEntryIndex(entries list.Entries[configdomain.ShipStrategy], needle configdomain.ShipStrategy) int {
 	for e, entry := range entries {
-		if entry.Short() == needleText {
+		if entry.Data == needle {
 			return e
 		}
 	}
