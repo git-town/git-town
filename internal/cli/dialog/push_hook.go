@@ -34,12 +34,12 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 		{
 			Data:    true,
 			Enabled: true,
-			Text:    "enabled",
+			Text:    "enabled: run Git hooks when pushing branches",
 		},
 		{
 			Data:    false,
 			Enabled: true,
-			Text:    "disabled",
+			Text:    "disabled: don't run Git hooks when pushing branches",
 		},
 	}
 	var defaultPos int
