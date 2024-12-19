@@ -85,11 +85,14 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
 		return gitdomain.BranchesSnapshot{
+			Active: Some(currentBranch),
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  Some(currentBranch),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
 		}, nil
