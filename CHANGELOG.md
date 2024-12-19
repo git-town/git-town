@@ -6,7 +6,7 @@ Git Town 17.1 unblocks users who have submitted urgent issues.
 
 #### New Features
 
-- The configuration file can now also be named ".git-town.toml", in addition to ".git-branches.toml" ([#4343](https://github.com/git-town/git-town/issues/4343)).
+- The configuration file can now also be named ".git-town.toml", in addition to ".git-branches.toml". This helps users locate it when looking for "Git Town configuration". ([#4343](https://github.com/git-town/git-town/issues/4343)).
 - Supports development versions of Git ([#4344](https://github.com/git-town/git-town/pull/4344)).
 - `git town switch` no longer asks for ancestry information. This avoids the risk of accidentally selecting a wrong parent branch when one is under the assumption of selecting a branch to switch to ([#4340](https://github.com/git-town/git-town/issues/4340)).
 - Git Town now uses full-length SHA values to address commits. This improves reliability in very large repositories ([#4339](https://github.com/git-town/git-town/pull/4339)).
