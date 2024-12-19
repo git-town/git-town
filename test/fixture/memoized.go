@@ -36,10 +36,6 @@ func NewMemoized(dir string) Memoized {
 	}
 	// initialize the repo in the folder
 	originRepo := testruntime.Initialize(originPath, dir, binPath)
-	err = originRepo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
-	if err != nil {
-		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
-	}
 	err = originRepo.Run("git", "branch", "main", "initial")
 	if err != nil {
 		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
