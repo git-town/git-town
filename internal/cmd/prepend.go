@@ -152,7 +152,6 @@ type prependData struct {
 	proposal            Option[hostingdomain.Proposal]
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
-	shasToBeam          Option[gitdomain.SHAs]
 	stashSize           gitdomain.StashSize
 	targetBranch        gitdomain.LocalBranchName
 }
@@ -344,12 +343,12 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		)
 	}
 	if len(data.commitsToBeam) > 0 {
-		// simple sync the initial branch with the newly created branch
+		// sync the new parent branch with the initial branch
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(data.targetBranch, initialBranchType)
+		syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.targetBranch},
 		)
@@ -365,8 +364,21 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType) {
-	switch afterBeamToParentSyncStrategy(parentName) {
+func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
+		switch syncStrategy {
+		case configdomain.SyncStrategyCompress,
+			configdomain.SyncStrategyMerge:
+			prog.Value.Add(
+				&opcodes.MergeParent{Parent: parentName.BranchName()},
+				&opcodes.PushCurrentBranch{},
+			)
+		case configdomain.SyncStrategyRebase:
+			prog.Value.Add(
+				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
+				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+			)
+		}
 	}
 }
 

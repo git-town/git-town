@@ -15,12 +15,9 @@ import (
 	"github.com/muesli/termenv"
 )
 
-const (
-	commitsToBeamTitle = `Select the commits to beam into branch %s`
-)
+const commitsToBeamTitle = `Select the commits to beam into branch %s`
 
-// PerennialBranches lets the user update the perennial branches.
-// This includes asking the user and updating the respective settings based on the user selection.
+// lets the user select commits to beam to the target branch
 func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.Commits, bool, error) {
 	entries := make([]commitsToBeamEntry, len(commits))
 	for c, commit := range commits {
@@ -45,15 +42,15 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 
 type commitsToBeamEntry gitdomain.Commit
 
-func (self commitsToBeamEntry) String() string {
-	return self.Message.String()
+func (entry commitsToBeamEntry) String() string {
+	return entry.Message.String()
 }
 
 type commitsToBeamModel struct {
 	list.List[commitsToBeamEntry]
-	targetBranch  gitdomain.LocalBranchName
 	Selections    []int
 	selectedColor termenv.Style
+	targetBranch  gitdomain.LocalBranchName
 }
 
 // checkedEntries provides all checked list entries.
