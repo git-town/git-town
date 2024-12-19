@@ -23,7 +23,7 @@ func NewEntries[S ComparableStringer](records ...S) Entries[S] {
 // indicates whether all entries in this list are disabled
 func (self Entries[S]) AllDisabled() bool {
 	for _, entry := range self {
-		if entry.Enabled {
+		if !entry.Disabled {
 			return false
 		}
 	}
