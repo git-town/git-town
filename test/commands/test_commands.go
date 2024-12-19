@@ -442,7 +442,7 @@ func (self *TestCommands) RemoveRemote(name gitdomain.Remote) {
 	self.MustRun("git", "remote", "rm", name.String())
 }
 
-// RemoveUnnecessaryFiles trims all files that aren'self necessary in this repo.
+// RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (self *TestCommands) RemoveUnnecessaryFiles() {
 	fullPath := filepath.Join(self.WorkingDir, ".git", "hooks")
 	asserts.NoError(os.RemoveAll(fullPath))

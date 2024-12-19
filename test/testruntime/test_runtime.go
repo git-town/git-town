@@ -58,7 +58,7 @@ func CreateGitTown(t *testing.T) commands.TestCommands {
 	return repo
 }
 
-// initialize creates a fully functioning test.Runner in the given working directory,
+// Initialize creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func Initialize(workingDir, homeDir, binDir string) commands.TestCommands {
 	runtime := New(workingDir, homeDir, binDir)
@@ -69,7 +69,19 @@ func Initialize(workingDir, homeDir, binDir string) commands.TestCommands {
 	return runtime
 }
 
-// newRuntime provides a new test.Runner instance working in the given directory.
+// InitializeNoInitialCommit creates a fully functioning test.Runner in the given working directory,
+// including necessary Git configuration to make commits. Creates missing folders as needed.
+// Does not create an initial commit.
+// This is useful for scenarios that require testing the behavior of Git Town in a fresh repository.
+func InitializeNoInitialCommit(workingDir, homeDir, binDir string) commands.TestCommands {
+	runtime := New(workingDir, homeDir, binDir)
+	runtime.MustRun("git", "init", "--initial-branch=initial")
+	runtime.MustRun("git", "config", "--global", "user.name", "user")
+	runtime.MustRun("git", "config", "--global", "user.email", "email@example.com")
+	return runtime
+}
+
+// New provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	testRunner := testshell.TestRunner{
