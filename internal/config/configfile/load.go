@@ -21,8 +21,8 @@ func Decode(text string) (*Data, error) {
 	return &result, err
 }
 
-func Load(rootDir gitdomain.RepoRootDir, finalMessages stringslice.Collector) (Option[configdomain.PartialConfig], error) {
-	configPath := filepath.Join(rootDir.String(), FileName)
+func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringslice.Collector) (Option[configdomain.PartialConfig], error) {
+	configPath := filepath.Join(rootDir.String(), fileName)
 	file, err := os.Open(configPath)
 	if err != nil {
 		return None[configdomain.PartialConfig](), nil
@@ -30,11 +30,11 @@ func Load(rootDir gitdomain.RepoRootDir, finalMessages stringslice.Collector) (O
 	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileCannotRead, fileName, err)
 	}
 	configFileData, err := Decode(string(bytes))
 	if err != nil {
-		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, ".git-branches.yml", err)
+		return None[configdomain.PartialConfig](), fmt.Errorf(messages.ConfigFileInvalidContent, fileName, err)
 	}
 	result, err := Validate(*configFileData, finalMessages)
 	return Some(result), err
