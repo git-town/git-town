@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 	"github.com/git-town/git-town/v17/internal/messages"
 )
 
@@ -29,8 +30,9 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	selections :=
-	selectedBranchesList, aborted, err := components.CheckList(list.NewEntries(perennialCandidates...), selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
+	entries := list.NewEntries(perennialCandidates...)
+	selections := slice.FindMany(perennialCandidates, oldPerennialBranches)
+	selectedBranchesList, aborted, err := components.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {

@@ -36,8 +36,6 @@ Feature: change existing information in Git metadata
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
