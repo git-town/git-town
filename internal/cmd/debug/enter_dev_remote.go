@@ -14,7 +14,7 @@ func enterDevRemote() *cobra.Command {
 		Use: "dev-remote",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.DevRemote("origin", gitdomain.Remotes{"origin", "fork"}, dialogInputs.Next())
+			_, _, err := dialog.DevRemote(gitdomain.RemoteOrigin, gitdomain.Remotes{gitdomain.RemoteOrigin, "fork"}, dialogInputs.Next())
 			return err
 		},
 	}
