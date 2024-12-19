@@ -7,6 +7,19 @@ import (
 // Entries provides methods for a collection of Entry instances.
 type Entries[S comparable] []Entry[S]
 
+// creates an Entries instance containing the given records
+func NewEntries[S ComparableStringer](records ...S) Entries[S] {
+	result := make([]Entry[S], len(records))
+	for r, record := range records {
+		result[r] = Entry[S]{
+			Data:    record,
+			Enabled: true,
+			Text:    record.String(),
+		}
+	}
+	return result
+}
+
 // indicates whether all entries in this list are disabled
 func (self Entries[S]) AllDisabled() bool {
 	for _, entry := range self {
@@ -31,17 +44,4 @@ func (self Entries[S]) IndexOfData(needle S) int {
 type ComparableStringer interface {
 	comparable
 	fmt.Stringer
-}
-
-// creates an Entries instance containing the given records
-func NewEntries[S ComparableStringer](records ...S) Entries[S] {
-	result := make([]Entry[S], len(records))
-	for r, record := range records {
-		result[r] = Entry[S]{
-			Data:    record,
-			Enabled: true,
-			Text:    record.String(),
-		}
-	}
-	return result
 }
