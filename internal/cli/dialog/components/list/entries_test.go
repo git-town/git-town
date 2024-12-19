@@ -39,14 +39,12 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[configdomain.HostingPlatform]{
 				{
-					Data:     configdomain.HostingPlatformGitHub,
-					Disabled: false,
-					Text:     "Github",
+					Data: configdomain.HostingPlatformGitHub,
+					Text: "Github",
 				},
 				{
-					Data:     configdomain.HostingPlatformGitLab,
-					Disabled: false,
-					Text:     "GitLab",
+					Data: configdomain.HostingPlatformGitLab,
+					Text: "GitLab",
 				},
 			}
 			have := entries.IndexOf(configdomain.HostingPlatformGitLab)
@@ -57,19 +55,16 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[configdomain.HostingPlatform]]{
 				{
-					Data:     None[configdomain.HostingPlatform](),
-					Disabled: false,
-					Text:     "auto-detect",
+					Data: None[configdomain.HostingPlatform](),
+					Text: "auto-detect",
 				},
 				{
-					Data:     Some(configdomain.HostingPlatformGitHub),
-					Disabled: false,
-					Text:     "Github",
+					Data: Some(configdomain.HostingPlatformGitHub),
+					Text: "Github",
 				},
 				{
-					Data:     Some(configdomain.HostingPlatformGitLab),
-					Disabled: false,
-					Text:     "GitLab",
+					Data: Some(configdomain.HostingPlatformGitLab),
+					Text: "GitLab",
 				},
 			}
 			have := entries.IndexOf(Some(configdomain.HostingPlatformGitHub))
@@ -89,19 +84,16 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[configdomain.HostingPlatform]]{
 				{
-					Data:     None[configdomain.HostingPlatform](),
-					Disabled: false,
-					Text:     "auto-detect",
+					Data: None[configdomain.HostingPlatform](),
+					Text: "auto-detect",
 				},
 				{
-					Data:     Some(configdomain.HostingPlatformGitHub),
-					Disabled: false,
-					Text:     "Github",
+					Data: Some(configdomain.HostingPlatformGitHub),
+					Text: "Github",
 				},
 				{
-					Data:     Some(configdomain.HostingPlatformGitLab),
-					Disabled: false,
-					Text:     "GitLab",
+					Data: Some(configdomain.HostingPlatformGitLab),
+					Text: "GitLab",
 				},
 			}
 			have := entries.IndexOfFunc(Some(configdomain.HostingPlatformGitHub), func(a, b Option[configdomain.HostingPlatform]) bool {

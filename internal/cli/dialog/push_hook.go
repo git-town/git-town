@@ -27,14 +27,12 @@ More info at https://www.git-town.com/preferences/push-hook.
 func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, bool, error) {
 	entries := list.Entries[configdomain.PushHook]{
 		{
-			Data:     true,
-			Disabled: false,
-			Text:     "enabled: run Git hooks when pushing branches",
+			Data: true,
+			Text: "enabled: run Git hooks when pushing branches",
 		},
 		{
-			Data:     false,
-			Disabled: false,
-			Text:     "disabled: don't run Git hooks when pushing branches",
+			Data: false,
+			Text: "disabled: don't run Git hooks when pushing branches",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)

@@ -24,19 +24,16 @@ hence their name.
 func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
 	entries := list.Entries[configdomain.SyncFeatureStrategy]{
 		{
-			Data:     configdomain.SyncFeatureStrategyMerge,
-			Disabled: false,
-			Text:     `merge updates from the parent and tracking branch`,
+			Data: configdomain.SyncFeatureStrategyMerge,
+			Text: `merge updates from the parent and tracking branch`,
 		},
 		{
-			Data:     configdomain.SyncFeatureStrategyRebase,
-			Disabled: false,
-			Text:     `rebase branches against their parent and tracking branch`,
+			Data: configdomain.SyncFeatureStrategyRebase,
+			Text: `rebase branches against their parent and tracking branch`,
 		},
 		{
-			Data:     configdomain.SyncFeatureStrategyCompress,
-			Disabled: false,
-			Text:     `compress the branch after merging parent and tracking`,
+			Data: configdomain.SyncFeatureStrategyCompress,
+			Text: `compress the branch after merging parent and tracking`,
 		},
 	}
 	defaultPos := entries.IndexOf(existing)

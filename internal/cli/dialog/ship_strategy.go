@@ -27,19 +27,16 @@ All options update proposals of child branches and remove the shipped branch loc
 func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, bool, error) {
 	entries := list.Entries[configdomain.ShipStrategy]{
 		{
-			Data:     configdomain.ShipStrategyAPI,
-			Disabled: false,
-			Text:     `api: merge the proposal on your code hosting platform via the code hosting API`,
+			Data: configdomain.ShipStrategyAPI,
+			Text: `api: merge the proposal on your code hosting platform via the code hosting API`,
 		},
 		{
-			Data:     configdomain.ShipStragegyFastForward,
-			Disabled: false,
-			Text:     `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`,
+			Data: configdomain.ShipStragegyFastForward,
+			Text: `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`,
 		},
 		{
-			Data:     configdomain.ShipStrategySquashMerge,
-			Disabled: false,
-			Text:     `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`,
+			Data: configdomain.ShipStrategySquashMerge,
+			Text: `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`,
 		},
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)

@@ -30,14 +30,12 @@ on the first run of "git town sync".
 func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
 	entries := list.Entries[configdomain.PushNewBranches]{
 		{
-			Data:     true,
-			Disabled: false,
-			Text:     "yes: push new branches to origin",
+			Data: true,
+			Text: "yes: push new branches to origin",
 		},
 		{
-			Data:     false,
-			Disabled: false,
-			Text:     "no, new branches remain local until synced",
+			Data: false,
+			Text: "no, new branches remain local until synced",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
