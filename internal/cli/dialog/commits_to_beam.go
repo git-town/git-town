@@ -19,8 +19,7 @@ const (
 	commitsToBeamTitle = `Select the commits to beam into branch %s`
 )
 
-// PerennialBranches lets the user update the perennial branches.
-// This includes asking the user and updating the respective settings based on the user selection.
+// lets the user select commits to beam to the target branch
 func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.Commits, bool, error) {
 	entries := make([]commitsToBeamEntry, len(commits))
 	for c, commit := range commits {
