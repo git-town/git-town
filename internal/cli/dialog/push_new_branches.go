@@ -2,10 +2,10 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/cli/format"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/messages"
 )
@@ -27,47 +27,24 @@ on the first run of "git town sync".
 `
 )
 
-const (
-	PushNewBranchesEntryYes pushNewBranchesEntry = "yes, push new branches to origin"
-	PushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
-)
-
 func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
-	entries := []pushNewBranchesEntry{
-		PushNewBranchesEntryYes,
-		PushNewBranchesEntryNo,
+	entries := list.Entries[configdomain.PushNewBranches]{
+		{
+			Data:    true,
+			Enabled: true,
+			Text:    "yes: push new branches to origin",
+		},
+		{
+			Data:    false,
+			Enabled: true,
+			Text:    "no, new branches remain local until synced",
+		},
 	}
-	var defaultPos int
-	if existing {
-		defaultPos = 0
-	} else {
-		defaultPos = 1
-	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
+	defaultPos := DialogPosition(entries, existing)
+	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(selection.Short(), aborted))
-	return selection.PushNewBranches(), aborted, err
-}
-
-type pushNewBranchesEntry string
-
-func (self pushNewBranchesEntry) PushNewBranches() configdomain.PushNewBranches {
-	switch self {
-	case PushNewBranchesEntryYes:
-		return configdomain.PushNewBranches(true)
-	case PushNewBranchesEntryNo:
-		return configdomain.PushNewBranches(false)
-	}
-	panic("unhandled pushNewBranchesEntry: " + self)
-}
-
-func (self pushNewBranchesEntry) Short() string {
-	begin, _, _ := strings.Cut(self.String(), ",")
-	return begin
-}
-
-func (self pushNewBranchesEntry) String() string {
-	return string(self)
+	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(format.Bool(selection.IsTrue()), aborted))
+	return selection, aborted, err
 }
