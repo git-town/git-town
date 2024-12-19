@@ -53,6 +53,9 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
 	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")
+	if output == "" {
+		return result
+	}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
