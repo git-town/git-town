@@ -11,7 +11,7 @@ import (
 
 // CheckList lets the user select zero to many of the given entries.
 func CheckList[S comparable](entries list.Entries[S], title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
-	program := tea.NewProgram(checkListModel[S]{
+	program := tea.NewProgram(CheckListModel[S]{
 		List:  list.NewList(entries, 0),
 		help:  help,
 		title: title,
@@ -21,11 +21,11 @@ func CheckList[S comparable](entries list.Entries[S], title, help string, inputs
 	if err != nil {
 		return []S{}, false, err
 	}
-	result := dialogResult.(checkListModel[S]) //nolint:forcetypeassert
+	result := dialogResult.(CheckListModel[S]) //nolint:forcetypeassert
 	return result.CheckedEntries(), result.Aborted(), nil
 }
 
-type checkListModel[S comparable] struct {
+type CheckListModel[S comparable] struct {
 	list.List[S]
 	Selections []int
 	help       string // help text to display before the checklist
@@ -33,7 +33,7 @@ type checkListModel[S comparable] struct {
 }
 
 // checkedEntries provides all checked list entries.
-func (self checkListModel[S]) CheckedEntries() []S {
+func (self CheckListModel[S]) CheckedEntries() []S {
 	result := []S{}
 	for e, entry := range self.Entries {
 		if self.IsRowChecked(e) {
@@ -44,34 +44,34 @@ func (self checkListModel[S]) CheckedEntries() []S {
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.
-func (self checkListModel[S]) DisableCurrentEntry() checkListModel[S] {
+func (self CheckListModel[S]) DisableCurrentEntry() CheckListModel[S] {
 	self.Selections = slice.Remove(self.Selections, self.Cursor)
 	return self
 }
 
 // enableCurrentEntry checks the currently selected list entry.
-func (self checkListModel[S]) EnableCurrentEntry() checkListModel[S] {
+func (self CheckListModel[S]) EnableCurrentEntry() CheckListModel[S] {
 	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
 	return self
 }
 
-func (self checkListModel[S]) Init() tea.Cmd {
+func (self CheckListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
 // isRowChecked indicates whether the row with the given number is checked or not.
-func (self checkListModel[S]) IsRowChecked(row int) bool {
+func (self CheckListModel[S]) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
 // isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self checkListModel[S]) IsSelectedRowChecked() bool {
+func (self CheckListModel[S]) IsSelectedRowChecked() bool {
 	return self.IsRowChecked(self.Cursor)
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self checkListModel[S]) ToggleCurrentEntry() checkListModel[S] {
+func (self CheckListModel[S]) ToggleCurrentEntry() CheckListModel[S] {
 	if self.IsRowChecked(self.Cursor) {
 		self = self.DisableCurrentEntry()
 	} else {
@@ -80,7 +80,7 @@ func (self checkListModel[S]) ToggleCurrentEntry() checkListModel[S] {
 	return self
 }
 
-func (self checkListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self CheckListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -103,7 +103,7 @@ func (self checkListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolin
 	return self, nil
 }
 
-func (self checkListModel[S]) View() string {
+func (self CheckListModel[S]) View() string {
 	if self.Status != list.StatusActive {
 		return ""
 	}
