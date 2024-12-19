@@ -10,6 +10,10 @@ import (
 // PushHook contains the push-hook configuration setting.
 type PushHook bool
 
+func (self PushHook) IsTrue() bool {
+	return bool(self)
+}
+
 func (self PushHook) Negate() NoPushHook {
 	boolValue := bool(self)
 	return NoPushHook(!boolValue)
