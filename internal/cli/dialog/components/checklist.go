@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 )
 
-// CheckList lets the user select zero, one, or many of the given entries.
+// lets the user select zero, one, or many of the given entries
 func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, aborted bool, err error) {
 	program := tea.NewProgram(CheckListModel[S]{
 		List:       list.NewList(entries, 0),
@@ -33,7 +33,7 @@ type CheckListModel[S comparable] struct {
 	title      string // title to display before the help text
 }
 
-// checkedEntries provides all checked list entries.
+// provides all checked list entries
 func (self CheckListModel[S]) CheckedEntries() []S {
 	result := []S{}
 	for e, entry := range self.Entries {
@@ -44,13 +44,13 @@ func (self CheckListModel[S]) CheckedEntries() []S {
 	return result
 }
 
-// disableCurrentEntry unchecks the currently selected list entry.
+// unchecks the currently selected list entry
 func (self CheckListModel[S]) DisableCurrentEntry() CheckListModel[S] {
 	self.Selections = slice.Remove(self.Selections, self.Cursor)
 	return self
 }
 
-// enableCurrentEntry checks the currently selected list entry.
+// checks the currently selected list entry
 func (self CheckListModel[S]) EnableCurrentEntry() CheckListModel[S] {
 	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
 	return self
@@ -60,13 +60,13 @@ func (self CheckListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
-// isRowChecked indicates whether the row with the given number is checked or not.
+// indicates whether the row with the given number is checked or not
 func (self CheckListModel[S]) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
-// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
-// and checks it if it is unchecked.
+// unchecks the currently selected list entry if it is checked,
+// and checks it if it is unchecked
 func (self CheckListModel[S]) ToggleCurrentEntry() CheckListModel[S] {
 	if self.IsRowChecked(self.Cursor) {
 		self = self.DisableCurrentEntry()
