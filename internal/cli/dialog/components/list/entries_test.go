@@ -77,4 +77,33 @@ func TestEntries(t *testing.T) {
 			must.EqOp(t, want, have)
 		})
 	})
+
+	t.Run("IndexOfFunc", func(t *testing.T) {
+		t.Parallel()
+		t.Run("works with options", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[Option[configdomain.HostingPlatform]]{
+				{
+					Data:    None[configdomain.HostingPlatform](),
+					Enabled: true,
+					Text:    "auto-detect",
+				},
+				{
+					Data:    Some(configdomain.HostingPlatformGitHub),
+					Enabled: true,
+					Text:    "Github",
+				},
+				{
+					Data:    Some(configdomain.HostingPlatformGitLab),
+					Enabled: true,
+					Text:    "GitLab",
+				},
+			}
+			have := entries.IndexOfFunc(Some(configdomain.HostingPlatformGitHub), func(a, b Option[configdomain.HostingPlatform]) bool {
+				return a.Equal(b)
+			})
+			want := 1
+			must.EqOp(t, want, have)
+		})
+	})
 }
