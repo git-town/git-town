@@ -38,33 +38,28 @@ const (
 func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput components.TestInput) (Response, bool, error) {
 	entries := list.Entries[Response]{
 		{
-			Data:    ResponseQuit,
-			Enabled: true,
-			Text:    messages.UnfinishedRunStateQuit,
+			Data: ResponseQuit,
+			Text: messages.UnfinishedRunStateQuit,
 		},
 		{
-			Data:    ResponseContinue,
-			Enabled: true,
-			Text:    fmt.Sprintf(messages.UnfinishedRunStateContinue, command),
+			Data: ResponseContinue,
+			Text: fmt.Sprintf(messages.UnfinishedRunStateContinue, command),
 		},
 	}
 	if canSkip {
 		entries = append(entries, list.Entry[Response]{
-			Data:    ResponseSkip,
-			Enabled: true,
-			Text:    fmt.Sprintf(messages.UnfinishedRunStateSkip, command),
+			Data: ResponseSkip,
+			Text: fmt.Sprintf(messages.UnfinishedRunStateSkip, command),
 		})
 	}
 	entries = append(entries,
 		list.Entry[Response]{
-			Data:    ResponseUndo,
-			Enabled: true,
-			Text:    fmt.Sprintf(messages.UnfinishedRunStateUndo, command),
+			Data: ResponseUndo,
+			Text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command),
 		},
 		list.Entry[Response]{
-			Data:    ResponseDiscard,
-			Enabled: true,
-			Text:    messages.UnfinishedRunStateDiscard,
+			Data: ResponseDiscard,
+			Text: messages.UnfinishedRunStateDiscard,
 		},
 	)
 	selection, aborted, err := components.RadioList(entries, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
