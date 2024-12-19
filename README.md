@@ -56,9 +56,9 @@ development. Supports mono-repos and stacked changes. Check out
 
 #### Dealing with errors
 
-- [continue](https://www.git-town.com/commands/continue.html) - restart the last
-  Git Town command after having resolved conflicts
-- [skip](https://www.git-town.com/commands/skip.html) - restart the last run Git
+- [continue](https://www.git-town.com/commands/continue.html) - resume the last
+  run Git Town command after having resolved conflicts
+- [skip](https://www.git-town.com/commands/skip.html) - resume the last run Git
   Town command by skipping the current branch
 - [status](https://www.git-town.com/commands/status.html) - displays or resets
   the current suspended Git Town command

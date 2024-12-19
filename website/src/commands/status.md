@@ -20,5 +20,5 @@ determine the repository state.
 
 ### subcommands
 
-The [reset](status-reset.md) subcommand prints the parent branch of the current
-or given
+The [reset](status-reset.md) subcommand deletes the persisted runstate. This is
+only needed if the runstate is corrupted and causes Git Town to crash.

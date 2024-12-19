@@ -167,11 +167,11 @@ Git commands that the Git Town test suite runs under the hood, add a tag
 Scenario: my awesome scenario
 ```
 
-To see all Git commands that the test runner and the Git Town command run,
-execute the Git Town command with the `--verbose` option. As an example, if the
-step `When I run "git-town append new"` mysteriously fails, you could change it
-to `When I run "git-town append new -v"`. Also add the tags `@debug @this` to
-see the CLI output on the console.
+To see all Git commands that the test runner and the Git Town command execute,
+run the Git Town command with the `--verbose` option. As an example, if the step
+`When I run "git-town append new"` mysteriously fails, you could change it to
+`When I run "git-town append new -v"`. Also add the tags `@debug @this` to see
+the CLI output on the console.
 
 To get a quick glance of which status the repo is at any point in time, insert
 the step `And display "<command_>"` running whatever command you want to execute
