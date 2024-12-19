@@ -1,5 +1,24 @@
 # Git Town Changelog
 
+### 17.1.0 (2024-12-19)
+
+Git Town 17.1 unblocks users who have submitted urgent issues.
+
+#### New Features
+
+- The configuration file can now also be named ".git-town.toml", in addition to ".git-branches.toml". This helps users locate it when looking for "Git Town configuration". ([#4343](https://github.com/git-town/git-town/issues/4343)).
+- Supports development versions of Git ([#4344](https://github.com/git-town/git-town/pull/4344)).
+- `git town switch` no longer asks for ancestry information. This avoids the risk of accidentally selecting a wrong parent branch when one is under the assumption of selecting a branch to switch to ([#4340](https://github.com/git-town/git-town/issues/4340)).
+- Git Town now uses full-length SHA values to address commits. This improves reliability in very large repositories ([#4339](https://github.com/git-town/git-town/pull/4339)).
+
+#### Bug Fixes
+
+- The setup assistant now allows configuring a "BitBucket-Datacenter" setup ([#4360](https://github.com/git-town/git-town/pull/4360)).
+
+#### Contributors
+
+Shoutout to @kevgo, @lud-wj, @pratikpc, @ruudk, @stephenwade for contributing feedback, ideas, documentation, and code to 28 shipped PRs and 5 resolved issues!
+
 ## 17.0.0 (2024-12-16)
 
 Git Town v17 modernizes some outdated concepts that were already documented. As always with major new Git Town releases, all changes are backwards compatible, so Git Town users don't need to change anything. The major version bump is merely a signal that you might need to update some of your own tooling around Git Town.
