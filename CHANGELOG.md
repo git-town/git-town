@@ -2,7 +2,7 @@
 
 ### 17.1.0 (2024-12-19)
 
-Git Town 17.1 releases critical updates that unblock users.
+Git Town 17.1 unblocks users who have submitted urgent issues.
 
 #### New Features
 
