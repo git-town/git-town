@@ -31,7 +31,7 @@ func (self Entries[S]) AllDisabled() bool {
 }
 
 // provides the position of the given needle in this list
-func (self Entries[S]) IndexOfData(needle S) int {
+func (self Entries[S]) IndexOf(needle S) int {
 	for e, entry := range self {
 		if entry.Data == needle {
 			return e

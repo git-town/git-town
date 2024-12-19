@@ -38,7 +38,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 			Text:    "no, don't receive updates from upstream",
 		},
 	}
-	defaultPos := entries.IndexOfData(existing)
+	defaultPos := entries.IndexOf(existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
