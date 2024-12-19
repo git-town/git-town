@@ -37,7 +37,7 @@ func (self Entries[S]) IndexOfData(needle S) int {
 			return e
 		}
 	}
-	return -1
+	return 0
 }
 
 // narrower type needed to use the NewEntries convenience function
