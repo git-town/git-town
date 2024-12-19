@@ -20,7 +20,7 @@ type List[S any] struct {
 	Status       Status
 }
 
-func NewList[S fmt.Stringer](entries Entries[S], cursor int) List[S] {
+func NewList[S any](entries Entries[S], cursor int) List[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return List[S]{
 		Status:       StatusActive,
