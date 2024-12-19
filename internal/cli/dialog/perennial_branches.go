@@ -28,6 +28,8 @@ See also the "perennial-regex" setting.
 `
 )
 
+// TODO: extract a components.Checkboxes struct similar to components.RadioList that implements a generic checkbox list.
+
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchNames, bool, error) {
