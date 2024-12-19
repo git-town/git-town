@@ -77,6 +77,23 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
+	if output == "" {
+		// We are in a brand-new repo.
+		// Even though `git branch` returns nothing, `git branch --show-current` will return the initial branch name.
+		output, err = querier.Query("git", "branch", "--show-current")
+		if err != nil {
+			return gitdomain.EmptyBranchesSnapshot(), err
+		}
+		return gitdomain.BranchesSnapshot{
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName(output)),
+					LocalSHA:   None[gitdomain.SHA](),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+				},
+			},
+		}, nil
+	}
 	branches, currentBranchOpt := ParseVerboseBranchesOutput(output)
 	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
 	if hasCurrentBranch {
