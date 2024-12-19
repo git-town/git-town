@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/test/git"
 	"github.com/shoenig/test/must"
 )
 
@@ -32,7 +31,7 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("AtRemote", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.AtRemote(git.RemoteOrigin)
+		have := branch.AtRemote(gitdomain.RemoteOrigin)
 		want := gitdomain.NewRemoteBranchName("origin/branch")
 		must.EqOp(t, want, have)
 	})
@@ -149,7 +148,7 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("TrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
-		have := branch.TrackingBranch(git.RemoteOrigin)
+		have := branch.TrackingBranch(gitdomain.RemoteOrigin)
 		want := gitdomain.NewRemoteBranchName("origin/branch")
 		must.EqOp(t, want, have)
 	})

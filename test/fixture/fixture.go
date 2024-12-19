@@ -214,7 +214,7 @@ func (self *Fixture) TagTable() datatable.DataTable {
 	builder.AddMany(localTags, "local")
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originTags := originRepo.Tags()
-		builder.AddMany(originTags, testgit.RemoteOrigin.String())
+		builder.AddMany(originTags, gitdomain.RemoteOrigin.String())
 	}
 	return builder.Table()
 }
@@ -247,7 +247,7 @@ func initializeWorkspace(repo *commands.TestCommands) {
 }
 
 func originRepoPath(rootDir string) string {
-	return filepath.Join(rootDir, testgit.RemoteOrigin.String())
+	return filepath.Join(rootDir, gitdomain.RemoteOrigin.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.

@@ -8,7 +8,6 @@ import (
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/git-town/git-town/v17/test/commands"
 	"github.com/git-town/git-town/v17/test/filesystem"
-	testgit "github.com/git-town/git-town/v17/test/git"
 	"github.com/git-town/git-town/v17/test/testruntime"
 )
 
@@ -76,8 +75,8 @@ func (self Memoized) CloneInto(dir string) Fixture {
 	devRepo := testruntime.New(developerDir, dir, binDir)
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	devRepo.MustRun("git", "remote", "remove", testgit.RemoteOrigin.String())
-	devRepo.AddRemote(testgit.RemoteOrigin, originDir)
+	devRepo.MustRun("git", "remote", "remove", gitdomain.RemoteOrigin.String())
+	devRepo.AddRemote(gitdomain.RemoteOrigin, originDir)
 	devRepo.Fetch()
 	// and connect the main branches again
 	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))

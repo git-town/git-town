@@ -57,7 +57,7 @@ func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.Loc
 }
 
 func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "ls-remote", "origin", branch.String())
+	err := runner.Run("git", "ls-remote", "origin", branch.String()) // TODO: use the configured devRemote here, don't hard-code "origin"
 	return err == nil
 }
 

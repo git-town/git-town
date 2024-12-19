@@ -5,14 +5,13 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
-	"github.com/git-town/git-town/v17/test/git"
 	"github.com/shoenig/test/must"
 )
 
 func TestNewRemote(t *testing.T) {
 	t.Parallel()
 	tests := map[string]Option[gitdomain.Remote]{
-		"origin":   Some(git.RemoteOrigin),
+		"origin":   Some(gitdomain.RemoteOrigin),
 		"upstream": Some(gitdomain.RemoteUpstream),
 		"foo":      gitdomain.NewRemote("foo"),
 		"":         None[gitdomain.Remote](),
