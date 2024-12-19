@@ -1,7 +1,6 @@
 package components
 
 import (
-	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,7 +12,7 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S fmt.Stringer](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+func RadioList[S any](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),
 		help:  help,
@@ -28,7 +27,7 @@ func RadioList[S fmt.Stringer](entries list.Entries[S], cursor int, title, help 
 	return result.SelectedData(), result.Aborted(), nil
 }
 
-type radioListModel[S fmt.Stringer] struct {
+type radioListModel[S any] struct {
 	list.List[S]
 	help  string // help text to display before the radio list
 	title string // title to display before the help text
