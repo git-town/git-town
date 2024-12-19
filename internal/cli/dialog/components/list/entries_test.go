@@ -17,17 +17,17 @@ func TestEntries(t *testing.T) {
 		t.Run("all entries are disabled", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
-				{Enabled: false},
-				{Enabled: false},
+				{Disabled: true},
+				{Disabled: true},
 			}
 			must.True(t, entries.AllDisabled())
 		})
 		t.Run("some entries are enabled", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
-				{Enabled: false},
-				{Enabled: false},
-				{Enabled: true},
+				{Disabled: true},
+				{Disabled: true},
+				{Disabled: false},
 			}
 			must.False(t, entries.AllDisabled())
 		})
@@ -39,14 +39,12 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[configdomain.HostingPlatform]{
 				{
-					Data:    configdomain.HostingPlatformGitHub,
-					Enabled: true,
-					Text:    "Github",
+					Data: configdomain.HostingPlatformGitHub,
+					Text: "Github",
 				},
 				{
-					Data:    configdomain.HostingPlatformGitLab,
-					Enabled: true,
-					Text:    "GitLab",
+					Data: configdomain.HostingPlatformGitLab,
+					Text: "GitLab",
 				},
 			}
 			have := entries.IndexOf(configdomain.HostingPlatformGitLab)
@@ -57,19 +55,16 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[configdomain.HostingPlatform]]{
 				{
-					Data:    None[configdomain.HostingPlatform](),
-					Enabled: true,
-					Text:    "auto-detect",
+					Data: None[configdomain.HostingPlatform](),
+					Text: "auto-detect",
 				},
 				{
-					Data:    Some(configdomain.HostingPlatformGitHub),
-					Enabled: true,
-					Text:    "Github",
+					Data: Some(configdomain.HostingPlatformGitHub),
+					Text: "Github",
 				},
 				{
-					Data:    Some(configdomain.HostingPlatformGitLab),
-					Enabled: true,
-					Text:    "GitLab",
+					Data: Some(configdomain.HostingPlatformGitLab),
+					Text: "GitLab",
 				},
 			}
 			have := entries.IndexOf(Some(configdomain.HostingPlatformGitHub))
@@ -89,19 +84,16 @@ func TestEntries(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[configdomain.HostingPlatform]]{
 				{
-					Data:    None[configdomain.HostingPlatform](),
-					Enabled: true,
-					Text:    "auto-detect",
+					Data: None[configdomain.HostingPlatform](),
+					Text: "auto-detect",
 				},
 				{
-					Data:    Some(configdomain.HostingPlatformGitHub),
-					Enabled: true,
-					Text:    "Github",
+					Data: Some(configdomain.HostingPlatformGitHub),
+					Text: "Github",
 				},
 				{
-					Data:    Some(configdomain.HostingPlatformGitLab),
-					Enabled: true,
-					Text:    "GitLab",
+					Data: Some(configdomain.HostingPlatformGitLab),
+					Text: "GitLab",
 				},
 			}
 			have := entries.IndexOfFunc(Some(configdomain.HostingPlatformGitHub), func(a, b Option[configdomain.HostingPlatform]) bool {

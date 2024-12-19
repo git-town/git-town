@@ -24,14 +24,12 @@ merging pull requests through its UI.
 func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
 	entries := list.Entries[bool]{
 		{
-			Data:    true,
-			Enabled: true,
-			Text:    `yes, "git town ship" should delete tracking branches`,
+			Data: true,
+			Text: `yes, "git town ship" should delete tracking branches`,
 		},
 		{
-			Data:    false,
-			Enabled: true,
-			Text:    `no, my code hosting platform deletes tracking branches`,
+			Data: false,
+			Text: `no, my code hosting platform deletes tracking branches`,
 		},
 	}
 	var defaultPos int

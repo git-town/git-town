@@ -28,14 +28,12 @@ and you want to keep it in sync with the repo it was forked from.
 func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInput) (configdomain.SyncUpstream, bool, error) {
 	entries := list.Entries[configdomain.SyncUpstream]{
 		{
-			Data:    true,
-			Enabled: true,
-			Text:    "yes, receive updates from the upstream repo",
+			Data: true,
+			Text: "yes, receive updates from the upstream repo",
 		},
 		{
-			Data:    false,
-			Enabled: true,
-			Text:    "no, don't receive updates from upstream",
+			Data: false,
+			Text: "no, don't receive updates from upstream",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
