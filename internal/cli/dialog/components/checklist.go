@@ -65,11 +65,6 @@ func (self CheckListModel[S]) IsRowChecked(row int) bool {
 	return slices.Contains(self.Selections, row)
 }
 
-// isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self CheckListModel[S]) IsSelectedRowChecked() bool {
-	return self.IsRowChecked(self.Cursor)
-}
-
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
 func (self CheckListModel[S]) ToggleCurrentEntry() CheckListModel[S] {

@@ -68,30 +68,6 @@ func TestPerennialBranches(t *testing.T) {
 		})
 	})
 
-	t.Run("isSelectedRowChecked", func(t *testing.T) {
-		t.Parallel()
-		t.Run("selected row is checked", func(t *testing.T) {
-			t.Parallel()
-			model := components.CheckListModel[gitdomain.LocalBranchName]{
-				List: list.List[gitdomain.LocalBranchName]{
-					Cursor: 2,
-				},
-				Selections: []int{2},
-			}
-			must.True(t, model.IsSelectedRowChecked())
-		})
-		t.Run("selected row is not checked", func(t *testing.T) {
-			t.Parallel()
-			model := components.CheckListModel[gitdomain.LocalBranchName]{
-				List: list.List[gitdomain.LocalBranchName]{
-					Cursor: 1,
-				},
-				Selections: []int{2},
-			}
-			must.False(t, model.IsSelectedRowChecked())
-		})
-	})
-
 	t.Run("isRowChecked", func(t *testing.T) {
 		t.Parallel()
 		model := components.CheckListModel[gitdomain.LocalBranchName]{
