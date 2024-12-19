@@ -80,14 +80,14 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	if output == "" {
 		// We are in a brand-new repo.
 		// Even though `git branch` returns nothing, `git branch --show-current` will return the initial branch name.
-		output, err = querier.Query("git", "branch", "--show-current")
+		currentBranch, err := self.CurrentBranchUncached(querier)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
 		return gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName(output)),
+					LocalName:  Some(currentBranch),
 					LocalSHA:   None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				},
