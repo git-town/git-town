@@ -57,6 +57,11 @@ func TestEntries(t *testing.T) {
 			have := entries.IndexOf(Some(configdomain.HostingPlatformGitHub))
 			want := 0 // this should be 1 if comparing options would work
 			must.EqOp(t, want, have)
+			have = entries.IndexOfFunc(Some(configdomain.HostingPlatformGitHub), func(a, b Option[configdomain.HostingPlatform]) bool {
+				return a.Equal(b)
+			})
+			want = 1
+			must.EqOp(t, want, have)
 		})
 	})
 }
