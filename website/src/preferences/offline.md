@@ -12,8 +12,8 @@ This setting applies to all repositories on your local machine.
 
 ## set via CLI
 
-To put Git Town into offline mode, execute the
-[git town offline](../commands/offline.md) command.
+To put Git Town into offline mode, run
+[git town offline](../commands/offline.md).
 
 ## Git metadata
 

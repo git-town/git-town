@@ -25,6 +25,7 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 	entries := hostingPlatformEntries{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
+		hostingPlatformBitBucketDatacenter,
 		hostingPlatformGitea,
 		hostingPlatformGitHub,
 		hostingPlatformGitLab,
