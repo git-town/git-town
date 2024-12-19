@@ -11,7 +11,7 @@ import (
 // how many elements to display in the dialog
 const WindowSize = 9
 
-// RadioList lets the user select a new main branch for this repo.
+// RadioList lets the user select one of the given entries.
 func RadioList[S comparable](entries list.Entries[S], cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		List:  list.NewList(entries, cursor),
