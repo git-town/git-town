@@ -5,7 +5,7 @@ import (
 )
 
 // Entries provides methods for a collection of Entry instances.
-type Entries[S fmt.Stringer] []Entry[S]
+type Entries[S any] []Entry[S]
 
 // creates an Entries instance containing the given records
 func NewEntries[S fmt.Stringer](records ...S) Entries[S] {
