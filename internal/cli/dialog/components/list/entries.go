@@ -41,9 +41,9 @@ func (self Entries[S]) IndexOf(needle S) int {
 }
 
 // provides the position of the given needle in this list
-func (self Entries[S]) IndexOfFunc(needle S, isEqualFn func(a, b S) bool) int {
+func (self Entries[S]) IndexOfFunc(needle S, equalFn func(a, b S) bool) int {
 	for e, entry := range self {
-		if isEqualFn(entry.Data, needle) {
+		if equalFn(entry.Data, needle) {
 			return e
 		}
 	}
