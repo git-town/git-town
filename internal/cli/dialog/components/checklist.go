@@ -10,11 +10,12 @@ import (
 )
 
 // CheckList lets the user select zero to many of the given entries.
-func CheckList[S comparable](entries list.Entries[S], title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
+func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(CheckListModel[S]{
-		List:  list.NewList(entries, 0),
-		help:  help,
-		title: title,
+		List:       list.NewList(entries, 0),
+		Selections: selections,
+		help:       help,
+		title:      title,
 	})
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()

@@ -29,7 +29,8 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	selectedBranchesList, aborted, err := components.CheckList(list.NewEntries(perennialCandidates...), perennialBranchesTitle, PerennialBranchesHelp, inputs)
+	selections :=
+	selectedBranchesList, aborted, err := components.CheckList(list.NewEntries(perennialCandidates...), selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
