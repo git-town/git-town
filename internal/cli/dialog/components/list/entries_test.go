@@ -35,6 +35,24 @@ func TestEntries(t *testing.T) {
 
 	t.Run("IndexOf", func(t *testing.T) {
 		t.Parallel()
+		t.Run("works with correctly comparable types", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[configdomain.HostingPlatform]{
+				{
+					Data:    configdomain.HostingPlatformGitHub,
+					Enabled: true,
+					Text:    "Github",
+				},
+				{
+					Data:    configdomain.HostingPlatformGitLab,
+					Enabled: true,
+					Text:    "GitLab",
+				},
+			}
+			have := entries.IndexOf(configdomain.HostingPlatformGitLab)
+			want := 1
+			must.EqOp(t, want, have)
+		})
 		t.Run("does not work with options", func(t *testing.T) {
 			t.Parallel()
 			entries := list.Entries[Option[configdomain.HostingPlatform]]{
@@ -61,6 +79,35 @@ func TestEntries(t *testing.T) {
 				return a.Equal(b)
 			})
 			want = 1
+			must.EqOp(t, want, have)
+		})
+	})
+
+	t.Run("IndexOfFunc", func(t *testing.T) {
+		t.Parallel()
+		t.Run("works with options", func(t *testing.T) {
+			t.Parallel()
+			entries := list.Entries[Option[configdomain.HostingPlatform]]{
+				{
+					Data:    None[configdomain.HostingPlatform](),
+					Enabled: true,
+					Text:    "auto-detect",
+				},
+				{
+					Data:    Some(configdomain.HostingPlatformGitHub),
+					Enabled: true,
+					Text:    "Github",
+				},
+				{
+					Data:    Some(configdomain.HostingPlatformGitLab),
+					Enabled: true,
+					Text:    "GitLab",
+				},
+			}
+			have := entries.IndexOfFunc(Some(configdomain.HostingPlatformGitHub), func(a, b Option[configdomain.HostingPlatform]) bool {
+				return a.Equal(b)
+			})
+			want := 1
 			must.EqOp(t, want, have)
 		})
 	})
