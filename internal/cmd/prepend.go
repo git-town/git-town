@@ -223,18 +223,19 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil || exit {
 		return data, exit, err
 	}
+	// TODO: find the latest ancestor branch that actually exists (wasn't manually deleted)
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
-	parent, hasParent := parentOpt.Get()
-	if !hasParent {
+	lineageParent, lineageHasParent := parentOpt.Get()
+	if !lineageHasParent {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, parent)
+	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, lineageParent)
 	if err != nil {
 		return data, false, err
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, parent, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, lineageParent, dialogTestInputs.Next())
 	}
 	if err != nil || exit {
 		return data, exit, err
@@ -248,7 +249,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil {
 		return data, false, err
 	}
-	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(parent)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(lineageParent)
 	slices.Reverse(parentAndAncestors)
 	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
 	return prependData{
@@ -260,7 +261,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
-		existingParent:      parent,
+		existingParent:      lineageParent,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
