@@ -335,6 +335,16 @@ func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.
 	return Some(gitdomain.LocalBranchName(name))
 }
 
+func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote {
+	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
+	if err != nil {
+		// Git returns an error if the user has not configured a default remote name.
+		// Use the Git default.
+		return gitdomain.Remote("origin")
+	}
+	return gitdomain.Remote(output)
+}
+
 // DeleteHostingPlatform removes the hosting platform config entry.
 func (self *Commands) DeleteHostingPlatform(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyHostingPlatform.String())
