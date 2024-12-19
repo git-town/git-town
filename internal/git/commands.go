@@ -311,7 +311,7 @@ func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bo
 func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
 	output, err := querier.QueryTrim("git", "branch", "--show-current")
-	if err == nil && output != "HEAD" {
+	if err == nil && output != "" {
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
