@@ -45,18 +45,38 @@ func (self unfinishedRunstateDialogEntry) String() string {
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
 func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput components.TestInput) (Response, bool, error) {
-	options := []unfinishedRunstateDialogEntry{
-		{response: ResponseQuit, text: messages.UnfinishedRunStateQuit},
-		{response: ResponseContinue, text: fmt.Sprintf(messages.UnfinishedRunStateContinue, command)},
+	entries := list.Entries[Response]{
+		{
+			Data:    ResponseQuit,
+			Enabled: true,
+			Text:    messages.UnfinishedRunStateQuit,
+		},
+		{
+			Data:    ResponseContinue,
+			Enabled: true,
+			Text:    fmt.Sprintf(messages.UnfinishedRunStateContinue, command),
+		},
 	}
 	if canSkip {
-		options = append(options, unfinishedRunstateDialogEntry{response: ResponseSkip, text: fmt.Sprintf(messages.UnfinishedRunStateSkip, command)})
+		entries = append(entries, list.Entry[Response]{
+			Data:    ResponseSkip,
+			Enabled: true,
+			Text:    fmt.Sprintf(messages.UnfinishedRunStateSkip, command),
+		})
 	}
-	options = append(options,
-		unfinishedRunstateDialogEntry{response: ResponseUndo, text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command)},
-		unfinishedRunstateDialogEntry{response: ResponseDiscard, text: messages.UnfinishedRunStateDiscard},
+	entries = append(entries,
+		list.Entry[Response]{
+			Data:    ResponseUndo,
+			Enabled: true,
+			Text:    fmt.Sprintf(messages.UnfinishedRunStateUndo, command),
+		},
+		list.Entry[Response]{
+			Data:    ResponseDiscard,
+			Enabled: true,
+			Text:    messages.UnfinishedRunStateDiscard,
+		},
 	)
-	selection, aborted, err := components.RadioList(list.NewEntries(options...), 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
-	fmt.Printf(messages.UnfinishedCommandHandle, components.FormattedSelection(selection.response.String(), aborted))
-	return selection.response, aborted, err
+	selection, aborted, err := components.RadioList(entries, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
+	fmt.Printf(messages.UnfinishedCommandHandle, components.FormattedSelection(string(selection), aborted))
+	return selection, aborted, err
 }
