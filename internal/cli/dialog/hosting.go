@@ -24,34 +24,34 @@ Only change this if your code hosting server uses as custom URL.
 func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs components.TestInput) (Option[configdomain.HostingPlatform], bool, error) {
 	entries := list.Entries[Option[configdomain.HostingPlatform]]{
 		{
-			Data:    None[configdomain.HostingPlatform](),
-			Enabled: true,
-			Text:    "auto-detect",
+			Data:     None[configdomain.HostingPlatform](),
+			Disabled: false,
+			Text:     "auto-detect",
 		},
 		{
-			Data:    Some(configdomain.HostingPlatformBitbucket),
-			Enabled: true,
-			Text:    "BitBucket",
+			Data:     Some(configdomain.HostingPlatformBitbucket),
+			Disabled: false,
+			Text:     "BitBucket",
 		},
 		{
-			Data:    Some(configdomain.HostingPlatformBitbucketDatacenter),
-			Enabled: true,
-			Text:    "BitBucket-Datacenter",
+			Data:     Some(configdomain.HostingPlatformBitbucketDatacenter),
+			Disabled: false,
+			Text:     "BitBucket-Datacenter",
 		},
 		{
-			Data:    Some(configdomain.HostingPlatformGitea),
-			Enabled: true,
-			Text:    "Gitea",
+			Data:     Some(configdomain.HostingPlatformGitea),
+			Disabled: false,
+			Text:     "Gitea",
 		},
 		{
-			Data:    Some(configdomain.HostingPlatformGitHub),
-			Enabled: true,
-			Text:    "GitHub",
+			Data:     Some(configdomain.HostingPlatformGitHub),
+			Disabled: false,
+			Text:     "GitHub",
 		},
 		{
-			Data:    Some(configdomain.HostingPlatformGitLab),
-			Enabled: true,
-			Text:    "GitLab",
+			Data:     Some(configdomain.HostingPlatformGitLab),
+			Disabled: false,
+			Text:     "GitLab",
 		},
 	}
 	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[configdomain.HostingPlatform]) bool {

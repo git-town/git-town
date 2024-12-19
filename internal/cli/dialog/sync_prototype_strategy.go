@@ -23,19 +23,19 @@ hence their name.
 func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs components.TestInput) (configdomain.SyncPrototypeStrategy, bool, error) {
 	entries := list.Entries[configdomain.SyncPrototypeStrategy]{
 		{
-			Data:    configdomain.SyncPrototypeStrategyMerge,
-			Enabled: true,
-			Text:    "merge updates from the parent and tracking branch",
+			Data:     configdomain.SyncPrototypeStrategyMerge,
+			Disabled: false,
+			Text:     "merge updates from the parent and tracking branch",
 		},
 		{
-			Data:    configdomain.SyncPrototypeStrategyRebase,
-			Enabled: true,
-			Text:    "rebase branches against their parent and tracking branch",
+			Data:     configdomain.SyncPrototypeStrategyRebase,
+			Disabled: false,
+			Text:     "rebase branches against their parent and tracking branch",
 		},
 		{
-			Data:    configdomain.SyncPrototypeStrategyCompress,
-			Enabled: true,
-			Text:    "compress the branch after merging parent and tracking",
+			Data:     configdomain.SyncPrototypeStrategyCompress,
+			Disabled: false,
+			Text:     "compress the branch after merging parent and tracking",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)

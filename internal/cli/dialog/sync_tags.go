@@ -21,14 +21,14 @@ Should "git town sync" sync tags with origin?
 func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, bool, error) {
 	entries := list.Entries[configdomain.SyncTags]{
 		{
-			Data:    true,
-			Enabled: true,
-			Text:    "yes, sync Git tags",
+			Data:     true,
+			Disabled: false,
+			Text:     "yes, sync Git tags",
 		},
 		{
-			Data:    false,
-			Enabled: true,
-			Text:    "no, don't sync Git tags",
+			Data:     false,
+			Disabled: false,
+			Text:     "no, don't sync Git tags",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)

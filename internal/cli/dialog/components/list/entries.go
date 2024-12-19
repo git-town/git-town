@@ -12,9 +12,9 @@ func NewEntries[S ComparableStringer](records ...S) Entries[S] {
 	result := make([]Entry[S], len(records))
 	for r, record := range records {
 		result[r] = Entry[S]{
-			Data:    record,
-			Enabled: true,
-			Text:    record.String(),
+			Data:     record,
+			Disabled: false,
+			Text:     record.String(),
 		}
 	}
 	return result
