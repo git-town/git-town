@@ -24,11 +24,6 @@ More info at https://www.git-town.com/preferences/push-hook.
 `
 )
 
-const (
-	pushHookEntryEnabled  pushHookEntry = "enabled"
-	pushHookEntryDisabled pushHookEntry = "disabled"
-)
-
 func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, bool, error) {
 	entries := list.Entries[configdomain.PushHook]{
 		{
@@ -49,20 +44,4 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 	}
 	fmt.Printf(messages.PushHook, components.FormattedSelection(format.Bool(selection.IsTrue()), aborted))
 	return selection, aborted, err
-}
-
-type pushHookEntry string
-
-func (self pushHookEntry) PushHook() configdomain.PushHook {
-	switch self {
-	case pushHookEntryEnabled:
-		return configdomain.PushHook(true)
-	case pushHookEntryDisabled:
-		return configdomain.PushHook(false)
-	}
-	panic("unhandled pushHookEntry: " + self)
-}
-
-func (self pushHookEntry) String() string {
-	return string(self)
 }
