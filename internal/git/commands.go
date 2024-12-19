@@ -34,17 +34,6 @@ func (self *Commands) AbortRebase(runner gitdomain.Runner) error {
 	return runner.Run("git", "rebase", "--abort")
 }
 
-func (self *Commands) AmbiguousBranchName(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
-	output, err := querier.QueryTrim("git", "rev-list", "--max-parents=0", "HEAD")
-	if err != nil {
-		return None[gitdomain.LocalBranchName]()
-	}
-	if output == "" {
-		return None[gitdomain.LocalBranchName]()
-	}
-	return Some(gitdomain.LocalBranchName(output[0:6]))
-}
-
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
 func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) ([]gitdomain.Author, error) {

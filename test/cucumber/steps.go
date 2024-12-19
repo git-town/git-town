@@ -1038,11 +1038,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the branches$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		for _, row := range table.Rows {
-			if row.Cells[0].Value == "<ambiguous>" {
-				row.Cells[0].Value = state.fixture.DevRepo.GetOrPanic().AmbiguousBranchName(state.fixture.DevRepo.Value).GetOrDefault().String()
-			}
-		}
 		for _, branchSetup := range datatable.ParseBranchSetupTable(table) {
 			var repoToCreateBranchIn *commands.TestCommands
 			switch {
@@ -1136,11 +1131,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		for _, row := range table.Rows {
-			if row.Cells[0].Value == "<ambiguous>" {
-				row.Cells[0].Value = state.fixture.DevRepo.GetOrPanic().AmbiguousBranchName(state.fixture.DevRepo.Value).GetOrDefault().String()
-			}
-		}
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		// create the commits
 		commits := git.FromGherkinTable(table)
@@ -1620,11 +1610,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^these commits exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		for _, row := range table.Rows {
-			if row.Cells[0].Value == "<ambiguous>" {
-				row.Cells[0].Value = state.fixture.DevRepo.GetOrPanic().AmbiguousBranchName(state.fixture.DevRepo.Value).GetOrDefault().String()
-			}
-		}
 		return state.compareGherkinTable(table)
 	})
 
