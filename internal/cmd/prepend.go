@@ -230,16 +230,16 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	localAncestor := ancestorBranchName.LocalName()
-	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestorBranchName)
-	if err != nil {
-		return data, false, err
-	}
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestorBranchName)
+		if err != nil {
+			return data, false, err
+		}
 		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, localAncestor, dialogTestInputs.Next())
-	}
-	if err != nil || exit {
-		return data, exit, err
+		if err != nil || exit {
+			return data, exit, err
+		}
 	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
