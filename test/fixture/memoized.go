@@ -1,11 +1,11 @@
 package fixture
 
 import (
-	"log"
 	"os"
 
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/git-town/git-town/v17/test/commands"
 	"github.com/git-town/git-town/v17/test/filesystem"
 	"github.com/git-town/git-town/v17/test/testruntime"
@@ -30,15 +30,11 @@ func NewMemoized(dir string) Memoized {
 	devRepoPath := developerRepoPath(dir)
 	// create the origin repo
 	err := os.MkdirAll(originPath, 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", originPath, err)
-	}
+	asserts.NoError(err)
 	// initialize the repo in the folder
 	originRepo := testruntime.Initialize(originPath, dir, binPath)
 	err = originRepo.Run("git", "branch", "main", "initial")
-	if err != nil {
-		log.Fatalf("cannot initialize origin directory at %q: %v", originPath, err)
-	}
+	asserts.NoError(err)
 	// clone the "developer" repo
 	devRepo := testruntime.Clone(originRepo.TestRunner, devRepoPath)
 	initializeWorkspace(&devRepo)

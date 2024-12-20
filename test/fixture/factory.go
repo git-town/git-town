@@ -1,10 +1,10 @@
 package fixture
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/git-town/git-town/v17/test/filesystem"
 	"github.com/git-town/git-town/v17/test/helpers"
 )
@@ -30,14 +30,10 @@ type Factory struct {
 // creates a new FixtureFactory instance
 func CreateFactory() Factory {
 	baseDir, err := os.MkdirTemp("", "")
-	if err != nil {
-		log.Fatalf("cannot create base directory for feature specs: %s", err)
-	}
+	asserts.NoError(err)
 	// Evaluate symlinks as Mac temp dir is symlinked
 	evalBaseDir, err := filepath.EvalSymlinks(baseDir)
-	if err != nil {
-		log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
-	}
+	asserts.NoError(err)
 	return Factory{
 		Counter:  helpers.AtomicCounter{},
 		Dir:      evalBaseDir,

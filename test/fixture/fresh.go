@@ -1,10 +1,10 @@
 package fixture
 
 import (
-	"log"
 	"os"
 
 	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/git-town/git-town/v17/test/commands"
 	"github.com/git-town/git-town/v17/test/testruntime"
 )
@@ -23,9 +23,7 @@ func NewFresh(dir string) Fresh {
 	devRepoPath := developerRepoPath(dir)
 	// create the "developer" repo
 	err := os.MkdirAll(devRepoPath, 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", devRepoPath, err)
-	}
+	asserts.NoError(err)
 	// initialize the repo in the folder
 	devRepo := testruntime.InitializeNoInitialCommit(devRepoPath, dir, binPath)
 	devRepo.RemoveUnnecessaryFiles()
