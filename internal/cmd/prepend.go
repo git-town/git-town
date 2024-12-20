@@ -231,7 +231,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	localAncestor := ancestorBranchName.LocalName()
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestorBranchName)
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, localAncestor)
 		if err != nil {
 			return data, false, err
 		}
