@@ -44,16 +44,6 @@ func (self BranchName) String() string {
 	return string(self)
 }
 
-func (self BranchName) ToLocalBranchName() (localName LocalBranchName, isLocal bool) {
-	isLocal = self.IsLocal()
-	if isLocal {
-		localName = NewLocalBranchName(self.String())
-	} else {
-		localName = self.LocalName()
-	}
-	return localName, isLocal
-}
-
 // isValidBranchName indicates whether the given text is a valid branch name.
 func isValidBranchName(text string) bool {
 	return len(text) != 0
