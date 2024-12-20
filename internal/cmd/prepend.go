@@ -101,7 +101,7 @@ func executePrepend(args []string, beam configdomain.Beam, detached configdomain
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, beam, detached, dryRun, prototype, verbose)
+	data, exit, err := determinePrependData(args, repo, beam, detached, dryRun, propose, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -156,13 +156,14 @@ type prependData struct {
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[hostingdomain.Proposal]
+	propose             configdomain.Propose
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
 	stashSize           gitdomain.StashSize
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -274,6 +275,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,
+		propose:             propose,
 		prototype:           prototype,
 		remotes:             remotes,
 		stashSize:           stashSize,
