@@ -192,7 +192,7 @@ func (self Lineage) IsEmpty() bool {
 }
 
 // provides the branch from candidates that is the youngest ancestor of the given branch
-func (self Lineage) LatestAncestorInGroup(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
+func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
 	for {
 		if candidates.Contains(branch) {
 			return Some(branch)
