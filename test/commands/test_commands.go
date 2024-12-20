@@ -53,6 +53,9 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
 	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")
+	if output == "" {
+		return result
+	}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
@@ -442,7 +445,7 @@ func (self *TestCommands) RemoveRemote(name gitdomain.Remote) {
 	self.MustRun("git", "remote", "rm", name.String())
 }
 
-// RemoveUnnecessaryFiles trims all files that aren'self necessary in this repo.
+// RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (self *TestCommands) RemoveUnnecessaryFiles() {
 	fullPath := filepath.Join(self.WorkingDir, ".git", "hooks")
 	asserts.NoError(os.RemoveAll(fullPath))

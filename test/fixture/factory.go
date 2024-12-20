@@ -41,6 +41,14 @@ func CreateFactory() Factory {
 	}
 }
 
+// CreateEmptyFixture provides an empty Fixture consisting of a brand-new Git repository.
+// This is useful for scenarios that require testing the behavior of Git Town in a fresh repository.
+func (self *Factory) CreateEmptyFixture(scenarioName string) Fixture {
+	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.NextAsString()
+	envPath := filepath.Join(self.Dir, envDirName)
+	return NewFresh(envPath).AsFixture()
+}
+
 // CreateFixture provides a new Fixture for the scenario with the given name.
 func (self *Factory) CreateFixture(scenarioName string) Fixture {
 	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.NextAsString()
