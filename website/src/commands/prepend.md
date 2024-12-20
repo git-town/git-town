@@ -38,9 +38,7 @@ main
 
 Moves ("beams") one or more commits from the current branch to the new parent
 branch that gets created. Lets you select the commits to beam via a visual
-dialog. Depending on the sync strategy that applies to the current branch, the
-current branch ends up without the moved commit or without the changes made by
-it.
+dialog.
 
 ### --detached / -d
 
