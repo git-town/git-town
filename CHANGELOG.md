@@ -2,6 +2,7 @@
 
 ### 17.1.1 (2024-12-20)
 
+Git Town 17.1.1 ships a bug fix that unblocks BitBucket Datacenter users.
 
 #### Bug Fixes
 
