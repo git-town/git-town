@@ -34,6 +34,12 @@ main
     feature-2
 ```
 
+### --beam / -b
+
+Moves ("beams") one or more commits from the current branch to the new parent
+branch that gets created. Lets you select the commits to beam via a visual
+dialog.
+
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial

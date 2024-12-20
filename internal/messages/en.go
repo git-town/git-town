@@ -37,6 +37,7 @@ const (
 	CodeHosting                        = "Code hosting: %s\n"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
+	CommitsSelected                    = "%d commits selected"
 	CompressUnsynced                   = "please sync branch %q before compressing it"
 	CompressIsPerennial                = "better not compress perennial branches"
 	CompressAlreadyOneCommit           = "branch %q has already just one commit"

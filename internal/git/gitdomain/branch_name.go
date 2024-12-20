@@ -20,7 +20,7 @@ func (self BranchName) IsLocal() bool {
 	return !strings.HasPrefix(string(self), "origin/")
 }
 
-// LocalName provides the local version of this branch name.
+// LocalName provides the (theoretical) local version of this branch name.
 func (self BranchName) LocalName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(string(self), "origin/"))
 }
