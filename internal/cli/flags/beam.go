@@ -7,7 +7,7 @@ import (
 
 const beamLong = "beam"
 
-// type-safe access to the CLI arguments of type gitdomain.Prototype
+// type-safe access to the CLI arguments of type configdomain.Beam
 func Beam() (AddFunc, ReadBeamFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(beamLong, "b", false, "beam some commits from this branch to the new branch")
