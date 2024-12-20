@@ -21,8 +21,6 @@ func (self BranchName) IsLocal() bool {
 }
 
 // LocalName provides the (theoretical) local version of this branch name.
-// Does not verify whether the branch is actually local.
-// For safe conversion, use ToLocalBranchName.
 func (self BranchName) LocalName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(string(self), "origin/"))
 }
