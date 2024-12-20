@@ -224,12 +224,12 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, exit, err
 	}
 	// TODO: find the latest ancestor branch that actually exists (wasn't manually deleted)
-	ancestorOpt := latestExistingAncestor(initialBranch, data.branchInfos, data.config.NormalConfig.Lineage)
+	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
 	ancestorBranchName, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	localAncestor, isLocal := ancestorBranchName.ToLocalBranchName()
+	localAncestor := ancestorBranchName.LocalName()
 	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestorBranchName)
 	if err != nil {
 		return data, false, err
@@ -388,12 +388,12 @@ func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config co
 // either locally or remotely.
 func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
-		if branchInfos.HasBranch(branch) {
-			return Some(branch.BranchName())
-		}
 		parent, hasParent := lineage.Parent(branch).Get()
 		if !hasParent {
 			return None[gitdomain.BranchName]()
+		}
+		if branchInfos.HasBranch(parent) {
+			return Some(parent.BranchName())
 		}
 		branch = parent
 	}
