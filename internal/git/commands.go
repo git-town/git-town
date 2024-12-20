@@ -77,6 +77,26 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
+	if output == "" {
+		// We are in a brand-new repo.
+		// Even though `git branch` returns nothing, `git branch --show-current` will return the initial branch name.
+		currentBranch, err := self.CurrentBranchUncached(querier)
+		if err != nil {
+			return gitdomain.EmptyBranchesSnapshot(), err
+		}
+		return gitdomain.BranchesSnapshot{
+			Active: Some(currentBranch),
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(currentBranch),
+					LocalSHA:   None[gitdomain.SHA](),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
+				},
+			},
+		}, nil
+	}
 	branches, currentBranchOpt := ParseVerboseBranchesOutput(output)
 	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
 	if hasCurrentBranch {
@@ -316,6 +336,16 @@ func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.
 		return None[gitdomain.LocalBranchName]()
 	}
 	return Some(gitdomain.LocalBranchName(name))
+}
+
+func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote {
+	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
+	if err != nil {
+		// Git returns an error if the user has not configured a default remote name.
+		// Use the Git default of "origin".
+		return gitdomain.RemoteOrigin
+	}
+	return gitdomain.Remote(output)
 }
 
 // DeleteHostingPlatform removes the hosting platform config entry.
