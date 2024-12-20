@@ -36,7 +36,7 @@ main
 
 ### --beam / -b
 
-Allows "beaming" one or more commits from the current branch to the new parent
+Moves (beams) one or more commits from the current branch to the new parent
 branch that gets created. Git Town lets you select the commits to beam via a
 visual dialog.
 
