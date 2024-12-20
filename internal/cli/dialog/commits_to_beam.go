@@ -23,7 +23,7 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 			Text: commit.Message.String(),
 		}
 	}
-	selection, aborted, err := components.CheckList(entries, []int{}, commitsToBeamTitle, "", inputs)
+	selection, aborted, err := components.CheckList(entries, []int{}, fmt.Sprintf(commitsToBeamTitle, targetBranch), "", inputs)
 	fmt.Printf(messages.CommitsSelected, len(selection))
 	return selection, aborted, err
 }
