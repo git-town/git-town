@@ -224,7 +224,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 			return data, exit, err
 		}
 		parent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToCompress)
-		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress.BranchName().LocalName(), parent)
+		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress, parent)
 		if err != nil {
 			return data, exit, err
 		}
