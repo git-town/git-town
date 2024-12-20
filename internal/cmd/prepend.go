@@ -6,6 +6,7 @@ import (
 	"os"
 	"slices"
 
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/flags"
 	"github.com/git-town/git-town/v17/internal/cli/print"
@@ -39,6 +40,7 @@ Syncs the parent branch, cuts a new feature branch with the given name off the p
 See "sync" for upstream remote options.`
 
 func prependCommand() *cobra.Command {
+	addBeamFlag, readBeamFlag := flags.Beam()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
@@ -50,6 +52,10 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			beam, err := readBeamFlag(cmd)
+			if err != nil {
+				return err
+			}
 			detached, err := readDetachedFlag(cmd)
 			if err != nil {
 				return err
@@ -66,9 +72,10 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePrepend(args, detached, dryRun, prototype, verbose)
+			return executePrepend(args, beam, detached, dryRun, prototype, verbose)
 		},
 	}
+	addBeamFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
@@ -76,7 +83,7 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args []string, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executePrepend(args []string, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -88,7 +95,7 @@ func executePrepend(args []string, detached configdomain.Detached, dryRun config
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, detached, dryRun, prototype, verbose)
+	data, exit, err := determinePrependData(args, repo, beam, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -130,6 +137,7 @@ type prependData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      []configdomain.BranchToSync
+	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
@@ -148,7 +156,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -215,6 +223,22 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil || exit {
 		return data, exit, err
 	}
+	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
+	ancestor, hasAncestor := ancestorOpt.Get()
+	if !hasAncestor {
+		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
+	}
+	commitsToBeam := []gitdomain.Commit{}
+	if beam {
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor)
+		if err != nil {
+			return data, false, err
+		}
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, ancestor, dialogTestInputs.Next())
+		if err != nil || exit {
+			return data, exit, err
+		}
+	}
 	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	if detached {
 		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
@@ -224,23 +248,19 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, detached c
 	if err != nil {
 		return data, false, err
 	}
-	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
-	parent, hasParent := parentOpt.Get()
-	if !hasParent {
-		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
-	}
-	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(parent)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
-	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
+	proposalOpt := ship.FindProposal(connector, initialBranch, Some(ancestor))
 	return prependData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
+		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
-		existingParent:      parent,
+		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
@@ -316,6 +336,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			ProposalNumber: proposal.Number,
 		})
 	}
+	moveCommitsToNewBranch(prog, data)
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
@@ -324,4 +345,75 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog.Immutable()
+}
+
+// provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
+func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config configdomain.NormalConfigData) Option[configdomain.SyncStrategy] {
+	switch branchType {
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
+		return None[configdomain.SyncStrategy]()
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch:
+		return Some(config.SyncFeatureStrategy.SyncStrategy())
+	case configdomain.BranchTypePrototypeBranch:
+		return Some(config.SyncPrototypeStrategy.SyncStrategy())
+	}
+	panic("unhandled branch type: " + branchType.String())
+}
+
+// provides the name of the youngest ancestor branch of the given branch that actually exists,
+// either locally or remotely.
+func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
+	for {
+		parent, hasParent := lineage.Parent(branch).Get()
+		if !hasParent {
+			return None[gitdomain.LocalBranchName]()
+		}
+		if branchInfos.HasBranch(parent) {
+			return Some(parent)
+		}
+		branch = parent
+	}
+}
+
+func moveCommitsToNewBranch(prog Mutable[program.Program], data prependData) {
+	if len(data.commitsToBeam) > 0 {
+		for _, commitToBeam := range data.commitsToBeam {
+			prog.Value.Add(
+				&opcodes.CherryPick{SHA: commitToBeam.SHA},
+			)
+		}
+		// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
+		initialBranchType := data.config.BranchType(data.initialBranch)
+		syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.targetBranch},
+		)
+	}
+}
+
+// basic sync of the current branch with its parent after beaming some commits into the parent
+func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
+		switch syncStrategy {
+		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
+			prog.Value.Add(
+				&opcodes.MergeParent{Parent: parentName.BranchName()},
+				&opcodes.PushCurrentBranch{},
+			)
+		case configdomain.SyncStrategyRebase:
+			prog.Value.Add(
+				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
+				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+			)
+		}
+	}
 }
