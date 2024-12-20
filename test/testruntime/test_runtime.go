@@ -61,10 +61,7 @@ func CreateGitTown(t *testing.T) commands.TestCommands {
 // Initialize creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func Initialize(workingDir, homeDir, binDir string) commands.TestCommands {
-	runtime := New(workingDir, homeDir, binDir)
-	runtime.MustRun("git", "init", "--initial-branch=initial")
-	runtime.MustRun("git", "config", "--global", "user.name", "user")
-	runtime.MustRun("git", "config", "--global", "user.email", "email@example.com")
+	runtime := InitializeNoInitialCommit(workingDir, homeDir, binDir)
 	runtime.MustRun("git", "commit", "--allow-empty", "-m", "initial commit")
 	return runtime
 }
