@@ -43,6 +43,7 @@ func prependCommand() *cobra.Command {
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -64,6 +65,10 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			propose, err := readProposeFlag(cmd)
+			if err != nil {
+				return err
+			}
 			prototype, err := readPrototypeFlag(cmd)
 			if err != nil {
 				return err
@@ -72,18 +77,19 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePrepend(args, beam, detached, dryRun, prototype, verbose)
+			return executePrepend(args, beam, detached, dryRun, propose, prototype, verbose)
 		},
 	}
 	addBeamFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePrepend(args []string, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executePrepend(args []string, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
