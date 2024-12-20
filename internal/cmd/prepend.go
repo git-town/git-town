@@ -383,12 +383,12 @@ func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdom
 }
 
 func moveCommitsToNewBranch(prog Mutable[program.Program], data prependData) {
-	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
-			&opcodes.CherryPick{SHA: commitToBeam.SHA},
-		)
-	}
 	if len(data.commitsToBeam) > 0 {
+		for _, commitToBeam := range data.commitsToBeam {
+			prog.Value.Add(
+				&opcodes.CherryPick{SHA: commitToBeam.SHA},
+			)
+		}
 		// sync the new parent branch with the initial branch
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
