@@ -188,10 +188,6 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
-	if !hasInitialBranch {
-		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
-	}
 	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
@@ -201,6 +197,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
+	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
+	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
