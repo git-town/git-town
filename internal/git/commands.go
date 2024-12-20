@@ -342,8 +342,8 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
 	if err != nil {
 		// Git returns an error if the user has not configured a default remote name.
-		// Use the Git default.
-		return gitdomain.Remote("origin")
+		// Use the Git default of "origin".
+		return gitdomain.RemoteOrigin
 	}
 	return gitdomain.Remote(output)
 }
