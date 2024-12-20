@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+### 17.1.1 (2024-12-20)
+
+#### Bug Fixes
+
+- Fixes a bug in the BitBucket-Datacenter driver ([#4371](https://github.com/git-town/git-town/pull/4371)).
+
 ### 17.1.0 (2024-12-19)
 
 Git Town 17.1 unblocks users who have submitted urgent issues.
