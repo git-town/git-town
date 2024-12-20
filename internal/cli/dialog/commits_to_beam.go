@@ -27,10 +27,10 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 		}
 	}
 	program := tea.NewProgram(commitsToBeamModel{
-		List:          list.NewList(entries, 0),
-		Selections:    []int{},
-		selectedColor: colors.Green(),
-		targetBranch:  targetBranch,
+		List:         list.NewList(entries, 0),
+		Selections:   []int{},
+		enabledColor: colors.Green(),
+		targetBranch: targetBranch,
 	})
 	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()
@@ -45,9 +45,9 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 
 type commitsToBeamModel struct {
 	list.List[gitdomain.Commit]
-	Selections    []int
-	selectedColor termenv.Style
-	targetBranch  gitdomain.LocalBranchName
+	Selections   []int
+	enabledColor termenv.Style
+	targetBranch gitdomain.LocalBranchName
 }
 
 // checkedEntries provides all checked list entries.
@@ -127,7 +127,7 @@ func (self commitsToBeamModel) View() string {
 	}
 	s := strings.Builder{}
 	s.WriteRune('\n')
-	s.WriteString(self.Colors.Title.Styled(fmt.Sprintf(commitsToBeamTitle, self.selectedColor.Styled(self.targetBranch.String()))))
+	s.WriteString(self.Colors.Title.Styled(fmt.Sprintf(commitsToBeamTitle, self.enabledColor.Styled(self.targetBranch.String()))))
 	s.WriteRune('\n')
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
@@ -145,7 +145,7 @@ func (self commitsToBeamModel) View() string {
 		case selected && !checked:
 			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.Text))
 		case !selected && checked:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch.Text))
+			s.WriteString(self.enabledColor.Styled("  [x] " + branch.Text))
 		case !selected && !checked:
 			s.WriteString("  [ ] " + branch.Text)
 		}
