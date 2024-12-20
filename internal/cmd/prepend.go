@@ -137,7 +137,7 @@ type prependData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      []configdomain.BranchToSync
-	commitsToBeam       []gitdomain.Commit
+	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
 	dialogTestInputs    components.TestInputs
