@@ -82,9 +82,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 // AddSubmodule adds a submodule repository.
 func (self *Fixture) AddSubmoduleRepo() {
 	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
-	}
+	asserts.NoError(err)
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRun("git", "config", "--global", "protocol.file.allow", "always")
 	self.SubmoduleRepo = MutableSome(&submoduleRepo)
