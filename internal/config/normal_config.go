@@ -81,6 +81,11 @@ func (self *NormalConfig) DevURL() Option[giturl.Parts] {
 	return self.RemoteURL(self.DevRemote)
 }
 
+// provides the name of the youngest ancestor branch of the given branch that actually exists,
+// either locally or remotely.
+func (self *NormalConfig) LatestExistingAncestor(branch gitdomain.LocalBranchName) Option[gitdomain.BranchName] {
+}
+
 // RemoteURL provides the URL for the given remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
