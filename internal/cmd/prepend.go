@@ -405,8 +405,7 @@ func moveCommitsToNewBranch(prog Mutable[program.Program], data prependData) {
 func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
 	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
 		switch syncStrategy {
-		case configdomain.SyncStrategyCompress,
-			configdomain.SyncStrategyMerge:
+		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
 			prog.Value.Add(
 				&opcodes.MergeParent{Parent: parentName.BranchName()},
 				&opcodes.PushCurrentBranch{},
