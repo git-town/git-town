@@ -224,18 +224,17 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, exit, err
 	}
 	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
-	ancestorBranchName, hasAncestor := ancestorOpt.Get()
+	ancestor, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	localAncestor := ancestorBranchName.LocalName()
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, localAncestor)
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor)
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, localAncestor, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, ancestor, dialogTestInputs.Next())
 		if err != nil || exit {
 			return data, exit, err
 		}
@@ -249,9 +248,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil {
 		return data, false, err
 	}
-	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(localAncestor)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
-	proposalOpt := ship.FindProposal(connector, initialBranch, Some(localAncestor))
+	proposalOpt := ship.FindProposal(connector, initialBranch, Some(ancestor))
 	return prependData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
@@ -261,7 +260,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
-		existingParent:      localAncestor,
+		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,
@@ -369,14 +368,14 @@ func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config co
 
 // provides the name of the youngest ancestor branch of the given branch that actually exists,
 // either locally or remotely.
-func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
+func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
 	for {
 		parent, hasParent := lineage.Parent(branch).Get()
 		if !hasParent {
-			return None[gitdomain.BranchName]()
+			return None[gitdomain.LocalBranchName]()
 		}
 		if branchInfos.HasBranch(parent) {
-			return Some(parent.BranchName())
+			return Some(parent)
 		}
 		branch = parent
 	}
