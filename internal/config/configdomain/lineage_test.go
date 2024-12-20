@@ -436,7 +436,7 @@ func TestLineage(t *testing.T) {
 				two:   one,
 				three: two,
 			})
-			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{one, two})
+			have := lineage.LatestAncestorInGroup(three, gitdomain.LocalBranchNames{one, two})
 			must.Eq(t, Some(two), have)
 		})
 		t.Run("no candidates", func(t *testing.T) {
@@ -446,7 +446,7 @@ func TestLineage(t *testing.T) {
 				two:   one,
 				three: two,
 			})
-			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{})
+			have := lineage.LatestAncestorInGroup(three, gitdomain.LocalBranchNames{})
 			must.Eq(t, None[gitdomain.LocalBranchName](), have)
 		})
 		t.Run("candidates contains branch", func(t *testing.T) {
@@ -456,7 +456,7 @@ func TestLineage(t *testing.T) {
 				two:   one,
 				three: two,
 			})
-			have := lineage.LatestAncestor(three, gitdomain.LocalBranchNames{two, three})
+			have := lineage.LatestAncestorInGroup(three, gitdomain.LocalBranchNames{two, three})
 			must.Eq(t, Some(three), have)
 		})
 		t.Run("candidates not in lineage", func(t *testing.T) {
@@ -464,7 +464,7 @@ func TestLineage(t *testing.T) {
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
 				one: main,
 			})
-			have := lineage.LatestAncestor(two, gitdomain.LocalBranchNames{three})
+			have := lineage.LatestAncestorInGroup(two, gitdomain.LocalBranchNames{three})
 			must.Eq(t, None[gitdomain.LocalBranchName](), have)
 		})
 	})

@@ -224,18 +224,18 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, exit, err
 	}
 	// TODO: find the latest ancestor branch that actually exists (wasn't manually deleted)
-	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
-	lineageParent, lineageHasParent := parentOpt.Get()
-	if !lineageHasParent {
+	ancestorOpt := latestExistingAncestor(initialBranch, data.branchInfos, data.config.NormalConfig.Lineage)
+	ancestorBranchName, hasAncestor := ancestorOpt.Get()
+	if !hasAncestor {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, lineageParent)
+	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestor)
 	if err != nil {
 		return data, false, err
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, lineageParent, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, ancestor, dialogTestInputs.Next())
 	}
 	if err != nil || exit {
 		return data, exit, err
@@ -249,7 +249,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil {
 		return data, false, err
 	}
-	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(lineageParent)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
 	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
 	return prependData{
@@ -364,25 +364,6 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	return prog.Immutable()
 }
 
-// basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
-	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
-		switch syncStrategy {
-		case configdomain.SyncStrategyCompress,
-			configdomain.SyncStrategyMerge:
-			prog.Value.Add(
-				&opcodes.MergeParent{Parent: parentName.BranchName()},
-				&opcodes.PushCurrentBranch{},
-			)
-		case configdomain.SyncStrategyRebase:
-			prog.Value.Add(
-				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
-				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
-			)
-		}
-	}
-}
-
 // provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
 func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config configdomain.NormalConfigData) Option[configdomain.SyncStrategy] {
 	switch branchType {
@@ -400,4 +381,38 @@ func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config co
 		return Some(config.SyncPrototypeStrategy.SyncStrategy())
 	}
 	panic("unhandled branch type: " + branchType.String())
+}
+
+// provides the name of the youngest ancestor branch of the given branch that actually exists,
+// either locally or remotely.
+func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
+	for {
+		if branchInfos.HasBranch(branch) {
+			return Some(branch.BranchName())
+		}
+		parent, hasParent := lineage.Parent(branch).Get()
+		if !hasParent {
+			return None[gitdomain.BranchName]()
+		}
+		branch = parent
+	}
+}
+
+// basic sync of the current branch with its parent after beaming some commits into the parent
+func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
+		switch syncStrategy {
+		case configdomain.SyncStrategyCompress,
+			configdomain.SyncStrategyMerge:
+			prog.Value.Add(
+				&opcodes.MergeParent{Parent: parentName.BranchName()},
+				&opcodes.PushCurrentBranch{},
+			)
+		case configdomain.SyncStrategyRebase:
+			prog.Value.Add(
+				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
+				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+			)
+		}
+	}
 }

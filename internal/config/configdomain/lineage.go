@@ -192,7 +192,7 @@ func (self Lineage) IsEmpty() bool {
 }
 
 // provides the branch from candidates that is the youngest ancestor of the given branch
-func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
+func (self Lineage) LatestAncestorInGroup(branch gitdomain.LocalBranchName, candidates gitdomain.LocalBranchNames) Option[gitdomain.LocalBranchName] {
 	for {
 		if candidates.Contains(branch) {
 			return Some(branch)
@@ -202,18 +202,6 @@ func (self Lineage) LatestAncestor(branch gitdomain.LocalBranchName, candidates 
 		} else {
 			return None[gitdomain.LocalBranchName]()
 		}
-	}
-}
-
-// provides the youngest ancestor of the given branch that hasn't been deleted manually
-func (self Lineage) LatestExistingAncestor(branch gitdomain.LocalBranchName) Option[gitdomain.BranchName] {
-	// TODO:
-	// - rename LatestAncestor to LatestAncestorInGroup
-	// - create a LatestAncestor helper that takes a match function
-	// - rewrite LatestAncestorInGroup to use LatestAncestor with a function that checks whether branch is in candidates
-	// - write this function here (LatestExistingAncestor) to use LatestAncestor using a match function that checks whether the ancestor exists in BranchInfos
-	for {
-
 	}
 }
 

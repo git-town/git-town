@@ -23,7 +23,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
-	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
+	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestorInGroup(localName, args.BranchesToDelete.Value.Values()).Get()
 	if hasParentToRemove && rebaseSyncStrategy {
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 			Ancestor:          parentToRemove.BranchName(),
