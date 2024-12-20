@@ -223,7 +223,6 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil || exit {
 		return data, exit, err
 	}
-	// TODO: find the latest ancestor branch that actually exists (wasn't manually deleted)
 	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
 	ancestorBranchName, hasAncestor := ancestorOpt.Get()
 	if !hasAncestor {
