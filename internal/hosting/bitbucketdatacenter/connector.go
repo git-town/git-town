@@ -208,6 +208,6 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) hostingdomain.Pro
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
 		Title:        pullRequest.Title,
-		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest),
+		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
 	}
 }
