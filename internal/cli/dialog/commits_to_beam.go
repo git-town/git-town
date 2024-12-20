@@ -19,12 +19,15 @@ const commitsToBeamTitle = `Select the commits to beam into branch %s`
 
 // lets the user select commits to beam to the target branch
 func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.Commits, bool, error) {
-	entries := make([]commitsToBeamEntry, len(commits))
+	entries := make(list.Entries[gitdomain.Commit], len(commits))
 	for c, commit := range commits {
-		entries[c] = commitsToBeamEntry(commit)
+		entries[c] = list.Entry[gitdomain.Commit]{
+			Data: commit,
+			Text: commit.Message.String(),
+		}
 	}
 	program := tea.NewProgram(commitsToBeamModel{
-		List:          list.NewList(list.NewEntries(entries...), 0),
+		List:          list.NewList(entries, 0),
 		Selections:    []int{},
 		selectedColor: colors.Green(),
 		targetBranch:  targetBranch,
@@ -40,14 +43,8 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 	return selectedBranches, result.Aborted(), nil
 }
 
-type commitsToBeamEntry gitdomain.Commit
-
-func (entry commitsToBeamEntry) String() string {
-	return entry.Message.String()
-}
-
 type commitsToBeamModel struct {
-	list.List[commitsToBeamEntry]
+	list.List[gitdomain.Commit]
 	Selections    []int
 	selectedColor termenv.Style
 	targetBranch  gitdomain.LocalBranchName
