@@ -22,7 +22,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git remote                                    |
-      |        | backend  | git rev-parse --abbrev-ref HEAD               |
+      |        | backend  | git branch --show-current                     |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva --sort=refname                |
