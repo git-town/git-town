@@ -173,7 +173,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if helpers.HasTag(scenarioTags, "@debug") {
 			devRepo.Verbose = true
 		}
-		devRepo.RemoveRemote(git.RemoteOrigin)
+		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
 		fixture.OriginRepo = MutableNone[commands.TestCommands]()
 		state := ScenarioState{
 			fixture:              fixture,
@@ -1108,7 +1108,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			if len(branchSetup.Locations) > 1 {
 				switch {
 				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
-					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, git.RemoteOrigin)
+					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 				default:
 					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
 				}
@@ -1250,7 +1250,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			coworkerRepo.StageFiles(commit.FileName)
 			coworkerRepo.CommitStagedChanges(commit.Message)
 		}
-		coworkerRepo.PushBranchToRemote(branch, git.RemoteOrigin)
+		coworkerRepo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 	})
 
 	sc.Step(`^the coworker pushes these commits to the "([^"]+)" branch$`, func(ctx context.Context, branchName string, table *godog.Table) {

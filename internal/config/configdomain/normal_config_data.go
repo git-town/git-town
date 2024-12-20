@@ -204,7 +204,7 @@ func DefaultNormalConfig() NormalConfigData {
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		DefaultBranchType:        BranchTypeFeatureBranch,
-		DevRemote:                gitdomain.Remote("origin"),
+		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
