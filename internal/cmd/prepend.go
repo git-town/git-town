@@ -229,13 +229,14 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if !hasAncestor {
 		return data, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestor)
+	localAncestor, isLocal := ancestorBranchName.ToLocalBranchName()
+	commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch.BranchName(), ancestorBranchName)
 	if err != nil {
 		return data, false, err
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, ancestor, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, localAncestor, dialogTestInputs.Next())
 	}
 	if err != nil || exit {
 		return data, exit, err
@@ -249,9 +250,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil {
 		return data, false, err
 	}
-	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
+	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(localAncestor)
 	slices.Reverse(parentAndAncestors)
-	proposalOpt := ship.FindProposal(connector, initialBranch, parentOpt)
+	proposalOpt := ship.FindProposal(connector, initialBranch, Some(localAncestor))
 	return prependData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
@@ -261,7 +262,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
-		existingParent:      lineageParent,
+		existingParent:      localAncestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		newParentCandidates: parentAndAncestors,

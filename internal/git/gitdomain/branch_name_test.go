@@ -86,4 +86,22 @@ func TestBranchName(t *testing.T) {
 		want := gitdomain.NewBranchName("branch-1")
 		must.EqOp(t, want, have)
 	})
+
+	t.Run("ToLocalBranchName", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is already a local name", func(t *testing.T) {
+			t.Parallel()
+			branchName := gitdomain.NewBranchName("branch")
+			localName, isLocal := branchName.ToLocalBranchName()
+			must.True(t, isLocal)
+			must.EqOp(t, "branch", localName)
+		})
+		t.Run("is a remote name", func(t *testing.T) {
+			t.Parallel()
+			branchName := gitdomain.NewBranchName("origin/branch")
+			localName, isLocal := branchName.ToLocalBranchName()
+			must.False(t, isLocal)
+			must.EqOp(t, "branch", localName)
+		})
+	})
 }

@@ -20,7 +20,9 @@ func (self BranchName) IsLocal() bool {
 	return !strings.HasPrefix(string(self), "origin/")
 }
 
-// LocalName provides the local version of this branch name.
+// LocalName provides the (theoretical) local version of this branch name.
+// Does not verify whether the branch is actually local.
+// For safe conversion, use ToLocalBranchName.
 func (self BranchName) LocalName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(string(self), "origin/"))
 }
@@ -40,6 +42,16 @@ func (self BranchName) RemoteName() RemoteBranchName {
 // Implementation of the fmt.Stringer interface.
 func (self BranchName) String() string {
 	return string(self)
+}
+
+func (self BranchName) ToLocalBranchName() (localName LocalBranchName, isLocal bool) {
+	isLocal = self.IsLocal()
+	if isLocal {
+		localName = NewLocalBranchName(self.String())
+	} else {
+		localName = self.LocalName()
+	}
+	return localName, isLocal
 }
 
 // isValidBranchName indicates whether the given text is a valid branch name.
