@@ -266,6 +266,9 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	if err != nil {
 		return data, exit, err
 	}
+	if len(remotes) == 0 {
+		remotes = gitdomain.Remotes{repo.Git.DefaultRemote(repo.Backend)}
+	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
