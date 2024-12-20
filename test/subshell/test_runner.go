@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -96,9 +95,7 @@ else
 	%s "$@"
 fi`
 	gitPath, err := exec.LookPath("git")
-	if err != nil {
-		log.Fatalf("cannot locate the git executable: %v", err)
-	}
+	asserts.NoError(err)
 	content := fmt.Sprintf(mockGit, version, gitPath)
 	self.createMockBinary("git", content)
 }
