@@ -389,7 +389,7 @@ func moveCommitsToNewBranch(prog Mutable[program.Program], data prependData) {
 				&opcodes.CherryPick{SHA: commitToBeam.SHA},
 			)
 		}
-		// sync the new parent branch with the initial branch
+		// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
