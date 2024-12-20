@@ -337,23 +337,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			ProposalNumber: proposal.Number,
 		})
 	}
-	// move commits to new parent branch
-	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
-			&opcodes.CherryPick{SHA: commitToBeam.SHA},
-		)
-	}
-	if len(data.commitsToBeam) > 0 {
-		// sync the new parent branch with the initial branch
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.initialBranch},
-		)
-		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.targetBranch},
-		)
-	}
+	moveCommitsToNewBranch(prog, data)
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
@@ -395,6 +379,25 @@ func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdom
 			return Some(parent.BranchName())
 		}
 		branch = parent
+	}
+}
+
+func moveCommitsToNewBranch(prog Mutable[program.Program], data prependData) {
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
+		)
+	}
+	if len(data.commitsToBeam) > 0 {
+		// sync the new parent branch with the initial branch
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
+		initialBranchType := data.config.BranchType(data.initialBranch)
+		syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.targetBranch},
+		)
 	}
 }
 
