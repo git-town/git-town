@@ -26,6 +26,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote get-url origin                     |
+      |        | backend  | git cherry -v main old                        |
       |        | backend  | git log main..old --format=%s --reverse       |
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main --no-update-refs       |
@@ -47,7 +48,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And Git Town prints:
       """
-      Ran 31 shell commands.
+      Ran 32 shell commands.
       """
     And the current branch is now "parent"
 
