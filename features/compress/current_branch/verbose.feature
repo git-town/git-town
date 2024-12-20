@@ -24,7 +24,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git status --long --ignore-submodules              |
       |         | git remote                                         |
-      |         | git rev-parse --abbrev-ref HEAD                    |
+      |         | git branch --show-current                          |
       | feature | git fetch --prune --tags                           |
       | <none>  | git stash list                                     |
       |         | git branch -vva --sort=refname                     |

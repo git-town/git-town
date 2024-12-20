@@ -14,7 +14,7 @@ Feature: display the parent of a top-level feature branch
       |        | backend | git rev-parse --show-toplevel      |
       |        | backend | git config -lz --includes --global |
       |        | backend | git config -lz --includes --local  |
-      |        | backend | git rev-parse --abbrev-ref HEAD    |
+      |        | backend | git branch --show-current          |
     And Git Town prints:
       """
       Ran 5 shell commands.
