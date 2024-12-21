@@ -126,9 +126,11 @@ type hoistData struct {
 	connector        Option[hostingdomain.Connector]
 	dialogTestInputs components.TestInputs
 	// dryRun                   configdomain.DryRun
-	hasOpenChanges      bool
-	initialBranch       gitdomain.LocalBranchName
-	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	hasOpenChanges              bool
+	initialBranch               gitdomain.LocalBranchName
+	initialBranchContainsMerges bool
+	initialBranchType           configdomain.BranchType
+	nonExistingBranches         gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	// previousBranch           Option[gitdomain.LocalBranchName]
 	// proposalsOfChildBranches []hostingdomain.Proposal
 	stashSize gitdomain.StashSize
@@ -314,46 +316,21 @@ func hoistLocalBranch(prog, finalUndoProgram Mutable[program.Program], data hois
 	}
 }
 
-func determineBranchWhenDone(args branchWhenDoneArgs) gitdomain.LocalBranchName {
-	if args.branchNameToHoist != args.initialBranch {
-		return args.initialBranch
-	}
-	// here we are deleting the initial branch
-	previousBranch, hasPreviousBranch := args.previousBranch.Get()
-	if !hasPreviousBranch || previousBranch == args.initialBranch {
-		return args.mainBranch
-	}
-	// here we could return the previous branch
-	if previousBranchInfo, hasPreviousBranchInfo := args.branches.FindByLocalName(previousBranch).Get(); hasPreviousBranchInfo {
-		if previousBranchInfo.SyncStatus != gitdomain.SyncStatusOtherWorktree {
-			return previousBranch
-		}
-	}
-	// here the previous branch is checked out in another worktree --> cannot return it
-	return args.mainBranch
-}
-
-type branchWhenDoneArgs struct {
-	branchNameToHoist gitdomain.LocalBranchName
-	branches          gitdomain.BranchInfos
-	initialBranch     gitdomain.LocalBranchName
-	mainBranch        gitdomain.LocalBranchName
-	previousBranch    Option[gitdomain.LocalBranchName]
-}
-
 func validateHoistData(data hoistData) error {
-	switch data.branchToHoistType {
+	if data.initialBranchContainsMerges {
+		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
+	}
+	switch data.initialBranchType {
 	case
-		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
-		return nil
-	case configdomain.BranchTypeMainBranch:
-		return errors.New(messages.HoistCannotHoistMainBranch)
-	case configdomain.BranchTypePerennialBranch:
-		return errors.New(messages.HoistCannotHoistPerennialBranches)
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypePerennialBranch:
+		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.initialBranchType)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %s", data.branchToHoistType))
+	return nil
 }
