@@ -10,9 +10,9 @@ const (
 )
 
 // type-safe access to the CLI arguments of type gitdomain.ProposalBody
-func ProposalBody() (AddFunc, ReadProposalBodyFlagFunc) {
+func ProposalBody(short string) (AddFunc, ReadProposalBodyFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().StringP(bodyLong, "", "", "provide a body for the proposal")
+		cmd.Flags().StringP(bodyLong, short, "", "provide a body for the proposal")
 	}
 	readFlag := func(cmd *cobra.Command) (gitdomain.ProposalBody, error) {
 		value, err := cmd.Flags().GetString(bodyLong)

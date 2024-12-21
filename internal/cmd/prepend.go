@@ -41,7 +41,7 @@ See "sync" for upstream remote options.`
 
 func prependCommand() *cobra.Command {
 	addBeamFlag, readBeamFlag := flags.Beam()
-	addBodyFlag, readBodyFlag := flags.ProposalBody()
+	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addProposeFlag, readProposeFlag := flags.Propose()
