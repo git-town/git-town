@@ -5,7 +5,8 @@ Feature: propose a newly prepended branch
     Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | existing | feature | main   | local, origin |
+      | parent   | feature | main   | local, origin |
+      | existing | feature | parent | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE          |
       | existing | local, origin | existing commit  |
@@ -21,25 +22,28 @@ Feature: propose a newly prepended branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                        |
-      | existing | git fetch --prune --tags                                       |
-      | <none>   | Looking for proposal online ... ok                             |
-      | existing | git checkout main                                              |
-      | main     | git rebase origin/main --no-update-refs                        |
-      |          | git checkout existing                                          |
-      | existing | git rebase main --no-update-refs                               |
-      |          | git push --force-with-lease --force-if-includes                |
-      |          | git checkout -b new main                                       |
-      | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}        |
-      |          | git checkout existing                                          |
-      | existing | git rebase new --no-update-refs                                |
-      |          | git push --force-with-lease --force-if-includes                |
-      |          | git checkout new                                               |
-      | new      | git push -u origin new                                         |
-      | <none>   | open https://github.com/git-town/git-town/compare/new?expand=1 |
+      | BRANCH   | COMMAND                                                                 |
+      | existing | git fetch --prune --tags                                                |
+      | <none>   | Looking for proposal online ... ok                                      |
+      | existing | git checkout main                                                       |
+      | main     | git rebase origin/main --no-update-refs                                 |
+      |          | git checkout parent                                                     |
+      | parent   | git rebase main --no-update-refs                                        |
+      |          | git push --force-with-lease --force-if-includes                         |
+      |          | git checkout existing                                                   |
+      | existing | git rebase parent --no-update-refs                                      |
+      |          | git push --force-with-lease --force-if-includes                         |
+      |          | git checkout -b new parent                                              |
+      | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}                 |
+      |          | git checkout existing                                                   |
+      | existing | git rebase new --no-update-refs                                         |
+      |          | git push --force-with-lease --force-if-includes                         |
+      |          | git checkout new                                                        |
+      | new      | git push -u origin new                                                  |
+      | <none>   | open https://github.com/git-town/git-town/compare/parent...new?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
-      https://github.com/git-town/git-town/compare/new?expand=1
+      https://github.com/git-town/git-town/compare/parent...new?expand=1
       """
     And the current branch is now "new"
     And these commits exist now
@@ -49,7 +53,8 @@ Feature: propose a newly prepended branch
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | new    |
-      | new      | main   |
+      | new      | parent |
+      | parent   | main   |
 
   Scenario: undo
     When I run "git-town undo"
