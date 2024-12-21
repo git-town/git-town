@@ -15,8 +15,8 @@ Feature: propose a newly prepended branch
     And tool "open" is installed
     And a proposal for this branch does not exist
     When I run "git-town prepend parent --beam --propose --title='proposal title' --body='proposal body'" and enter into the dialog:
-      | DIALOG           | KEYS             |
-      | select commits 2 | down space enter |
+      | DIALOG                    | KEYS             |
+      | select "unrelated commit" | down space enter |
 
   Scenario: result
     Then Git Town runs the commands
