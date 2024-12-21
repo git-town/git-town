@@ -16,11 +16,11 @@ You can create pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-### --body / -b <text>
+### --body / -b &lt;text&gt;
 
 Pre-populate the body of the pull request with the given text.
 
-### --body-file / -f <path>
+### --body-file / -f &lt;path&gt;
 
 When called with the `--body-file` aka `-f` flag, it pre-populates the body of
 the pull request with the content of the given file. The filename `-` reads the
@@ -37,7 +37,7 @@ in changes from other developers.
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --title / -t <text>
+### --title / -t &lt;text&gt;
 
 When called with the `--title <title>` aka `-t` flag, the _propose_ command
 pre-populate the title of the pull request to the given text.
