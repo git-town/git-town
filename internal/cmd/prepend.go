@@ -41,9 +41,12 @@ See "sync" for upstream remote options.`
 
 func prependCommand() *cobra.Command {
 	addBeamFlag, readBeamFlag := flags.Beam()
+	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
+	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
@@ -56,6 +59,10 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			bodyText, err := readBodyFlag(cmd)
+			if err != nil {
+				return err
+			}
 			detached, err := readDetachedFlag(cmd)
 			if err != nil {
 				return err
@@ -64,7 +71,15 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			propose, err := readProposeFlag(cmd)
+			if err != nil {
+				return err
+			}
 			prototype, err := readPrototypeFlag(cmd)
+			if err != nil {
+				return err
+			}
+			title, err := readTitleFlag(cmd)
 			if err != nil {
 				return err
 			}
@@ -72,18 +87,21 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePrepend(args, beam, detached, dryRun, prototype, verbose)
+			return executePrepend(args, beam, bodyText, detached, dryRun, propose, prototype, title, verbose)
 		},
 	}
 	addBeamFlag(&cmd)
+	addBodyFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
+	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePrepend(args []string, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomain.ProposalBody, detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, proposalTitle gitdomain.ProposalTitle, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -95,7 +113,7 @@ func executePrepend(args []string, beam configdomain.Beam, detached configdomain
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, beam, detached, dryRun, prototype, verbose)
+	data, exit, err := determinePrependData(args, repo, beam, detached, dryRun, proposalBody, proposalTitle, propose, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -150,13 +168,16 @@ type prependData struct {
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[hostingdomain.Proposal]
+	proposalBody        gitdomain.ProposalBody
+	proposalTitle       gitdomain.ProposalTitle
+	propose             configdomain.Propose
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
 	stashSize           gitdomain.StashSize
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, detached configdomain.Detached, dryRun configdomain.DryRun, propasalBody gitdomain.ProposalBody, proposalTitle gitdomain.ProposalTitle, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -268,6 +289,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,
+		proposalBody:        propasalBody,
+		proposalTitle:       proposalTitle,
+		propose:             propose,
 		prototype:           prototype,
 		remotes:             remotes,
 		stashSize:           stashSize,
@@ -337,6 +361,18 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		})
 	}
 	moveCommitsToNewBranch(prog, data)
+	if data.propose {
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchIfLocal{
+				CurrentBranch: data.targetBranch,
+			},
+			&opcodes.ProposalCreate{
+				Branch:        data.targetBranch,
+				MainBranch:    data.config.ValidatedConfigData.MainBranch,
+				ProposalBody:  data.proposalBody,
+				ProposalTitle: data.proposalTitle,
+			})
+	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

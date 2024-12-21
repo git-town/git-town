@@ -40,6 +40,11 @@ Moves ("beams") one or more commits from the current branch to the new parent
 branch that gets created. Lets you select the commits to beam via a visual
 dialog.
 
+### --body &lt;string&gt;
+
+Pre-populate the body of the pull request to create with the given text.
+Requires `--propose`.
+
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
@@ -51,10 +56,19 @@ in changes from other developers.
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
+### --propose
+
+When set, this command proposes the branch it creates.
+
 ### --prototype / -p
 
 Adding the `--prototype` aka `-p` switch creates a
 [prototype branch](../branch-types.md#prototype-branches)).
+
+### --title / -t &lt;text&gt;
+
+Pre-populate the title of the pull request to create with the given text.
+Requires `--propose`.
 
 ### --verbose / -v
 

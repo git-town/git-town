@@ -12,7 +12,7 @@ import (
 )
 
 func newPullRequestCommand() *cobra.Command {
-	addBodyFlag, readBodyFlag := flags.ProposalBody()
+	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
