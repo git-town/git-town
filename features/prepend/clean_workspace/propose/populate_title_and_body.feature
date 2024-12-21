@@ -1,3 +1,4 @@
+@messyoutput
 Feature: propose a newly prepended branch
 
   Background:
