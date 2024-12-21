@@ -5,11 +5,11 @@ Feature: propose a newly prepended branch
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE          |
       | old    | local, origin | old commit       |
       |        |               | unrelated commit |
+    And the current branch is "old"
     And Git Town setting "sync-feature-strategy" is "rebase"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
@@ -18,6 +18,7 @@ Feature: propose a newly prepended branch
       | DIALOG           | KEYS             |
       | select commits 2 | down space enter |
 
+  @debug
   @this
   Scenario: result
     Then Git Town runs the commands

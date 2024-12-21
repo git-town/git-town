@@ -10,7 +10,7 @@ const proposeLong = "propose"
 // type-safe access to the CLI arguments of type gitdomain.Propose
 func Propose() (AddFunc, ReadProposeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(proposeLong, "p", false, "propose the new branch")
+		cmd.Flags().BoolP(proposeLong, "", false, "propose the new branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Propose, error) {
 		value, err := cmd.Flags().GetBool(proposeLong)
