@@ -13,31 +13,40 @@ Feature: show the configuration from a subfolder
     Then Git Town prints:
       """
       Branches:
-        main branch: main
-        perennial branches: public
-        perennial regex: (not set)
-        default branch type: feature
-        feature regex: (not set)
-        parked branches: (none)
         contribution branches: (none)
         contribution regex: (not set)
+        default branch type: feature
+        feature regex: (not set)
+        main branch: main
         observed branches: (none)
         observed regex: (not set)
+        parked branches: (none)
+        perennial branches: public
+        perennial regex: (not set)
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: no
-        ship strategy: api
-        ship deletes the tracking branch: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync with upstream: yes
-        sync tags: yes
 
       Hosting:
-        hosting platform override: (not set)
+        hosting platform: (not set)
+        hostname: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: yes
+        strategy: api
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
+        sync-prototype strategy: merge
+        sync tags: yes
+        sync with upstream: yes
       """

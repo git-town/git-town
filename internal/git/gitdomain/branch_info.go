@@ -3,7 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.

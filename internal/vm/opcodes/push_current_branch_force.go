@@ -1,16 +1,15 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
-// TODO: rename to PushCurrentBranchForce
-type ForcePush struct {
+type PushCurrentBranchForce struct {
 	ForceIfIncludes         bool
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ForcePush) Run(args shared.RunArgs) error {
+func (self *PushCurrentBranchForce) Run(args shared.RunArgs) error {
 	return args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), self.ForceIfIncludes)
 }

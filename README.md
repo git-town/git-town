@@ -56,9 +56,9 @@ development. Supports mono-repos and stacked changes. Check out
 
 #### Dealing with errors
 
-- [continue](https://www.git-town.com/commands/continue.html) - restart the last
-  Git Town command after having resolved conflicts
-- [skip](https://www.git-town.com/commands/skip.html) - restart the last run Git
+- [continue](https://www.git-town.com/commands/continue.html) - resume the last
+  run Git Town command after having resolved conflicts
+- [skip](https://www.git-town.com/commands/skip.html) - resume the last run Git
   Town command by skipping the current branch
 - [status](https://www.git-town.com/commands/status.html) - displays or resets
   the current suspended Git Town command
@@ -73,9 +73,13 @@ development. Supports mono-repos and stacked changes. Check out
   visual setup assistant
 - [offline](https://www.git-town.com/commands/offline.html) - start or stop
   running in offline mode
+- [completions](https://www.git-town.com/commands/completions) -
+  auto-completions for bash, zsh, fish, and PowerShell
 
 #### Advanced development commands
 
+- [branch](https://www.git-town.com/commands/branch) - display the local branch
+  hierarchy
 - [compress](https://www.git-town.com/commands/compress.html) - squash all
   commits on feature branches down to a single commit
 - [delete](https://www.git-town.com/commands/delete.html) - remove a feature

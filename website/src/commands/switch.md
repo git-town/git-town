@@ -44,7 +44,7 @@ The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
 
-### --type / -t
+### --type / -t &lt;name&gt;
 
 The `--type` aka `-t` flag reduces the list of branches to those that have the
 given type(s). For example, to display only observed branches:

@@ -3,10 +3,11 @@ Feature: remove existing configuration in Git metadata
 
   Background:
     Given a Git repo with origin
+    And I rename the "origin" remote to "fork"
     And the branches
-      | NAME       | TYPE      | LOCATIONS     |
-      | qa         | perennial | local, origin |
-      | production | (none)    | local, origin |
+      | NAME       | TYPE      | LOCATIONS |
+      | qa         | perennial | local     |
+      | production | (none)    | local     |
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.diff-parent" is "town diff-parent"
@@ -23,6 +24,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "perennial-regex" is "qa.*"
     And local Git Town setting "feature-regex" is "user.*"
     And local Git Town setting "default-branch-type" is "observed"
+    And local Git Town setting "dev-remote" is "fork"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
     And local Git Town setting "hosting-origin-hostname" is "code"
@@ -32,7 +34,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "sync-tags" is "true"
     And local Git Town setting "push-new-branches" is "true"
     And local Git Town setting "push-hook" is "true"
-    And local Git Town setting "create-prototype-branches" is "true"
+    And local Git Town setting "new-branch-type" is "parked"
     And local Git Town setting "ship-strategy" is "squash-merge"
     And local Git Town setting "ship-delete-tracking-branch" is "false"
     When I run "git-town config setup" and enter into the dialogs:
@@ -44,15 +46,17 @@ Feature: remove existing configuration in Git metadata
       | remove the perennial regex              | backspace backspace backspace backspace enter                     |
       | default branch type                     | down enter                                                        |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
-      | remove hosting service override         | up up up enter                                                    |
+      | dev-remote                              | enter                                                             |
+      | remove hosting service override         | up up up up enter                                                 |
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |
       | sync-feature-strategy                   | down enter                                                        |
       | sync-perennial-strategy                 | down enter                                                        |
+      | sync-prototype-strategy                 | down enter                                                        |
       | sync-upstream                           | down enter                                                        |
       | sync-tags                               | down enter                                                        |
       | enable push-new-branches                | down enter                                                        |
       | disable the push hook                   | down enter                                                        |
-      | create-prototype-branches               | down enter                                                        |
+      | new-branch-type                         | down enter                                                        |
       | change ship-strategy                    | down enter                                                        |
       | disable ship-delete-tracking-branch     | down enter                                                        |
       | save config to Git metadata             | down enter                                                        |
@@ -86,7 +90,8 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is still "main"
     And the perennial branches are now "production"
-    And local Git Town setting "create-prototype-branches" is now "false"
+    And local Git Town setting "dev-remote" is now "fork"
+    And local Git Town setting "new-branch-type" is now "prototype"
     And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
@@ -117,7 +122,8 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
-    And local Git Town setting "create-prototype-branches" is now "true"
+    And local Git Town setting "dev-remote" is now "fork"
+    And local Git Town setting "new-branch-type" is now "parked"
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "perennial-regex" is now "qa.*"
     And local Git Town setting "feature-regex" is now "user.*"

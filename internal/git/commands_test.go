@@ -3,14 +3,14 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	"github.com/git-town/git-town/v16/internal/subshell"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	testgit "github.com/git-town/git-town/v16/test/git"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	"github.com/git-town/git-town/v17/internal/subshell"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	testgit "github.com/git-town/git-town/v17/test/git"
+	"github.com/git-town/git-town/v17/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
@@ -401,7 +401,7 @@ func TestBackendCommands(t *testing.T) {
 			repo.CheckoutBranch(main.LocalBranchName())
 			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
 			must.NoError(t, err)
-			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.BranchName())
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch(gitdomain.RemoteOrigin).BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
@@ -1067,7 +1067,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
 			must.NoError(t, err)
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.False(t, shouldPush)
 		})
@@ -1085,7 +1085,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "local_file",
 				Message:     "add local file",
 			})
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -1104,7 +1104,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -1129,7 +1129,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})

@@ -13,15 +13,17 @@ Feature: override an existing Git alias
       | perennial regex             | enter   |
       | default branch type         | enter   |
       | feature regex               | enter   |
+      | dev-remote                  | enter   |
       | hosting platform            | enter   |
       | origin hostname             | enter   |
       | sync-feature-strategy       | enter   |
       | sync-perennial-strategy     | enter   |
+      | sync-prototype-strategy     | enter   |
       | sync-upstream               | enter   |
       | sync-tags                   | enter   |
       | push-new-branches           | enter   |
       | push-hook                   | enter   |
-      | create-prototype-branches   | enter   |
+      | new-branch-type             | enter   |
       | ship-strategy               | enter   |
       | ship-delete-tracking-branch | enter   |
       | save config to config file  | enter   |

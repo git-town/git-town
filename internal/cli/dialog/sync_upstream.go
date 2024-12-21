@@ -2,12 +2,12 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/cli/format"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
 )
 
 const (
@@ -25,47 +25,22 @@ and you want to keep it in sync with the repo it was forked from.
 `
 )
 
-const (
-	SyncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
-	SyncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
-)
-
 func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []syncUpstreamEntry{
-		SyncUpstreamEntryYes,
-		SyncUpstreamEntryNo,
+	entries := list.Entries[configdomain.SyncUpstream]{
+		{
+			Data: true,
+			Text: "yes, receive updates from the upstream repo",
+		},
+		{
+			Data: false,
+			Text: "no, don't receive updates from upstream",
+		},
 	}
-	var defaultPos int
-	if existing {
-		defaultPos = 0
-	} else {
-		defaultPos = 1
-	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
+	defaultPos := entries.IndexOf(existing)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf(messages.SyncWithUpstream, components.FormattedSelection(selection.Short(), aborted))
-	return selection.SyncUpstream(), aborted, err
-}
-
-type syncUpstreamEntry string
-
-func (self syncUpstreamEntry) Short() string {
-	start, _, _ := strings.Cut(self.String(), ",")
-	return start
-}
-
-func (self syncUpstreamEntry) String() string {
-	return string(self)
-}
-
-func (self syncUpstreamEntry) SyncUpstream() configdomain.SyncUpstream {
-	switch self {
-	case SyncUpstreamEntryYes:
-		return configdomain.SyncUpstream(true)
-	case SyncUpstreamEntryNo:
-		return configdomain.SyncUpstream(false)
-	}
-	panic("unhandled syncUpstreamEntry: " + self)
+	fmt.Printf(messages.SyncWithUpstream, components.FormattedSelection(format.Bool(selection.IsTrue()), aborted))
+	return selection, aborted, err
 }

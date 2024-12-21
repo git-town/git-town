@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/config"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	configInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/config"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -62,7 +62,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = validateParkData(data); err != nil {
+	if err = validateParkData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
@@ -141,7 +141,7 @@ func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, er
 	}, err
 }
 
-func validateParkData(data parkData) error {
+func validateParkData(data parkData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToPark {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
@@ -157,7 +157,7 @@ func validateParkData(data parkData) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

@@ -7,19 +7,19 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/config/configfile"
-	"github.com/git-town/git-town/v16/internal/config/gitconfig"
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/subshell"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configfile"
+	"github.com/git-town/git-town/v17/internal/config/gitconfig"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/subshell"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
@@ -73,17 +73,25 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	configFile, err := configfile.Load(rootDir)
+	finalMessages := stringslice.NewCollector()
+	configFile, err := configfile.Load(rootDir, configfile.FileName, finalMessages)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unvalidatedConfig, finalMessages := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access:       configGitAccess,
-		ConfigFile:   configFile,
-		DryRun:       args.DryRun,
-		GitVersion:   gitVersion,
-		GlobalConfig: globalConfig,
-		LocalConfig:  localConfig,
+	if configFile.IsNone() {
+		configFile, err = configfile.Load(rootDir, configfile.AlternativeFileName, finalMessages)
+		if err != nil {
+			return emptyOpenRepoResult(), err
+		}
+	}
+	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+		Access:        configGitAccess,
+		ConfigFile:    configFile,
+		DryRun:        args.DryRun,
+		FinalMessages: finalMessages,
+		GitVersion:    gitVersion,
+		GlobalConfig:  globalConfig,
+		LocalConfig:   localConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,

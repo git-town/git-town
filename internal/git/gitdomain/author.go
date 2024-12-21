@@ -1,6 +1,6 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v16/pkg/prelude"
+import . "github.com/git-town/git-town/v17/pkg/prelude"
 
 // Author represents the author of a commit in the format "name <email>"
 type Author string

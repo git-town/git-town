@@ -3,9 +3,9 @@ package configdomain
 import (
 	"encoding/json"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/pkg"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/pkg"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.
@@ -58,11 +58,11 @@ const (
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
-	KeyCreatePrototypeBranches             = Key("git-town.create-prototype-branches")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
+	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
@@ -72,6 +72,7 @@ const (
 	KeyDeprecatedPushVerify                = Key("git-town.push-verify")
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
+	KeyDevRemote                           = Key("git-town.dev-remote")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
@@ -79,6 +80,7 @@ const (
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyHostingPlatform                     = Key("git-town.hosting-platform")
 	KeyMainBranch                          = Key("git-town.main-branch")
+	KeyNewBranchType                       = Key("git-town.new-branch-type")
 	KeyObservedBranches                    = Key("git-town.observed-branches")
 	KeyObservedRegex                       = Key("git-town.observed-regex")
 	KeyOffline                             = Key("git-town.offline")
@@ -94,7 +96,6 @@ const (
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
 	KeySyncPerennialStrategy               = Key("git-town.sync-perennial-strategy")
 	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
-	KeySyncStrategy                        = Key("git-town.sync-strategy")
 	KeySyncTags                            = Key("git-town.sync-tags")
 	KeySyncUpstream                        = Key("git-town.sync-upstream")
 	KeyGitUserEmail                        = Key("user.email")
@@ -108,13 +109,13 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyBitbucketUsername,
 	KeyContributionBranches,
 	KeyContributionRegex,
-	KeyCreatePrototypeBranches,
 	KeyDefaultBranchType,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
+	KeyDeprecatedCreatePrototypeBranches,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
@@ -122,6 +123,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
 	KeyDeprecatedSyncStrategy,
+	KeyDevRemote,
 	KeyFeatureRegex,
 	KeyGiteaToken,
 	KeyGithubToken,
@@ -129,6 +131,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyGitUserEmail,
 	KeyGitUserName,
 	KeyMainBranch,
+	KeyNewBranchType,
 	KeyObservedBranches,
 	KeyObservedRegex,
 	KeyOffline,
@@ -144,7 +147,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
 	KeySyncPrototypeStrategy,
-	KeySyncStrategy,
 	KeySyncTags,
 	KeySyncUpstream,
 }
@@ -207,6 +209,26 @@ var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
 		After: ConfigSetting{
 			Key:   KeyAliasRename,
 			Value: "town rename",
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "true",
+		},
+		After: ConfigSetting{
+			Key:   KeyNewBranchType,
+			Value: "prototype",
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedCreatePrototypeBranches,
+			Value: "false",
+		},
+		After: ConfigSetting{
+			Key:   KeyNewBranchType,
+			Value: "feature",
 		},
 	},
 }

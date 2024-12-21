@@ -5,32 +5,32 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/cmd/ship"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/cmd/ship"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
 const setParentCmd = "set-parent"
 
-const setParentDesc = "Prompt to set the parent branch for the current branch"
+const setParentDesc = "Set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -161,7 +161,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -217,9 +217,10 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
+func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted bool) {
 	proposal, hasProposal := data.proposal.Get()
-	switch outcome {
+	// update lineage
+	switch dialogOutcome {
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
@@ -235,6 +236,63 @@ func setParentProgram(outcome dialog.ParentOutcome, selectedBranch gitdomain.Loc
 				OldBranch:      proposal.Target,
 				ProposalNumber: proposal.Number,
 			})
+		}
+		// update commits
+		switch data.config.NormalConfig.SyncFeatureStrategy {
+		case configdomain.SyncFeatureStrategyMerge:
+		case configdomain.SyncFeatureStrategyCompress, configdomain.SyncFeatureStrategyRebase:
+			initialBranchInfo, hasInitialBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(data.initialBranch).Get()
+			hasRemoteBranch := hasInitialBranchInfo && initialBranchInfo.HasTrackingBranch()
+			if hasRemoteBranch {
+				prog.Add(
+					&opcodes.PullCurrentBranch{},
+				)
+			}
+			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
+			prog.Add(
+				&opcodes.RebaseOnto{
+					BranchToRebaseAgainst: data.initialBranch.BranchName(),
+					BranchToRebaseOnto:    selectedBranch,
+					Upstream:              parentOpt,
+				},
+			)
+			if hasRemoteBranch {
+				prog.Add(
+					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+				)
+			}
+			// remove commits from descendents
+			descendents := data.config.NormalConfig.Lineage.Descendants(data.initialBranch)
+			for _, descendent := range descendents {
+				prog.Add(
+					&opcodes.CheckoutIfNeeded{
+						Branch: descendent,
+					},
+				)
+				descendentBranchInfo, hasDescendentBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get()
+				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					prog.Add(
+						&opcodes.PullCurrentBranch{},
+					)
+				}
+				prog.Add(
+					&opcodes.RebaseOnto{
+						BranchToRebaseAgainst: descendent.BranchName(),
+						BranchToRebaseOnto:    data.initialBranch,
+						Upstream:              parentOpt,
+					},
+				)
+				if hasDescendentBranchInfo && descendentBranchInfo.HasTrackingBranch() {
+					prog.Add(
+						&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+					)
+				}
+			}
+			prog.Add(
+				&opcodes.CheckoutIfNeeded{
+					Branch: data.initialBranch,
+				},
+			)
 		}
 	}
 	return prog, false

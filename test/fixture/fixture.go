@@ -7,17 +7,17 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/asserts"
-	"github.com/git-town/git-town/v16/test/commands"
-	"github.com/git-town/git-town/v16/test/datatable"
-	testgit "github.com/git-town/git-town/v16/test/git"
-	"github.com/git-town/git-town/v16/test/helpers"
-	"github.com/git-town/git-town/v16/test/subshell"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
+	"github.com/git-town/git-town/v17/test/commands"
+	"github.com/git-town/git-town/v17/test/datatable"
+	testgit "github.com/git-town/git-town/v17/test/git"
+	"github.com/git-town/git-town/v17/test/helpers"
+	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.
@@ -82,9 +82,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 // AddSubmodule adds a submodule repository.
 func (self *Fixture) AddSubmoduleRepo() {
 	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
-	}
+	asserts.NoError(err)
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRun("git", "config", "--global", "protocol.file.allow", "always")
 	self.SubmoduleRepo = MutableSome(&submoduleRepo)
@@ -105,22 +103,21 @@ func (self *Fixture) Branches() datatable.DataTable {
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := gitdomain.NewLocalBranchName("main")
 	initialBranch := gitdomain.NewLocalBranchName("initial")
-	localBranches, err := self.DevRepo.GetOrPanic().LocalBranches()
-	asserts.NoError(err)
+	localBranches := asserts.NoError1(self.DevRepo.GetOrPanic().LocalBranches())
 	localBranchesJoined := localBranches.RemoveWorktreeMarkers().Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originRepo, hasOriginRepo := self.OriginRepo.Get()
 	if !hasOriginRepo {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, err := originRepo.LocalBranches()
-	asserts.NoError(err)
+	originBranches := asserts.NoError1(originRepo.LocalBranches())
 	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	originName := self.DevRepo.Value.Config.NormalConfig.DevRemote.String()
 	if localBranchesJoined == originBranchesJoined {
-		result.AddRow("local, origin", localBranchesJoined)
+		result.AddRow("local, "+originName, localBranchesJoined)
 	} else {
 		result.AddRow("local", localBranchesJoined)
-		result.AddRow("origin", originBranchesJoined)
+		result.AddRow(originName, originBranchesJoined)
 	}
 	return result
 }
@@ -144,7 +141,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
 		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
-		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
+		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
 		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)

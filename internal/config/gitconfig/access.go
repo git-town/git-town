@@ -7,11 +7,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/cli/colors"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 type Runner interface {
@@ -92,15 +92,6 @@ func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdom
 	return self.Run("git", args...)
 }
 
-// updates a custom Git alias (not set up by Git Town)
-func (self *Access) UpdateDeprecatedCustomSetting(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
-	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
-	err := self.SetConfigValue(scope, key, newValue)
-	if err != nil {
-		fmt.Printf(messages.SettingCannotWrite, scope, key, err)
-	}
-}
-
 func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedMessage, scope, oldKey, newKey)))
 	err := self.RemoveConfigValue(scope, oldKey)
@@ -110,6 +101,15 @@ func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldK
 	err = self.SetConfigValue(scope, newKey, value)
 	if err != nil {
 		fmt.Printf(messages.SettingCannotWrite, scope, newKey, err)
+	}
+}
+
+// updates a custom Git alias (not set up by Git Town)
+func (self *Access) UpdateExternalGitTownAlias(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
+	err := self.SetConfigValue(scope, key, newValue)
+	if err != nil {
+		fmt.Printf(messages.SettingCannotWrite, scope, key, err)
 	}
 }
 
@@ -156,8 +156,8 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
-				} else if value == update.Before.Value {
-					self.UpdateDeprecatedCustomSetting(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
+				} else if IsGitTownAlias(value) && value == update.Before.Value {
+					self.UpdateExternalGitTownAlias(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
 				}
@@ -169,4 +169,9 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
 	return snapshot, partialConfig, err
+}
+
+// indicates whether the given value of a Git configuration setting contains an alias for a Git Town command
+func IsGitTownAlias(value string) bool {
+	return strings.HasPrefix(value, "town ")
 }

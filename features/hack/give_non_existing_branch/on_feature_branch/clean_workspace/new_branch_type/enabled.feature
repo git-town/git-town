@@ -1,4 +1,5 @@
-Feature: auto-creating a prototype branch when hacking
+@smoke
+Feature: create a new branch when prototype branches are configured via Git metadata
 
   Background:
     Given a Git repo with origin
@@ -10,7 +11,7 @@ Feature: auto-creating a prototype branch when hacking
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And Git Town setting "create-prototype-branches" is "true"
+    And Git Town setting "new-branch-type" is "prototype"
     When I run "git-town hack new"
 
   Scenario: result

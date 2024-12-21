@@ -5,26 +5,26 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/cmd/sync"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/pkg/set"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/cmd/sync"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -174,7 +174,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return mergeData{}, false, err
 	}
@@ -267,7 +267,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	if data.parentBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
 		sync.FeatureTrackingBranchProgram(
-			data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
+			data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
 			data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
 			sync.FeatureTrackingArgs{
 				FirstCommitMessage: data.parentBranchFirstCommitMessage,
@@ -325,7 +325,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	})
 	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsFalse() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
-			Branch: data.parentBranch.AtRemote(gitdomain.RemoteOrigin),
+			Branch: data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -340,7 +340,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 
 func validateMergeData(data mergeData) error {
 	// ensure parent isn't deleted at remote
-	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch).Get()
+	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.parentBranch)
 	}
@@ -351,7 +351,7 @@ func validateMergeData(data mergeData) error {
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
 	// ensure branch isn't deleted at remote
-	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch).Get()
+	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasBranchInfo {
 		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
 	}

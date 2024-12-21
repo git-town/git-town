@@ -3,7 +3,7 @@ package gitdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,12 +15,12 @@ func TestRemotes(t *testing.T) {
 		t.Run("origin remote exists", func(t *testing.T) {
 			t.Parallel()
 			remotes := gitdomain.Remotes{gitdomain.RemoteOrigin}
-			must.True(t, remotes.HasOrigin())
+			must.True(t, remotes.Contains(gitdomain.RemoteOrigin))
 		})
 		t.Run("origin remote does not exist", func(t *testing.T) {
 			t.Parallel()
 			remotes := gitdomain.Remotes{gitdomain.RemoteUpstream}
-			must.False(t, remotes.HasOrigin())
+			must.False(t, remotes.Contains(gitdomain.RemoteOrigin))
 		})
 	})
 

@@ -19,7 +19,7 @@ back to the exact state you repo was in before the sync by running
 - pulls and pushes updates from all parent branches and the tracking branch
 - deletes branches whose tracking branch was deleted at the remote if they
   contain no unshipped changes
-- removes commits from deleted branches from their descendent branches, unless
+- removes commits of deleted branches from their descendent branches, unless
   when using the
   [merge sync strategy](../preferences/sync-feature-strategy.md#merge).
 - safely stashes away uncommitted changes and restores them when done
@@ -43,8 +43,8 @@ developers.
 
 ### --dry-run
 
-The `--dry-run` flag allows to test-drive this command. It prints the Git
-commands that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
 ### --no-push
 

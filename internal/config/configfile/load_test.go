@@ -3,7 +3,8 @@ package configfile_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config/configfile"
+	"github.com/git-town/git-town/v17/internal/config/configfile"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -32,9 +33,25 @@ observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
 
+[create]
+new-branch-type = "prototype"
+push-new-branches = true
+
 [hosting]
 platform = "github"
 origin-hostname = "github.com"
+
+[ship]
+delete-tracking-branch = false
+strategy = "api"
+
+[sync]
+feature-strategy = "merge"
+perennial-strategy = "rebase"
+prototype-strategy = "compress"
+push-hook = true
+tags = false
+upstream = true
 
 [sync-strategy]
 feature-branches = "merge"
@@ -43,50 +60,48 @@ prototype-branches = "compress"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			contributionRegex := "^gittown-"
-			createPrototypeBranches := true
-			createDefaultType := "prototype"
-			featureRegex := "^kg-"
-			github := "github"
-			githubCom := "github.com"
-			main := "main"
-			merge := "merge"
-			observedRegex := `^dependabot\/`
-			pushNewBranches := true
-			pushHook := true
-			rebase := "rebase"
-			compress := "compress"
-			releaseRegex := "release-.*"
-			shipDeleteTrackingBranch := false
-			shipStrategy := "api"
-			syncTags := false
-			syncUpstream := true
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					ContributionRegex: &contributionRegex,
-					DefaultType:       &createDefaultType,
-					FeatureRegex:      &featureRegex,
-					Main:              &main,
-					ObservedRegex:     &observedRegex,
-					PerennialRegex:    &releaseRegex,
+					ContributionRegex: Ptr("^gittown-"),
+					DefaultType:       Ptr("prototype"),
+					FeatureRegex:      Ptr("^kg-"),
+					Main:              Ptr("main"),
+					ObservedRegex:     Ptr(`^dependabot\/`),
+					PerennialRegex:    Ptr("release-.*"),
 					Perennials:        []string{"public", "staging"},
 				},
+				Create: &configfile.Create{
+					NewBranchType:   Ptr("prototype"),
+					PushNewbranches: Ptr(true),
+				},
 				Hosting: &configfile.Hosting{
-					Platform:       &github,
-					OriginHostname: &githubCom,
+					Platform:       Ptr("github"),
+					OriginHostname: Ptr("github.com"),
+				},
+				Ship: &configfile.Ship{
+					DeleteTrackingBranch: Ptr(false),
+					Strategy:             Ptr("api"),
+				},
+				Sync: &configfile.Sync{
+					FeatureStrategy:   Ptr("merge"),
+					PerennialStrategy: Ptr("rebase"),
+					PrototypeStrategy: Ptr("compress"),
+					PushHook:          Ptr(true),
+					Tags:              Ptr(false),
+					Upstream:          Ptr(true),
 				},
 				SyncStrategy: &configfile.SyncStrategy{
-					FeatureBranches:   &merge,
-					PerennialBranches: &rebase,
-					PrototypeBranches: &compress,
+					FeatureBranches:   Ptr("merge"),
+					PerennialBranches: Ptr("rebase"),
+					PrototypeBranches: Ptr("compress"),
 				},
-				CreatePrototypeBranches:  &createPrototypeBranches,
-				PushHook:                 &pushHook,
-				PushNewbranches:          &pushNewBranches,
-				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
-				ShipStrategy:             &shipStrategy,
-				SyncTags:                 &syncTags,
-				SyncUpstream:             &syncUpstream,
+				CreatePrototypeBranches:  Ptr(true),
+				PushHook:                 Ptr(true),
+				PushNewbranches:          Ptr(true),
+				ShipDeleteTrackingBranch: Ptr(false),
+				ShipStrategy:             Ptr("api"),
+				SyncTags:                 Ptr(false),
+				SyncUpstream:             Ptr(true),
 			}
 			must.Eq(t, want, *have)
 		})
@@ -99,10 +114,9 @@ main = "main"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			main := "main"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main:           &main,
+					Main:           Ptr("main"),
 					Perennials:     nil,
 					PerennialRegex: nil,
 				},
@@ -123,10 +137,9 @@ branches.main = "main"
 `[1:]
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
-			main := "main"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main: &main,
+					Main: Ptr("main"),
 				},
 			}
 			must.Eq(t, want, *have)

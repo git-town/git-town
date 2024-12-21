@@ -1,6 +1,6 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v16/pkg/prelude"
+import . "github.com/git-town/git-town/v17/pkg/prelude"
 
 // SyncPrototypeStrategy defines legal values for the "sync-prototype-strategy" configuration setting.
 type SyncPrototypeStrategy SyncStrategy
@@ -14,8 +14,9 @@ func (self SyncPrototypeStrategy) SyncStrategy() SyncStrategy {
 }
 
 const (
-	SyncPrototypeStrategyMerge  = SyncPrototypeStrategy(SyncStrategyMerge)
-	SyncPrototypeStrategyRebase = SyncPrototypeStrategy(SyncStrategyRebase)
+	SyncPrototypeStrategyMerge    = SyncPrototypeStrategy(SyncStrategyMerge)
+	SyncPrototypeStrategyRebase   = SyncPrototypeStrategy(SyncStrategyRebase)
+	SyncPrototypeStrategyCompress = SyncPrototypeStrategy(SyncStrategyCompress)
 )
 
 func NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy SyncFeatureStrategy) SyncPrototypeStrategy {

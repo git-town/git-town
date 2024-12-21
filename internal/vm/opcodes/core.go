@@ -5,8 +5,8 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // undeclaredOpcodeMethods can be added to structs in this package to satisfy the shared.Opcode interface even if they don't declare all required methods.
@@ -98,7 +98,7 @@ func Types() []shared.Opcode {
 		&ConflictPhantomResolve{},
 		&ConnectorProposalMerge{},
 		&FetchUpstream{},
-		&ForcePush{},
+		&PushCurrentBranchForce{},
 		&LineageBranchRemove{},
 		&LineageParentRemove{},
 		&LineageParentSet{},
@@ -108,7 +108,7 @@ func Types() []shared.Opcode {
 		&Merge{},
 		&MergeAbort{},
 		&MergeContinue{},
-		&MergeParent{},
+		&MergeParentResolvePhantomConflicts{},
 		&MergeParentIfNeeded{},
 		&MergeSquashProgram{},
 		&MessageQueue{},

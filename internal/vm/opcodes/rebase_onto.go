@@ -3,14 +3,16 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
 type RebaseOnto struct {
 	BranchToRebaseAgainst   gitdomain.BranchName
 	BranchToRebaseOnto      gitdomain.LocalBranchName
+	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -27,7 +29,7 @@ func (self *RebaseOnto) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOnto) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto)
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto, self.Upstream)
 	if err != nil {
 		// Here the rebase-onto has failed.
 		// The branch that gets rebased onto will be deleted.

@@ -66,6 +66,5 @@ CI runs. The first run of `git town sync` will create the remote tracking
 branch.
 
 If the configuration setting
-[create-prototype-branches](../preferences/create-prototype-branches.md) is set,
-`git town append` always creates a
-[prototype branch](../branch-types.md#prototype-branches).
+[new-branch-type](../preferences/new-branch-type.md) is set, `git town append`
+creates a branch with the given [type](../branch-types.md).

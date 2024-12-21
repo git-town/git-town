@@ -21,7 +21,7 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git remote                                        |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                   |
+      |         | backend  | git branch --show-current                         |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git stash list                                    |
       |         | backend  | git branch -vva --sort=refname                    |
@@ -64,7 +64,7 @@ Feature: display all executed Git commands
       |        | backend  | git remote get-url origin                      |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git remote get-url origin                      |
-      |        | backend  | git log --pretty=format:%h %s -10              |
+      |        | backend  | git log --pretty=format:%H %s -10              |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
       | main   | frontend | git push                                       |

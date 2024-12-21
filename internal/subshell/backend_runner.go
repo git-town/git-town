@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v16/internal/cli/colors"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -51,6 +51,7 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 		subProcess.Dir = dir
 	}
 	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+	subProcess.Env = append(subProcess.Environ(), `GIT_CONFIG_PARAMETERS='core.abbrev=40'`)
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
 	var outputBytes []byte

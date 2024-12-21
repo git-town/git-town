@@ -11,7 +11,13 @@ option.
 ## in config file
 
 ```toml
-push-new-branches = true
+create.push-new-branches = true
+```
+
+or
+
+```toml
+create.push-new-branches = true
 ```
 
 ## in Git metadata

@@ -23,13 +23,12 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git remote                                        |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                   |
+      |         | backend  | git branch --show-current                         |
       | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git stash list                                    |
       |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git remote get-url origin                         |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout other                                |
       | other   | frontend | git branch -D current                             |
@@ -41,6 +40,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 22 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "other"

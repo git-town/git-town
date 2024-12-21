@@ -1,4 +1,4 @@
-Feature: auto-create prototype branches when prepending
+Feature: prepend a new branch when prototype branches are configured via Git metadata
 
   Background:
     Given a Git repo with origin
@@ -9,7 +9,7 @@ Feature: auto-create prototype branches when prepending
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And Git Town setting "create-prototype-branches" is "true"
+    And Git Town setting "new-branch-type" is "prototype"
     When I run "git-town prepend parent"
 
   Scenario: result

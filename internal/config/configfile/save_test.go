@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/config/configfile"
-	"github.com/git-town/git-town/v16/internal/config/gitconfig"
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configfile"
+	"github.com/git-town/git-town/v17/internal/config/gitconfig"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -50,12 +50,13 @@ func TestSave(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					CreatePrototypeBranches:  true,
 					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
+					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 					HostingPlatform:          None[configdomain.HostingPlatform](),
 					Lineage:                  configdomain.NewLineage(),
+					NewBranchType:            configdomain.BranchTypePrototypeBranch,
 					ObservedBranches:         gitdomain.LocalBranchNames{},
 					Offline:                  false,
 					ParkedBranches:           gitdomain.LocalBranchNames{},
@@ -74,118 +75,33 @@ func TestSave(t *testing.T) {
 		}
 		have := configfile.RenderTOML(&give)
 		want := `
-# Git Town configuration file
-#
-# Run "git town config setup" to add additional entries
-# to this file after updating Git Town.
-#
-# The "push-hook" setting determines whether Git Town
-# permits or prevents Git hooks while pushing branches.
-# Hooks are enabled by default. If your Git hooks are slow,
-# you can disable them to speed up branch syncing.
-#
-# When disabled, Git Town pushes using the "--no-verify" switch.
-# More info at https://www.git-town.com/preferences/push-hook.
-push-hook = true
-
-# Should Git Town push the new branches it creates
-# immediately to origin even if they are empty?
-#
-# When enabled, you can run "git push" right away
-# but creating new branches is slower and
-# it triggers an unnecessary CI run on the empty branch.
-#
-# When disabled, many Git Town commands execute faster
-# and Git Town will create the missing tracking branch
-# on the first run of "git town sync".
-push-new-branches = false
-
-# The "create-prototype-branches" setting determines whether Git Town
-# always creates prototype branches.
-# Prototype branches sync only locally and don't create a tracking branch
-# until they are proposed.
-#
-# More info at https://www.git-town.com/preferences/create-prototype-branches.
-create-prototype-branches = true
-
-# Which method should Git Town use to ship feature branches?
-#
-# Options:
-#
-# - api: merge the proposal on your code hosting platform via the code hosting API
-# - fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch
-# - squash-merge: in your local repo, squash-merge the feature branch into its parent branch
-#
-# All options update proposals of child branches and remove the shipped branch locally and remotely.
-ship-strategy = "squash-merge"
-
-# Should "git town ship" delete the tracking branch?
-# You want to disable this if your code hosting platform
-# (GitHub, GitLab, etc) deletes head branches when
-# merging pull requests through its UI.
-ship-delete-tracking-branch = true
-
-# Should "git town sync" sync tags with origin?
-sync-tags = true
-
-# Should "git town sync" also fetch updates from the upstream remote?
-#
-# If an "upstream" remote exists, and this setting is enabled,
-# "git town sync" will also update the local main branch
-# with commits from the main branch at the upstream remote.
-#
-# This is useful if the repository you work on is a fork,
-# and you want to keep it in sync with the repo it was forked from.
-sync-upstream = true
+# More info around this file at https://www.git-town.com/configuration-file
 
 [branches]
-
-# The main branch is the branch from which you cut new feature branches,
-# and into which you ship feature branches when they are done.
-# This branch is often called "main", "master", or "development".
 main = "main"
-
-# Perennial branches are long-lived branches.
-# They are never shipped and have no ancestors.
-# Typically, perennial branches have names like
-# "development", "staging", "qa", "production", etc.
-#
-# See also the "perennial-regex" setting.
 perennials = ["one", "two"]
-
-# All branches whose name matches this regular expression
-# are also considered perennial branches.
-#
-# If you are not sure, leave this empty.
 perennial-regex = ""
 
+[create]
+new-branch-type = "prototype"
+push-new-branches = false
+
 [hosting]
-
-# Knowing the type of code hosting platform allows Git Town
-# to open browser URLs and talk to the code hosting API.
-# Most people can leave this on "auto-detect".
-# Only change this if your code hosting server uses as custom URL.
+dev-remote = "fork"
 # platform = ""
-
-# When using SSH identities, define the hostname
-# of your source code repository. Only change this
-# if the auto-detection does not work for you.
 # origin-hostname = ""
 
-[sync-strategy]
+[ship]
+delete-tracking-branch = true
+strategy = "squash-merge"
 
-# How should Git Town synchronize feature branches?
-# Feature branches are short-lived branches cut from
-# the main branch and shipped back into the main branch.
-# Typically you develop features and bug fixes on them,
-# hence their name.
-feature-branches = "merge"
-
-# How should Git Town synchronize perennial branches?
-# Perennial branches have no parent branch.
-# The only updates they receive are additional commits
-# made to their tracking branch somewhere else.
-perennial-branches = "rebase"
+[sync]
+feature-strategy = "merge"
+perennial-strategy = "rebase"
+prototype-strategy = ""
+push-hook = true
+tags = true
+upstream = true
 `[1:]
 		must.EqOp(t, want, have)
 	})
@@ -202,147 +118,34 @@ perennial-branches = "rebase"
 		must.NoError(t, err)
 		have := string(bytes)
 		want := `
-# Git Town configuration file
-#
-# Run "git town config setup" to add additional entries
-# to this file after updating Git Town.
-#
-# The "push-hook" setting determines whether Git Town
-# permits or prevents Git hooks while pushing branches.
-# Hooks are enabled by default. If your Git hooks are slow,
-# you can disable them to speed up branch syncing.
-#
-# When disabled, Git Town pushes using the "--no-verify" switch.
-# More info at https://www.git-town.com/preferences/push-hook.
-push-hook = true
-
-# Should Git Town push the new branches it creates
-# immediately to origin even if they are empty?
-#
-# When enabled, you can run "git push" right away
-# but creating new branches is slower and
-# it triggers an unnecessary CI run on the empty branch.
-#
-# When disabled, many Git Town commands execute faster
-# and Git Town will create the missing tracking branch
-# on the first run of "git town sync".
-push-new-branches = false
-
-# The "create-prototype-branches" setting determines whether Git Town
-# always creates prototype branches.
-# Prototype branches sync only locally and don't create a tracking branch
-# until they are proposed.
-#
-# More info at https://www.git-town.com/preferences/create-prototype-branches.
-create-prototype-branches = false
-
-# Which method should Git Town use to ship feature branches?
-#
-# Options:
-#
-# - api: merge the proposal on your code hosting platform via the code hosting API
-# - fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch
-# - squash-merge: in your local repo, squash-merge the feature branch into its parent branch
-#
-# All options update proposals of child branches and remove the shipped branch locally and remotely.
-ship-strategy = "api"
-
-# Should "git town ship" delete the tracking branch?
-# You want to disable this if your code hosting platform
-# (GitHub, GitLab, etc) deletes head branches when
-# merging pull requests through its UI.
-ship-delete-tracking-branch = true
-
-# Should "git town sync" sync tags with origin?
-sync-tags = true
-
-# Should "git town sync" also fetch updates from the upstream remote?
-#
-# If an "upstream" remote exists, and this setting is enabled,
-# "git town sync" will also update the local main branch
-# with commits from the main branch at the upstream remote.
-#
-# This is useful if the repository you work on is a fork,
-# and you want to keep it in sync with the repo it was forked from.
-sync-upstream = true
+# More info around this file at https://www.git-town.com/configuration-file
 
 [branches]
-
-# The main branch is the branch from which you cut new feature branches,
-# and into which you ship feature branches when they are done.
-# This branch is often called "main", "master", or "development".
 main = "main"
-
-# Perennial branches are long-lived branches.
-# They are never shipped and have no ancestors.
-# Typically, perennial branches have names like
-# "development", "staging", "qa", "production", etc.
-#
-# See also the "perennial-regex" setting.
 perennials = []
-
-# All branches whose name matches this regular expression
-# are also considered perennial branches.
-#
-# If you are not sure, leave this empty.
 perennial-regex = ""
 
+[create]
+new-branch-type = "feature"
+push-new-branches = false
+
 [hosting]
-
-# Knowing the type of code hosting platform allows Git Town
-# to open browser URLs and talk to the code hosting API.
-# Most people can leave this on "auto-detect".
-# Only change this if your code hosting server uses as custom URL.
+dev-remote = "origin"
 # platform = ""
-
-# When using SSH identities, define the hostname
-# of your source code repository. Only change this
-# if the auto-detection does not work for you.
 # origin-hostname = ""
 
-[sync-strategy]
+[ship]
+delete-tracking-branch = true
+strategy = "api"
 
-# How should Git Town synchronize feature branches?
-# Feature branches are short-lived branches cut from
-# the main branch and shipped back into the main branch.
-# Typically you develop features and bug fixes on them,
-# hence their name.
-feature-branches = "merge"
-
-# How should Git Town synchronize perennial branches?
-# Perennial branches have no parent branch.
-# The only updates they receive are additional commits
-# made to their tracking branch somewhere else.
-perennial-branches = "rebase"
+[sync]
+feature-strategy = "merge"
+perennial-strategy = "rebase"
+prototype-strategy = "rebase"
+push-hook = true
+tags = true
+upstream = true
 `[1:]
 		must.EqOp(t, want, have)
-	})
-
-	t.Run("TOMLComment", func(t *testing.T) {
-		t.Parallel()
-		t.Run("empty", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("")
-			want := ""
-			must.Eq(t, want, have)
-		})
-		t.Run("single line", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1")
-			want := "# line 1"
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple lines", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3")
-			want := "# line 1\n# line 2\n# line 3"
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple lines with terminating newline", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3\n")
-			want := "# line 1\n# line 2\n# line 3\n#"
-			must.Eq(t, want, have)
-		})
 	})
 }

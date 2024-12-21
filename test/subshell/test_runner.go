@@ -5,20 +5,19 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/subshell"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/asserts"
-	"github.com/git-town/git-town/v16/test/envvars"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/subshell"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
+	"github.com/git-town/git-town/v17/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -96,9 +95,7 @@ else
 	%s "$@"
 fi`
 	gitPath, err := exec.LookPath("git")
-	if err != nil {
-		log.Fatalf("cannot locate the git executable: %v", err)
-	}
+	asserts.NoError(err)
 	content := fmt.Sprintf(mockGit, version, gitPath)
 	self.createMockBinary("git", content)
 }
@@ -120,19 +117,15 @@ func (self *TestRunner) MustQueryStringCode(fullCmd string) (output string, exit
 }
 
 func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (output string, exitCode int) {
-	parts, err := shellquote.Split(fullCmd)
-	asserts.NoError(err)
+	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
-	output, exitCode, err = self.QueryWithCode(opts, cmd, args...)
-	asserts.NoError(err)
+	output, exitCode = asserts.NoError2(self.QueryWithCode(opts, cmd, args...))
 	return output, exitCode
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
 func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) (output string) {
-	output, err := self.QueryWith(opts, cmd, args...)
-	asserts.NoError(err)
-	return output
+	return asserts.NoError1(self.QueryWith(opts, cmd, args...))
 }
 
 // Run runs the given command with the given arguments.
@@ -160,8 +153,7 @@ func (self *TestRunner) QueryString(fullCmd string) (output string, err error) {
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (output string, err error) {
-	parts, err := shellquote.Split(fullCmd)
-	asserts.NoError(err)
+	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
 	return self.QueryWith(opts, cmd, args...)
 }
@@ -198,6 +190,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	opts.Env = envvars.Replace(opts.Env, "HOME", self.HomeDir)
+	opts.Env = append(opts.Env, `GIT_CONFIG_PARAMETERS='core.abbrev=40'`)
 	// add the custom origin
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)
@@ -225,7 +218,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	var outputBuf bytes.Buffer
 	subProcess.Stdout = &outputBuf
-	subProcess.Stderr = &outputBuf
 	if input, hasInput := opts.Input.Get(); hasInput {
 		var stdin io.WriteCloser
 		stdin, err = subProcess.StdinPipe()
@@ -260,7 +252,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	if self.Verbose {
 		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, stringslice.JoinArgs(args))
-		os.Stdout.Write(outputBuf.Bytes())
+		os.Stdout.Write(bytes.ReplaceAll(outputBuf.Bytes(), []byte{0x00}, []byte{'\n', '\n'}))
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}

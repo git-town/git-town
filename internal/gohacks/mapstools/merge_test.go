@@ -3,7 +3,7 @@ package mapstools_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v17/internal/gohacks/mapstools"
 	"github.com/shoenig/test/must"
 )
 

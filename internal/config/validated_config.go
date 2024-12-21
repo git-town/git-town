@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -83,5 +83,5 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.ValidatedConfigData.MainBranch = branch
-	return self.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return self.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }

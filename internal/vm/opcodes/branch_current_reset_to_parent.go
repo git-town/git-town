@@ -1,9 +1,9 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // ResetCurrentBranch resets all commits in the current branch.
@@ -26,7 +26,7 @@ func (self *BranchCurrentResetToParent) Run(args shared.RunArgs) error {
 	if parentIsLocal {
 		target = parent.BranchName()
 	} else {
-		target = parent.TrackingBranch().BranchName()
+		target = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 	}
 	args.PrependOpcodes(&BranchReset{Target: target})
 	return nil

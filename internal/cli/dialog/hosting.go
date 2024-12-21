@@ -3,11 +3,11 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 const (
@@ -22,59 +22,36 @@ Only change this if your code hosting server uses as custom URL.
 )
 
 func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs components.TestInput) (Option[configdomain.HostingPlatform], bool, error) {
-	entries := hostingPlatformEntries{
-		hostingPlatformAutoDetect,
-		hostingPlatformBitBucket,
-		hostingPlatformGitea,
-		hostingPlatformGitHub,
-		hostingPlatformGitLab,
+	entries := list.Entries[Option[configdomain.HostingPlatform]]{
+		{
+			Data: None[configdomain.HostingPlatform](),
+			Text: "auto-detect",
+		},
+		{
+			Data: Some(configdomain.HostingPlatformBitbucket),
+			Text: "BitBucket",
+		},
+		{
+			Data: Some(configdomain.HostingPlatformBitbucketDatacenter),
+			Text: "BitBucket-Datacenter",
+		},
+		{
+			Data: Some(configdomain.HostingPlatformGitea),
+			Text: "Gitea",
+		},
+		{
+			Data: Some(configdomain.HostingPlatformGitHub),
+			Text: "GitHub",
+		},
+		{
+			Data: Some(configdomain.HostingPlatformGitLab),
+			Text: "GitLab",
+		},
 	}
-	cursor := entries.IndexOfHostingPlatformOrStart(existingValue.GetOrDefault())
-	newValue, aborted, err := components.RadioList(list.NewEntries(entries...), cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
-	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
-	return newValue.HostingPlatform(), aborted, err
-}
-
-type hostingPlatformEntry string
-
-const (
-	hostingPlatformAutoDetect          hostingPlatformEntry = "auto-detect"
-	hostingPlatformBitBucket           hostingPlatformEntry = "BitBucket"
-	hostingPlatformBitBucketDatacenter hostingPlatformEntry = "BitBucket-Datacenter"
-	hostingPlatformGitea               hostingPlatformEntry = "Gitea"
-	hostingPlatformGitHub              hostingPlatformEntry = "GitHub"
-	hostingPlatformGitLab              hostingPlatformEntry = "GitLab"
-)
-
-func (entry hostingPlatformEntry) HostingPlatform() Option[configdomain.HostingPlatform] {
-	switch entry {
-	case hostingPlatformAutoDetect, "":
-		return None[configdomain.HostingPlatform]()
-	case hostingPlatformBitBucket:
-		return Some(configdomain.HostingPlatformBitbucket)
-	case hostingPlatformBitBucketDatacenter:
-		return Some(configdomain.HostingPlatformBitbucketDatacenter)
-	case hostingPlatformGitea:
-		return Some(configdomain.HostingPlatformGitea)
-	case hostingPlatformGitHub:
-		return Some(configdomain.HostingPlatformGitHub)
-	case hostingPlatformGitLab:
-		return Some(configdomain.HostingPlatformGitLab)
-	}
-	panic(fmt.Sprintf(messages.HostingPlatformUnknown, entry))
-}
-
-func (entry hostingPlatformEntry) String() string {
-	return string(entry)
-}
-
-type hostingPlatformEntries []hostingPlatformEntry
-
-func (entries hostingPlatformEntries) IndexOfHostingPlatformOrStart(needle configdomain.HostingPlatform) int {
-	for h, entry := range entries {
-		if value, has := entry.HostingPlatform().Get(); has && value == needle {
-			return h
-		}
-	}
-	return 0
+	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[configdomain.HostingPlatform]) bool {
+		return optA.Equal(optB)
+	})
+	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
+	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
+	return newValue, aborted, err
 }

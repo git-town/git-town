@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 type ConfigRemove struct {
@@ -12,5 +12,5 @@ type ConfigRemove struct {
 }
 
 func (self *ConfigRemove) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitConfig.RemoveConfigValue(self.Scope, self.Key)
+	return args.Config.Value.NormalConfig.GitConfigAccess.RemoveConfigValue(self.Scope, self.Key)
 }

@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v16/pkg/set"
-	"github.com/git-town/git-town/v16/test/asserts"
+	"github.com/git-town/git-town/v17/pkg/set"
+	"github.com/git-town/git-town/v17/test/asserts"
 )
 
 var unusedWhitelist = []string{ //nolint:gochecknoglobals
@@ -88,8 +88,7 @@ func findAllUsedSteps() []string {
 		if filepath.Ext(path) != ".feature" {
 			return nil
 		}
-		fileContent, err := os.ReadFile(path)
-		asserts.NoError(err)
+		fileContent := asserts.NoError1(os.ReadFile(path))
 		for _, stepInFile := range FindUsedStepsIn(string(fileContent)) {
 			result.Add(stepInFile)
 		}

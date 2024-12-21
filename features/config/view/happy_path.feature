@@ -19,44 +19,47 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        main branch: main
-        perennial branches: qa, staging
-        perennial regex: ^release-
-        default branch type: observed
-        feature regex: ^user-.*$
-        parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
+        default branch type: observed
+        feature regex: ^user-.*$
+        main branch: main
         observed branches: observed-1, observed-2
         observed regex: ^dependabot/
+        parked branches: parked-1, parked-2
+        perennial branches: qa, staging
+        perennial regex: ^release-
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: no
-        ship strategy: squash-merge
-        ship deletes the tracking branch: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync with upstream: yes
-        sync tags: yes
 
       Hosting:
-        hosting platform override: (not set)
+        hosting platform: (not set)
+        hostname: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: yes
+        strategy: squash-merge
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
+        sync-prototype strategy: merge
+        sync tags: yes
+        sync with upstream: yes
       """
 
   Scenario: all configured in config file
     And the configuration file:
       """
-      push-new-branches = true
-      ship-strategy = "squash-merge"
-      ship-delete-tracking-branch = true
-      sync-upstream = true
-      sync-tags = false
-
       [branches]
       main = "main"
       perennials = [ "public", "staging" ]
@@ -66,45 +69,64 @@ Feature: show the configuration
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
 
+      [create]
+      push-new-branches = true
+
       [hosting]
       platform = "github"
       origin-hostname = "github.com"
 
-      [sync-strategy]
-      feature-branches = "rebase"
-      perennial-branches = "merge"
+      [ship]
+      delete-tracking-branch = true
+      strategy = "squash-merge"
+
+      [sync]
+      feature-strategy = "rebase"
+      perennial-strategy = "merge"
+      prototype-strategy = "compress"
+      tags = false
+      upstream = true
       """
     When I run "git-town config"
     Then Git Town prints:
       """
       Branches:
-        main branch: main
-        perennial branches: public, staging
-        perennial regex: ^release-
-        default branch type: observed
-        feature regex: ^user-.*$
-        parked branches: (none)
         contribution branches: (none)
         contribution regex: ^renovate/
+        default branch type: observed
+        feature regex: ^user-.*$
+        main branch: main
         observed branches: (none)
         observed regex: ^dependabot/
+        parked branches: (none)
+        perennial branches: public, staging
+        perennial regex: ^release-
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: yes
-        ship strategy: squash-merge
-        ship deletes the tracking branch: yes
-        sync-feature strategy: rebase
-        sync-perennial strategy: merge
-        sync with upstream: yes
-        sync tags: no
 
       Hosting:
-        hosting platform override: github
+        hosting platform: github
+        hostname: github.com
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: yes
+        strategy: squash-merge
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: rebase
+        sync-perennial strategy: merge
+        sync-prototype strategy: compress
+        sync tags: no
+        sync with upstream: yes
       """
 
   Scenario: configured in both Git and config file
@@ -125,14 +147,9 @@ Feature: show the configuration
     And Git Town setting "sync-tags" is "false"
     And Git Town setting "sync-perennial-strategy" is "merge"
     And Git Town setting "sync-feature-strategy" is "merge"
+    And Git Town setting "sync-prototype-strategy" is "compress"
     And the configuration file:
       """
-      push-new-branches = true
-      ship-strategy = "api"
-      ship-delete-tracking-branch = true
-      sync-upstream = true
-      sync-tags = true
-
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
@@ -142,45 +159,64 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
 
+      [create]
+      push-new-branches = true
+
       [hosting]
       platform = "github"
       origin-hostname = "github.com"
 
-      [sync-strategy]
-      feature-branches = "merge"
-      perennial-branches = "merge"
+      [ship]
+      delete-tracking-branch = true
+      strategy = "api"
+
+      [sync]
+      feature-strategy = "merge"
+      perennial-strategy = "rebase"
+      prototype-strategy = "rebase"
+      tags = true
+      upstream = true
       """
     When I run "git-town config"
     Then Git Town prints:
       """
       Branches:
-        main branch: git-main
-        perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
-        perennial regex: ^git-perennial-
-        default branch type: observed
-        feature regex: git-feature-.*
-        parked branches: parked-1, parked-2
         contribution branches: contribution-1, contribution-2
         contribution regex: ^git-contribution-regex
+        default branch type: observed
+        feature regex: git-feature-.*
+        main branch: git-main
         observed branches: observed-1, observed-2
         observed regex: ^git-observed-regex
+        parked branches: parked-1, parked-2
+        perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
+        perennial regex: ^git-perennial-
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: no
-        ship strategy: squash-merge
-        ship deletes the tracking branch: no
-        sync-feature strategy: merge
-        sync-perennial strategy: merge
-        sync with upstream: no
-        sync tags: no
 
       Hosting:
-        hosting platform override: github
+        hosting platform: github
+        hostname: github.com
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: no
+        strategy: squash-merge
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: merge
+        sync-prototype strategy: compress
+        sync tags: no
+        sync with upstream: no
       """
 
   Scenario: all configured, with stacked changes
@@ -195,33 +231,42 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        main branch: main
-        perennial branches: qa
-        perennial regex: (not set)
-        default branch type: feature
-        feature regex: (not set)
-        parked branches: (none)
         contribution branches: (none)
         contribution regex: (not set)
+        default branch type: feature
+        feature regex: (not set)
+        main branch: main
         observed branches: (none)
         observed regex: (not set)
+        parked branches: (none)
+        perennial branches: qa
+        perennial regex: (not set)
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: no
-        ship strategy: api
-        ship deletes the tracking branch: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync with upstream: yes
-        sync tags: yes
 
       Hosting:
-        hosting platform override: (not set)
+        hosting platform: (not set)
+        hostname: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: yes
+        strategy: api
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
+        sync-prototype strategy: merge
+        sync tags: yes
+        sync with upstream: yes
 
       Branch Lineage:
         main
@@ -239,31 +284,40 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        main branch: (not set)
-        perennial branches: (none)
-        perennial regex: (not set)
-        default branch type: feature
-        feature regex: (not set)
-        parked branches: (none)
         contribution branches: (none)
         contribution regex: (not set)
+        default branch type: feature
+        feature regex: (not set)
+        main branch: (not set)
         observed branches: (none)
         observed regex: (not set)
+        parked branches: (none)
+        perennial branches: (none)
+        perennial regex: (not set)
 
       Configuration:
         offline: no
-        run pre-push hook: yes
+
+      Create:
+        new branch type: feature
         push new branches: no
-        ship strategy: api
-        ship deletes the tracking branch: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync with upstream: yes
-        sync tags: yes
 
       Hosting:
-        hosting platform override: (not set)
+        hosting platform: (not set)
+        hostname: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
+
+      Ship:
+        delete the tracking branch: yes
+        strategy: api
+
+      Sync:
+        run pre-push hook: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
+        sync-prototype strategy: merge
+        sync tags: yes
+        sync with upstream: yes
       """

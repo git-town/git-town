@@ -1,8 +1,8 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // UnvalidatedConfigData is the Git Town configuration as read from disk.

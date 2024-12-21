@@ -17,7 +17,8 @@ To configure the push hook in the
 [configuration file](../configuration-file.md):
 
 ```toml
-push-hook = false
+[sync]
+push-hook = true
 ```
 
 ## Git metadata

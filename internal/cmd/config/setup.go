@@ -4,20 +4,20 @@ import (
 	"os"
 	"slices"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/config/configfile"
-	"github.com/git-town/git-town/v16/internal/config/gitconfig"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	configInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/config"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configfile"
+	"github.com/git-town/git-town/v17/internal/config/gitconfig"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	configInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/config"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -93,6 +93,7 @@ type setupData struct {
 	dialogInputs  components.TestInputs
 	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
+	remotes       gitdomain.Remotes
 	userInput     userInput
 }
 
@@ -105,8 +106,8 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	if originURL, hasOriginURL := config.NormalConfig.OriginURL().Get(); hasOriginURL {
-		return hosting.Detect(originURL, userChoice)
+	if devURL, hasDevURL := config.NormalConfig.DevURL().Get(); hasDevURL {
+		return hosting.Detect(devURL, userChoice)
 	}
 	return None[configdomain.HostingPlatform]()
 }
@@ -145,6 +146,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		return aborted, err
 	}
 	data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -192,6 +197,10 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
+	data.userInput.config.NormalConfig.SyncPrototypeStrategy, aborted, err = dialog.SyncPrototypeStrategy(config.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	data.userInput.config.NormalConfig.SyncUpstream, aborted, err = dialog.SyncUpstream(config.NormalConfig.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -208,7 +217,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.NormalConfig.CreatePrototypeBranches, aborted, err = dialog.CreatePrototypeBranches(config.NormalConfig.CreatePrototypeBranches, data.dialogInputs.Next())
+	data.userInput.config.NormalConfig.NewBranchType, aborted, err = dialog.NewBranchType(config.NormalConfig.NewBranchType, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -250,13 +259,24 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		ValidateNoOpenChanges: false,
 		Verbose:               verbose,
 	})
+	if err != nil {
+		return data, exit, err
+	}
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, exit, err
+	}
+	if len(remotes) == 0 {
+		remotes = gitdomain.Remotes{repo.Git.DefaultRemote(repo.Backend)}
+	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
 		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.UnvalidatedConfig.NormalConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
-		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfig, repo.UnvalidatedConfig.NormalConfig.GitVersion),
-	}, exit, err
+		remotes:       remotes,
+		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
+	}, exit, nil
 }
 
 func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
@@ -295,13 +315,14 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
-	fc.Check(saveCreatePrototypeBranches(oldConfig.NormalConfig.CreatePrototypeBranches, userInput.config.NormalConfig.CreatePrototypeBranches, oldConfig))
+	fc.Check(saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig))
 	fc.Check(saveHostingPlatform(oldConfig.NormalConfig.HostingPlatform, userInput.config.NormalConfig.HostingPlatform, gitCommands, frontend))
 	fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
 	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
 	fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
 	fc.Check(savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
 	fc.Check(saveDefaultBranchType(oldConfig.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
+	fc.Check(saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig))
 	fc.Check(saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
 	fc.Check(savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
 	fc.Check(savePushNewBranches(oldConfig.NormalConfig.PushNewBranches, userInput.config.NormalConfig.PushNewBranches, oldConfig))
@@ -309,6 +330,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
 	fc.Check(saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
 	fc.Check(saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig))
+	fc.Check(saveSyncPrototypeStrategy(oldConfig.NormalConfig.SyncPrototypeStrategy, userInput.config.NormalConfig.SyncPrototypeStrategy, oldConfig))
 	fc.Check(saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
 	fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
 	return fc.Err
@@ -351,11 +373,11 @@ func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsern
 	return gitCommands.RemoveBitbucketUsername(frontend)
 }
 
-func saveCreatePrototypeBranches(oldValue, newValue configdomain.CreatePrototypeBranches, config config.UnvalidatedConfig) error {
+func saveNewBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetCreatePrototypeBranches(newValue)
+	return config.NormalConfig.SetNewBranchType(newValue)
 }
 
 func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
@@ -363,6 +385,13 @@ func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config co
 		return nil
 	}
 	return config.NormalConfig.SetDefaultBranchTypeLocally(newValue)
+}
+
+func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.NormalConfig.SetDevRemote(newValue)
 }
 
 func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
@@ -498,6 +527,13 @@ func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStra
 	return config.NormalConfig.SetSyncPerennialStrategy(newValue)
 }
 
+func saveSyncPrototypeStrategy(oldValue, newValue configdomain.SyncPrototypeStrategy, config config.UnvalidatedConfig) error {
+	if newValue == oldValue {
+		return nil
+	}
+	return config.NormalConfig.SetSyncPrototypeStrategy(newValue)
+}
+
 func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
@@ -518,7 +554,9 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 		return err
 	}
 	config.NormalConfig.RemoveCreatePrototypeBranches()
+	config.NormalConfig.RemoveDevRemote()
 	config.RemoveMainBranch()
+	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()
 	config.NormalConfig.RemovePerennialRegex()
 	config.NormalConfig.RemovePushNewBranches()
@@ -527,6 +565,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveShipDeleteTrackingBranch()
 	config.NormalConfig.RemoveSyncFeatureStrategy()
 	config.NormalConfig.RemoveSyncPerennialStrategy()
+	config.NormalConfig.RemoveSyncPrototypeStrategy()
 	config.NormalConfig.RemoveSyncUpstream()
 	config.NormalConfig.RemoveSyncTags()
 	err = saveDefaultBranchType(config.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, config)

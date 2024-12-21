@@ -1,8 +1,8 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 )
 
 // BranchesProgram syncs all given branches.

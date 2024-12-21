@@ -1,10 +1,10 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // merges the branch that at runtime is the parent branch of the given branch into the given branch
@@ -26,16 +26,16 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 		if !hasParent {
 			break
 		}
-		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent).Get(); hasParentInfo {
+		if parentBranchInfo, hasParentInfo := branchInfos.FindLocalOrRemote(parent, args.Config.Value.NormalConfig.DevRemote).Get(); hasParentInfo {
 			parentIsLocal := parentBranchInfo.LocalName.IsSome()
 			if parentIsLocal {
 				var parentToMerge gitdomain.BranchName
 				if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-					parentToMerge = parent.TrackingBranch().BranchName()
+					parentToMerge = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
 				} else {
 					parentToMerge = parent.BranchName()
 				}
-				program = append(program, &MergeParent{
+				program = append(program, &MergeParentResolvePhantomConflicts{
 					CurrentParent:      parentToMerge,
 					OriginalParentName: self.OriginalParentName,
 					OriginalParentSHA:  self.OriginalParentSHA,
@@ -44,7 +44,7 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 			}
 			// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
 			if parentTrackingBranch, parentHasTrackingBranch := parentBranchInfo.RemoteName.Get(); parentHasTrackingBranch {
-				program = append(program, &MergeParent{
+				program = append(program, &MergeParentResolvePhantomConflicts{
 					CurrentParent:      parentTrackingBranch.BranchName(),
 					OriginalParentName: self.OriginalParentName,
 					OriginalParentSHA:  self.OriginalParentSHA,

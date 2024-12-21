@@ -11,12 +11,12 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Given a Git repo with origin
     And the committed configuration file:
       """
-      [sync-strategy]
-      feature-branches = "compress"
-
       [branches]
       main = "main"
       perennials = []
+
+      [sync]
+      feature-strategy = "compress"
       """
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |

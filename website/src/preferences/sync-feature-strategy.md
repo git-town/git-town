@@ -69,8 +69,8 @@ In the [config file](../configuration-file.md) the sync-feature-strategy is part
 of the `[sync-strategy]` section:
 
 ```toml
-[sync-strategy]
-feature-branches = "merge"
+[sync]
+feature-strategy = "merge"
 ```
 
 ### Git metadata

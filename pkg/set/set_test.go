@@ -3,7 +3,7 @@ package set_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/pkg/set"
+	"github.com/git-town/git-town/v17/pkg/set"
 	"github.com/shoenig/test/must"
 )
 
@@ -27,14 +27,6 @@ func TestSet(t *testing.T) {
 		other := set.New(2, 3)
 		have.AddSet(other)
 		must.Eq(t, []int{1, 2, 3}, have.Values())
-	})
-
-	t.Run("Contains", func(t *testing.T) {
-		t.Parallel()
-		set := set.New(1, 2)
-		must.True(t, set.Contains(1))
-		must.True(t, set.Contains(2))
-		must.False(t, set.Contains(3))
 	})
 
 	t.Run("New", func(t *testing.T) {

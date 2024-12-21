@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // BranchTrackingCreate pushes the given local branch up to origin
@@ -13,5 +13,5 @@ type BranchTrackingCreate struct {
 }
 
 func (self *BranchTrackingCreate) Run(args shared.RunArgs) error {
-	return args.Git.CreateTrackingBranch(args.Frontend, self.Branch, gitdomain.RemoteOrigin, args.Config.Value.NormalConfig.NoPushHook())
+	return args.Git.CreateTrackingBranch(args.Frontend, self.Branch, args.Config.Value.NormalConfig.DevRemote, args.Config.Value.NormalConfig.NoPushHook())
 }

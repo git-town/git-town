@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // BranchCreateAndCheckoutExistingParent creates a new branch with the first existing entry from the given ancestor list as its parent.
@@ -22,7 +22,7 @@ func (self *BranchCreateAndCheckoutExistingParent) Run(args shared.RunArgs) erro
 	if hasNearestAncestor {
 		ancestorToUse = nearestAncestor.BranchName()
 	} else {
-		ancestorToUse = args.Config.Value.ValidatedConfigData.MainBranch.AtRemote(gitdomain.RemoteOrigin).BranchName()
+		ancestorToUse = args.Config.Value.ValidatedConfigData.MainBranch.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
 	}
 	if ancestorToUse == currentBranch.BranchName() {
 		return args.Git.CreateAndCheckoutBranch(args.Frontend, self.Branch)
