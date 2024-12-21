@@ -42,7 +42,7 @@ commit 1
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --message / -m
+### --message / -m <text>
 
 By default the now compressed commit uses the commit message of the first commit
 in the branch. You can provide a custom commit message for the squashed commit

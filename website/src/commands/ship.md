@@ -28,12 +28,12 @@ When called with a positional argument, it ships the branch with the given name.
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --message / -m
+### --message / -m <text>
 
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
 specifying the commit message via the CLI.
 
-### --strategy / -s
+### --strategy / -s <name>
 
 Overrides the configured [ship-strategy](../preferences/ship-strategy.md).
 Allowed values:
