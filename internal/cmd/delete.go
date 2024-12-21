@@ -347,11 +347,10 @@ func validateDeleteData(data deleteData) error {
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
-		return nil
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.DeleteCannotDeleteMainBranch)
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.DeleteCannotDeletePerennialBranches)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %s", data.branchToDeleteType))
+	return nil
 }
