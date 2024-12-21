@@ -15,51 +15,51 @@ Feature: propose a newly prepended branch
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And a proposal for this branch does not exist
-    When I run "git-town prepend parent --beam --propose" and enter into the dialog:
+    When I run "git-town prepend new --beam --propose" and enter into the dialog:
       | DIALOG                    | KEYS             |
       | select "unrelated commit" | down space enter |
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                           |
-      | existing | git fetch --prune --tags                                          |
-      | <none>   | Looking for proposal online ... ok                                |
-      | existing | git checkout main                                                 |
-      | main     | git rebase origin/main --no-update-refs                           |
-      |          | git checkout existing                                             |
-      | existing | git rebase main --no-update-refs                                  |
-      |          | git push --force-with-lease --force-if-includes                   |
-      |          | git checkout -b parent main                                       |
-      | parent   | git cherry-pick {{ sha-before-run 'unrelated commit' }}           |
-      |          | git checkout existing                                             |
-      | existing | git rebase parent --no-update-refs                                |
-      |          | git push --force-with-lease --force-if-includes                   |
-      |          | git checkout parent                                               |
-      | parent   | git push -u origin parent                                         |
-      | <none>   | open https://github.com/git-town/git-town/compare/parent?expand=1 |
+      | BRANCH   | COMMAND                                                        |
+      | existing | git fetch --prune --tags                                       |
+      | <none>   | Looking for proposal online ... ok                             |
+      | existing | git checkout main                                              |
+      | main     | git rebase origin/main --no-update-refs                        |
+      |          | git checkout existing                                          |
+      | existing | git rebase main --no-update-refs                               |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout -b new main                                       |
+      | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}        |
+      |          | git checkout existing                                          |
+      | existing | git rebase new --no-update-refs                                |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout new                                               |
+      | new      | git push -u origin new                                         |
+      | <none>   | open https://github.com/git-town/git-town/compare/new?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
-      https://github.com/git-town/git-town/compare/parent?expand=1
+      https://github.com/git-town/git-town/compare/new?expand=1
       """
-    And the current branch is now "parent"
+    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
       | existing | local, origin | existing commit  |
-      | parent   | local, origin | unrelated commit |
+      | new      | local, origin | unrelated commit |
     And this lineage exists now
       | BRANCH   | PARENT |
-      | existing | parent |
-      | parent   | main   |
+      | existing | new    |
+      | new      | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
-      | parent   | git checkout existing                           |
+      | new      | git checkout existing                           |
       | existing | git reset --hard {{ sha 'unrelated commit' }}   |
       |          | git push --force-with-lease --force-if-includes |
-      |          | git branch -D parent                            |
-      |          | git push origin :parent                         |
+      |          | git branch -D new                               |
+      |          | git push origin :new                            |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now
