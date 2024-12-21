@@ -53,9 +53,12 @@ Feature: propose a newly prepended branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND                                         |
+      | parent | git checkout old                                |
+      | old    | git reset --hard {{ sha 'unrelated commit' }}   |
+      |        | git push --force-with-lease --force-if-includes |
+      |        | git branch -D parent                            |
+      |        | git push origin :parent                         |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now
