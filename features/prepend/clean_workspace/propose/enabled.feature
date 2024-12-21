@@ -18,31 +18,33 @@ Feature: propose a newly prepended branch
       | DIALOG           | KEYS             |
       | select commits 2 | down space enter |
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                 |
-      | old    | git fetch --prune --tags                                |
-      |        | git checkout main                                       |
-      | main   | git rebase origin/main --no-update-refs                 |
-      |        | git checkout old                                        |
-      | old    | git rebase main --no-update-refs                        |
-      |        | git push --force-with-lease --force-if-includes         |
-      |        | git checkout -b parent main                             |
-      | parent | git cherry-pick {{ sha-before-run 'unrelated commit' }} |
-      |        | git checkout old                                        |
-      | old    | git rebase parent --no-update-refs                      |
-      |        | git push --force-with-lease --force-if-includes         |
-      |        | git checkout parent                                     |
+      | BRANCH | COMMAND                                                           |
+      | old    | git fetch --prune --tags                                          |
+      | <none> | Looking for proposal online ... ok                                |
+      | old    | git checkout main                                                 |
+      | main   | git rebase origin/main --no-update-refs                           |
+      |        | git checkout old                                                  |
+      | old    | git rebase main --no-update-refs                                  |
+      |        | git push --force-with-lease --force-if-includes                   |
+      |        | git checkout -b parent main                                       |
+      | parent | git cherry-pick {{ sha-before-run 'unrelated commit' }}           |
+      |        | git checkout old                                                  |
+      | old    | git rebase parent --no-update-refs                                |
+      |        | git push --force-with-lease --force-if-includes                   |
+      |        | git checkout parent                                               |
+      | parent | git push -u origin parent                                         |
+      | <none> | open https://github.com/git-town/git-town/compare/parent?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
-      https://github.com/git-town/git-town/compare/feature?expand=1
+      https://github.com/git-town/git-town/compare/parent?expand=1
       """
     And the current branch is now "parent"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, origin | old commit |
+      | BRANCH | LOCATION      | MESSAGE          |
+      | old    | local, origin | old commit       |
+      | parent | local, origin | unrelated commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | old    | parent |
