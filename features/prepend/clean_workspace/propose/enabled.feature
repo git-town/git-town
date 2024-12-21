@@ -8,7 +8,7 @@ Feature: propose a newly prepended branch
       | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE          |
-      | existing | local, origin | related commit   |
+      | existing | local, origin | existing commit  |
       |          |               | unrelated commit |
     And the current branch is "existing"
     And Git Town setting "sync-feature-strategy" is "rebase"
@@ -44,7 +44,7 @@ Feature: propose a newly prepended branch
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
-      | existing | local, origin | related commit   |
+      | existing | local, origin | existing commit  |
       | parent   | local, origin | unrelated commit |
     And this lineage exists now
       | BRANCH   | PARENT |
