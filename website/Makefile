@@ -8,7 +8,7 @@ clean: ../tools/rta@${RTA_VERSION}  # removes all build artifacts
 	rm -rf bin
 
 help:  # prints available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v help | grep -v '^bin\/' | grep -v '$${mdbook_path}:' | grep -v '.SILENT' | sed 's/:.*#/#/' | column -s "#" -t
+	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
 	../tools/rta mdbook serve --open
