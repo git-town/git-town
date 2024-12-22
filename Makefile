@@ -133,22 +133,23 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
-	@tools/rta deadcode -test github.com/git-town/git-town/v17 | grep -v BranchExists \
-	                                                           | grep -v 'Create$$' \
-	                                                           | grep -v CreateFile \
-	                                                           | grep -v CreateGitTown \
-	                                                           | grep -v EmptyConfigSnapshot \
-	                                                           | grep -v FileExists \
-	                                                           | grep -v FileHasContent \
-	                                                           | grep -v IsGitRepo \
-	                                                           | grep -v Memoized.AsFixture \
-																														 | grep -v NewCommitMessages \
-	                                                           | grep -v NewLineageWith \
-	                                                           | grep -v NewSHAs \
-																														 | grep -v pkg/prelude/ptr.go \
-	                                                           | grep -v Paniced \
-	                                                           | grep -v Set.Add \
-	                                                           || true
+	@tools/rta deadcode -test github.com/git-town/git-town/v17 \
+		| grep -v BranchExists \
+		| grep -v 'Create$$' \
+		| grep -v CreateFile \
+		| grep -v CreateGitTown \
+		| grep -v EmptyConfigSnapshot \
+		| grep -v FileExists \
+		| grep -v FileHasContent \
+		| grep -v IsGitRepo \
+		| grep -v Memoized.AsFixture \
+		| grep -v NewCommitMessages \
+		| grep -v NewLineageWith \
+		| grep -v NewSHAs \
+		| grep -v pkg/prelude/ptr.go \
+		| grep -v Paniced \
+		| grep -v Set.Add \
+		|| true
 	@tput sgr0 || true
 
 tools/rta@${RTA_VERSION}:
