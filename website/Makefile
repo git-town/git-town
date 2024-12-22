@@ -14,7 +14,7 @@ serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the web
 	../tools/rta mdbook serve --open
 
 test:  # tests the website
-	cd .. && make --no-print-dir docs
+	cd .. && make --no-print-directory docs
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 

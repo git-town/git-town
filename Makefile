@@ -49,7 +49,7 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	make --no-print-dir lint-smoke
+	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
 	make --no-print-directory lint-structs-sorted
