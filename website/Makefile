@@ -3,7 +3,7 @@ RTA_VERSION = 0.6.1  # run-that-app version to use
 build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
 	../tools/rta mdbook build
 
-clean: ../tools/rta@${RTA_VERSION} # removes all build artifacts
+clean: ../tools/rta@${RTA_VERSION}  # removes all build artifacts
 	../tools/rta mdbook clean
 	rm -rf bin
 
