@@ -1,4 +1,4 @@
-RTA_VERSION = 0.6.1  # run-that-app version to use
+RTA_VERSION = 0.8.1  # run-that-app version to use
 
 build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
 	../tools/rta mdbook build
