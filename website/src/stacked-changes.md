@@ -1,4 +1,4 @@
-# Stacked Changes
+# Stacked changes
 
 [Stacked changes](https://newsletter.pragmaticengineer.com/p/stacked-diffs)
 implement and review a complex change as a series of smaller feature branches
@@ -207,7 +207,7 @@ review and ship parts of your complex change before the entire change is
 finished. You can still make different changes in parallel, just commit them to
 the correct branch.
 
-## Best Practices
+## Best practices
 
 #### One change per branch
 
