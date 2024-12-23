@@ -192,8 +192,12 @@ longer happen at the end of the file.
 
 #### All struct fields are required by default
 
-Unlike in idiomatic Go, when the Git Town codebase instantiates a struct, it
-needs to provide values for all of the struct's fields. This has been done
-because it forces us to make a conscious decision about which value each struct
-field should have in each context. This is especially helpful when adding a new
-field to an existing struct.
+In the Git Town codebase, all struct fields must be explicitly initialized when
+a struct is instantiated. This deviates from idiomatic Go, where fields can be
+left unset.
+
+This design choice ensures that every field gets deliberate attention, making it
+clear what value it should hold in any given context. This is especially
+beneficial when adding a new field to an existing struct, as it forces a
+thoughtful review of the required changes throughout the codebase. This gives
+immediate feedback for the design of the new struct field.
