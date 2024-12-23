@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/config/confighelpers"
 	"github.com/git-town/git-town/v17/internal/config/envconfig"
 	"github.com/git-town/git-town/v17/internal/config/gitconfig"
 	"github.com/git-town/git-town/v17/internal/git"
@@ -85,11 +84,18 @@ func (self *NormalConfig) DevURL() Option[giturl.Parts] {
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(remote gitdomain.Remote) Option[giturl.Parts] {
-	text, hasText := self.RemoteURLString(remote).Get()
-	if !hasText {
+	urlStr, hasURLStr := self.RemoteURLString(remote).Get()
+	if !hasURLStr {
 		return None[giturl.Parts]()
 	}
-	return confighelpers.DetermineRemoteURL(text, self.HostingOriginHostname)
+	url, hasURL := giturl.Parse(urlStr).Get()
+	if !hasURL {
+		return None[giturl.Parts]()
+	}
+	if hostnameOverride, hasHostNameOverride := self.HostingOriginHostname.Get(); hasHostNameOverride {
+		url.Host = hostnameOverride.String()
+	}
+	return Some(url)
 }
 
 // RemoteURLString provides the URL for the given remote.
