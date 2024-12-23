@@ -114,7 +114,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		if err != nil {
 			return err
 		}
-	case configdomain.ShipStragegyFastForward:
+	case configdomain.ShipStrategyFastForward:
 		mergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {
 			return err
@@ -171,7 +171,7 @@ func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []
 }
 
 func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonperennialParent, message Option[gitdomain.CommitMessage]) error {
-	if data.config.NormalConfig.ShipStrategy == configdomain.ShipStragegyFastForward && message.IsSome() {
+	if data.config.NormalConfig.ShipStrategy == configdomain.ShipStrategyFastForward && message.IsSome() {
 		return errors.New(messages.ShipMessageWithFastForward)
 	}
 	if !toParent {
