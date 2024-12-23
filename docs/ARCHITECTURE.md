@@ -169,7 +169,7 @@ Town's domain model includes so many distinct uses for `string` and other basic
 data types that it becomes too easy to mix them up. Git Town's codebase
 extensively employs the newtype pattern, i.e. defines distinct data types for
 each domain concept, even if they can be represented by a simple `string` or
-`int`. This ensures that semantically correct data is used.
+`int`. This ensures that only semantically correct data is used.
 
 #### Making invalid states unrepresentable
 
