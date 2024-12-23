@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/git-town/git-town/v17/test/asserts"
-	testgit "github.com/git-town/git-town/v17/test/git"
+	"github.com/git-town/git-town/v17/test/testgit"
 )
 
 type BranchSetup struct {

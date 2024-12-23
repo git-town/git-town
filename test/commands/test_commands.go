@@ -16,8 +16,8 @@ import (
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/git-town/git-town/v17/test/datatable"
-	"github.com/git-town/git-town/v17/test/git"
 	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testgit"
 )
 
 const ConfigFileCommitMessage = "persisted config file"
@@ -71,12 +71,12 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchName, lineage configdomain.Lineage) []git.Commit {
+func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchName, lineage configdomain.Lineage) []testgit.Commit {
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
 	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch.LocalName()))
-	var result []git.Commit
+	var result []testgit.Commit
 	for _, branch := range branches {
 		if strings.HasPrefix(branch.String(), "+ ") {
 			// branch is checked out in another workspace --> skip here
@@ -90,7 +90,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []git.Commit {
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
 	args := []string{"log", "--format=%H|%s|%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
@@ -99,13 +99,13 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 	}
 	output := self.MustQuery("git", args...)
 	lines := strings.Split(output, "\n")
-	result := make([]git.Commit, 0, len(lines))
+	result := make([]testgit.Commit, 0, len(lines))
 	for _, line := range lines {
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
 		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
+		commit := testgit.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
 			continue
 		}
@@ -149,7 +149,7 @@ func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchN
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (self *TestCommands) CreateCommit(commit git.Commit) {
+func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 	self.CheckoutBranch(commit.Branch)
 	self.CreateFile(commit.FileName, commit.FileContent)
 	self.MustRun("git", "add", commit.FileName)
