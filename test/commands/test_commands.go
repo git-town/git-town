@@ -242,7 +242,7 @@ func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, linea
 		if self.BranchExists(self, parent) {
 			return Some(parent.BranchName())
 		}
-		if self.BranchExistsRemotely(self, parent) {
+		if self.BranchExistsRemotely(self, parent, gitdomain.RemoteOrigin) {
 			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
 		}
 		branch = parent
