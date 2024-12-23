@@ -2,7 +2,7 @@
 
 - [Introduction](introduction.md)
 - [Q & A](questions.md)
-- [Install](install.md)
+- [Installation](install.md)
 - [Configuration](configuration.md)
 - [Integration](integration.md)
 - [Commands](all-commands.md)
