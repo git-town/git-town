@@ -10,7 +10,7 @@ import (
 // Individual implementations exist to talk to specific hosting platforms.
 // Functions that might or might not be supported by a connector are implemented as higher-level functions,
 // i.e. they return an option of the function to call.
-// A `None“ value implies that the respective functionality isn't supported by this connector implementation.
+// A `None` value implies that the respective functionality isn't supported by this connector implementation.
 type Connector interface {
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective hosting platform is prepopulated with.

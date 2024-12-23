@@ -11,3 +11,4 @@ git-repository-url = "https://github.com/git-town/git-town"
 edit-url-template = "https://github.com/git-town/git-town/edit/main/website/{path}"
 site-url = "https://www.git-town.com/"
 no-section-label = true
+smart-punctuation = true

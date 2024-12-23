@@ -1,20 +1,20 @@
-RTA_VERSION = 0.6.1  # run-that-app version to use
+RTA_VERSION = 0.8.1  # run-that-app version to use
 
 build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
 	../tools/rta mdbook build
 
-clean: ../tools/rta@${RTA_VERSION} # removes all build artifacts
+clean: ../tools/rta@${RTA_VERSION}  # removes all build artifacts
 	../tools/rta mdbook clean
 	rm -rf bin
 
 help:  # prints available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v help | grep -v '^bin\/' | grep -v '$${mdbook_path}:' | grep -v '.SILENT' | sed 's/:.*#/#/' | column -s "#" -t
+	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
-	../tools/rta mdbook serve --open
+	../tools/rta mdbook serve --open -n 127.0.0.1
 
 test:  # tests the website
-	cd .. && make --no-print-dir docs
+	cd .. && make --no-print-directory docs
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 

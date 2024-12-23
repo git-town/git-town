@@ -75,7 +75,7 @@ If the repository contains a Git remote called `upstream` and the
 also pulls new commits from the upstream's main branch.
 
 [sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
-tags with the `origin` remote.
+tags with the [development remote](../preferences/dev-remote.md).
 
 ### Why does git-sync sometimes update a local branch whose tracking branch was deleted before deleting it?
 
