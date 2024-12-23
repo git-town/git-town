@@ -28,8 +28,9 @@ To make branches "alpha" and "beta" contribution branches:
 git town contribute alpha beta
 ```
 
-Check out a remote branch (that exists at the development remote but not on your
-local machine) and make it a contribution branch:
+Check out a remote branch (that exists at the
+[development remote](../preferences/dev-remote.md) but not on your local
+machine) and make it a contribution branch:
 
 ```fish
 git town contribute somebody-elses-branch

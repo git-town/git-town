@@ -22,8 +22,9 @@ Observe branches "alpha" and "beta":
 git town observe alpha beta
 ```
 
-Check out a remote branch (that exists at the development remote but not on your
-local machine) and make it observed:
+Check out a remote branch (that exists at the
+[development remote](../preferences/dev-remote.md) but not on your local
+machine) and make it observed:
 
 ```fish
 git town observe somebody-elses-branch
