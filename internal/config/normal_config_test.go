@@ -10,11 +10,6 @@ import (
 func TestNormalConfig(t *testing.T) {
 	t.Parallel()
 
-	t.Run("RemoteURL", func(t *testing.T) {
-		t.Parallel()
-
-	})
-
 	t.Run("SetOffline", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
