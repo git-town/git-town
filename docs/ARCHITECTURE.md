@@ -122,7 +122,7 @@ The name `self` is sufficiently concise, being only four characters long. For
 more background please refer to https://michaelwhatcott.com/receiver-names-in-go
 and https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f.
 
-#### Dedicated generic types for Optionality and Mutablitity
+#### Generic container types for Optionality and Mutablitity
 
 Pointers in Go serve various orthogonal purposes. One is expressing optionality.
 The simplest way to create a variable that can either have a value or not is
@@ -177,3 +177,27 @@ Git Town's contains more and higher-level data structures than in typical Go
 programs. This extra complexity exists to make invalid code result in compiler
 errors. This has proven so useful that it is worth the additional complexity, as
 it eliminates entire categories of bugs.
+
+#### Alphabetic sorting
+
+We sort files alphabetically wherever it makes sense. For example:
+
+- struct fields and methods
+- function definitions
+- the order of unit tests
+
+This helps navigate larger files and locate things in them. It also prevents
+conflicts when two branches add something to the same file because additions no
+longer happen at the end of the file.
+
+#### All struct fields are required by default
+
+In the Git Town codebase, all struct fields must be explicitly initialized when
+a struct is instantiated. This deviates from idiomatic Go, where fields can be
+left unset.
+
+This design choice ensures that every field gets deliberate attention, making it
+clear what value it should hold in any given context. This is especially
+beneficial when adding a new field to an existing struct, as it forces a
+thoughtful review of the required changes throughout the codebase. This gives
+immediate feedback for the design of the new struct field.
