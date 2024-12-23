@@ -11,6 +11,3 @@ type RemoteBranch = Cache[gitdomain.RemoteBranchName]
 
 // Remotes is a cache for domain.Remotes variables.
 type Remotes = Cache[gitdomain.Remotes]
-
-// Strings is a cache for string variables.
-type Strings = Cache[[]string]
