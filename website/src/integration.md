@@ -2,14 +2,14 @@
 
 This page describes how to integrate Git Town into other applications.
 
-## Git Town GitHub action
+## GitHub Actions
 
 The
-[Git Town GitHub Action](https://github.com/marketplace/actions/git-town-github-action)
+[Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
 appends a visual breadcrumb of the currently reviewed branch and its location in
-the its branch stack.
+the branch stack to new PRs.
 
-![example branch stack created by the Git Town GitHub Action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
+![example branch stack created by the Git Town GitHub action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
 
 ## Shell autocompletion
 
@@ -19,14 +19,14 @@ To have your shell auto-complete Git Town commands, set up
 ## Shell prompt
 
 You can display a reminder for running `git town continue` to finish a pending
-Git Town command in your shell prompt. Here is how this could look like:
+Git Town command in your shell prompt. Here is what this could look like:
 
 <img width="108" height="31" src="shell_prompt_example.gif">
 
 ### Bash
 
-To add the above status indicator to your shell prompt in Bash, add something
-like this to your `.bashrc` file:
+To add the example status indicator to your shell prompt in Bash, add this to
+your `.bashrc` file:
 
 ```bash
 function git_town_status {
@@ -41,7 +41,8 @@ PS1='$(git_town_status)> '
 
 ### Zsh
 
-For zsh, customize the `~/.zshrc` file:
+To add the example status indicator to your shell prompt in Zsh, add this to
+your `~/.zshrc` file:
 
 ```zsh
 git_town_status() {
@@ -58,9 +59,9 @@ PROMPT='$(git_town_status)> '
 
 ### Fish
 
-To add this example to your
-[Fish shell prompt](https://fishshell.com/docs/current/cmds/fish_prompt.html),
-edit file `~/.config/fish/config.fish` and overwrite the `fish_prompt` function:
+To add the example status indicator to your shell prompt in Fish, edit your
+`~/.config/fish/config.fish` file and overwrite the
+[`fish_prompt` function](https://fishshell.com/docs/current/cmds/fish_prompt.html):
 
 ```zsh
 function fish_prompt
