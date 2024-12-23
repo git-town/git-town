@@ -122,7 +122,7 @@ The name `self` is sufficiently concise, being only four characters long. For
 more background please refer to https://michaelwhatcott.com/receiver-names-in-go
 and https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f.
 
-#### Dedicated generic types for Optionality and Mutablitity
+#### Generic container types for Optionality and Mutablitity
 
 Pointers in Go serve various orthogonal purposes. One is expressing optionality.
 The simplest way to create a variable that can either have a value or not is
@@ -177,3 +177,11 @@ Git Town's contains more and higher-level data structures than in typical Go
 programs. This extra complexity exists to make invalid code result in compiler
 errors. This has proven so useful that it is worth the additional complexity, as
 it eliminates entire categories of bugs.
+
+#### All struct fields are required by default
+
+Unlike in idiomatic Go, when the Git Town codebase instantiates a struct, it
+needs to provide values for all of the struct's fields. This has been done
+because it forces us to make a conscious decision about which value each struct
+field should have in each context. This is especially helpful when adding a new
+field to an existing struct.
