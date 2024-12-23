@@ -180,12 +180,15 @@ it eliminates entire categories of bugs.
 
 #### Alphabetic sorting
 
-Files are sorted alphabetically where it makes sense. Examples are:
+We sort files alphabetically wherever it makes sense. For example:
 
 - struct fields and methods
-- unit tests
+- function definitions
+- the order of unit tests
 
-This helps locate things in larger files.
+This helps navigate larger files and locate things in them. It also prevents
+conflicts when two branches add something to the same file because additions no
+longer happen at the end of the file.
 
 #### All struct fields are required by default
 
