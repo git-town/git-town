@@ -525,6 +525,11 @@ func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain
 	return runner.Run("git", "merge", "--ff-only", branch.String())
 }
 
+// MergeNoFastForward merges branch into the current branch and always creates a merge commit.
+func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+	return runner.Run("git", "merge", "--no-ff", branch.String())
+}
+
 // NavigateToDir changes into the root directory of the current repository.
 func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
 	return os.Chdir(dir.String())
