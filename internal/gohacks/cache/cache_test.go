@@ -9,7 +9,7 @@ import (
 
 func TestStringSliceCache(t *testing.T) {
 	t.Parallel()
-	ssc := cache.Strings{}
+	ssc := cache.Cache[[]string]{}
 	must.False(t, ssc.Initialized())
 	ssc.Set(&[]string{"foo"})
 	must.True(t, ssc.Initialized())
