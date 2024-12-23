@@ -144,7 +144,8 @@ why a function argument is a pointer: it is optional, mutable, or simply too
 large to pass by value? To clarify this, the Git Town codebase wraps mutable
 function arguments and struct fields in the generic `Mutable` type to denote
 mutability. Any variable not wrapped in a `Mutable` should be considered
-immutable. Any variable wrappen in `Mutable` is guaranteed to exist.
+immutable. Any variable wrappen in `Mutable` is guaranteed (by convention) to
+exist, i.e. a `Mutable` is never `nil`.
 
 While this practice introduces a thin layer of additional complexity, a few more
 allocations, and more code to handle edge cases correctly, this complexity is
