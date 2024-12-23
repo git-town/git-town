@@ -17,6 +17,7 @@ import (
 func TestBackendCommands(t *testing.T) {
 	t.Parallel()
 	initial := gitdomain.NewLocalBranchName("initial")
+	// Keep tests sorted.
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
@@ -464,6 +465,52 @@ func TestBackendCommands(t *testing.T) {
 			have := git.LastBranchInRef(give)
 			must.EqOp(t, want, have)
 		}
+	})
+
+	t.Run("MergeFastForward", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
+
+		err := runtime.MergeFastForward(runtime.TestRunner, branch)
+		must.NoError(t, err)
+
+		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
+		must.NoError(t, err)
+		haveMessages := commits.Messages()
+		wantMessages := gitdomain.NewCommitMessages("first commit", "initial commit")
+		must.Eq(t, wantMessages, haveMessages)
+	})
+
+	t.Run("MergeNoFastForward", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
+
+		err := runtime.MergeNoFastForward(runtime.TestRunner, branch)
+		must.NoError(t, err)
+
+		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
+		must.NoError(t, err)
+		haveMessages := commits.Messages()
+		wantMessages := gitdomain.NewCommitMessages("Merge branch 'branch' into initial", "initial commit", "first commit")
+		must.Eq(t, wantMessages, haveMessages)
 	})
 
 	t.Run("NewUnmergedStage", func(t *testing.T) {
