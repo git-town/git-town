@@ -5,11 +5,11 @@ This page describes how to integrate Git Town into other applications.
 ## Git Town GitHub Action
 
 The
-[Git Town GitHub Action](https://github.com/marketplace/actions/git-town-github-action)
+[Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
 appends a visual breadcrumb of the currently reviewed branch and its location in
-the its branch stack.
+the branch stack to new PRs.
 
-![example branch stack created by the Git Town GitHub Action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
+![example branch stack created by the Git Town GitHub action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
 
 ## Shell autocompletion
 
@@ -19,7 +19,7 @@ To have your shell auto-complete Git Town commands, set up
 ## Shell prompt
 
 You can display a reminder for running `git town continue` to finish a pending
-Git Town command in your shell prompt. Here is how this could look like:
+Git Town command in your shell prompt. Here is what this could look like:
 
 <img width="108" height="31" src="shell_prompt_example.gif">
 
