@@ -140,13 +140,11 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v EmptyConfigSnapshot \
 	                                                           | grep -v FileExists \
 	                                                           | grep -v FileHasContent \
-	                                                           | grep -v FilterErr \
 	                                                           | grep -v IsGitRepo \
 	                                                           | grep -v Memoized.AsFixture \
 																														 | grep -v NewCommitMessages \
 	                                                           | grep -v NewLineageWith \
 	                                                           | grep -v NewSHAs \
-	                                                           | grep -v NewSet \
 																														 | grep -v pkg/prelude/ptr.go \
 	                                                           | grep -v Paniced \
 	                                                           | grep -v Set.Add \
