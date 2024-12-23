@@ -1,4 +1,4 @@
-# Stacked Changes
+# Stacked changes
 
 [Stacked changes](https://newsletter.pragmaticengineer.com/p/stacked-diffs)
 implement and review a complex change as a series of smaller feature branches
@@ -142,7 +142,7 @@ it merges branch 1 into branch 2 and branch 2 into branch 3.
 
 ## Shipping the refactor
 
-We got the approval for the refactor from step 1. Let’s ship it!
+We got the approval for the refactor from step 1. Let's ship it!
 
 ```
 git town ship 1-refactor
@@ -186,7 +186,7 @@ We can now add the new feature on top of the code base we prepared:
 git town append 4-add-feature
 ```
 
-Let’s stop here and review what we have done.
+Let's stop here and review what we have done.
 
 - Each change happens in its own feature branch.
 - Our feature branches build on top of each other and see changes in their
@@ -207,7 +207,7 @@ review and ship parts of your complex change before the entire change is
 finished. You can still make different changes in parallel, just commit them to
 the correct branch.
 
-## Best Practices
+## Best practices
 
 #### One change per branch
 

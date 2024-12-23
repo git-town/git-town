@@ -5,7 +5,6 @@ fix:  # runs all linters and auto-fixes
 	go run ../format_unittests/format_unittests.go
 	go run ../format_self/format_self.go
 
-
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 

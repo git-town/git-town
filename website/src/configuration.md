@@ -12,7 +12,7 @@ git town config setup
 More information about the configuration file including how to create one
 manually is [here](configuration-file.md).
 
-### Access Tokens
+### Access tokens
 
 API access multiplies Git Town's utility:
 
@@ -28,4 +28,4 @@ Configuring API access takes only one minute. Here is how you do it:
 - GitLab: [access token](preferences/gitlab-token.md)
 - Bitbucket: [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
-- gitea: [access token](preferences/gitea-token.md)
+- Gitea: [access token](preferences/gitea-token.md)
