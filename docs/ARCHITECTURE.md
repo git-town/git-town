@@ -178,6 +178,15 @@ programs. This extra complexity exists to make invalid code result in compiler
 errors. This has proven so useful that it is worth the additional complexity, as
 it eliminates entire categories of bugs.
 
+#### Alphabetic sorting
+
+Files are sorted alphabetically where it makes sense. Examples are:
+
+- struct fields and methods
+- unit tests
+
+This helps locate things in larger files.
+
 #### All struct fields are required by default
 
 Unlike in idiomatic Go, when the Git Town codebase instantiates a struct, it

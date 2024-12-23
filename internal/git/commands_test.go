@@ -17,7 +17,6 @@ import (
 func TestBackendCommands(t *testing.T) {
 	t.Parallel()
 	initial := gitdomain.NewLocalBranchName("initial")
-	// Keep tests sorted.
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
