@@ -25,8 +25,8 @@ Git Town command in your shell prompt. Here is how this could look like:
 
 ### Bash
 
-To add the above status indicator to your shell prompt in Bash, add something
-like this to your `.bashrc` file:
+To add the example status indicator to your shell prompt in Bash, add this to
+your `.bashrc` file:
 
 ```bash
 function git_town_status {
@@ -41,7 +41,8 @@ PS1='$(git_town_status)> '
 
 ### Zsh
 
-For zsh, customize the `~/.zshrc` file:
+To add the example status indicator to your shell prompt in Zsh, add this to
+your `~/.zshrc` file:
 
 ```zsh
 git_town_status() {
@@ -58,9 +59,9 @@ PROMPT='$(git_town_status)> '
 
 ### Fish
 
-To add this example to your
-[Fish shell prompt](https://fishshell.com/docs/current/cmds/fish_prompt.html),
-edit file `~/.config/fish/config.fish` and overwrite the `fish_prompt` function:
+To add the example status indicator to your shell prompt in Fish, edit your
+`~/.config/fish/config.fish` file and overwrite the
+[`fish_prompt` function](https://fishshell.com/docs/current/cmds/fish_prompt.html):
 
 ```zsh
 function fish_prompt
