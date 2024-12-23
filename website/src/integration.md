@@ -2,7 +2,7 @@
 
 This page describes how to integrate Git Town into other applications.
 
-## Git Town GitHub Action
+## GitHub Actions
 
 The
 [Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
