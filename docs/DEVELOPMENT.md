@@ -4,7 +4,7 @@ This page provides guidance for contributing to the Git Town codebase. For a
 comprehensive understanding of the architecture, refer to
 [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## setup
+## Setup
 
 1. install [Go](https://golang.org) version 1.23
 2. install [Make](https://www.gnu.org/software/make)
@@ -18,7 +18,7 @@ comprehensive understanding of the architecture, refer to
 5. install Git Town locally into `~/go/bin`:
    <code type="make/command" dir="..">make install</code>
 
-## dependencies
+## Dependencies
 
 Add an external Go dependency:
 
@@ -44,7 +44,7 @@ make update
 
 </a>
 
-## unit tests
+## Unit tests
 
 Run unit tests for packages containing changes:
 
@@ -83,7 +83,7 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
-## end-to-end tests
+## End-to-end tests
 
 Run all end-to-end tests:
 
@@ -134,7 +134,7 @@ folder.
 
 To see all commit SHAs of the repo, add the `And inspect the commits` step.
 
-## inspecting variables
+## Inspecting variables
 
 Inspect basic variables in a unit test:
 
@@ -156,7 +156,7 @@ spew.Dump(variable)
 pretty.LDiff(t, var1, var2)
 ```
 
-## debug end-to-end tests
+## Debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, as well as the
 Git commands that the Git Town test suite runs under the hood, add a tag
@@ -188,7 +188,7 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-## triangulate a hanging end-to-end test
+## Triangulate a hanging end-to-end test
 
 End-to-end tests sometimes hang due to Git Town waiting for input that the test
 doesn't enter. To find the hanging test you can do a binary search by executing
@@ -199,7 +199,7 @@ Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
 you hints at which test fails.
 
-## run linters
+## Run linters
 
 Quick and efficient linter during development:
 
@@ -223,15 +223,15 @@ make fix
 
 </a>
 
-## debug the dialogs
+## Debug the dialogs
 
 Run `git town debug` to see the commands to manually test Git Town's dialogs.
 
-## learn about the code and test architecture
+## Learn about the code and test architecture
 
 See file [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## website
+## Website
 
 The source code for the [website](https://www.git-town.com) is in the
 [website](../website) folder. This folder contains its own
