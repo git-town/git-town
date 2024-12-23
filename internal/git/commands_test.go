@@ -1049,7 +1049,7 @@ func TestBackendCommands(t *testing.T) {
 				CommandsCounter: NewMutable(new(gohacks.Counter)),
 			}
 			cmds := git.Commands{
-				CurrentBranchCache: &cache.LocalBranchWithPrevious{},
+				CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
 				RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 			}
 			have := cmds.RootDirectory(runner)
