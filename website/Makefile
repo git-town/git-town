@@ -11,7 +11,7 @@ help:  # prints available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
-	../tools/rta mdbook serve --open
+	../tools/rta mdbook serve --open -n 127.0.0.1
 
 test:  # tests the website
 	cd .. && make --no-print-directory docs
