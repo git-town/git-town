@@ -12,6 +12,7 @@ type PartialConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
+	BranchTypeOverrides      map[gitdomain.LocalBranchName]BranchType
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        Option[BranchType]
