@@ -131,8 +131,8 @@ pointer indicates the presence of a value. However, Go does not enforce checks
 for absent values, which leads to runtime panics when attempting to dereference
 a nil-pointer representing a variable with non-existing value. The Git Town
 codebase wraps optional values in a generic `Option` type. This approach makes
-it explicit whether a type is optional. It also enforces optionality checks when
-using an optional value.
+it explicit whether a type is optional. It also enforces checks when using an
+optional value.
 
 Another use of pointers in Go is for performance optimization: if a variable is
 too large to pass by value, it can be passed by reference. The Git Town codebase
