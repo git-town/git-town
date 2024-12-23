@@ -14,9 +14,9 @@ import (
 	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/git-town/git-town/v17/test/commands"
 	"github.com/git-town/git-town/v17/test/datatable"
-	testgit "github.com/git-town/git-town/v17/test/git"
 	"github.com/git-town/git-town/v17/test/helpers"
 	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testgit"
 	"github.com/git-town/git-town/v17/test/testruntime"
 )
 
