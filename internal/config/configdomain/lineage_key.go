@@ -7,30 +7,32 @@ import (
 )
 
 // a Key that contains a lineage entry
-type LineageKey BranchSpecificKey
+type LineageKey struct {
+	BranchSpecificKey
+}
 
-func NewLineageKey(key Key) Option[LineageKey] {
+func NewLineageKey(key string) LineageKey {
+	return LineageKey{
+		BranchSpecificKey: BranchSpecificKey{
+			Key: Key(key),
+		},
+	}
+}
+
+func ParseLineageKey(key Key) Option[LineageKey] {
 	if isLineageKey(key.String()) {
-		return Some(LineageKey(key))
+		return Some(LineageKey{
+			BranchSpecificKey: BranchSpecificKey{
+				Key: key,
+			},
+		})
 	}
 	return None[LineageKey]()
 }
 
-// converts this LineageKey into a generic Key
-func (self LineageKey) Key() Key {
-	return Key(self)
-}
-
-func (self LineageKey) String() string {
-	return string(self)
-}
-
-const (
-	BranchSpecificKeyPrefix = "git-town-branch."
-	LineageKeySuffix        = ".parent"
-)
+const LineageKeySuffix = ".parent"
 
 // indicates whether the given key value is for a LineageKey
 func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, BranchSpecificKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
+	return isBranchSpecificKey(key) && strings.HasSuffix(key, LineageKeySuffix)
 }

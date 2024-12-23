@@ -8,18 +8,25 @@ import (
 
 const BranchTypeSuffix = ".branchtype"
 
-// a Key that contains a BranchTypeOverrides entry
-type BranchTypeOverrideKey Key
-
-func NewBranchTypeOverrideKey(key Key) Option[LineageKey] {
-	if isBranchTypeOverrideKey(key.String()) {
-		return Some(LineageKey(key))
-	}
-	return None[LineageKey]()
+// a Key that contains a BranchTypeOverrides entry,
+// for example "git-town-branch.foo.branchtype"
+type BranchTypeOverrideKey struct {
+	BranchSpecificKey
 }
 
-func (self LineageKey) BranchType() string {
-	return strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
+func ParseBranchTypeOverrideKey(key Key) Option[BranchTypeOverrideKey] {
+	if isBranchTypeOverrideKey(key.String()) {
+		return Some(BranchTypeOverrideKey{
+			BranchSpecificKey: BranchSpecificKey{
+				Key: key,
+			},
+		})
+	}
+	return None[BranchTypeOverrideKey]()
+}
+
+func (self BranchTypeOverrideKey) Key() Key {
+	return Key(self.BranchSpecificKey.Key)
 }
 
 func isBranchTypeOverrideKey(key string) bool {

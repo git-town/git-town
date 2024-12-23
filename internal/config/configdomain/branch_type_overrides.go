@@ -11,30 +11,31 @@ import (
 
 type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 
-func NewBranchTypeOverridesFromSnapshot(snapshot SingleSnapshot) (BranchTypeOverrides, error) {
+func NewBranchTypeOverridesFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (BranchTypeOverrides, error) {
 	result := BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
-		childName := key.ChildName()
-		if childName == "" {
-			// empty lineage entries are invalid --> delete it
-			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
+		branchName := key.BranchName()
+		if branchName == "" {
+			// empty branch --> delete it
+			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
 			_ = removeLocalConfigValue(key.Key())
 			continue
 		}
-		child := gitdomain.NewLocalBranchName(childName)
+		branch := gitdomain.NewLocalBranchName(branchName)
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty lineage entries are invalid --> delete it
-			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
+			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
 			_ = removeLocalConfigValue(key.Key())
 			continue
 		}
-		if updateOutdated && childName == value {
-			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, childName)))
-			_ = removeLocalConfigValue(NewParentKey(child))
+		branchTypeOpt, err := ParseBranchType(value)
+		if err != nil {
+			return result, err
 		}
-		parent := gitdomain.NewLocalBranchName(value)
-		result = result.Set(child, parent)
+		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
+			result[branch] = branchType
+		}
 	}
 	return result, nil
 }

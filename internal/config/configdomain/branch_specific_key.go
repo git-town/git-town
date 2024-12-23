@@ -3,13 +3,17 @@ package configdomain
 import "strings"
 
 // a Git config key that contains a branch specific value
-type BranchSpecificKey Key
+type BranchSpecificKey struct {
+	Key
+}
 
 // provides the name of the child branch encoded in this LineageKey
-func (self BranchSpecificKey) ChildName() string {
+func (self BranchSpecificKey) BranchName() string {
 	return strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), LineageKeySuffix)
 }
 
-func (self BranchSpecificKey) String() string {
-	return string(self)
+const BranchSpecificKeyPrefix = "git-town-branch."
+
+func isBranchSpecificKey(key string) bool {
+	return strings.HasPrefix(key, BranchSpecificKeyPrefix)
 }
