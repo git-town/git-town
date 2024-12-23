@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
-// MergeFastForward fast-forwards current branch to point to the commits on the given branch.
+// MergeFastForward fast-forwards the current branch to point to the commits on the given branch.
 type MergeFastForward struct {
 	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
