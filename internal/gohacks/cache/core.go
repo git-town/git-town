@@ -5,6 +5,3 @@ import "github.com/git-town/git-town/v17/internal/git/gitdomain"
 
 // LocalBranch is a cache for gitdomain.LocalBranchName variables.
 type LocalBranchWithPrevious = WithPrevious[gitdomain.LocalBranchName]
-
-// RemoteBranch is a cache for gitdomain.RemoteBranchName variables.
-type RemoteBranch = Cache[gitdomain.RemoteBranchName]
