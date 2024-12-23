@@ -44,7 +44,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	gitVersion, err := gitCommands.Version(backendRunner)
 	if err != nil {

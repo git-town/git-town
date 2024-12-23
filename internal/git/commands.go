@@ -20,8 +20,8 @@ import (
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type Commands struct {
-	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
-	RemotesCache       *cache.Remotes                 // caches Git remotes
+	CurrentBranchCache *cache.LocalBranchWithPrevious  // caches the currently checked out Git branch
+	RemotesCache       *cache.Cache[gitdomain.Remotes] // caches Git remotes
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.

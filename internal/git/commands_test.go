@@ -1050,7 +1050,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			cmds := git.Commands{
 				CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-				RemotesCache:       &cache.Remotes{},
+				RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 			}
 			have := cmds.RootDirectory(runner)
 			must.True(t, have.IsNone())
