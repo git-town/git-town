@@ -128,10 +128,11 @@ Pointers in Go serve various orthogonal purposes. One is expressing optionality.
 The simplest way to create a variable that can either have a value or not is
 with a pointer. Here, `nil` signifies the absence of a value, while a non-nil
 pointer indicates the presence of a value. However, Go does not enforce checks
-for absent values, which leads to runtime panics when attempting to access an
-uninitialized variable. The Git Town codebase wraps optional values in a generic
-`Option` type. This approach makes it explicit to both human and machine readers
-whether a type is optional. It also enforces optionality checks.
+for absent values, which leads to runtime panics when attempting to dereference
+a nil-pointer representing a variable with non-existing value. The Git Town
+codebase wraps optional values in a generic `Option` type. This approach makes
+it explicit whether a type is optional. It also enforces checks when using an
+optional value.
 
 Another use of pointers in Go is for performance optimization: if a variable is
 too large to pass by value, it can be passed by reference. The Git Town codebase
@@ -143,14 +144,15 @@ why a function argument is a pointer: it is optional, mutable, or simply too
 large to pass by value? To clarify this, the Git Town codebase wraps mutable
 function arguments and struct fields in the generic `Mutable` type to denote
 mutability. Any variable not wrapped in a `Mutable` should be considered
-immutable.
+immutable. Any variable wrappen in `Mutable` is guaranteed (by convention) to
+exist, i.e. a `Mutable` is never `nil`.
 
-While this practice introduces a thin layer of additional complexity, and more
-code to handle edge cases correctly, this complexity is justified by the
-drastically increased robustness of the codebase. It has eliminated entire
-categories of bugs that had occurred relatively frequently before. We have
-adopted the naming conventions from the Rust programming language as they have
-proven effective in that community.
+While this practice introduces a thin layer of additional complexity, a few more
+allocations, and more code to handle edge cases correctly, this complexity is
+justified by the drastically increased robustness of the codebase. It has
+eliminated entire categories of bugs that Git Town users encountered relatively
+frequently before. We have adopted the naming conventions from the Rust
+programming language as they have proven effective in that community.
 
 #### One concept per file
 
@@ -160,16 +162,18 @@ of locating specific concepts by opening the file with the matching name.
 
 #### Newtypes
 
-Idiomatic Go code has a tendency for primitive obsession. Git Town's domain
-model includes so many distinct uses for string and other basic data types that
-there is pretty much no protection from the type system left and it becomes too
-easy to mix them up. Git Town's codebase extensively employs the newtype pattern
-by defining specific data types for each domain concept, even if they can be
-represented by a simple `string` or `int`. This ensures that semantically
-correct data is used.
+In earlier versions, the Git Town codebase used the built-in data types like
+`string` and `int` for struct fields. This led to
+[primitive-obsession](https://refactoring.guru/smells/primitive-obsession). Git
+Town's domain model includes so many distinct uses for `string` and other basic
+data types that it becomes too easy to mix them up. Git Town's codebase
+extensively employs the newtype pattern, i.e. defines distinct data types for
+each domain concept, even if they can be represented by a simple `string` or
+`int`. This ensures that only semantically correct data is used.
 
 #### Making invalid states unrepresentable
 
 Git Town's contains more and higher-level data structures than in typical Go
 programs. This extra complexity exists to make invalid code result in compiler
-errors. This eliminates entire categories of bugs.
+errors. This has proven so useful that it is worth the additional complexity, as
+it eliminates entire categories of bugs.
