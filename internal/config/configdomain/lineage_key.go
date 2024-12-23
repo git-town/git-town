@@ -20,9 +20,7 @@ func NewLineageKey(key Key) LineageKey {
 // CheckLineage indicates using the returned option whether this key is a lineage key.
 func ParseLineageKey(key Key) Option[LineageKey] {
 	if isLineageKey(key.String()) {
-		return Some(LineageKey{
-			Key: key,
-		})
+		return Some(NewLineageKey(key))
 	}
 	return None[LineageKey]()
 }
