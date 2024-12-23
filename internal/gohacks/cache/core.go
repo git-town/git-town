@@ -8,6 +8,3 @@ type LocalBranchWithPrevious = WithPrevious[gitdomain.LocalBranchName]
 
 // RemoteBranch is a cache for gitdomain.RemoteBranchName variables.
 type RemoteBranch = Cache[gitdomain.RemoteBranchName]
-
-// Remotes is a cache for domain.Remotes variables.
-// type Remotes = Cache[gitdomain.Remotes]
