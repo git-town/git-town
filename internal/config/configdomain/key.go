@@ -152,7 +152,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
-	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
+	return Key(BranchSpecificKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {
@@ -161,7 +161,7 @@ func ParseKey(name string) Option[Key] {
 			return Some(configKey)
 		}
 	}
-	if isLineageKey(name) {
+	if isLineageKey(name) || isBranchTypeOverrideKey(name) {
 		return Some(Key(name))
 	}
 	if aliasKey, isAliasKey := AllAliasableCommands().LookupKey(name).Get(); isAliasKey {

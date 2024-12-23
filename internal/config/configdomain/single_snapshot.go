@@ -33,3 +33,14 @@ func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
 	}
 	return result
 }
+
+// provides all the keys that describe branch type overrides
+func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey]string {
+	result := map[BranchTypeOverrideKey]string{}
+	for key, value := range self {
+		if lineageKey, isLineageKey := NewLineageKey(key).Get(); isLineageKey {
+			result[lineageKey] = value
+		}
+	}
+	return result
+}
