@@ -79,7 +79,7 @@ You can install Git Town on BSD via
 [freshports](https://www.freshports.org/devel/git-town) or by downloading the
 matching binaries from the GitHub release.
 
-## manual installation
+## Manual installation
 
 ```
 curl https://www.git-town.com/install.sh | sh
@@ -90,7 +90,7 @@ For a fully custom installation,
 your CPU architecture, extract it, and move the `git-town` executable into a
 directory listed in your `$PATH`, for example `/usr/local/bin`.
 
-## compile from source
+## Compile from source
 
 If you have the [Go compiler](https://go.dev) installed, you can compile the
 latest version of Git Town from source by running:

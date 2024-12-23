@@ -32,7 +32,7 @@ This guide is for maintainers who make releases of Git Town.
 - copy the changelog into the release notes
 - publish the release
 
-### update the website
+### Update the website
 
 The website publishes from the `public` branch to avoid listing unreleased
 features to the public.
@@ -43,7 +43,7 @@ git merge main
 git push
 ```
 
-### debugging the release script
+### Debugging the release script
 
 Debugging is best done on a separate fork of this codebase. This avoids
 accidental releases to the official location, which then trigger other
@@ -67,7 +67,7 @@ git push ; git tag -d v0.0.1 ; git push origin :v0.0.1 ; git tag v0.0.1 ; git pu
 $env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\tools\release.ps1
 ```
 
-### performing a manual release
+### Performing a manual release
 
 If the release script fails in production and doesn't create the release, and/or
 you want to investigate some release code, you can perform the release manually
@@ -95,7 +95,7 @@ on a Windows machine using PowerShell.
   git fetch --tags
   ```
 
-### release platforms
+### Release platforms
 
 - HomeBrew: Git Town is in the auto-updating
   [core formulae](https://formulae.brew.sh/formula/git-town)

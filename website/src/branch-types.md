@@ -1,4 +1,4 @@
-# Branch Types
+# Branch types
 
 Git Town supports many different types of Git branches. When properly
 configured, you can run `git town sync` or `git town sync --all` at any time and
@@ -66,7 +66,7 @@ to a feature branch by running [git town hack](commands/hack.md) on it. You can
 also define an [observed-regex](preferences/observed-regex.md) in your Git
 configuration or the config file.
 
-## Parked Branches
+## Parked branches
 
 Parked branches don't get synced at all unless you run `git town sync` directly
 on a parked branch. You might want to park a branch if you
@@ -79,7 +79,7 @@ on a parked branch. You might want to park a branch if you
 You can park any feature branch by running [git town park](commands/park.md) on
 it. Unpark a parked branch by running `git town hack` on it.
 
-## Prototype Branches
+## Prototype branches
 
 A prototype branch is a local-only feature branch that incorporates updates from
 its parent branch but is not pushed to the remote repository. Prototype branches
