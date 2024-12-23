@@ -130,8 +130,8 @@ To pause an end-to-end test so that you have time to inspect the status of the
 Git repository created by the test, add the step `And inspect the repo`. The
 test runner will pause and print the path of the test workspace. You can `cd`
 into that path in a separate terminal window and inspect the repos there. The
-developer's repo is in the `repo` folder. The dev repo is in the `origin`
-folder.
+developer's repo is in the `repo` folder. The remote repo (that would normally
+be on GitHub) is in the `origin` folder.
 
 To see all commit SHAs of the repo, add the `And inspect the commits` step.
 

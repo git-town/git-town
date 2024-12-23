@@ -66,10 +66,9 @@ If you have configured the API tokens for
 [GitHub](../preferences/github-token.md),
 [GitLab](../preferences/gitlab-token.md), or
 [Gitea](../preferences/gitea-token.md) and the branch to be shipped has an open
-proposal, this command merges the proposal for the current branch on your origin
-server rather than on the local Git workspace.
+proposal, this command merges the proposal for the current branch.
 
-If your origin server deletes shipped branches, for example
+If your hosting platform automatically deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
 you can
 [disable deleting remote branches](../preferences/ship-delete-tracking-branch.md).
