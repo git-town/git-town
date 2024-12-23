@@ -12,7 +12,7 @@ git town config setup
 More information about the configuration file including how to create one
 manually is [here](configuration-file.md).
 
-### Access Tokens
+### Access tokens
 
 API access multiplies Git Town's utility:
 
