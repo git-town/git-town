@@ -15,7 +15,7 @@ defined as part of the `[branches]` section:
 
 ```toml
 [branches]
-perennials = [ "branch", "other-branch" ]
+perennials = ["branch", "other-branch"]
 ```
 
 ## configure in Git metadata
