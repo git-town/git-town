@@ -19,7 +19,6 @@ Feature: stacked changes
     And global Git setting "rebase.updateRefs" is "true"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
