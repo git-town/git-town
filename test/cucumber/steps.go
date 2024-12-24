@@ -605,8 +605,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "rebase.updateRefs" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key := configdomain.Key("rebase.updateRefs")
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, key, value)
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, "rebase.updateRefs", value)
 	})
 
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {

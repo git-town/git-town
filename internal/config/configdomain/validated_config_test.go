@@ -14,8 +14,8 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("Author", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.ValidatedConfigData{
-			GitUserName:  configdomain.GitUserName("name"),
-			GitUserEmail: configdomain.GitUserEmail("email"),
+			GitUserName:  "name",
+			GitUserEmail: "email",
 		}
 		have := config.Author()
 		want := gitdomain.Author("name <email>")
