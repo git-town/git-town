@@ -14,19 +14,18 @@ type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 func NewBranchTypeOverridesFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (BranchTypeOverrides, error) {
 	result := BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
-		branchName := key.BranchName()
-		if branchName == "" {
+		branch := key.Branch()
+		if branch == "" {
 			// empty branch --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = removeLocalConfigValue(key.Key())
+			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
-		branch := gitdomain.NewLocalBranchName(branchName)
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = removeLocalConfigValue(key.Key())
+			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
 		branchTypeOpt, err := ParseBranchType(value)
