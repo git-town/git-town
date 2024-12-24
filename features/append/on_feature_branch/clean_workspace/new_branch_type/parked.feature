@@ -9,7 +9,7 @@ Feature: append a new branch when parked branches are configured
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And Git Town setting "new-branch-type" is "parked"
+    And Git setting "git-town.new-branch-type" is "parked"
     When I run "git-town append new"
 
   Scenario: result

@@ -13,7 +13,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       | child  | local, origin | child commit 2 |
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
     And the current branch is "child"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 

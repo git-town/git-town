@@ -11,7 +11,7 @@ Feature: syncing a local feature branch using --no-push
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push"
 
   Scenario: result

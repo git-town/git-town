@@ -10,7 +10,7 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town hack new"
 
   Scenario: result

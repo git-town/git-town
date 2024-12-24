@@ -12,7 +12,7 @@ Feature: proposing using the "compress" sync strategy
       | existing | local    | local existing commit 2 |
       | existing | origin   | remote existing commit  |
     And the current branch is "existing"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     And wait 1 second to ensure new Git timestamps

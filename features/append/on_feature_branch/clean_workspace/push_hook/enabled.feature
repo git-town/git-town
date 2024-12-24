@@ -6,8 +6,8 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And Git Town setting "push-new-branches" is "true"
-    And Git Town setting "push-hook" is "true"
+    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.push-hook" is "true"
     When I run "git-town append new"
 
   Scenario: result

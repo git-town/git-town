@@ -14,7 +14,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the commits
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
-    And Git Town setting "sync-feature-strategy" is "merge"
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     And I add commit "additional commit" to the "main" branch
     And the current branch is "beta"

@@ -5,7 +5,7 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And offline mode is enabled
     And the current branch is "feature"
     And the commits

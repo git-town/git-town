@@ -6,7 +6,7 @@ Feature: sync the current branch that is observed via regex
       | NAME       | TYPE   | LOCATIONS     |
       | renovate/1 | (none) | local, origin |
     And the current branch is "renovate/1"
-    And Git Town setting "observed-regex" is "^renovate"
+    And Git setting "git-town.observed-regex" is "^renovate"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE       | FILE NAME   |
       | main       | local, origin | main commit   | main_file   |

@@ -564,7 +564,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
+	sc.Step(`^(?:local )?Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
@@ -584,46 +584,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
+	sc.Step(`^(?:local )?Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey("git-town." + name).Get()
-		if !hasKey {
-			return fmt.Errorf("unknown config key: %q", name)
-		}
-		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
-		devRepo.Config.NormalConfig.SetByKey(key, value)
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, key, value)
-	})
-
-	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is (?:now|still) "([^"]+)"$`, func(ctx context.Context, locality, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey("git-town." + name).Get()
-		if !hasKey {
-			return fmt.Errorf("unknown config key: %q", name)
-		}
-		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
-		have, has := devRepo.GitConfig(scope, key).Get()
-		if !has {
-			return fmt.Errorf(`expected %s setting %q to be %q but doesn't exist`, scope, name, want)
-		}
-		if have != want {
-			return fmt.Errorf(`expected %s setting %q to be %q but is %q`, scope, name, want, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^(global |local |)Git Town setting "([^"]+)" (:?now|still) doesn't exist$`, func(ctx context.Context, locality, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey("git-town." + name).Get()
-		if !hasKey {
-			return fmt.Errorf("unknown config key: %q", name)
-		}
-		scope := configdomain.ParseConfigScope(strings.TrimSpace(locality))
-		if value, hasValue := devRepo.GitConfig(scope, key).Get(); hasValue {
-			return fmt.Errorf("should not have %s setting %q anymore but it exists and has value %q", scope, name, value)
+		have, has := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
+		if has {
+			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
 		return nil
 	})

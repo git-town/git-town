@@ -15,7 +15,7 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And wait 1 second to ensure new Git timestamps
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "child"
     When I run "git-town sync"
 
