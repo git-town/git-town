@@ -6,5 +6,4 @@ import (
 
 func TestBranchSpecificKey(t *testing.T) {
 	t.Parallel()
-
 }
