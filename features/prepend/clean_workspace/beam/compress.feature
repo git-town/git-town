@@ -1,3 +1,4 @@
+@messyoutput
 Feature: prepend a branch to a feature branch using the "compress" sync strategy
 
   Background:
