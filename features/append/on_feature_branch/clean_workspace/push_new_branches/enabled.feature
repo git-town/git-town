@@ -6,7 +6,7 @@ Feature: auto-push the new branch to origin
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And Git setting "git-town.push-new-branches" is "true"
-    And the branch is git-town."main"
+    And the current branch is "main"
     When I run "git-town append new"
 
   Scenario: result
