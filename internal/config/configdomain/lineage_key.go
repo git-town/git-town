@@ -8,12 +8,14 @@ import (
 
 // a Key that contains a lineage entry
 type LineageKey struct {
-	Key
+	BranchSpecificKey
 }
 
 func NewLineageKey(key Key) LineageKey {
 	return LineageKey{
-		Key: key,
+		BranchSpecificKey: BranchSpecificKey{
+			Key: key,
+		},
 	}
 }
 
@@ -25,17 +27,9 @@ func ParseLineageKey(key Key) Option[LineageKey] {
 	return None[LineageKey]()
 }
 
-// provides the name of the child branch encoded in this LineageKey
-func (self LineageKey) ChildName() string {
-	return strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(self.String(), LineageKeyPrefix), LineageKeySuffix))
-}
-
-const (
-	LineageKeyPrefix = "git-town-branch."
-	LineageKeySuffix = ".parent"
-)
+const LineageKeySuffix = ".parent"
 
 // indicates whether the given key value is for a LineageKey
 func isLineageKey(key string) bool {
-	return strings.HasPrefix(key, LineageKeyPrefix) && strings.HasSuffix(key, LineageKeySuffix)
+	return isBranchSpecificKey(key) && strings.HasSuffix(key, LineageKeySuffix)
 }
