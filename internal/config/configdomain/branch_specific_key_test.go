@@ -9,11 +9,13 @@ import (
 
 func TestBranchSpecificKey(t *testing.T) {
 
-	t.Run("ChildName", func(t *testing.T) {
+	t.Run("BranchName", func(t *testing.T) {
 		t.Parallel()
-		key := configdomain.NewLineageKey("git-town-branch.foo.parent")
+		key := configdomain.BranchSpecificKey{
+			Key: configdomain.Key("git-town-branch.my-branch.parent"),
+		}
 		have := key.BranchName()
-		want := "foo"
+		want := "my-branch"
 		must.EqOp(t, want, have)
 	})
 }
