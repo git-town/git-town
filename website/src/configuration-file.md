@@ -11,7 +11,7 @@ Here is an example configuration file with the default settings:
 
 ```toml
 [branches]
-main = ""                           # must be set by the user
+main = "" # must be set by the user
 contribution-regex = ""
 default-type = "feature"
 feature-regex = ""
@@ -25,8 +25,8 @@ push-new-branches = false
 
 [hosting]
 dev-remote = "origin"
-origin-hostname = ""  # use the hostname in the origin URL
-platform = ""         # auto-detect
+origin-hostname = "" # use the hostname in the origin URL
+platform = "" # auto-detect
 
 [ship]
 delete-tracking-branch = true
