@@ -42,7 +42,6 @@ type NormalConfigData struct {
 	SyncUpstream             SyncUpstream
 }
 
-// TODO: delete
 func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
 }
