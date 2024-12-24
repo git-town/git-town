@@ -33,7 +33,7 @@ func NewLineage() Lineage {
 func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (Lineage, error) {
 	result := NewLineage()
 	for key, value := range snapshot.LineageEntries() {
-		child := key.BranchName()
+		child := key.ChildBranch()
 		if child == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
