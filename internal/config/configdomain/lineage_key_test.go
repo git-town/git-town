@@ -11,18 +11,6 @@ import (
 func TestLineageKey(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ChildName", func(t *testing.T) {
-		t.Parallel()
-
-		t.Run("valid lineage key", func(t *testing.T) {
-			t.Parallel()
-			key := configdomain.NewLineageKey("git-town-branch.foo.parent")
-			have := key.ChildName()
-			want := "foo"
-			must.EqOp(t, want, have)
-		})
-	})
-
 	t.Run("ParseLineageKey", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.LineageKey]{
