@@ -348,7 +348,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypePrototypeBranch {
 			return fmt.Errorf(
