@@ -1,6 +1,6 @@
 # git town merge
 
-> _git town merge_
+> `git town merge`
 
 The _merge_ command merges the current branch with its parent branch. Both
 branches must be [feature branches](../branch-types.md#feature-branches).

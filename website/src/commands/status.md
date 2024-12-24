@@ -1,6 +1,6 @@
 # git town status
 
-> _git town status [--pending]_
+> `git town status [--pending]`
 
 The _status_ command indicates whether Git Town has encountered a merge conflict
 and which commands you can run to continue, skip, or undo it.

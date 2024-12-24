@@ -1,6 +1,6 @@
 # git town delete
 
-> _git town delete [branch-name]_
+> `git town delete [branch-name]`
 
 The _delete_ command deletes the given branch from the local and remote
 repository and updates proposals of its child branches to the parent of the

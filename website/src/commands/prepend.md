@@ -1,6 +1,6 @@
 # git town prepend
 
-> _git town prepend [--prototype] &lt;branch-name&gt;_
+> `git town prepend [--prototype] <branch-name>`
 
 The _prepend_ command creates a new feature branch as the parent of the current
 branch. It does that by inserting the new feature branch between the current

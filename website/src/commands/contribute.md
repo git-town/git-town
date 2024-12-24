@@ -1,6 +1,6 @@
 # git town contribute
 
-> _git town contribute [branch-name...]_
+> `git town contribute [branch-name...]`
 
 The _contribute_ command makes some of your branches
 [contribution](../branch-types.md#contribution-branches) branches.

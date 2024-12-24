@@ -1,6 +1,6 @@
 # git town ship
 
-> _git town ship [--to-parent] [--message &lt;text&gt;] [branch-name]_
+> `git town ship [--to-parent] [--message <text>] [branch-name]`
 
 _Notice: Most people don't need to use this command. The recommended way to
 merge your feature branches is to use the web UI or merge queue of your code
