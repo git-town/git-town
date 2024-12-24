@@ -47,22 +47,6 @@ func (self *NormalConfigData) IsOnline() bool {
 }
 
 // TODO: delete
-func (self *NormalConfigData) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
-	return slices.Contains(self.ParkedBranches, branch)
-}
-
-// TODO: delete
-func (self *NormalConfigData) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PerennialBranches, branch) {
-		return true
-	}
-	if perennialRegex, has := self.PerennialRegex.Get(); has {
-		return perennialRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-// TODO: delete
 func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return true
