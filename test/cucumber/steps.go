@@ -350,11 +350,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypePrototypeBranch {
-			return fmt.Errorf(
-				"branch %q isn't prototype as expected.\nPrototype branches: %s",
-				branch,
-				devRepo.Config.NormalConfig.PrototypeBranches.Join(", "),
-			)
+			return fmt.Errorf("branch %q isn't prototype as expected, it is %q", branch, branchType)
 		}
 		return nil
 	})
