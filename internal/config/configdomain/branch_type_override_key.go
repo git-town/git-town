@@ -3,6 +3,7 @@ package configdomain
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
@@ -25,8 +26,10 @@ func ParseBranchTypeOverrideKey(key Key) Option[BranchTypeOverrideKey] {
 	return None[BranchTypeOverrideKey]()
 }
 
-func (self BranchTypeOverrideKey) Key() Key {
-	return Key(self.BranchSpecificKey.Key)
+// provides the name of the child branch encoded in this LineageKey
+func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
+	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
+	return gitdomain.NewLocalBranchName(text)
 }
 
 func isBranchTypeOverrideKey(key string) bool {
