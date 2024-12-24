@@ -42,51 +42,8 @@ type NormalConfigData struct {
 	SyncUpstream             SyncUpstream
 }
 
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *NormalConfigData) ContainsLineage() bool {
-	return self.Lineage.Len() > 0
-}
-
 func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
-}
-
-func (self *NormalConfigData) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PerennialBranches, branch) {
-		return true
-	}
-	if perennialRegex, has := self.PerennialRegex.Get(); has {
-		return perennialRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PrototypeBranches, branch) {
-		return true
-	}
-	return self.DefaultBranchType == BranchTypePrototypeBranch
-}
-
-func (self *NormalConfigData) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
-	if contributionRegex, has := self.ContributionRegex.Get(); has {
-		return contributionRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *NormalConfigData) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
-	if featureRegex, has := self.FeatureRegex.Get(); has {
-		return featureRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *NormalConfigData) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
-	if observedRegex, has := self.ObservedRegex.Get(); has {
-		return observedRegex.MatchesBranch(branch)
-	}
-	return false
 }
 
 func (self *NormalConfigData) NoPushHook() NoPushHook {
@@ -98,9 +55,7 @@ func (self *NormalConfigData) Online() Online {
 }
 
 func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
-	if self.IsPerennialBranch(branch) {
-		return BranchTypePerennialBranch
-	}
+	// check the configured branch lists
 	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
 	}
@@ -110,18 +65,26 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
 	}
+	if slices.Contains(self.PerennialBranches, branch) {
+		return BranchTypePerennialBranch
+	}
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
-	if self.MatchesFeatureBranchRegex(branch) {
-		return BranchTypeFeatureBranch
-	}
-	if self.MatchesContributionRegex(branch) {
+	// check if a regex matches
+	if regex, has := self.ContributionRegex.Get(); has && regex.MatchesBranch(branch) {
 		return BranchTypeContributionBranch
 	}
-	if self.MatchesObservedRegex(branch) {
+	if regex, has := self.FeatureRegex.Get(); has && regex.MatchesBranch(branch) {
+		return BranchTypeFeatureBranch
+	}
+	if regex, has := self.ObservedRegex.Get(); has && regex.MatchesBranch(branch) {
 		return BranchTypeObservedBranch
 	}
+	if regex, has := self.PerennialRegex.Get(); has && regex.MatchesBranch(branch) {
+		return BranchTypePerennialBranch
+	}
+	// branch doesn't match any of the overrides --> default branch type
 	return self.DefaultBranchType
 }
 
