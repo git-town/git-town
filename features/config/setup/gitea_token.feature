@@ -33,7 +33,7 @@ Feature: enter the Gitea API token
     Then Git Town runs the commands
       | COMMAND                                |
       | git config git-town.gitea-token 123456 |
-    And local Git Town setting "hosting-platform" still doesn't exist
+    And local Git setting "git-town.hosting-platform" still doesn't exist
     And local Git setting "git-town.gitea-token" is now "123456"
 
   Scenario: select Gitea manually

@@ -33,7 +33,7 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.github-token 123456 |
-    And local Git Town setting "hosting-platform" still doesn't exist
+    And local Git setting "git-town.hosting-platform" still doesn't exist
     And local Git setting "git-town.github-token" is now "123456"
 
   Scenario: manually selected GitHub
@@ -98,7 +98,7 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                  |
       | git config --unset git-town.github-token |
-    And local Git Town setting "hosting-platform" still doesn't exist
+    And local Git setting "git-town.hosting-platform" still doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
 
   Scenario: undo

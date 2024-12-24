@@ -33,7 +33,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.gitlab-token 123456 |
-    And local Git Town setting "hosting-platform" still doesn't exist
+    And local Git setting "git-town.hosting-platform" still doesn't exist
     And local Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: select GitLab manually
