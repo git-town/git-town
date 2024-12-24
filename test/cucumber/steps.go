@@ -328,11 +328,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	// TODO: replace with a single step implementation that compares against BranchType.String()
 	sc.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.NormalConfig.IsPerennialBranch(branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypePerennialBranch {
 			return fmt.Errorf(
 				"branch %q isn't perennial as expected.\nPerennial branches: %s",
 				branch,
@@ -346,7 +348,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.NormalConfig.IsPrototypeBranch(branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypePrototypeBranch {
 			return fmt.Errorf(
 				"branch %q isn't prototype as expected.\nPrototype branches: %s",
 				branch,

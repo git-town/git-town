@@ -46,14 +46,6 @@ func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
 }
 
-// TODO: delete
-func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PrototypeBranches, branch) {
-		return true
-	}
-	return self.DefaultBranchType == BranchTypePrototypeBranch
-}
-
 func (self *NormalConfigData) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }

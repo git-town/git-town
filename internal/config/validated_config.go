@@ -40,7 +40,8 @@ func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, n
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *ValidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return self.ValidatedConfigData.IsMainBranch(branch) || self.NormalConfig.IsPerennialBranch(branch)
+	branchType := self.BranchType(branch)
+	return branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 }
 
 func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
