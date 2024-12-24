@@ -278,7 +278,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.NormalConfig.IsContributionBranch(branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypeContributionBranch {
 			return fmt.Errorf(
 				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
