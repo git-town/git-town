@@ -12,7 +12,6 @@ Feature: append a new branch when prototype branches are configured via a deprec
     And Git Town setting "create-prototype-branches" is "true"
     When I run "git-town append new"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |

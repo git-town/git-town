@@ -10,13 +10,3 @@ Feature: automatically upgrade kill alias
       """
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.kill" now doesn't exist
-
-  Scenario: Git alias to "git town kill" with another name
-    Given a Git repo with origin
-    And global Git setting "alias.my-command" is "town kill"
-    When I run "git town hack foo -v"
-    Then Git Town prints:
-      """
-      Upgrading value of global Git alias "alias.my-command" from "town kill" to "town delete".
-      """
-    And global Git setting "alias.my-command" is now "town delete"

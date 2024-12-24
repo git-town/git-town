@@ -156,10 +156,6 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
-				} else if IsGitTownAlias(value) && value == update.Before.Value {
-					self.UpdateExternalGitTownAlias(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
-					configKey = update.After.Key
-					value = update.After.Value
 				}
 			}
 		}
