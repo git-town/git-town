@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v17/internal/git"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -48,7 +47,7 @@ func TestUnmergedFile(t *testing.T) {
 			want := git.BlobInfo{
 				FilePath:   "file",
 				Permission: "100755",
-				SHA:        gitdomain.NewSHA("ece1e56bf2125e5b114644258872f04bc375ba69"),
+				SHA:        "ece1e56bf2125e5b114644258872f04bc375ba69",
 			}
 			must.Eq(t, want, have)
 		})

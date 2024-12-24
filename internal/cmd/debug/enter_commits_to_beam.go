@@ -24,7 +24,7 @@ func enterCommitsToBeam() *cobra.Command {
 			for i := range amount {
 				commits = append(commits, gitdomain.Commit{
 					Message: gitdomain.CommitMessage(fmt.Sprintf("commit %d", i)),
-					SHA:     gitdomain.SHA("1234567"),
+					SHA:     "1234567",
 				})
 			}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())

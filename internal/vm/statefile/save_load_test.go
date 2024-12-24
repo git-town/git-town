@@ -135,7 +135,7 @@ func TestLoadSave(t *testing.T) {
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
-				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
+				EndBranch: "end-branch",
 				EndTime:   time.Time{},
 			}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
