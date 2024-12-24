@@ -43,12 +43,6 @@ type NormalConfigData struct {
 }
 
 // TODO: delete
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *NormalConfigData) ContainsLineage() bool {
-	return self.Lineage.Len() > 0
-}
-
-// TODO: delete
 func (self *NormalConfigData) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
 	if slices.Contains(self.ContributionBranches, branch) {
 		return true

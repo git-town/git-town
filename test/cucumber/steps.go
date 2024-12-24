@@ -963,7 +963,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.Config.NormalConfig.ContainsLineage() {
+		if devRepo.Config.NormalConfig.Lineage.Len() > 0 {
 			lineage := devRepo.Config.NormalConfig.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
