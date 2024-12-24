@@ -48,20 +48,20 @@ Feature: migrate existing configuration in Git metadata to a config file
     Then Git Town runs no commands
     And the main branch is now not set
     And there are now no perennial branches
-    And local Git Town setting "hosting-platform" now doesn't exist
-    And local Git Town setting "hosting-origin-hostname" now doesn't exist
-    And local Git Town setting "sync-feature-strategy" now doesn't exist
-    And local Git Town setting "sync-perennial-strategy" now doesn't exist
-    And local Git Town setting "sync-upstream" now doesn't exist
-    And local Git Town setting "sync-tags" now doesn't exist
-    And local Git Town setting "perennial-regex" now doesn't exist
+    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" now doesn't exist
+    And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
+    And local Git setting "git-town.sync-upstream" now doesn't exist
+    And local Git setting "git-town.sync-tags" now doesn't exist
+    And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git Town setting "feature-regex" is still "user-.*"
     And local Git Town setting "default-branch-type" is still "observed"
-    And local Git Town setting "push-new-branches" now doesn't exist
-    And local Git Town setting "push-hook" now doesn't exist
-    And local Git Town setting "new-branch-type" now doesn't exist
-    And local Git Town setting "ship-strategy" now doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
+    And local Git setting "git-town.push-new-branches" now doesn't exist
+    And local Git setting "git-town.push-hook" now doesn't exist
+    And local Git setting "git-town.new-branch-type" now doesn't exist
+    And local Git setting "git-town.ship-strategy" now doesn't exist
+    And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
@@ -96,16 +96,16 @@ Feature: migrate existing configuration in Git metadata to a config file
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is now "main"
-    And local Git Town setting "dev-remote" is now "fork"
-    And local Git Town setting "new-branch-type" is now "prototype"
-    And local Git Town setting "perennial-regex" is now "release-.*"
-    And local Git Town setting "feature-regex" is now "user-.*"
-    And local Git Town setting "default-branch-type" is now "observed"
-    And local Git Town setting "push-new-branches" is now "false"
-    And local Git Town setting "push-hook" is now "true"
-    And local Git Town setting "ship-strategy" is now "squash-merge"
-    And local Git Town setting "ship-delete-tracking-branch" is now "false"
-    And local Git Town setting "sync-feature-strategy" is now "merge"
-    And local Git Town setting "sync-perennial-strategy" is now "rebase"
-    And local Git Town setting "sync-upstream" is now "true"
-    And local Git Town setting "sync-tags" is now "false"
+    And local Git setting "git-town.dev-remote" is now "fork"
+    And local Git setting "git-town.new-branch-type" is now "prototype"
+    And local Git setting "git-town.perennial-regex" is now "release-.*"
+    And local Git setting "git-town.feature-regex" is now "user-.*"
+    And local Git setting "git-town.default-branch-type" is now "observed"
+    And local Git setting "git-town.push-new-branches" is now "false"
+    And local Git setting "git-town.push-hook" is now "true"
+    And local Git setting "git-town.ship-strategy" is now "squash-merge"
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.sync-feature-strategy" is now "merge"
+    And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
+    And local Git setting "git-town.sync-upstream" is now "true"
+    And local Git setting "git-town.sync-tags" is now "false"

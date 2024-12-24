@@ -32,8 +32,8 @@ Feature: remove an existing code hosting override
     Then Git Town runs the commands
       | COMMAND                                      |
       | git config --unset git-town.hosting-platform |
-    And local Git Town setting "hosting-platform" now doesn't exist
+    And local Git setting "git-town.hosting-platform" now doesn't exist
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git Town setting "hosting-platform" is now "github"
+    And local Git setting "git-town.hosting-platform" is now "github"

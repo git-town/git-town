@@ -34,7 +34,7 @@ Feature: enter the GitHub API token
       | COMMAND                                 |
       | git config git-town.github-token 123456 |
     And local Git Town setting "hosting-platform" still doesn't exist
-    And local Git Town setting "github-token" is now "123456"
+    And local Git setting "git-town.github-token" is now "123456"
 
   Scenario: manually selected GitHub
     When I run "git-town config setup" and enter into the dialog:
@@ -65,8 +65,8 @@ Feature: enter the GitHub API token
       | COMMAND                                     |
       | git config git-town.github-token 123456     |
       | git config git-town.hosting-platform github |
-    And local Git Town setting "hosting-platform" is now "github"
-    And local Git Town setting "github-token" is now "123456"
+    And local Git setting "git-town.hosting-platform" is now "github"
+    And local Git setting "git-town.github-token" is now "123456"
 
   Scenario: remove existing GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
@@ -99,9 +99,9 @@ Feature: enter the GitHub API token
       | COMMAND                                  |
       | git config --unset git-town.github-token |
     And local Git Town setting "hosting-platform" still doesn't exist
-    And local Git Town setting "github-token" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git Town setting "hosting-platform" now doesn't exist
-    And local Git Town setting "github-token" now doesn't exist
+    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist

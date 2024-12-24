@@ -36,6 +36,7 @@ Feature: change existing information in Git metadata
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -70,23 +71,23 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
-    And local Git Town setting "dev-remote" now doesn't exist
-    And local Git Town setting "new-branch-type" is now "parked"
-    And local Git Town setting "hosting-platform" is now "github"
-    And local Git Town setting "github-token" is now "123456"
-    And local Git Town setting "hosting-origin-hostname" is now "code"
-    And local Git Town setting "sync-feature-strategy" is now "rebase"
-    And local Git Town setting "sync-perennial-strategy" is now "merge"
-    And local Git Town setting "sync-prototype-strategy" is now "rebase"
-    And local Git Town setting "sync-upstream" is now "false"
-    And local Git Town setting "sync-tags" is now "true"
-    And local Git Town setting "perennial-regex" is now "3366"
-    And local Git Town setting "feature-regex" is now "user"
-    And local Git Town setting "default-branch-type" is now "observed"
-    And local Git Town setting "push-new-branches" is now "true"
-    And local Git Town setting "push-hook" is now "true"
-    And local Git Town setting "ship-strategy" is now "fast-forward"
-    And local Git Town setting "ship-delete-tracking-branch" is now "false"
+    And local Git setting "git-town.dev-remote" now doesn't exist
+    And local Git setting "git-town.new-branch-type" is now "parked"
+    And local Git setting "git-town.hosting-platform" is now "github"
+    And local Git setting "git-town.github-token" is now "123456"
+    And local Git setting "git-town.hosting-origin-hostname" is now "code"
+    And local Git setting "git-town.sync-feature-strategy" is now "rebase"
+    And local Git setting "git-town.sync-perennial-strategy" is now "merge"
+    And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
+    And local Git setting "git-town.sync-upstream" is now "false"
+    And local Git setting "git-town.sync-tags" is now "true"
+    And local Git setting "git-town.perennial-regex" is now "3366"
+    And local Git setting "git-town.feature-regex" is now "user"
+    And local Git setting "git-town.default-branch-type" is now "observed"
+    And local Git setting "git-town.push-new-branches" is now "true"
+    And local Git setting "git-town.push-hook" is now "true"
+    And local Git setting "git-town.ship-strategy" is now "fast-forward"
+    And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
 
   Scenario: undo
     When I run "git-town undo"
@@ -103,18 +104,18 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
-    And local Git Town setting "new-branch-type" now doesn't exist
-    And local Git Town setting "hosting-platform" now doesn't exist
-    And local Git Town setting "github-token" now doesn't exist
-    And local Git Town setting "hosting-origin-hostname" now doesn't exist
-    And local Git Town setting "sync-feature-strategy" now doesn't exist
-    And local Git Town setting "sync-perennial-strategy" now doesn't exist
-    And local Git Town setting "sync-prototype-strategy" now doesn't exist
-    And local Git Town setting "sync-upstream" now doesn't exist
-    And local Git Town setting "perennial-regex" now doesn't exist
-    And local Git Town setting "feature-regex" now doesn't exist
-    And local Git Town setting "default-branch-type" now doesn't exist
-    And local Git Town setting "push-new-branches" is now "false"
-    And local Git Town setting "push-hook" is now "false"
-    And local Git Town setting "ship-strategy" now doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
+    And local Git setting "git-town.new-branch-type" now doesn't exist
+    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.github-token" now doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" now doesn't exist
+    And local Git setting "git-town.sync-perennial-strategy" now doesn't exist
+    And local Git setting "git-town.sync-prototype-strategy" now doesn't exist
+    And local Git setting "git-town.sync-upstream" now doesn't exist
+    And local Git setting "git-town.perennial-regex" now doesn't exist
+    And local Git setting "git-town.feature-regex" now doesn't exist
+    And local Git setting "git-town.default-branch-type" now doesn't exist
+    And local Git setting "git-town.push-new-branches" is now "false"
+    And local Git setting "git-town.push-hook" is now "false"
+    And local Git setting "git-town.ship-strategy" now doesn't exist
+    And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist
