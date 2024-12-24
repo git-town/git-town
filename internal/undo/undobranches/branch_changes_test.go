@@ -303,8 +303,8 @@ func TestChanges(t *testing.T) {
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalChanged: undobranches.LocalBranchChange{},
 			RemoteAdded: gitdomain.RemoteBranchNames{
-				gitdomain.NewRemoteBranchName("origin/perennial-branch"),
-				gitdomain.NewRemoteBranchName("origin/feature-branch"),
+				"origin/perennial-branch",
+				"origin/feature-branch",
 			},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
 			RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
@@ -467,8 +467,8 @@ func TestChanges(t *testing.T) {
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalChanged: undobranches.LocalBranchChange{},
 			RemoteAdded: gitdomain.RemoteBranchNames{
-				gitdomain.NewRemoteBranchName("origin/perennial-branch"),
-				gitdomain.NewRemoteBranchName("origin/feature-branch"),
+				"origin/perennial-branch",
+				"origin/feature-branch",
 			},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
 			RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
@@ -699,11 +699,11 @@ func TestChanges(t *testing.T) {
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
 			RemoteChanged: map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{
-				gitdomain.NewRemoteBranchName("origin/perennial-branch"): {
+				"origin/perennial-branch": {
 					Before: "111111",
 					After:  "222222",
 				},
-				gitdomain.NewRemoteBranchName("origin/feature-branch"): {
+				"origin/feature-branch": {
 					Before: "333333",
 					After:  "444444",
 				},
@@ -1247,11 +1247,11 @@ func TestChanges(t *testing.T) {
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
 			RemoteChanged: map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{
-				gitdomain.NewRemoteBranchName("origin/perennial-branch"): {
+				"origin/perennial-branch": {
 					Before: "111111",
 					After:  "222222",
 				},
-				gitdomain.NewRemoteBranchName("origin/feature-branch"): {
+				"origin/feature-branch": {
 					Before: "333333",
 					After:  "444444",
 				},
@@ -1514,12 +1514,10 @@ func TestChanges(t *testing.T) {
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
 		wantChanges := undobranches.BranchChanges{
-			LocalAdded:   gitdomain.LocalBranchNames{},
-			LocalRemoved: undobranches.LocalBranchesSHAs{},
-			LocalChanged: undobranches.LocalBranchChange{},
-			RemoteAdded: gitdomain.RemoteBranchNames{
-				gitdomain.NewRemoteBranchName("upstream/main"),
-			},
+			LocalAdded:    gitdomain.LocalBranchNames{},
+			LocalRemoved:  undobranches.LocalBranchesSHAs{},
+			LocalChanged:  undobranches.LocalBranchChange{},
+			RemoteAdded:   gitdomain.RemoteBranchNames{"upstream/main"},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
 			RemoteChanged: map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
 			OmniRemoved:   undobranches.LocalBranchesSHAs{},

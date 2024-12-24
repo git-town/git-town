@@ -146,11 +146,11 @@ func TestCategorize(t *testing.T) {
 	t.Run("CategorizeRemoteBranchChange", func(t *testing.T) {
 		t.Parallel()
 		give := undobranches.RemoteBranchChange{
-			gitdomain.NewRemoteBranchName("origin/branch-1"): {
+			"origin/branch-1": {
 				Before: "111111",
 				After:  "222222",
 			},
-			gitdomain.NewRemoteBranchName("origin/dev"): {
+			"origin/dev": {
 				Before: "333333",
 				After:  "444444",
 			},
@@ -168,14 +168,14 @@ func TestCategorize(t *testing.T) {
 		}
 		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchChange(give, config)
 		wantPerennials := undobranches.RemoteBranchChange{
-			gitdomain.NewRemoteBranchName("origin/dev"): {
+			"origin/dev": {
 				Before: "333333",
 				After:  "444444",
 			},
 		}
 		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := undobranches.RemoteBranchChange{
-			gitdomain.NewRemoteBranchName("origin/branch-1"): {
+			"origin/branch-1": {
 				Before: "111111",
 				After:  "222222",
 			},

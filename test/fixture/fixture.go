@@ -129,9 +129,9 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	var mainBranch gitdomain.BranchName
 	mainIsLocal := self.DevRepo.Value.BranchExists(self.DevRepo.Value, "main")
 	if mainIsLocal {
-		mainBranch = gitdomain.NewLocalBranchName("main").BranchName()
+		mainBranch = gitdomain.NewBranchName("main")
 	} else {
-		mainBranch = gitdomain.NewRemoteBranchName("origin/main").BranchName()
+		mainBranch = gitdomain.NewBranchName("origin/main")
 	}
 	localCommits := self.DevRepo.GetOrPanic().Commits(fields, mainBranch, lineage)
 	builder.AddMany(localCommits, "local")

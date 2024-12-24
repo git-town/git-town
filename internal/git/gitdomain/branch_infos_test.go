@@ -393,7 +393,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 			}
 			bs := gitdomain.BranchInfos{branch}
-			have, has := bs.FindByRemoteName(gitdomain.NewRemoteBranchName("origin/two")).Get()
+			have, has := bs.FindByRemoteName("origin/two").Get()
 			must.True(t, has)
 			must.Eq(t, &branch, have)
 		})
@@ -406,7 +406,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 			}}
-			have := bs.FindByRemoteName(gitdomain.NewRemoteBranchName("kg/one"))
+			have := bs.FindByRemoteName("kg/one")
 			must.True(t, have.IsNone())
 		})
 	})
