@@ -55,8 +55,8 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.sync-tags" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
-    And local Git Town setting "feature-regex" is still "user-.*"
-    And local Git Town setting "default-branch-type" is still "observed"
+    And local Git setting "git-town.feature-regex" is still "user-.*"
+    And local Git setting "git-town.default-branch-type" is still "observed"
     And local Git setting "git-town.push-new-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
