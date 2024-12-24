@@ -355,17 +355,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^custom global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		aliasableCommand := configdomain.AliasableCommand(name)
-		have := asserts.NoError1(devRepo.LoadGitAlias(aliasableCommand))
-		if have != want {
-			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
-		}
-		return nil
-	})
-
 	sc.Step(`^display "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -551,44 +540,47 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+	// AAAAAAAAAAAAAAAAAAAA
+
+	sc.Step(`^global Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey(configdomain.AliasKeyPrefix + name).Get()
-		if !hasKey {
-			return errors.New("key not found")
-		}
-		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
-		command, has := devRepo.Config.NormalConfig.Aliases[aliasableCommand]
-		if has {
-			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.Key(key), value)
+	})
+
+	sc.Step(`^local Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.Key(key), value)
+	})
+
+	sc.Step(`^global Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		fmt.Println("111111111111111111111", devRepo.GlobalConfigSnapshot)
+		have := devRepo.GlobalConfigSnapshot[configdomain.Key(name)]
+		if have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
 		return nil
 	})
 
-	// XXX
-
-	sc.Step(`^(global|local) Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scopeName, key, value string) error {
+	sc.Step(`^local Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		scope := configdomain.ParseConfigScope(scopeName)
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, configdomain.Key(key), value)
-	})
-
-	sc.Step(`^(global|local) Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scopeName, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		scope := configdomain.ParseConfigScope(scopeName)
-		var snapshot configdomain.SingleSnapshot
-		switch scope {
-		case configdomain.ConfigScopeGlobal:
-			snapshot = devRepo.GlobalConfigSnapshot
-		case configdomain.ConfigScopeLocal:
-			snapshot = devRepo.LocalConfigSnapshot
-		}
-		have := snapshot[configdomain.Key(name)]
+		have := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^global Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		have, has := devRepo.GlobalConfigSnapshot[configdomain.Key(name)]
+		if has {
+			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
 		return nil
 	})
@@ -848,7 +840,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		secondWorkTree.Config.Reload()
+		secondWorkTree.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" in the other worktree and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
@@ -862,7 +854,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		secondWorkTree.Config.Reload()
+		secondWorkTree.Reload()
 	})
 
 	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
@@ -877,6 +869,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if hasDevRepo {
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
 			devRepo.Reload()
+			fmt.Println("222222222222222222222222222222", devRepo.GlobalConfigSnapshot)
 		} else {
 			parts := asserts.NoError1(shellquote.Split(command))
 			cmd, args := parts[0], parts[1:]
