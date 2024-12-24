@@ -9,7 +9,6 @@ import (
 )
 
 func TestBranchSpecificKey(t *testing.T) {
-
 	t.Run("BranchName", func(t *testing.T) {
 		t.Parallel()
 		key := configdomain.BranchSpecificKey{
