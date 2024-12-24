@@ -44,7 +44,7 @@ func (self *Commit) Set(name, value string) {
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
 func DefaultCommit() Commit {
 	return Commit{
-		Branch:      gitdomain.NewLocalBranchName("main"),
+		Branch:      "main",
 		FileContent: "default file content",
 		FileName:    "default_file_name_" + counter.NextAsString(),
 		Locations:   Locations{LocationLocal, LocationOrigin},

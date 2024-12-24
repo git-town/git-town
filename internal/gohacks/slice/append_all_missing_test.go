@@ -37,10 +37,10 @@ func TestAppendAllMissing(t *testing.T) {
 
 	t.Run("aliased slice type", func(t *testing.T) {
 		t.Parallel()
-		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222")}
-		give := gitdomain.SHAs{gitdomain.NewSHA("333333"), gitdomain.NewSHA("444444")}
+		list := gitdomain.SHAs{"111111", "222222"}
+		give := gitdomain.SHAs{"333333", "444444"}
 		have := slice.AppendAllMissing(list, give...)
-		want := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333"), gitdomain.NewSHA("444444")}
+		want := gitdomain.SHAs{"111111", "222222", "333333", "444444"}
 		must.Eq(t, want, have)
 	})
 }
