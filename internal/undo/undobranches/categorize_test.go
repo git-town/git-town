@@ -106,13 +106,13 @@ func TestCategorize(t *testing.T) {
 	t.Run("CategorizeLocalBranchChange", func(t *testing.T) {
 		t.Parallel()
 		give := undobranches.LocalBranchChange{
-			gitdomain.NewLocalBranchName("branch-1"): {
-				Before: gitdomain.NewSHA("111111"),
-				After:  gitdomain.NewSHA("222222"),
+			"branch-1": {
+				Before: "111111",
+				After:  "222222",
 			},
-			gitdomain.NewLocalBranchName("dev"): {
-				Before: gitdomain.NewSHA("333333"),
-				After:  gitdomain.NewSHA("444444"),
+			"dev": {
+				Before: "333333",
+				After:  "444444",
 			},
 		}
 		config := config.ValidatedConfig{
@@ -128,16 +128,16 @@ func TestCategorize(t *testing.T) {
 		}
 		havePerennials, haveFeatures := undobranches.CategorizeLocalBranchChange(give, config)
 		wantPerennials := undobranches.LocalBranchChange{
-			gitdomain.NewLocalBranchName("dev"): {
-				Before: gitdomain.NewSHA("333333"),
-				After:  gitdomain.NewSHA("444444"),
+			"dev": {
+				Before: "333333",
+				After:  "444444",
 			},
 		}
 		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := undobranches.LocalBranchChange{
-			gitdomain.NewLocalBranchName("branch-1"): {
-				Before: gitdomain.NewSHA("111111"),
-				After:  gitdomain.NewSHA("222222"),
+			"branch-1": {
+				Before: "111111",
+				After:  "222222",
 			},
 		}
 		must.Eq(t, wantFeatures, haveFeatures)
@@ -146,13 +146,13 @@ func TestCategorize(t *testing.T) {
 	t.Run("CategorizeRemoteBranchChange", func(t *testing.T) {
 		t.Parallel()
 		give := undobranches.RemoteBranchChange{
-			gitdomain.NewRemoteBranchName("origin/branch-1"): {
-				Before: gitdomain.NewSHA("111111"),
-				After:  gitdomain.NewSHA("222222"),
+			"origin/branch-1": {
+				Before: "111111",
+				After:  "222222",
 			},
-			gitdomain.NewRemoteBranchName("origin/dev"): {
-				Before: gitdomain.NewSHA("333333"),
-				After:  gitdomain.NewSHA("444444"),
+			"origin/dev": {
+				Before: "333333",
+				After:  "444444",
 			},
 		}
 		config := config.ValidatedConfig{
@@ -168,16 +168,16 @@ func TestCategorize(t *testing.T) {
 		}
 		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchChange(give, config)
 		wantPerennials := undobranches.RemoteBranchChange{
-			gitdomain.NewRemoteBranchName("origin/dev"): {
-				Before: gitdomain.NewSHA("333333"),
-				After:  gitdomain.NewSHA("444444"),
+			"origin/dev": {
+				Before: "333333",
+				After:  "444444",
 			},
 		}
 		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := undobranches.RemoteBranchChange{
-			gitdomain.NewRemoteBranchName("origin/branch-1"): {
-				Before: gitdomain.NewSHA("111111"),
-				After:  gitdomain.NewSHA("222222"),
+			"origin/branch-1": {
+				Before: "111111",
+				After:  "222222",
 			},
 		}
 		must.Eq(t, wantFeatures, haveFeatures)
@@ -186,8 +186,8 @@ func TestCategorize(t *testing.T) {
 	t.Run("CategorizeRemoteBranchesSHAs", func(t *testing.T) {
 		t.Parallel()
 		give := undobranches.RemoteBranchesSHAs{
-			gitdomain.NewRemoteBranchName("origin/feature-branch"):   gitdomain.NewSHA("111111"),
-			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
+			"origin/feature-branch":   "111111",
+			"origin/perennial-branch": "222222",
 		}
 		config := config.ValidatedConfig{
 			ValidatedConfigData: configdomain.ValidatedConfigData{
@@ -202,11 +202,11 @@ func TestCategorize(t *testing.T) {
 		}
 		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchesSHAs(give, config)
 		wantPerennials := undobranches.RemoteBranchesSHAs{
-			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
+			"origin/perennial-branch": "222222",
 		}
 		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := undobranches.RemoteBranchesSHAs{
-			gitdomain.NewRemoteBranchName("origin/feature-branch"): gitdomain.NewSHA("111111"),
+			"origin/feature-branch": "111111",
 		}
 		must.Eq(t, wantFeatures, haveFeatures)
 	})
