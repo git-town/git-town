@@ -21,6 +21,7 @@ func (self *ValidatedConfigData) Author() gitdomain.Author {
 	return gitdomain.Author(fmt.Sprintf("%s <%s>", name, email))
 }
 
+// TODO: delete
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *ValidatedConfigData) IsMainBranch(branch gitdomain.LocalBranchName) bool {

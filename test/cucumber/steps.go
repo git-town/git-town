@@ -278,7 +278,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.ContributionBranches, branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypeContributionBranch {
 			return fmt.Errorf(
 				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
@@ -327,11 +328,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	// TODO: replace with a single step implementation that compares against BranchType.String()
 	sc.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.NormalConfig.IsPerennialBranch(branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypePerennialBranch {
 			return fmt.Errorf(
 				"branch %q isn't perennial as expected.\nPerennial branches: %s",
 				branch,
@@ -345,7 +348,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.PrototypeBranches, branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypePrototypeBranch {
 			return fmt.Errorf(
 				"branch %q isn't prototype as expected.\nPrototype branches: %s",
 				branch,
@@ -963,7 +967,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.Config.NormalConfig.ContainsLineage() {
+		if devRepo.Config.NormalConfig.Lineage.Len() > 0 {
 			lineage := devRepo.Config.NormalConfig.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
