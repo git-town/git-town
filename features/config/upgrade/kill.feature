@@ -1,5 +1,6 @@
 Feature: automatically upgrade kill alias
 
+  @this
   Scenario: alias set up by Git Town
     Given a Git repo with origin
     And global Git setting "alias.kill" is "town kill"
@@ -13,7 +14,7 @@ Feature: automatically upgrade kill alias
 
   Scenario: Git alias to "git town kill" with another name
     Given a Git repo with origin
-    And custom global Git setting "alias.my-command" is "town kill"
+    And global Git setting "alias.my-command" is "town kill"
     When I run "git town hack foo"
     Then Git Town prints:
       """

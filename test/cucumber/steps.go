@@ -355,13 +355,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^custom global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		aliasableCommand := configdomain.AliasableCommand(name)
-		return devRepo.SetGitAlias(aliasableCommand, value)
-	})
-
 	sc.Step(`^custom global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -558,31 +551,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey(configdomain.AliasKeyPrefix + name).Get()
-		if !hasKey {
-			return fmt.Errorf("no key found for %q", name)
-		}
-		return devRepo.SetGitAlias(configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand(), value)
-	})
-
-	sc.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key, hasKey := configdomain.ParseKey(configdomain.AliasKeyPrefix + name).Get()
-		if !hasKey {
-			return errors.New("key not found")
-		}
-		aliasableCommand := configdomain.NewAliasKey(key).GetOrPanic().AliasableCommand()
-		have := devRepo.Config.NormalConfig.Aliases[aliasableCommand]
-		if have != want {
-			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
-		}
-		return nil
-	})
-
 	sc.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -594,6 +562,33 @@ func defineSteps(sc *godog.ScenarioContext) {
 		command, has := devRepo.Config.NormalConfig.Aliases[aliasableCommand]
 		if has {
 			return fmt.Errorf("unexpected aliasableCommand %q: %q", key, command)
+		}
+		return nil
+	})
+
+	// XXX
+
+	sc.Step(`^(global|local) Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scopeName, key, value string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		scope := configdomain.ParseConfigScope(scopeName)
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, configdomain.Key(key), value)
+	})
+
+	sc.Step(`^(global|local) Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scopeName, name, want string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		scope := configdomain.ParseConfigScope(scopeName)
+		var snapshot configdomain.SingleSnapshot
+		switch scope {
+		case configdomain.ConfigScopeGlobal:
+			snapshot = devRepo.GlobalConfigSnapshot
+		case configdomain.ConfigScopeLocal:
+			snapshot = devRepo.LocalConfigSnapshot
+		}
+		have := snapshot[configdomain.Key(name)]
+		if have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
 		return nil
 	})
@@ -760,7 +755,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: Some(input.Content)})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I rename the "([^"]+)" remote to "([^"]+)"$`, func(ctx context.Context, oldName, newName string) {
@@ -799,7 +794,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(ctx context.Context, cmd string) {
@@ -813,7 +808,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = devRepo.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(ctx context.Context, cmd, message string) {
@@ -827,7 +822,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = devRepo.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(ctx context.Context, cmd, folderName string) {
@@ -840,7 +835,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]+)" in the other worktree$`, func(ctx context.Context, cmd string) {
@@ -881,7 +876,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		var runOutput string
 		if hasDevRepo {
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
-			devRepo.Config.Reload()
+			devRepo.Reload()
 		} else {
 			parts := asserts.NoError1(shellquote.Split(command))
 			cmd, args := parts[0], parts[1:]
@@ -911,7 +906,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
-		devRepo.Config.Reload()
+		devRepo.Reload()
 	})
 
 	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
