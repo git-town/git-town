@@ -557,7 +557,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fmt.Println("111111111111111111111", devRepo.GlobalConfigSnapshot)
 		have := devRepo.GlobalConfigSnapshot[configdomain.Key(name)]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
@@ -869,7 +868,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		if hasDevRepo {
 			runOutput, exitCode = devRepo.MustQueryStringCode(command)
 			devRepo.Reload()
-			fmt.Println("222222222222222222222222222222", devRepo.GlobalConfigSnapshot)
 		} else {
 			parts := asserts.NoError1(shellquote.Split(command))
 			cmd, args := parts[0], parts[1:]

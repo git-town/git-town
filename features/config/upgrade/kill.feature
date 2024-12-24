@@ -11,8 +11,6 @@ Feature: automatically upgrade kill alias
     And global Git setting "alias.delete" is now "town delete"
     And global Git setting "alias.kill" now doesn't exist
 
-  @debug
-  @this
   Scenario: Git alias to "git town kill" with another name
     Given a Git repo with origin
     And global Git setting "alias.my-command" is "town kill"

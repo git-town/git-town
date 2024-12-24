@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/config/gitconfig"
 	"github.com/git-town/git-town/v17/internal/git"
@@ -35,8 +33,7 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 
 func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
 	globalSnapshot, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	fmt.Println("3333333333333333", globalSnapshot)
-	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadLocal(false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
