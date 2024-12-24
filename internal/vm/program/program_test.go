@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/shared"
@@ -306,8 +305,8 @@ Program:
 		want := program.Program{
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				Hard:        false,
-				MustHaveSHA: gitdomain.NewSHA("abcdef"),
-				SetToSHA:    gitdomain.NewSHA("123456"),
+				MustHaveSHA: "abcdef",
+				SetToSHA:    "123456",
 			},
 			&opcodes.StashOpenChanges{},
 		}
