@@ -5,7 +5,7 @@ Feature: show the configuration
     Given a Git repo with origin
 
   Scenario: all configured in Git, no stacked changes
-    Given Git Town setting "perennial-branches" is "qa staging"
+    Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-branches" is "observed-1 observed-2"
