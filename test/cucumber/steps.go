@@ -345,7 +345,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.PrototypeBranches, branch) {
+		if !devRepo.Config.NormalConfig.IsPrototypeBranch(branch) {
 			return fmt.Errorf(
 				"branch %q isn't prototype as expected.\nPrototype branches: %s",
 				branch,
@@ -548,7 +548,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.Key(key), value)
 	})
 
-	sc.Step(`^local Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
+	sc.Step(`^(?:local )?Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.Key(key), value)
