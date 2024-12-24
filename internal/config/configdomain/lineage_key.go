@@ -3,6 +3,7 @@ package configdomain
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
@@ -25,6 +26,12 @@ func ParseLineageKey(key Key) Option[LineageKey] {
 		return Some(NewLineageKey(key))
 	}
 	return None[LineageKey]()
+}
+
+// provides the name of the child branch encoded in this LineageKey
+func (self LineageKey) ChildName() gitdomain.LocalBranchName {
+	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), LineageKeySuffix)
+	return gitdomain.NewLocalBranchName(text)
 }
 
 const LineageKeySuffix = ".parent"
