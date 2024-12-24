@@ -75,7 +75,7 @@ func (self Memoized) CloneInto(dir string) Fixture {
 	devRepo.AddRemote(gitdomain.RemoteOrigin, originDir)
 	devRepo.Fetch()
 	// and connect the main branches again
-	devRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
+	devRepo.ConnectTrackingBranch("main")
 	return Fixture{
 		CoworkerRepo:   MutableNone[commands.TestCommands](),
 		DevRepo:        MutableSome(&devRepo),

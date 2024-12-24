@@ -176,7 +176,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
+		originRepo.CheckoutBranch("initial")
 	}
 }
 
@@ -236,7 +236,7 @@ func developerRepoPath(rootDir string) string {
 }
 
 func initializeWorkspace(repo *commands.TestCommands) {
-	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
+	asserts.NoError(repo.Config.SetMainBranch("main"))
 	asserts.NoError(repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
 	// NOTE: the developer repos receives the initial branch from origin

@@ -1169,7 +1169,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		// restore the initial branch
 		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
 		if !hasInitialBranch {
-			devRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
+			devRepo.CheckoutBranch("main")
 			return
 		}
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
@@ -1647,7 +1647,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fileTable := devRepo.FilesInBranches(gitdomain.NewLocalBranchName("main"))
+		fileTable := devRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
