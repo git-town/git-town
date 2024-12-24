@@ -16,7 +16,6 @@ Feature: prototype the current parked branch
       """
     And the current branch is still "parked"
     And branch "parked" is now prototype
-    And branch "parked" is still parked
 
   Scenario: undo
     When I run "git-town undo"
