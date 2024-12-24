@@ -23,9 +23,9 @@ The `fast-forward` ship strategy prevents false merge conflicts when using
 [stacked changes](../stacked-changes.md). It merges the branch to ship into its
 parent (typically the main branch) by running
 [git merge --ff-only](https://git-scm.com/docs/git-merge#Documentation/git-merge.txt---ff-only)
-and then pushes the new commits on the parent branch to origin. This way the
-parent branch contains the exact same commits as the branch that has just been
-shipped.
+and then pushes the new commits on the parent branch to the
+[development remote](dev-remote.md). This way the parent branch contains the
+exact same commits as the branch that has just been shipped.
 
 For details why this is needed check out this
 [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).

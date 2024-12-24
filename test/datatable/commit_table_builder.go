@@ -2,8 +2,8 @@ package datatable
 
 import (
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/test/git"
 	"github.com/git-town/git-town/v17/test/helpers"
+	"github.com/git-town/git-town/v17/test/testgit"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories
@@ -14,7 +14,7 @@ type CommitTableBuilder struct {
 	// Structure:
 	//   commit 1 SHA:  commit 1
 	//   commit 2 SHA:  commit 2
-	commits map[gitdomain.SHA]git.Commit
+	commits map[gitdomain.SHA]testgit.Commit
 
 	// commitsInBranch stores which branches contain which commits.
 	//
@@ -34,7 +34,7 @@ type CommitTableBuilder struct {
 // NewCommitTableBuilder provides a fully initialized instance of CommitTableBuilder.
 func NewCommitTableBuilder() CommitTableBuilder {
 	result := CommitTableBuilder{
-		commits:         make(map[gitdomain.SHA]git.Commit),
+		commits:         make(map[gitdomain.SHA]testgit.Commit),
 		commitsInBranch: make(map[gitdomain.LocalBranchName]helpers.OrderedSet[gitdomain.SHA]),
 		locations:       make(map[string]helpers.OrderedSet[string]),
 	}
@@ -42,7 +42,7 @@ func NewCommitTableBuilder() CommitTableBuilder {
 }
 
 // Add registers the given commit from the given location into this table.
-func (self *CommitTableBuilder) Add(commit git.Commit, location string) {
+func (self *CommitTableBuilder) Add(commit testgit.Commit, location string) {
 	self.commits[commit.SHA] = commit
 	commitsInBranch, exists := self.commitsInBranch[commit.Branch]
 	if exists {
@@ -60,7 +60,7 @@ func (self *CommitTableBuilder) Add(commit git.Commit, location string) {
 }
 
 // AddMany registers the given commits from the given location into this table.
-func (self *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
+func (self *CommitTableBuilder) AddMany(commits []testgit.Commit, location string) {
 	for _, commit := range commits {
 		self.Add(commit, location)
 	}

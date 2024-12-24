@@ -10,7 +10,7 @@ import (
 
 const (
 	ShipStrategyAPI         ShipStrategy = "api"          // shipping via the code hosting API
-	ShipStragegyFastForward ShipStrategy = "fast-forward" // shipping by doing a local fast-forward
+	ShipStrategyFastForward ShipStrategy = "fast-forward" // shipping by doing a local fast-forward
 	ShipStrategySquashMerge ShipStrategy = "squash-merge" // shipping by doing a local squash-merge
 )
 
@@ -37,7 +37,7 @@ func ParseShipStrategy(text string) (Option[ShipStrategy], error) {
 func ShipStrategies() []ShipStrategy {
 	return []ShipStrategy{
 		ShipStrategyAPI,
-		ShipStragegyFastForward,
+		ShipStrategyFastForward,
 		ShipStrategySquashMerge,
 	}
 }

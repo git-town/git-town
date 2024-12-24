@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/git-town/git-town/v17/test/datatable"
-	"github.com/git-town/git-town/v17/test/git"
+	"github.com/git-town/git-town/v17/test/testgit"
 	"github.com/shoenig/test/must"
 )
 
@@ -52,13 +52,13 @@ func TestParseBranchSetupTable(t *testing.T) {
 				Name:       "feature-1",
 				BranchType: Some(configdomain.BranchTypeFeatureBranch),
 				Parent:     Some(gitdomain.NewLocalBranchName("main")),
-				Locations:  []git.Location{git.LocationLocal, git.LocationOrigin},
+				Locations:  []testgit.Location{testgit.LocationLocal, testgit.LocationOrigin},
 			},
 			{
 				Name:       "feature-2",
 				BranchType: Some(configdomain.BranchTypeFeatureBranch),
 				Parent:     Some(gitdomain.NewLocalBranchName("main")),
-				Locations:  []git.Location{git.LocationLocal, git.LocationOrigin},
+				Locations:  []testgit.Location{testgit.LocationLocal, testgit.LocationOrigin},
 			},
 		}
 		must.Eq(t, want, have)
@@ -90,7 +90,7 @@ func TestParseBranchSetupTable(t *testing.T) {
 				Name:       "staging",
 				BranchType: Some(configdomain.BranchTypePerennialBranch),
 				Parent:     None[gitdomain.LocalBranchName](),
-				Locations:  git.Locations{git.LocationLocal, git.LocationOrigin},
+				Locations:  testgit.Locations{testgit.LocationLocal, testgit.LocationOrigin},
 			},
 		}
 		must.Eq(t, want, have)

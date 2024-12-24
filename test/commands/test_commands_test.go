@@ -12,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/git-town/git-town/v17/test/filesystem"
 	"github.com/git-town/git-town/v17/test/fixture"
-	"github.com/git-town/git-town/v17/test/git"
+	"github.com/git-town/git-town/v17/test/testgit"
 	"github.com/git-town/git-town/v17/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -36,13 +36,13 @@ func TestTestCommands(t *testing.T) {
 	t.Run("Commits", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
 			FileContent: "hello",
 			FileName:    "file1",
 			Message:     "first commit",
 		})
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
 			FileContent: "hello again",
 			FileName:    "file2",
@@ -119,7 +119,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateCommit(git.Commit{
+			runtime.CreateCommit(testgit.Commit{
 				Branch:      gitdomain.NewLocalBranchName("initial"),
 				FileContent: "hello world",
 				FileName:    "hello.txt",
@@ -136,7 +136,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateCommit(git.Commit{
+			runtime.CreateCommit(testgit.Commit{
 				Author:      "developer <developer@example.com>",
 				Branch:      gitdomain.NewLocalBranchName("initial"),
 				FileContent: "hello world",
@@ -211,7 +211,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("FileContentInCommit", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
 			FileContent: "hello world",
 			FileName:    "hello.txt",
@@ -226,10 +226,10 @@ func TestTestCommands(t *testing.T) {
 	t.Run("FilesInCommit", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:    "initial",
 			FileName:  "initial_file",
-			Locations: []git.Location{git.LocationLocal},
+			Locations: []testgit.Location{testgit.LocationLocal},
 			Message:   "initial file commit",
 		})
 		runtime.CreateFile("f1.txt", "one")
@@ -393,7 +393,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("SHAForCommit", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
-		repo.CreateCommit(git.Commit{
+		repo.CreateCommit(testgit.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
 			FileContent: "bar",
 			FileName:    "foo",

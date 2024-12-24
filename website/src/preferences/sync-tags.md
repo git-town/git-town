@@ -1,7 +1,7 @@
 # sync-tags
 
-The sync-tags setting configures whether to sync Git tags with the `origin`
-remote.
+The sync-tags setting configures whether to sync Git tags with the
+[development remote](dev-remote.md).
 
 ## options
 

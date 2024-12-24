@@ -27,10 +27,10 @@ import (
 	"github.com/git-town/git-town/v17/test/datatable"
 	"github.com/git-town/git-town/v17/test/filesystem"
 	"github.com/git-town/git-town/v17/test/fixture"
-	"github.com/git-town/git-town/v17/test/git"
 	"github.com/git-town/git-town/v17/test/helpers"
 	"github.com/git-town/git-town/v17/test/output"
 	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testgit"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
 )
@@ -652,7 +652,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch$`, func(ctx context.Context, message, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateCommit(git.Commit{
+		devRepo.CreateCommit(testgit.Commit{
 			Branch:   gitdomain.NewLocalBranchName(branch),
 			FileName: "new_file",
 			Message:  gitdomain.CommitMessage(message),
@@ -662,7 +662,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I add this commit to the "([^"]*)" branch$`, func(ctx context.Context, branch string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		commit := git.FromGherkinTable(table)[0]
+		commit := testgit.FromGherkinTable(table)[0]
 		commit.Branch = gitdomain.LocalBranchName(branch)
 		devRepo.CreateCommit(commit)
 	})
@@ -670,7 +670,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I add this commit to the current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		commit := git.FromGherkinTable(table)[0]
+		commit := testgit.FromGherkinTable(table)[0]
 		devRepo.CreateFile(commit.FileName, commit.FileContent)
 		devRepo.StageFiles(commit.FileName)
 		devRepo.CommitStagedChanges(commit.Message)
@@ -727,7 +727,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		newBranch := gitdomain.NewLocalBranchName(branchName)
 		devRepo.CreateBranch(newBranch, "main")
 		devRepo.CheckoutBranch(newBranch)
-		for _, commit := range git.FromGherkinTable(table) {
+		for _, commit := range testgit.FromGherkinTable(table) {
 			devRepo.CreateFile(commit.FileName, commit.FileContent)
 			devRepo.StageFiles(commit.FileName)
 			devRepo.CommitStagedChanges(commit.Message)
@@ -1069,12 +1069,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 			var repoToCreateBranchIn *commands.TestCommands
 			switch {
 			case
-				branchSetup.Locations.Is(git.LocationLocal),
-				branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
+				branchSetup.Locations.Is(testgit.LocationLocal),
+				branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
 				repoToCreateBranchIn = state.fixture.DevRepo.GetOrPanic()
-			case branchSetup.Locations.Is(git.LocationOrigin):
+			case branchSetup.Locations.Is(testgit.LocationOrigin):
 				repoToCreateBranchIn = state.fixture.OriginRepo.GetOrPanic()
-			case branchSetup.Locations.Is(git.LocationUpstream):
+			case branchSetup.Locations.Is(testgit.LocationUpstream):
 				repoToCreateBranchIn = state.fixture.UpstreamRepo.GetOrPanic()
 			default:
 				return errors.New("unhandled location to create the new branch: " + branchSetup.Locations.String())
@@ -1107,7 +1107,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			}
 			if len(branchSetup.Locations) > 1 {
 				switch {
-				case branchSetup.Locations.Is(git.LocationLocal, git.LocationOrigin):
+				case branchSetup.Locations.Is(testgit.LocationLocal, testgit.LocationOrigin):
 					state.fixture.DevRepo.GetOrPanic().PushBranchToRemote(branchSetup.Name, gitdomain.RemoteOrigin)
 				default:
 					return errors.New("unhandled location to push the new branch to: " + branchSetup.Locations.String())
@@ -1160,7 +1160,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		// create the commits
-		commits := git.FromGherkinTable(table)
+		commits := testgit.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
@@ -1221,7 +1221,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker adds this commit to their current branch:$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		commits := git.FromGherkinTable(table)
+		commits := testgit.FromGherkinTable(table)
 		commit := commits[0]
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
@@ -1245,7 +1245,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CreateBranch(branch, "main")
 		coworkerRepo.CheckoutBranch(branch)
-		for _, commit := range git.FromGherkinTable(table) {
+		for _, commit := range testgit.FromGherkinTable(table) {
 			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 			coworkerRepo.StageFiles(commit.FileName)
 			coworkerRepo.CommitStagedChanges(commit.Message)
@@ -1258,7 +1258,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		coworkerRepo.CheckoutBranch(branch)
-		for _, commit := range git.FromGherkinTable(table) {
+		for _, commit := range testgit.FromGherkinTable(table) {
 			coworkerRepo.CreateFile(commit.FileName, commit.FileContent)
 			coworkerRepo.StageFiles(commit.FileName)
 			coworkerRepo.CommitStagedChanges(commit.Message)

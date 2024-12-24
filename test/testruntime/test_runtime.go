@@ -89,8 +89,8 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		WorkingDir:       workingDir,
 	}
 	gitCommands := git.Commands{
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{

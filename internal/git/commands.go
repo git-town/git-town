@@ -20,8 +20,8 @@ import (
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type Commands struct {
-	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
-	RemotesCache       *cache.Remotes                 // caches Git remotes
+	CurrentBranchCache *cache.WithPrevious[gitdomain.LocalBranchName] // caches the currently checked out Git branch
+	RemotesCache       *cache.Cache[gitdomain.Remotes]                // caches Git remotes
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -56,8 +56,8 @@ func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.Loc
 	return err == nil
 }
 
-func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "ls-remote", "origin", branch.String()) // TODO: use the configured devRemote here, don't hard-code "origin"
+func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
 }
 
@@ -523,6 +523,11 @@ func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomai
 
 func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "merge", "--ff-only", branch.String())
+}
+
+// MergeNoFastForward merges branch into the current branch and always creates a merge commit.
+func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+	return runner.Run("git", "merge", "--no-ff", branch.String())
 }
 
 // NavigateToDir changes into the root directory of the current repository.

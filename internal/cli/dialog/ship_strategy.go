@@ -31,7 +31,7 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 			Text: `api: merge the proposal on your code hosting platform via the code hosting API`,
 		},
 		{
-			Data: configdomain.ShipStragegyFastForward,
+			Data: configdomain.ShipStrategyFastForward,
 			Text: `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`,
 		},
 		{

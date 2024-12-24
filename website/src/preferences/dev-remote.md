@@ -6,7 +6,7 @@ git-town.dev-remote=<remote>
 
 This setting lets you override the name of the Git remote used for development.
 This is the remote that branches get pushed to, and into which branches get
-shipped to. Usually that remote is called `origin`. This is also the default
+shipped to. Usually that remote is called `origin`, which is also the default
 value for this setting.
 
 ## config file

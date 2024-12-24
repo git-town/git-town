@@ -14,9 +14,9 @@ import (
 	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/git-town/git-town/v17/test/commands"
 	"github.com/git-town/git-town/v17/test/datatable"
-	testgit "github.com/git-town/git-town/v17/test/git"
 	"github.com/git-town/git-town/v17/test/helpers"
 	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testgit"
 	"github.com/git-town/git-town/v17/test/testruntime"
 )
 
@@ -69,8 +69,8 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		WorkingDir:       workTreePath,
 	}
 	gitCommands := git.Commands{
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
 		TestRunner: &runner,

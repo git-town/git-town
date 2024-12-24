@@ -36,18 +36,9 @@ func (self *undeclaredOpcodeMethods) UndoExternalChangesProgram() []shared.Opcod
 	return []shared.Opcode{}
 }
 
-func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
-	for _, opcode := range Types() {
-		if gohacks.TypeName(opcode) == opcodeType {
-			return opcode
-		}
-	}
-	return nil
-}
-
-// Types provides all existing opcodes.
+// All provides all existing opcodes.
 // This is used to iterate all opcode types.
-func Types() []shared.Opcode {
+func All() []shared.Opcode {
 	return []shared.Opcode{
 		&BranchCreate{},
 		&BranchCreateAndCheckoutExistingParent{},
@@ -139,4 +130,13 @@ func Types() []shared.Opcode {
 		&StashPopIfNeeded{},
 		&UndoLastCommit{},
 	} //exhaustruct:ignore
+}
+
+func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
+	for _, opcode := range All() {
+		if gohacks.TypeName(opcode) == opcodeType {
+			return opcode
+		}
+	}
+	return nil
 }

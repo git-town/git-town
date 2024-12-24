@@ -27,7 +27,7 @@ func (self SingleSnapshot) Aliases() Aliases {
 func (self SingleSnapshot) LineageEntries() map[LineageKey]string {
 	result := map[LineageKey]string{}
 	for key, value := range self {
-		if lineageKey, isLineageKey := NewLineageKey(key).Get(); isLineageKey {
+		if lineageKey, isLineageKey := ParseLineageKey(key).Get(); isLineageKey {
 			result[lineageKey] = value
 		}
 	}
