@@ -146,7 +146,7 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			&opcodes.BranchCreate{
 				Branch:        "branch-1",
-				StartingPoint: gitdomain.Location("111111"),
+				StartingPoint: "111111",
 			},
 			&opcodes.CheckoutIfExists{Branch: "branch-1"},
 		}
@@ -961,7 +961,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.CommitRevertIfNeeded{SHA: "444444"},
 			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "main"},
 			// re-create the feature branch
-			&opcodes.BranchCreate{Branch: "feature-branch", StartingPoint: gitdomain.Location("222222")},
+			&opcodes.BranchCreate{Branch: "feature-branch", StartingPoint: "222222"},
 			&opcodes.BranchTrackingCreate{Branch: "feature-branch"},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
@@ -1376,11 +1376,11 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			&opcodes.BranchCreate{
 				Branch:        "feature-branch",
-				StartingPoint: gitdomain.Location("222222"),
+				StartingPoint: "222222",
 			},
 			&opcodes.BranchCreate{
 				Branch:        "perennial-branch",
-				StartingPoint: gitdomain.Location("111111"),
+				StartingPoint: "111111",
 			},
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}

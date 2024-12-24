@@ -37,18 +37,18 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(testgit.Commit{
-			Branch:      gitdomain.NewLocalBranchName("initial"),
+			Branch:      "initial",
 			FileContent: "hello",
 			FileName:    "file1",
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(testgit.Commit{
-			Branch:      gitdomain.NewLocalBranchName("initial"),
+			Branch:      "initial",
 			FileContent: "hello again",
 			FileName:    "file2",
 			Message:     "second commit",
 		})
-		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewBranchName("initial"), runtime.Config.NormalConfig.Lineage)
+		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial", runtime.Config.NormalConfig.Lineage)
 		must.Len(t, 2, commits)
 		must.EqOp(t, "initial", commits[0].Branch)
 		must.EqOp(t, "file1", commits[0].FileName)
@@ -78,7 +78,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("simple branch name", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("branch1", gitdomain.NewBranchName("initial"))
+			runtime.CreateBranch("branch1", "initial")
 			currentBranch, err := runtime.CurrentBranch(runtime)
 			must.NoError(t, err)
 			must.EqOp(t, "initial", currentBranch)
@@ -91,7 +91,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch name with slashes", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("my/feature", gitdomain.NewBranchName("initial"))
+			runtime.CreateBranch("my/feature", "initial")
 			currentBranch, err := runtime.CurrentBranch(runtime)
 			must.NoError(t, err)
 			must.EqOp(t, "initial", currentBranch)
@@ -120,12 +120,12 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
-				Branch:      gitdomain.NewLocalBranchName("initial"),
+				Branch:      "initial",
 				FileContent: "hello world",
 				FileName:    "hello.txt",
 				Message:     "test commit",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewBranchName("initial"), runtime.Config.NormalConfig.Lineage)
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial", runtime.Config.NormalConfig.Lineage)
 			must.Len(t, 1, commits)
 			must.EqOp(t, "hello.txt", commits[0].FileName)
 			must.EqOp(t, "hello world", commits[0].FileContent)
@@ -138,12 +138,12 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Author:      "developer <developer@example.com>",
-				Branch:      gitdomain.NewLocalBranchName("initial"),
+				Branch:      "initial",
 				FileContent: "hello world",
 				FileName:    "hello.txt",
 				Message:     "test commit",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewBranchName("initial"), runtime.Config.NormalConfig.Lineage)
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial", runtime.Config.NormalConfig.Lineage)
 			must.Len(t, 1, commits)
 			must.EqOp(t, "hello.txt", commits[0].FileName)
 			must.EqOp(t, "hello world", commits[0].FileContent)
@@ -236,7 +236,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string{}, gitdomain.NewBranchName("initial"), runtime.Config.NormalConfig.Lineage)
+		commits := runtime.Commits([]string{}, "initial", runtime.Config.NormalConfig.Lineage)
 		must.Len(t, 2, commits)
 		fileNames := runtime.FilesInCommit(commits[1].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)
@@ -247,7 +247,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("branch1", gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch("branch1", "main")
 			devRepo.CheckoutBranch("branch1")
 			devRepo.CreateFile("file1", "content")
 			devRepo.StageFiles("file1")
@@ -261,7 +261,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("branch1", gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch("branch1", "main")
 			devRepo.PushBranch()
 			devRepo.CreateFile("file1", "content")
 			devRepo.StageFiles("file1")
@@ -274,7 +274,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			fixture := fixture.NewMemoized(t.TempDir()).AsFixture()
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("branch1", gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch("branch1", "main")
 			devRepo.PushBranch()
 			originRepo := fixture.OriginRepo.GetOrPanic()
 			originRepo.CheckoutBranch("main")
@@ -329,7 +329,7 @@ func TestTestCommands(t *testing.T) {
 		})
 		t.Run("branch lineage is configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("main", gitdomain.NewBranchName("initial"))
+			runtime.CreateBranch("main", "initial")
 			runtime.CreateFeatureBranch("foo", "main")
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
@@ -356,7 +356,7 @@ func TestTestCommands(t *testing.T) {
 		dev := testruntime.Create(t)
 		origin := testruntime.Create(t)
 		dev.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
-		dev.CreateBranch("b1", gitdomain.NewBranchName("initial"))
+		dev.CreateBranch("b1", "initial")
 		dev.PushBranchToRemote("b1", gitdomain.RemoteOrigin)
 		branches, err := origin.LocalBranchesMainFirst("initial")
 		must.NoError(t, err)
@@ -367,7 +367,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("RemoveBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("b1", gitdomain.NewBranchName("initial"))
+		runtime.CreateBranch("b1", "initial")
 		branches, err := runtime.LocalBranchesMainFirst("initial")
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchNames("initial", "b1")
@@ -394,7 +394,7 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		repo.CreateCommit(testgit.Commit{
-			Branch:      gitdomain.NewLocalBranchName("initial"),
+			Branch:      "initial",
 			FileContent: "bar",
 			FileName:    "foo",
 			Message:     "commit",

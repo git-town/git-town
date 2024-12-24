@@ -136,19 +136,19 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	localCommits := self.DevRepo.GetOrPanic().Commits(fields, mainBranch, lineage)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
-		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		coworkerCommits := coworkerRepo.Commits(fields, "main", lineage)
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		originCommits := originRepo.Commits(fields, "main", lineage)
 		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
-		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		upstreamCommits := upstreamRepo.Commits(fields, "main", lineage)
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
-		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		secondWorktreeCommits := secondWorkTree.Commits(fields, "main", lineage)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
 	return builder.Table(fields)

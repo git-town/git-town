@@ -36,11 +36,11 @@ func TestFixture(t *testing.T) {
 			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("d1", gitdomain.NewBranchName("main"))
-			devRepo.CreateBranch("d2", gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch("d1", "main")
+			devRepo.CreateBranch("d2", "main")
 			originRepo := fixture.OriginRepo.GetOrPanic()
-			originRepo.CreateBranch("o1", gitdomain.NewBranchName("initial"))
-			originRepo.CreateBranch("o2", gitdomain.NewBranchName("initial"))
+			originRepo.CreateBranch("o1", "initial")
+			originRepo.CreateBranch("o2", "initial")
 			// get branches
 			table := fixture.Branches()
 			// verify
@@ -55,11 +55,11 @@ func TestFixture(t *testing.T) {
 			fixture := fixture.NewMemoized(filepath.Join(dir, "")).AsFixture()
 			// create the branches
 			devRepo := fixture.DevRepo.GetOrPanic()
-			devRepo.CreateBranch("b1", gitdomain.NewBranchName("main"))
-			devRepo.CreateBranch("b2", gitdomain.NewBranchName("main"))
+			devRepo.CreateBranch("b1", "main")
+			devRepo.CreateBranch("b2", "main")
 			originRepo := fixture.OriginRepo.GetOrPanic()
-			originRepo.CreateBranch("b1", gitdomain.NewBranchName("main"))
-			originRepo.CreateBranch("b2", gitdomain.NewBranchName("main"))
+			originRepo.CreateBranch("b1", "main")
+			originRepo.CreateBranch("b2", "main")
 			// get branches
 			table := fixture.Branches()
 			// verify
@@ -100,7 +100,7 @@ func TestFixture(t *testing.T) {
 			},
 		})
 		// verify local commits
-		commits := cloned.DevRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewBranchName("main"), cloned.DevRepo.Value.Config.NormalConfig.Lineage)
+		commits := cloned.DevRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, "main", cloned.DevRepo.Value.Config.NormalConfig.Lineage)
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
 		must.EqOp(t, "loc-rem-file", commits[0].FileName)
@@ -109,7 +109,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "local-file", commits[1].FileName)
 		must.EqOp(t, "local content", commits[1].FileContent)
 		// verify origin commits
-		commits = cloned.OriginRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewBranchName("main"), cloned.DevRepo.Value.Config.NormalConfig.Lineage)
+		commits = cloned.OriginRepo.GetOrPanic().Commits([]string{"FILE NAME", "FILE CONTENT"}, "main", cloned.DevRepo.Value.Config.NormalConfig.Lineage)
 		must.Len(t, 2, commits)
 		must.EqOp(t, "local and origin commit", commits[0].Message)
 		must.EqOp(t, "loc-rem-file", commits[0].FileName)
@@ -130,7 +130,7 @@ func TestFixture(t *testing.T) {
 		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
 		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
 		// create the origin branch
-		cloned.OriginRepo.GetOrPanic().CreateBranch("b1", gitdomain.NewBranchName("main"))
+		cloned.OriginRepo.GetOrPanic().CreateBranch("b1", "main")
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.GetOrPanic().LocalBranchesMainFirst("main")
 		must.NoError(t, err)
@@ -151,14 +151,14 @@ func TestFixture(t *testing.T) {
 			clonedDevRepo := cloned.DevRepo.GetOrPanic()
 			// create a few commits
 			clonedDevRepo.CreateCommit(testgit.Commit{
-				Branch:      gitdomain.NewLocalBranchName("main"),
+				Branch:      "main",
 				FileContent: "one",
 				FileName:    "local-origin.md",
 				Message:     "local-origin",
 			})
 			clonedDevRepo.PushBranchToRemote("main", gitdomain.RemoteOrigin)
 			cloned.OriginRepo.GetOrPanic().CreateCommit(testgit.Commit{
-				Branch:      gitdomain.NewLocalBranchName("main"),
+				Branch:      "main",
 				FileContent: "two",
 				FileName:    "origin.md",
 				Message:     "2",
@@ -183,13 +183,13 @@ func TestFixture(t *testing.T) {
 			cloned.AddUpstream()
 			// create a few commits
 			cloned.DevRepo.GetOrPanic().CreateCommit(testgit.Commit{
-				Branch:      gitdomain.NewLocalBranchName("main"),
+				Branch:      "main",
 				FileContent: "one",
 				FileName:    "local.md",
 				Message:     "local",
 			})
 			cloned.UpstreamRepo.GetOrPanic().CreateCommit(testgit.Commit{
-				Branch:      gitdomain.NewLocalBranchName("main"),
+				Branch:      "main",
 				FileContent: "two",
 				FileName:    "upstream.md",
 				Message:     "2",
