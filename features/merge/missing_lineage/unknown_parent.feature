@@ -1,3 +1,4 @@
+@messyoutput
 Feature: merging with missing lineage
 
   Background:
