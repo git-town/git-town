@@ -43,17 +43,6 @@ type NormalConfigData struct {
 }
 
 // TODO: delete
-func (self *NormalConfigData) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.ObservedBranches, branch) {
-		return true
-	}
-	if regex, has := self.ObservedRegex.Get(); has {
-		return regex.MatchesBranch(branch)
-	}
-	return false
-}
-
-// TODO: delete
 func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
 }
