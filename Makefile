@@ -121,6 +121,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go work vendor
 	(cd tools && yarn upgrade --latest)
 	tools/rta --update
+	tools/rta dprint config update
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
