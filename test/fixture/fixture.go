@@ -7,6 +7,7 @@ import (
 
 	"github.com/cucumber/godog"
 
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/git"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/gohacks/cache"
@@ -73,9 +74,11 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
-		TestRunner: &runner,
-		Commands:   &gitCommands,
-		Config:     devRepo.Config,
+		TestRunner:           &runner,
+		Commands:             &gitCommands,
+		Config:               devRepo.Config,
+		GlobalConfigSnapshot: configdomain.SingleSnapshot{},
+		LocalConfigSnapshot:  configdomain.SingleSnapshot{},
 	})
 }
 

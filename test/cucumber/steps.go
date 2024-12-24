@@ -548,12 +548,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.Key(key), value)
 	})
 
-	sc.Step(`^(?:local )?Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.Key(key), value)
-	})
-
 	sc.Step(`^global Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -564,30 +558,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(?:local )?Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
-		if have != want {
-			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
-		}
-		return nil
-	})
-
 	sc.Step(`^global Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		have, has := devRepo.GlobalConfigSnapshot[configdomain.Key(name)]
-		if has {
-			return fmt.Errorf("unexpected value for %q: %q", name, have)
-		}
-		return nil
-	})
-
-	sc.Step(`^(?:local )?Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have, has := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
 		if has {
 			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
@@ -871,10 +845,30 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^local Git setting "init.defaultbranch" is "([^"]*)"$`, func(ctx context.Context, value string) {
+	sc.Step(`^(?:local )?Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.SetDefaultGitBranch(gitdomain.NewLocalBranchName(value))
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.Key(key), value)
+	})
+
+	sc.Step(`^(?:local )?Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		have := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
+		if have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		}
+		return nil
+	})
+
+	sc.Step(`^(?:local )?Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, name string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		have, has := devRepo.LocalConfigSnapshot[configdomain.Key(name)]
+		if has {
+			return fmt.Errorf("unexpected value for %q: %q", name, have)
+		}
+		return nil
 	})
 
 	sc.Step(`^my repo's "([^"]*)" remote is "([^"]*)"$`, func(ctx context.Context, remoteName, remoteURL string) {
