@@ -32,7 +32,6 @@ Feature: prototype multiple other branches
       branch "parked" is now a prototype branch
       """
     And branch "parked" is now prototype
-    And branch "parked" is still parked
     And the current branch is still "main"
 
   Scenario: undo
