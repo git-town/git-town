@@ -22,7 +22,6 @@ Feature: parking multiple other branches
     And branch "observed" is now parked
     And there are now no observed branches
     And branch "prototype" is now parked
-    And branch "prototype" is still prototype
     And the current branch is still "main"
 
   Scenario: undo

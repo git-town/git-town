@@ -3,6 +3,7 @@ package opcodes
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/messages"
 	"github.com/git-town/git-town/v17/internal/vm/shared"
@@ -16,7 +17,8 @@ type BranchesPrototypeRemove struct {
 
 func (self *BranchesPrototypeRemove) Run(args shared.RunArgs) error {
 	var err error
-	if args.Config.Value.NormalConfig.IsPrototypeBranch(self.Branch) {
+	branchType := args.Config.Value.BranchType(self.Branch)
+	if branchType == configdomain.BranchTypePrototypeBranch {
 		args.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, self.Branch))
 		err = args.Config.Value.NormalConfig.RemoveFromPrototypeBranches(self.Branch)
 	}
