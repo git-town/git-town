@@ -29,7 +29,7 @@ func ParseLineageKey(key Key) Option[LineageKey] {
 }
 
 // provides the name of the child branch encoded in this LineageKey
-func (self LineageKey) ChildName() gitdomain.LocalBranchName {
+func (self LineageKey) ChildBranch() gitdomain.LocalBranchName {
 	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), LineageKeySuffix)
 	return gitdomain.NewLocalBranchName(text)
 }

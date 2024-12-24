@@ -15,7 +15,7 @@ func TestLineageKey(t *testing.T) {
 	t.Run("BranchName", func(t *testing.T) {
 		t.Parallel()
 		key := configdomain.NewLineageKey("git-town-branch.my-branch.parent")
-		have := key.ChildName()
+		have := key.ChildBranch()
 		want := gitdomain.LocalBranchName("my-branch")
 		must.EqOp(t, want, have)
 	})
