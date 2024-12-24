@@ -34,43 +34,43 @@ main
     feature-2
 ```
 
-### --beam / -b
+#### `-b`<br>`--beam`
 
 Moves ("beams") one or more commits from the current branch to the new parent
 branch that gets created. Lets you select the commits to beam via a visual
 dialog.
 
-### --body &lt;string&gt;
+#### `--body <string>`
 
 Pre-populate the body of the pull request to create with the given text.
 Requires `--propose`.
 
-### --detached / -d
+#### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch. This allows you to build out your branch stack and decide when to pull
 in changes from other developers.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --propose
+#### `--propose`
 
 When set, this command proposes the branch it creates.
 
-### --prototype / -p
+#### `-p`<br>`--prototype`
 
 Adding the `--prototype` aka `-p` switch creates a
 [prototype branch](../branch-types.md#prototype-branches)).
 
-### --title / -t &lt;text&gt;
+#### `-t <text>`<br>`--title <text>`
 
 Pre-populate the title of the pull request to create with the given text.
 Requires `--propose`.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

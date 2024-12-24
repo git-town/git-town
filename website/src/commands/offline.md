@@ -13,7 +13,7 @@ offline status.
 When called with `yes`, `1`, `on`, or `true`, this command enables offline mode.
 When called with `no`, `0`, `off`, or `false`, it disables offline mode.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

@@ -3,7 +3,7 @@
 The _get-parent_ subcommand of the Git Town's _config_ command outputs the name
 of the parent branch if one exists, otherwise nothing.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

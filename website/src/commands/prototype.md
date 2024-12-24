@@ -22,7 +22,7 @@ Make branches "alpha" and "beta" prototype branches:
 git town prototype alpha beta
 ```
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

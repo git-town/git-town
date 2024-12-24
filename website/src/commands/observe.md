@@ -29,7 +29,7 @@ and make it observed:
 git town observe somebody-elses-branch
 ```
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

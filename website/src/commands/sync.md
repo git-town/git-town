@@ -28,34 +28,34 @@ back to the exact state you repo was in before the sync by running
 If the parent branch is not known, Git Town looks for a pull/merge request for
 this branch and uses its parent branch. Otherwise it prompts you for the parent.
 
-### --all / -a
+#### `-a`<br>`--all`
 
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
-### --detached / -d
+#### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch at the root of your branch hierarchy. This allows you to keep your
 branches in sync with each other and decide when to pull in changes from other
 developers.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --no-push
+#### `--no-push`
 
 The `--no-push` argument disables all pushes of local commits to their tracking
 branch.
 
-### --stack / -s
+#### `-s`<br>`--stack`
 
 The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
 that the current branch belongs to.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

@@ -5,7 +5,7 @@
 The _status_ command indicates whether Git Town has encountered a merge conflict
 and which commands you can run to continue, skip, or undo it.
 
-### --pending / -p
+#### `-p`<br>`--pending`
 
 The `--pending` aka `-p` argument causes this command to output only the name of
 the pending Git Town command if one exists. This allows displaying a reminder to
@@ -13,7 +13,7 @@ run `git town continue` into your shell prompt when you encountered a merge
 conflict earlier. See [Integration](../integration.md#shell-prompt) on how to
 set this up.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

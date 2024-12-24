@@ -13,7 +13,7 @@ Running without a subcommand shows the current Git Town configuration.
 - The [setup](config-setup.md) subcommand interactively prompts for all
   configuration values
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
