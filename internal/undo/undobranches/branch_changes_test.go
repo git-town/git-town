@@ -846,12 +846,10 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch: before.Active.GetOrPanic(),
-			Config:      config,
-			EndBranch:   after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA{
-				gitdomain.NewSHA("444444"),
-			},
+			BeginBranch:              before.Active.GetOrPanic(),
+			Config:                   config,
+			EndBranch:                after.Active.GetOrPanic(),
+			UndoablePerennialCommits: []gitdomain.SHA{"444444"},
 		})
 		wantProgram := program.Program{
 			// revert the commit on the perennial branch
@@ -952,12 +950,10 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			BeginBranch: before.Active.GetOrPanic(),
-			Config:      config,
-			EndBranch:   after.Active.GetOrPanic(),
-			UndoablePerennialCommits: []gitdomain.SHA{
-				gitdomain.NewSHA("444444"),
-			},
+			BeginBranch:              before.Active.GetOrPanic(),
+			Config:                   config,
+			EndBranch:                after.Active.GetOrPanic(),
+			UndoablePerennialCommits: []gitdomain.SHA{"444444"},
 		})
 		wantProgram := program.Program{
 			// revert the undoable commit on the main branch

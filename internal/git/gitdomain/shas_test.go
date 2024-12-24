@@ -33,10 +33,7 @@ func TestSHAs(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {
 			t.Parallel()
-			give := gitdomain.SHAs{
-				gitdomain.NewSHA("111111"),
-				gitdomain.NewSHA("222222"),
-			}
+			give := gitdomain.SHAs{"111111", "222222"}
 			have := give.Join(", ")
 			want := "111111, 222222"
 			must.EqOp(t, want, have)
@@ -72,10 +69,7 @@ func TestSHAs(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {
 			t.Parallel()
-			give := gitdomain.SHAs{
-				gitdomain.NewSHA("111111"),
-				gitdomain.NewSHA("222222"),
-			}
+			give := gitdomain.SHAs{"111111", "222222"}
 			have := give.Strings()
 			want := []string{"111111", "222222"}
 			must.Eq(t, want, have)
