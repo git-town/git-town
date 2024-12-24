@@ -12,7 +12,7 @@ import (
 func TestLineageKey(t *testing.T) {
 	t.Parallel()
 
-	t.Run("BranchName", func(t *testing.T) {
+	t.Run("ChildBranch", func(t *testing.T) {
 		t.Parallel()
 		key := configdomain.NewLineageKey("git-town-branch.my-branch.parent")
 		have := key.ChildBranch()
