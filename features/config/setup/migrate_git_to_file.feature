@@ -7,19 +7,19 @@ Feature: migrate existing configuration in Git metadata to a config file
       | NAME | TYPE      | LOCATIONS     |
       | qa   | perennial | local, origin |
     And the main branch is "main"
-    And local Git Town setting "perennial-regex" is "release-.*"
-    And local Git Town setting "feature-regex" is "user-.*"
-    And local Git Town setting "default-branch-type" is "observed"
-    And local Git Town setting "dev-remote" is "fork"
-    And local Git Town setting "push-new-branches" is "false"
-    And local Git Town setting "push-hook" is "true"
-    And local Git Town setting "new-branch-type" is "prototype"
-    And local Git Town setting "ship-strategy" is "squash-merge"
-    And local Git Town setting "ship-delete-tracking-branch" is "false"
-    And local Git Town setting "sync-feature-strategy" is "merge"
-    And local Git Town setting "sync-perennial-strategy" is "rebase"
-    And local Git Town setting "sync-upstream" is "true"
-    And local Git Town setting "sync-tags" is "false"
+    And local Git setting "git-town.perennial-regex" is "release-.*"
+    And local Git setting "git-town.feature-regex" is "user-.*"
+    And local Git setting "git-town.default-branch-type" is "observed"
+    And local Git setting "git-town.dev-remote" is "fork"
+    And local Git setting "git-town.push-new-branches" is "false"
+    And local Git setting "git-town.push-hook" is "true"
+    And local Git setting "git-town.new-branch-type" is "prototype"
+    And local Git setting "git-town.ship-strategy" is "squash-merge"
+    And local Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And local Git setting "git-town.sync-feature-strategy" is "merge"
+    And local Git setting "git-town.sync-perennial-strategy" is "rebase"
+    And local Git setting "git-town.sync-upstream" is "true"
+    And local Git setting "git-town.sync-tags" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS  |
       | welcome                                   | enter |

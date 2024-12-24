@@ -70,7 +70,7 @@ Feature: enter the GitHub API token
 
   Scenario: remove existing GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
-    And local Git Town setting "github-token" is "123"
+    And local Git setting "git-town.github-token" is "123"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                        | KEYS                                | DESCRIPTION                                 |
       | welcome                       | enter                               |                                             |

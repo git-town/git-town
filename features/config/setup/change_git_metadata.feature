@@ -8,9 +8,9 @@ Feature: change existing information in Git metadata
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
-    And local Git Town setting "push-new-branches" is "false"
-    And local Git Town setting "push-hook" is "false"
-    And local Git Town setting "sync-tags" is "false"
+    And local Git setting "git-town.push-new-branches" is "false"
+    And local Git setting "git-town.push-hook" is "false"
+    And local Git setting "git-town.sync-tags" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS                   |
       | welcome                                   | enter                  |
