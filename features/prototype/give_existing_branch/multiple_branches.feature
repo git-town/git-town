@@ -40,6 +40,6 @@ Feature: prototype multiple other branches
     And there are now no prototype branches
     And branch "contribution" is now a contribution branch
     And branch "observed" is now observed
-    And branch "parked" is still parked
+    And branch "parked" is now parked
     And the current branch is still "main"
     And the initial branches and lineage exist now
