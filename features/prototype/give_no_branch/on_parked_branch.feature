@@ -16,11 +16,10 @@ Feature: prototype the current parked branch
       """
     And the current branch is still "parked"
     And branch "parked" is now prototype
-    And branch "parked" is still parked
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is still "parked"
-    And branch "parked" is still parked
+    And branch "parked" is now parked
     And there are now no prototype branches
