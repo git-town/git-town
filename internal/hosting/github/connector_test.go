@@ -37,43 +37,43 @@ func TestConnector(t *testing.T) {
 			want   string
 		}{
 			"top-level branch": {
-				branch: gitdomain.NewLocalBranchName("feature"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				branch: "feature",
+				parent: "main",
 				title:  "",
 				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature?expand=1",
 			},
 			"stacked change": {
-				branch: gitdomain.NewLocalBranchName("feature-3"),
-				parent: gitdomain.NewLocalBranchName("feature-2"),
+				branch: "feature-3",
+				parent: "feature-2",
 				title:  "",
 				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature-2...feature-3?expand=1",
 			},
 			"special characters in branch name": {
-				branch: gitdomain.NewLocalBranchName("feature-#"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				branch: "feature-#",
+				parent: "main",
 				title:  "",
 				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
 			},
 			"provide title and body": {
-				branch: gitdomain.NewLocalBranchName("feature-#"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				branch: "feature-#",
+				parent: "main",
 				title:  "my title",
 				body:   "my body",
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title&body=my+body",
 			},
 			"provide title only": {
-				branch: gitdomain.NewLocalBranchName("feature-#"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				branch: "feature-#",
+				parent: "main",
 				title:  "my title",
 				body:   "",
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title",
 			},
 			"provide body only": {
-				branch: gitdomain.NewLocalBranchName("feature-#"),
-				parent: gitdomain.NewLocalBranchName("main"),
+				branch: "feature-#",
+				parent: "main",
 				title:  "",
 				body:   "my body",
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&body=my+body",
@@ -81,7 +81,6 @@ func TestConnector(t *testing.T) {
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
-				main := gitdomain.NewLocalBranchName("main")
 				connector := github.Connector{
 					Data: hostingdomain.Data{
 						Hostname:     "github.com",
@@ -90,7 +89,7 @@ func TestConnector(t *testing.T) {
 					},
 					APIToken: configdomain.ParseGitHubToken("apiToken"),
 				}
-				have, err := connector.NewProposalURL(tt.branch, tt.parent, main, tt.title, tt.body)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent, "main", tt.title, tt.body)
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)
 			})

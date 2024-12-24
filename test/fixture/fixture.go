@@ -129,26 +129,26 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	var mainBranch gitdomain.BranchName
 	mainIsLocal := self.DevRepo.Value.BranchExists(self.DevRepo.Value, "main")
 	if mainIsLocal {
-		mainBranch = gitdomain.NewLocalBranchName("main").BranchName()
+		mainBranch = gitdomain.NewBranchName("main")
 	} else {
-		mainBranch = gitdomain.NewRemoteBranchName("origin/main").BranchName()
+		mainBranch = gitdomain.NewBranchName("origin/main")
 	}
 	localCommits := self.DevRepo.GetOrPanic().Commits(fields, mainBranch, lineage)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
-		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		coworkerCommits := coworkerRepo.Commits(fields, "main", lineage)
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		originCommits := originRepo.Commits(fields, "main", lineage)
 		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
-		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		upstreamCommits := upstreamRepo.Commits(fields, "main", lineage)
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
-		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		secondWorktreeCommits := secondWorkTree.Commits(fields, "main", lineage)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
 	return builder.Table(fields)
@@ -176,7 +176,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
+		originRepo.CheckoutBranch("initial")
 	}
 }
 
@@ -236,7 +236,7 @@ func developerRepoPath(rootDir string) string {
 }
 
 func initializeWorkspace(repo *commands.TestCommands) {
-	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
+	asserts.NoError(repo.Config.SetMainBranch("main"))
 	asserts.NoError(repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
 	// NOTE: the developer repos receives the initial branch from origin
