@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	giteasdk "code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/hosting/gitea"
 	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -51,7 +50,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 			},
 		},
 	}
-	have := gitea.FilterPullRequests(give, gitdomain.NewLocalBranchName("branch"), gitdomain.NewLocalBranchName("target"))
+	have := gitea.FilterPullRequests(give, "branch", "target")
 	must.Eq(t, want, have)
 }
 
@@ -80,7 +79,7 @@ func TestGitea(t *testing.T) {
 	// 		Log:            log.Silent{},
 	// 	})
 	// 	must.NoError(t, err)
-	// 	have, err := connector.NewProposalURL(gitdomain.NewLocalBranchName("feature"), gitdomain.NewLocalBranchName("parent"))
+	// 	have, err := connector.NewProposalURL("feature", "parent")
 	// 	must.NoError(t, err)
 	// 	must.EqOp(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
 	// })

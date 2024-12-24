@@ -13,15 +13,15 @@ func TestRemoteBranchNames(t *testing.T) {
 	t.Run("Sort", func(t *testing.T) {
 		t.Parallel()
 		have := gitdomain.RemoteBranchNames{
-			gitdomain.NewRemoteBranchName("origin/branch-3"),
-			gitdomain.NewRemoteBranchName("origin/branch-2"),
-			gitdomain.NewRemoteBranchName("origin/branch-1"),
+			"origin/branch-3",
+			"origin/branch-2",
+			"origin/branch-1",
 		}
 		have.Sort()
 		want := gitdomain.RemoteBranchNames{
-			gitdomain.NewRemoteBranchName("origin/branch-1"),
-			gitdomain.NewRemoteBranchName("origin/branch-2"),
-			gitdomain.NewRemoteBranchName("origin/branch-3"),
+			"origin/branch-1",
+			"origin/branch-2",
+			"origin/branch-3",
 		}
 		must.Eq(t, want, have)
 	})
@@ -29,9 +29,9 @@ func TestRemoteBranchNames(t *testing.T) {
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
 		give := gitdomain.RemoteBranchNames{
-			gitdomain.NewRemoteBranchName("origin/branch-1"),
-			gitdomain.NewRemoteBranchName("origin/branch-2"),
-			gitdomain.NewRemoteBranchName("origin/branch-3"),
+			"origin/branch-1",
+			"origin/branch-2",
+			"origin/branch-3",
 		}
 		have := give.Strings()
 		want := []string{

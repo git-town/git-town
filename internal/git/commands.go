@@ -327,7 +327,7 @@ func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomai
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
 func (self *Commands) CurrentSHA(querier gitdomain.Querier) (gitdomain.SHA, error) {
-	return self.SHAForBranch(querier, gitdomain.NewBranchName("HEAD"))
+	return self.SHAForBranch(querier, "HEAD")
 }
 
 func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {

@@ -35,9 +35,9 @@ func TestTruncateLast(t *testing.T) {
 
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
-		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
+		list := gitdomain.SHAs{"111111", "222222", "333333"}
 		have := slice.TruncateLast(list)
-		want := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222")}
+		want := gitdomain.SHAs{"111111", "222222"}
 		must.Eq(t, want, have)
 	})
 }
