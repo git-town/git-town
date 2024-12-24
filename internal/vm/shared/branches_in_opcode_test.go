@@ -56,7 +56,7 @@ func TestBranchesInOpcode(t *testing.T) {
 	t.Run("RemoteBranchName", func(t *testing.T) {
 		t.Parallel()
 		opcode := opcodes.BranchTrackingDelete{
-			Branch: gitdomain.NewRemoteBranchName("origin/branch"),
+			Branch: "origin/branch",
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{

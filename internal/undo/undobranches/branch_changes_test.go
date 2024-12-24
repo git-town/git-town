@@ -336,10 +336,10 @@ func TestChanges(t *testing.T) {
 		})
 		wantProgram := program.Program{
 			&opcodes.BranchTrackingDelete{
-				Branch: gitdomain.NewRemoteBranchName("origin/perennial-branch"),
+				Branch: "origin/perennial-branch",
 			},
 			&opcodes.BranchTrackingDelete{
-				Branch: gitdomain.NewRemoteBranchName("origin/feature-branch"),
+				Branch: "origin/feature-branch",
 			},
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
@@ -503,10 +503,10 @@ func TestChanges(t *testing.T) {
 			&opcodes.CheckoutIfNeeded{Branch: "main"},
 			&opcodes.BranchLocalDelete{Branch: "feature-branch"},
 			&opcodes.BranchTrackingDelete{
-				Branch: gitdomain.NewRemoteBranchName("origin/perennial-branch"),
+				Branch: "origin/perennial-branch",
 			},
 			&opcodes.BranchTrackingDelete{
-				Branch: gitdomain.NewRemoteBranchName("origin/feature-branch"),
+				Branch: "origin/feature-branch",
 			},
 			&opcodes.CheckoutIfExists{Branch: "main"},
 		}
@@ -739,7 +739,7 @@ func TestChanges(t *testing.T) {
 			// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
 			// and we can't revert the commit on it since we cannot change the local perennial branch here.
 			&opcodes.BranchRemoteSetToSHAIfNeeded{
-				Branch:      gitdomain.NewRemoteBranchName("origin/feature-branch"),
+				Branch:      "origin/feature-branch",
 				SetToSHA:    "333333",
 				MustHaveSHA: "444444",
 			},
@@ -1087,7 +1087,7 @@ func TestChanges(t *testing.T) {
 				Hard:        true,
 			},
 			&opcodes.BranchRemoteSetToSHAIfNeeded{
-				Branch:      gitdomain.NewRemoteBranchName("origin/feature-branch"), // TODO: remove type
+				Branch:      "origin/feature-branch",
 				MustHaveSHA: "666666",
 				SetToSHA:    "222222",
 			},
@@ -1286,7 +1286,7 @@ func TestChanges(t *testing.T) {
 		wantProgram := program.Program{
 			// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
 			&opcodes.BranchRemoteSetToSHAIfNeeded{
-				Branch:      gitdomain.NewRemoteBranchName("origin/feature-branch"),
+				Branch:      "origin/feature-branch",
 				MustHaveSHA: "444444",
 				SetToSHA:    "333333",
 			},

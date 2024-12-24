@@ -158,7 +158,6 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		runtime.CreateFeatureBranch("f1", "main")
 		runtime.Config.Reload()
-		// TODO: remove "gitdomain.NewLocalBranchName" for all matches of `gitdomain.NewLocalBranchName("`
 		must.False(t, runtime.Config.IsMainOrPerennialBranch("f1"))
 		lineageHave := runtime.Config.NormalConfig.Lineage
 		lineageWant := configdomain.NewLineageWith(configdomain.LineageData{
