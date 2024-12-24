@@ -13,11 +13,7 @@ func TestSHAs(t *testing.T) {
 	t.Run("NewSHAs", func(t *testing.T) {
 		t.Parallel()
 		have := gitdomain.NewSHAs("111111", "222222", "333333")
-		want := gitdomain.SHAs{
-			gitdomain.SHA("111111"),
-			gitdomain.SHA("222222"),
-			gitdomain.SHA("333333"),
-		}
+		want := gitdomain.SHAs{"111111", "222222", "333333"}
 		must.Eq(t, want, have)
 	})
 

@@ -19,7 +19,7 @@ func TestBranchesInOpcode(t *testing.T) {
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("branch"),
+			"branch",
 		}
 		must.Eq(t, want, have)
 	})
@@ -32,8 +32,8 @@ func TestBranchesInOpcode(t *testing.T) {
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("branch"),
-			gitdomain.NewBranchName("parent"),
+			"branch",
+			"parent",
 		}
 		must.Eq(t, want, have)
 	})
@@ -46,9 +46,9 @@ func TestBranchesInOpcode(t *testing.T) {
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("ancestor-1"),
-			gitdomain.NewBranchName("ancestor-2"),
-			gitdomain.NewBranchName("branch"),
+			"ancestor-1",
+			"ancestor-2",
+			"branch",
 		}
 		must.Eq(t, want, have)
 	})
@@ -60,7 +60,7 @@ func TestBranchesInOpcode(t *testing.T) {
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
-			gitdomain.NewBranchName("origin/branch"),
+			"origin/branch",
 		}
 		must.Eq(t, want, have)
 	})
