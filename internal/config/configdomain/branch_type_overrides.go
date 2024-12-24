@@ -11,6 +11,17 @@ import (
 
 type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 
+func (self BranchTypeOverrides) Add(other BranchTypeOverrides) BranchTypeOverrides {
+	result := make(BranchTypeOverrides, len(self)+len(other))
+	for key, value := range self {
+		result[key] = value
+	}
+	for key, value := range other {
+		result[key] = value
+	}
+	return result
+}
+
 func NewBranchTypeOverridesFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (BranchTypeOverrides, error) {
 	result := BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
