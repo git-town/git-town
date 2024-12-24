@@ -49,4 +49,7 @@ Feature: ship to a custom dev remote
       | main    | local, fork | feature done          |
       |         |             | Revert "feature done" |
       | feature | local, fork | feature commit        |
-    And the initial branches and lineage exist now
+    And the branches are now
+      | REPOSITORY  | BRANCHES      |
+      | local, fork | main, feature |
+    And the initial lineage exists now
