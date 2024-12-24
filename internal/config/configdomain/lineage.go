@@ -40,7 +40,7 @@ func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, remove
 			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
-		child := gitdomain.NewLocalBranchName(childName)
+		child := childName
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty lineage entries are invalid --> delete it
@@ -48,7 +48,7 @@ func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, remove
 			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
-		if updateOutdated && childName == value {
+		if updateOutdated && childName.String() == value {
 			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, childName)))
 			_ = removeLocalConfigValue(NewParentKey(child))
 		}

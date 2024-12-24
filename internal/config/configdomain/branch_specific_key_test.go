@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,7 +16,7 @@ func TestBranchSpecificKey(t *testing.T) {
 			Key: configdomain.Key("git-town-branch.my-branch.parent"),
 		}
 		have := key.BranchName()
-		want := "my-branch"
+		want := gitdomain.LocalBranchName("my-branch")
 		must.EqOp(t, want, have)
 	})
 }
