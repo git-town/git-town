@@ -12,6 +12,7 @@ type NormalConfigData struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
+	BranchTypeOverrides      BranchTypeOverrides
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        BranchType
@@ -58,12 +59,18 @@ func (self *NormalConfigData) IsPerennialBranch(branch gitdomain.LocalBranchName
 	if perennialRegex, has := self.PerennialRegex.Get(); has {
 		return perennialRegex.MatchesBranch(branch)
 	}
+	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
+		return branchTypeOverride == BranchTypePerennialBranch
+	}
 	return false
 }
 
 func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return true
+	}
+	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
+		return branchTypeOverride == BranchTypePrototypeBranch
 	}
 	return self.DefaultBranchType == BranchTypePrototypeBranch
 }
@@ -98,6 +105,9 @@ func (self *NormalConfigData) Online() Online {
 }
 
 func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
+	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
+		return branchTypeOverride
+	}
 	if self.IsPerennialBranch(branch) {
 		return BranchTypePerennialBranch
 	}
@@ -201,6 +211,7 @@ func DefaultNormalConfig() NormalConfigData {
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
+		BranchTypeOverrides:      BranchTypeOverrides{},
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		DefaultBranchType:        BranchTypeFeatureBranch,
