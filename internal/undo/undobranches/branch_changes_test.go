@@ -1511,10 +1511,12 @@ func TestChanges(t *testing.T) {
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
 		wantChanges := undobranches.BranchChanges{
-			LocalAdded:    gitdomain.LocalBranchNames{},
-			LocalRemoved:  undobranches.LocalBranchesSHAs{},
-			LocalChanged:  undobranches.LocalBranchChange{},
-			RemoteAdded:   gitdomain.RemoteBranchNames{"upstream/main"},
+			LocalAdded:   gitdomain.LocalBranchNames{},
+			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalChanged: undobranches.LocalBranchChange{},
+			RemoteAdded: gitdomain.RemoteBranchNames{
+				"upstream/main",
+			},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
 			RemoteChanged: map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
 			OmniRemoved:   undobranches.LocalBranchesSHAs{},
