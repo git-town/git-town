@@ -15,7 +15,6 @@ Feature: prototype another parked branch
       branch "parked" is now a prototype branch
       """
     And the prototype branches are now "parked"
-    And the parked branches are still "parked"
 
   Scenario: undo
     When I run "git-town undo"

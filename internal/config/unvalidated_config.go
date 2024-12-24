@@ -21,7 +21,8 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) conf
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return self.UnvalidatedConfig.IsMainBranch(branch) || self.NormalConfig.IsPerennialBranch(branch)
+	branchType := self.BranchType(branch)
+	return branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
