@@ -152,7 +152,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
-	return Key(LineageKeyPrefix + branch + LineageKeySuffix)
+	return Key(BranchSpecificKeyPrefix + branch + LineageKeySuffix)
 }
 
 func ParseKey(name string) Option[Key] {
