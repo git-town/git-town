@@ -164,7 +164,7 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 			}
 		}
 		if hasConfigKey || strings.HasPrefix(key, "alias.") {
-			snapshot[configdomain.Key(key)] = value
+			snapshot[configKey] = value
 		}
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)

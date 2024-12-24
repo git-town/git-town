@@ -351,8 +351,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypePrototypeBranch {
 			return fmt.Errorf(
-				"branch %q isn't prototype as expected.\nPrototype branches: %s",
+				"branch %q isn't prototype as expected, it is %q.\nPrototype branches: %s",
 				branch,
+				branchType,
 				devRepo.Config.NormalConfig.PrototypeBranches.Join(", "),
 			)
 		}
