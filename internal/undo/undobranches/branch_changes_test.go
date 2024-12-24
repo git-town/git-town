@@ -114,7 +114,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded: gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{
-				gitdomain.NewLocalBranchName("branch-1"): "111111",
+				"branch-1": "111111",
 			},
 			LocalChanged:          undobranches.LocalBranchChange{},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
@@ -200,11 +200,11 @@ func TestChanges(t *testing.T) {
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalChanged: undobranches.LocalBranchChange{
-				gitdomain.NewLocalBranchName("perennial-branch"): {
+				"perennial-branch": {
 					Before: "111111",
 					After:  "333333",
 				},
-				gitdomain.NewLocalBranchName("feature-branch"): {
+				"feature-branch": {
 					Before: "222222",
 					After:  "444444",
 				},
@@ -389,10 +389,7 @@ func TestChanges(t *testing.T) {
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
 		wantChanges := undobranches.BranchChanges{
-			LocalAdded: gitdomain.LocalBranchNames{
-				gitdomain.NewLocalBranchName("perennial-branch"),
-				gitdomain.NewLocalBranchName("feature-branch"),
-			},
+			LocalAdded:            gitdomain.LocalBranchNames{"perennial-branch", "feature-branch"},
 			LocalRemoved:          undobranches.LocalBranchesSHAs{},
 			LocalChanged:          undobranches.LocalBranchChange{},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
@@ -461,8 +458,8 @@ func TestChanges(t *testing.T) {
 		haveChanges := span.Changes()
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded: gitdomain.LocalBranchNames{
-				gitdomain.NewLocalBranchName("perennial-branch"),
-				gitdomain.NewLocalBranchName("feature-branch"),
+				"perennial-branch",
+				"feature-branch",
 			},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalChanged: undobranches.LocalBranchChange{},
@@ -559,11 +556,11 @@ func TestChanges(t *testing.T) {
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalChanged: undobranches.LocalBranchChange{
-				gitdomain.NewLocalBranchName("perennial-branch"): {
+				"perennial-branch": {
 					Before: "111111",
 					After:  "333333",
 				},
-				gitdomain.NewLocalBranchName("feature-branch"): {
+				"feature-branch": {
 					Before: "222222",
 					After:  "444444",
 				},
@@ -813,15 +810,15 @@ func TestChanges(t *testing.T) {
 			RemoteChanged: map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
 			OmniRemoved:   undobranches.LocalBranchesSHAs{},
 			OmniChanged: undobranches.LocalBranchChange{
-				gitdomain.NewLocalBranchName("main"): {
+				"main": {
 					Before: "111111",
 					After:  "444444",
 				},
-				gitdomain.NewLocalBranchName("perennial-branch"): {
+				"perennial-branch": {
 					Before: "222222",
 					After:  "555555",
 				},
-				gitdomain.NewLocalBranchName("feature-branch"): {
+				"feature-branch": {
 					Before: "333333",
 					After:  "666666",
 				},
@@ -926,7 +923,7 @@ func TestChanges(t *testing.T) {
 				"feature-branch": "222222",
 			},
 			OmniChanged: undobranches.LocalBranchChange{
-				gitdomain.NewLocalBranchName("main"): {
+				"main": {
 					Before: "111111",
 					After:  "444444",
 				},
@@ -1142,11 +1139,11 @@ func TestChanges(t *testing.T) {
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
 			LocalChanged: undobranches.LocalBranchChange{
-				gitdomain.NewLocalBranchName("perennial-branch"): {
+				"perennial-branch": {
 					Before: "111111",
 					After:  "222222",
 				},
-				gitdomain.NewLocalBranchName("feature-branch"): {
+				"feature-branch": {
 					Before: "333333",
 					After:  "444444",
 				},
@@ -1522,7 +1519,7 @@ func TestChanges(t *testing.T) {
 			RemoteChanged: map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
 			OmniRemoved:   undobranches.LocalBranchesSHAs{},
 			OmniChanged: undobranches.LocalBranchChange{
-				gitdomain.NewLocalBranchName("main"): {
+				"main": {
 					Before: "111111",
 					After:  "222222",
 				},
