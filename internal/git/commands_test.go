@@ -449,9 +449,9 @@ func TestBackendCommands(t *testing.T) {
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
 		runner.CreateBranch(gitdomain.NewLocalBranchName("b1"), initial.BranchName())
 		runner.CreateBranch(gitdomain.NewLocalBranchName("b2"), initial.BranchName())
-		must.True(t, runner.Commands.HasLocalBranch(runner, gitdomain.NewLocalBranchName("b1")))
-		must.True(t, runner.Commands.HasLocalBranch(runner, gitdomain.NewLocalBranchName("b2")))
-		must.False(t, runner.Commands.HasLocalBranch(runner, gitdomain.NewLocalBranchName("b3")))
+		must.True(t, runner.Commands.HasLocalBranch(runner, "b1"))
+		must.True(t, runner.Commands.HasLocalBranch(runner, "b2"))
+		must.False(t, runner.Commands.HasLocalBranch(runner, "b3"))
 	})
 
 	t.Run("lastBranchInRef", func(t *testing.T) {

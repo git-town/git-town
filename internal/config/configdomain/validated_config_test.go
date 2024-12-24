@@ -25,11 +25,11 @@ func TestValidatedConfig(t *testing.T) {
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.ValidatedConfigData{
-			MainBranch: gitdomain.NewLocalBranchName("main"),
+			MainBranch: "main",
 		}
-		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("feature")))
-		must.True(t, config.IsMainBranch(gitdomain.NewLocalBranchName("main")))
-		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("peren1")))
-		must.False(t, config.IsMainBranch(gitdomain.NewLocalBranchName("peren2")))
+		must.False(t, config.IsMainBranch("feature"))
+		must.True(t, config.IsMainBranch("main"))
+		must.False(t, config.IsMainBranch("peren1"))
+		must.False(t, config.IsMainBranch("peren2"))
 	})
 }

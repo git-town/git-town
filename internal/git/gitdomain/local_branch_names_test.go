@@ -49,14 +49,14 @@ func TestLocalBranchNames(t *testing.T) {
 		t.Run("haystack contains needle", func(t *testing.T) {
 			t.Parallel()
 			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-			have := branches.Hoist(gitdomain.NewLocalBranchName("two"))
+			have := branches.Hoist("two")
 			want := gitdomain.NewLocalBranchNames("two", "one", "three")
 			must.Eq(t, want, have)
 		})
 		t.Run("haystack does not contain needle", func(t *testing.T) {
 			t.Parallel()
 			branches := gitdomain.NewLocalBranchNames("one", "two", "three")
-			have := branches.Hoist(gitdomain.NewLocalBranchName("zonk"))
+			have := branches.Hoist("zonk")
 			want := gitdomain.NewLocalBranchNames("one", "two", "three")
 			must.Eq(t, want, have)
 		})
