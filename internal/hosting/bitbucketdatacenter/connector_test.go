@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/git/giturl"
 	"github.com/git-town/git-town/v17/internal/hosting/bitbucketdatacenter"
 	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
@@ -43,8 +42,7 @@ func TestBitbucketConnector(t *testing.T) {
 			HostingPlatform: None[configdomain.HostingPlatform](),
 			RemoteURL:       url,
 		})
-		main := gitdomain.NewLocalBranchName("main")
-		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"), main, "", "")
+		have, err := connector.NewProposalURL("branch", "parent-branch", "main", "", "")
 		must.NoError(t, err)
 		want := "https://custom-url.com/projects/git-town/repos/docs/pull-requests?create&sourceBranch=branch&targetBranch=parent-branch"
 		must.EqOp(t, want, have)

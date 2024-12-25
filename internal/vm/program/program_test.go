@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/shared"
@@ -195,12 +194,12 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				&opcodes.MergeAbort{},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfExists{Branch: "branch"},
 			}
 			have := give.RemoveAllButLast("*opcodes.CheckoutIfExists")
 			want := program.Program{
 				&opcodes.MergeAbort{},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfExists{Branch: "branch"},
 			}
 			must.Eq(t, want, have)
 		})
@@ -208,13 +207,13 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				&opcodes.MergeAbort{},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfExists{Branch: "branch"},
 				&opcodes.RebaseAbort{},
 			}
 			have := give.RemoveAllButLast("*opcodes.CheckoutIfExists")
 			want := program.Program{
 				&opcodes.MergeAbort{},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CheckoutIfExists{Branch: "branch"},
 				&opcodes.RebaseAbort{},
 			}
 			must.Eq(t, want, have)
@@ -223,18 +222,18 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				&opcodes.MergeAbort{},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-1")},
+				&opcodes.CheckoutIfExists{Branch: "branch-1"},
 				&opcodes.RebaseAbort{},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-2")},
-				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-3")},
+				&opcodes.CheckoutIfExists{Branch: "branch-2"},
+				&opcodes.CheckoutIfNeeded{Branch: "branch-3"},
+				&opcodes.CheckoutIfExists{Branch: "branch-3"},
 			}
 			have := give.RemoveAllButLast("*opcodes.CheckoutIfExists")
 			want := program.Program{
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
-				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
-				&opcodes.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-3")},
+				&opcodes.CheckoutIfNeeded{Branch: "branch-3"},
+				&opcodes.CheckoutIfExists{Branch: "branch-3"},
 			}
 			must.Eq(t, want, have)
 		})
@@ -243,13 +242,13 @@ func TestProgram(t *testing.T) {
 			give := program.Program{
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
-				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
+				&opcodes.CheckoutIfNeeded{Branch: "branch-3"},
 			}
 			have := give.RemoveAllButLast("*opcodes.CheckoutIfExists")
 			want := program.Program{
 				&opcodes.MergeAbort{},
 				&opcodes.RebaseAbort{},
-				&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch-3")},
+				&opcodes.CheckoutIfNeeded{Branch: "branch-3"},
 			}
 			must.Eq(t, want, have)
 		})
@@ -260,7 +259,7 @@ func TestProgram(t *testing.T) {
 		give := program.Program{
 			&opcodes.MergeAbort{},
 			&opcodes.BranchesPerennialAdd{
-				Branch: gitdomain.NewLocalBranchName("branch"),
+				Branch: "branch",
 			},
 		}
 		have := give.String()
@@ -276,7 +275,7 @@ Program:
 		t.Parallel()
 		prog := program.Program{
 			&opcodes.MergeAbort{},
-			&opcodes.CheckoutIfNeeded{Branch: gitdomain.NewLocalBranchName("branch")},
+			&opcodes.CheckoutIfNeeded{Branch: "branch"},
 		}
 		have := prog.OpcodeTypes()
 		want := []string{"*opcodes.MergeAbort", "*opcodes.CheckoutIfNeeded"}
@@ -306,8 +305,8 @@ Program:
 		want := program.Program{
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				Hard:        false,
-				MustHaveSHA: gitdomain.NewSHA("abcdef"),
-				SetToSHA:    gitdomain.NewSHA("123456"),
+				MustHaveSHA: "abcdef",
+				SetToSHA:    "123456",
 			},
 			&opcodes.StashOpenChanges{},
 		}

@@ -15,6 +15,11 @@ import (
 
 func TestSwitchBranch(t *testing.T) {
 	t.Parallel()
+	alpha := gitdomain.NewLocalBranchName("alpha")
+	beta := gitdomain.NewLocalBranchName("beta")
+	main := gitdomain.NewLocalBranchName("main")
+	prototype := gitdomain.NewLocalBranchName("prototype")
+	perennial := gitdomain.NewLocalBranchName("perennial")
 
 	t.Run("SwitchBranchCursorPos", func(t *testing.T) {
 		t.Parallel()
@@ -51,9 +56,6 @@ func TestSwitchBranch(t *testing.T) {
 			t.Parallel()
 			t.Run("all branches are in the current worktree", func(t *testing.T) {
 				t.Parallel()
-				alpha := gitdomain.NewLocalBranchName("alpha")
-				beta := gitdomain.NewLocalBranchName("beta")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineageWith(configdomain.LineageData{
 					alpha: main,
 					beta:  main,
@@ -77,9 +79,6 @@ func TestSwitchBranch(t *testing.T) {
 			})
 			t.Run("one of the feature branches is in other worktree", func(t *testing.T) {
 				t.Parallel()
-				alpha := gitdomain.NewLocalBranchName("alpha")
-				beta := gitdomain.NewLocalBranchName("beta")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineageWith(configdomain.LineageData{
 					alpha: main,
 					beta:  main,
@@ -105,10 +104,7 @@ func TestSwitchBranch(t *testing.T) {
 
 		t.Run("perennial branches", func(t *testing.T) {
 			t.Parallel()
-			alpha := gitdomain.NewLocalBranchName("alpha")
-			beta := gitdomain.NewLocalBranchName("beta")
 			perennial1 := gitdomain.NewLocalBranchName("perennial-1")
-			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
 				alpha: main,
 				beta:  main,
@@ -139,7 +135,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				local := gitdomain.NewLocalBranchName("local")
 				remote := gitdomain.NewRemoteBranchName("origin/remote")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -161,7 +156,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				child := gitdomain.NewLocalBranchName("child")
 				grandchild := gitdomain.NewLocalBranchName("grandchild")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineageWith(configdomain.LineageData{
 					child:      main,
 					grandchild: child,
@@ -188,7 +182,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				local := gitdomain.NewLocalBranchName("local")
 				remote := gitdomain.NewRemoteBranchName("origin/remote")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineageWith(configdomain.LineageData{
 					local: main,
 				})
@@ -217,9 +210,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
-				prototype := gitdomain.NewLocalBranchName("prototype")
-				perennial := gitdomain.NewLocalBranchName("perennial")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -249,9 +239,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
-				prototype := gitdomain.NewLocalBranchName("prototype")
-				perennial := gitdomain.NewLocalBranchName("perennial")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -289,9 +276,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
-				prototype := gitdomain.NewLocalBranchName("prototype")
-				perennial := gitdomain.NewLocalBranchName("perennial")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -319,9 +303,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
-				prototype := gitdomain.NewLocalBranchName("prototype")
-				perennial := gitdomain.NewLocalBranchName("perennial")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(observed1), SyncStatus: gitdomain.SyncStatusLocalOnly},
@@ -346,9 +327,6 @@ func TestSwitchBranch(t *testing.T) {
 				t.Parallel()
 				observed1 := gitdomain.NewLocalBranchName("observed-1")
 				observed2 := gitdomain.NewLocalBranchName("observed-2")
-				prototype := gitdomain.NewLocalBranchName("prototype")
-				perennial := gitdomain.NewLocalBranchName("perennial")
-				main := gitdomain.NewLocalBranchName("main")
 				lineage := configdomain.NewLineage()
 				branchInfos := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{LocalName: Some(main), SyncStatus: gitdomain.SyncStatusLocalOnly},

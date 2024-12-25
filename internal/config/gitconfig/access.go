@@ -156,10 +156,6 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
-				} else if IsGitTownAlias(value) && value == update.Before.Value {
-					self.UpdateExternalGitTownAlias(scope, configdomain.Key(key), update.Before.Value, update.After.Value)
-					configKey = update.After.Key
-					value = update.After.Value
 				}
 			}
 		}
@@ -169,9 +165,4 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
 	return snapshot, partialConfig, err
-}
-
-// indicates whether the given value of a Git configuration setting contains an alias for a Git Town command
-func IsGitTownAlias(value string) bool {
-	return strings.HasPrefix(value, "town ")
 }

@@ -217,7 +217,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
 	if force.IsFalse() {
-		if validatedConfig.NormalConfig.IsPerennialBranch(oldBranchName) {
+		if validatedConfig.BranchType(oldBranchName) == configdomain.BranchTypePerennialBranch {
 			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -274,7 +274,9 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.dryRun {
-		if data.config.NormalConfig.IsPerennialBranch(data.initialBranch) {
+		// TODO: renaming a branch should not update the these configuration settings.
+		// Rather, update the upcoming branch type override.
+		if slices.Contains(data.config.NormalConfig.PerennialBranches, data.initialBranch) {
 			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
 			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
 		}

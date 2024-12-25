@@ -121,6 +121,9 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 			return err
 		}
 		shipProgramFastForward(prog, sharedData, mergeData)
+	case configdomain.ShipStrategyAlwaysMerge:
+		// TODO: #4381 - add ShipStrategyAlwaysMerge support
+		return errors.New("unimplemented, impossible branch")
 	case configdomain.ShipStrategySquashMerge:
 		squashMergeData, err := determineMergeData(repo, sharedData.branchNameToShip, sharedData.targetBranchName)
 		if err != nil {

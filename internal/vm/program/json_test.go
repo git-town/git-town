@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/shoenig/test/must"
@@ -17,7 +16,7 @@ func TestJSON(t *testing.T) {
 		t.Parallel()
 		jsonstep := program.JSON{
 			Opcode: &opcodes.CheckoutIfNeeded{
-				Branch: gitdomain.NewLocalBranchName("branch-1"),
+				Branch: "branch-1",
 			},
 		}
 		have, err := json.MarshalIndent(jsonstep, "", "  ")
@@ -51,7 +50,7 @@ func TestJSON(t *testing.T) {
 		must.NoError(t, err)
 		want := program.JSON{
 			Opcode: &opcodes.CheckoutIfNeeded{
-				Branch: gitdomain.NewLocalBranchName("branch-1"),
+				Branch: "branch-1",
 			},
 		}
 		must.Eq(t, want, have)

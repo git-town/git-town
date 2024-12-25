@@ -114,11 +114,14 @@ func removeNonPrototypeBranchTypes(branches configdomain.BranchesAndTypes, confi
 			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
+		case configdomain.BranchTypeParkedBranch:
+			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
+				return err
+			}
 		case
 			configdomain.BranchTypeFeatureBranch,
 			configdomain.BranchTypePrototypeBranch,
 			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePerennialBranch:
 		}
 	}

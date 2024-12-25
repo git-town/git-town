@@ -278,7 +278,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.ContributionBranches, branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypeContributionBranch {
 			return fmt.Errorf(
 				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
@@ -327,11 +328,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	// TODO: replace with a single step implementation that compares against BranchType.String()
 	sc.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !devRepo.Config.NormalConfig.IsPerennialBranch(branch) {
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypePerennialBranch {
 			return fmt.Errorf(
 				"branch %q isn't perennial as expected.\nPerennial branches: %s",
 				branch,
@@ -345,30 +348,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.PrototypeBranches, branch) {
-			return fmt.Errorf(
-				"branch %q isn't prototype as expected.\nPrototype branches: %s",
-				branch,
-				devRepo.Config.NormalConfig.PrototypeBranches.Join(", "),
-			)
-		}
-		return nil
-	})
-
-	sc.Step(`^custom global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(ctx context.Context, name, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		aliasableCommand := configdomain.AliasableCommand(name)
-		return devRepo.SetGitAlias(aliasableCommand, value)
-	})
-
-	sc.Step(`^custom global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		aliasableCommand := configdomain.AliasableCommand(name)
-		have := asserts.NoError1(devRepo.LoadGitAlias(aliasableCommand))
-		if have != want {
-			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypePrototypeBranch {
+			return fmt.Errorf("branch %q isn't prototype as expected, it is %q", branch, branchType)
 		}
 		return nil
 	})
@@ -601,8 +583,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^global Git setting "rebase.updateRefs" is "([^"]+)"$`, func(ctx context.Context, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		key := configdomain.Key("rebase.updateRefs")
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, key, value)
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, "rebase.updateRefs", value)
 	})
 
 	sc.Step(`^(global |local |)Git Town setting "([^"]+)" is "([^"]+)"$`, func(ctx context.Context, locality, name, value string) error {
@@ -963,7 +944,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no lineage exists now$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.Config.NormalConfig.ContainsLineage() {
+		if devRepo.Config.NormalConfig.Lineage.Len() > 0 {
 			lineage := devRepo.Config.NormalConfig.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
@@ -1165,7 +1146,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		// restore the initial branch
 		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
 		if !hasInitialBranch {
-			devRepo.CheckoutBranch(gitdomain.NewLocalBranchName("main"))
+			devRepo.CheckoutBranch("main")
 			return
 		}
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
@@ -1643,7 +1624,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^these committed files exist now$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fileTable := devRepo.FilesInBranches(gitdomain.NewLocalBranchName("main"))
+		fileTable := devRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
