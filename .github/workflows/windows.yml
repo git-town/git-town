@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  windows-tests:
+  windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
