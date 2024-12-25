@@ -1,7 +1,7 @@
 # git town sync
 
 ```command-summary
-git town sync [-a | --all] [--no-push] [-s | --stack] [-d | --detached] [-p | --prune] [--dry-run] [-v | --verbose]
+git town sync [-a | --all] [--no-push] [-s | --stack] [--strategy=<name>] [-d | --detached] [-p | --prune] [--dry-run] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -68,6 +68,17 @@ branch.
 
 The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
 that the current branch belongs to.
+
+#### `--strategy <name>`
+
+Overrides the configured sync strategy. Only supported for syncing the current
+branch, not allowed in combination with `--all` or `--stacked`.
+
+Possible values depend on the branch type, see:
+
+- [sync-feature-strategy](../preferences/sync-feature-strategy.md)
+- [sync-perennial-strategy](../preferences/sync-perennial-strategy.md)
+- [sync-prototype-strategy](../preferences/sync-prototype-strategy.md)
 
 #### `-d`<br>`--detached`
 

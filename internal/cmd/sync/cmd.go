@@ -52,6 +52,7 @@ func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addFeatureStrategyFlag, readFeatureStrategyFlag := flags.SyncStrategy()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
 	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
@@ -75,6 +76,10 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			strategyOverride, err := readFeatureStrategyFlag(cmd)
+			if err != nil {
+				return err
+			}
 			noPush, err := readNoPushFlag(cmd)
 			if err != nil {
 				return err
@@ -91,12 +96,13 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSync(allBranches, stack, detached, dryRun, verbose, noPush, prune)
+			return executeSync(strategyOverride, allBranches, stack, detached, dryRun, verbose, noPush, prune)
 		},
 	}
 	addAllFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addFeatureStrategyFlag(&cmd)
 	addNoPushFlag(&cmd)
 	addPruneFlag(&cmd)
 	addStackFlag(&cmd)
@@ -104,7 +110,7 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
+func executeSync(strategyOverride Option[configdomain.SyncStrategy], syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -116,7 +122,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(syncAllBranches, syncStack, repo, verbose, detached)
+	data, exit, err := determineSyncData(strategyOverride, syncAllBranches, syncStack, repo, verbose, detached)
 	if err != nil || exit {
 		return err
 	}
@@ -210,7 +216,7 @@ type syncData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit bool, err error) {
+func determineSyncData(strategyOverride Option[configdomain.SyncStrategy], syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -320,6 +326,27 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	})
 	if err != nil || exit {
 		return data, exit, err
+	}
+	if strategyOverride, hasStrategyOverride := strategyOverride.Get(); hasStrategyOverride {
+		// Strategy override is only supported for the current branch.
+		// As per discussion in #4425 it may be confusing to support strategy
+		// overrides for multiple branches, so we explicitly disallow that.
+		switch {
+		// Try to produce a helpful error message.
+		case syncAllBranches.Enabled():
+			return data, false, errors.New(messages.SyncStrategyOverrideNotSupportedForAll)
+		case syncStack.Enabled():
+			return data, false, errors.New(messages.SyncStrategyOverrideNotSupportedForStack)
+		// Defence in depth: make sure we are operating on a single branch.
+		// This may happen if a new branch selector flag is introduced.
+		case len(branchNamesToSync) > 1:
+			return data, false, errors.New(messages.SyncStrategyOverrideNotSupportedForMultiple)
+		}
+		// Override all possible branch type strategies.
+		// If a new branch type with a custom sync strategy is added please add an override here.
+		validatedConfig.NormalConfig.SyncFeatureStrategy = configdomain.SyncFeatureStrategy(strategyOverride)
+		validatedConfig.NormalConfig.SyncPerennialStrategy = configdomain.SyncPerennialStrategy(strategyOverride)
+		validatedConfig.NormalConfig.SyncPrototypeStrategy = configdomain.SyncPrototypeStrategy(strategyOverride)
 	}
 	var shouldPushTags bool
 	switch {
