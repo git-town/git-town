@@ -34,6 +34,7 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 			Data: configdomain.ShipStrategyFastForward,
 			Text: `fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch`,
 		},
+		// TODO: #4381 - add ShipStrategyAlwaysMerge
 		{
 			Data: configdomain.ShipStrategySquashMerge,
 			Text: `squash-merge: in your local repo, squash-merge the feature branch into its parent branch`,
