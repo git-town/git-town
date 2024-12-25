@@ -502,13 +502,37 @@ func TestBackendCommands(t *testing.T) {
 		})
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
 
-		err := runtime.MergeNoFastForward(runtime.TestRunner, branch)
+		err := runtime.MergeNoFastForward(runtime.TestRunner, None[gitdomain.CommitMessage](), branch)
 		must.NoError(t, err)
 
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
 		must.NoError(t, err)
 		haveMessages := commits.Messages()
 		wantMessages := gitdomain.NewCommitMessages("Merge branch 'branch' into initial", "initial commit", "first commit")
+		must.Eq(t, wantMessages, haveMessages)
+	})
+
+	t.Run("MergeNoFastForwardWithCommitMessage", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		mergeMessage := gitdomain.CommitMessage("merge message")
+		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
+
+		err := runtime.MergeNoFastForward(runtime.TestRunner, Some(mergeMessage), branch)
+		must.NoError(t, err)
+
+		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
+		must.NoError(t, err)
+		haveMessages := commits.Messages()
+		wantMessages := gitdomain.NewCommitMessages("merge message", "initial commit", "first commit")
 		must.Eq(t, wantMessages, haveMessages)
 	})
 
