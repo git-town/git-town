@@ -1,6 +1,8 @@
 # git town completions
 
-> _git town completion <bash|zsh|fish|powershell>_
+```command-summary
+git town completion [--no-descriptions] <bash|fish|powershell|zsh>
+```
 
 The _completions_ command outputs shell scripts that enable auto-completion for
 Git Town in Bash, Zsh, Fish, or PowerShell. When set up, typing
