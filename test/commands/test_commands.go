@@ -27,8 +27,8 @@ type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.Commands
 	Config               config.UnvalidatedConfig
-	GlobalConfigSnapshot configdomain.SingleSnapshot
-	LocalConfigSnapshot  configdomain.SingleSnapshot
+	GlobalConfigSnapshot configdomain.SingleSnapshot // copy of the low-level Git config metadata, for verifying it in end-to-end tests
+	LocalConfigSnapshot  configdomain.SingleSnapshot // copy of the low-level Git config metadata, for verifying it in end-to-end tests
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.

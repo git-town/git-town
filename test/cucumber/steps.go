@@ -540,10 +540,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^global Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
+	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scopeName, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.Key(key), value)
+		scope := configdomain.ParseConfigScope(scopeName)
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, configdomain.Key(key), value)
 	})
 
 	sc.Step(`^global Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
@@ -841,12 +842,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}
 		return nil
-	})
-
-	sc.Step(`^(?:local )?Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.Key(key), value)
 	})
 
 	sc.Step(`^(?:local )?Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, name, want string) error {
