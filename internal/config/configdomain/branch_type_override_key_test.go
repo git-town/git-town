@@ -10,6 +10,7 @@ import (
 
 func TestBranchTypeOverrideKey(t *testing.T) {
 	t.Parallel()
+
 	t.Run("ParseBranchTypeOverrideKey", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is branch type override", func(t *testing.T) {

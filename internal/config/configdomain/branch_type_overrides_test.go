@@ -9,6 +9,7 @@ import (
 
 func TestBranchTypeOverrides(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Concat", func(t *testing.T) {
 		t.Parallel()
 		data1 := configdomain.BranchTypeOverrides{
