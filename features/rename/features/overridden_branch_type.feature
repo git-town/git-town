@@ -15,7 +15,6 @@ Feature: rename a branch that has an overridden branch type
       | DIALOG                  | KEYS  |
       | parent branch ofd "old" | enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
@@ -42,4 +41,6 @@ Feature: rename a branch that has an overridden branch type
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
     And the current branch is now "old"
+    And Git setting "git-town-branch.new.branchtype" now doesn't exist
+    And Git setting "git-town-branch.old.branchtype" is now "feature"
     And the initial branches and lineage exist now
