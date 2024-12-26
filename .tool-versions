@@ -12,6 +12,8 @@ goreleaser 1.26.2
 govulncheck 1.1.3
 mdbook 0.4.43
 node 20.17.0
+npm 20.17.0
+npx 20.17.0
 scc 3.4.0
 shellcheck system 0.10.0
 shfmt 3.10.0
