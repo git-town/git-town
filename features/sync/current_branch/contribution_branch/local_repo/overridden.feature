@@ -1,52 +1,43 @@
-Feature: sync the current branch which has an override to "contribution"
+Feature: sync the current branch which has a branch-type override
 
   Background:
-    Given a local Git repo
+    Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT | LOCATIONS |
-      | contribution | contribution | main   | local     |
+      | NAME      | TYPE      | PARENT | LOCATIONS |
+      | prototype | prototype | main   | local     |
     And the commits
-      | BRANCH       | LOCATION | MESSAGE             |
-      | main         | local    | main commit         |
-      | contribution | local    | contribution commit |
-    And the current branch is "contribution"
-    And Git setting "git-town-branch.contribution.branchtype" is "feature"
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | main      | local, origin | main commit      |
+      | prototype | local         | prototype commit |
+    And the current branch is "prototype"
+    And Git setting "git-town-branch.prototype.branchtype" is "feature"
     When I run "git-town sync"
 
   @this
   Scenario: result
-    Then Git Town prints:
-      """
-      xxx
-      """
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git push                                |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff main           |
-      |         | git merge --no-edit --ff origin/feature |
-      |         | git push                                |
+      | BRANCH    | COMMAND                                 |
+      | prototype | git fetch --prune --tags                |
+      |           | git checkout main                       |
+      | main      | git rebase origin/main --no-update-refs |
+      |           | git checkout prototype                  |
+      | prototype | git merge --no-edit --ff main           |
+      |           | git push -u origin prototype            |
     And all branches are now synchronized
-    And the current branch is still "contribution"
+    And the current branch is still "prototype"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, origin | origin main commit                                         |
-      |         |               | local main commit                                          |
-      | feature | local, origin | local feature commit                                       |
-      |         |               | Merge branch 'main' into feature                           |
-      |         |               | origin feature commit                                      |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
+      | BRANCH    | LOCATION      | MESSAGE                            |
+      | main      | local, origin | main commit                        |
+      | prototype | local, origin | prototype commit                   |
+      |           |               | Merge branch 'main' into prototype |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND       |
-      | contribution | git add -A    |
-      |              | git stash     |
-      |              | git stash pop |
-    And the current branch is still "contribution"
+      | BRANCH    | COMMAND       |
+      | prototype | git add -A    |
+      |           | git stash     |
+      |           | git stash pop |
+    And the current branch is still "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now
