@@ -5,89 +5,89 @@
  * @typedef {import("./types").Book} Book
  * @typedef {import("./types").BookItem} BookItem
  * @typedef {import("./types").Chapter} Chapter
- * 
+ *
  * This file is an mdBook preprocessor that modifies the book JSON data.
  * We use it to process code blocks with language "command-summary".
- * 
+ *
  * @see processCommandSummary
- * 
+ *
  * mdBook preprocessor documentation:
  * https://rust-lang.github.io/mdBook/for_developers/preprocessors.html
  */
 
 if (process.argv.length > 2) {
-	handleSupports();
+  handleSupports();
 } else {
-	await handlePreprocess();
+  await handlePreprocess();
 }
 
 function handleSupports() {
-	if (process.argv[2] === "supports" && process.argv[3] === "html") {
-		process.exit(0);
-	}
-	process.exit(1);
+  if (process.argv[2] === "supports" && process.argv[3] === "html") {
+    process.exit(0);
+  }
+  process.exit(1);
 }
 
 /**
  * An mdBook preprocessor receives JSON data `[context, book]` from stdin,
  * modifies `book`, and writes `book` back to stdout.
- * 
+ *
  * Example input:
  * https://rust-lang.github.io/mdBook/for_developers/preprocessors.html#:~:text=mod%20test
  */
 async function handlePreprocess() {
-	// Read from stdin
-	let stdin = '';
-	for await (const chunk of process.stdin) {
+  // Read from stdin
+  let stdin = "";
+  for await (const chunk of process.stdin) {
     stdin += chunk;
   }
 
-	let [_context, book] = JSON.parse(stdin);
+  let [_context, book] = JSON.parse(stdin);
 
-	// We don't care about the context. Only process the book.
-	processBook(book);
+  // We don't care about the context. Only process the book.
+  processBook(book);
 
-	// Write to stdout
-	let output = JSON.stringify(book);
-	process.stdout.write(output + "\n");
+  // Write to stdout
+  let output = JSON.stringify(book);
+  process.stdout.write(output + "\n");
 }
 
 /**
  * @param {Book} book
  */
 function processBook(book) {
-	for (const bookItem of book.sections) {
-		processBookItem(bookItem);
-	}
+  for (const bookItem of book.sections) {
+    processBookItem(bookItem);
+  }
 }
 
 /**
  * @param {BookItem} bookItem
  */
 function processBookItem(bookItem) {
-	// bookItem is { "Chapter": Chapter }, "Separator", or { "PartTitle": string }
-	if (bookItem === "Separator") {
-		return;
-	}
-	// bookItem is { "Chapter": Chapter } or { "PartTitle": string }
-	if ("PartTitle" in bookItem) {
-		return;
-	}
-	// bookItem is { "Chapter": Chapter }
+  // bookItem is { "Chapter": Chapter }, "Separator", or { "PartTitle": string }
+  if (bookItem === "Separator") {
+    return;
+  }
+  // bookItem is { "Chapter": Chapter } or { "PartTitle": string }
+  if ("PartTitle" in bookItem) {
+    return;
+  }
+  // bookItem is { "Chapter": Chapter }
 
-	const chapter = bookItem.Chapter;
-	processChapter(chapter);
+  const chapter = bookItem.Chapter;
+  processChapter(chapter);
 }
 
 /**
  * @param {Chapter} chapter
  */
 function processChapter(chapter) {
-	for (const subItem of chapter.sub_items) {
-		processBookItem(subItem);
-	}
+  for (const subItem of chapter.sub_items) {
+    processBookItem(subItem);
+  }
 
-	chapter.content = processContent(chapter.content);
+  chapter.content = processContent(chapter.content);
 }
 
 /**
@@ -95,56 +95,56 @@ function processChapter(chapter) {
  * @returns {string}
  */
 function processContent(content) {
-	return content.replace(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
-		return processCommandSummary(code);
-	});
+  return content.replace(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
+    return processCommandSummary(code);
+  });
 }
 
 /**
  * This function processes code blocks with language "command-summary".
- * 
+ *
  * For example:
- * 
+ *
  * ```command-summary
  * git town append [--prototype] <branch-name>
  * ```
- * 
+ *
  * will become:
- * 
+ *
  * <pre><code><div class="gt-command-summary" style="padding-left: 16ch; text-indent: -16ch"
  *   ><span class="gt-command">git town append</span
  *   > <span class="gt-argument">[--prototype]</span
  *   > <span class="gt-argument">&lt;branch-name&gt;</span
  *   ></div></code></pre>
- * 
+ *
  * We can then apply custom styling in head.hbs.
- * 
+ *
  * @param {string} code
  * @returns {string}
  */
 function processCommandSummary(code) {
-	return `<pre><code>${code
-		.split('\n')
-		.map(line => {
-			const command = line.match(/^.*?(?=$| [\[<])/)?.[0]
-			if (!command) {
-				return line
-			}
-			const indent = command.length + 1
-			return `<div class="gt-command-summary" style="padding-left: ${
-				indent
-			}ch; text-indent: -${
-				indent
-			}ch"><span class="gt-command">${command}</span> ${line
-				.slice(command.length + 1)
-				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;')
-				.replace(
-					/(\[&lt;.*?&gt;\])|(\[.*?\])|(&lt;.*?&gt;)/g,
-					'<span class="gt-argument">$1$2$3</span>'
-				)}</div>`
-		})
-		.join('\n')}</pre></code>`
+  return `<pre><code>${
+    code
+      .split("\n")
+      .map(line => {
+        const command = line.match(/^.*?(?=$| [\[<])/)?.[0];
+        if (!command) {
+          return line;
+        }
+        const indent = command.length + 1;
+        return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
+          line
+            .slice(command.length + 1)
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(
+              /(\[&lt;.*?&gt;\])|(\[.*?\])|(&lt;.*?&gt;)/g,
+              "<span class=\"gt-argument\">$1$2$3</span>",
+            )
+        }</div>`;
+      })
+      .join("\n")
+  }</pre></code>`;
 }
 
 // Make TypeScript think this file is a module
