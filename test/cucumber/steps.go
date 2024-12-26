@@ -540,8 +540,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	// AAAAAAAAAAAAAAAAAAAA
-
 	sc.Step(`^global Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
