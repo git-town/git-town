@@ -19,5 +19,5 @@ func ShipIntoNonPerennialParent() (AddFunc, ReadShipIntoNonPerennialParentFlagFu
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadShipIntoNonPerennialParentFlagFunc is the type signature for the function that reads the "to-parent" flag from the args to the given Cobra command.
 type ReadShipIntoNonPerennialParentFlagFunc func(*cobra.Command) (configdomain.ShipIntoNonperennialParent, error)

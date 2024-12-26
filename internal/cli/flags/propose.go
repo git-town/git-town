@@ -19,5 +19,5 @@ func Propose() (AddFunc, ReadProposeFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadProposeFlagFunc is the type signature for the function that reads the "propose" flag from the args to the given Cobra command.
 type ReadProposeFlagFunc func(*cobra.Command) (configdomain.Propose, error)

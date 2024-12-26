@@ -36,11 +36,6 @@ specifying the commit message via the CLI.
 #### `-s <name>`<br>`--strategy <name>`
 
 Overrides the configured [ship-strategy](../preferences/ship-strategy.md).
-Allowed values:
-
-- `api`
-- `fast-forward`
-- `squash-merge`
 
 #### `-p`<br>`--to-parent`
 
