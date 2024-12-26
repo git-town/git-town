@@ -107,6 +107,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	testCommands := commands.TestCommands{
 		Commands:   &gitCommands,
 		Config:     unvalidatedConfig,
+		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 		TestRunner: &testRunner,
 	}
 	return testCommands

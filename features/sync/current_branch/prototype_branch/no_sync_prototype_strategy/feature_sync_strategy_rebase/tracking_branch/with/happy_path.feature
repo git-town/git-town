@@ -12,7 +12,7 @@ Feature: sync the current prototype branch
       |           | local    | main origin commit |
       | prototype | local    | local commit       |
       |           | origin   | origin commit      |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

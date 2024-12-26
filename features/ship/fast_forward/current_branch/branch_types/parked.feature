@@ -9,7 +9,7 @@ Feature: shipping a parked branch using the fast-forward strategy
       | BRANCH | LOCATION      | MESSAGE       |
       | parked | local, origin | parked commit |
     And the current branch is "parked"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result

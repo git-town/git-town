@@ -14,7 +14,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     And an uncommitted file
 
   Scenario: set to "false"
-    Given Git Town setting "push-hook" is "false"
+    Given Git setting "git-town.push-hook" is "false"
     When I run "git-town delete"
     And I run "git-town undo"
     Then Git Town runs the commands
@@ -29,7 +29,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     And the initial branches and lineage exist now
 
   Scenario: set to "true"
-    Given Git Town setting "push-hook" is "true"
+    Given Git setting "git-town.push-hook" is "true"
     When I run "git-town delete"
     And I run "git-town undo"
     Then Git Town runs the commands

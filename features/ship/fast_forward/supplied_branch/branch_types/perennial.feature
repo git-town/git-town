@@ -6,7 +6,7 @@ Feature: does not ship perennial branches using the fast-forward strategy
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | production | perennial |        | local, origin |
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship production"
 
   Scenario: result

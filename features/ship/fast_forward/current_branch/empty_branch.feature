@@ -10,7 +10,7 @@ Feature: does not ship an empty branch using the fast-forward strategy
       | main   | local    | main commit  | same_file | same content |
       | empty  | local    | empty commit | same_file | same content |
     And the current branch is "empty"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result

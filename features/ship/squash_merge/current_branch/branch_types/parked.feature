@@ -10,7 +10,7 @@ Feature: shipping a parked branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parked | local, origin | parked commit |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and enter "parked done" for the commit message
 
   Scenario: result

@@ -11,7 +11,7 @@ Feature: ship a parent branch
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And the current branch is "parent"
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'parent done'"
 
   Scenario: result

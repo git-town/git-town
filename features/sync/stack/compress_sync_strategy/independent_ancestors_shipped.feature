@@ -7,7 +7,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | feature-1 | feature | main      | local, origin |
       | feature-2 | feature | feature-1 | local, origin |
       | feature-3 | feature | feature-2 | local, origin |
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | feature-1 | local, origin | feature-1 commit   | feature-1-file   | feature 1 content   |

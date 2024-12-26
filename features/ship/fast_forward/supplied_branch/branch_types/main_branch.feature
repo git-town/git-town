@@ -7,7 +7,7 @@ Feature: does not ship the main branch using the fast-forward strategy
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship main"
 
   Scenario: result

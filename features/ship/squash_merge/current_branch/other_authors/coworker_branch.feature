@@ -9,7 +9,7 @@ Feature: ship a coworker's feature branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
       | feature | local, origin | coworker commit | coworker <coworker@example.com> |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"

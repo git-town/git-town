@@ -15,7 +15,7 @@ Feature: syncing a stacked feature branch using --no-push
       |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push"
 
   Scenario: result

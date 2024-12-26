@@ -12,7 +12,7 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
       | feature | local    | unsynced feature commit |
     And the current branch is "other"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     And I run "git-town ship feature"
 
   Scenario: result
