@@ -143,7 +143,7 @@ function processCommandSummary(code) {
             )
         }</div>`;
       })
-      .join("\n")
+      .join("")
   }</pre></code>`;
 }
 

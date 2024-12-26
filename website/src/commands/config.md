@@ -1,4 +1,11 @@
-# git town config [subcommand]
+# git town config 
+
+```command-summary
+git town config [-v | --verbose]
+git town config get-parent [-v | --verbose] [<branch-name>]
+git town config remove [-v | --verbose]
+git town config setup [-v | --verbose]
+```
 
 The _config_ command displays and updates the local Git Town configuration.
 
@@ -6,12 +13,11 @@ The _config_ command displays and updates the local Git Town configuration.
 
 Running without a subcommand shows the current Git Town configuration.
 
-- The [get-parent](config-get-parent.md) subcommand prints the parent branch of
+- The [get-parent](config-get-parent.md) subcommand outputs the parent branch of
   the current or given branch.
-- The [remove](config-remove.md) subcommand deletes all Git Town configuration
-  entries.
-- The [setup](config-setup.md) subcommand interactively prompts for all
-  configuration values
+- The [remove](config-remove.md) subcommand removes all Git Town related
+  configuration from the current Git repository.
+- The [setup](config-setup.md) subcommand launches Git Town's setup assistant.
 
 ### --verbose / -v
 
