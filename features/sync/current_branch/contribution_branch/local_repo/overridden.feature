@@ -1,4 +1,4 @@
-Feature: sync the current branch which was overridden to "contribution"
+Feature: sync the current branch which has an override to "contribution"
 
   Background:
     Given a local Git repo
