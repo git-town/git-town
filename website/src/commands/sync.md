@@ -1,7 +1,8 @@
 # git town sync
 
-> _git town sync [--all] [--detached] [--dry-run] [--no-push] [--stack]
-> [--verbose]_
+```command-summary
+git town sync [-a | --all] [-d | --detached] [--dry-run] [--no-push] [-s | --stack] [-v | --verbose]
+```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
 with what happened in the rest of the repository.
