@@ -15,6 +15,14 @@ type BranchTypeOverrideKey struct {
 	BranchSpecificKey
 }
 
+func NewBranchTypeOverrideKeyForBranch(branch gitdomain.LocalBranchName) BranchTypeOverrideKey {
+	return BranchTypeOverrideKey{
+		BranchSpecificKey: BranchSpecificKey{
+			Key: Key(BranchSpecificKeyPrefix + branch.String() + BranchTypeSuffix),
+		},
+	}
+}
+
 func ParseBranchTypeOverrideKey(key Key) Option[BranchTypeOverrideKey] {
 	if isBranchTypeOverrideKey(key.String()) {
 		return Some(BranchTypeOverrideKey{
