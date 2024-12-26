@@ -9,7 +9,7 @@ Feature: append a new branch when feature branches are configured
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And Git Town setting "new-branch-type" is "feature"
+    And Git setting "git-town.new-branch-type" is "feature"
     When I run "git-town append new"
 
   Scenario: result

@@ -10,7 +10,7 @@ Feature: don't sync tags while prepending
       | local-tag  | local    |
       | origin-tag | origin   |
     And the current branch is "old"
-    And Git Town setting "sync-tags" is "false"
+    And Git setting "git-town.sync-tags" is "false"
     When I run "git-town prepend new"
 
   Scenario: result

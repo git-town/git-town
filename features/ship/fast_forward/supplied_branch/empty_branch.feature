@@ -12,7 +12,7 @@ Feature: does not ship empty feature branches using the fast-forward strategy
       | empty  | local    | feature commit | common_file | common content |
     And the current branch is "other"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship empty"
 
   Scenario: result

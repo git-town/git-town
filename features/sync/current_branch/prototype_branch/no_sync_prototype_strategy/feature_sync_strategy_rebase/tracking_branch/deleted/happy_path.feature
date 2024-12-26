@@ -11,7 +11,7 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | main      | local, origin | main commit  | main_file  |
       | prototype | local         | local commit | local_file |
     And origin deletes the "prototype" branch
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

@@ -9,7 +9,7 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And an uncommitted file
     When I run "git-town prepend parent"
 
