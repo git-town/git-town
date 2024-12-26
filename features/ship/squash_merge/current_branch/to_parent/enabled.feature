@@ -11,7 +11,7 @@ Feature: allowing shiping into a feature branch
       | alpha  | local    | alpha commit |
       | beta   | local    | beta commit  |
     And the current branch is "beta"
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship --to-parent -m done"
 
   Scenario: result

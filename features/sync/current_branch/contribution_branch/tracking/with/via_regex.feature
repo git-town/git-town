@@ -6,7 +6,7 @@ Feature: sync the current branch that is contribution via regex
       | NAME       | TYPE   | LOCATIONS     |
       | renovate/1 | (none) | local, origin |
     And the current branch is "renovate/1"
-    And Git Town setting "contribution-regex" is "^renovate"
+    And Git setting "git-town.contribution-regex" is "^renovate"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE       | FILE NAME   |
       | main       | local, origin | main commit   | main_file   |

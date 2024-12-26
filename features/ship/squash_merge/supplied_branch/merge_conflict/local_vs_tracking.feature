@@ -12,7 +12,7 @@ Feature: refuses shipping a branch with conflicts between the supplied feature b
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "other"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

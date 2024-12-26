@@ -6,7 +6,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |

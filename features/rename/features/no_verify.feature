@@ -12,7 +12,7 @@ Feature: rename the current branch without pre-push hook
       | old    | local, origin | old commit  |
 
   Scenario: set to "false"
-    Given Git Town setting "push-hook" is "false"
+    Given Git setting "git-town.push-hook" is "false"
     When I run "git-town rename new"
     Then Git Town runs the commands
       | BRANCH | COMMAND                            |
@@ -28,7 +28,7 @@ Feature: rename the current branch without pre-push hook
       | new    | local, origin | old commit  |
 
   Scenario: set to "true"
-    Given Git Town setting "push-hook" is "true"
+    Given Git setting "git-town.push-hook" is "true"
     When I run "git-town rename new"
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |

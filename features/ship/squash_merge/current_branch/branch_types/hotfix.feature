@@ -10,7 +10,7 @@ Feature: ship hotfixes
       | BRANCH | LOCATION      | MESSAGE       |
       | hotfix | local, origin | hotfix commit |
     And the current branch is "hotfix"
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'hotfix done'"
 
   Scenario: result

@@ -9,7 +9,7 @@ Feature: prepend a new branch when prototype branches are configured via Git met
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And Git Town setting "new-branch-type" is "prototype"
+    And Git setting "git-town.new-branch-type" is "prototype"
     When I run "git-town prepend parent"
 
   Scenario: result

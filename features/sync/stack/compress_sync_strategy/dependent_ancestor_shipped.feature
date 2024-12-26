@@ -15,7 +15,7 @@ Feature: shipped the head branch of a synced stack with dependent changes
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | file      | beta content |
     And the current branch is "beta"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin ships the "alpha" branch using the "squash-merge" ship-strategy
     When I run "git-town sync"
 

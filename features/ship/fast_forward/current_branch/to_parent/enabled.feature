@@ -17,7 +17,7 @@ Feature: allowing shipping into a feature branch
       | beta   | local, origin | beta 1  | beta_1    | beta 1       |
       |        |               | beta 2  | beta_2    | beta 2       |
     And the current branch is "beta"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship --to-parent"
 
   Scenario: result

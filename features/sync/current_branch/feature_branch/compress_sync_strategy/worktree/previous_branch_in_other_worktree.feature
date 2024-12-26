@@ -12,7 +12,7 @@ Feature: sync while the previous branch is checked out in another worktree
       | current | local    | current 2 |
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    And Git Town setting "sync-strategy" is "compress"
+    And Git setting "git-town.sync-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result

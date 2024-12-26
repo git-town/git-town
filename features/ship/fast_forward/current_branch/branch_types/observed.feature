@@ -9,7 +9,7 @@ Feature: cannot ship observed branches using the fast-forward strategy
       | BRANCH   | LOCATION      | MESSAGE         |
       | observed | local, origin | observed commit |
     And the current branch is "observed"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result

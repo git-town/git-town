@@ -13,8 +13,8 @@ Feature: a default branch type is set, the feature-regex does not match
       | my-branch | local    | local my-branch commit  |
       |           | origin   | origin my-branch commit |
     And the current branch is "my-branch"
-    And local Git Town setting "feature-regex" is "other"
-    And local Git Town setting "default-branch-type" is "observed"
+    And local Git setting "git-town.feature-regex" is "other"
+    And local Git setting "git-town.default-branch-type" is "observed"
     When I run "git-town sync"
 
   Scenario: result
