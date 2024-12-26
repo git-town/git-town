@@ -3,23 +3,32 @@ Feature: sync the current branch which was overridden to "contribution"
   Background:
     Given a local Git repo
     And the branches
-      | NAME         | TYPE    | PARENT | LOCATIONS |
-      | contribution | feature | main   | local     |
+      | NAME         | TYPE         | PARENT | LOCATIONS |
+      | contribution | contribution | main   | local     |
     And the commits
-      | BRANCH       | LOCATION | MESSAGE      | FILE NAME  |
-      | main         | local    | main commit  | main_file  |
-      | contribution | local    | local commit | local_file |
+      | BRANCH       | LOCATION | MESSAGE             |
+      | main         | local    | main commit         |
+      | contribution | local    | contribution commit |
     And the current branch is "contribution"
-    And Git Town branch-type-override setting for branch "feature" is "feature"
-    And an uncommitted file
+    And Git setting "git-town-branch.contribution.branch-type" is "feature"
     When I run "git-town sync"
 
+  @this
   Scenario: result
+    Then Git Town prints:
+      """
+      xxx
+      """
     Then Git Town runs the commands
-      | BRANCH       | COMMAND       |
-      | contribution | git add -A    |
-      |              | git stash     |
-      |              | git stash pop |
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      |         | git checkout main                       |
+      | main    | git rebase origin/main --no-update-refs |
+      |         | git push                                |
+      |         | git checkout feature                    |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
+      |         | git push                                |
     And all branches are now synchronized
     And the current branch is still "contribution"
     And the uncommitted file still exists
