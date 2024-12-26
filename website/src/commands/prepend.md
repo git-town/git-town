@@ -1,6 +1,8 @@
 # git town prepend
 
-> _git town prepend [--prototype] &lt;branch-name&gt;_
+```command-summary
+git town prepend [-b | --beam] [--body <string>] [-d | --detached] [--dry-run] [--propose] [-p | --prototype] [-t <text> | --title <text>] [-v | --verbose] [branch-name...]
+```
 
 The _prepend_ command creates a new feature branch as the parent of the current
 branch. It does that by inserting the new feature branch between the current
@@ -63,7 +65,7 @@ When set, this command proposes the branch it creates.
 ### --prototype / -p
 
 Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches)).
+[prototype branch](../branch-types.md#prototype-branches).
 
 ### --title / -t &lt;text&gt;
 
