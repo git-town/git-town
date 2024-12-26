@@ -42,13 +42,13 @@ async function handlePreprocess() {
     stdin += chunk;
   }
 
-  let [_context, book] = JSON.parse(stdin);
-
   // We don't care about the context. Only process the book.
+  const [, book] = JSON.parse(stdin);
+
   processBook(book);
 
   // Write to stdout
-  let output = JSON.stringify(book);
+  const output = JSON.stringify(book);
   process.stdout.write(output + "\n");
 }
 
@@ -95,7 +95,7 @@ function processChapter(chapter) {
  * @returns {string}
  */
 function processContent(content) {
-  return content.replace(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
+  return content.replaceAll(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
     return processCommandSummary(code);
   });
 }
@@ -135,9 +135,9 @@ function processCommandSummary(code) {
         return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
           line
             .slice(command.length + 1)
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll(
               /(\[&lt;.*?&gt;\])|(\[.*?\])|(&lt;.*?&gt;)/g,
               "<span class=\"gt-argument\">$1$2$3</span>",
             )
