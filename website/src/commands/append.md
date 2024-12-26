@@ -1,6 +1,8 @@
 # git town append
 
-> _git town append [--prototype] &lt;branch-name&gt;_
+```command-summary
+git town append [-d | --detached] [--dry-run] [--prototype] [-v | --verbose] <branch-name>
+```
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
