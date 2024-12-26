@@ -19,5 +19,5 @@ func DryRun() (AddFunc, ReadDryRunFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadDryRunFlagFunc is the type signature for the function that reads the "dry-run" flag from the args to the given Cobra command.
 type ReadDryRunFlagFunc func(*cobra.Command) (configdomain.DryRun, error)

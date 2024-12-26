@@ -19,5 +19,5 @@ func Prototype() (AddFunc, ReadPrototypeFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadPrototypeFlagFunc is the type signature for the function that reads the "prototype" flag from the args to the given Cobra command.
 type ReadPrototypeFlagFunc func(*cobra.Command) (configdomain.Prototype, error)
