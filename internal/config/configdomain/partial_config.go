@@ -141,7 +141,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
-		BranchTypeOverrides:      other.BranchTypeOverrides.Add(self.BranchTypeOverrides),
+		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),

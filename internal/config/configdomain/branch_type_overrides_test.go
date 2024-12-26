@@ -19,7 +19,7 @@ func TestBranchTypeOverrides(t *testing.T) {
 			"branch-1": configdomain.BranchTypeContributionBranch,
 			"branch-3": configdomain.BranchTypeObservedBranch,
 		}
-		have := data1.Add(data2)
+		have := data1.Concat(data2)
 		want := configdomain.BranchTypeOverrides{
 			"branch-1": configdomain.BranchTypeContributionBranch,
 			"branch-2": configdomain.BranchTypeParkedBranch,

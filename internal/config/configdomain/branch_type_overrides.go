@@ -11,7 +11,7 @@ import (
 
 type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 
-func (self BranchTypeOverrides) Add(other BranchTypeOverrides) BranchTypeOverrides {
+func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOverrides {
 	result := make(BranchTypeOverrides, len(self)+len(other))
 	for key, value := range self {
 		result[key] = value
