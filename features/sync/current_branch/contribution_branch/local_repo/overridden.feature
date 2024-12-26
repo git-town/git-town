@@ -10,7 +10,7 @@ Feature: sync the current branch which has an override to "contribution"
       | main         | local    | main commit         |
       | contribution | local    | contribution commit |
     And the current branch is "contribution"
-    And Git setting "git-town-branch.contribution.branch-type" is "feature"
+    And Git setting "git-town-branch.contribution.branchtype" is "feature"
     When I run "git-town sync"
 
   @this
