@@ -60,9 +60,6 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
 		return branchTypeOverride
 	}
-	if self.IsPerennialBranch(branch) {
-		return BranchTypePerennialBranch
-	}
 	// check the configured branch lists
 	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
