@@ -15,7 +15,7 @@ Feature: rename a branch that has an overridden branch type
       | DIALOG                  | KEYS  |
       | parent branch ofd "old" | enter |
 
-  # @this
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                   |
@@ -26,7 +26,7 @@ Feature: rename a branch that has an overridden branch type
       |        | git push origin :old      |
     And the current branch is now "new"
     And Git setting "git-town-branch.new.branchtype" is now "feature"
-    And Git setting "git-town-branch.old.branchtype" no longer exists
+    And Git setting "git-town-branch.old.branchtype" now doesn't exist
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
