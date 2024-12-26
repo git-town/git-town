@@ -1,7 +1,7 @@
 # git town observe
 
 ```command-summary
-git town observe [-v | --verbose] [branch-name...]
+git town observe [-v | --verbose] [<branch-name>...]
 ```
 
 The _observe_ command makes some of your branches

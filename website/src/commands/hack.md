@@ -1,7 +1,7 @@
 # git town hack
 
 ```command-summary
-git town hack [-d | --detached] [--dry-run] [-p | --prototype] [-v | --verbose] [branch-name...]
+git town hack [-d | --detached] [--dry-run] [-p | --prototype] [-v | --verbose] [<branch-name>...]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the

@@ -1,6 +1,6 @@
 # git town rename
 
-> _git town rename [--force] [old-name] &lt;new-name&gt;_
+> _git town rename [--force] [&lt;old-name&gt;] &lt;new-name&gt;_
 
 The _rename_ command changes the name of the current branch in the local and
 [remote](../preferences/dev-remote.md) repository. It requires the branch to be

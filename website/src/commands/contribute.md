@@ -1,7 +1,7 @@
 # git town contribute
 
 ```command-summary
-git town contribute [-v | --verbose] [branch-name...]
+git town contribute [-v | --verbose] [<branch-name>...]
 ```
 
 The _contribute_ command makes some of your branches
