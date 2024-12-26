@@ -329,22 +329,6 @@ func (self *TestCommands) FilesInWorkspace() []string {
 	return result
 }
 
-func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configdomain.Key) Option[string] {
-	args := []string{"config"}
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		args = append(args, "--global")
-	case configdomain.ConfigScopeLocal:
-		args = append(args, "--local")
-	}
-	args = append(args, "--get", name.String())
-	output, err := self.Query("git", args...)
-	if err != nil {
-		return None[string]()
-	}
-	return Some(output)
-}
-
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
 func (self *TestCommands) HasBranchesOutOfSync() (bool, string) {
 	output := self.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
