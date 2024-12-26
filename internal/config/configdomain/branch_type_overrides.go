@@ -27,14 +27,14 @@ func NewBranchTypeOverridesFromSnapshot(snapshot SingleSnapshot, removeLocalConf
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
 		branch := key.Branch()
 		if branch == "" {
-			// empty branch --> delete it
+			// empty branch name --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
 			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
 		value = strings.TrimSpace(value)
 		if value == "" {
-			// empty lineage entries are invalid --> delete it
+			// empty branch type values are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
 			_ = removeLocalConfigValue(key.Key)
 			continue
