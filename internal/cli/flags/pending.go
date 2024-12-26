@@ -22,5 +22,5 @@ func Pending() (AddFunc, ReadPendingFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the pending flag from the args to the given Cobra command
+// ReadPendingFlagFunc is the type signature for the function that reads the "pending" flag from the args to the given Cobra command.
 type ReadPendingFlagFunc func(*cobra.Command) (configdomain.Pending, error)

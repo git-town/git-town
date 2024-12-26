@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

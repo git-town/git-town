@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  smoke:
+  windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
