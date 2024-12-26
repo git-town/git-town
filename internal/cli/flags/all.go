@@ -19,5 +19,5 @@ func All(desc string) (AddFunc, ReadAllFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadAllFlagFunc is the type signature for the function that reads the "all" flag from the args to the given Cobra command.
 type ReadAllFlagFunc func(*cobra.Command) (configdomain.AllBranches, error)

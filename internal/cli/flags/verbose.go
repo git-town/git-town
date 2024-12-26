@@ -22,5 +22,5 @@ func Verbose() (AddFunc, ReadVerboseFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the verbose flag from the args to the given Cobra command
+// ReadVerboseFlagFunc is the type signature for the function that reads the "verbose" flag from the args to the given Cobra command.
 type ReadVerboseFlagFunc func(*cobra.Command) (configdomain.Verbose, error)
