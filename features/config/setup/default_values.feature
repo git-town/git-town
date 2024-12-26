@@ -37,21 +37,21 @@ Feature: Accepting all default values leads to a working setup
     Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
-    And local Git Town setting "dev-remote" still doesn't exist
-    And local Git Town setting "new-branch-type" still doesn't exist
-    And local Git Town setting "main-branch" still doesn't exist
-    And local Git Town setting "perennial-branches" still doesn't exist
-    And local Git Town setting "default-branch-type" still doesn't exist
-    And local Git Town setting "feature-regex" still doesn't exist
-    And local Git Town setting "hosting-platform" still doesn't exist
-    And local Git Town setting "push-new-branches" still doesn't exist
-    And local Git Town setting "push-hook" still doesn't exist
-    And local Git Town setting "sync-feature-strategy" still doesn't exist
-    And local Git Town setting "sync-perennial-strategy" still doesn't exist
-    And local Git Town setting "sync-upstream" still doesn't exist
-    And local Git Town setting "sync-tags" still doesn't exist
-    And local Git Town setting "ship-strategy" still doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
+    And local Git setting "git-town.dev-remote" still doesn't exist
+    And local Git setting "git-town.new-branch-type" still doesn't exist
+    And local Git setting "git-town.main-branch" still doesn't exist
+    And local Git setting "git-town.perennial-branches" still doesn't exist
+    And local Git setting "git-town.default-branch-type" still doesn't exist
+    And local Git setting "git-town.feature-regex" still doesn't exist
+    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.push-new-branches" still doesn't exist
+    And local Git setting "git-town.push-hook" still doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" still doesn't exist
+    And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
+    And local Git setting "git-town.sync-upstream" still doesn't exist
+    And local Git setting "git-town.sync-tags" still doesn't exist
+    And local Git setting "git-town.ship-strategy" still doesn't exist
+    And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
@@ -96,19 +96,19 @@ Feature: Accepting all default values leads to a working setup
     And global Git setting "alias.set-parent" still doesn't exist
     And global Git setting "alias.ship" still doesn't exist
     And global Git setting "alias.sync" still doesn't exist
-    And local Git Town setting "dev-remote" still doesn't exist
-    And local Git Town setting "new-branch-type" still doesn't exist
-    And local Git Town setting "main-branch" still doesn't exist
-    And local Git Town setting "perennial-branches" still doesn't exist
-    And local Git Town setting "hosting-platform" still doesn't exist
-    And local Git Town setting "github-token" still doesn't exist
-    And local Git Town setting "hosting-origin-hostname" still doesn't exist
-    And local Git Town setting "sync-feature-strategy" still doesn't exist
-    And local Git Town setting "sync-perennial-strategy" still doesn't exist
-    And local Git Town setting "sync-upstream" still doesn't exist
-    And local Git Town setting "sync-tags" still doesn't exist
-    And local Git Town setting "perennial-regex" still doesn't exist
-    And local Git Town setting "push-new-branches" still doesn't exist
-    And local Git Town setting "push-hook" still doesn't exist
-    And local Git Town setting "ship-strategy" still doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
+    And local Git setting "git-town.dev-remote" still doesn't exist
+    And local Git setting "git-town.new-branch-type" still doesn't exist
+    And local Git setting "git-town.main-branch" still doesn't exist
+    And local Git setting "git-town.perennial-branches" still doesn't exist
+    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.github-token" still doesn't exist
+    And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
+    And local Git setting "git-town.sync-feature-strategy" still doesn't exist
+    And local Git setting "git-town.sync-perennial-strategy" still doesn't exist
+    And local Git setting "git-town.sync-upstream" still doesn't exist
+    And local Git setting "git-town.sync-tags" still doesn't exist
+    And local Git setting "git-town.perennial-regex" still doesn't exist
+    And local Git setting "git-town.push-new-branches" still doesn't exist
+    And local Git setting "git-town.push-hook" still doesn't exist
+    And local Git setting "git-town.ship-strategy" still doesn't exist
+    And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist

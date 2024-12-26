@@ -33,8 +33,8 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.gitlab-token 123456 |
-    And local Git Town setting "hosting-platform" still doesn't exist
-    And local Git Town setting "gitlab-token" is now "123456"
+    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
@@ -65,10 +65,10 @@ Feature: enter the GitLab API token
       | COMMAND                                     |
       | git config git-town.gitlab-token 123456     |
       | git config git-town.hosting-platform gitlab |
-    And local Git Town setting "hosting-platform" is now "gitlab"
-    And local Git Town setting "gitlab-token" is now "123456"
+    And local Git setting "git-town.hosting-platform" is now "gitlab"
+    And local Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git Town setting "hosting-platform" now doesn't exist
-    And local Git Town setting "gitlab-token" now doesn't exist
+    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.gitlab-token" now doesn't exist

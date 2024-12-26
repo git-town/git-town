@@ -12,7 +12,7 @@ Feature: cannot ship a feature branch that is active in another worktree
     And the current branch is "other"
     And branch "feature" is active in another worktree
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship feature"
 
   Scenario: result

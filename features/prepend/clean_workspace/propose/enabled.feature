@@ -12,7 +12,7 @@ Feature: propose a newly prepended branch
       | existing | local, origin | existing commit  |
       |          |               | unrelated commit |
     And the current branch is "existing"
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And a proposal for this branch does not exist

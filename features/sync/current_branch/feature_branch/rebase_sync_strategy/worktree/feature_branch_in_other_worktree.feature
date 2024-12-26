@@ -5,7 +5,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |

@@ -12,7 +12,7 @@ Feature: sync the current feature branch without a tracking branch using the "co
       | feature | local    | local feature commit 1 |
       | feature | local    | local feature commit 2 |
     And the current branch is "feature"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result

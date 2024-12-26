@@ -10,7 +10,7 @@ Feature: offline mode
       | feature | local, origin | feature commit |
     And the current branch is "feature"
     And offline mode is enabled
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result

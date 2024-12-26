@@ -10,8 +10,8 @@ Feature: sync the current prototype branch in a local repo
       | main      | local    | main commit  | main_file  |
       | prototype | local    | local commit | local_file |
     And the current branch is "prototype"
-    And Git Town setting "sync-prototype-strategy" is "rebase"
-    And Git Town setting "sync-feature-strategy" is "merge"
+    And Git setting "git-town.sync-prototype-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     When I run "git-town sync"
 
   Scenario: result

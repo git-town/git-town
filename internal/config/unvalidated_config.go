@@ -32,9 +32,9 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
-func (self *UnvalidatedConfig) Reload() {
-	_, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	_, localGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
+	globalSnapshot, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadLocal(false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
@@ -46,6 +46,7 @@ func (self *UnvalidatedConfig) Reload() {
 		LocalGitConfig:   localGitConfig,
 		NormalConfigData: normalConfig,
 	}
+	return globalSnapshot, localSnapshot
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {

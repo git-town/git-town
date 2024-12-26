@@ -13,7 +13,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | local, origin | commit 3 |
       | old    | local, origin | commit 4 |
     And the current branch is "old"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG                 | KEYS                             |
       | select commits 2 and 4 | down space down down space enter |
