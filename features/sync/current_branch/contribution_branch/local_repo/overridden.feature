@@ -3,8 +3,8 @@ Feature: sync the current branch which has a branch-type override
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT | LOCATIONS |
-      | contribution | contribution | main   | local     |
+      | NAME         | TYPE         | LOCATIONS |
+      | contribution | contribution | local     |
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | main         | local, origin | main commit         |
