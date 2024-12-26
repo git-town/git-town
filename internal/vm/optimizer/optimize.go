@@ -1,4 +1,3 @@
-// Package optimizer optimizes VM programs.
 package optimizer
 
 import "github.com/git-town/git-town/v17/internal/vm/program"
