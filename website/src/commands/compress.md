@@ -1,6 +1,8 @@
 # git town compress
 
-> git town compress [--message &lt;text&gt;] [--stack]
+```command-summary
+git town compress [--dry-run] [-m <text> | --message <text>] [-s | --stack] [-v | --verbose]
+```
 
 The _compress_ command squashes all commits on a branch into a single commit.
 Git Town compresses feature branches and
