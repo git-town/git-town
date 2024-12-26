@@ -9,7 +9,7 @@ import (
 
 func TestBranchTypeOverrides(t *testing.T) {
 	t.Parallel()
-	t.Run("Add", func(t *testing.T) {
+	t.Run("Concat", func(t *testing.T) {
 		t.Parallel()
 		data1 := configdomain.BranchTypeOverrides{
 			"branch-1": configdomain.BranchTypeFeatureBranch,
@@ -24,6 +24,22 @@ func TestBranchTypeOverrides(t *testing.T) {
 			"branch-1": configdomain.BranchTypeContributionBranch,
 			"branch-2": configdomain.BranchTypeParkedBranch,
 			"branch-3": configdomain.BranchTypeObservedBranch,
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("NewBranchTypeOverridesFromSnapshot", func(t *testing.T) {
+		t.Parallel()
+		snapshot := configdomain.SingleSnapshot{
+			"git-town-branch.branch-1.branchtype": "feature",
+			"git-town-branch.branch-2.branchtype": "observed",
+		}
+		removeFunc := func(configdomain.Key) error { return nil }
+		have, err := configdomain.NewBranchTypeOverridesFromSnapshot(snapshot, removeFunc)
+		must.NoError(t, err)
+		want := configdomain.BranchTypeOverrides{
+			"branch-1": configdomain.BranchTypeFeatureBranch,
+			"branch-2": configdomain.BranchTypeObservedBranch,
 		}
 		must.Eq(t, want, have)
 	})
