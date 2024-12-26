@@ -26,9 +26,8 @@ const ConfigFileCommitMessage = "persisted config file"
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.Commands
-	Config               config.UnvalidatedConfig
-	GlobalConfigSnapshot configdomain.SingleSnapshot // copy of the low-level Git config metadata, for verifying it in end-to-end tests
-	LocalConfigSnapshot  configdomain.SingleSnapshot // copy of the low-level Git config metadata, for verifying it in end-to-end tests
+	Config    config.UnvalidatedConfig
+	SnapShots map[configdomain.ConfigScope]configdomain.SingleSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -427,7 +426,9 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 }
 
 func (self *TestCommands) Reload() {
-	self.GlobalConfigSnapshot, self.LocalConfigSnapshot = self.Config.Reload()
+	globalConfigSnapshot, localConfigSnapshot := self.Config.Reload()
+	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
+	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.

@@ -74,11 +74,10 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
-		TestRunner:           &runner,
-		Commands:             &gitCommands,
-		Config:               devRepo.Config,
-		GlobalConfigSnapshot: configdomain.SingleSnapshot{},
-		LocalConfigSnapshot:  configdomain.SingleSnapshot{},
+		TestRunner: &runner,
+		Commands:   &gitCommands,
+		Config:     devRepo.Config,
+		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 	})
 }
 
