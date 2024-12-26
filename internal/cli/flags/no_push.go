@@ -19,5 +19,5 @@ func NoPush() (AddFunc, ReadNoPushFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadNoPushFlagFunc is the type signature for the function that reads the "no-push" flag from the args to the given Cobra command.
 type ReadNoPushFlagFunc func(*cobra.Command) (configdomain.PushBranches, error)

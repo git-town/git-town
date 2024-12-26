@@ -122,6 +122,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	(cd tools && yarn upgrade --latest)
 	tools/rta --update
 	tools/rta dprint config update
+	tools/rta dprint config update --config dprint-changelog.json
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 

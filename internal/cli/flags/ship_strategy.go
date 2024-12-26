@@ -31,5 +31,5 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadShipStrategyFunc is the type signature for the function that reads the ship "strategy" flag from the args to the given Cobra command.
 type ReadShipStrategyFunc func(*cobra.Command) (Option[configdomain.ShipStrategy], error)

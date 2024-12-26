@@ -22,5 +22,5 @@ func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	return addFlag, readFlag
 }
 
-// reads gitdomain.ProposalBodyFile from the CLI args
+// ReadProposalBodyFileFlagFunc reads gitdomain.ProposalBodyFile from the CLI args.
 type ReadProposalBodyFileFlagFunc func(*cobra.Command) (gitdomain.ProposalBodyFile, error)
