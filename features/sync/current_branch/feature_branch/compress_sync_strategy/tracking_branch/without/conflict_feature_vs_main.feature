@@ -11,7 +11,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "feature"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And an uncommitted file
     When I run "git-town sync"
 

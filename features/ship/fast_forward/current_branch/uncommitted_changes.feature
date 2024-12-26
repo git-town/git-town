@@ -6,7 +6,7 @@ Feature: does not ship uncommitted changes using the fast-forward strategy
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     And an uncommitted file
     When I run "git-town ship"
 

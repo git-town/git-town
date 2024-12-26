@@ -15,7 +15,7 @@ Feature: stacked changes where each branch makes independent changes
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the current branch is "child"
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

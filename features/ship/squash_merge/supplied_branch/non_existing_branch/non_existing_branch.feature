@@ -4,7 +4,7 @@ Feature: does not ship a non-existing branch
     Given a Git repo with origin
     And the current branch is "main"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship non-existing-branch"
 
   Scenario: result

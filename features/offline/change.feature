@@ -5,7 +5,7 @@ Feature: change offline mode
 
   Scenario Outline: writing to local Git metadata
     When I run "git-town offline <GIVE>"
-    Then global Git Town setting "offline" is now "<WANT>"
+    Then global Git setting "git-town.offline" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |
@@ -21,10 +21,10 @@ Feature: change offline mode
       | no    | false |
 
   Scenario: invalid value in Git metadata
-    And global Git Town setting "offline" is "false"
+    And global Git setting "git-town.offline" is "false"
     When I run "git-town offline zonk"
     Then Git Town prints the error:
       """
       invalid value for git-town.offline: "zonk". Please provide either "yes" or "no"
       """
-    And global Git Town setting "offline" is still "false"
+    And global Git setting "git-town.offline" is still "false"

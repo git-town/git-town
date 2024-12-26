@@ -9,7 +9,7 @@ Feature: append a new branch when prototype branches are configured via a deprec
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And Git Town setting "create-prototype-branches" is "true"
+    And Git setting "git-town.create-prototype-branches" is "true"
     When I run "git-town append new"
 
   Scenario: result
@@ -28,8 +28,8 @@ Feature: append a new branch when prototype branches are configured via a deprec
       """
     And the current branch is now "new"
     And branch "new" is now prototype
-    And Git Town setting "create-prototype-branches" now doesn't exist
-    And Git Town setting "new-branch-type" is now "prototype"
+    And Git setting "git-town.create-prototype-branches" now doesn't exist
+    And Git setting "git-town.new-branch-type" is now "prototype"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
@@ -45,5 +45,5 @@ Feature: append a new branch when prototype branches are configured via a deprec
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now
-    And Git Town setting "new-branch-type" is still "prototype"
-    And Git Town setting "create-prototype-branches" still doesn't exist
+    And Git setting "git-town.new-branch-type" is still "prototype"
+    And Git setting "git-town.create-prototype-branches" still doesn't exist

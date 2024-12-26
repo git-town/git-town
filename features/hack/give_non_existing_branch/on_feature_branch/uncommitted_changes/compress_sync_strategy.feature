@@ -10,7 +10,7 @@ Feature: create a new top-level feature branch in a dirty workspace using the "c
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And an uncommitted file
     When I run "git-town hack new"
 

@@ -9,7 +9,7 @@ Feature: ship the current feature branch using the fast-forward strategy
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And the current branch is "feature"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship feature"
 
   Scenario: result

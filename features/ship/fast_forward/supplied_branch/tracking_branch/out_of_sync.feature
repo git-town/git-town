@@ -12,7 +12,7 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
       |         | origin   | origin commit |
     And the current branch is "other"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     And I run "git-town ship feature"
 
   Scenario: result

@@ -13,7 +13,7 @@ Feature: don't sync tags while proposing
     And the origin is "ssh://git@github.com/git-town/git-town.git"
     And a proposal for this branch does not exist
     And tool "open" is installed
-    And Git Town setting "sync-tags" is "false"
+    And Git setting "git-town.sync-tags" is "false"
     When I run "git-town propose"
 
   Scenario: result

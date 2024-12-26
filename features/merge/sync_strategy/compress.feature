@@ -12,7 +12,7 @@ Feature: merging branches using the "compress" sync-strategy
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And wait 1 second to ensure new Git timestamps
     And the current branch is "beta"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town merge"
 
   Scenario: result

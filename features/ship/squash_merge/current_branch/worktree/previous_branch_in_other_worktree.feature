@@ -11,7 +11,7 @@ Feature: ship a feature branch in a local repo
       | current | local    | current commit |
     And the current branch is "current" and the previous branch is "previous"
     And branch "previous" is active in another worktree
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result

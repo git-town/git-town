@@ -6,7 +6,7 @@ Feature: don't sync tags while appending
       | NAME       | LOCATION |
       | local-tag  | local    |
       | origin-tag | origin   |
-    And Git Town setting "sync-tags" is "false"
+    And Git setting "git-town.sync-tags" is "false"
     When I run "git-town append new"
 
   Scenario: result

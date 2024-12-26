@@ -12,7 +12,7 @@ Feature: abort the ship via empty commit message
       | feature | local         | feature commit | conflicting_file | feature content |
     And the current branch is "other"
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature" and enter an empty commit message
 
   @skipWindows
