@@ -540,29 +540,29 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scopeName, key, value string) error {
+	sc.Step(`^(global |local |)Git setting "([^"]+)" is "([^"]*)"$`, func(ctx context.Context, scope, key, value string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		scope := configdomain.ParseConfigScope(scopeName)
-		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(scope, configdomain.Key(key), value)
+		parsedScope := configdomain.ParseConfigScope(scope)
+		return devRepo.Config.NormalConfig.GitConfigAccess.SetConfigValue(parsedScope, configdomain.Key(key), value)
 	})
 
-	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scopeName, name, want string) error {
+	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		scope := configdomain.ParseConfigScope(scopeName)
-		have := devRepo.SnapShots[scope][configdomain.Key(name)]
+		parsedScope := configdomain.ParseConfigScope(scope)
+		have := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
 		return nil
 	})
 
-	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scopeName, name string) error {
+	sc.Step(`^(global |local |)Git setting "([^"]+)" (?:now|still) doesn't exist$`, func(ctx context.Context, scope, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		scope := configdomain.ParseConfigScope(scopeName)
-		have, has := devRepo.SnapShots[scope][configdomain.Key(name)]
+		parsedScope := configdomain.ParseConfigScope(scope)
+		have, has := devRepo.SnapShots[parsedScope][configdomain.Key(name)]
 		if has {
 			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
