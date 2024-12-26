@@ -33,5 +33,5 @@ func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
 }
 
 func isBranchTypeOverrideKey(key string) bool {
-	return strings.HasPrefix(key, BranchSpecificKeyPrefix) && strings.HasSuffix(key, BranchTypeSuffix)
+	return isBranchSpecificKey(key) && strings.HasSuffix(key, BranchTypeSuffix)
 }
