@@ -19,5 +19,5 @@ func Beam() (AddFunc, ReadBeamFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadBeamFlagFunc is the type signature for the function that reads the "beam" flag from the args to the given Cobra command.
 type ReadBeamFlagFunc func(*cobra.Command) (configdomain.Beam, error)

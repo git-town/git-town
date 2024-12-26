@@ -19,5 +19,5 @@ func Force(desc string) (AddFunc, ReadForceFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the force flag from the args to the given Cobra command
+// ReadForceFlagFunc is the type signature for the function that reads the "force" flag from the args to the given Cobra command.
 type ReadForceFlagFunc func(*cobra.Command) (configdomain.Force, error)
