@@ -7,7 +7,7 @@ Feature: "compress" sync with upstream repo
       | feature | feature | main   | local, origin |
     And an upstream repo
     And the current branch is "feature"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     | FILE CONTENT     |
       | main    | upstream | upstream commit | upstream_file | upstream content |

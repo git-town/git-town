@@ -4,7 +4,7 @@ Feature: does not ship a non-existing branch
     Given a Git repo with origin
     And the current branch is "main"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship non-existing-branch"
 
   Scenario: result

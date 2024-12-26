@@ -6,7 +6,7 @@ Feature: append a new feature branch to the main branch using the "compress" syn
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town append new"
 
   Scenario: result

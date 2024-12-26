@@ -9,7 +9,7 @@ Feature: unknown ship strategy
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And the current branch is "feature"
-    And Git Town setting "ship-strategy" is "zonk"
+    And Git setting "git-town.ship-strategy" is "zonk"
     And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exist
     When I run "git-town ship -m done"

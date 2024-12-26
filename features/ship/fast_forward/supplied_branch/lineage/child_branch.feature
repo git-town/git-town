@@ -13,7 +13,7 @@ Feature: does not ship a child branch using the fast-forward strategy
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
     And the current branch is "alpha"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship gamma"
 
   Scenario: result

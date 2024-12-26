@@ -11,7 +11,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | prototype | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
     And an uncommitted file
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

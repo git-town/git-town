@@ -26,7 +26,8 @@ const ConfigFileCommitMessage = "persisted config file"
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.Commands
-	Config config.UnvalidatedConfig
+	Config    config.UnvalidatedConfig
+	SnapShots map[configdomain.ConfigScope]configdomain.SingleSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -328,22 +329,6 @@ func (self *TestCommands) FilesInWorkspace() []string {
 	return result
 }
 
-func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configdomain.Key) Option[string] {
-	args := []string{"config"}
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		args = append(args, "--global")
-	case configdomain.ConfigScopeLocal:
-		args = append(args, "--local")
-	}
-	args = append(args, "--get", name.String())
-	output, err := self.Query("git", args...)
-	if err != nil {
-		return None[string]()
-	}
-	return Some(output)
-}
-
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
 func (self *TestCommands) HasBranchesOutOfSync() (bool, string) {
 	output := self.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
@@ -422,6 +407,12 @@ func (self *TestCommands) PushBranchToRemote(branch gitdomain.LocalBranchName, r
 
 func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) error {
 	return self.Run("git", "rebase", branch.String())
+}
+
+func (self *TestCommands) Reload() {
+	globalConfigSnapshot, localConfigSnapshot := self.Config.Reload()
+	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
+	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.

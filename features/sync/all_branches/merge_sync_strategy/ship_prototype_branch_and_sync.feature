@@ -4,7 +4,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
 
   Background:
     Given a Git repo with origin
-    And Git Town setting "default-branch-type" is "prototype"
+    And Git setting "git-town.default-branch-type" is "prototype"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And I ran "git-town hack hooks"

@@ -12,7 +12,7 @@ Feature: does not ship empty feature branches
       | empty  | local    | feature commit | common_file | common content |
     And the current branch is "other"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship empty"
 
   Scenario: result

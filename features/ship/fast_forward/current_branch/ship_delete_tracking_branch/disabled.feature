@@ -9,8 +9,8 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And the current branch is "feature"
-    And Git Town setting "ship-delete-tracking-branch" is "false"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
     And origin deletes the "feature" branch
 

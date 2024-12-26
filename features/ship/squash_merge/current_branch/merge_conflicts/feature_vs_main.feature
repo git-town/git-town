@@ -10,7 +10,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local         | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And I run "git-town ship -m 'feature done'"
 
   Scenario: result

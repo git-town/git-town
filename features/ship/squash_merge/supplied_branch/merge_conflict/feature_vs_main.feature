@@ -12,7 +12,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "other"
     And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

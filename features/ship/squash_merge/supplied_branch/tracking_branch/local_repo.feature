@@ -11,7 +11,7 @@ Feature: ship the supplied feature branch in a local repo
       | feature | local    | feature commit | conflicting_file |
     And the current branch is "other"
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

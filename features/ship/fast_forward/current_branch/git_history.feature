@@ -6,7 +6,7 @@ Feature: preserve the previous Git branch when shipping using the fast-forward s
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | previous | feature | main   | local     |
       | current  | feature | main   | local     |
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
 
   Scenario: current branch gone
     Given the commits

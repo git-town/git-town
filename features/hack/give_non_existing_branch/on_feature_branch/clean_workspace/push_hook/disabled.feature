@@ -2,8 +2,8 @@ Feature: auto-push the new branch without running Git push hooks
 
   Background:
     Given a Git repo with origin
-    And Git Town setting "push-new-branches" is "true"
-    And Git Town setting "push-hook" is "false"
+    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.push-hook" is "false"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |

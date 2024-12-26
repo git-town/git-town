@@ -11,7 +11,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
       | branch-1 | local, origin | branch-1 commit |
     And the current branch is "branch-2"
     And origin deletes the "branch-2" branch
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town sync --verbose"
 
   Scenario: result
