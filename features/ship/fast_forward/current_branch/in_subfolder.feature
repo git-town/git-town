@@ -9,7 +9,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               |
       | feature | local, origin | feature commit | new_folder/feature_file |
     And the current branch is "feature"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship" in the "new_folder" folder
 
   Scenario: result

@@ -3,7 +3,7 @@ Feature: sync a branch to a custom dev-remote
   Background:
     Given a Git repo with origin
     And I rename the "origin" remote to "fork"
-    And Git Town setting "dev-remote" is "fork"
+    And Git setting "git-town.dev-remote" is "fork"
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS |
       | branch | feature | main   | local     |

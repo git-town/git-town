@@ -5,8 +5,8 @@ Feature: auto-push new branches
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And Git Town setting "push-new-branches" is "true"
-    And Git Town setting "push-hook" is "false"
+    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.push-hook" is "false"
     And the current branch is "old"
     And an uncommitted file
     And the commits

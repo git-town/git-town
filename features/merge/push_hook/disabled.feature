@@ -11,7 +11,7 @@ Feature: merging a branch with disabled push-hook
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
     And the current branch is "beta"
-    And Git Town setting "push-hook" is "false"
+    And Git setting "git-town.push-hook" is "false"
     When I run "git-town merge"
 
   Scenario: result

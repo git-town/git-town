@@ -12,7 +12,7 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       | branch-1 | local, origin | branch-1 commit |
       | branch-2 | local, origin | branch-2 commit |
     And the current branch is "branch-2"
-    And Git Town setting "sync-feature-strategy" is "compress"
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend branch-1a"
 

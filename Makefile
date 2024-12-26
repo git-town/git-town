@@ -125,6 +125,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	@(export PATH=$(PATH) && cd tools && ./rta npm install)  # work around "node: command not found" when running npm (bug in rta)
 	tools/rta --update
 	tools/rta dprint config update
+	tools/rta dprint config update --config dprint-changelog.json
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 

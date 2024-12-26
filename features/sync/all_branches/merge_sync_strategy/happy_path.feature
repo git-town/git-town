@@ -68,7 +68,7 @@ Feature: sync all feature branches
       |            |               | qa local commit                |
 
   Scenario: with "rebase" sync-feature strategy
-    Given Git Town setting "sync-feature-strategy" is "rebase"
+    Given Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --all"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                         |

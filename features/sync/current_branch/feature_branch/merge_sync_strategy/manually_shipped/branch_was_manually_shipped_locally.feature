@@ -2,7 +2,7 @@ Feature: the branch was shipped manually on the local machine
 
   Background:
     Given a Git repo with origin
-    And Git Town setting "default-branch-type" is "prototype"
+    And Git setting "git-town.default-branch-type" is "prototype"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |

@@ -11,8 +11,8 @@ Feature: ship to a custom dev remote
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And I rename the "origin" remote to "fork"
-    And Git Town setting "dev-remote" is "fork"
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.dev-remote" is "fork"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result
@@ -49,4 +49,7 @@ Feature: ship to a custom dev remote
       | main    | local, fork | feature done          |
       |         |             | Revert "feature done" |
       | feature | local, fork | feature commit        |
-    And the initial branches and lineage exist now
+    And the branches are now
+      | REPOSITORY  | BRANCHES      |
+      | local, fork | main, feature |
+    And the initial lineage exists now

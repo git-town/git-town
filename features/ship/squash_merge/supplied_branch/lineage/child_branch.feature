@@ -13,7 +13,7 @@ Feature: does not ship a child branch
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship gamma -m 'gamma done'"
 
   Scenario: result

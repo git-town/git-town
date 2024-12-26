@@ -11,8 +11,8 @@ Feature: skip deleting the remote branch when shipping another branch using the 
       | feature | local, origin | feature commit |
       | other   | local         | other commit   |
     And the current branch is "other"
-    And Git Town setting "ship-delete-tracking-branch" is "false"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-delete-tracking-branch" is "false"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship feature"
     And origin deletes the "feature" branch
 
