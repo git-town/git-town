@@ -75,8 +75,7 @@ function processBookItem(bookItem) {
   }
   // bookItem is { "Chapter": Chapter }
 
-  const chapter = bookItem.Chapter;
-  processChapter(chapter);
+  processChapter(bookItem.Chapter);
 }
 
 /**
