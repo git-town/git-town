@@ -1,7 +1,7 @@
 # git town hack
 
 ```command-summary
-git town hack [<branch-name>...] [-d | --detached] [--dry-run] [-p | --prototype] [-v | --verbose]
+git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [--dry-run] [-v | --verbose]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
@@ -25,6 +25,11 @@ When given an existing contribution, observed, parked, or prototype branch,
 When given no arguments, `git town hack` converts the current contribution,
 observed, parked, or prototype branch into a feature branch.
 
+### --prototype / -p
+
+Adding the `--prototype` aka `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches).
+
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
@@ -35,11 +40,6 @@ in changes from other developers.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
-
-### --prototype / -p
-
-Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches).
 
 ### --verbose / -v
 

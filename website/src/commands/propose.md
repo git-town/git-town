@@ -1,7 +1,7 @@
 # git town propose
 
 ```command-summary
-git town propose [-b <text> | --body <text>] [-f <path> | --body-file <path>] [-d | --detached] [--dry-run] [-t <text> | --title <text>] [-v | --verbose]
+git town propose [-b <text> | --body <text>] [-f <path> | --body-file <path>] [-t <text> | --title <text>] [-d | --detached] [--dry-run] [-v | --verbose]
 ```
 
 The _propose_ command helps create a new pull request (also known as merge
@@ -27,6 +27,11 @@ When called with the `--body-file` aka `-f` flag, it pre-populates the body of
 the pull request with the content of the given file. The filename `-` reads the
 body text from STDIN.
 
+### --title / -t &lt;text&gt;
+
+When called with the `--title <title>` aka `-t` flag, the _propose_ command
+pre-populate the title of the pull request to the given text.
+
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
@@ -37,11 +42,6 @@ in changes from other developers.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
-
-### --title / -t &lt;text&gt;
-
-When called with the `--title <title>` aka `-t` flag, the _propose_ command
-pre-populate the title of the pull request to the given text.
 
 ### --verbose / -v
 

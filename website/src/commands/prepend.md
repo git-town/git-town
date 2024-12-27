@@ -1,7 +1,7 @@
 # git town prepend
 
 ```command-summary
-git town prepend [<branch-name>...] [-b | --beam] [--body <string>] [-d | --detached] [--dry-run] [--propose] [-p | --prototype] [-t <text> | --title <text>] [-v | --verbose]
+git town prepend [<branch-name>...] [-b | --beam] [--body <string>] [--propose] [-p | --prototype] [-t <text> | --title <text>] [-d | --detached] [--dry-run] [-v | --verbose]
 ```
 
 The _prepend_ command creates a new feature branch as the parent of the current
@@ -47,17 +47,6 @@ dialog.
 Pre-populate the body of the pull request to create with the given text.
 Requires `--propose`.
 
-### --detached / -d
-
-The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to build out your branch stack and decide when to pull
-in changes from other developers.
-
-### --dry-run
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
-
 ### --propose
 
 When set, this command proposes the branch it creates.
@@ -71,6 +60,17 @@ Adding the `--prototype` aka `-p` switch creates a
 
 Pre-populate the title of the pull request to create with the given text.
 Requires `--propose`.
+
+### --detached / -d
+
+The `--detached` aka `-d` flag does not pull updates from the main or perennial
+branch. This allows you to build out your branch stack and decide when to pull
+in changes from other developers.
+
+### --dry-run
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
 ### --verbose / -v
 

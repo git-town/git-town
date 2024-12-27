@@ -1,7 +1,7 @@
 # git town sync
 
 ```command-summary
-git town sync [-a | --all] [-d | --detached] [--dry-run] [--no-push] [-s | --stack] [-v | --verbose]
+git town sync [-a | --all] [--no-push] [-s | --stack] [-d | --detached] [--dry-run] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -35,6 +35,16 @@ this branch and uses its parent branch. Otherwise it prompts you for the parent.
 By default this command syncs only the current branch. The `--all` aka `-a`
 parameter makes Git Town sync all local branches.
 
+### --no-push
+
+The `--no-push` argument disables all pushes of local commits to their tracking
+branch.
+
+### --stack / -s
+
+The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
+that the current branch belongs to.
+
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
@@ -46,16 +56,6 @@ developers.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
-
-### --no-push
-
-The `--no-push` argument disables all pushes of local commits to their tracking
-branch.
-
-### --stack / -s
-
-The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
-that the current branch belongs to.
 
 ### --verbose / -v
 
