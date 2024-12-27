@@ -1,7 +1,7 @@
 # git town switch
 
 ```command-summary
-git town switch [-a | --all] [-d | --display-types] [-m | --merge] [-t <name> | --type <name>] [-v | --verbose] [<branch-name-regex>...]
+git town switch [<branch-name-regex>...] [-a | --all] [-d | --display-types] [-m | --merge] [-t <name> | --type <name>] [-v | --verbose]
 ```
 
 The _switch_ command displays the branch hierarchy on your machine and allows

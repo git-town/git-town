@@ -1,7 +1,7 @@
 # git town config get-parent
 
 ```command-summary
-git town config get-parent [-v | --verbose] [<branch-name>]
+git town config get-parent [<branch-name>] [-v | --verbose]
 ```
 
 The _config get-parent_ command outputs the parent branch of the current or

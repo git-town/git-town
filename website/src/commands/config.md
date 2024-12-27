@@ -2,7 +2,7 @@
 
 ```command-summary
 git town config [-v | --verbose]
-git town config get-parent [-v | --verbose] [<branch-name>]
+git town config get-parent [<branch-name>] [-v | --verbose]
 git town config remove [-v | --verbose]
 git town config setup [-v | --verbose]
 ```

@@ -1,7 +1,7 @@
 # git town rename
 
 ```command-summary
-git town rename [--dry-run] [-f | --force] [-v | --verbose] [<old-name>] <new-name>
+git town rename [<old-name>] <new-name> [--dry-run] [-f | --force] [-v | --verbose]
 ```
 
 The _rename_ command changes the name of the current branch in the local and

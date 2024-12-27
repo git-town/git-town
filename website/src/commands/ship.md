@@ -1,7 +1,7 @@
 # git town ship
 
 ```command-summary
-git town ship [--dry-run] [-m <text> | --message <text>] [-s <name> | --strategy <name>] [-p | --to-parent] [-v | --verbose] [<branch-name>]
+git town ship [<branch-name>] [--dry-run] [-m <text> | --message <text>] [-s <name> | --strategy <name>] [-p | --to-parent] [-v | --verbose]
 ```
 
 _Notice: Most people don't need to use this command. The recommended way to

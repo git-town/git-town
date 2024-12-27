@@ -1,7 +1,7 @@
 # git town hack
 
 ```command-summary
-git town hack [-d | --detached] [--dry-run] [-p | --prototype] [-v | --verbose] [<branch-name>...]
+git town hack [<branch-name>...] [-d | --detached] [--dry-run] [-p | --prototype] [-v | --verbose]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
@@ -39,7 +39,7 @@ that would be run but doesn't execute them.
 ### --prototype / -p
 
 Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches)).
+[prototype branch](../branch-types.md#prototype-branches).
 
 ### --verbose / -v
 

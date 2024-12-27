@@ -1,7 +1,7 @@
 # git town append
 
 ```command-summary
-git town append [-d | --detached] [--dry-run] [--prototype] [-v | --verbose] <branch-name>
+git town append <branch-name> [-d | --detached] [--dry-run] [--prototype] [-v | --verbose]
 ```
 
 The _append_ command creates a new feature branch with the given name as a

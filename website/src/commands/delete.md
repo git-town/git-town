@@ -1,7 +1,7 @@
 # git town delete
 
 ```command-summary
-git town delete [-v | --verbose] [<branch-name>...]
+git town delete [<branch-name>...] [-v | --verbose]
 ```
 
 The _delete_ command deletes the given branch from the local and remote

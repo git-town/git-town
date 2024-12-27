@@ -1,7 +1,7 @@
 # git town repo
 
 ```command-summary
-git town repo [-v | --verbose] [<remote-name>]
+git town repo [<remote-name>] [-v | --verbose]
 ```
 
 The _repo_ command ("show me the repository") opens the homepage of the current

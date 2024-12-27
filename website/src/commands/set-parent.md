@@ -16,7 +16,7 @@ their old parents. However, they don't see the changes made by their new parent
 branches yet. Please run [git town sync](sync.md) to pull in changes from the
 new parents.
 
-To demonstrate how `git town set-parent works`, let's say we have this branch
+To demonstrate how `git town set-parent` works, let's say we have this branch
 hierarchy:
 
 ```

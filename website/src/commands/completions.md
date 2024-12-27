@@ -1,7 +1,7 @@
 # git town completions
 
 ```command-summary
-git town completion [--no-descriptions] <bash|fish|powershell|zsh>
+git town completion <bash|fish|powershell|zsh> [--no-descriptions]
 ```
 
 The _completions_ command outputs shell scripts that enable auto-completion for
