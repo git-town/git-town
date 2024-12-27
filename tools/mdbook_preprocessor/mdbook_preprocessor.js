@@ -127,7 +127,17 @@ function processCommandSummary(code) {
     code
       .split("\n")
       .map(line => {
-        const command = line.match(/^.*?(?=$| [\[<])/)?.[0];
+        /**
+         * This regex matches the command in the line. The command is
+         * the beginning of the line until the first argument (`[`, `<`)
+         * or the end of the line if no arguments.
+         *
+         * @example
+         * "git town append [--prototype] <branch-name>" -> "git town append"
+         * "git town skip"                               -> "git town skip"
+         */
+        const commandRegex = /^.*?(?=$| [\[<])/;
+        const command = line.match(commandRegex)?.[0];
         if (!command) {
           return line;
         }
