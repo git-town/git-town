@@ -33,7 +33,7 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: install tools/node_modules  # tests the documentation
 	@tools/rta node tools/node_modules/.bin/text-run --offline
 
-fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
+fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	tools/rta gofumpt -l -w .
