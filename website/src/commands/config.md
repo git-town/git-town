@@ -1,4 +1,4 @@
-# git town config 
+# git town config
 
 ```command-summary
 git town config [-v | --verbose]
