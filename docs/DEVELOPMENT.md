@@ -244,3 +244,19 @@ To work on the website, cd into the `website` folder and run
 development server. The production site auto-updates on changes to the `main`
 branch. The site hoster is [Netlify](https://www.netlify.com). Netlify
 configuration is in [netlify.toml](../netlify.toml).
+
+### Style guide
+
+#### Headings
+
+- Use sentence case capitalization for headings.
+
+#### Commands
+
+- Command summaries
+  - Always add a command summary immediately after the page title.
+  - Sort positional arguments before options (starting with `-` or `--`).
+  - Sort `[-d | --detached]`, `[--dry-run]`, and `[-v | --verbose]` at the end
+    of the options. We should put the options specific to this command at the
+    beginning of the options list.
+  - Sort the remaining options alphabetically.
