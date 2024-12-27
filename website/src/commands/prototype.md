@@ -1,6 +1,8 @@
 # git town prototype
 
-> _git town prototype [branch-name...]_
+```command-summary
+git town prototype [<branch-name>...] [-v | --verbose]
+```
 
 The _prototype_ command marks some of your branches as
 [prototype branches](../branch-types.md#prototype-branches).

@@ -42,7 +42,6 @@
     - [config.get-parent](commands/config-get-parent.md)
     - [config.remove](commands/config-remove.md)
     - [config.setup](commands/config-setup.md)
-    - [setup](commands/config-setup.md)
     - [offline](commands/offline.md)
 - [Preferences](preferences.md)
   - [bitbucket-app-password](preferences/bitbucket-app-password.md)

@@ -1,6 +1,8 @@
 # git town switch
 
-> _git town switch [--merge] [--all] [--type] [branch-name-regex...]_
+```command-summary
+git town switch [<branch-name-regex>...] [-a | --all] [-d | --display-types] [-m | --merge] [-t <name> | --type <name>] [-v | --verbose]
+```
 
 The _switch_ command displays the branch hierarchy on your machine and allows
 switching the current Git workspace to another local Git branch using VIM motion

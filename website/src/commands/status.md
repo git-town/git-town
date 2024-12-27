@@ -1,9 +1,17 @@
 # git town status
 
-> _git town status [--pending]_
+```command-summary
+git town status [-p | --pending] [-v | --verbose]
+git town status reset [-v | --verbose]
+```
 
 The _status_ command indicates whether Git Town has encountered a merge conflict
 and which commands you can run to continue, skip, or undo it.
+
+### Subcommands
+
+The [reset](status-reset.md) subcommand deletes the persisted runstate. This is
+only needed if the runstate is corrupted and causes Git Town to crash.
 
 ### --pending / -p
 
@@ -17,8 +25,3 @@ set this up.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-### subcommands
-
-The [reset](status-reset.md) subcommand deletes the persisted runstate. This is
-only needed if the runstate is corrupted and causes Git Town to crash.

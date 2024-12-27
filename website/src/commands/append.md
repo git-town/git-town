@@ -1,6 +1,8 @@
 # git town append
 
-> _git town append [--prototype] &lt;branch-name&gt;_
+```command-summary
+git town append <branch-name> [--prototype] [-d | --detached] [--dry-run] [-v | --verbose]
+```
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
@@ -36,6 +38,11 @@ main
 *   feature-2
 ```
 
+### --prototype / -p
+
+Adding the `--prototype` aka `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches).
+
 ### --detached / -d
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
@@ -46,11 +53,6 @@ in changes from other developers.
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
-
-### --prototype / -p
-
-Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches)).
 
 ### --verbose / -v
 

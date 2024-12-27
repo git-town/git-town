@@ -1,6 +1,8 @@
 # git town compress
 
-> git town compress [--message &lt;text&gt;] [--stack]
+```command-summary
+git town compress [-m <text> | --message <text>] [-s | --stack] [--dry-run] [-v | --verbose]
+```
 
 The _compress_ command squashes all commits on a branch into a single commit.
 Git Town compresses feature branches and
@@ -36,11 +38,6 @@ containing the changes of all three commits that existed on the branch before:
 $ git log --pretty=format:'%s'
 commit 1
 ```
-
-### --dry-run
-
-Use the `--dry-run` flag to test-drive this command. It prints the Git commands
-that would be run but doesn't execute them.
 
 ### --message / -m &lt;text&gt;
 
@@ -120,6 +117,11 @@ As usual, the new `commit 1a` contains the changes made in `branch 1`, i.e. the
 changes from the old `commit 1a`, `commit 1b`, and `commit 1c`. The new
 `commit 2a` contains the changes made in `branch 2`, i.e. the changes from the
 old `commit 2a`, `commit 2b`, and `commit 2c`.
+
+### --dry-run
+
+Use the `--dry-run` flag to test-drive this command. It prints the Git commands
+that would be run but doesn't execute them.
 
 ### --verbose / -v
 

@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "gherkin-lint": "4.2.4",
     "text-runner": "5.0.2",
