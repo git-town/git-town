@@ -1,6 +1,8 @@
 # git town set-parent
 
-> _git town set-parent_
+```command-summary
+git town set-parent [-v | --verbose]
+```
 
 The _set-parent_ command changes the parent branch for the current branch. You
 select the new parent through a visual dialog. Updates associated proposals and
