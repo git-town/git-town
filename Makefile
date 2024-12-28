@@ -34,8 +34,8 @@ docs: install tools/node_modules  # tests the documentation
 	@tools/rta node tools/node_modules/.bin/text-run --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
-	go run tools/format_unittests/format_unittests.go
-	go run tools/format_self/format_self.go
+	tools/rta go run tools/format_unittests/format_unittests.go
+	tools/rta go run tools/format_self/format_self.go
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
