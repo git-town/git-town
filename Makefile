@@ -4,6 +4,7 @@ RTA_VERSION = 0.8.1  # run-that-app version to use
 .DEFAULT_GOAL := help
 RELEASE_VERSION := "17.1.1"
 GO_BUILD_ARGS = LANG=C GOGC=off
+PATH := $(PATH):$(shell dirname $(shell tools/rta --which node))  # work around "node: command not found" when running npm (bug in rta)
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
 	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
@@ -32,7 +33,7 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: install tools/node_modules  # tests the documentation
 	@tools/rta node tools/node_modules/.bin/text-run --offline
 
-fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
+fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	tools/rta gofumpt -l -w .
@@ -54,7 +55,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-structs-sorted
 	git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
-	${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	tools/rta node tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	tools/rta staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
@@ -119,7 +120,9 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go work vendor
-	(cd tools && yarn upgrade --latest)
+	rm -rf tools/node_modules package-lock.json
+	@(export PATH=$(PATH) && cd tools && ./rta npx -y npm-check-updates -u)  # work around "node: command not found" when running npm (bug in rta)
+	@(export PATH=$(PATH) && cd tools && ./rta npm install)  # work around "node: command not found" when running npm (bug in rta)
 	tools/rta --update
 	tools/rta dprint config update
 	tools/rta dprint config update --config dprint-changelog.json
@@ -159,7 +162,8 @@ tools/rta@${RTA_VERSION}:
 	@mv tools/rta tools/rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} tools/rta
 
-tools/node_modules: tools/yarn.lock
+tools/node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
+	test -f tools/node_modules/.yarn-integrity && rm -rf tools/node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
-	@cd tools && yarn install
+	@(export PATH=$(PATH) && cd tools && ./rta npm ci)  # work around "node: command not found" when running npm (bug in rta)
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command

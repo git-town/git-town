@@ -1,6 +1,8 @@
 # git town append
 
-> _git town append [--prototype] &lt;branch-name&gt;_
+```command-summary
+git town append <branch-name> [--prototype] [-d | --detached] [--dry-run] [-v | --verbose]
+```
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
@@ -12,7 +14,7 @@ happens on top of the current state of the repository. If the workspace contains
 uncommitted changes, `git town append` does not perform this sync to let you
 commit your open changes first and then sync manually.
 
-### Positional argument
+## Positional argument
 
 When given a non-existing branch name, `git town append` creates a new feature
 branch with the main branch as its parent.
@@ -36,28 +38,30 @@ main
 *   feature-2
 ```
 
-### --detached / -d
+## Options
+
+#### `-p`<br>`--prototype`
+
+Adding the `--prototype` aka `-p` switch creates a
+[prototype branch](../branch-types.md#prototype-branches).
+
+#### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch. This allows you to build out your branch stack and decide when to pull
 in changes from other developers.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --prototype / -p
-
-Adding the `--prototype` aka `-p` switch creates a
-[prototype branch](../branch-types.md#prototype-branches)).
-
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-### Configuration
+## Configuration
 
 If [push-new-branches](../preferences/push-new-branches.md) is set,
 `git town append` also creates the tracking branch for the new feature branch.

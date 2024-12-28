@@ -1,17 +1,14 @@
 # git town completions
 
-> _git town completion <bash|zsh|fish|powershell>_
+```command-summary
+git town completion (bash|fish|powershell|zsh) [--no-descriptions]
+```
 
 The _completions_ command outputs shell scripts that enable auto-completion for
-Git Town in Bash, Zsh, Fish, or PowerShell. When set up, typing
+Git Town in Bash, Fish, PowerShell, or Zsh. When set up, typing
 `git-town <tab key>` in your terminal will auto-complete subcommands.
 
-## --no-descriptions
-
-The `--no-descriptions` flag outputs shorter completions without descriptions of
-arguments.
-
-## bash
+### Bash
 
 To load autocompletion for Bash, run this command:
 
@@ -21,7 +18,7 @@ source <(git-town completions bash)
 
 To load completions for each session, add the above line to your `.bashrc`.
 
-## fish
+### Fish
 
 To load autocompletions for Fish, run this command:
 
@@ -32,9 +29,9 @@ git-town completions fish | source
 To load completions for each session, add the above line to your
 `~/.config/fish/config.fish`.
 
-## powershell
+### PowerShell
 
-To install autocompletions for Powershell, run this command:
+To install autocompletions for PowerShell, run this command:
 
 ```
 git-town completions powershell | Out-String | Invoke-Expression
@@ -43,7 +40,7 @@ git-town completions powershell | Out-String | Invoke-Expression
 To load completions for each session, add the above line to your PowerShell
 profile.
 
-## zsh
+### Zsh
 
 To load autocompletions for Zsh, run this command:
 
@@ -58,3 +55,10 @@ To fix the error message `command not found: compdef`, run
 ```zsh
 autoload -Uz compinit
 ```
+
+## Options
+
+#### `--no-descriptions`
+
+The `--no-descriptions` flag outputs shorter completions without descriptions of
+arguments.

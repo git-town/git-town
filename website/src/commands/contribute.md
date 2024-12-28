@@ -1,6 +1,8 @@
 # git town contribute
 
-> _git town contribute [branch-name...]_
+```command-summary
+git town contribute [<branch-name>...] [-v | --verbose]
+```
 
 The _contribute_ command makes some of your branches
 [contribution](../branch-types.md#contribution-branches) branches.
@@ -17,7 +19,7 @@ To make the current branch a contribution branch:
 git town contribute
 ```
 
-### Positional arguments
+## Positional arguments
 
 When called with positional arguments, this commands makes the branches with the
 given names contribution branches.
@@ -36,7 +38,9 @@ machine) and make it a contribution branch:
 git town contribute somebody-elses-branch
 ```
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
