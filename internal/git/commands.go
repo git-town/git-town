@@ -532,10 +532,21 @@ func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain
 }
 
 // MergeNoFastForward merges branch into the current branch and always creates a merge commit.
-func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], branch gitdomain.LocalBranchName) error {
+func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage configdomain.UseMessage, branch gitdomain.LocalBranchName) error {
 	gitArgs := []string{"merge", "--no-ff"}
-	if messageContent, has := message.Get(); has {
-		gitArgs = append(gitArgs, "-m", messageContent.String())
+	switch {
+	case useMessage.IsCustomMessage():
+		message := useMessage.GetCustomMessageOrPanic()
+		gitArgs = append(gitArgs, "-m", message.String())
+	case useMessage.IsUseDefault():
+		gitArgs = append(gitArgs, "--no-edit")
+	case useMessage.IsEditDefault():
+		// Unlike `git commit`, `git merge` only launches the editor in a tty.
+		// Until cucumber tests run git subcommands in a tty we have to explicitly set
+		// `--edit` mode to test commit message behaviour.
+		gitArgs = append(gitArgs, "--edit")
+	default:
+		return fmt.Errorf("unhandled %#v case", useMessage)
 	}
 	// Add branch name as the last argument.
 	gitArgs = append(gitArgs, "--", branch.String())
