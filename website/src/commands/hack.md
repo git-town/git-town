@@ -14,6 +14,12 @@ state of the repository. If the workspace is not clean (contains uncommitted
 changes), `git town hack` does not perform this sync to let you commit your open
 changes.
 
+### Upstream remote
+
+If the repository contains a remote called `upstream`, it also syncs the main
+branch with its upstream counterpart. You can control this behavior with the
+[sync-upstream](../preferences/sync-upstream.md) flag.
+
 ## Positional arguments
 
 When given a non-existing branch name, `git town hack` creates a new feature
@@ -47,12 +53,6 @@ that would be run but doesn't execute them.
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
-
-### Upstream remote
-
-If the repository contains a remote called `upstream`, it also syncs the main
-branch with its upstream counterpart. You can control this behavior with the
-[sync-upstream](../preferences/sync-upstream.md) flag.
 
 ## Configuration
 
