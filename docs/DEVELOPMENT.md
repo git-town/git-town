@@ -254,9 +254,19 @@ configuration is in [netlify.toml](../netlify.toml).
 #### Commands
 
 - Command summaries
-  - Always add a command summary immediately after the page title.
+  - Always add a command summary code block immediately after the page title.
   - Sort positional arguments before options (starting with `-` or `--`).
   - Sort `[-d | --detached]`, `[--dry-run]`, and `[-v | --verbose]` at the end
     of the options. We should put the options specific to this command at the
     beginning of the options list.
   - Sort the remaining options alphabetically.
+
+- Document order
+  - Command summary code block
+  - Description (no heading)
+  - Other info (h3)
+  - Positional argument, if applicable (h2)
+  - Options (h2)
+    - Describe each command-line option with an h4 heading, in the same order as
+      the command summary
+  - Configuration, if applicable (h2)
