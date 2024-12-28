@@ -14,7 +14,8 @@ design objectives:
    terminate the entire application to allow the end user to resolve problems in
    the same terminal window and shell environment that they ran Git Town in, and
    then resume execution.
-3. **Reliable undo:**Be able to reliably undo everything that Git Town has done.
+3. **Reliable undo:** Be able to reliably undo everything that Git Town has
+   done.
 
 ### General structure
 
@@ -122,7 +123,7 @@ The name `self` is sufficiently concise, being only four characters long. For
 more background please refer to https://michaelwhatcott.com/receiver-names-in-go
 and https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f.
 
-#### Generic container types for Optionality and Mutablitity
+#### Generic container types for Optionality and Mutability
 
 Pointers in Go serve various orthogonal purposes. One is expressing optionality.
 The simplest way to create a variable that can either have a value or not is
@@ -144,7 +145,7 @@ why a function argument is a pointer: it is optional, mutable, or simply too
 large to pass by value? To clarify this, the Git Town codebase wraps mutable
 function arguments and struct fields in the generic `Mutable` type to denote
 mutability. Any variable not wrapped in a `Mutable` should be considered
-immutable. Any variable wrappen in `Mutable` is guaranteed (by convention) to
+immutable. Any variable wrapped in `Mutable` is guaranteed (by convention) to
 exist, i.e. a `Mutable` is never `nil`.
 
 While this practice introduces a thin layer of additional complexity, a few more
