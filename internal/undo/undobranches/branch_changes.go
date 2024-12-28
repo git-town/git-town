@@ -85,7 +85,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.Config)
 
-	// reset inconsintently changed perennial branches
+	// reset inconsistently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch(); isOmni {
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
@@ -96,7 +96,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		}
 	}
 
-	// reset inconsintently changed feature branches
+	// reset inconsistently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
 		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
 		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemoteBranch()
