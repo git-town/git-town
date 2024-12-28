@@ -80,12 +80,12 @@ also pulls new commits from the upstream's main branch.
 [sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
 tags with the [development remote](../preferences/dev-remote.md).
 
-### Why does git-sync sometimes update a local branch whose tracking branch was deleted before deleting it?
+### Why does Git Town sometimes update a local branch whose tracking branch was deleted before deleting it?
 
-If a remote branch was deleted at the remote, it is considered obsolete and "git
-town sync" will remove its local counterpart. To guarantee that this doesn't
-lose unshipped changes in the local branch, "git town sync" needs to prove that
-the branch to be deleted contains no unshipped changes.
+If a remote branch was deleted at the remote, it is considered obsolete and
+`git town sync` will remove its local counterpart. To guarantee that this
+doesn't lose unshipped changes in the local branch, `git town sync` needs to
+prove that the branch to be deleted contains no unshipped changes.
 
 The easiest way to prove that is when the local branch was in sync with its
 tracking branch before Git Town runs `git fetch`. This is another reason to run
