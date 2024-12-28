@@ -8,13 +8,6 @@ The _completions_ command outputs shell scripts that enable auto-completion for
 Git Town in Bash, Fish, PowerShell, or Zsh. When set up, typing
 `git-town <tab key>` in your terminal will auto-complete subcommands.
 
-## Options
-
-#### `--no-descriptions`
-
-The `--no-descriptions` flag outputs shorter completions without descriptions of
-arguments.
-
 ### Bash
 
 To load autocompletion for Bash, run this command:
@@ -62,3 +55,10 @@ To fix the error message `command not found: compdef`, run
 ```zsh
 autoload -Uz compinit
 ```
+
+## Options
+
+#### `--no-descriptions`
+
+The `--no-descriptions` flag outputs shorter completions without descriptions of
+arguments.
