@@ -167,7 +167,7 @@ func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bo
 	if err != nil {
 		return "", false, err
 	}
-	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
+	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()
 	return selectedData.Branch, result.Aborted(), nil
 }

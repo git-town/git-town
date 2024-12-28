@@ -27,7 +27,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 	if err != nil {
 		return args.ExistingValue, false, err
 	}
-	result := dialogResult.(textFieldModel) //nolint:forcetypeassert
+	result := dialogResult.(textFieldModel)
 	return result.textInput.Value(), result.status == list.StatusAborted, nil
 }
 
