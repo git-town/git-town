@@ -30,6 +30,23 @@ back to the exact state you repo was in before the sync by running
 If the parent branch is not known, Git Town looks for a pull/merge request for
 this branch and uses its parent branch. Otherwise it prompts you for the parent.
 
+### Why does Git Town sometimes update a local branch whose tracking branch was deleted before deleting it?
+
+If a remote branch was deleted at the remote, it is considered obsolete and
+`git town sync` will remove its local counterpart. To guarantee that this
+doesn't lose unshipped changes in the local branch, `git town sync` needs to
+prove that the branch to be deleted contains no unshipped changes.
+
+The easiest way to prove that is when the local branch was in sync with its
+tracking branch before Git Town runs `git fetch`. This is another reason to run
+`git town sync` regularly.
+
+If a local shipped branch is not in sync with its tracking branch on your
+machine, Git Town must check for unshipped local changes by diffing the branch
+to delete against its parent branch. Only branches with an empty diff can be
+deleted safely. For this to work, Git Town needs to sync the branch first, even
+if it's going to be deleted right afterwards.
+
 ## Options
 
 #### `-a`<br>`--all`
@@ -79,20 +96,3 @@ also pulls new commits from the upstream's main branch.
 
 [sync-tags](../preferences/sync-tags.md) configures whether Git Town syncs Git
 tags with the [development remote](../preferences/dev-remote.md).
-
-### Why does Git Town sometimes update a local branch whose tracking branch was deleted before deleting it?
-
-If a remote branch was deleted at the remote, it is considered obsolete and
-`git town sync` will remove its local counterpart. To guarantee that this
-doesn't lose unshipped changes in the local branch, `git town sync` needs to
-prove that the branch to be deleted contains no unshipped changes.
-
-The easiest way to prove that is when the local branch was in sync with its
-tracking branch before Git Town runs `git fetch`. This is another reason to run
-`git town sync` regularly.
-
-If a local shipped branch is not in sync with its tracking branch on your
-machine, Git Town must check for unshipped local changes by diffing the branch
-to delete against its parent branch. Only branches with an empty diff can be
-deleted safely. For this to work, Git Town needs to sync the branch first, even
-if it's going to be deleted right afterwards.
