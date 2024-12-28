@@ -14,7 +14,7 @@ state of the repository. If the workspace is not clean (contains uncommitted
 changes), `git town hack` does not perform this sync to let you commit your open
 changes.
 
-### Positional arguments
+## Positional arguments
 
 When given a non-existing branch name, `git town hack` creates a new feature
 branch with the main branch as its parent.
@@ -25,34 +25,36 @@ When given an existing contribution, observed, parked, or prototype branch,
 When given no arguments, `git town hack` converts the current contribution,
 observed, parked, or prototype branch into a feature branch.
 
-### --prototype / -p
+## Options
+
+#### `-p`<br>`--prototype`
 
 Adding the `--prototype` aka `-p` switch creates a
 [prototype branch](../branch-types.md#prototype-branches).
 
-### --detached / -d
+#### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch. This allows you to build out your branch stack and decide when to pull
 in changes from other developers.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-### upstream remote
+### Upstream remote
 
 If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
 [sync-upstream](../preferences/sync-upstream.md) flag.
 
-### configuration
+## Configuration
 
 If [push-new-branches](../preferences/push-new-branches.md) is set,
 `git town hack` creates a remote tracking branch for the new feature branch.

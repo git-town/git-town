@@ -9,7 +9,7 @@ git town config setup [-v | --verbose]
 
 The _config_ command displays and updates the local Git Town configuration.
 
-### Subcommands
+## Subcommands
 
 Running without a subcommand shows the current Git Town configuration.
 
@@ -19,7 +19,9 @@ Running without a subcommand shows the current Git Town configuration.
   configuration from the current Git repository.
 - The [setup](config-setup.md) subcommand launches Git Town's setup assistant.
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

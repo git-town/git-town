@@ -10,7 +10,7 @@ The _prototype_ command marks some of your branches as
 To convert a prototype branch back into a feature branch, use the
 [hack](hack.md) command.
 
-### Positional arguments
+## Positional arguments
 
 Make the current branch a prototype branch:
 
@@ -24,7 +24,9 @@ Make branches "alpha" and "beta" prototype branches:
 git town prototype alpha beta
 ```
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

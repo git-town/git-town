@@ -24,7 +24,9 @@ Park branches "alpha" and "beta":
 git town park alpha beta
 ```
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
