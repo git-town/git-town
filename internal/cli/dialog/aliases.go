@@ -38,7 +38,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	})
 	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()
-	result := dialogResult.(AliasesModel) //nolint:forcetypeassert
+	result := dialogResult.(AliasesModel)
 	if err != nil || result.Aborted() {
 		return configdomain.Aliases{}, result.Aborted(), err
 	}

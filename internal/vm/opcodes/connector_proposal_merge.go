@@ -38,7 +38,6 @@ func (self *ConnectorProposalMerge) AutomaticUndoError() error {
 
 func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	commitMessage, hasCommitMessage := self.CommitMessage.Get()
-	//nolint:nestif
 	if !hasCommitMessage {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.

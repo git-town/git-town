@@ -21,7 +21,7 @@ func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	result := dialogResult.(textDisplayModel) //nolint:forcetypeassert
+	result := dialogResult.(textDisplayModel)
 	return result.status == list.StatusAborted, nil
 }
 
