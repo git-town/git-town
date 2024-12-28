@@ -11,7 +11,7 @@ import (
 )
 
 // JSON is used to store an opcode in JSON.
-type JSON struct { //nolint:musttag // JSON uses a custom serialization algorithm
+type JSON struct {
 	shared.Opcode
 }
 

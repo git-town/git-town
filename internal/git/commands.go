@@ -72,7 +72,7 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
+func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
 	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
