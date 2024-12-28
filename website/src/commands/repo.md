@@ -17,6 +17,13 @@ When called without arguments, the _repo_ command shows the repository at the
 When called with an argument, it shows the repository at the remote with the
 given name.
 
+## Options
+
+#### `-v`<br>`--verbose`
+
+The `--verbose` aka `-v` flag prints all Git commands run under the hood to
+determine the repository state.
+
 ## Configuration
 
 Git Town automatically identifies the hosting platform type through the URL of
@@ -25,10 +32,3 @@ the development remote. You can override the type of hosting server with the
 
 Set the [hosting-origin-hostname](../preferences/hosting-origin-hostname.md)
 setting to tell Git Town about the hostname when using ssh identities.
-
-## Options
-
-#### `-v`<br>`--verbose`
-
-The `--verbose` aka `-v` flag prints all Git commands run under the hood to
-determine the repository state.
