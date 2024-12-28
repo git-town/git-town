@@ -6,6 +6,9 @@ multilingual = false
 src = "src"
 title = "Git Town 17.1"
 
+[preprocessor.gittown]
+command = "../tools/rta node ../tools/mdbook_preprocessor/mdbook_preprocessor.js"
+
 [output.html]
 git-repository-url = "https://github.com/git-town/git-town"
 edit-url-template = "https://github.com/git-town/git-town/edit/main/website/{path}"

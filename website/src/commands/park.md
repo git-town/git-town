@@ -1,6 +1,8 @@
 # git town park
 
-> _git town park [branch-name...]_
+```command-summary
+git town park [<branch-name>...] [-v | --verbose]
+```
 
 The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
@@ -22,7 +24,9 @@ Park branches "alpha" and "beta":
 git town park alpha beta
 ```
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
