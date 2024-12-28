@@ -39,7 +39,9 @@ $ git log --pretty=format:'%s'
 commit 1
 ```
 
-### --message / -m &lt;text&gt;
+## Options
+
+#### `-m <text>`<br>`--message <text>`
 
 By default the now compressed commit uses the commit message of the first commit
 in the branch. You can provide a custom commit message for the squashed commit
@@ -71,7 +73,7 @@ compressed commit
 The new `compressed commit` now contains the changes from the old `commit 1`,
 `commit 2`, and `commit 3`.
 
-### --stack / -s
+#### `-s`<br>`--stack`
 
 To compress all branches in a [branch stack](../stacked-changes.md) provide the
 `--stack` aka `-s` switch.
@@ -118,12 +120,12 @@ changes from the old `commit 1a`, `commit 1b`, and `commit 1c`. The new
 `commit 2a` contains the changes made in `branch 2`, i.e. the changes from the
 old `commit 2a`, `commit 2b`, and `commit 2c`.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

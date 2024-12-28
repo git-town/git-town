@@ -16,7 +16,7 @@ a proposal, the existing proposal will most likely end up closed and you have to
 create a new proposal that supersedes the old one. If that happens, Git Town
 will notify you. Updating proposals of child branches usually works.
 
-### Positional arguments
+## Positional arguments
 
 When called with only one argument, the _rename_ command renames the current
 branch to the given name.
@@ -24,17 +24,19 @@ branch to the given name.
 When called with two arguments, it renames the branch with the given name to the
 given name.
 
-### --force / -f
+## Options
+
+#### `-f`<br>`--force`
 
 Renaming perennial branches requires confirmation with the `--force` aka `-f`
 flag.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

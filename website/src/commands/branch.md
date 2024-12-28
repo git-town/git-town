@@ -9,7 +9,9 @@ The _branch_ command is Git Town's equivalent of the
 branch hierarchy, and the types of all branches except for main and feature
 branches.
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

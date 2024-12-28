@@ -18,40 +18,42 @@ exit with an error. When that happens, run [git town sync](sync.md) to get the
 branch in sync, re-test and re-review the updated branch, and then run
 `git town ship` again.
 
-### Positional argument
+## Positional argument
 
 When called without a positional argument, the _ship_ command ships the current
 branch.
 
 When called with a positional argument, it ships the branch with the given name.
 
-### --message / -m &lt;text&gt;
+## Options
+
+#### `-m <text>`<br>`--message <text>`
 
 Similar to `git commit`, the `--message <message>` aka `-m` parameter allows
 specifying the commit message via the CLI.
 
-### --strategy / -s &lt;name&gt;
+#### `-s <name>`<br>`--strategy <name>`
 
 Overrides the configured [ship-strategy](../preferences/ship-strategy.md).
 
-### --to-parent / -p
+#### `-p`<br>`--to-parent`
 
 The _ship_ command ships only direct children of the main branch. To ship a
 child branch, you need to first ship or [delete](delete.md) all its ancestor
 branches. If you really want to ship into a non-perennial branch, you can
 override the protection against that with the `--to-parent` aka `-p` option.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-### Configuration
+## Configuration
 
 The configured [ship-strategy](../preferences/ship-strategy.md) determines how
 the _ship_ command merges branches. When shipping

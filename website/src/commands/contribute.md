@@ -19,7 +19,7 @@ To make the current branch a contribution branch:
 git town contribute
 ```
 
-### Positional arguments
+## Positional arguments
 
 When called with positional arguments, this commands makes the branches with the
 given names contribution branches.
@@ -38,7 +38,9 @@ machine) and make it a contribution branch:
 git town contribute somebody-elses-branch
 ```
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

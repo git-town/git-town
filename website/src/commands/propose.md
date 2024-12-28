@@ -17,38 +17,40 @@ You can create pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-### --body / -b &lt;text&gt;
+## Options
+
+#### `-b <text>`<br>`--body <text>`
 
 Pre-populate the body of the pull request with the given text.
 
-### --body-file / -f &lt;path&gt;
+#### `-f <path>`<br>`--body-file <path>`
 
 When called with the `--body-file` aka `-f` flag, it pre-populates the body of
 the pull request with the content of the given file. The filename `-` reads the
 body text from STDIN.
 
-### --title / -t &lt;text&gt;
+#### `-t <text>`<br>`--title <text>`
 
 When called with the `--title <title>` aka `-t` flag, the _propose_ command
 pre-populate the title of the pull request to the given text.
 
-### --detached / -d
+#### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch. This allows you to build out your branch stack and decide when to pull
 in changes from other developers.
 
-### --dry-run
+#### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
 that would be run but doesn't execute them.
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
 
-### Configuration
+## Configuration
 
 You can configure the hosting platform type with the
 [hosting-platform](../preferences/hosting-platform.md) setting.

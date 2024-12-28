@@ -12,7 +12,7 @@ regular expression matches.
 `git town switch` reminds you about uncommitted changes in your workspace in
 case you forgot to commit them to the current branch.
 
-### positional arguments
+## Positional arguments
 
 `git town switch` interprets all positional arguments as regular expressions.
 When receiving regular expressions from the user, it displays only the branches
@@ -31,22 +31,24 @@ To display all branches starting with `me-` and the main branch:
 git town switch me- main
 ```
 
-### --all / -a
+## Options
+
+#### `-a`<br>`--all`
 
 The `--all` aka `-a` flag also displays both local and remote branches.
 
-### --display-types / -d
+#### `-d`<br>`--display-types`
 
 When enabled, this command displays the types for all branches except the main
 branch and feature branches.
 
-### --merge / -m
+#### `-m`<br>`--merge`
 
 The `--merge` aka `-m` flag has the same effect as the
 [git checkout -m](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt--m)
 flag.
 
-### --type / -t &lt;name&gt;
+#### `-t <name>`<br>`--type <name>`
 
 The `--type` aka `-t` flag reduces the list of branches to those that have the
 given type(s). For example, to display only observed branches:
@@ -82,7 +84,7 @@ This can be shortened to:
 git town switch -to+c
 ```
 
-### --verbose / -v
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

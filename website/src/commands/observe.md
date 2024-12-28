@@ -10,7 +10,7 @@ The _observe_ command makes some of your branches
 To convert an observed branch back into a feature branch, use the
 [hack](hack.md) command.
 
-### Positional arguments
+## Positional arguments
 
 Observe the current branch:
 
@@ -32,7 +32,9 @@ machine) and make it observed:
 git town observe somebody-elses-branch
 ```
 
-### --verbose / -v
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.
