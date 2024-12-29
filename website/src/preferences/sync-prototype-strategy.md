@@ -10,11 +10,6 @@ their parent and tracking branches. When not set, Git Town uses the
 `sync-prototype-strategy` accepts the same options as
 [sync-feature-strategy](sync-feature-strategy.md#options).
 
-## change this setting
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ### config file
 
 In the [config file](../configuration-file.md) the sync-prototype-strategy is

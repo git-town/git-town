@@ -8,9 +8,6 @@ When disabled, Git Town pushes using the
 [--no-verify](https://git-scm.com/docs/git-push) option. This omits the
 [pre-push](https://git-scm.com/docs/githooks#_pre_push) hook.
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 To configure the push hook in the

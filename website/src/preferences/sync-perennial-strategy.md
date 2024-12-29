@@ -9,9 +9,6 @@ When set to `rebase` (the default value), Git Town rebases local perennial
 branches against their tracking branch. When set to `merge`, it merges the
 tracking branch into the local perennial branch.
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ## in config file
 
 In the [config file](../configuration-file.md) the sync-perennial-strategy is
