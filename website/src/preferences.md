@@ -14,7 +14,7 @@ Configuration data exists on multiple levels:
    in all my repositories, I would run:
 
    ```command-summary
-   git config --global git-town.sync-feature-strategy rebase.
+   git config --global git-town.sync-feature-strategy rebase
    ```
 3. User and repo specific configuration settings go into local Git metadata,
    which takes precedence over (1) and (2). For example, if I want `rebase` as
