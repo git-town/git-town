@@ -1387,7 +1387,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the observed branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.ObservedBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 observed branch, got %q", actual)
 		}

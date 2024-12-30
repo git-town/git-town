@@ -45,9 +45,23 @@ type NormalConfigData struct {
 }
 
 func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
-	matching := set.New(self.ContributionBranches...)
+	matching := set.New[gitdomain.LocalBranchName]()
+	switch branchType {
+	case BranchTypeContributionBranch:
+		matching.Add(self.ContributionBranches...)
+	case BranchTypeFeatureBranch:
+	case BranchTypeMainBranch:
+	case BranchTypeObservedBranch:
+		matching.Add(self.ObservedBranches...)
+	case BranchTypeParkedBranch:
+		matching.Add(self.ParkedBranches...)
+	case BranchTypePerennialBranch:
+		matching.Add(self.PerennialBranches...)
+	case BranchTypePrototypeBranch:
+		matching.Add(self.PrototypeBranches...)
+	}
 	for key, value := range self.BranchTypeOverrides {
-		if value == BranchTypeContributionBranch {
+		if value == branchType {
 			matching.Add(key)
 		}
 	}
