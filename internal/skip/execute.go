@@ -109,6 +109,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		BeginBranch:              args.InitialBranch,
 		Config:                   args.Config,
 		EndBranch:                args.InitialBranch,
+		FinalMessages:            args.FinalMessages,
 		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})

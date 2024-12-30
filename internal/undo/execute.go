@@ -27,6 +27,7 @@ func Execute(args ExecuteArgs) error {
 		Backend:        args.Backend,
 		Config:         args.Config,
 		DryRun:         args.RunState.DryRun,
+		FinalMessages:  args.FinalMessages,
 		Git:            args.Git,
 		HasOpenChanges: args.HasOpenChanges,
 		NoPushHook:     args.Config.NormalConfig.NoPushHook(),
