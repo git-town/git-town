@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"strings"
 	"time"
 
@@ -280,11 +279,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypeContributionBranch {
-			return fmt.Errorf(
-				"branch %q isn't contribution as expected.\nContribution branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.ContributionBranches.Strings(), ", "),
-			)
+			return fmt.Errorf("branch %q is %q", branch, branchType)
 		}
 		return nil
 	})
@@ -295,7 +290,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypeFeatureBranch {
-			return fmt.Errorf("branch %q is a %s", branch, branchType)
+			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
 	})
@@ -304,12 +299,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.ObservedBranches, branch) {
-			return fmt.Errorf(
-				"branch %q isn't observed as expected.\nObserved branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.ObservedBranches.Strings(), ", "),
-			)
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypeObservedBranch {
+			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
 	})
@@ -318,12 +310,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.ParkedBranches, branch) {
-			return fmt.Errorf(
-				"branch %q isn't parked as expected.\nParked branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.ParkedBranches.Strings(), ", "),
-			)
+		branchType := devRepo.Config.NormalConfig.PartialBranchType(branch)
+		if branchType != configdomain.BranchTypeParkedBranch {
+			return fmt.Errorf("branch %q is %q", branch, branchType)
 		}
 		return nil
 	})
@@ -334,12 +323,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypePerennialBranch {
-			return fmt.Errorf(
-				"branch %q isn't perennial as expected.\nPerennial branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.PerennialBranches.Strings(), ", "),
-			)
+		if branchType != configdomain.BranchTypeFeatureBranch {
+			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
 	})

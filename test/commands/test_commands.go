@@ -210,6 +210,7 @@ func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) 
 }
 
 // creates a prototype branch with the given name and parent in this repository
+// TODO: make generic
 func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent.BranchName())
 	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePrototypeBranch, name))
