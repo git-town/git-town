@@ -23,7 +23,7 @@ import (
 
 // TestRunner runs shell commands using a customizable environment.
 // This is useful in tests. Possible customizations:
-//   - overide environment variables
+//   - override environment variables
 //   - Temporarily override certain shell commands with mock implementations.
 //     Temporary mocks are only valid for the next command being run.
 type TestRunner struct {

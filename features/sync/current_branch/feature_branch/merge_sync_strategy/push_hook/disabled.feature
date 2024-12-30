@@ -39,8 +39,8 @@ Feature: push-hook setting set to "false"
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """
-    And Git Town runs no commands
