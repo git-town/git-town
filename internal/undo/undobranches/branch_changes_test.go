@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v17/internal/undo/undobranches"
 	"github.com/git-town/git-town/v17/internal/undo/undodomain"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
@@ -141,6 +142,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -236,6 +238,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -332,6 +335,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -419,6 +423,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -493,6 +498,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -592,6 +598,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -730,6 +737,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -846,6 +854,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{"444444"},
 		})
 		wantProgram := program.Program{
@@ -950,6 +959,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{"444444"},
 		})
 		wantProgram := program.Program{
@@ -1073,6 +1083,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1175,6 +1186,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1278,6 +1290,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1368,6 +1381,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1461,6 +1475,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrDefault(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1548,6 +1563,7 @@ func TestChanges(t *testing.T) {
 			BeginBranch:              before.Active.GetOrPanic(),
 			Config:                   config,
 			EndBranch:                after.Active.GetOrPanic(),
+			FinalMessages:            stringslice.NewCollector(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
