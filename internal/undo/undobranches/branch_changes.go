@@ -1,10 +1,13 @@
 package undobranches
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/messages"
 	"github.com/git-town/git-town/v17/internal/undo/undodomain"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 	"github.com/git-town/git-town/v17/internal/vm/program"
@@ -65,6 +68,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
 			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+		} else {
+			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After))
 		}
 	}
 
@@ -93,6 +98,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
 				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
 			}
+		} else {
+			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA))
 		}
 	}
 
@@ -186,6 +193,7 @@ type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
+	FinalMessages            stringslice.Collector
 	UndoAPIProgram           program.Program
 	UndoablePerennialCommits []gitdomain.SHA
 }
