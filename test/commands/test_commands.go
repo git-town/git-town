@@ -164,7 +164,7 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 // creates a contribution branches with the given name in this repository
 func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.MakeContributionBranch(name))
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, name))
 }
 
 // creates a feature branch with the given name in this repository
@@ -191,7 +191,7 @@ func (self *TestCommands) CreateFolder(name string) {
 // creates an observed branch with the given name in this repository
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.AddToObservedBranches(name))
+	asserts.NoError(self.Config.NormalConfig.MakeObservedBranch(name))
 }
 
 // creates a parked branch with the given name and parent in this repository

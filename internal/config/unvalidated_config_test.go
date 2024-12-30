@@ -28,7 +28,7 @@ func TestUnvalidatedConfig(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			repo.CreateBranch("branch", "main")
-			err := repo.Config.NormalConfig.MakeContributionBranch("branch")
+			err := repo.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, "branch")
 			must.NoError(t, err)
 			repo.Config.Reload()
 			want := gitdomain.NewLocalBranchNames("branch")

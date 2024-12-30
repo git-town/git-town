@@ -72,7 +72,7 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.MakeContributionBranch(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)

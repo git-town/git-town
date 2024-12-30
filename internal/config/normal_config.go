@@ -27,20 +27,20 @@ type NormalConfig struct {
 	LocalGitConfig  configdomain.PartialConfig         // content of the local Git configuration
 }
 
-// MakeContributionBranch registers the given branch names as contribution branches.
+// SetBranchTypeOverride registers the given branch names as contribution branches.
 // The branches must exist.
-func (self *NormalConfig) MakeContributionBranch(branches ...gitdomain.LocalBranchName) error {
+func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
 	result := gohacks.ErrorCollector{}
 	for _, branch := range branches {
-		self.BranchTypeOverrides[branch] = configdomain.BranchTypeContributionBranch
-		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, configdomain.BranchTypeContributionBranch.String()))
+		self.BranchTypeOverrides[branch] = branchType
+		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()))
 	}
 	return result.Err
 }
 
-// AddToObservedBranches registers the given branch names as observed branches.
+// MakeObservedBranch registers the given branch names as observed branches.
 // The branches must exist.
-func (self *NormalConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
+func (self *NormalConfig) MakeObservedBranch(branches ...gitdomain.LocalBranchName) error {
 	return self.SetObservedBranches(append(self.ObservedBranches, branches...))
 }
 
