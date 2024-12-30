@@ -11,7 +11,6 @@ Feature: rename a contribution branch
       | contribution | local, origin | somebody elses commit |
     When I run "git-town rename contribution new"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH       | COMMAND                            |

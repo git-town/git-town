@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/git"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/git/giturl"
+	"github.com/git-town/git-town/v17/internal/gohacks"
 	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v17/internal/messages"
@@ -26,10 +27,15 @@ type NormalConfig struct {
 	LocalGitConfig  configdomain.PartialConfig         // content of the local Git configuration
 }
 
-// AddToContributionBranches registers the given branch names as contribution branches.
+// MakeContributionBranch registers the given branch names as contribution branches.
 // The branches must exist.
-func (self *NormalConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetContributionBranches(append(self.ContributionBranches, branches...))
+func (self *NormalConfig) MakeContributionBranch(branches ...gitdomain.LocalBranchName) error {
+	result := gohacks.ErrorCollector{}
+	for _, branch := range branches {
+		self.BranchTypeOverrides[branch] = configdomain.BranchTypeContributionBranch
+		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, configdomain.BranchTypeContributionBranch.String()))
+	}
+	return result.Err
 }
 
 // AddToObservedBranches registers the given branch names as observed branches.

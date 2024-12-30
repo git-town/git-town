@@ -164,7 +164,7 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 // creates a contribution branches with the given name in this repository
 func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.AddToContributionBranches(name))
+	asserts.NoError(self.Config.NormalConfig.MakeContributionBranch(name))
 }
 
 // creates a feature branch with the given name in this repository
