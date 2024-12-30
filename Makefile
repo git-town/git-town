@@ -120,8 +120,8 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go mod tidy
 	go work vendor
 	rm -rf tools/node_modules package-lock.json
-	cd tools && ./rta npx -y npm-check-updates -u  # work around "node: command not found" when running npm (bug in rta)
-	cd tools && ./rta npm install  # work around "node: command not found" when running npm (bug in rta)
+	cd tools && ./rta npx -y npm-check-updates -u
+	cd tools && ./rta npm install
 	tools/rta --update
 	tools/rta dprint config update
 	tools/rta dprint config update --config dprint-changelog.json
@@ -164,5 +164,5 @@ tools/rta@${RTA_VERSION}:
 tools/node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
 	test -f tools/node_modules/.yarn-integrity && rm -rf tools/node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
-	cd tools && ./rta npm ci  # work around "node: command not found" when running npm (bug in rta)
+	cd tools && ./rta npm ci
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
