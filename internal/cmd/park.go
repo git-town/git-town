@@ -66,7 +66,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToPark.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.AddToParkedBranches(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeParkedBranch, branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonParkBranchTypes(data.branchesToPark, repo.UnvalidatedConfig); err != nil {

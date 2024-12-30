@@ -189,21 +189,23 @@ func (self *TestCommands) CreateFolder(name string) {
 }
 
 // creates an observed branch with the given name in this repository
+// TODO: convert to more generic CreateBranchWithType function
 func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.MakeObservedBranch(name))
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, name))
 }
 
 // creates a parked branch with the given name and parent in this repository
+// TODO: make generic
 func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
 	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.AddToParkedBranches(name))
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeParkedBranch, name))
 }
 
 // creates a perennial branch with the given name in this repository
 func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.AddToPerennialBranches(name))
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePerennialBranch, name))
 }
 
 // creates a prototype branch with the given name and parent in this repository

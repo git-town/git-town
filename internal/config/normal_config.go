@@ -38,24 +38,6 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 	return result.Err
 }
 
-// MakeObservedBranch registers the given branch names as observed branches.
-// The branches must exist.
-func (self *NormalConfig) MakeObservedBranch(branches ...gitdomain.LocalBranchName) error {
-	return self.SetObservedBranches(append(self.ObservedBranches, branches...))
-}
-
-// AddToParkedBranches registers the given branch names as parked branches.
-// The branches must exist.
-func (self *NormalConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetParkedBranches(append(self.ParkedBranches, branches...))
-}
-
-// AddToPerennialBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (self *NormalConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
-}
-
 // AddToPrototypeBranches registers the given branch names as prototype branches.
 // The branches must exist.
 func (self *NormalConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {

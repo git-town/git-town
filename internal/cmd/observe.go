@@ -73,7 +73,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.MakeObservedBranch(branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
 	}
 	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
