@@ -52,6 +52,7 @@ Feature: ship the supplied feature branch without a tracking branch
       |        | git checkout other                            |
       | other  | git stash pop                                 |
     And the current branch is now "other"
+    And the uncommitted file still exists
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
