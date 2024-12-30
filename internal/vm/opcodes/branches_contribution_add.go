@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
@@ -12,5 +13,5 @@ type BranchesContributionAdd struct {
 }
 
 func (self *BranchesContributionAdd) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.AddToContributionBranches(self.Branch)
+	return args.Config.Value.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, self.Branch)
 }

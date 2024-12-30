@@ -1123,7 +1123,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the contribution branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.ContributionBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 contribution branch, got %q", actual)
 		}

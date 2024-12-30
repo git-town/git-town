@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/pkg/set"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
@@ -41,6 +42,16 @@ type NormalConfigData struct {
 	SyncPrototypeStrategy    SyncPrototypeStrategy
 	SyncTags                 SyncTags
 	SyncUpstream             SyncUpstream
+}
+
+func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
+	matching := set.New(self.ContributionBranches...)
+	for key, value := range self.BranchTypeOverrides {
+		if value == BranchTypeContributionBranch {
+			matching.Add(key)
+		}
+	}
+	return matching.Values()
 }
 
 func (self *NormalConfigData) IsOnline() bool {

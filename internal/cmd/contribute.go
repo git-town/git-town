@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/cli/flags"
 	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/execute"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
@@ -73,10 +72,7 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.AddToContributionBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.UnvalidatedConfig); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
@@ -110,31 +106,6 @@ func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.ContributeBranchIsNowContribution, branch)
 	}
-}
-
-func removeNonContributionBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
 }
 
 func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {

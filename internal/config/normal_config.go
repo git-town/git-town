@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/git"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/git/giturl"
+	"github.com/git-town/git-town/v17/internal/gohacks"
 	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v17/internal/messages"
@@ -26,34 +27,15 @@ type NormalConfig struct {
 	LocalGitConfig  configdomain.PartialConfig         // content of the local Git configuration
 }
 
-// AddToContributionBranches registers the given branch names as contribution branches.
+// SetBranchTypeOverride registers the given branch names as contribution branches.
 // The branches must exist.
-func (self *NormalConfig) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetContributionBranches(append(self.ContributionBranches, branches...))
-}
-
-// AddToObservedBranches registers the given branch names as observed branches.
-// The branches must exist.
-func (self *NormalConfig) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetObservedBranches(append(self.ObservedBranches, branches...))
-}
-
-// AddToParkedBranches registers the given branch names as parked branches.
-// The branches must exist.
-func (self *NormalConfig) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetParkedBranches(append(self.ParkedBranches, branches...))
-}
-
-// AddToPerennialBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (self *NormalConfig) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
-}
-
-// AddToPrototypeBranches registers the given branch names as prototype branches.
-// The branches must exist.
-func (self *NormalConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPrototypeBranches(append(self.PrototypeBranches, branches...))
+func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
+	result := gohacks.ErrorCollector{}
+	for _, branch := range branches {
+		self.BranchTypeOverrides[branch] = branchType
+		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()))
+	}
+	return result.Err
 }
 
 // removes the given branch from the lineage, and updates its children
