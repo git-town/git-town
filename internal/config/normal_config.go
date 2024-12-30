@@ -38,12 +38,6 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 	return result.Err
 }
 
-// AddToPrototypeBranches registers the given branch names as prototype branches.
-// The branches must exist.
-func (self *NormalConfig) AddToPrototypeBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPrototypeBranches(append(self.PrototypeBranches, branches...))
-}
-
 // removes the given branch from the lineage, and updates its children
 func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchName) {
 	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
