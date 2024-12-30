@@ -119,7 +119,7 @@ func (self *RunState) String() string {
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
 	if unfinishedDetails, hasUnfinishedDetails := self.UnfinishedDetails.Get(); hasUnfinishedDetails {
-		result.WriteString("  UnfineshedDetails: ")
+		result.WriteString("  UnfinishedDetails: ")
 		result.WriteString(unfinishedDetails.String())
 	}
 	return result.String()

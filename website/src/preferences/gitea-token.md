@@ -10,9 +10,6 @@ permissions:
 
 - read and write the repository
 
-The best way to enter your token is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since your API token is confidential, you cannot add it to the config file.

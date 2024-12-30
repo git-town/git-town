@@ -9,7 +9,8 @@ Feature: no double undo
     And I run "git-town delete"
     And I run "git-town undo"
     When I run "git-town undo"
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """
