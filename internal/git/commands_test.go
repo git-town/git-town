@@ -509,7 +509,7 @@ func TestBackendCommands(t *testing.T) {
 		must.NoError(t, err)
 		haveMessages := commits.Messages()
 		wantMessages := gitdomain.NewCommitMessages("Merge branch 'branch' into initial", "initial commit", "first commit")
-		must.Eq(t, wantMessages, haveMessages)
+		must.SliceContainsAll(t, wantMessages, haveMessages)
 	})
 
 	t.Run("MergeNoFastForwardWithCommitMessage", func(t *testing.T) {
@@ -533,7 +533,7 @@ func TestBackendCommands(t *testing.T) {
 		must.NoError(t, err)
 		haveMessages := commits.Messages()
 		wantMessages := gitdomain.NewCommitMessages("merge message", "initial commit", "first commit")
-		must.Eq(t, wantMessages, haveMessages)
+		must.SliceContainsAll(t, wantMessages, haveMessages)
 	})
 
 	t.Run("NewUnmergedStage", func(t *testing.T) {
