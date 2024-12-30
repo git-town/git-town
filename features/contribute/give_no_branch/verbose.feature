@@ -11,16 +11,16 @@ Feature: make the current branch a contribution branch verbosely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                           |
-      |        | git version                                       |
-      |        | git rev-parse --show-toplevel                     |
-      |        | git config -lz --includes --global                |
-      |        | git config -lz --includes --local                 |
-      |        | git branch -vva --sort=refname                    |
-      |        | git config git-town.contribution-branches feature |
-      |        | git branch -vva --sort=refname                    |
-      |        | git config -lz --includes --global                |
-      |        | git config -lz --includes --local                 |
+      | BRANCH | COMMAND                                                    |
+      |        | git version                                                |
+      |        | git rev-parse --show-toplevel                              |
+      |        | git config -lz --includes --global                         |
+      |        | git config -lz --includes --local                          |
+      |        | git branch -vva --sort=refname                             |
+      |        | git config git-town-branch.feature.branchtype contribution |
+      |        | git branch -vva --sort=refname                             |
+      |        | git config -lz --includes --global                         |
+      |        | git config -lz --includes --local                          |
     And Git Town prints:
       """
       Ran 9 shell commands
@@ -36,22 +36,22 @@ Feature: make the current branch a contribution branch verbosely
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                           |
-      |         | git version                                       |
-      |         | git rev-parse --show-toplevel                     |
-      |         | git config -lz --includes --global                |
-      |         | git config -lz --includes --local                 |
-      |         | git status --long --ignore-submodules             |
-      |         | git stash list                                    |
-      |         | git branch -vva --sort=refname                    |
-      |         | git remote get-url origin                         |
-      |         | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | git remote get-url origin                         |
-      | feature | git add -A                                        |
-      |         | git stash                                         |
-      | <none>  | git config --unset git-town.contribution-branches |
-      |         | git stash list                                    |
-      | feature | git stash pop                                     |
+      | BRANCH  | COMMAND                                               |
+      |         | git version                                           |
+      |         | git rev-parse --show-toplevel                         |
+      |         | git config -lz --includes --global                    |
+      |         | git config -lz --includes --local                     |
+      |         | git status --long --ignore-submodules                 |
+      |         | git stash list                                        |
+      |         | git branch -vva --sort=refname                        |
+      |         | git remote get-url origin                             |
+      |         | git rev-parse --verify --abbrev-ref @{-1}             |
+      |         | git remote get-url origin                             |
+      | feature | git add -A                                            |
+      |         | git stash                                             |
+      | <none>  | git config --unset git-town-branch.feature.branchtype |
+      |         | git stash list                                        |
+      | feature | git stash pop                                         |
     And Git Town prints:
       """
       Ran 15 shell commands
