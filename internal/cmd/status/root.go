@@ -67,7 +67,7 @@ func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) e
 	}
 	displayStatus(data, pending)
 	if !pending {
-		print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
+		print.Footer(verbose, *repo.CommandsCounter.Value, []string{})
 	}
 	return nil
 }
