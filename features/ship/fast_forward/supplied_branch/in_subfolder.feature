@@ -48,6 +48,7 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git stash pop                                 |
     And the current branch is now "other"
+    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |

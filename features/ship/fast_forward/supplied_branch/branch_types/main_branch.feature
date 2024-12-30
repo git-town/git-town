@@ -29,3 +29,4 @@ Feature: does not ship the main branch using the fast-forward strategy
       nothing to undo
       """
     And the current branch is still "feature"
+    And the uncommitted file still exists

@@ -8,9 +8,6 @@ needs your Bitbucket username and an
 Bitbucket Datacenter capabilities are a little more restricted but the process
 is the same as for Bitbucket Cloud.
 
-The best way to enter your Bitbucket username is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since usernames are user specific, you cannot add them to the config file.

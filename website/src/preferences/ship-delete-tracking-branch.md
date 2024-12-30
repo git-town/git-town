@@ -10,9 +10,6 @@ resulting in an error. To prevent this error, set the
 _ship-delete-tracking-branch_ setting to `false` so that Git Town does not try
 to delete the tracking branch.
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ## in config file
 
 ```toml

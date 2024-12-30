@@ -8,9 +8,6 @@ of the [development remote](dev-remote.md). If that's not successful, for
 example when using private instances of code hosting platforms, you can tell Git
 Town through this configuration setting which code hosting platform you use.
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ## values
 
 You can use one of these values for the hosting platform setting:

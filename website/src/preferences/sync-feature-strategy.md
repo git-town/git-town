@@ -58,11 +58,6 @@ Please be aware that this sync strategy leads to more merge conflicts than the
 "merge" sync strategy when more than one Git user makes commits to the same
 branch.
 
-## change this setting
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ### config file
 
 In the [config file](../configuration-file.md) the sync-feature-strategy is part

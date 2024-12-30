@@ -4,9 +4,6 @@ If you use SSH identities, you can define the hostname of your source code
 repository with this setting. The given value should match the hostname in your
 SSH config file.
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 In the [config file](../configuration-file.md) the hosting platform is part of

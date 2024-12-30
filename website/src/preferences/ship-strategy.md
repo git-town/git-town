@@ -47,11 +47,6 @@ feature branch to ship in your local Git repository. While doing so it squashes
 all commits on the feature branch into a single commit and lets you edit the
 commit message.
 
-## change this setting
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ### config file
 
 Set the ship-strategy in the [config file](../configuration-file.md):

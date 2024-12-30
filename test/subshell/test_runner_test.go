@@ -32,6 +32,20 @@ func TestMockingRunner(t *testing.T) {
 		must.EqOp(t, "foo called with: bar", res)
 	})
 
+	t.Run("MockCommitMessage", func(t *testing.T) {
+		t.Parallel()
+		runner := subshell.TestRunner{
+			WorkingDir: t.TempDir(),
+			HomeDir:    t.TempDir(),
+			BinDir:     filepath.Join(t.TempDir(), "bin"),
+		}
+
+		runner.MockCommitMessage("test commit message")
+
+		res := runner.MustQuery("bash", "-c", "$GIT_EDITOR output; cat output")
+		must.Eq(t, "test commit message", res)
+	})
+
 	t.Run("Run", func(t *testing.T) {
 		t.Parallel()
 		runner := subshell.TestRunner{
