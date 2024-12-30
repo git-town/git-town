@@ -32,7 +32,8 @@ Feature: abort the ship by empty commit message
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """
