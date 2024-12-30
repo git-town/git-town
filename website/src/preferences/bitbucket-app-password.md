@@ -32,11 +32,6 @@ the left `HTTP access tokens`. You need to enable these permissions:
 - Project read
 - Repository write
 
-## Setup app password
-
-The best way to enter the Bitbucket app password is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since your App Password is confidential, you cannot add it to the config file.

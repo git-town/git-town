@@ -6,9 +6,6 @@ _This setting is deprecated. Please replace it with the
 The "create-prototype-branches" setting determines whether Git Town creates new
 branches as [prototype branches](../branch-types.md#prototype-branches).
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 To configure the creation of prototype branches in the
