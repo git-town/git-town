@@ -203,6 +203,7 @@ func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchN
 }
 
 // creates a perennial branch with the given name in this repository
+// TODO: make generic
 func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
 	self.CreateBranch(name, "main")
 	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePerennialBranch, name))
