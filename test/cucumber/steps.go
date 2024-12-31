@@ -991,7 +991,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypeContributionBranch:
 					repoToCreateBranchIn.CreateContributionBranch(branchSetup.Name)
 				case configdomain.BranchTypeObservedBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, None[gitdomain.LocalBranchName](), configdomain.BranchTypeObservedBranch)
+					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeObservedBranch)
 				case configdomain.BranchTypeParkedBranch:
 					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeParkedBranch)
 				case configdomain.BranchTypePrototypeBranch:
