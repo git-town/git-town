@@ -11,6 +11,16 @@ import (
 func TestBranchTypeOverrideKey(t *testing.T) {
 	t.Parallel()
 
+	t.Run("NewBranchTypeOverrideKeyForBranch", func(t *testing.T) {
+		t.Parallel()
+		have := configdomain.NewBranchTypeOverrideKeyForBranch("my-branch")
+		want := configdomain.BranchTypeOverrideKey{
+			BranchSpecificKey: configdomain.BranchSpecificKey{
+				Key: "git-town-branch.my-branch.branchtype",
+			},
+		}
+		must.EqOp(t, want, have)
+	})
 	t.Run("ParseBranchTypeOverrideKey", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is branch type override", func(t *testing.T) {
