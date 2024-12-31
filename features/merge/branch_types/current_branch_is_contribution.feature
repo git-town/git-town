@@ -9,6 +9,7 @@ Feature: does not merge contribution branches
     And the current branch is "current"
     When I run "git-town merge"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
