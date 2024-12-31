@@ -142,8 +142,18 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
+func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], branchType configdomain.BranchType) {
+	if parent, hasParent := parentOpt.Get(); hasParent {
+		self.CreateFeatureBranch(name, parent.BranchName())
+	} else {
+		self.CreateBranch(name, "main")
+	}
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(branchType, name))
+}
+
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
+// TODO: merge with CreateFeatureBranch
 func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	self.CreateBranch(branch, parent.BranchName())
 	asserts.NoError(self.Config.NormalConfig.SetParent(branch, parent))
@@ -159,12 +169,6 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 		commands = append(commands, "--author="+commit.Author.String())
 	}
 	self.MustRun("git", commands...)
-}
-
-// creates a contribution branches with the given name in this repository
-func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, name))
 }
 
 // creates a feature branch with the given name in this repository
@@ -186,34 +190,6 @@ func (self *TestCommands) CreateFile(name, content string) {
 func (self *TestCommands) CreateFolder(name string) {
 	folderPath := filepath.Join(self.WorkingDir, name)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
-}
-
-// creates an observed branch with the given name in this repository
-// TODO: convert to more generic CreateBranchWithType function
-func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, name))
-}
-
-// creates a parked branch with the given name and parent in this repository
-// TODO: make generic
-func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeParkedBranch, name))
-}
-
-// creates a perennial branch with the given name in this repository
-// TODO: make generic
-func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePerennialBranch, name))
-}
-
-// creates a prototype branch with the given name and parent in this repository
-// TODO: make generic
-func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePrototypeBranch, name))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.

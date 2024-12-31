@@ -15,7 +15,7 @@ Feature: does not merge contribution branches
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge branch "current" because it has no parent
+      cannot merge contribution branches
       """
 
   Scenario: undo

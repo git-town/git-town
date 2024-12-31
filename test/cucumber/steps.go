@@ -986,18 +986,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 					return errors.New("main branch exists already")
 				case configdomain.BranchTypeFeatureBranch:
 					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
-				case configdomain.BranchTypePerennialBranch:
-					repoToCreateBranchIn.CreatePerennialBranch(branchSetup.Name)
-				case configdomain.BranchTypeContributionBranch:
-					repoToCreateBranchIn.CreateContributionBranch(branchSetup.Name)
-				case configdomain.BranchTypeObservedBranch:
-					repoToCreateBranchIn.CreateObservedBranch(branchSetup.Name)
-				case configdomain.BranchTypeParkedBranch:
-					repoToCreateBranchIn.CreateParkedBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
-				case configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreatePrototypeBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
-				default:
-					return errors.New("unhandled branch type: " + branchType.String())
+				case
+					configdomain.BranchTypePerennialBranch,
+					configdomain.BranchTypeContributionBranch,
+					configdomain.BranchTypeObservedBranch,
+					configdomain.BranchTypeParkedBranch,
+					configdomain.BranchTypePrototypeBranch:
+					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, branchType)
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
