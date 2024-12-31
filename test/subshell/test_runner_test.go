@@ -34,16 +34,26 @@ func TestMockingRunner(t *testing.T) {
 
 	t.Run("MockCommitMessage", func(t *testing.T) {
 		t.Parallel()
+		dir := t.TempDir()
 		runner := subshell.TestRunner{
-			WorkingDir: t.TempDir(),
-			HomeDir:    t.TempDir(),
-			BinDir:     filepath.Join(t.TempDir(), "bin"),
+			WorkingDir: dir,
+			HomeDir:    dir,
+			BinDir:     filepath.Join(dir, "bin"),
 		}
 
 		runner.MockCommitMessage("test commit message")
 
-		res := runner.MustQuery("bash", "-c", "$GIT_EDITOR output; cat output")
-		must.Eq(t, "test commit message", res)
+		// Simulate Git calling the mock editor configured by MockCommitMessage and
+		// verify its effect.
+		// MockCommitMessage creates a custom editor that the runner makes available
+		// via the GIT_EDITOR environment variable. We verify the following:
+		// - GIT_EDITOR is available and executable.
+		// - The contents of the file provided in the first argument to $GIT_EDITOR
+		//   our expected commit message after the command has finished.
+		_ = runner.MustQuery("bash", "-c", `"$GIT_EDITOR" output`)
+		data, err := os.ReadFile(filepath.Join(dir, "output"))
+		must.NoError(t, err)
+		must.Eq(t, "test commit message\n", string(data))
 	})
 
 	t.Run("Run", func(t *testing.T) {
