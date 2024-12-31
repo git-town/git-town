@@ -12,8 +12,8 @@ Feature: rename a branch that has an overridden branch type
     And the current branch is "old"
     And Git setting "git-town-branch.old.branchtype" is "feature"
     When I run "git-town rename new" and enter into the dialog:
-      | DIALOG                  | KEYS  |
-      | parent branch ofd "old" | enter |
+      | DIALOG                 | KEYS  |
+      | parent branch of "old" | enter |
 
   Scenario: result
     Then Git Town runs the commands
