@@ -993,9 +993,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypeObservedBranch:
 					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, None[gitdomain.LocalBranchName](), configdomain.BranchTypeObservedBranch)
 				case configdomain.BranchTypeParkedBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, Some(branchSetup.Parent.GetOrPanic()), configdomain.BranchTypeParkedBranch)
+					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeParkedBranch)
 				case configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreatePrototypeBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
+					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypePrototypeBranch)
 				default:
 					return errors.New("unhandled branch type: " + branchType.String())
 				}

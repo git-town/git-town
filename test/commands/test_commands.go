@@ -197,13 +197,6 @@ func (self *TestCommands) CreateFolder(name string) {
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 }
 
-// creates a prototype branch with the given name and parent in this repository
-// TODO: make generic
-func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePrototypeBranch, name))
-}
-
 // CreateStandaloneTag creates a tag not on a branch.
 func (self *TestCommands) CreateStandaloneTag(name string) {
 	self.MustRun("git", "checkout", "-b", "temp")
