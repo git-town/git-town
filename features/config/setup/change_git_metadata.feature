@@ -32,7 +32,7 @@ Feature: change existing information in Git metadata
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
       | new-branch-type                           | down enter             |
-      | set ship-strategy to "fast-forward"       | down enter             |
+      | set ship-strategy to "fast-forward"       | down down enter        |
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
