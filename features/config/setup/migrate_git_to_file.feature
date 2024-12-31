@@ -3,11 +3,9 @@ Feature: migrate existing configuration in Git metadata to a config file
 
   Background:
     Given a Git repo with origin
-    And the branches
-      | NAME | TYPE      | LOCATIONS     |
-      | qa   | perennial | local, origin |
     And the main branch is "main"
     And local Git setting "git-town.perennial-regex" is "release-.*"
+    And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.feature-regex" is "user-.*"
     And local Git setting "git-town.default-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"

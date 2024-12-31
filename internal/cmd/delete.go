@@ -248,6 +248,13 @@ func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runPro
 		configdomain.BranchTypePerennialBranch:
 		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToDeleteType))
 	}
+	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
+		prog.Value.Add(&opcodes.ConfigRemove{
+			Key:   configdomain.NewBranchTypeOverrideKeyForBranch(localBranchNameToDelete).Key,
+			Scope: configdomain.ConfigScopeLocal,
+		})
+	}
 	localBranchNameToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get()
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

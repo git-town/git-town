@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"strings"
 	"time"
 
@@ -280,11 +279,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypeContributionBranch {
-			return fmt.Errorf(
-				"branch %q isn't contribution as expected.\nContribution branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.ContributionBranches.Strings(), ", "),
-			)
+			return fmt.Errorf("branch %q is %q", branch, branchType)
 		}
 		return nil
 	})
@@ -295,7 +290,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypeFeatureBranch {
-			return fmt.Errorf("branch %q is a %s", branch, branchType)
+			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
 	})
@@ -304,12 +299,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.ObservedBranches, branch) {
-			return fmt.Errorf(
-				"branch %q isn't observed as expected.\nObserved branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.ObservedBranches.Strings(), ", "),
-			)
+		branchType := devRepo.Config.BranchType(branch)
+		if branchType != configdomain.BranchTypeObservedBranch {
+			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
 	})
@@ -318,12 +310,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
-		if !slices.Contains(devRepo.Config.NormalConfig.ParkedBranches, branch) {
-			return fmt.Errorf(
-				"branch %q isn't parked as expected.\nParked branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.ParkedBranches.Strings(), ", "),
-			)
+		branchType := devRepo.Config.NormalConfig.PartialBranchType(branch)
+		if branchType != configdomain.BranchTypeParkedBranch {
+			return fmt.Errorf("branch %q is %q", branch, branchType)
 		}
 		return nil
 	})
@@ -335,11 +324,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
 		if branchType != configdomain.BranchTypePerennialBranch {
-			return fmt.Errorf(
-				"branch %q isn't perennial as expected.\nPerennial branches: %s",
-				branch,
-				strings.Join(devRepo.Config.NormalConfig.PerennialBranches.Strings(), ", "),
-			)
+			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
 	})
@@ -1124,7 +1109,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the contribution branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.ContributionBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 contribution branch, got %q", actual)
 		}
@@ -1403,7 +1388,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the observed branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.ObservedBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 observed branch, got %q", actual)
 		}
@@ -1422,7 +1407,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the parked branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.ParkedBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeParkedBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 parked branch, got %q", actual)
 		}
@@ -1441,25 +1426,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.PerennialBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePerennialBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
 		if (actual)[0].String() != name {
 			return fmt.Errorf("expected %q, got %q", name, (actual)[0])
-		}
-		return nil
-	})
-
-	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.PerennialBranches
-		if len(actual) != 2 {
-			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
-		}
-		if (actual)[0].String() != branch1 || (actual)[1].String() != branch2 {
-			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
 		return nil
 	})
@@ -1477,7 +1449,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the prototype branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.LocalGitConfig.PrototypeBranches
+		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 prototype branch, got %q", actual)
 		}

@@ -12,6 +12,7 @@ type PartialConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
+	BranchTypeOverrides      BranchTypeOverrides
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        Option[BranchType]
@@ -54,6 +55,8 @@ func EmptyPartialConfig() PartialConfig {
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
 	aliases := snapshot.Aliases()
+	branchTypeOverrides, err := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
+	ec.Check(err)
 	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
 	ec.Check(err)
 	defaultBranchType, err := ParseBranchType(snapshot[KeyDefaultBranchType])
@@ -94,6 +97,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Aliases:                  aliases,
 		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
+		BranchTypeOverrides:      branchTypeOverrides,
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,
@@ -137,6 +141,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
+		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
@@ -177,6 +182,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		Aliases:                  self.Aliases,
 		BitbucketAppPassword:     self.BitbucketAppPassword,
 		BitbucketUsername:        self.BitbucketUsername,
+		BranchTypeOverrides:      self.BranchTypeOverrides,
 		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),

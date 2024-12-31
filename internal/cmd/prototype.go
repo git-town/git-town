@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/cli/flags"
 	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/execute"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
@@ -64,10 +63,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToPrototype.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.AddToPrototypeBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonPrototypeBranchTypes(data.branchesToPrototype, repo.UnvalidatedConfig); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePrototypeBranch, branchNames...); err != nil {
 		return err
 	}
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {
@@ -101,31 +97,6 @@ func printPrototypeBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.PrototypeBranchIsNowPrototype, branch)
 	}
-}
-
-func removeNonPrototypeBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypePrototypeBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
 }
 
 func determinePrototypeData(args []string, repo execute.OpenRepoResult) (prototypeData, error) {

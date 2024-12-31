@@ -5,9 +5,9 @@ Feature: remove existing configuration in Git metadata
     Given a Git repo with origin
     And I rename the "origin" remote to "fork"
     And the branches
-      | NAME       | TYPE      | LOCATIONS |
-      | qa         | perennial | local     |
-      | production | (none)    | local     |
+      | NAME       | TYPE   | LOCATIONS |
+      | qa         | (none) | local     |
+      | production | (none) | local     |
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.diff-parent" is "town diff-parent"
@@ -21,6 +21,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
     And local Git setting "git-town.hosting-platform" is "github"
+    And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.feature-regex" is "user.*"
     And local Git setting "git-town.default-branch-type" is "observed"

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/pkg/set"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
@@ -12,6 +13,7 @@ type NormalConfigData struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
+	BranchTypeOverrides      BranchTypeOverrides
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        BranchType
@@ -55,6 +57,10 @@ func (self *NormalConfigData) Online() Online {
 }
 
 func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
+	// check the branch type overrides
+	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
+		return branchTypeOverride
+	}
 	// check the configured branch lists
 	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
@@ -88,6 +94,31 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	return self.DefaultBranchType
 }
 
+func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
+	matching := set.New[gitdomain.LocalBranchName]()
+	switch branchType {
+	case BranchTypeContributionBranch:
+		matching.Add(self.ContributionBranches...)
+	case BranchTypeFeatureBranch:
+	case BranchTypeMainBranch:
+		// main branch is stored in ValidatedConfig
+	case BranchTypeObservedBranch:
+		matching.Add(self.ObservedBranches...)
+	case BranchTypeParkedBranch:
+		matching.Add(self.ParkedBranches...)
+	case BranchTypePerennialBranch:
+		matching.Add(self.PerennialBranches...)
+	case BranchTypePrototypeBranch:
+		matching.Add(self.PrototypeBranches...)
+	}
+	for key, value := range self.BranchTypeOverrides {
+		if value == branchType {
+			matching.Add(key)
+		}
+	}
+	return matching.Values()
+}
+
 func (self *NormalConfigData) ShouldPushNewBranches() bool {
 	return self.PushNewBranches.IsTrue()
 }
@@ -97,6 +128,7 @@ func DefaultNormalConfig() NormalConfigData {
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
+		BranchTypeOverrides:      BranchTypeOverrides{},
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		DefaultBranchType:        BranchTypeFeatureBranch,

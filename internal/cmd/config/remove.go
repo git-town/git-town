@@ -45,7 +45,7 @@ func executeRemoveConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = repo.UnvalidatedConfig.NormalConfig.GitConfigAccess.RemoveLocalGitConfiguration(repo.UnvalidatedConfig.NormalConfig.Lineage)
+	err = repo.UnvalidatedConfig.NormalConfig.GitConfigAccess.RemoveLocalGitConfiguration(repo.UnvalidatedConfig.NormalConfig.Lineage, repo.UnvalidatedConfig.NormalConfig.BranchTypeOverrides)
 	if err != nil {
 		return err
 	}
