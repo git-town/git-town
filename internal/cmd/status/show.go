@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const statusShowDesc = "Displays the complete runstate details"
+const statusShowDesc = "Displays the detailed information from the persisted runstate"
 
 func showRunstateCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
