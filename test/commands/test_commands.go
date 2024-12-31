@@ -170,12 +170,6 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 	self.MustRun("git", commands...)
 }
 
-// creates a contribution branches with the given name in this repository
-func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, name))
-}
-
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.CreateBranch(name, parent)

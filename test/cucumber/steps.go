@@ -989,7 +989,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypePerennialBranch:
 					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypePerennialBranch)
 				case configdomain.BranchTypeContributionBranch:
-					repoToCreateBranchIn.CreateContributionBranch(branchSetup.Name)
+					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeContributionBranch)
 				case configdomain.BranchTypeObservedBranch:
 					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeObservedBranch)
 				case configdomain.BranchTypeParkedBranch:
