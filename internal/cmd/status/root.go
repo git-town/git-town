@@ -43,6 +43,7 @@ func RootCommand() *cobra.Command {
 	addPendingFlag(&cmd)
 	addVerboseFlag(&cmd)
 	cmd.AddCommand(resetRunstateCommand())
+	cmd.AddCommand(showRunstateCommand())
 	return &cmd
 }
 

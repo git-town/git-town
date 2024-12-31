@@ -920,13 +920,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		commitMessage := asserts.NoError1(originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
-		if commitMessage.IsNone() {
+		message, hasCommitMessage := commitMessage.Get()
+		if !hasCommitMessage {
 			return errors.New("branch to ship contains no commits")
 		}
 		originRepo.CheckoutBranch("main")
 		asserts.NoError(originRepo.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Commit(originRepo.TestRunner, commitMessage, false, gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -943,7 +944,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		originRepo.CreateFile(fileName, fileContent)
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -956,7 +957,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.CheckoutBranch("main")
 		asserts.NoError(originRepo.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Commit(originRepo.TestRunner, Some(gitdomain.CommitMessage(commitMessage)), false, gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
