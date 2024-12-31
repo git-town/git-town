@@ -92,30 +92,35 @@ func (self *NormalConfig) RemoveFeatureRegex() {
 }
 
 // RemoveFromContributionBranches removes the given branch as a perennial branch.
+// TODO: delete this
 func (self *NormalConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
 	self.ContributionBranches = slice.Remove(self.ContributionBranches, branch)
 	return self.SetContributionBranches(self.ContributionBranches)
 }
 
 // RemoveFromObservedBranches removes the given branch as a perennial branch.
+// TODO: delete this
 func (self *NormalConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
 	self.ObservedBranches = slice.Remove(self.ObservedBranches, branch)
 	return self.SetObservedBranches(self.ObservedBranches)
 }
 
 // RemoveFromParkedBranches removes the given branch as a perennial branch.
+// TODO: delete this
 func (self *NormalConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
 	self.ParkedBranches = slice.Remove(self.ParkedBranches, branch)
 	return self.SetParkedBranches(self.ParkedBranches)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
+// TODO: delete this
 func (self *NormalConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	self.PerennialBranches = slice.Remove(self.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.PerennialBranches)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
+// TODO: delete this
 func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
 	self.PrototypeBranches = slice.Remove(self.PrototypeBranches, branch)
 	return self.SetPrototypeBranches(self.PrototypeBranches)
