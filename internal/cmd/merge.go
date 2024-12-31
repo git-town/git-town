@@ -128,11 +128,13 @@ type mergeData struct {
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
 	initialBranchProposal           Option[hostingdomain.Proposal]
+	initialBranchType               configdomain.BranchType
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	parentBranchInfo                gitdomain.BranchInfo
 	parentBranchProposal            Option[hostingdomain.Proposal]
+	parentBranchType                configdomain.BranchType
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
 	remotes                         gitdomain.Remotes
@@ -221,6 +223,8 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	initialBranchType := validatedConfig.BranchType(initialBranch)
+	parentBranchType := validatedConfig.BranchType(parentBranch)
 	parentBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, parentBranch.BranchName(), grandParentBranch.BranchName())
 	if err != nil {
 		return mergeData{}, false, err
@@ -250,11 +254,13 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
 		initialBranchInfo:               *initialBranchInfo,
 		initialBranchProposal:           initialBranchProposal,
+		initialBranchType:               initialBranchType,
 		offline:                         repo.IsOffline,
 		parentBranch:                    parentBranch,
 		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
 		parentBranchInfo:                *parentBranchInfo,
 		parentBranchProposal:            parentBranchProposal,
+		parentBranchType:                parentBranchType,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
 		remotes:                         remotes,
