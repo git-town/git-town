@@ -996,8 +996,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeParkedBranch)
 				case configdomain.BranchTypePrototypeBranch:
 					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypePrototypeBranch)
-				default:
-					return errors.New("unhandled branch type: " + branchType.String())
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
