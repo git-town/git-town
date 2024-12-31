@@ -6,6 +6,7 @@ Feature: making the current observed branch a feature branch
       | NAME     | TYPE     | PARENT | LOCATIONS |
       | observed | observed |        | local     |
     And the current branch is "observed"
+    And local Git setting "git-town.observed-branches" is "observed"
     When I run "git-town hack"
 
   Scenario: result
@@ -15,6 +16,7 @@ Feature: making the current observed branch a feature branch
       branch "observed" is now a feature branch
       """
     And branch "observed" is now a feature branch
+    And local Git setting "git-town.observed-branches" is still "observed"
 
   Scenario: undo
     When I run "git-town undo"
