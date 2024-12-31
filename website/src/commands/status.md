@@ -13,6 +13,9 @@ and which commands you can run to continue, skip, or undo it.
 The [reset](status-reset.md) subcommand deletes the persisted runstate. This is
 only needed if the runstate is corrupted and causes Git Town to crash.
 
+The [show](status-show.md) subcommand displays detailed information about the
+persisted runstate.
+
 ## Options
 
 #### `-p`<br>`--pending`
