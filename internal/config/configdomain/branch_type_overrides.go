@@ -9,6 +9,8 @@ import (
 	"github.com/git-town/git-town/v17/internal/messages"
 )
 
+// BranchTypeOverrides contains all configured branch type overrides.
+// These are stored in Git metadata like this: "git-town-branch.<name>.branchtype".
 type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 
 func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOverrides {
