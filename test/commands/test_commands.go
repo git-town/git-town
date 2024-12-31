@@ -142,6 +142,11 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
+func (self *TestCommands) CreateBranchOfType(name, parent gitdomain.LocalBranchName, branchType configdomain.BranchType) {
+	self.CreateBranch(name, parent.BranchName())
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(branchType, name))
+}
+
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
 func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
@@ -186,13 +191,6 @@ func (self *TestCommands) CreateFile(name, content string) {
 func (self *TestCommands) CreateFolder(name string) {
 	folderPath := filepath.Join(self.WorkingDir, name)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
-}
-
-// creates an observed branch with the given name in this repository
-// TODO: convert to more generic CreateBranchWithType function
-func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, name))
 }
 
 // creates a parked branch with the given name and parent in this repository
