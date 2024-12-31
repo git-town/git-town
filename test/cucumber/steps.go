@@ -1436,19 +1436,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)" and "([^"]+)"$`, func(ctx context.Context, branch1, branch2 string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		actual := devRepo.Config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePerennialBranch)
-		if len(actual) != 2 {
-			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
-		}
-		if (actual)[0].String() != branch1 || (actual)[1].String() != branch2 {
-			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
-		}
-		return nil
-	})
-
 	sc.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

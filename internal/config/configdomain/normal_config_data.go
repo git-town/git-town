@@ -44,30 +44,6 @@ type NormalConfigData struct {
 	SyncUpstream             SyncUpstream
 }
 
-func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
-	matching := set.New[gitdomain.LocalBranchName]()
-	switch branchType {
-	case BranchTypeContributionBranch:
-		matching.Add(self.ContributionBranches...)
-	case BranchTypeFeatureBranch:
-	case BranchTypeMainBranch:
-	case BranchTypeObservedBranch:
-		matching.Add(self.ObservedBranches...)
-	case BranchTypeParkedBranch:
-		matching.Add(self.ParkedBranches...)
-	case BranchTypePerennialBranch:
-		matching.Add(self.PerennialBranches...)
-	case BranchTypePrototypeBranch:
-		matching.Add(self.PrototypeBranches...)
-	}
-	for key, value := range self.BranchTypeOverrides {
-		if value == branchType {
-			matching.Add(key)
-		}
-	}
-	return matching.Values()
-}
-
 func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
 }
@@ -116,6 +92,30 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	}
 	// branch doesn't match any of the overrides --> default branch type
 	return self.DefaultBranchType
+}
+
+func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
+	matching := set.New[gitdomain.LocalBranchName]()
+	switch branchType {
+	case BranchTypeContributionBranch:
+		matching.Add(self.ContributionBranches...)
+	case BranchTypeFeatureBranch:
+	case BranchTypeMainBranch:
+	case BranchTypeObservedBranch:
+		matching.Add(self.ObservedBranches...)
+	case BranchTypeParkedBranch:
+		matching.Add(self.ParkedBranches...)
+	case BranchTypePerennialBranch:
+		matching.Add(self.PerennialBranches...)
+	case BranchTypePrototypeBranch:
+		matching.Add(self.PrototypeBranches...)
+	}
+	for key, value := range self.BranchTypeOverrides {
+		if value == branchType {
+			matching.Add(key)
+		}
+	}
+	return matching.Values()
 }
 
 func (self *NormalConfigData) ShouldPushNewBranches() bool {

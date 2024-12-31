@@ -27,17 +27,6 @@ type NormalConfig struct {
 	LocalGitConfig  configdomain.PartialConfig         // content of the local Git configuration
 }
 
-// SetBranchTypeOverride registers the given branch names as contribution branches.
-// The branches must exist.
-func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
-	result := gohacks.ErrorCollector{}
-	for _, branch := range branches {
-		self.BranchTypeOverrides[branch] = branchType
-		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()))
-	}
-	return result.Err
-}
-
 // removes the given branch from the lineage, and updates its children
 func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchName) {
 	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
@@ -194,6 +183,17 @@ func (self *NormalConfig) RemoveSyncTags() {
 
 func (self *NormalConfig) RemoveSyncUpstream() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeySyncUpstream)
+}
+
+// SetBranchTypeOverride registers the given branch names as contribution branches.
+// The branches must exist.
+func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
+	result := gohacks.ErrorCollector{}
+	for _, branch := range branches {
+		self.BranchTypeOverrides[branch] = branchType
+		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()))
+	}
+	return result.Err
 }
 
 // SetObservedBranches marks the given branches as observed branches.
