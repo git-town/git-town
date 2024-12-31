@@ -58,5 +58,7 @@ func showStatus(data displayStatusData) {
 	if !hasState {
 		return
 	}
+	fmt.Println("Displaying runstate at", data.filepath)
+	fmt.Println()
 	fmt.Println(state.String())
 }
