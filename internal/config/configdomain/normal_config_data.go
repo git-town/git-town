@@ -101,6 +101,7 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 		matching.Add(self.ContributionBranches...)
 	case BranchTypeFeatureBranch:
 	case BranchTypeMainBranch:
+		// main branch is stored in ValidatedConfig
 	case BranchTypeObservedBranch:
 		matching.Add(self.ObservedBranches...)
 	case BranchTypeParkedBranch:
