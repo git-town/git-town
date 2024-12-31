@@ -3,11 +3,11 @@ Feature: remove existing configuration in Git metadata
 
   Background:
     Given a Git repo with origin
+    And I rename the "origin" remote to "fork"
     And the branches
       | NAME       | TYPE   | LOCATIONS |
       | qa         | (none) | local     |
       | production | (none) | local     |
-    And I rename the "origin" remote to "fork"
     And the main branch is "main"
     And global Git setting "alias.append" is "town append"
     And global Git setting "alias.diff-parent" is "town diff-parent"
