@@ -14,8 +14,7 @@ Feature: park another prototype branch
       """
       branch "prototype" is now parked
       """
-    And the prototype branches are now "prototype"
-    And the parked branches are now "prototype"
+    And branch "prototype" is now parked
 
   Scenario: undo
     When I run "git-town undo"
