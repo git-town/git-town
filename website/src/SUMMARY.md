@@ -16,6 +16,7 @@
     - [skip](commands/skip.md)
     - [status](commands/status.md)
     - [status.reset](commands/status-reset.md)
+    - [status.show](commands/status-show.md)
     - [undo](commands/undo.md)
   - [Stacked changes](stacked-changes.md)
     - [append](commands/append.md)

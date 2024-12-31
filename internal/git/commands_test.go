@@ -3,6 +3,7 @@ package git_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/git"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/gohacks"
@@ -502,7 +503,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
 
-		err := runtime.MergeNoFastForward(runtime.TestRunner, None[gitdomain.CommitMessage](), branch)
+		err := runtime.MergeNoFastForward(runtime.TestRunner, configdomain.UseDefaultMessage(), branch)
 		must.NoError(t, err)
 
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
@@ -526,7 +527,7 @@ func TestBackendCommands(t *testing.T) {
 		mergeMessage := gitdomain.CommitMessage("merge message")
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
 
-		err := runtime.MergeNoFastForward(runtime.TestRunner, Some(mergeMessage), branch)
+		err := runtime.MergeNoFastForward(runtime.TestRunner, configdomain.UseCustomMessage(mergeMessage), branch)
 		must.NoError(t, err)
 
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.

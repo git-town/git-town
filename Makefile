@@ -141,6 +141,7 @@ deadcode: tools/rta@${RTA_VERSION}
 		| grep -v 'Create$$' \
 		| grep -v CreateFile \
 		| grep -v CreateGitTown \
+		| grep -v EditDefaultMessage \
 		| grep -v EmptyConfigSnapshot \
 		| grep -v FileExists \
 		| grep -v FileHasContent \
@@ -152,6 +153,8 @@ deadcode: tools/rta@${RTA_VERSION}
 		| grep -v pkg/prelude/ptr.go \
 		| grep -v Paniced \
 		| grep -v Set.Add \
+		| grep -v UseCustomMessageOr \
+		| grep -v UseDefaultMessage \
 		|| true
 	@tput sgr0 || true
 
