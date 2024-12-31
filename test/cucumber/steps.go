@@ -986,16 +986,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 					return errors.New("main branch exists already")
 				case configdomain.BranchTypeFeatureBranch:
 					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
-				case configdomain.BranchTypePerennialBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypePerennialBranch)
-				case configdomain.BranchTypeContributionBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeContributionBranch)
-				case configdomain.BranchTypeObservedBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeObservedBranch)
-				case configdomain.BranchTypeParkedBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypeParkedBranch)
-				case configdomain.BranchTypePrototypeBranch:
-					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, configdomain.BranchTypePrototypeBranch)
+				case
+					configdomain.BranchTypePerennialBranch,
+					configdomain.BranchTypeContributionBranch,
+					configdomain.BranchTypeObservedBranch,
+					configdomain.BranchTypeParkedBranch,
+					configdomain.BranchTypePrototypeBranch:
+					repoToCreateBranchIn.CreateBranchOfType(branchSetup.Name, branchSetup.Parent, branchType)
 				}
 			} else {
 				repoToCreateBranchIn.CreateBranch(branchSetup.Name, "main")
