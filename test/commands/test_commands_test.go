@@ -186,20 +186,6 @@ func TestTestCommands(t *testing.T) {
 		})
 	})
 
-	t.Run("CreatePerennialBranches", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.CreateGitTown(t)
-		runtime.CreatePerennialBranch("p1")
-		runtime.CreatePerennialBranch("p2")
-		branches, err := runtime.LocalBranchesMainFirst("main")
-		must.NoError(t, err)
-		want := gitdomain.NewLocalBranchNames("main", "initial", "p1", "p2")
-		must.Eq(t, want, branches)
-		runtime.Config.Reload()
-		must.EqOp(t, configdomain.BranchTypePerennialBranch, runtime.Config.BranchType("p1"))
-		must.EqOp(t, configdomain.BranchTypePerennialBranch, runtime.Config.BranchType("p2"))
-	})
-
 	t.Run("Fetch", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)

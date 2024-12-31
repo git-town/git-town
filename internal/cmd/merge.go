@@ -79,8 +79,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil || exit {
 		return err
 	}
-	err = validateMergeData(data)
-	if err != nil {
+	if err = validateMergeData(data); err != nil {
 		return err
 	}
 	runProgram := mergeProgram(data, dryRun)
@@ -128,11 +127,13 @@ type mergeData struct {
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
 	initialBranchProposal           Option[hostingdomain.Proposal]
+	initialBranchType               configdomain.BranchType
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	parentBranchInfo                gitdomain.BranchInfo
 	parentBranchProposal            Option[hostingdomain.Proposal]
+	parentBranchType                configdomain.BranchType
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
 	remotes                         gitdomain.Remotes
@@ -221,6 +222,8 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
+	initialBranchType := validatedConfig.BranchType(initialBranch)
+	parentBranchType := validatedConfig.BranchType(parentBranch)
 	parentBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, parentBranch.BranchName(), grandParentBranch.BranchName())
 	if err != nil {
 		return mergeData{}, false, err
@@ -250,11 +253,13 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
 		initialBranchInfo:               *initialBranchInfo,
 		initialBranchProposal:           initialBranchProposal,
+		initialBranchType:               initialBranchType,
 		offline:                         repo.IsOffline,
 		parentBranch:                    parentBranch,
 		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
 		parentBranchInfo:                *parentBranchInfo,
 		parentBranchProposal:            parentBranchProposal,
+		parentBranchType:                parentBranchType,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
 		remotes:                         remotes,
@@ -339,6 +344,12 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 }
 
 func validateMergeData(data mergeData) error {
+	if err := verifyBranchType(data.initialBranchType); err != nil {
+		return err
+	}
+	if err := verifyBranchType(data.parentBranchType); err != nil {
+		return err
+	}
 	// ensure parent isn't deleted at remote
 	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
@@ -359,5 +370,21 @@ func validateMergeData(data mergeData) error {
 		return fmt.Errorf(messages.BranchDeletedAtRemote, data.initialBranch)
 	}
 	// ensure parent branch has only one child
+	return nil
+}
+
+func verifyBranchType(branchType configdomain.BranchType) error {
+	switch branchType {
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypePerennialBranch:
+		return fmt.Errorf(messages.MergeWrongBranchType, branchType)
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
+	}
 	return nil
 }

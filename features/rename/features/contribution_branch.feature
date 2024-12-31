@@ -26,6 +26,7 @@ Feature: rename a contribution branch
       | new    | local, origin | somebody elses commit |
     And this lineage exists now
       | BRANCH | PARENT |
+      | new    | main   |
 
   Scenario: undo
     When I run "git-town undo"
