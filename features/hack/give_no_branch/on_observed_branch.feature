@@ -9,7 +9,6 @@ Feature: making the current observed branch a feature branch
     And local Git setting "git-town.observed-branches" is "observed"
     When I run "git-town hack"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
