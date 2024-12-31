@@ -19,7 +19,6 @@ Feature: cannot make the current perennial branch a feature branch
     And local Git setting "git-town-branch.perennial.branchtype" still doesn't exist
     And local Git setting "git-town.perennial-branches" is still "perennial"
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
