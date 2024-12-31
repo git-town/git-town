@@ -79,8 +79,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil || exit {
 		return err
 	}
-	err = validateMergeData(data)
-	if err != nil {
+	if err = validateMergeData(data); err != nil {
 		return err
 	}
 	runProgram := mergeProgram(data, dryRun)
@@ -345,6 +344,12 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 }
 
 func validateMergeData(data mergeData) error {
+	if err := verifyBranchType(data.initialBranchType); err != nil {
+		return err
+	}
+	if err := verifyBranchType(data.parentBranchType); err != nil {
+		return err
+	}
 	// ensure parent isn't deleted at remote
 	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
@@ -365,5 +370,21 @@ func validateMergeData(data mergeData) error {
 		return fmt.Errorf(messages.BranchDeletedAtRemote, data.initialBranch)
 	}
 	// ensure parent branch has only one child
+	return nil
+}
+
+func verifyBranchType(branchType configdomain.BranchType) error {
+	switch branchType {
+	case
+		configdomain.BranchTypeContributionBranch,
+		configdomain.BranchTypeMainBranch,
+		configdomain.BranchTypeObservedBranch,
+		configdomain.BranchTypePerennialBranch:
+		return fmt.Errorf(messages.MergeWrongBranchType, branchType)
+	case
+		configdomain.BranchTypeFeatureBranch,
+		configdomain.BranchTypeParkedBranch,
+		configdomain.BranchTypePrototypeBranch:
+	}
 	return nil
 }

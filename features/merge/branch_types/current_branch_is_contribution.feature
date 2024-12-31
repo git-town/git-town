@@ -9,16 +9,16 @@ Feature: does not merge contribution branches
     And the current branch is "current"
     When I run "git-town merge"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge branch "current" because it has no parent
+      cannot merge contribution branches
       """
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
