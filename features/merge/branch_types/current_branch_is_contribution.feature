@@ -18,7 +18,6 @@ Feature: does not merge contribution branches
       cannot merge contribution branches
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
