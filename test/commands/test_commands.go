@@ -153,6 +153,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
+// TODO: merge with CreateFeatureBranch
 func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	self.CreateBranch(branch, parent.BranchName())
 	asserts.NoError(self.Config.NormalConfig.SetParent(branch, parent))
