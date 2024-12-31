@@ -312,16 +312,14 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 	}
 	for branchName, branchType := range args.makeFeatureData.targetBranches {
 		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			err = args.config.NormalConfig.RemoveFromContributionBranches(branchName)
-		case configdomain.BranchTypeObservedBranch:
-			err = args.config.NormalConfig.RemoveFromObservedBranches(branchName)
-		case configdomain.BranchTypeParkedBranch:
-			err = args.config.NormalConfig.RemoveFromParkedBranches(branchName)
-		case configdomain.BranchTypePrototypeBranch:
-			err = args.config.NormalConfig.RemoveFromPrototypeBranches(branchName)
 		case
-			configdomain.BranchTypeFeatureBranch,
+			configdomain.BranchTypeContributionBranch,
+			configdomain.BranchTypeObservedBranch,
+			configdomain.BranchTypeParkedBranch,
+			configdomain.BranchTypePrototypeBranch,
+			configdomain.BranchTypeFeatureBranch:
+			err = args.config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeFeatureBranch, branchName)
+		case
 			configdomain.BranchTypeMainBranch,
 			configdomain.BranchTypePerennialBranch:
 			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
