@@ -23,7 +23,7 @@ func (self SingleSnapshot) Aliases() Aliases {
 	return result
 }
 
-// provides all the keys that describe branch type overrides
+// provides all the configuration entries that describe branch type overrides
 func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey]string {
 	result := map[BranchTypeOverrideKey]string{}
 	for key, value := range self {
