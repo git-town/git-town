@@ -4,12 +4,21 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
 func TestBranchTypeOverrideKey(t *testing.T) {
 	t.Parallel()
+
+	t.Run("Branch", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.LocalBranchName("my-branch")
+		key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
+		have := key.Branch()
+		must.EqOp(t, branch, have)
+	})
 
 	t.Run("NewBranchTypeOverrideKeyForBranch", func(t *testing.T) {
 		t.Parallel()
