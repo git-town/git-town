@@ -306,26 +306,22 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 }
 
 func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
-	err := validateConvertToFeatureData(args.makeFeatureData)
-	if err != nil {
-		return err
-	}
 	for branchName, branchType := range args.makeFeatureData.targetBranches {
 		switch branchType {
 		case
 			configdomain.BranchTypeContributionBranch,
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypePrototypeBranch,
-			configdomain.BranchTypeFeatureBranch:
-			err = args.config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeFeatureBranch, branchName)
-		case
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-			panic(fmt.Sprintf("unchecked branch type: %s", branchType))
-		}
-		if err != nil {
-			return err
+			configdomain.BranchTypePrototypeBranch:
+			if err := args.config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeFeatureBranch, branchName); err != nil {
+				return err
+			}
+		case configdomain.BranchTypeFeatureBranch:
+			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
+		case configdomain.BranchTypeMainBranch:
+			return errors.New(messages.HackCannotFeatureMainBranch)
+		case configdomain.BranchTypePerennialBranch:
+			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
 		}
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
@@ -350,25 +346,4 @@ type convertToFeatureBranchArgs struct {
 	repo                execute.OpenRepoResult
 	rootDir             gitdomain.RepoRootDir
 	verbose             configdomain.Verbose
-}
-
-func validateConvertToFeatureData(data convertToFeatureData) error {
-	for branchName, branchType := range data.targetBranches {
-		switch branchType {
-		case
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypePrototypeBranch:
-			return nil
-		case configdomain.BranchTypeFeatureBranch:
-			return fmt.Errorf(messages.HackBranchIsAlreadyFeature, branchName)
-		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.HackCannotFeatureMainBranch)
-		case configdomain.BranchTypePerennialBranch:
-			return fmt.Errorf(messages.HackCannotFeaturePerennialBranch, branchName)
-		}
-		panic(fmt.Sprintf("unhandled branch type: %s", branchType))
-	}
-	return nil
 }
