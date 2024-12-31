@@ -20,6 +20,19 @@ func TestBranchTypeOverrideKey(t *testing.T) {
 		must.EqOp(t, branch, have)
 	})
 
+	t.Run("IsBranchTypeOverrideKey", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]bool{
+			"git-town-branch.foo.branchtype": true,
+			"git-town-branch.foo.parent":     false,
+			"git-town.prototype-branches":    false,
+		}
+		for give, want := range tests {
+			have := configdomain.IsBranchTypeOverrideKey(give)
+			must.EqOp(t, want, have)
+		}
+	})
+
 	t.Run("NewBranchTypeOverrideKeyForBranch", func(t *testing.T) {
 		t.Parallel()
 		have := configdomain.NewBranchTypeOverrideKeyForBranch("my-branch")

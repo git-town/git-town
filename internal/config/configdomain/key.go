@@ -161,7 +161,7 @@ func ParseKey(name string) Option[Key] {
 			return Some(configKey)
 		}
 	}
-	if isLineageKey(name) || isBranchTypeOverrideKey(name) {
+	if isLineageKey(name) || IsBranchTypeOverrideKey(name) {
 		return Some(Key(name))
 	}
 	if aliasKey, isAliasKey := AllAliasableCommands().LookupKey(name).Get(); isAliasKey {

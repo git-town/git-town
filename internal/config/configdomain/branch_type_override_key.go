@@ -24,7 +24,7 @@ func NewBranchTypeOverrideKeyForBranch(branch gitdomain.LocalBranchName) BranchT
 }
 
 func ParseBranchTypeOverrideKey(key Key) Option[BranchTypeOverrideKey] {
-	if isBranchTypeOverrideKey(key.String()) {
+	if IsBranchTypeOverrideKey(key.String()) {
 		return Some(BranchTypeOverrideKey{
 			BranchSpecificKey: BranchSpecificKey{
 				Key: key,
@@ -40,6 +40,6 @@ func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
 	return gitdomain.NewLocalBranchName(text)
 }
 
-func isBranchTypeOverrideKey(key string) bool {
+func IsBranchTypeOverrideKey(key string) bool {
 	return isBranchSpecificKey(key) && strings.HasSuffix(key, BranchTypeSuffix)
 }
