@@ -2,7 +2,6 @@ package gitdomain
 
 import (
 	"fmt"
-	"strings"
 
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
@@ -177,15 +176,6 @@ func (self BranchInfos) Select(remote Remote, names ...LocalBranchName) (result 
 		nonExisting = append(nonExisting, name)
 	}
 	return result, nonExisting
-}
-
-func (self BranchInfos) String() string {
-	result := strings.Builder{}
-	for _, branchInfo := range self {
-		result.WriteString(branchInfo.String())
-		result.WriteRune('\n')
-	}
-	return result.String()
 }
 
 func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
