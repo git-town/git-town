@@ -100,6 +100,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.Merge{Branch: "branch"},
 				&opcodes.MergeAbort{},
+				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
 				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
@@ -509,6 +510,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "MergeAbort"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "CommitMessage": "commit message"
+      },
+      "type": "MergeAlwaysProgram"
     },
     {
       "data": {},
