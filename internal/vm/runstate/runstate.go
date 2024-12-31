@@ -122,5 +122,8 @@ func (self *RunState) String() string {
 		result.WriteString("  UnfinishedDetails: ")
 		result.WriteString(unfinishedDetails.String())
 	}
+	result.WriteString("Touched branches:", self.TouchedBranches)
+	result.WriteString("Before snapshot")
+	result.WriteString(self.BeginBranchesSnapshot)
 	return result.String()
 }
