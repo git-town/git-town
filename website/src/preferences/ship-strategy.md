@@ -17,6 +17,13 @@ You need to configure an API token in the
 `api` is the default value because it does exactly what you normally do
 manually.
 
+### always-merge
+
+The `always-merge` ship strategy creates a merge commit via `git merge --no-ff`.
+
+This strategy allows visually grouping related feature commits together which
+may aid in understanding project history in certain situations.
+
 ### fast-forward
 
 The `fast-forward` ship strategy prevents false merge conflicts when using
