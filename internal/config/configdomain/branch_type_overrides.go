@@ -13,6 +13,7 @@ import (
 // These are stored in Git metadata like this: "git-town-branch.<name>.branchtype".
 type BranchTypeOverrides map[gitdomain.LocalBranchName]BranchType
 
+// adds the given BranchTypeOverrides to this BranchTypeOverrides
 func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOverrides {
 	result := make(BranchTypeOverrides, len(self)+len(other))
 	for key, value := range self {
@@ -24,7 +25,8 @@ func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOver
 	return result
 }
 
-func NewBranchTypeOverridesFromSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (BranchTypeOverrides, error) {
+// provides the branch type overrides stored in the given Git metadata snapshot
+func NewBranchTypeOverridesInSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (BranchTypeOverrides, error) {
 	result := BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
 		branch := key.Branch()

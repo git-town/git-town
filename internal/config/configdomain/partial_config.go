@@ -55,7 +55,7 @@ func EmptyPartialConfig() PartialConfig {
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
 	aliases := snapshot.Aliases()
-	branchTypeOverrides, err := NewBranchTypeOverridesFromSnapshot(snapshot, removeLocalConfigValue)
+	branchTypeOverrides, err := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
 	ec.Check(err)
 	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
 	ec.Check(err)

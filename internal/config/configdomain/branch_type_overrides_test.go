@@ -36,7 +36,7 @@ func TestBranchTypeOverrides(t *testing.T) {
 			"git-town-branch.branch-2.branchtype": "observed",
 		}
 		removeFunc := func(configdomain.Key) error { return nil }
-		have, err := configdomain.NewBranchTypeOverridesFromSnapshot(snapshot, removeFunc)
+		have, err := configdomain.NewBranchTypeOverridesInSnapshot(snapshot, removeFunc)
 		must.NoError(t, err)
 		want := configdomain.BranchTypeOverrides{
 			"branch-1": configdomain.BranchTypeFeatureBranch,
