@@ -7,6 +7,7 @@ import (
 )
 
 // registers the branch with the given name as a contribution branch in the Git config
+// TODO: convert to more generic SetBranchTypeOverride opcode
 type BranchesContributionAdd struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
