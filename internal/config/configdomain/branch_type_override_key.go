@@ -15,6 +15,16 @@ type BranchTypeOverrideKey struct {
 	BranchSpecificKey
 }
 
+// provides the name of the child branch encoded in this LineageKey
+func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
+	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
+	return gitdomain.NewLocalBranchName(text)
+}
+
+func IsBranchTypeOverrideKey(key string) bool {
+	return isBranchSpecificKey(key) && strings.HasSuffix(key, BranchTypeSuffix)
+}
+
 func NewBranchTypeOverrideKeyForBranch(branch gitdomain.LocalBranchName) BranchTypeOverrideKey {
 	return BranchTypeOverrideKey{
 		BranchSpecificKey: BranchSpecificKey{
@@ -32,14 +42,4 @@ func ParseBranchTypeOverrideKey(key Key) Option[BranchTypeOverrideKey] {
 		})
 	}
 	return None[BranchTypeOverrideKey]()
-}
-
-// provides the name of the child branch encoded in this LineageKey
-func (self BranchTypeOverrideKey) Branch() gitdomain.LocalBranchName {
-	text := strings.TrimSuffix(strings.TrimPrefix(self.String(), BranchSpecificKeyPrefix), BranchTypeSuffix)
-	return gitdomain.NewLocalBranchName(text)
-}
-
-func IsBranchTypeOverrideKey(key string) bool {
-	return isBranchSpecificKey(key) && strings.HasSuffix(key, BranchTypeSuffix)
 }
