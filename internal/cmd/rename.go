@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"slices"
 
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v17/internal/cli/flags"
@@ -274,27 +273,18 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.dryRun {
-		// TODO: renaming a branch should not update the these configuration settings.
-		// Rather, update the upcoming branch type override.
-		if slices.Contains(data.config.NormalConfig.PerennialBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.PrototypeBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.ObservedBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesObservedRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.ContributionBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesContributionRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.ParkedBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesParkedRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
+		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
+			result.Value.Add(
+				&opcodes.ConfigSet{
+					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(data.newBranch).Key,
+					Scope: configdomain.ConfigScopeLocal,
+					Value: override.String(),
+				},
+				&opcodes.ConfigRemove{
+					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(oldLocalBranch).Key,
+					Scope: configdomain.ConfigScopeLocal,
+				},
+			)
 		}
 		if parentBranch, hasParent := data.config.NormalConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 			result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
