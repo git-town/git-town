@@ -15,7 +15,6 @@ Feature: display the local branch hierarchy with types for unusual branches
     And the current branch is "beta"
     When I run "git-town branch"
 
-  @this
   Scenario: result
     Then Git Town runs no commands
     And Git Town prints:
