@@ -323,7 +323,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypeFeatureBranch {
+		if branchType != configdomain.BranchTypePerennialBranch {
 			return fmt.Errorf("branch %q is %s", branch, branchType)
 		}
 		return nil
