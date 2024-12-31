@@ -3,8 +3,8 @@ Feature: make another observed branch a contribution branch
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE     | PARENT | LOCATIONS     |
-      | observed | observed |        | local, origin |
+      | NAME     | TYPE     | LOCATIONS     |
+      | observed | observed | local, origin |
     When I run "git-town contribute observed"
 
   Scenario: result

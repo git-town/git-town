@@ -48,6 +48,7 @@ const (
 	CompressObservedBranch             = "you are merely observing branch %q and should leave compressing it to the branch owner"
 	CompressParkedBranch               = "branch %q and should not compress it"
 	CompletionTypeUnknown              = "unknown completion type: %q"
+	ConfigBranchTypeOverrideEmpty      = "removing empty branch type entry"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidContent           = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigLineageParentIsChild         = "removing lineage entry for %q because the parent is the child"

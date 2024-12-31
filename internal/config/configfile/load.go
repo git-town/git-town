@@ -219,6 +219,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Aliases:                  map[configdomain.AliasableCommand]string{},
 		BitbucketAppPassword:     None[configdomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[configdomain.BitbucketUsername](),
+		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,

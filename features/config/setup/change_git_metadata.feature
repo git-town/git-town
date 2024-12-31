@@ -69,7 +69,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
-    And the perennial branches are now "production"
+    And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.dev-remote" now doesn't exist
     And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.hosting-platform" is now "github"
