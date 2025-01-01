@@ -6,13 +6,14 @@ import (
 	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
-// registers the branch with the given name as an observed branch in the Git config
+// registers the branch with the given name as a contribution branch in the Git config
 // TODO: convert to more generic SetBranchTypeOverride opcode
-type BranchesObservedAdd struct {
+type BranchTypeOverrideSet struct {
 	Branch                  gitdomain.LocalBranchName
+	BranchType              configdomain.BranchType
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *BranchesObservedAdd) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, self.Branch)
+func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
+	return args.Config.Value.NormalConfig.SetBranchTypeOverride(self.BranchType, self.Branch)
 }

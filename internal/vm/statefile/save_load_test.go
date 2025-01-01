@@ -63,16 +63,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchTrackingCreate{Branch: "branch"},
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
-				&opcodes.BranchesContributionAdd{Branch: "branch"},
-				&opcodes.BranchesContributionRemove{Branch: "branch"},
-				&opcodes.BranchesObservedAdd{Branch: "branch"},
-				&opcodes.BranchesObservedRemove{Branch: "branch"},
-				&opcodes.BranchesParkedAdd{Branch: "branch"},
-				&opcodes.BranchesParkedRemove{Branch: "branch"},
-				&opcodes.BranchesPerennialAdd{Branch: "branch"},
-				&opcodes.BranchesPerennialRemove{Branch: "branch"},
-				&opcodes.BranchesPrototypeAdd{Branch: "branch"},
-				&opcodes.BranchesPrototypeRemove{Branch: "branch"},
+				&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypeFeatureBranch},
+				&opcodes.BranchTypeOverrideRemove{Branch: "branch"},
 				&opcodes.ChangesDiscard{},
 				&opcodes.ChangesStage{},
 				&opcodes.Checkout{Branch: "branch"},
@@ -281,63 +273,16 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "Branch": "branch",
+        "BranchType": "feature"
       },
-      "type": "BranchesContributionAdd"
+      "type": "BranchTypeOverrideSet"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "BranchesContributionRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesObservedAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesObservedRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesParkedAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesParkedRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPerennialAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPerennialRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPrototypeAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPrototypeRemove"
+      "type": "BranchTypeOverrideRemove"
     },
     {
       "data": {},

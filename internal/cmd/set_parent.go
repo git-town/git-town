@@ -224,7 +224,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 	case dialog.ParentOutcomeAborted:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
-		prog.Add(&opcodes.BranchesPerennialAdd{Branch: data.initialBranch})
+		prog.Add(&opcodes.BranchTypeOverrideSet{Branch: data.initialBranch, BranchType: configdomain.BranchTypePerennialBranch})
 		prog.Add(&opcodes.LineageParentRemove{Branch: data.initialBranch})
 	case dialog.ParentOutcomeSelectedParent:
 		prog.Add(&opcodes.LineageParentSet{Branch: data.initialBranch, Parent: selectedBranch})
