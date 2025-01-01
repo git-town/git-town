@@ -10,11 +10,7 @@ Feature: displaying the branches in the middle of an ongoing sync merge conflict
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "feature"
-    And I ran "git-town sync"
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And I ran "git-town sync" and ignore the error
     When I run "git-town branch"
 
   Scenario: result
