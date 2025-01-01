@@ -9,7 +9,6 @@ import (
 )
 
 func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
-	args.Program.Value.Add(&opcodes.BranchesPerennialRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: args.Branch})
 	childBranches := args.Lineage.Children(args.Branch)
 	for _, child := range childBranches {
