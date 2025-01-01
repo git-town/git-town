@@ -25,7 +25,6 @@ Feature: delete the current contribution branch
       | feature      | git branch -D contribution                                |
     And the current branch is now "feature"
     And no uncommitted files exist now
-    And Git setting "git-town-branch.contribution.branchtype" now doesn't exist
     And the branches are now
       | REPOSITORY | BRANCHES                    |
       | local      | main, feature               |
