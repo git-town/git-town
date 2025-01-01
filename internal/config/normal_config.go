@@ -234,7 +234,7 @@ func (self *NormalConfig) SetFeatureRegexLocally(value configdomain.FeatureRegex
 
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *NormalConfig) SetNewBranchType(value configdomain.BranchType) error {
-	self.NewBranchType = value
+	self.NewBranchType = Some(value)
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
 }
 
