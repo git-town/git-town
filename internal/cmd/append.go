@@ -279,7 +279,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		case configdomain.BranchTypeParkedBranch:
 			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeParkedBranch})
 		case configdomain.BranchTypePerennialBranch:
-			prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
+			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePerennialBranch})
 		case configdomain.BranchTypePrototypeBranch:
 			prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 		}
