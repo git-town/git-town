@@ -668,6 +668,28 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
+	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
+		runCommand(ctx, command)
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode != 0 {
+				return fmt.Errorf("unexpected exit code: %d", exitCode)
+			}
+		}
+		return nil
+	})
+
+	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
+		runCommand(ctx, command)
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode == 0 {
+				return errors.New("this command should fail")
+			}
+		}
+		return nil
+	})
+
 	sc.Step(`^I rename the "([^"]+)" remote to "([^"]+)"$`, func(ctx context.Context, oldName, newName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -777,28 +799,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		runCommand(ctx, command)
-	})
-
-	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
-		runCommand(ctx, command)
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
-			if exitCode != 0 {
-				return fmt.Errorf("unexpected exit code: %d", exitCode)
-			}
-		}
-		return nil
-	})
-
-	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
-		runCommand(ctx, command)
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
-			if exitCode == 0 {
-				return errors.New("this command should fail")
-			}
-		}
-		return nil
 	})
 
 	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
@@ -1626,19 +1626,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 }
 
-func updateInitialSHAs(state *ScenarioState) {
-	devRepo := state.fixture.DevRepo.GetOrPanic()
-	if state.initialDevSHAs.IsNone() && state.insideGitRepo {
-		state.initialDevSHAs = Some(devRepo.CommitSHAs())
-	}
-	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); state.initialOriginSHAs.IsNone() && state.insideGitRepo && hasOriginrepo {
-		state.initialOriginSHAs = Some(originRepo.CommitSHAs())
-	}
-	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
-		state.initialWorktreeSHAs = Some(secondWorkTree.CommitSHAs())
-	}
-}
-
 func runCommand(ctx context.Context, command string) {
 	state := ctx.Value(keyScenarioState).(*ScenarioState)
 	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
@@ -1663,4 +1650,17 @@ func runCommand(ctx context.Context, command string) {
 	}
 	state.runOutput = Some(runOutput)
 	state.runExitCode = Some(exitCode)
+}
+
+func updateInitialSHAs(state *ScenarioState) {
+	devRepo := state.fixture.DevRepo.GetOrPanic()
+	if state.initialDevSHAs.IsNone() && state.insideGitRepo {
+		state.initialDevSHAs = Some(devRepo.CommitSHAs())
+	}
+	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); state.initialOriginSHAs.IsNone() && state.insideGitRepo && hasOriginrepo {
+		state.initialOriginSHAs = Some(originRepo.CommitSHAs())
+	}
+	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
+		state.initialWorktreeSHAs = Some(secondWorkTree.CommitSHAs())
+	}
 }
