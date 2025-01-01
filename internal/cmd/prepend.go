@@ -340,7 +340,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		case configdomain.BranchTypeFeatureBranch:
 		case configdomain.BranchTypeMainBranch:
 		case configdomain.BranchTypeObservedBranch:
-			prog.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.targetBranch})
+			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeObservedBranch})
 		case configdomain.BranchTypeParkedBranch:
 			prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
 		case configdomain.BranchTypePerennialBranch:

@@ -59,7 +59,6 @@ func All() []shared.Opcode {
 		&BranchTrackingDelete{},
 		&BranchTypeOverrideSet{},
 		&BranchTypeOverrideRemove{},
-		&BranchesObservedAdd{},
 		&BranchesObservedRemove{},
 		&BranchesParkedAdd{},
 		&BranchesParkedRemove{},
