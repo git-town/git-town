@@ -271,18 +271,15 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	} else {
 		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
 			switch newBranchType {
-			case configdomain.BranchTypeContributionBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeContributionBranch})
+			case
+				configdomain.BranchTypeContributionBranch,
+				configdomain.BranchTypeObservedBranch,
+				configdomain.BranchTypeParkedBranch,
+				configdomain.BranchTypePerennialBranch,
+				configdomain.BranchTypePrototypeBranch:
+				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
 			case configdomain.BranchTypeFeatureBranch:
 			case configdomain.BranchTypeMainBranch:
-			case configdomain.BranchTypeObservedBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeObservedBranch})
-			case configdomain.BranchTypeParkedBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeParkedBranch})
-			case configdomain.BranchTypePerennialBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePerennialBranch})
-			case configdomain.BranchTypePrototypeBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 			}
 		}
 	}
