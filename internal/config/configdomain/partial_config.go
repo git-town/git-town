@@ -194,7 +194,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		HostingOriginHostname:    self.HostingOriginHostname,
 		HostingPlatform:          self.HostingPlatform,
 		Lineage:                  self.Lineage,
-		NewBranchType:            self.NewBranchType.GetOrElse(defaults.NewBranchType),
+		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
 		ObservedBranches:         self.ObservedBranches,
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),

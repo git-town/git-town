@@ -28,7 +28,7 @@ Feature: show the configuration from a subfolder
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: no
 
       Hosting:

@@ -24,6 +24,12 @@ The `always-merge` ship strategy creates a merge commit via `git merge --no-ff`.
 This strategy allows visually grouping related feature commits together which
 may aid in understanding project history in certain situations.
 
+It is not generally recommended to revert merge commits, so `git town undo` will
+not create a merge reversal commit if the merge commit has been pushed already.
+See
+[howto/revert-a-faulty-merge.txt](https://github.com/git/git/blob/master/Documentation/howto/revert-a-faulty-merge.txt)
+in the official Git documentation for more information.
+
 ### fast-forward
 
 The `fast-forward` ship strategy prevents false merge conflicts when using

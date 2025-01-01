@@ -70,7 +70,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennial-regex = "release-.*"
 
       [create]
-      new-branch-type = "parked"
+      new-branch-type = "prototype"
       push-new-branches = false
 
       [hosting]

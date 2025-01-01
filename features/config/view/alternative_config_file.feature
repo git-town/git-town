@@ -27,7 +27,7 @@ Feature: show the configuration when using an alternative config file
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: no
 
       Hosting:

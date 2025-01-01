@@ -269,19 +269,21 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	if data.prototype.IsTrue() {
 		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
 	} else {
-		switch data.config.NormalConfig.NewBranchType {
-		case configdomain.BranchTypeContributionBranch:
-			prog.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.targetBranch})
-		case configdomain.BranchTypeFeatureBranch:
-		case configdomain.BranchTypeMainBranch:
-		case configdomain.BranchTypeObservedBranch:
-			prog.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.targetBranch})
-		case configdomain.BranchTypeParkedBranch:
-			prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
-		case configdomain.BranchTypePerennialBranch:
-			prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
-		case configdomain.BranchTypePrototypeBranch:
-			prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
+			switch newBranchType {
+			case configdomain.BranchTypeContributionBranch:
+				prog.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.targetBranch})
+			case configdomain.BranchTypeFeatureBranch:
+			case configdomain.BranchTypeMainBranch:
+			case configdomain.BranchTypeObservedBranch:
+				prog.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.targetBranch})
+			case configdomain.BranchTypeParkedBranch:
+				prog.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.targetBranch})
+			case configdomain.BranchTypePerennialBranch:
+				prog.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.targetBranch})
+			case configdomain.BranchTypePrototypeBranch:
+				prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+			}
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}

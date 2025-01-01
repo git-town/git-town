@@ -73,7 +73,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsTrue()))
 	fmt.Println()
 	print.Header("Create")
-	print.Entry("new branch type", format.StringsSetting(config.NormalConfig.NewBranchType.String()))
+	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))
 	print.Entry("push new branches", format.Bool(config.NormalConfig.ShouldPushNewBranches()))
 	fmt.Println()
 	print.Header("Hosting")
