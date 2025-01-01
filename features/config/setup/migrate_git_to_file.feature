@@ -18,6 +18,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.sync-perennial-strategy" is "rebase"
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.sync-tags" is "false"
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS  |
       | welcome                                   | enter |
@@ -70,7 +71,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennial-regex = "release-.*"
 
       [create]
-      new-branch-type = "parked"
+      new-branch-type = "prototype"
       push-new-branches = false
 
       [hosting]

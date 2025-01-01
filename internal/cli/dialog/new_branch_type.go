@@ -45,7 +45,12 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 			Text: "always create perennial branches",
 		},
 	}
-	defaultPos := entries.IndexOf(existingOpt)
+	defaultPos := 0
+	for e, entry := range entries {
+		if entry.Data.Equal(existingOpt) {
+			defaultPos = e
+		}
+	}
 	selection, aborted, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
 	if err != nil || aborted {
 		return None[configdomain.BranchType](), aborted, err
