@@ -12,5 +12,6 @@ type BranchTypeOverrideRemove struct {
 }
 
 func (self *BranchTypeOverrideRemove) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.RemoveBranchTypeOverride(self.Branch)
+	_ = args.Config.Value.NormalConfig.RemoveBranchTypeOverride(self.Branch)
+	return nil
 }
