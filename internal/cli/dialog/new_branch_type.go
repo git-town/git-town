@@ -19,19 +19,6 @@ will have when you run "git town hack", "append", or "prepend".
 Branches for which no branch type is set, and for which no configuration entries match, are considered feature branches.
 More info at https://www.git-town.com/preferences/new-branch-type.
 
-Before setting this, try to configure the branch type using one of these configuration entries:
-
-- contribution-branches
-- contribution-regex
-- default-branch-type
-- feature-regex
-- observed-branches
-- observed-regex
-- parked-branches
-- perennial-branches
-- perennial-regex
-- prototype-branches
-
 `
 )
 
