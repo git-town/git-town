@@ -9,7 +9,7 @@ import (
 )
 
 func RemoveBranchConfiguration(args RemoveBranchConfigurationArgs) {
-	args.Program.Value.Add(&opcodes.BranchesContributionRemove{Branch: args.Branch})
+	args.Program.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.BranchesObservedRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.BranchesParkedRemove{Branch: args.Branch})
 	args.Program.Value.Add(&opcodes.BranchesPerennialRemove{Branch: args.Branch})
