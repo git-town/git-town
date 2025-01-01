@@ -668,6 +668,28 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
+	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
+		runCommand(ctx, command)
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode != 0 {
+				return fmt.Errorf("unexpected exit code: %d", exitCode)
+			}
+		}
+		return nil
+	})
+
+	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
+		runCommand(ctx, command)
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode == 0 {
+				return errors.New("this command should fail")
+			}
+		}
+		return nil
+	})
+
 	sc.Step(`^I rename the "([^"]+)" remote to "([^"]+)"$`, func(ctx context.Context, oldName, newName string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -691,6 +713,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		content = strings.ReplaceAll(content, "\\n", "\n")
 		devRepo.CreateFile(filename, content)
 		devRepo.StageFiles(filename)
+	})
+
+	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
+		runCommand(ctx, command)
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
@@ -773,32 +799,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
-	})
-
-	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-		if hasDevRepo {
-			state.CaptureState()
-			updateInitialSHAs(state)
-		}
-		var exitCode int
-		var runOutput string
-		if hasDevRepo {
-			runOutput, exitCode = devRepo.MustQueryStringCode(command)
-			devRepo.Reload()
-		} else {
-			parts := asserts.NoError1(shellquote.Split(command))
-			cmd, args := parts[0], parts[1:]
-			subProcess := exec.Command(cmd, args...) // #nosec
-			subProcess.Dir = state.fixture.Dir
-			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-			outputBytes, _ := subProcess.CombinedOutput()
-			runOutput = string(outputBytes)
-			exitCode = subProcess.ProcessState.ExitCode()
-		}
-		state.runOutput = Some(runOutput)
-		state.runExitCode = Some(exitCode)
 	})
 
 	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
@@ -1624,6 +1624,32 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`wait 1 second to ensure new Git timestamps`, func() {
 		time.Sleep(1 * time.Second)
 	})
+}
+
+func runCommand(ctx context.Context, command string) {
+	state := ctx.Value(keyScenarioState).(*ScenarioState)
+	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
+	if hasDevRepo {
+		state.CaptureState()
+		updateInitialSHAs(state)
+	}
+	var exitCode int
+	var runOutput string
+	if hasDevRepo {
+		runOutput, exitCode = devRepo.MustQueryStringCode(command)
+		devRepo.Reload()
+	} else {
+		parts := asserts.NoError1(shellquote.Split(command))
+		cmd, args := parts[0], parts[1:]
+		subProcess := exec.Command(cmd, args...) // #nosec
+		subProcess.Dir = state.fixture.Dir
+		subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+		outputBytes, _ := subProcess.CombinedOutput()
+		runOutput = string(outputBytes)
+		exitCode = subProcess.ProcessState.ExitCode()
+	}
+	state.runOutput = Some(runOutput)
+	state.runExitCode = Some(exitCode)
 }
 
 func updateInitialSHAs(state *ScenarioState) {
