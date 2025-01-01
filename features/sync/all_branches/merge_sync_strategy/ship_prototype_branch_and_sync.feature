@@ -24,6 +24,7 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
     And origin ships the "hooks" branch using the "squash-merge" ship-strategy
     When I run "git-town sync --all"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |

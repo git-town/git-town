@@ -824,6 +824,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			exitCode = subProcess.ProcessState.ExitCode()
 		}
 		state.runOutput = Some(runOutput)
+		state.runExitCode = Some(exitCode)
 		if exitCode != 0 {
 			return fmt.Errorf("unexpected exit code: %d", exitCode)
 		}
@@ -853,6 +854,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			exitCode = subProcess.ProcessState.ExitCode()
 		}
 		state.runOutput = Some(runOutput)
+		state.runExitCode = Some(exitCode)
 		if exitCode == 0 {
 			return errors.New("this command should fail")
 		}
