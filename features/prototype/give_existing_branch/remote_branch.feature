@@ -17,7 +17,7 @@ Feature: prototype another remote branch
       branch "remote-feature" is now a prototype branch
       """
     And the current branch is now "remote-feature"
-    And branch "remote-feature" is now prototype
+    And branch "remote-feature" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"

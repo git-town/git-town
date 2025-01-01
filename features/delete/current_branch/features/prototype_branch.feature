@@ -47,4 +47,4 @@ Feature: delete the current prototype branch
     And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "prototype" is now prototype
+    And branch "prototype" now has type "prototype"

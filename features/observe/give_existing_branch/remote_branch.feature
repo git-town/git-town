@@ -18,7 +18,7 @@ Feature: make another remote feature branch an observed branch
       branch "remote-feature" is now an observed branch
       """
     And the current branch is now "remote-feature"
-    And branch "remote-feature" is now observed
+    And branch "remote-feature" now has type "observed"
     And the uncommitted file still exists
 
   Scenario: undo

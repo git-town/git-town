@@ -15,21 +15,21 @@ Feature: making multiple branches a feature branch
       """
       branch "contribution" is now a feature branch
       """
-    And branch "contribution" is now a feature branch
+    And branch "contribution" now has type "feature"
     And Git Town prints:
       """
       branch "observed" is now a feature branch
       """
-    And branch "observed" is now a feature branch
+    And branch "observed" now has type "feature"
     And Git Town prints:
       """
       branch "parked" is now a feature branch
       """
-    And branch "parked" is now a feature branch
+    And branch "parked" now has type "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "contribution" is now a contribution branch
-    And branch "observed" is now observed
-    And branch "parked" is now parked
+    And branch "contribution" now has type "contribution"
+    And branch "observed" now has type "observed"
+    And branch "parked" now has type "parked"

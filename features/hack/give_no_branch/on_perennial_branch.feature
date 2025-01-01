@@ -15,12 +15,12 @@ Feature: cannot make the current perennial branch a feature branch
       """
       branch "perennial" is a perennial branch
       """
-    And branch "perennial" is still perennial
+    And branch "perennial" still has type "perennial"
     And local Git setting "git-town-branch.perennial.branchtype" still doesn't exist
     And local Git setting "git-town.perennial-branches" is still "perennial"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "perennial" is still perennial
+    And branch "perennial" still has type "perennial"
     And local Git setting "git-town-branch.perennial.branchtype" still doesn't exist

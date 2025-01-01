@@ -36,4 +36,4 @@ Feature: sync perennial branch that was deleted at the remote
       |        | git checkout perennial                          |
     And the current branch is now "perennial"
     And the initial branches and lineage exist now
-    And branch "perennial" is now perennial
+    And branch "perennial" now has type "perennial"

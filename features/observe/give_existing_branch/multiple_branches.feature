@@ -16,24 +16,24 @@ Feature: observing multiple other branches
       """
       branch "feature" is now an observed branch
       """
-    And branch "feature" is now observed
+    And branch "feature" now has type "observed"
     And Git Town prints:
       """
       branch "contribution" is now an observed branch
       """
-    And branch "contribution" is now observed
+    And branch "contribution" now has type "observed"
     And there are now no contribution branches
     And Git Town prints:
       """
       branch "parked" is now an observed branch
       """
-    And branch "parked" is now observed
+    And branch "parked" now has type "observed"
     And there are now no parked branches
     And Git Town prints:
       """
       branch "prototype" is now an observed branch
       """
-    And branch "prototype" is now observed
+    And branch "prototype" now has type "observed"
     And there are now no prototype branches
     And the current branch is still "main"
 
