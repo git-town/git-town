@@ -46,8 +46,8 @@ Feature: display all executed Git commands when using the always-merge strategy
       """
     And the current branch is now "main"
 
+  @this
   Scenario: undo
-    Given I ran "git-town ship -m done"
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                        |
