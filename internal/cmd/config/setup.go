@@ -379,10 +379,9 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	}
 	if value, hasValue := newValue.Get(); hasValue {
 		return config.NormalConfig.SetNewBranchType(value)
-	} else {
-		config.NormalConfig.RemoveNewBranchType()
-		return nil
 	}
+	config.NormalConfig.RemoveNewBranchType()
+	return nil
 }
 
 func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {

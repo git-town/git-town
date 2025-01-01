@@ -41,20 +41,12 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 			Data: Some(configdomain.BranchTypePrototypeBranch),
 			Text: "always create prototype branches",
 		},
+		{
+			Data: Some(configdomain.BranchTypePrototypeBranch),
+			Text: "always create perennial branches",
+		},
 	}
-	var defaultPos int
-	if existing, hasExisting := existingOpt.Get(); hasExisting {
-		switch existing {
-		case configdomain.BranchTypeFeatureBranch:
-			defaultPos = 1
-		case configdomain.BranchTypeParkedBranch:
-			defaultPos = 2
-		case configdomain.BranchTypePrototypeBranch:
-			defaultPos = 3
-		}
-	} else {
-		defaultPos = 0
-	}
+	defaultPos := entries.IndexOf(existingOpt)
 	selection, aborted, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
 	if err != nil || aborted {
 		return None[configdomain.BranchType](), aborted, err
