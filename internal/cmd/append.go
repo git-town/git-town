@@ -271,7 +271,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	} else {
 		switch data.config.NormalConfig.NewBranchType {
 		case configdomain.BranchTypeContributionBranch:
-			prog.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.targetBranch})
+			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeContributionBranch})
 		case configdomain.BranchTypeFeatureBranch:
 		case configdomain.BranchTypeMainBranch:
 		case configdomain.BranchTypeObservedBranch:

@@ -63,7 +63,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchTrackingCreate{Branch: "branch"},
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
-				&opcodes.BranchesContributionAdd{Branch: "branch"},
+				&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypeFeatureBranch},
 				&opcodes.BranchesContributionRemove{Branch: "branch"},
 				&opcodes.BranchesObservedAdd{Branch: "branch"},
 				&opcodes.BranchesObservedRemove{Branch: "branch"},
@@ -281,9 +281,10 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "Branch": "branch",
+        "BranchType": "feature"
       },
-      "type": "BranchesContributionAdd"
+      "type": "BranchTypeOverrideSet"
     },
     {
       "data": {

@@ -8,11 +8,12 @@ import (
 
 // registers the branch with the given name as a contribution branch in the Git config
 // TODO: convert to more generic SetBranchTypeOverride opcode
-type BranchesContributionAdd struct {
+type BranchTypeOverrideSet struct {
 	Branch                  gitdomain.LocalBranchName
+	BranchType              configdomain.BranchType
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *BranchesContributionAdd) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, self.Branch)
+func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
+	return args.Config.Value.NormalConfig.SetBranchTypeOverride(self.BranchType, self.Branch)
 }
