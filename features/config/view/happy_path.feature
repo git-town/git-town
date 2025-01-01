@@ -34,7 +34,7 @@ Feature: show the configuration
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: no
 
       Hosting:
@@ -106,7 +106,7 @@ Feature: show the configuration
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: yes
 
       Hosting:
@@ -196,7 +196,7 @@ Feature: show the configuration
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: no
 
       Hosting:
@@ -247,7 +247,7 @@ Feature: show the configuration
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: no
 
       Hosting:
@@ -300,7 +300,7 @@ Feature: show the configuration
         offline: no
 
       Create:
-        new branch type: feature
+        new branch type: (not set)
         push new branches: no
 
       Hosting:
