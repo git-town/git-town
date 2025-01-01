@@ -12,11 +12,7 @@ Feature: displaying the repo in the middle of an ongoing sync merge conflict
     And the current branch is "feature"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
-    And I ran "git-town sync"
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And I ran "git-town sync" and ignore the error
     When I run "git-town repo"
 
   Scenario: result
