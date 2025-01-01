@@ -6,15 +6,12 @@ import (
 )
 
 // removes the branch with the given name from the contribution branches list in the Git config
-type BranchesContributionRemove struct {
+type BranchTypeOverrideRemove struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *BranchesContributionRemove) Run(args shared.RunArgs) error {
-	var err error
-	if args.Config.Value.NormalConfig.ContributionBranches.Contains(self.Branch) {
-		err = args.Config.Value.NormalConfig.RemoveFromContributionBranches(self.Branch)
-	}
-	return err
+func (self *BranchTypeOverrideRemove) Run(args shared.RunArgs) error {
+	_ = args.Config.Value.NormalConfig.RemoveBranchTypeOverride(self.Branch)
+	return nil
 }
