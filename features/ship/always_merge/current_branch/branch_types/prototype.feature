@@ -45,4 +45,4 @@ Feature: shipping a prototype branch using the always-merge strategy
       | main   | local, origin | prototype commit         |
       |        |               | Merge branch 'prototype' |
     And the initial branches and lineage exist now
-    And branch "prototype" is now prototype
+    And branch "prototype" now has type "prototype"

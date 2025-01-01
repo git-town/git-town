@@ -27,4 +27,4 @@ Feature: park another remote branch
       | main           | git branch -D remote-feature |
     And the current branch is now "main"
     And there are now no parked branches
-    And branch "remote-feature" is now a feature branch
+    And branch "remote-feature" now has type "feature"

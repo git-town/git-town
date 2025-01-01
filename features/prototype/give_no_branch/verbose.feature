@@ -30,7 +30,7 @@ Feature: prototype the current branch verbosely
       branch "feature" is now a prototype branch
       """
     And the current branch is still "feature"
-    And branch "feature" is now prototype
+    And branch "feature" now has type "prototype"
     And the uncommitted file still exists
 
   Scenario: undo
@@ -57,5 +57,5 @@ Feature: prototype the current branch verbosely
       Ran 15 shell commands
       """
     And the current branch is still "feature"
-    And branch "feature" is now a feature branch
+    And branch "feature" now has type "feature"
     And the uncommitted file still exists

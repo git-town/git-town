@@ -16,7 +16,7 @@ Feature: make another remote branch a contribution branch
       """
       branch "remote-feature" is now a contribution branch
       """
-    And branch "remote-feature" is now a contribution branch
+    And branch "remote-feature" now has type "contribution"
     And the current branch is now "remote-feature"
 
   Scenario: undo

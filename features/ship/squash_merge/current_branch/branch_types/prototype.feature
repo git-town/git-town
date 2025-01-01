@@ -48,4 +48,4 @@ Feature: shipping a prototype branch
       |           |               | Revert "prototype done" |
       | prototype | local, origin | prototype commit        |
     And the initial branches and lineage exist now
-    And branch "prototype" is now prototype
+    And branch "prototype" now has type "prototype"

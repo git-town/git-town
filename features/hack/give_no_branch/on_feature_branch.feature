@@ -14,9 +14,9 @@ Feature: cannot make the current feature branch a feature branch
       """
       branch "feature" is already a feature branch
       """
-    And branch "feature" is still a feature branch
+    And branch "feature" still has type "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "feature" is still a feature branch
+    And branch "feature" still has type "feature"

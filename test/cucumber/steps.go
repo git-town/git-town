@@ -273,69 +273,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
 	})
 
-	sc.Step(`^branch "([^"]+)" is (?:now|still) a contribution branch`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypeContributionBranch {
-			return fmt.Errorf("branch %q is %q", branch, branchType)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is (?:now|still) a feature branch`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypeFeatureBranch {
-			return fmt.Errorf("branch %q is %s", branch, branchType)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypeObservedBranch {
-			return fmt.Errorf("branch %q is %s", branch, branchType)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is (?:now|still) parked`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.NormalConfig.PartialBranchType(branch)
-		if branchType != configdomain.BranchTypeParkedBranch {
-			return fmt.Errorf("branch %q is %q", branch, branchType)
-		}
-		return nil
-	})
-
 	// TODO: replace with a single step implementation that compares against BranchType.String()
-	sc.Step(`^branch "([^"]+)" is (?:now|still) perennial`, func(ctx context.Context, name string) error {
+	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypePerennialBranch {
-			return fmt.Errorf("branch %q is %s", branch, branchType)
-		}
-		return nil
-	})
-
-	sc.Step(`^branch "([^"]+)" is (?:now|still) prototype`, func(ctx context.Context, name string) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branch := gitdomain.NewLocalBranchName(name)
-		branchType := devRepo.Config.BranchType(branch)
-		if branchType != configdomain.BranchTypePrototypeBranch {
-			return fmt.Errorf("branch %q isn't prototype as expected, it is %q", branch, branchType)
+		branch := gitdomain.NewLocalBranchName(branchName)
+		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName))
+		want := wantOpt.GetOrPanic()
+		have := devRepo.Config.BranchType(branch)
+		if have != want {
+			return fmt.Errorf("branch %q is %s", branch, have)
 		}
 		return nil
 	})

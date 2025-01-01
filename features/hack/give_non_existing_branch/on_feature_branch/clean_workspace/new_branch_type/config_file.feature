@@ -25,7 +25,7 @@ Feature: create a new branch when prototype branches are configured via config f
       | main     | git rebase origin/main --no-update-refs |
       |          | git checkout -b new                     |
     And the current branch is now "new"
-    And branch "new" is now prototype
+    And branch "new" now has type "prototype"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |

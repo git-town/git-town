@@ -16,17 +16,17 @@ Feature: make multiple other branches contribution branches
       """
       branch "feature-1" is now a contribution branch
       """
-    And branch "feature-1" is now a contribution branch
+    And branch "feature-1" now has type "contribution"
     And Git Town prints:
       """
       branch "feature-2" is now a contribution branch
       """
-    And branch "feature-2" is now a contribution branch
+    And branch "feature-2" now has type "contribution"
     And Git Town prints:
       """
       branch "feature-3" is now a contribution branch
       """
-    And branch "feature-3" is now a contribution branch
+    And branch "feature-3" now has type "contribution"
     And the current branch is still "main"
     And the uncommitted file still exists
 

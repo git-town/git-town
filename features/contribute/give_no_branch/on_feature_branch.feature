@@ -14,7 +14,7 @@ Feature: make the current feature branch a contribution branch
       """
       branch "feature" is now a contribution branch
       """
-    And branch "feature" is now a contribution branch
+    And branch "feature" now has type "contribution"
     And the current branch is still "feature"
 
   Scenario: undo

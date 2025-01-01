@@ -16,7 +16,7 @@ Feature: observing the current feature branch
       branch "feature" is now an observed branch
       """
     And the current branch is still "feature"
-    And branch "feature" is now observed
+    And branch "feature" now has type "observed"
     And the uncommitted file still exists
 
   Scenario: undo

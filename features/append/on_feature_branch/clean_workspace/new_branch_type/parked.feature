@@ -23,7 +23,7 @@ Feature: append a new branch when parked branches are configured
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"
-    And branch "new" is now parked
+    And branch "new" now has type "parked"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |

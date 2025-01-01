@@ -43,4 +43,4 @@ Feature: shipping a prototype branch using the fast-forward strategy
       | BRANCH | LOCATION      | MESSAGE          |
       | main   | local, origin | prototype commit |
     And the initial branches and lineage exist now
-    And branch "prototype" is now prototype
+    And branch "prototype" now has type "prototype"

@@ -15,12 +15,12 @@ Feature: observing the current parked branch
       branch "parked" is now an observed branch
       """
     And the current branch is still "parked"
-    And branch "parked" is now observed
+    And branch "parked" now has type "observed"
     And there are now no parked branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is still "parked"
-    And branch "parked" is now parked
+    And branch "parked" now has type "parked"
     And there are now no observed branches

@@ -15,7 +15,7 @@ Feature: observe the current contribution branch
       """
       branch "contribution" is now an observed branch
       """
-    And branch "contribution" is now observed
+    And branch "contribution" now has type "observed"
     And there are now no contribution branches
     And the uncommitted file still exists
 
@@ -27,6 +27,6 @@ Feature: observe the current contribution branch
       |              | git stash     |
       |              | git stash pop |
     And the current branch is still "contribution"
-    And branch "contribution" is now a contribution branch
+    And branch "contribution" now has type "contribution"
     And there are now no observed branches
     And the uncommitted file still exists

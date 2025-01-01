@@ -23,7 +23,7 @@ Feature: prepend a prototype branch to a feature branch
       |        | git merge --no-edit --ff origin/old     |
       |        | git checkout -b parent main             |
     And the current branch is now "parent"
-    And branch "parent" is now prototype
+    And branch "parent" now has type "prototype"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |

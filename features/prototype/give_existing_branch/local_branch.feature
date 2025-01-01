@@ -18,5 +18,5 @@ Feature: prototype another local feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "feature" is now a feature branch
+    And branch "feature" now has type "feature"
     And there are now no prototype branches

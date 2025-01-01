@@ -48,4 +48,4 @@ Feature: shipping a parked branch
       |        |               | Revert "parked done" |
       | parked | local, origin | parked commit        |
     And the initial branches and lineage exist now
-    And branch "parked" is now parked
+    And branch "parked" now has type "parked"

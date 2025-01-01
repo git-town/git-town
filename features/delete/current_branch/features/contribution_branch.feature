@@ -48,4 +48,4 @@ Feature: delete the current contribution branch
     And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "contribution" is now a contribution branch
+    And branch "contribution" now has type "contribution"

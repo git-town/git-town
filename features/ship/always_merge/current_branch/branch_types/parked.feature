@@ -44,4 +44,4 @@ Feature: shipping a parked branch using the always-merge strategy
       | main   | local, origin | parked commit         |
       |        |               | Merge branch 'parked' |
     And the initial branches and lineage exist now
-    And branch "parked" is now parked
+    And branch "parked" now has type "parked"

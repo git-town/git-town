@@ -15,7 +15,7 @@ Feature: prototype the current feature branch
       branch "feature" is now a prototype branch
       """
     And the current branch is still "feature"
-    And branch "feature" is now prototype
+    And branch "feature" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"

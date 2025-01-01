@@ -15,12 +15,12 @@ Feature: making the current observed branch a feature branch
       """
       branch "observed" is now a feature branch
       """
-    And branch "observed" is now a feature branch
+    And branch "observed" now has type "feature"
     And local Git setting "git-town-branch.observed.branchtype" is now "feature"
     And local Git setting "git-town.observed-branches" is still "observed"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "observed" is now observed
+    And branch "observed" now has type "observed"
     And local Git setting "git-town-branch.observed.branchtype" now doesn't exist

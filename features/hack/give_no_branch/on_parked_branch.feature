@@ -15,12 +15,12 @@ Feature: making the current parked branch a feature branch
       """
       branch "parked" is now a feature branch
       """
-    And branch "parked" is now a feature branch
+    And branch "parked" now has type "feature"
     And local Git setting "git-town-branch.parked.branchtype" is now "feature"
     And local Git setting "git-town.parked-branches" is still "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "parked" is now parked
+    And branch "parked" now has type "parked"
     And local Git setting "git-town-branch.parked.branchtype" now doesn't exist
