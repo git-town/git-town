@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/shared"
@@ -258,15 +259,13 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.MergeAbort{},
-			&opcodes.BranchesPerennialAdd{
-				Branch: "branch",
-			},
+			&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypePerennialBranch},
 		}
 		have := give.String()
 		want := `
 Program:
 1: &opcodes.MergeAbort{undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
-2: &opcodes.BranchesPerennialAdd{Branch:"branch", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
+2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
 `[1:]
 		must.EqOp(t, want, have)
 	})

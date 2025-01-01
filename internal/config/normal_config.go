@@ -79,6 +79,13 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 	return self.GitConfigAccess.RemoteURL(remote)
 }
 
+func (self *NormalConfig) RemoveBranchTypeOverride(branch gitdomain.LocalBranchName) error {
+	delete(self.BranchTypeOverrides, branch)
+	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
+	_ = self.GitConfigAccess.RemoveLocalConfigValue(key.Key)
+	return nil
+}
+
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
 }

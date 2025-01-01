@@ -2,8 +2,10 @@ package status
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/messages"
 	"github.com/git-town/git-town/v17/internal/vm/statefile"
 	"github.com/spf13/cobra"
@@ -25,7 +27,11 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func executeStatusReset() error {
-	err := statefile.Delete(".")
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	err = statefile.Delete(gitdomain.RepoRootDir(cwd))
 	if err != nil {
 		return err
 	}
