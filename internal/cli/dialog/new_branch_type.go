@@ -41,7 +41,7 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 			Text: "always create prototype branches",
 		},
 		{
-			Data: Some(configdomain.BranchTypePrototypeBranch),
+			Data: Some(configdomain.BranchTypePerennialBranch),
 			Text: "always create perennial branches",
 		},
 	}
