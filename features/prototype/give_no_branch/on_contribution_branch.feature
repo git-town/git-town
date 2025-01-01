@@ -12,7 +12,7 @@ Feature: prototype the current contribution branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "contribution" now a has type "prototype" branch
+      branch "contribution" is now a prototype branch
       """
     And the current branch is still "contribution"
     And branch "contribution" now has type "prototype"

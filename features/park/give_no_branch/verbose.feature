@@ -27,7 +27,7 @@ Feature: park the current branch verbosely
       """
     And Git Town prints:
       """
-      branch "feature" now has type "parked"
+      branch "feature" is now parked
       """
     And the current branch is still "feature"
     And branch "feature" now has type "parked"

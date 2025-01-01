@@ -11,7 +11,7 @@ Feature: park another local feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" now has type "parked"
+      branch "feature" is now parked
       """
     And the parked branches are now "feature"
 

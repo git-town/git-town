@@ -12,7 +12,7 @@ Feature: prototype the current parked branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "parked" now a has type "prototype" branch
+      branch "parked" is now a prototype branch
       """
     And the current branch is still "parked"
     And branch "parked" now has type "prototype"
