@@ -776,87 +776,27 @@ func defineSteps(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-		if hasDevRepo {
-			state.CaptureState()
-			updateInitialSHAs(state)
-		}
-		var exitCode int
-		var runOutput string
-		if hasDevRepo {
-			runOutput, exitCode = devRepo.MustQueryStringCode(command)
-			devRepo.Reload()
-		} else {
-			parts := asserts.NoError1(shellquote.Split(command))
-			cmd, args := parts[0], parts[1:]
-			subProcess := exec.Command(cmd, args...) // #nosec
-			subProcess.Dir = state.fixture.Dir
-			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-			outputBytes, _ := subProcess.CombinedOutput()
-			runOutput = string(outputBytes)
-			exitCode = subProcess.ProcessState.ExitCode()
-		}
-		state.runOutput = Some(runOutput)
-		state.runExitCode = Some(exitCode)
+		runCommand(ctx, command)
 	})
 
 	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
+		runCommand(ctx, command)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-		if hasDevRepo {
-			state.CaptureState()
-			updateInitialSHAs(state)
-		}
-		var exitCode int
-		var runOutput string
-		if hasDevRepo {
-			runOutput, exitCode = devRepo.MustQueryStringCode(command)
-			devRepo.Reload()
-		} else {
-			parts := asserts.NoError1(shellquote.Split(command))
-			cmd, args := parts[0], parts[1:]
-			subProcess := exec.Command(cmd, args...) // #nosec
-			subProcess.Dir = state.fixture.Dir
-			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-			outputBytes, _ := subProcess.CombinedOutput()
-			runOutput = string(outputBytes)
-			exitCode = subProcess.ProcessState.ExitCode()
-		}
-		state.runOutput = Some(runOutput)
-		state.runExitCode = Some(exitCode)
-		if exitCode != 0 {
-			return fmt.Errorf("unexpected exit code: %d", exitCode)
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode != 0 {
+				return fmt.Errorf("unexpected exit code: %d", exitCode)
+			}
 		}
 		return nil
 	})
 
 	sc.Step(`^I ran "(.+)" and ignore the error$`, func(ctx context.Context, command string) error {
+		runCommand(ctx, command)
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-		if hasDevRepo {
-			state.CaptureState()
-			updateInitialSHAs(state)
-		}
-		var exitCode int
-		var runOutput string
-		if hasDevRepo {
-			runOutput, exitCode = devRepo.MustQueryStringCode(command)
-			devRepo.Reload()
-		} else {
-			parts := asserts.NoError1(shellquote.Split(command))
-			cmd, args := parts[0], parts[1:]
-			subProcess := exec.Command(cmd, args...) // #nosec
-			subProcess.Dir = state.fixture.Dir
-			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-			outputBytes, _ := subProcess.CombinedOutput()
-			runOutput = string(outputBytes)
-			exitCode = subProcess.ProcessState.ExitCode()
-		}
-		state.runOutput = Some(runOutput)
-		state.runExitCode = Some(exitCode)
-		if exitCode == 0 {
-			return errors.New("this command should fail")
+		if exitCode, hasExitCode := state.runExitCode.Get(); hasExitCode {
+			if exitCode == 0 {
+				return errors.New("this command should fail")
+			}
 		}
 		return nil
 	})
@@ -1697,4 +1637,30 @@ func updateInitialSHAs(state *ScenarioState) {
 	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
 		state.initialWorktreeSHAs = Some(secondWorkTree.CommitSHAs())
 	}
+}
+
+func runCommand(ctx context.Context, command string) {
+	state := ctx.Value(keyScenarioState).(*ScenarioState)
+	devRepo, hasDevRepo := state.fixture.DevRepo.Get()
+	if hasDevRepo {
+		state.CaptureState()
+		updateInitialSHAs(state)
+	}
+	var exitCode int
+	var runOutput string
+	if hasDevRepo {
+		runOutput, exitCode = devRepo.MustQueryStringCode(command)
+		devRepo.Reload()
+	} else {
+		parts := asserts.NoError1(shellquote.Split(command))
+		cmd, args := parts[0], parts[1:]
+		subProcess := exec.Command(cmd, args...) // #nosec
+		subProcess.Dir = state.fixture.Dir
+		subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+		outputBytes, _ := subProcess.CombinedOutput()
+		runOutput = string(outputBytes)
+		exitCode = subProcess.ProcessState.ExitCode()
+	}
+	state.runOutput = Some(runOutput)
+	state.runExitCode = Some(exitCode)
 }
