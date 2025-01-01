@@ -330,11 +330,11 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		Parent: data.targetBranch,
 	})
 	if data.prototype.IsTrue() {
-		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 	} else {
 		switch data.config.NormalConfig.NewBranchType {
 		case configdomain.BranchTypePrototypeBranch:
-			prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 		case configdomain.BranchTypeContributionBranch:
 			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypeContributionBranch})
 		case configdomain.BranchTypeFeatureBranch:

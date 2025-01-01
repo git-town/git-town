@@ -267,7 +267,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		Ancestors: data.newBranchParentCandidates,
 	})
 	if data.prototype.IsTrue() {
-		prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 	} else {
 		switch data.config.NormalConfig.NewBranchType {
 		case configdomain.BranchTypeContributionBranch:
@@ -281,7 +281,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		case configdomain.BranchTypePerennialBranch:
 			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePerennialBranch})
 		case configdomain.BranchTypePrototypeBranch:
-			prog.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.targetBranch})
+			prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
