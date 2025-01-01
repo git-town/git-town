@@ -775,7 +775,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		secondWorkTree.Reload()
 	})
 
-	sc.Step(`^I (?:run|ran) "(.+)"$`, func(ctx context.Context, command string) {
+	sc.Step(`^I run "(.+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
 		if hasDevRepo {
@@ -799,6 +799,35 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		state.runOutput = Some(runOutput)
 		state.runExitCode = Some(exitCode)
+	})
+
+	sc.Step(`^I ran "(.+)"$`, func(ctx context.Context, command string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
+		if hasDevRepo {
+			state.CaptureState()
+			updateInitialSHAs(state)
+		}
+		var exitCode int
+		var runOutput string
+		if hasDevRepo {
+			runOutput, exitCode = devRepo.MustQueryStringCode(command)
+			devRepo.Reload()
+		} else {
+			parts := asserts.NoError1(shellquote.Split(command))
+			cmd, args := parts[0], parts[1:]
+			subProcess := exec.Command(cmd, args...) // #nosec
+			subProcess.Dir = state.fixture.Dir
+			subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+			outputBytes, _ := subProcess.CombinedOutput()
+			runOutput = string(outputBytes)
+			exitCode = subProcess.ProcessState.ExitCode()
+		}
+		state.runOutput = Some(runOutput)
+		if exitCode != 0 {
+			return fmt.Errorf("unexpected exit code: %d", exitCode)
+		}
+		return nil
 	})
 
 	sc.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(ctx context.Context, cmd string, input *godog.Table) {
