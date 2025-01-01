@@ -373,11 +373,15 @@ func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsern
 	return gitCommands.RemoveBitbucketUsername(frontend)
 }
 
-func saveNewBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
+func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetNewBranchType(newValue)
+	if value, hasValue := newValue.Get(); hasValue {
+		return config.NormalConfig.SetNewBranchType(value)
+	}
+	config.NormalConfig.RemoveNewBranchType()
+	return nil
 }
 
 func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
