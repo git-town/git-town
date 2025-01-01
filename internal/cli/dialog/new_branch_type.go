@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 const (
@@ -15,26 +16,48 @@ const (
 The "new-branch-type" setting determines which branch type Git Town
 creates when you run "git town hack", "append", or "prepend".
 
+The default is to create feature branches.
+
 More info at https://www.git-town.com/preferences/new-branch-type.
 
 `
 )
 
-func NewBranchType(existing configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, bool, error) {
-	entries := []configdomain.BranchType{
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePrototypeBranch,
+func NewBranchType(existingOpt Option[configdomain.BranchType], inputs components.TestInput) (Option[configdomain.BranchType], bool, error) {
+	entries := list.Entries[Option[configdomain.BranchType]]{
+		{
+			Data: None[configdomain.BranchType](),
+			Text: "create default branch type",
+		},
+		{
+			Data: Some(configdomain.BranchTypeFeatureBranch),
+			Text: "always create feature branches",
+		},
+		{
+			Data: Some(configdomain.BranchTypeParkedBranch),
+			Text: "always create parked branches",
+		},
+		{
+			Data: Some(configdomain.BranchTypePrototypeBranch),
+			Text: "always create prototype branches",
+		},
 	}
 	var defaultPos int
-	if existing == configdomain.BranchTypeFeatureBranch {
-		defaultPos = 0
+	if existing, hasExisting := existingOpt.Get(); hasExisting {
+		switch existing {
+		case configdomain.BranchTypeFeatureBranch:
+			defaultPos = 1
+		case configdomain.BranchTypeParkedBranch:
+			defaultPos = 2
+		case configdomain.BranchTypePrototypeBranch:
+			defaultPos = 3
+		}
 	} else {
-		defaultPos = 1
+		defaultPos = 0
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(entries...), defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
 	if err != nil || aborted {
-		return configdomain.BranchTypeFeatureBranch, aborted, err
+		return None[configdomain.BranchType](), aborted, err
 	}
 	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
