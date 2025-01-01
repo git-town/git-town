@@ -7,16 +7,16 @@ import (
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
-type BranchType int
+type BranchType string
 
 const (
-	BranchTypeMainBranch BranchType = iota
-	BranchTypePerennialBranch
-	BranchTypeFeatureBranch
-	BranchTypeParkedBranch
-	BranchTypeContributionBranch
-	BranchTypeObservedBranch
-	BranchTypePrototypeBranch
+	BranchTypeMainBranch         = BranchType("main")
+	BranchTypePerennialBranch    = BranchType("perennial")
+	BranchTypeFeatureBranch      = BranchType("feature")
+	BranchTypeParkedBranch       = BranchType("parked")
+	BranchTypeContributionBranch = BranchType("contribution")
+	BranchTypeObservedBranch     = BranchType("observed")
+	BranchTypePrototypeBranch    = BranchType("prototype")
 )
 
 func AllBranchTypes() []BranchType {
@@ -80,21 +80,5 @@ func (self BranchType) ShouldPush(isInitialBranch bool) bool {
 }
 
 func (self BranchType) String() string {
-	switch self {
-	case BranchTypeContributionBranch:
-		return "contribution"
-	case BranchTypeFeatureBranch:
-		return "feature"
-	case BranchTypeMainBranch:
-		return "main"
-	case BranchTypeObservedBranch:
-		return "observed"
-	case BranchTypeParkedBranch:
-		return "parked"
-	case BranchTypePerennialBranch:
-		return "perennial"
-	case BranchTypePrototypeBranch:
-		return "prototype"
-	}
-	panic("unhandled branch type")
+	return string(self)
 }
