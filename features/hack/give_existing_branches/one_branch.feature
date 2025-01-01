@@ -15,9 +15,9 @@ Feature: making a branch a feature branch
       """
       branch "contribution" is now a feature branch
       """
-    And branch "contribution" is now a feature branch
+    And branch "contribution" now has type "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "contribution" is now a contribution branch
+    And branch "contribution" now has type "contribution"

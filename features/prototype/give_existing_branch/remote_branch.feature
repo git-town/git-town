@@ -14,10 +14,10 @@ Feature: prototype another remote branch
       | main   | git checkout remote-feature |
     And Git Town prints:
       """
-      branch "remote-feature" is now a prototype branch
+      branch "remote-feature" now a has type "prototype" branch
       """
     And the current branch is now "remote-feature"
-    And branch "remote-feature" is now prototype
+    And branch "remote-feature" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"

@@ -11,12 +11,12 @@ Feature: park another local feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now parked
+      branch "feature" now has type "parked"
       """
     And the parked branches are now "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "feature" is now a feature branch
+    And branch "feature" now has type "feature"
     And there are now no parked branches

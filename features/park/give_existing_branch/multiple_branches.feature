@@ -14,14 +14,14 @@ Feature: parking multiple other branches
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now parked
+      branch "feature" now has type "parked"
       """
-    And branch "feature" is now parked
-    And branch "contribution" is now parked
+    And branch "feature" now has type "parked"
+    And branch "contribution" now has type "parked"
     And there are now no contribution branches
-    And branch "observed" is now parked
+    And branch "observed" now has type "parked"
     And there are now no observed branches
-    And branch "prototype" is now parked
+    And branch "prototype" now has type "parked"
     And the current branch is still "main"
 
   Scenario: undo

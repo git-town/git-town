@@ -12,14 +12,14 @@ Feature: prototype the current parked branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "parked" is now a prototype branch
+      branch "parked" now a has type "prototype" branch
       """
     And the current branch is still "parked"
-    And branch "parked" is now prototype
+    And branch "parked" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is still "parked"
-    And branch "parked" is now parked
+    And branch "parked" now has type "parked"
     And there are now no prototype branches

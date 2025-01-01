@@ -11,12 +11,12 @@ Feature: prototype another local feature branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "feature" is now a prototype branch
+      branch "feature" now a has type "prototype" branch
       """
     And the prototype branches are now "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "feature" is now a feature branch
+    And branch "feature" now has type "feature"
     And there are now no prototype branches

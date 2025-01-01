@@ -12,15 +12,15 @@ Feature: park the current observed branch
     Then Git Town runs no commands
     And Git Town prints:
       """
-      branch "observed" is now parked
+      branch "observed" now has type "parked"
       """
     And the current branch is still "observed"
-    And branch "observed" is now parked
+    And branch "observed" now has type "parked"
     And there are now no observed branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is still "observed"
-    And branch "observed" is now observed
+    And branch "observed" now has type "observed"
     And there are now no parked branches
