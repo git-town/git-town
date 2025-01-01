@@ -15,12 +15,12 @@ Feature: making the current contribution branch a feature branch
       """
       branch "contribution" is now a feature branch
       """
-    And branch "contribution" is now a feature branch
+    And branch "contribution" now has type "feature"
     And local Git setting "git-town-branch.contribution.branchtype" is now "feature"
     And local Git setting "git-town.contribution-branches" is still "contribution"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And branch "contribution" is now a contribution branch
+    And branch "contribution" now has type "contribution"
     And local Git setting "git-town-branch.contribution.branchtype" now doesn't exist

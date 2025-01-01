@@ -48,4 +48,4 @@ Feature: delete the current parked branch
     And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "parked" is now parked
+    And branch "parked" now has type "parked"

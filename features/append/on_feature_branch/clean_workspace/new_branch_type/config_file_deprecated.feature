@@ -31,7 +31,7 @@ Feature: append a new branch when prototype branches are configured via a deprec
       Please upgrade to the new format: create.new-branch-type = "prototype"
       """
     And the current branch is now "new"
-    And branch "new" is now prototype
+    And branch "new" now has type "prototype"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |

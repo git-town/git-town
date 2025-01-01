@@ -15,7 +15,7 @@ Feature: parking the current feature branch
       branch "feature" is now parked
       """
     And the current branch is still "feature"
-    And branch "feature" is now parked
+    And branch "feature" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
