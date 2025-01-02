@@ -22,7 +22,7 @@ push-hook = true
 
 To configure the push hook manually in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.push-hook <true|false>
 ```
 

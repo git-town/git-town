@@ -19,7 +19,7 @@ Feature: compress the commits on a prototype branch
       | BRANCH    | COMMAND                                         |
       | prototype | git fetch --prune --tags                        |
       |           | git add -A                                      |
-      |           | git stash                                       |
+      |           | git stash -m "Git Town WIP"                     |
       |           | git reset --soft main                           |
       |           | git commit -m "commit 1"                        |
       |           | git push --force-with-lease --force-if-includes |
@@ -39,7 +39,7 @@ Feature: compress the commits on a prototype branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git add -A                                      |
-      |           | git stash                                       |
+      |           | git stash -m "Git Town WIP"                     |
       |           | git reset --hard {{ sha 'commit 3' }}           |
       |           | git push --force-with-lease --force-if-includes |
       |           | git stash pop                                   |

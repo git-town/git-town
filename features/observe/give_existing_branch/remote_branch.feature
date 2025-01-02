@@ -26,7 +26,7 @@ Feature: make another remote feature branch an observed branch
     Then Git Town runs the commands
       | BRANCH         | COMMAND                      |
       | remote-feature | git add -A                   |
-      |                | git stash                    |
+      |                | git stash -m "Git Town WIP"  |
       |                | git checkout main            |
       | main           | git branch -D remote-feature |
       |                | git stash pop                |

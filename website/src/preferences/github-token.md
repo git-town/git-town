@@ -15,7 +15,7 @@ Since your API token is confidential, you cannot add it to the config file.
 
 You can configure the API token manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.github-token <token>
 ```
 

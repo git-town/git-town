@@ -38,7 +38,7 @@ default-type = "feature"
 
 You can manually configure the default branch type using Git metadata:
 
-```bash
+```wrap
 git config [--global] git-town.default-branch-type "feature"
 ```
 

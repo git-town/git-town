@@ -7,9 +7,10 @@
  * @typedef {import("./types").Chapter} Chapter
  *
  * This file is an mdBook preprocessor that modifies the book JSON data.
- * We use it to process code blocks with language "command-summary".
+ * We use it to process custom code blocks.
  *
  * @see processCommandSummary
+ * @see processCodeWrap
  *
  * mdBook preprocessor documentation:
  * https://rust-lang.github.io/mdBook/for_developers/preprocessors.html
@@ -96,6 +97,8 @@ function processChapter(chapter) {
 function processContent(content) {
   return content.replaceAll(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
     return processCommandSummary(code);
+  }).replaceAll(/^( *)```wrap\n([\s\S]*?)\n\1```/gm, (_, indent, code) => {
+    return processCodeWrap(code, indent);
   });
 }
 
@@ -105,18 +108,36 @@ function processContent(content) {
  * For example:
  *
  * ```command-summary
- * git town append [--prototype] <branch-name>
+ * git town append [-p | --prototype] [-v | --verbose] <branch-name>
  * ```
  *
  * will become:
  *
  * <pre><code><div class="gt-command-summary" style="padding-left: 16ch; text-indent: -16ch"
  *   ><span class="gt-command">git town append</span
- *   > <span class="gt-argument">[--prototype]</span
- *   > <span class="gt-argument">&lt;branch-name&gt;</span
+ *   > <span>[-p | --prototype]</span
+ *   > <span>[-v | --verbose]</span
+ *   > <span>&lt;branch-name&gt;</span
  *   ></div></code></pre>
  *
- * We can then apply custom styling in head.hbs.
+ * `padding-left` and `text-indent` are set based on the length of the command.
+ * They align the arguments with the command. Other styles are applied in
+ * head.hbs. The above example should render as:
+ *
+ * ┌───────────────────────────────────────────────────────────────────┐
+ * │ git town append [-p | --prototype] [-v | --verbose] <branch-name> │
+ * └───────────────────────────────────────────────────────────────────┘
+ * or
+ * ┌─────────────────────────────────────────────────────┐
+ * │ git town append [-p | --prototype] [-v | --verbose] │
+ * │                 <branch-name>                       │
+ * └─────────────────────────────────────────────────────┘
+ * or
+ * ┌───────────────────────────────────────┐
+ * │ git town append [-p | --prototype]    │
+ * │                 [-v | --verbose]      │
+ * │                 <branch-name>         │
+ * └───────────────────────────────────────┘
  *
  * @param {string} code
  * @returns {string}
@@ -126,34 +147,140 @@ function processCommandSummary(code) {
     code
       .split("\n")
       .map(line => {
-        /**
-         * This regex matches the command in the line. The command is
-         * the beginning of the line until the first argument (`[`, `<`)
-         * or the end of the line if no arguments.
-         *
-         * @example
-         * "git town append [--prototype] <branch-name>" -> "git town append"
-         * "git town skip"                               -> "git town skip"
-         */
-        const commandRegex = /^.*?(?=$| [\[<])/;
-        const command = line.match(commandRegex)?.[0];
-        if (!command) {
-          return line;
-        }
+        const tokens = tokenize(line);
+        const { command, otherTokens } = extractCommand(tokens);
+
         const indent = command.length + 1;
         return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
-          line
-            .slice(command.length + 1)
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll(
-              /(\[&lt;.*?&gt;\])|(\[.*?\])|(&lt;.*?&gt;)/g,
-              "<span class=\"gt-argument\">$1$2$3</span>",
-            )
+          otherTokens
+            .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
+            .join(" ")
         }</div>`;
       })
       .join("")
   }</pre></code>`;
+}
+
+/**
+ * This function processes code blocks with language "wrap".
+ *
+ * For example:
+ *
+ * ```wrap
+ * git config --global git-town.sync-feature-strategy rebase
+ * ```
+ *
+ * will become:
+ *
+ * <pre><code><div class="gt-code-wrap"
+ *   ><span>git</span
+ *   > <span>config</span
+ *   > <span>--global</span
+ *   > <span>git-town.sync-feature-strategy</span
+ *   > <span>rebase</span
+ *   ></div></code></pre>
+ *
+ * Styles are applied in head.hbs. The above example should render as:
+ *
+ * ┌───────────────────────────────────────────────────────────────────┐
+ * │ git config --global git-town.sync-feature-strategy rebase         │
+ * └───────────────────────────────────────────────────────────────────┘
+ * or
+ * ┌─────────────────────────────────────────────────────┐
+ * │ git config --global git-town.sync-feature-strategy  │
+ * │     rebase                                          │
+ * └─────────────────────────────────────────────────────┘
+ * or
+ * ┌───────────────────────────────────────┐
+ * │ git config --global                   │
+ * │     git-town.sync-feature-strategy    │
+ * │     rebase                            │
+ * └───────────────────────────────────────┘
+ *
+ * @param {string} code
+ * @param {string} indent
+ * @returns {string}
+ */
+function processCodeWrap(code, indent) {
+  return `${indent}<pre><code>${
+    code
+      .split("\n")
+      .map(line => {
+        const tokens = tokenize(line.slice(indent.length));
+
+        return `<div class="gt-code-wrap">${
+          tokens
+            .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
+            .join(" ")
+        }</div>`;
+      })
+      .join("")
+  }</pre></code>`;
+}
+
+/**
+ * This function tokenizes a line of text into strings that should be kept
+ * together when wrapping text. For example, the text "[-p | --prototype]"
+ * should be a single token.
+ *
+ * @example
+ * tokenize("git town append [-p | --prototype] <branch-name>")
+ * // => ["git", "town", "append", "[-p | --prototype]", "<branch-name>"]
+ *
+ * @param {string} line
+ * @returns {string[]}
+ */
+function tokenize(line) {
+  const GROUP_CHARS = ["()", "<>", "[]"];
+
+  const tokens = [];
+  let token = "";
+  let group = undefined;
+  for (const char of line) {
+    if (group) {
+      if (char === group[1]) {
+        group = undefined;
+      }
+      token += char;
+    } else {
+      const nextGroup = GROUP_CHARS.find(group => group[0] === char);
+      if (nextGroup) {
+        group = nextGroup;
+        token += char;
+      } else if (char === " ") {
+        tokens.push(token);
+        token = "";
+      } else {
+        token += char;
+      }
+    }
+  }
+  tokens.push(token);
+  return tokens;
+}
+
+/**
+ * This function extracts the command and other tokens from a line of text.
+ *
+ * @example
+ * extractCommand(["git", "town", "append", "[-p | --prototype]", "<branch-name>"])
+ * // => { command: "git town append", otherTokens: ["[-p | --prototype]", "<branch-name>"] }
+ *
+ * @param {string[]} tokens
+ * @returns {{ command: string, otherTokens: string[] }}
+ */
+function extractCommand(tokens) {
+  const otherTokens = [...tokens];
+
+  const commandTokens = [];
+  while (otherTokens.length > 0 && otherTokens[0].match(/^[a-z]/i)) {
+    commandTokens.push(otherTokens[0]);
+    otherTokens.shift();
+  }
+
+  const command = commandTokens.join(" ");
+
+  return { command, otherTokens };
 }
 
 // Make TypeScript think this file is a module

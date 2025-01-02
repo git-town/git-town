@@ -48,7 +48,7 @@ Feature: park the current branch verbosely
       |         | git rev-parse --verify --abbrev-ref @{-1}             |
       |         | git remote get-url origin                             |
       | feature | git add -A                                            |
-      |         | git stash                                             |
+      |         | git stash -m "Git Town WIP"                           |
       | <none>  | git config --unset git-town-branch.feature.branchtype |
       |         | git stash list                                        |
       | feature | git stash pop                                         |
