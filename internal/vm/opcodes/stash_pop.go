@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"errors"
-
 	"github.com/git-town/git-town/v17/internal/messages"
 	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
@@ -19,7 +17,7 @@ func (self *StashPop) ContinueProgram() []shared.Opcode {
 func (self *StashPop) Run(args shared.RunArgs) error {
 	err := args.Git.PopStash(args.Frontend)
 	if err != nil {
-		return errors.New(messages.DiffConflictWithMain)
+		args.FinalMessages.Add(messages.DiffConflictWithMain)
 	}
 	return nil
 }

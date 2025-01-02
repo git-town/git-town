@@ -572,7 +572,11 @@ func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.Loc
 
 // PopStash restores stashed-away changes into the workspace.
 func (self *Commands) PopStash(runner gitdomain.Runner) error {
-	return runner.Run("git", "stash", "pop")
+	err := runner.Run("git", "stash", "pop")
+	if err != nil {
+		_ = runner.Run("git", "stash", "drop")
+	}
+	return err
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
