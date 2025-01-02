@@ -98,13 +98,6 @@ func (self *NormalConfig) RemoveFeatureRegex() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
 }
 
-// RemoveFromContributionBranches removes the given branch as a perennial branch.
-// TODO: delete this
-func (self *NormalConfig) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
-	self.ContributionBranches = slice.Remove(self.ContributionBranches, branch)
-	return self.SetContributionBranches(self.ContributionBranches)
-}
-
 // RemoveFromObservedBranches removes the given branch as a perennial branch.
 // TODO: delete this
 func (self *NormalConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
