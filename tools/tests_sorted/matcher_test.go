@@ -283,3 +283,80 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 		}
 	})
 }
+
+func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Failure", func(t *testing.T) {
+		for _, tc := range []struct {
+			funcMatcher ExprMatcher
+			expr        string
+			wantReason  string
+		}{
+			{
+				funcMatcher: &trueMatcher{},
+				expr:        `struct{}`,
+				wantReason:  "not an ast.CallExpr",
+			}, {
+				funcMatcher: &falseMatcher{},
+				expr:        `foo("arg1", "arg2")`,
+				wantReason:  "call.Fun doesn't match: fake failure",
+			}, {
+				funcMatcher: &trueMatcher{},
+				expr:        `foo()`,
+				wantReason:  "len(call.Args) == 0, want at least 1",
+			}, {
+				funcMatcher: &trueMatcher{},
+				expr:        `foo(""+"")`,
+				wantReason:  "the first call argument is not an ast.BasicLit",
+			}, {
+				funcMatcher: &trueMatcher{},
+				expr:        `foo(1)`,
+				wantReason:  "the first call argument is not a STRING ast.BasicLit",
+			},
+		} {
+			t.Run(tc.wantReason, func(t *testing.T) {
+				expr, err := parser.ParseExpr(tc.expr)
+				must.NoError(t, err)
+				e := &FirstStringArgFromFuncCallExtractor{
+					FuncMatcher: tc.funcMatcher,
+				}
+
+				_, r := e.Extract(expr)
+
+				must.False(t, r.Success())
+				must.Eq(t, tc.wantReason, r.FailureReason())
+			})
+		}
+		t.Run("UnquoteError", func(t *testing.T) {
+			// Construct a correct string literal, and then make it invalid by assigning
+			// a known badly quoted string to its Value.
+			expr, err := parser.ParseExpr(`foo("test")`)
+			must.NoError(t, err)
+			call := expr.(*ast.CallExpr)
+			arg := call.Args[0].(*ast.BasicLit)
+			arg.Value = `"foo` // Intentionally badly quoted for this test.
+			e := &FirstStringArgFromFuncCallExtractor{
+				FuncMatcher: &trueMatcher{},
+			}
+
+			_, r := e.Extract(expr)
+
+			must.False(t, r.Success())
+			must.StrHasPrefix(t, "the first call argument is an invalid string literal:", r.FailureReason())
+		})
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		expr, err := parser.ParseExpr(`foo("arg1")`)
+		must.NoError(t, err)
+		e := &FirstStringArgFromFuncCallExtractor{
+			FuncMatcher: &trueMatcher{},
+		}
+
+		arg, r := e.Extract(expr)
+
+		must.True(t, r.Success())
+		must.Eq(t, "arg1", arg)
+	})
+}
