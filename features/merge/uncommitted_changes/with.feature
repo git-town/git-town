@@ -19,7 +19,7 @@ Feature: merging a branch with uncommitted changes
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git add -A                            |
-      |        | git stash                             |
+      |        | git stash -m "Git Town WIP"           |
       |        | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
       |        | git checkout beta                     |
@@ -49,7 +49,7 @@ Feature: merging a branch with uncommitted changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git add -A                                           |
-      |        | git stash                                            |
+      |        | git stash -m "Git Town WIP"                          |
       |        | git reset --hard {{ sha-before-run 'beta commit' }}  |
       |        | git push --force-with-lease --force-if-includes      |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |

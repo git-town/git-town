@@ -19,7 +19,7 @@ Feature: provide the commit message via a CLI argument
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
-      |        | git stash                       |
+      |        | git stash -m "Git Town WIP"     |
       |        | git checkout main               |
       | main   | git merge --squash --ff feature |
       |        | git commit -m "feature done"    |
@@ -45,7 +45,7 @@ Feature: provide the commit message via a CLI argument
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
-      |        | git stash                                     |
+      |        | git stash -m "Git Town WIP"                   |
       |        | git checkout main                             |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |

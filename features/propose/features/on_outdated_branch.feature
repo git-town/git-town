@@ -28,7 +28,7 @@ Feature: sync before proposing
       | child  | git fetch --prune --tags                                                  |
       | <none> | Looking for proposal online ... ok                                        |
       | child  | git add -A                                                                |
-      |        | git stash                                                                 |
+      |        | git stash -m "Git Town WIP"                                               |
       |        | git checkout main                                                         |
       | main   | git rebase origin/main --no-update-refs                                   |
       |        | git push                                                                  |

@@ -18,7 +18,7 @@ Feature: sync the current prototype branch in a local repo
     Then Git Town runs the commands
       | BRANCH    | COMMAND                          |
       | prototype | git add -A                       |
-      |           | git stash                        |
+      |           | git stash -m "Git Town WIP"      |
       |           | git rebase main --no-update-refs |
       |           | git stash pop                    |
     And all branches are now synchronized
@@ -35,7 +35,7 @@ Feature: sync the current prototype branch in a local repo
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git add -A                                           |
-      |           | git stash                                            |
+      |           | git stash -m "Git Town WIP"                          |
       |           | git reset --hard {{ sha-before-run 'local commit' }} |
       |           | git stash pop                                        |
     And the current branch is still "prototype"

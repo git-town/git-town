@@ -20,7 +20,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | BRANCH  | COMMAND                                 |
       | shipped | git fetch --prune --tags                |
       |         | git add -A                              |
-      |         | git stash                               |
+      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout shipped                    |
@@ -39,7 +39,7 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                  |
       | shipped | git add -A                                               |
-      |         | git stash                                                |
+      |         | git stash -m "Git Town WIP"                              |
       |         | git checkout main                                        |
       | main    | git reset --hard {{ sha 'initial commit' }}              |
       |         | git checkout shipped                                     |

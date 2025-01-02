@@ -18,7 +18,7 @@ Feature: sync a stack that makes conflicting changes
       | BRANCH | COMMAND                                 |
       | alpha  | git fetch --prune --tags                |
       |        | git add -A                              |
-      |        | git stash                               |
+      |        | git stash -m "Git Town WIP"             |
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
@@ -66,7 +66,7 @@ Feature: sync a stack that makes conflicting changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                               |
       | alpha  | git add -A                                            |
-      |        | git stash                                             |
+      |        | git stash -m "Git Town WIP"                           |
       |        | git reset --hard {{ sha-before-run 'alpha commit' }}  |
       |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout beta                                     |
