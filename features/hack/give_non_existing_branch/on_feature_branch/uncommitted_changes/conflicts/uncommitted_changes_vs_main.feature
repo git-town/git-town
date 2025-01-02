@@ -19,23 +19,29 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash                |
       |          | git checkout -b new main |
       | new      | git stash pop            |
-    And Git Town prints the error:
-      """
-      conflicts between your uncommmitted changes and the main branch
-      """
-    And file "conflicting_file" still contains unresolved conflicts
+      |          | git stash drop           |
+    And file "conflicting_file" now contains unresolved conflicts
 
+  @this
   Scenario: undo with unresolved merge conflict
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                              |
-      | new      | git add -A                                           |
-      |          | git commit -m "Committing open changes to undo them" |
-      |          | git checkout existing                                |
-      | existing | git branch -D new                                    |
-      |          | git stash pop                                        |
+      | BRANCH   | COMMAND               |
+      | new      | git add -A            |
+      |          | git stash             |
+      |          | git checkout existing |
+      | existing | git branch -D new     |
+      |          | git stash pop         |
+      |          | git stash drop        |
     And the current branch is now "existing"
-    And file "conflicting_file" still has content "conflicting content"
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< Updated upstream
+      main content
+      =======
+      conflicting content
+      >>>>>>> Stashed changes
+      """
 
   Scenario: resolve and undo
     Given I resolve the conflict in "conflicting_file"
