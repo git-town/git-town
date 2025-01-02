@@ -11,8 +11,8 @@ Git Town 18 fixes unsound behavior in edge cases.
 #### New Features
 
 - The new [always-merge ship strategy]() always creates a merge commit when shipping a branch ([#4381](https://github.com/git-town/git-town/issues/4381)).
-- `git town prepend` now has a `--beam` flag. When set, it allows the user to choose one or more commits to move into the new branch that is getting prepended ([#4356](https://github.com/git-town/git-town/pull/4356)).
-- `git town prepend` now has a `--propose` flag. When set, it automatically proposes the new branch. This is meant to be used together with `--beam`. ([#4377](https://github.com/git-town/git-town/issues/4377)).
+- `git town prepend` now has a `--beam` option. When enabled, it allows the user to choose one or more commits to move into the new branch that is getting prepended ([#4356](https://github.com/git-town/git-town/pull/4356)).
+- `git town prepend` now has a `--propose` flag. When enabled, it automatically proposes the new branch. This is meant to be used together with `--beam`. ([#4377](https://github.com/git-town/git-town/issues/4377)).
 - The new [git town status show command]() displays details about the currently interrupted Git Town command ([#4457](https://github.com/git-town/git-town/pull/4457)).
 - Git Town now adds a message to entries it creates on the Git stash. This helps identify which stash entries were created by Git Town ([#4479](https://github.com/git-town/git-town/pull/4479)).
 
