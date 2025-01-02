@@ -112,9 +112,10 @@ UNIT_TEST_DIRS = \
 	./test/... \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
+	./tools/lint_steps/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \
-	./tools/lint_steps/...
+	./tools/tests_sorted/...
 
 unit: install  # runs only the unit tests for changed code
 	@env GOGC=off go test -timeout=30s $(UNIT_TEST_DIRS)
