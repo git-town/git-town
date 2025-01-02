@@ -105,18 +105,36 @@ function processContent(content) {
  * For example:
  *
  * ```command-summary
- * git town append [--prototype] <branch-name>
+ * git town append [-p | --prototype] [-v | --verbose] <branch-name>
  * ```
  *
  * will become:
  *
  * <pre><code><div class="gt-command-summary" style="padding-left: 16ch; text-indent: -16ch"
  *   ><span class="gt-command">git town append</span
- *   > <span class="gt-argument">[--prototype]</span
+ *   > <span class="gt-argument">[-p | --prototype]</span
+ *   > <span class="gt-argument">[-v | --verbose]</span
  *   > <span class="gt-argument">&lt;branch-name&gt;</span
  *   ></div></code></pre>
  *
- * We can then apply custom styling in head.hbs.
+ * `padding-left` and `text-indent` are set based on the length of the command.
+ * They align the arguments with the command. Other styles are applied in
+ * head.hbs. The above example should render as:
+ *
+ * ┌───────────────────────────────────────────────────────────────────┐
+ * │ git town append [-p | --prototype] [-v | --verbose] <branch-name> │
+ * └───────────────────────────────────────────────────────────────────┘
+ * or
+ * ┌─────────────────────────────────────────────────────┐
+ * │ git town append [-p | --prototype] [-v | --verbose] │
+ * │                 <branch-name>                       │
+ * └─────────────────────────────────────────────────────┘
+ * or
+ * ┌───────────────────────────────────────┐
+ * │ git town append [-p | --prototype]    │
+ * │                 [-v | --verbose]      │
+ * │                 <branch-name>         │
+ * └───────────────────────────────────────┘
  *
  * @param {string} code
  * @returns {string}
