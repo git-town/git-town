@@ -18,6 +18,7 @@ Git Town 18 fixes unsound behavior in edge cases.
 
 #### Bug Fixes
 
+- The setup assistant no longer crashes when run in a brand-new repository ([#4365](https://github.com/git-town/git-town/pull/4365)).
 - `git town status reset` now works ([#4469](https://github.com/git-town/git-town/pull/4469)).
 
 ### 17.1.1 (2024-12-20)
