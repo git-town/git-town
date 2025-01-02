@@ -144,34 +144,83 @@ function processCommandSummary(code) {
     code
       .split("\n")
       .map(line => {
-        /**
-         * This regex matches the command in the line. The command is
-         * the beginning of the line until the first argument (`[`, `<`)
-         * or the end of the line if no arguments.
-         *
-         * @example
-         * "git town append [--prototype] <branch-name>" -> "git town append"
-         * "git town skip"                               -> "git town skip"
-         */
-        const commandRegex = /^.*?(?=$| [\[<])/;
-        const command = line.match(commandRegex)?.[0];
-        if (!command) {
-          return line;
-        }
+        const tokens = tokenize(line);
+        const { command, otherTokens } = extractCommand(tokens);
+
         const indent = command.length + 1;
         return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
-          line
-            .slice(command.length + 1)
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll(
-              /(\[&lt;.*?&gt;\])|(\[.*?\])|(&lt;.*?&gt;)/g,
-              "<span>$1$2$3</span>",
-            )
+          otherTokens
+            .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
+            .join(" ")
         }</div>`;
       })
       .join("")
   }</pre></code>`;
+}
+
+/**
+ * This function tokenizes a line of text into strings that should be kept
+ * together when wrapping text. For example, the text "[-p | --prototype]"
+ * should be a single token.
+ *
+ * @example
+ * tokenize("git town append [-p | --prototype] <branch-name>")
+ * // => ["git", "town", "append", "[-p | --prototype]", "<branch-name>"]
+ *
+ * @param {string} line
+ * @returns {string[]}
+ */
+function tokenize(line) {
+  const GROUP_CHARS = ["()", "<>", "[]"];
+
+  const tokens = [];
+  let token = "";
+  let group = undefined;
+  for (const char of line) {
+    if (group) {
+      if (char === group[1]) {
+        group = undefined;
+      }
+      token += char;
+    } else {
+      const nextGroup = GROUP_CHARS.find(group => group[0] === char);
+      if (nextGroup) {
+        group = nextGroup;
+        token += char;
+      } else if (char === " ") {
+        tokens.push(token);
+        token = "";
+      } else {
+        token += char;
+      }
+    }
+  }
+  tokens.push(token);
+  return tokens;
+}
+
+/**
+ * This function extracts the command and other tokens from a line of text.
+ *
+ * @example
+ * extractCommand(["git", "town", "append", "[-p | --prototype]", "<branch-name>"])
+ * // => { command: "git town append", otherTokens: ["[-p | --prototype]", "<branch-name>"] }
+ *
+ * @param {string[]} tokens
+ * @returns {{ command: string, otherTokens: string[] }}
+ */
+function extractCommand(tokens) {
+  const otherTokens = [...tokens];
+
+  const commandTokens = [];
+  while (otherTokens.length > 0 && otherTokens[0].match(/^[a-z]/i)) {
+    commandTokens.push(otherTokens[0]);
+    otherTokens.shift();
+  }
+
+  const command = commandTokens.join(" ");
+
+  return { command, otherTokens };
 }
 
 // Make TypeScript think this file is a module
