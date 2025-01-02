@@ -4,7 +4,9 @@ package matcher
 import (
 	"fmt"
 	"go/ast"
+	"go/token"
 	"iter"
+	"strconv"
 )
 
 // Result is a match result with a reason.
@@ -160,4 +162,46 @@ func (self *FieldListPrefixMatcher) Match(fields *ast.FieldList) Result {
 		}
 	}
 	return okResult
+}
+
+// FirstStringArgFromFuncCallExtractor is an ast.CallExpr <Function(Arg1, ...)>
+// extractor that extracts the first argument if the function matches the
+// FuncMatcher and the first argument is a string literal.
+//
+// For example for `t.Run("foo", ...)` Extract() returns "foo", without quotes.
+type FirstStringArgFromFuncCallExtractor struct {
+	FuncMatcher ExprMatcher
+}
+
+func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string, Result) {
+	// Check that this is a <Fun>(<Call>) expression.
+	call, ok := expr.(*ast.CallExpr)
+	if !ok {
+		return "", stringResult("not an ast.CallExpr")
+	}
+	// Check that the call.Fun matches the FuncMatcher.
+	if r := self.FuncMatcher.Match(call.Fun); !r.Success() {
+		return "", fmtResult("call.Fun doesn't match: %v", r.FailureReason())
+	}
+	// Check call.Args.
+	if len(call.Args) < 1 {
+		return "", fmtResult("len(call.Args) == %d, want at least 1", len(call.Args))
+	}
+	firstArg := call.Args[0]
+	// Check the first arg type.
+	lit, ok := firstArg.(*ast.BasicLit)
+	if !ok {
+		return "", stringResult("the first call argument is not an ast.BasicLit")
+	}
+	if lit.Kind != token.STRING {
+		return "", stringResult("the first call argument is not a STRING ast.BasicLit")
+	}
+	// The literal as is in code, including the quotes.
+	quotedLiteral := lit.Value
+	// https://go-review.googlesource.com/c/go/+/244960
+	literal, err := strconv.Unquote(quotedLiteral)
+	if err != nil {
+		return "", fmtResult("the first call argument is an invalid string literal: %v", err)
+	}
+	return literal, okResult
 }
