@@ -13,7 +13,7 @@ Configuration data exists on multiple levels:
    [sync-feature-strategy](https://www.git-town.com/preferences/sync-feature-strategy.html)
    in all my repositories, I would run:
 
-   ```command-summary
+   ```wrap
    git config --global git-town.sync-feature-strategy rebase
    ```
 3. User and repo specific configuration settings go into local Git metadata,
@@ -22,6 +22,6 @@ Configuration data exists on multiple levels:
    to use `merge`, I'd first configure the global setting in (2), and then run
    in the `foo` repo:
 
-   ```command-summary
+   ```wrap
    git config git-town.sync-feature-strategy merge
    ```

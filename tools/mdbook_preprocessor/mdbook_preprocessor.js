@@ -7,9 +7,10 @@
  * @typedef {import("./types").Chapter} Chapter
  *
  * This file is an mdBook preprocessor that modifies the book JSON data.
- * We use it to process code blocks with language "command-summary".
+ * We use it to process custom code blocks.
  *
  * @see processCommandSummary
+ * @see processCodeWrap
  *
  * mdBook preprocessor documentation:
  * https://rust-lang.github.io/mdBook/for_developers/preprocessors.html
@@ -96,6 +97,8 @@ function processChapter(chapter) {
 function processContent(content) {
   return content.replaceAll(/```command-summary\n([\s\S]*?)\n```/g, (_, code) => {
     return processCommandSummary(code);
+  }).replaceAll(/^( *)```wrap\n([\s\S]*?)\n\1```/gm, (_, indent, code) => {
+    return processCodeWrap(code, indent);
   });
 }
 
@@ -150,6 +153,63 @@ function processCommandSummary(code) {
         const indent = command.length + 1;
         return `<div class="gt-command-summary" style="padding-left: ${indent}ch; text-indent: -${indent}ch"><span class="gt-command">${command}</span> ${
           otherTokens
+            .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
+            .join(" ")
+        }</div>`;
+      })
+      .join("")
+  }</pre></code>`;
+}
+
+/**
+ * This function processes code blocks with language "wrap".
+ *
+ * For example:
+ *
+ * ```wrap
+ * git config --global git-town.sync-feature-strategy rebase
+ * ```
+ *
+ * will become:
+ *
+ * <pre><code><div class="gt-code-wrap"
+ *   ><span>git</span
+ *   > <span>config</span
+ *   > <span>--global</span
+ *   > <span>git-town.sync-feature-strategy</span
+ *   > <span>rebase</span
+ *   ></div></code></pre>
+ *
+ * Styles are applied in head.hbs. The above example should render as:
+ *
+ * ┌───────────────────────────────────────────────────────────────────┐
+ * │ git config --global git-town.sync-feature-strategy rebase         │
+ * └───────────────────────────────────────────────────────────────────┘
+ * or
+ * ┌─────────────────────────────────────────────────────┐
+ * │ git config --global git-town.sync-feature-strategy  │
+ * │     rebase                                          │
+ * └─────────────────────────────────────────────────────┘
+ * or
+ * ┌───────────────────────────────────────┐
+ * │ git config --global                   │
+ * │     git-town.sync-feature-strategy    │
+ * │     rebase                            │
+ * └───────────────────────────────────────┘
+ *
+ * @param {string} code
+ * @param {string} indent
+ * @returns {string}
+ */
+function processCodeWrap(code, indent) {
+  return `${indent}<pre><code>${
+    code
+      .split("\n")
+      .map(line => {
+        const tokens = tokenize(line.slice(indent.length));
+
+        return `<div class="gt-code-wrap">${
+          tokens
             .map(token => `<span>${token.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</span>`)
             .join(" ")
         }</div>`;

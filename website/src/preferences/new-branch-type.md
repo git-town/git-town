@@ -38,7 +38,7 @@ new-branch-type = "feature"
 
 To configure the type of new branches in Git metadata, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.new-branch-type <feature|parked|perennial|prototype>
 ```
 
