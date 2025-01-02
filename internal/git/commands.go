@@ -576,7 +576,7 @@ func (self *Commands) PopStash(runner gitdomain.Runner) error {
 	if err != nil {
 		_ = runner.Run("git", "stash", "drop")
 	}
-	return nil
+	return err
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.

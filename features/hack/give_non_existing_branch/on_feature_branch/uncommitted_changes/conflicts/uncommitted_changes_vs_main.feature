@@ -28,6 +28,10 @@ Feature: conflicts between uncommitted changes and the main branch
       conflicting content
       >>>>>>> Stashed changes
       """
+    And Git Town prints:
+      """
+      conflicts between your uncommmitted changes and the main branch
+      """
 
   Scenario: undo
     When I run "git-town undo"
