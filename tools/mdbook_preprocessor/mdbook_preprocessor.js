@@ -112,9 +112,9 @@ function processContent(content) {
  *
  * <pre><code><div class="gt-command-summary" style="padding-left: 16ch; text-indent: -16ch"
  *   ><span class="gt-command">git town append</span
- *   > <span class="gt-argument">[-p | --prototype]</span
- *   > <span class="gt-argument">[-v | --verbose]</span
- *   > <span class="gt-argument">&lt;branch-name&gt;</span
+ *   > <span>[-p | --prototype]</span
+ *   > <span>[-v | --verbose]</span
+ *   > <span>&lt;branch-name&gt;</span
  *   ></div></code></pre>
  *
  * `padding-left` and `text-indent` are set based on the length of the command.
@@ -166,7 +166,7 @@ function processCommandSummary(code) {
             .replaceAll(">", "&gt;")
             .replaceAll(
               /(\[&lt;.*?&gt;\])|(\[.*?\])|(&lt;.*?&gt;)/g,
-              "<span class=\"gt-argument\">$1$2$3</span>",
+              "<span>$1$2$3</span>",
             )
         }</div>`;
       })
