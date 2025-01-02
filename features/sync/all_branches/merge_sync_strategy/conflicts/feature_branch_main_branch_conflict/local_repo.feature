@@ -21,7 +21,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
       | main   | git add -A                    |
-      |        | git stash                     |
+      |        | git stash -m "Git Town WIP"   |
       |        | git checkout alpha            |
       | alpha  | git merge --no-edit --ff main |
       |        | git checkout beta             |

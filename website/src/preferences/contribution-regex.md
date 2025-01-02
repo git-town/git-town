@@ -19,7 +19,7 @@ contribution-regex = "^renovate/"
 
 To manually set the feature regex, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.contribution-regex '^renovate/'
 ```
 

@@ -21,7 +21,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git add -A                                      |
-      |        | git stash                                       |
+      |        | git stash -m "Git Town WIP"                     |
       |        | git checkout main                               |
       | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout alpha                              |
@@ -47,7 +47,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                               |
       | alpha  | git add -A                                            |
-      |        | git stash                                             |
+      |        | git stash -m "Git Town WIP"                           |
       |        | git reset --hard {{ sha-before-run 'folder commit' }} |
       |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout beta                                     |

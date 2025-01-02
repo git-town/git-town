@@ -20,7 +20,7 @@ create-prototype-branches = true
 To configure the creation of prototype branches manually in Git, run this
 command:
 
-```bash
+```wrap
 git config [--global] git-town.create-prototype-branches <true|false>
 ```
 

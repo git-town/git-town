@@ -18,7 +18,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
       | BRANCH   | COMMAND                                     |
       | observed | git fetch --prune --tags                    |
       |          | git add -A                                  |
-      |          | git stash                                   |
+      |          | git stash -m "Git Town WIP"                 |
       |          | git rebase origin/observed --no-update-refs |
     And Git Town prints the error:
       """

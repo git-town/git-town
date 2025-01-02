@@ -20,7 +20,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git add -A                              |
-      |        | git stash                               |
+      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |

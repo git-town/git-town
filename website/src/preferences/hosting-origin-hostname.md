@@ -18,7 +18,7 @@ origin-hostname = "<hostname>"
 
 To configure the origin hostname in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.hosting-origin-hostname <hostname>
 ```
 

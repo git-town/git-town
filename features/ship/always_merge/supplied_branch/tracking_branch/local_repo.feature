@@ -18,7 +18,7 @@ Feature: ship the supplied feature branch in a local repo using the always-merge
     Then Git Town runs the commands
       | BRANCH | COMMAND                             |
       | other  | git add -A                          |
-      |        | git stash                           |
+      |        | git stash -m "Git Town WIP"         |
       |        | git checkout main                   |
       | main   | git merge --no-ff --edit -- feature |
       |        | git checkout other                  |
@@ -42,7 +42,7 @@ Feature: ship the supplied feature branch in a local repo using the always-merge
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
-      |        | git stash                                     |
+      |        | git stash -m "Git Town WIP"                   |
       |        | git checkout main                             |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |

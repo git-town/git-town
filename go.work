@@ -7,4 +7,5 @@ use (
 	./tools/lint_steps
 	./tools/stats_release
 	./tools/structs_sorted
+	./tools/tests_sorted
 )

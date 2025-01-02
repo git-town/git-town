@@ -28,7 +28,7 @@ Feature: display all executed Git commands
       |        | backend  | git remote get-url origin                     |
       |        | backend  | git log main..old --format=%s --reverse       |
       | old    | frontend | git add -A                                    |
-      |        | frontend | git stash                                     |
+      |        | frontend | git stash -m "Git Town WIP"                   |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | old    | frontend | git checkout -b parent main                   |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
@@ -64,7 +64,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       |        | backend  | git remote get-url origin                        |
       | parent | frontend | git add -A                                       |
-      |        | frontend | git stash                                        |
+      |        | frontend | git stash -m "Git Town WIP"                      |
       |        | frontend | git checkout old                                 |
       | old    | frontend | git branch -D parent                             |
       |        | backend  | git config --unset git-town-branch.parent.parent |

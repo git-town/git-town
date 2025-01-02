@@ -22,10 +22,10 @@ Feature: observe the current contribution branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND       |
-      | contribution | git add -A    |
-      |              | git stash     |
-      |              | git stash pop |
+      | BRANCH       | COMMAND                     |
+      | contribution | git add -A                  |
+      |              | git stash -m "Git Town WIP" |
+      |              | git stash pop               |
     And the current branch is still "contribution"
     And branch "contribution" now has type "contribution"
     And there are now no observed branches

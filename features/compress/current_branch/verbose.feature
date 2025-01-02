@@ -31,7 +31,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git remote get-url origin                          |
       |         | git cherry -v main feature                         |
       | feature | git add -A                                         |
-      |         | git stash                                          |
+      |         | git stash -m "Git Town WIP"                        |
       |         | git reset --soft main                              |
       |         | git commit -m "commit 1"                           |
       | <none>  | git rev-list --left-right feature...origin/feature |
@@ -71,7 +71,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |
       | feature | git add -A                                         |
-      |         | git stash                                          |
+      |         | git stash -m "Git Town WIP"                        |
       | <none>  | git rev-parse --short HEAD                         |
       | feature | git reset --hard {{ sha 'commit 3' }}              |
       | <none>  | git rev-list --left-right feature...origin/feature |

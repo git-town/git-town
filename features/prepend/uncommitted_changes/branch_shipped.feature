@@ -17,11 +17,11 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                    |
-      | child  | git add -A                 |
-      |        | git stash                  |
-      |        | git checkout -b new parent |
-      | new    | git stash pop              |
+      | BRANCH | COMMAND                     |
+      | child  | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout -b new parent  |
+      | new    | git stash pop               |
     And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES                 |
@@ -37,12 +37,12 @@ Feature: prepend a branch to a branch that was shipped at the remote
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | new    | git add -A         |
-      |        | git stash          |
-      |        | git checkout child |
-      | child  | git branch -D new  |
-      |        | git stash pop      |
+      | BRANCH | COMMAND                     |
+      | new    | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout child          |
+      | child  | git branch -D new           |
+      |        | git stash pop               |
     And the current branch is now "child"
     And the branches are now
       | REPOSITORY | BRANCHES            |

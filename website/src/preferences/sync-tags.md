@@ -23,7 +23,7 @@ tags = true
 
 To manually configure `sync-tags` in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.sync-tags <true|false>
 ```
 

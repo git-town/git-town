@@ -17,7 +17,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                       |
       | feature | git add -A                    |
-      |         | git stash                     |
+      |         | git stash -m "Git Town WIP"   |
       |         | git merge --no-edit --ff main |
     And Git Town prints the error:
       """

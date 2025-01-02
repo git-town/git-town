@@ -17,13 +17,13 @@ Feature: delete another than the current branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | good   | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git push origin :dead    |
-      |        | git branch -D dead       |
-      |        | git stash pop            |
+      | BRANCH | COMMAND                     |
+      | good   | git fetch --prune --tags    |
+      |        | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git push origin :dead       |
+      |        | git branch -D dead          |
+      |        | git stash pop               |
     And the current branch is still "good"
     And the uncommitted file has content:
       """
@@ -45,7 +45,7 @@ Feature: delete another than the current branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | good   | git add -A                                  |
-      |        | git stash                                   |
+      |        | git stash -m "Git Town WIP"                 |
       |        | git branch dead {{ sha 'dead-end commit' }} |
       |        | git push -u origin dead                     |
       |        | git stash pop                               |

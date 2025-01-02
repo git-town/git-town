@@ -19,7 +19,7 @@ Feature: ship the supplied local feature branch
       | BRANCH | COMMAND                     |
       | other  | git fetch --prune --tags    |
       |        | git add -A                  |
-      |        | git stash                   |
+      |        | git stash -m "Git Town WIP" |
       |        | git checkout main           |
       | main   | git merge --ff-only feature |
       |        | git push                    |
@@ -43,7 +43,7 @@ Feature: ship the supplied local feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
-      |        | git stash                                     |
+      |        | git stash -m "Git Town WIP"                   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git stash pop                                 |
     And the current branch is now "other"

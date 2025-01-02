@@ -25,7 +25,7 @@ upstream = true
 
 To manually configure `sync-upstream` in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.sync-upstream <true|false>
 ```
 

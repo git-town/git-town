@@ -18,7 +18,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
       |              | git add -A                                      |
-      |              | git stash                                       |
+      |              | git stash -m "Git Town WIP"                     |
       |              | git rebase origin/contribution --no-update-refs |
     And Git Town prints the error:
       """

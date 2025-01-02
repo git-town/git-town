@@ -24,7 +24,7 @@ prototype-strategy = "merge"
 
 To manually configure the sync-prototype-strategy in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.sync-prototype-strategy <merge|rebase>
 ```
 

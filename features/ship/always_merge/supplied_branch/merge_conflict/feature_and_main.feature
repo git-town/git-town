@@ -20,7 +20,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH | COMMAND                             |
       | other  | git fetch --prune --tags            |
       |        | git add -A                          |
-      |        | git stash                           |
+      |        | git stash -m "Git Town WIP"         |
       |        | git checkout main                   |
       | main   | git merge --no-ff --edit -- feature |
       |        | git merge --abort                   |

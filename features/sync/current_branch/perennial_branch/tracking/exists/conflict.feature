@@ -19,7 +19,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | COMMAND                               |
       | qa     | git fetch --prune --tags              |
       |        | git add -A                            |
-      |        | git stash                             |
+      |        | git stash -m "Git Town WIP"           |
       |        | git rebase origin/qa --no-update-refs |
     And Git Town prints the error:
       """

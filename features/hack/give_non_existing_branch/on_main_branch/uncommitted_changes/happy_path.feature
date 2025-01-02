@@ -11,11 +11,11 @@ Feature: on the main branch with uncommitted changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git add -A          |
-      |        | git stash           |
-      |        | git checkout -b new |
-      | new    | git stash pop       |
+      | BRANCH | COMMAND                     |
+      | main   | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout -b new         |
+      | new    | git stash pop               |
     And the current branch is now "new"
     And the uncommitted file still exists
     And the initial commits exist now
@@ -26,12 +26,12 @@ Feature: on the main branch with uncommitted changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | new    | git add -A        |
-      |        | git stash         |
-      |        | git checkout main |
-      | main   | git branch -D new |
-      |        | git stash pop     |
+      | BRANCH | COMMAND                     |
+      | new    | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout main           |
+      | main   | git branch -D new           |
+      |        | git stash pop               |
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

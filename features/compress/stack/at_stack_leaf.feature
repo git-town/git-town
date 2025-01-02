@@ -35,7 +35,7 @@ Feature: compress the commits on an entire stack when at the stack root
       | BRANCH | COMMAND                                         |
       | gamma  | git fetch --prune --tags                        |
       |        | git add -A                                      |
-      |        | git stash                                       |
+      |        | git stash -m "Git Town WIP"                     |
       |        | git checkout alpha                              |
       | alpha  | git reset --soft main                           |
       |        | git commit -m "alpha 1"                         |
@@ -72,7 +72,7 @@ Feature: compress the commits on an entire stack when at the stack root
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | gamma  | git add -A                                      |
-      |        | git stash                                       |
+      |        | git stash -m "Git Town WIP"                     |
       |        | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'alpha 3' }}            |
       |        | git push --force-with-lease --force-if-includes |

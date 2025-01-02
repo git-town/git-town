@@ -24,7 +24,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND                                  |
       | main   | git fetch --prune --tags                 |
       |        | git add -A                               |
-      |        | git stash                                |
+      |        | git stash -m "Git Town WIP"              |
       |        | git checkout alpha                       |
       | alpha  | git rebase origin/alpha --no-update-refs |
       |        | git checkout beta                        |

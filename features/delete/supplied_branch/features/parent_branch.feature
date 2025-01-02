@@ -26,13 +26,13 @@ Feature: delete a parent branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                    |
-      | feature-3 | git fetch --prune --tags   |
-      |           | git add -A                 |
-      |           | git stash                  |
-      |           | git push origin :feature-2 |
-      |           | git branch -D feature-2    |
-      |           | git stash pop              |
+      | BRANCH    | COMMAND                     |
+      | feature-3 | git fetch --prune --tags    |
+      |           | git add -A                  |
+      |           | git stash -m "Git Town WIP" |
+      |           | git push origin :feature-2  |
+      |           | git branch -D feature-2     |
+      |           | git stash pop               |
     And the current branch is now "feature-3"
     And the uncommitted file still exists
     And the branches are now
@@ -53,7 +53,7 @@ Feature: delete a parent branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-3 | git add -A                                        |
-      |           | git stash                                         |
+      |           | git stash -m "Git Town WIP"                       |
       |           | git branch feature-2 {{ sha 'feature-2 commit' }} |
       |           | git push -u origin feature-2                      |
       |           | git stash pop                                     |

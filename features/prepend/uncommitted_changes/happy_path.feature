@@ -17,7 +17,7 @@ Feature: prepend a branch to a feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | old    | git add -A                  |
-      |        | git stash                   |
+      |        | git stash -m "Git Town WIP" |
       |        | git checkout -b parent main |
       | parent | git stash pop               |
     And the current branch is now "parent"
@@ -33,12 +33,12 @@ Feature: prepend a branch to a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git add -A           |
-      |        | git stash            |
-      |        | git checkout old     |
-      | old    | git branch -D parent |
-      |        | git stash pop        |
+      | BRANCH | COMMAND                     |
+      | parent | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout old            |
+      | old    | git branch -D parent        |
+      |        | git stash pop               |
     And the current branch is now "old"
     And the uncommitted file still exists
     And the initial commits exist now

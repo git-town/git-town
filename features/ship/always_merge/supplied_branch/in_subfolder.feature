@@ -19,7 +19,7 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
       | BRANCH | COMMAND                                        |
       | other  | git fetch --prune --tags                       |
       |        | git add -A                                     |
-      |        | git stash                                      |
+      |        | git stash -m "Git Town WIP"                    |
       |        | git checkout main                              |
       | main   | git merge --no-ff -m "feature done" -- feature |
       |        | git push                                       |
@@ -45,7 +45,7 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
-      |        | git stash                                     |
+      |        | git stash -m "Git Town WIP"                   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git stash pop                                 |
     And the current branch is now "other"

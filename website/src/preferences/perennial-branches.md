@@ -22,7 +22,7 @@ perennials = ["branch", "other-branch"]
 
 You can configure the perennial branches manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.perennial-branches "branch other-branch"
 ```
 

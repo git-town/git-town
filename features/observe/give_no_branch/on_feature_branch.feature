@@ -22,10 +22,10 @@ Feature: observing the current feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND       |
-      | feature | git add -A    |
-      |         | git stash     |
-      |         | git stash pop |
+      | BRANCH  | COMMAND                     |
+      | feature | git add -A                  |
+      |         | git stash -m "Git Town WIP" |
+      |         | git stash pop               |
     And the current branch is still "feature"
     And there are now no observed branches
     And the uncommitted file still exists

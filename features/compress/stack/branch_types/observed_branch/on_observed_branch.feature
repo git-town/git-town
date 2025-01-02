@@ -25,7 +25,7 @@ Feature: does not compress an active observed branch
       | BRANCH   | COMMAND                                         |
       | observed | git fetch --prune --tags                        |
       |          | git add -A                                      |
-      |          | git stash                                       |
+      |          | git stash -m "Git Town WIP"                     |
       |          | git checkout child                              |
       | child    | git reset --soft observed                       |
       |          | git commit -m "child 1"                         |
@@ -48,7 +48,7 @@ Feature: does not compress an active observed branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | observed | git add -A                                      |
-      |          | git stash                                       |
+      |          | git stash -m "Git Town WIP"                     |
       |          | git checkout child                              |
       | child    | git reset --hard {{ sha 'child 2' }}            |
       |          | git push --force-with-lease --force-if-includes |

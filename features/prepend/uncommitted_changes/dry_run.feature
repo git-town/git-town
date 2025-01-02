@@ -16,7 +16,7 @@ Feature: dry-run prepending a branch to a feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | old    | git add -A                  |
-      |        | git stash                   |
+      |        | git stash -m "Git Town WIP" |
       |        | git checkout -b parent main |
       | parent | git stash pop               |
     And the current branch is still "old"

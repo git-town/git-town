@@ -1,7 +1,7 @@
-# git town status
+# git town status show
 
 ```command-summary
-git town status [-v | --verbose]
+git town status show [-v | --verbose]
 ```
 
 The _status show_ command displays detailed information from Git Town's

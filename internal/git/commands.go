@@ -819,7 +819,7 @@ func (self *Commands) Stash(runner gitdomain.Runner) error {
 	if err != nil {
 		return err
 	}
-	return runner.Run("git", "stash")
+	return runner.Run("git", "stash", "-m", "Git Town WIP")
 }
 
 // StashSize provides the number of stashes in this repository.

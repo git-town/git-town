@@ -59,7 +59,7 @@ Feature: sync a workspace with two independent stacks
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
       |        | git add -A                              |
-      |        | git stash                               |
+      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout first                      |
       | first  | git merge --no-edit --ff main           |
@@ -96,10 +96,10 @@ Feature: sync a workspace with two independent stacks
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+      | BRANCH | COMMAND                     |
+      | main   | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git stash pop               |
     And the current branch is still "main"
     And the uncommitted file still exists
     And the initial commits exist now

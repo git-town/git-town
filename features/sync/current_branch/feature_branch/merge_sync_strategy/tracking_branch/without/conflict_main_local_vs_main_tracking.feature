@@ -18,7 +18,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
-      |         | git stash                               |
+      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
     And Git Town prints the error:

@@ -21,7 +21,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       | BRANCH   | COMMAND                                 |
       | branch-2 | git fetch --prune --tags                |
       |          | git add -A                              |
-      |          | git stash                               |
+      |          | git stash -m "Git Town WIP"             |
       |          | git checkout main                       |
       | main     | git rebase origin/main --no-update-refs |
       |          | git checkout branch-2                   |
@@ -42,10 +42,10 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND       |
-      | branch-2 | git add -A    |
-      |          | git stash     |
-      |          | git stash pop |
+      | BRANCH   | COMMAND                     |
+      | branch-2 | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git stash pop               |
     And the current branch is now "branch-2"
     And the uncommitted file still exists
     And the initial branches and lineage exist now

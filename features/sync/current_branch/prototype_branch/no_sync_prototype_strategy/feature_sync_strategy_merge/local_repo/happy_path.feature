@@ -17,7 +17,7 @@ Feature: sync the current prototype branch in a local repo
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
       | prototype | git add -A                    |
-      |           | git stash                     |
+      |           | git stash -m "Git Town WIP"   |
       |           | git merge --no-edit --ff main |
       |           | git stash pop                 |
     And these commits exist now
@@ -35,7 +35,7 @@ Feature: sync the current prototype branch in a local repo
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git add -A                                           |
-      |           | git stash                                            |
+      |           | git stash -m "Git Town WIP"                          |
       |           | git reset --hard {{ sha-before-run 'local commit' }} |
       |           | git stash pop                                        |
     And the current branch is still "prototype"

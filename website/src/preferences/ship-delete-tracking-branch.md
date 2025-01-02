@@ -27,7 +27,7 @@ delete-tracking-branch = true
 
 To configure this setting in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.ship-delete-tracking-branch <true|false>
 ```
 

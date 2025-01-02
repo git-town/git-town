@@ -25,7 +25,7 @@ Feature: compresses active parked branches
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
       |        | git add -A                                      |
-      |        | git stash                                       |
+      |        | git stash -m "Git Town WIP"                     |
       |        | git reset --soft main                           |
       |        | git commit -m "parked 1"                        |
       |        | git push --force-with-lease --force-if-includes |
@@ -50,7 +50,7 @@ Feature: compresses active parked branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | parked | git add -A                                      |
-      |        | git stash                                       |
+      |        | git stash -m "Git Town WIP"                     |
       |        | git checkout child                              |
       | child  | git reset --hard {{ sha 'child 2' }}            |
       |        | git push --force-with-lease --force-if-includes |

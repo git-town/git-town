@@ -19,7 +19,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                          |
       | feature | git add -A                       |
-      |         | git stash                        |
+      |         | git stash -m "Git Town WIP"      |
       |         | git rebase main --no-update-refs |
     And Git Town prints the error:
       """

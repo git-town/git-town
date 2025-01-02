@@ -33,7 +33,7 @@ platform = "<value>"
 
 To configure the hosting platform in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.hosting-platform <value>
 ```
 

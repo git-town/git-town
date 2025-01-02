@@ -20,7 +20,7 @@ Feature: ship the supplied feature branch
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
       |        | git add -A                      |
-      |        | git stash                       |
+      |        | git stash -m "Git Town WIP"     |
       |        | git checkout main               |
       | main   | git merge --squash --ff feature |
       |        | git commit                      |
@@ -46,7 +46,7 @@ Feature: ship the supplied feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git add -A                                    |
-      |        | git stash                                     |
+      |        | git stash -m "Git Town WIP"                   |
       |        | git checkout main                             |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |

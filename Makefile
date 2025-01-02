@@ -106,14 +106,25 @@ test-go:  # smoke tests while working on the Go code
 todo:  # displays all TODO items
 	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile | grep -v internal/hosting/bitbucketdatacenter/connector.go
 
+UNIT_TEST_DIRS = \
+	./internal/... \
+	./pkg/... \
+	./test/... \
+	./tools/format_self/... \
+	./tools/format_unittests/... \
+	./tools/lint_steps/... \
+	./tools/stats_release/... \
+	./tools/structs_sorted/... \
+	./tools/tests_sorted/...
+
 unit: install  # runs only the unit tests for changed code
-	@env GOGC=off go test -timeout=30s ./internal/... ./pkg/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
+	@env GOGC=off go test -timeout=30s $(UNIT_TEST_DIRS)
 
 unit-all: install  # runs all the unit tests
-	env GOGC=off go test -count=1 -shuffle=on -timeout=60s ./internal/... ./pkg/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
+	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
 
 unit-race: install  # runs all the unit tests with race detector
-	env GOGC=off go test -count=1 -timeout 60s -race ./internal/... ./pkg/... ./test/...
+	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
 
 update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...

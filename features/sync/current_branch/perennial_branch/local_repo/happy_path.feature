@@ -16,10 +16,10 @@ Feature: sync the current perennial branch in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND       |
-      | qa     | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+      | BRANCH | COMMAND                     |
+      | qa     | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git stash pop               |
     And all branches are now synchronized
     And the current branch is still "qa"
     And the uncommitted file still exists
@@ -28,10 +28,10 @@ Feature: sync the current perennial branch in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND       |
-      | qa     | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+      | BRANCH | COMMAND                     |
+      | qa     | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git stash pop               |
     And the current branch is still "qa"
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |

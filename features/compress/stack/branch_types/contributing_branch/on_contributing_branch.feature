@@ -25,7 +25,7 @@ Feature: does not compress the active contribution branch
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
       |              | git add -A                                      |
-      |              | git stash                                       |
+      |              | git stash -m "Git Town WIP"                     |
       |              | git checkout child                              |
       | child        | git reset --soft contribution                   |
       |              | git commit -m "child 1"                         |
@@ -48,7 +48,7 @@ Feature: does not compress the active contribution branch
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git add -A                                      |
-      |              | git stash                                       |
+      |              | git stash -m "Git Town WIP"                     |
       |              | git checkout child                              |
       | child        | git reset --hard {{ sha 'child 2' }}            |
       |              | git push --force-with-lease --force-if-includes |

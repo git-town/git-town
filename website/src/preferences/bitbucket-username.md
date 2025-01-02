@@ -16,7 +16,7 @@ Since usernames are user specific, you cannot add them to the config file.
 
 You can configure the Bitbucket username manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.bitbucket-username <token>
 ```
 

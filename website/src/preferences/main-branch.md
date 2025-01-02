@@ -19,7 +19,7 @@ main = "config-main"
 
 To configure the main branch in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.main-branch <value>
 ```
 

@@ -19,7 +19,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
-      |         | git stash                               |
+      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
