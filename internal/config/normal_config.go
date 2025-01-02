@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/git/giturl"
 	"github.com/git-town/git-town/v17/internal/gohacks"
-	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v17/internal/messages"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
@@ -96,34 +95,6 @@ func (self *NormalConfig) RemoveDevRemote() {
 
 func (self *NormalConfig) RemoveFeatureRegex() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
-}
-
-// RemoveFromObservedBranches removes the given branch as a perennial branch.
-// TODO: delete this
-func (self *NormalConfig) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
-	self.ObservedBranches = slice.Remove(self.ObservedBranches, branch)
-	return self.SetObservedBranches(self.ObservedBranches)
-}
-
-// RemoveFromParkedBranches removes the given branch as a perennial branch.
-// TODO: delete this
-func (self *NormalConfig) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
-	self.ParkedBranches = slice.Remove(self.ParkedBranches, branch)
-	return self.SetParkedBranches(self.ParkedBranches)
-}
-
-// RemoveFromPerennialBranches removes the given branch as a perennial branch.
-// TODO: delete this
-func (self *NormalConfig) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
-	self.PerennialBranches = slice.Remove(self.PerennialBranches, branch)
-	return self.SetPerennialBranches(self.PerennialBranches)
-}
-
-// RemoveFromPerennialBranches removes the given branch as a perennial branch.
-// TODO: delete this
-func (self *NormalConfig) RemoveFromPrototypeBranches(branch gitdomain.LocalBranchName) error {
-	self.PrototypeBranches = slice.Remove(self.PrototypeBranches, branch)
-	return self.SetPrototypeBranches(self.PrototypeBranches)
 }
 
 func (self *NormalConfig) RemoveNewBranchType() {
