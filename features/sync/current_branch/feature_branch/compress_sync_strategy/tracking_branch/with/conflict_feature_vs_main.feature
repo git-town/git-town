@@ -21,7 +21,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
-      |         | git stash                               |
+      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |

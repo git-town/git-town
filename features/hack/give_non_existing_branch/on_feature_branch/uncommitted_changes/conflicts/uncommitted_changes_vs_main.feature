@@ -14,11 +14,11 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git add -A               |
-      |          | git stash                |
-      |          | git checkout -b new main |
-      | new      | git stash pop            |
+      | BRANCH   | COMMAND                     |
+      | existing | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout -b new main    |
+      | new      | git stash pop               |
     And Git Town prints the error:
       """
       conflicts between your uncommmitted changes and the main branch
@@ -74,12 +74,12 @@ Feature: conflicts between uncommitted changes and the main branch
     And I run "git-town continue" and close the editor
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
-      | existing | git branch -D new     |
-      |          | git stash pop         |
+      | BRANCH   | COMMAND                     |
+      | new      | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout existing       |
+      | existing | git branch -D new           |
+      |          | git stash pop               |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

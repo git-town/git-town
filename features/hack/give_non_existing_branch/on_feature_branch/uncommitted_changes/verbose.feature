@@ -24,7 +24,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git remote get-url origin                     |
       |        | backend  | git remote                                    |
       | main   | frontend | git add -A                                    |
-      |        | frontend | git stash                                     |
+      |        | frontend | git stash -m "Git Town WIP"                   |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | main   | frontend | git checkout -b new                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
@@ -59,7 +59,7 @@ Feature: display all executed Git commands with uncommitted changes
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote get-url origin                     |
       | new    | frontend | git add -A                                    |
-      |        | frontend | git stash                                     |
+      |        | frontend | git stash -m "Git Town WIP"                   |
       |        | frontend | git checkout main                             |
       | main   | frontend | git branch -D new                             |
       |        | backend  | git config --unset git-town-branch.new.parent |
