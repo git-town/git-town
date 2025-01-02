@@ -32,13 +32,13 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
-      | existing | git branch -D new     |
-      |          | git stash pop         |
-      |          | git stash drop        |
+      | BRANCH   | COMMAND                     |
+      | new      | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout existing       |
+      | existing | git branch -D new           |
+      |          | git stash pop               |
+      |          | git stash drop              |
     And the current branch is now "existing"
     And file "conflicting_file" still has content:
       """
