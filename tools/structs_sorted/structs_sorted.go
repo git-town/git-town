@@ -23,10 +23,12 @@ var (
 	ignoreTypes = []string{ //nolint:gochecknoglobals
 		"BranchSpan",
 		"Change",
+		"IdentSelectorMatcher", // Field order is meaningful.
 		"InconsistentChange",
 		"Lineage",
 		"LineageData",
 		"Parts",
+		"PositionalField", // Mimics ast.Field.
 	}
 )
 

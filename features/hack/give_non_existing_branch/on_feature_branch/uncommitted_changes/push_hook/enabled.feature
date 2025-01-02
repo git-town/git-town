@@ -13,12 +13,12 @@ Feature: auto-push the new branch without running Git push hooks
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                |
-      | main   | git add -A             |
-      |        | git stash              |
-      |        | git checkout -b new    |
-      | new    | git push -u origin new |
-      |        | git stash pop          |
+      | BRANCH | COMMAND                     |
+      | main   | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout -b new         |
+      | new    | git push -u origin new      |
+      |        | git stash pop               |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
@@ -29,13 +29,13 @@ Feature: auto-push the new branch without running Git push hooks
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | new    | git add -A           |
-      |        | git stash            |
-      |        | git checkout main    |
-      | main   | git branch -D new    |
-      |        | git push origin :new |
-      |        | git stash pop        |
+      | BRANCH | COMMAND                     |
+      | new    | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout main           |
+      | main   | git branch -D new           |
+      |        | git push origin :new        |
+      |        | git stash pop               |
     And the current branch is now "main"
     And the uncommitted file still exists
     And the initial commits exist now

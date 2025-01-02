@@ -21,7 +21,7 @@ Feature: sync a branch whose tracking branch was shipped
       | BRANCH    | COMMAND                                 |
       | feature-1 | git fetch --prune --tags                |
       |           | git add -A                              |
-      |           | git stash                               |
+      |           | git stash -m "Git Town WIP"             |
       |           | git checkout main                       |
       | main      | git rebase origin/main --no-update-refs |
       |           | git branch -D feature-1                 |
@@ -46,7 +46,7 @@ Feature: sync a branch whose tracking branch was shipped
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
       | feature-2 | git add -A                                        |
-      |           | git stash                                         |
+      |           | git stash -m "Git Town WIP"                       |
       |           | git checkout main                                 |
       | main      | git reset --hard {{ sha 'initial commit' }}       |
       |           | git branch feature-1 {{ sha 'feature-1 commit' }} |

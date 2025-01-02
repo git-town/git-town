@@ -17,11 +17,11 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND             |
-      | existing | git add -A          |
-      |          | git stash           |
-      |          | git checkout -b new |
-      | new      | git stash pop       |
+      | BRANCH   | COMMAND                     |
+      | existing | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout -b new         |
+      | new      | git stash pop               |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
@@ -32,12 +32,12 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
-      | existing | git branch -D new     |
-      |          | git stash pop         |
+      | BRANCH   | COMMAND                     |
+      | new      | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout existing       |
+      | existing | git branch -D new           |
+      |          | git stash pop               |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

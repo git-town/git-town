@@ -21,7 +21,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
       |         | git add -A                              |
-      |         | git stash                               |
+      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout current                    |

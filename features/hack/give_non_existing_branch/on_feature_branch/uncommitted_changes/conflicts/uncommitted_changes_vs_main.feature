@@ -14,12 +14,12 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git add -A               |
-      |          | git stash                |
-      |          | git checkout -b new main |
-      | new      | git stash pop            |
-      |          | git stash drop           |
+      | BRANCH   | COMMAND                     |
+      | existing | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout -b new main    |
+      | new      | git stash pop               |
+      |          | git stash drop              |
     And file "conflicting_file" now has content:
       """
       <<<<<<< Updated upstream
@@ -59,4 +59,29 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
+    <<<<<<< HEAD
     Then Git Town runs no commands
+    =======
+    Then Git Town runs the commands
+      | BRANCH | COMMAND        |
+      | new    | git stash drop |
+    And the current branch is now "new"
+    And the initial commits exist now
+    And file "conflicting_file" now has content "resolved content"
+
+  Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts
+    Given I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                     |
+      | new      | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout existing       |
+      | existing | git branch -D new           |
+      |          | git stash pop               |
+    And the current branch is now "existing"
+    And the initial commits exist now
+    And the initial branches and lineage exist now
+    And file "conflicting_file" now has content "resolved content"
+>>>>>>> main
