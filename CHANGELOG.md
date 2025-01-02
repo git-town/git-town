@@ -16,6 +16,10 @@
 - The setup assistant no longer crashes when run in a brand-new repository ([#4365](https://github.com/git-town/git-town/pull/4365)).
 - `git town status reset` now works ([#4469](https://github.com/git-town/git-town/pull/4469)).
 
+#### Contributors
+
+Shoutout to @Crocmagnon, @kevgo, @legeana, @lud-wj, @ruudk, @stephenwade, @wayne-zhan for contributing feedback, ideas, documentation, and code to 104 shipped PRs and 7 resolved issues!
+
 ### 17.1.1 (2024-12-20)
 
 Git Town 17.1.1 ships a bug fix that unblocks BitBucket Datacenter users.
