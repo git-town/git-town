@@ -11,7 +11,7 @@ This guide is for maintainers who make releases of Git Town.
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `17.2.0`
-    - double-digits: `17.1`
+    - double-digits: `17.2`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
