@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/cli/flags"
 	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/execute"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
@@ -69,9 +68,6 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeParkedBranch, branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonParkBranchTypes(data.branchesToPark, repo.UnvalidatedConfig); err != nil {
-		return err
-	}
 	printParkedBranches(branchNames)
 	if branchToCheckout, hasBranchToCheckout := data.branchToCheckout.Get(); hasBranchToCheckout {
 		if err = repo.Git.CheckoutBranch(repo.Frontend, branchToCheckout, false); err != nil {
@@ -103,28 +99,6 @@ func printParkedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.ParkedBranchIsNowParked, branch)
 	}
-}
-
-func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeParkedBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch,
-			configdomain.BranchTypePrototypeBranch:
-		}
-	}
-	return nil
 }
 
 func determineParkData(args []string, repo execute.OpenRepoResult) (parkData, error) {
