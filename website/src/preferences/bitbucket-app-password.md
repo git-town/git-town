@@ -40,7 +40,7 @@ Since your App Password is confidential, you cannot add it to the config file.
 
 You can configure the App Password manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.bitbucket-app-password <token>
 ```
 

@@ -24,7 +24,7 @@ create.push-new-branches = true
 
 To enable pushing new branches in Git, run this command:
 
-```
+```wrap
 git config [--global] push-new-branches <true|false>
 ```
 

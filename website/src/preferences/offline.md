@@ -17,6 +17,6 @@ To put Git Town into offline mode, run
 
 ## Git metadata
 
-```
+```wrap
 git config --global git-town.offline <true|false>
 ```

@@ -17,7 +17,7 @@ perennial-regex = "^release-.*"
 
 You can configure the perennial branches manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.perennial-regex 'release-.*'
 ```
 

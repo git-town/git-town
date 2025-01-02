@@ -23,7 +23,7 @@ dev-remote = "<remote name>"
 
 To configure the development remote manually in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.dev-remote <remote name>
 ```
 

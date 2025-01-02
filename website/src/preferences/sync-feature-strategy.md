@@ -72,7 +72,7 @@ feature-strategy = "merge"
 
 To manually configure the sync-feature-strategy in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.sync-feature-strategy <merge|rebase>
 ```
 
