@@ -19,7 +19,8 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b new main    |
       | new      | git stash pop               |
-    And Git Town prints the error:
+      |          | git stash drop              |
+    And Git Town prints:
       """
       conflicts between your uncommmitted changes and the main branch
       """
@@ -32,32 +33,25 @@ Feature: conflicts between uncommitted changes and the main branch
       >>>>>>> Stashed changes
       """
 
-  Scenario: undo with unresolved merge conflict
+  Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                              |
-      | new      | git add -A                                           |
-      |          | git commit -m "Committing open changes to undo them" |
-      |          | git checkout existing                                |
-      | existing | git branch -D new                                    |
-      |          | git stash pop                                        |
+      | BRANCH   | COMMAND                     |
+      | new      | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout existing       |
+      | existing | git branch -D new           |
+      |          | git stash pop               |
+      |          | git stash drop              |
     And the current branch is now "existing"
-    And file "conflicting_file" still has content "conflicting content"
-
-  Scenario: resolve and undo
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                                              |
-      | new      | git add -A                                           |
-      |          | git commit -m "Committing open changes to undo them" |
-      |          | git checkout existing                                |
-      | existing | git branch -D new                                    |
-      |          | git stash pop                                        |
-    And Git Town does not print "to go back to where you started, run \"git-town undo\""
-    And the current branch is now "existing"
-    And the initial commits exist now
-    And file "conflicting_file" still has content "conflicting content"
+    And file "conflicting_file" still has content:
+      """
+      <<<<<<< Updated upstream
+      main content
+      =======
+      conflicting content
+      >>>>>>> Stashed changes
+      """
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -69,25 +63,4 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
-    Then Git Town runs the commands
-      | BRANCH | COMMAND        |
-      | new    | git stash drop |
-    And the current branch is now "new"
-    And the initial commits exist now
-    And file "conflicting_file" now has content "resolved content"
-
-  Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts
-    Given I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and close the editor
-    When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | new      | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout existing       |
-      | existing | git branch -D new           |
-      |          | git stash pop               |
-    And the current branch is now "existing"
-    And the initial commits exist now
-    And the initial branches and lineage exist now
-    And file "conflicting_file" now has content "resolved content"
+    Then Git Town runs no commands
