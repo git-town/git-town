@@ -151,14 +151,6 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(branchType, name))
 }
 
-// CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
-// The parent branch must already exist.
-// TODO: merge with CreateFeatureBranch
-func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
-	self.CreateBranch(branch, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.SetParent(branch, parent))
-}
-
 // CreateCommit creates a commit with the given properties in this Git repo.
 func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 	self.CheckoutBranch(commit.Branch)
@@ -174,7 +166,7 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.CreateBranch(name, parent)
-	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
+	asserts.NoError(self.Config.NormalConfig.SetParent(name, parent.LocalName()))
 }
 
 // creates a file with the given name and content in this repository
