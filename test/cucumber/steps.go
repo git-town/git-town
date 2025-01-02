@@ -273,7 +273,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))
 	})
 
-	// TODO: replace with a single step implementation that compares against BranchType.String()
 	sc.Step(`^branch "([^"]+)" (?:now|still) has type "(\w+)"$`, func(ctx context.Context, branchName, branchTypeName string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
@@ -932,7 +931,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 				case configdomain.BranchTypeMainBranch:
 					return errors.New("main branch exists already")
 				case configdomain.BranchTypeFeatureBranch:
-					repoToCreateBranchIn.CreateChildFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic())
+					repoToCreateBranchIn.CreateFeatureBranch(branchSetup.Name, branchSetup.Parent.GetOrPanic().BranchName())
 				case
 					configdomain.BranchTypePerennialBranch,
 					configdomain.BranchTypeContributionBranch,
