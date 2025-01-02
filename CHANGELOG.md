@@ -1,12 +1,6 @@
 # Git Town Changelog
 
-### 18.0.0 (2024-01-02)
-
-Git Town 18 fixes unsound behavior in edge cases.
-
-#### BREAKING CHANGES
-
-- If the only problem Git Town encounters is conflicts when running `git stash pop` at the end, it drops the stash entry and no longer returns with an error ([#4480](https://github.com/git-town/git-town/pull/4480)).
+### 17.2.0 (2024-01-02)
 
 #### New Features
 
@@ -15,6 +9,7 @@ Git Town 18 fixes unsound behavior in edge cases.
 - `git town prepend` now has a `--propose` flag. When enabled, it automatically proposes the new branch. This is meant to be used together with `--beam`. ([#4377](https://github.com/git-town/git-town/issues/4377)).
 - The new [git town status show command]() displays details about the currently interrupted Git Town command ([#4457](https://github.com/git-town/git-town/pull/4457)).
 - Git Town now adds a message to entries it creates on the Git stash. This helps identify which stash entries were created by Git Town ([#4479](https://github.com/git-town/git-town/pull/4479)).
+- If the only problem Git Town encounters is conflicts when running `git stash pop` at the end, it drops the stash entry and no longer returns with an error ([#4480](https://github.com/git-town/git-town/pull/4480)).
 
 #### Bug Fixes
 
