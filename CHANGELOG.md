@@ -1,5 +1,25 @@
 # Git Town Changelog
 
+### 17.2.0 (2024-01-02)
+
+#### New Features
+
+- The new [always-merge ship strategy]() always creates a merge commit when shipping a branch ([#4381](https://github.com/git-town/git-town/issues/4381)).
+- `git town prepend` now has a `--beam` option. When enabled, it allows the user to choose one or more commits to move into the new branch that is getting prepended ([#4356](https://github.com/git-town/git-town/pull/4356)).
+- `git town prepend` now has a `--propose` flag. When enabled, it automatically proposes the new branch. This is meant to be used together with `--beam` ([#4377](https://github.com/git-town/git-town/issues/4377)).
+- The new [git town status show command]() displays details about the currently interrupted Git Town command ([#4457](https://github.com/git-town/git-town/pull/4457)).
+- Git Town now adds a message to entries it creates on the Git stash. This helps identify which stash entries were created by Git Town ([#4479](https://github.com/git-town/git-town/pull/4479)).
+- If the only problem Git Town encounters is conflicts when running `git stash pop` at the end, it drops the stash entry and no longer returns with an error ([#4480](https://github.com/git-town/git-town/pull/4480)).
+
+#### Bug Fixes
+
+- The setup assistant no longer crashes when run in a brand-new repository ([#4365](https://github.com/git-town/git-town/pull/4365)).
+- `git town status reset` now works ([#4469](https://github.com/git-town/git-town/pull/4469)).
+
+#### Contributors
+
+Shoutout to @Crocmagnon, @kevgo, @legeana, @lud-wj, @ruudk, @stephenwade, @wayne-zhan for contributing feedback, ideas, documentation, and code to 104 shipped PRs and 7 resolved issues!
+
 ### 17.1.1 (2024-12-20)
 
 Git Town 17.1.1 ships a bug fix that unblocks BitBucket Datacenter users.
