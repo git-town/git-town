@@ -23,7 +23,14 @@ Feature: conflicts between uncommitted changes and the main branch
       """
       conflicts between your uncommmitted changes and the main branch
       """
-    And file "conflicting_file" still contains unresolved conflicts
+    And file "conflicting_file" now has content:
+      """
+      <<<<<<< Updated upstream
+      main content
+      =======
+      conflicting content
+      >>>>>>> Stashed changes
+      """
 
   Scenario: undo with unresolved merge conflict
     When I run "git-town undo"
