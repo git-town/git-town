@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v17/internal/cli/flags"
 	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v17/internal/config"
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/execute"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
@@ -76,9 +75,6 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
-		return err
-	}
 	printObservedBranches(branchNames)
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {
 		if err = repo.Git.CheckoutBranch(repo.Frontend, checkout, false); err != nil {
@@ -110,31 +106,6 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	for _, branch := range branches {
 		fmt.Printf(messages.ObservedBranchIsNowObserved, branch)
 	}
-}
-
-func removeNonObserveBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
 }
 
 func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
