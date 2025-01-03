@@ -14,9 +14,12 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git checkout -b new main |
-      |          | git stash drop           |
+      | BRANCH   | COMMAND                     |
+      | existing | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout -b new main    |
+      | new      | git stash pop               |
+      |          | git stash drop              |
     And Git Town prints:
       """
       conflicts between your uncommmitted changes and the main branch
@@ -33,10 +36,13 @@ Feature: conflicts between uncommitted changes and the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
-      |          | git stash drop        |
+      | BRANCH   | COMMAND                     |
+      | new      | git add -A                  |
+      |          | git stash -m "Git Town WIP" |
+      |          | git checkout existing       |
+      | existing | git branch -D new           |
+      |          | git stash pop               |
+      |          | git stash drop              |
     And the current branch is now "existing"
     And file "conflicting_file" still has content:
       """
