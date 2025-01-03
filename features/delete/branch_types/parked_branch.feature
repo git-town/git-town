@@ -16,13 +16,11 @@ Feature: delete the current parked branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                   |
-      | parked  | git fetch --prune --tags                                  |
-      |         | git push origin :parked                                   |
-      |         | git add -A                                                |
-      |         | git commit -m "Committing open changes on deleted branch" |
-      |         | git checkout feature                                      |
-      | feature | git branch -D parked                                      |
+      | BRANCH  | COMMAND                  |
+      | parked  | git fetch --prune --tags |
+      |         | git push origin :parked  |
+      |         | git checkout feature     |
+      | feature | git branch -D parked     |
     And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
@@ -38,11 +36,10 @@ Feature: delete the current parked branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                 |
-      | feature | git push origin {{ sha 'parked commit' }}:refs/heads/parked             |
-      |         | git branch parked {{ sha 'Committing open changes on deleted branch' }} |
-      |         | git checkout parked                                                     |
-      | parked  | git reset --soft HEAD~1                                                 |
+      | BRANCH  | COMMAND                                     |
+      | feature | git branch parked {{ sha 'parked commit' }} |
+      |         | git push -u origin parked                   |
+      |         | git checkout parked                         |
     And the current branch is now "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now
