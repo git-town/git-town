@@ -37,11 +37,10 @@ Feature: delete the current branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                  |
-      | main    | git push origin {{ sha 'current commit' }}:refs/heads/current            |
-      |         | git branch current {{ sha 'Committing open changes on deleted branch' }} |
-      |         | git checkout current                                                     |
-      | current | git reset --soft HEAD~1                                                  |
+      | BRANCH | COMMAND                                       |
+      | main   | git branch current {{ sha 'current commit' }} |
+      |        | git push -u origin current                    |
+      |        | git checkout current                          |
     And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now
