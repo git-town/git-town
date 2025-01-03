@@ -15,13 +15,11 @@ Feature: delete the current prototype branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                   |
-      | prototype | git fetch --prune --tags                                  |
-      |           | git push origin :prototype                                |
-      |           | git add -A                                                |
-      |           | git commit -m "Committing open changes on deleted branch" |
-      |           | git checkout previous                                     |
-      | previous  | git branch -D prototype                                   |
+      | BRANCH    | COMMAND                    |
+      | prototype | git fetch --prune --tags   |
+      |           | git push origin :prototype |
+      |           | git checkout previous      |
+      | previous  | git branch -D prototype    |
     And the current branch is now "previous"
     And no uncommitted files exist now
     And the branches are now
@@ -37,11 +35,10 @@ Feature: delete the current prototype branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                                    |
-      | previous  | git push origin {{ sha 'prototype commit' }}:refs/heads/prototype          |
-      |           | git branch prototype {{ sha 'Committing open changes on deleted branch' }} |
-      |           | git checkout prototype                                                     |
-      | prototype | git reset --soft HEAD~1                                                    |
+      | BRANCH   | COMMAND                                           |
+      | previous | git branch prototype {{ sha 'prototype commit' }} |
+      |          | git push -u origin prototype                      |
+      |          | git checkout prototype                            |
     And the current branch is now "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now
