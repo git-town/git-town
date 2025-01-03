@@ -1,7 +1,7 @@
 // @ts-check
 /// <reference types="node" />
 
-import { tokenize, extractCommand } from "./util.js";
+import { extractCommand, tokenize } from "./util.js";
 
 /**
  * @typedef {import("./types").Book} Book
