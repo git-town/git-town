@@ -33,14 +33,13 @@ Feature: compress the commits on a feature branch verbosely
       |         | git commit -m "commit 1"                           |
       | <none>  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
-      | <none>  | git stash list                                     |
       | <none>  | git branch -vva --sort=refname                     |
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
       |         | git stash list                                     |
     And Git Town prints:
       """
-      Ran 25 shell commands
+      Ran 21 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"
