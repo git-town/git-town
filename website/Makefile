@@ -17,7 +17,7 @@ test: unit  # tests the website
 	cd .. && make --no-print-directory docs
 
 unit: ../tools/rta@${RTA_VERSION}  # runs the unit tests
-	cd ../tools && npm test
+	cd ../tools && unset $(env | cut -d= -f1) && ./rta npm test
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
