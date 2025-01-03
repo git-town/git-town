@@ -10,12 +10,16 @@ Feature: prepend a branch to a feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    And an uncommitted file
     When I run "git-town prepend parent"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
-      | old    | git checkout -b parent main |
+      | old    | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout -b parent main |
+      | parent | git stash pop               |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
@@ -28,9 +32,12 @@ Feature: prepend a branch to a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND                     |
+      | parent | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout old            |
+      | old    | git branch -D parent        |
+      |        | git stash pop               |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now
