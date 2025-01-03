@@ -14,12 +14,10 @@ Feature: delete a local branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                   |
-      | current | git fetch --prune --tags                                  |
-      |         | git add -A                                                |
-      |         | git commit -m "Committing open changes on deleted branch" |
-      |         | git checkout other                                        |
-      | other   | git branch -D current                                     |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git checkout other       |
+      | other   | git branch -D current    |
     And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
@@ -32,10 +30,9 @@ Feature: delete a local branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                  |
-      | other   | git branch current {{ sha 'Committing open changes on deleted branch' }} |
-      |         | git checkout current                                                     |
-      | current | git reset --soft HEAD~1                                                  |
+      | BRANCH | COMMAND                                     |
+      | other  | git branch current {{ sha 'local commit' }} |
+      |        | git checkout current                        |
     And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now
