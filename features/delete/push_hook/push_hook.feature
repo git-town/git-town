@@ -17,11 +17,10 @@ Feature: undo deleting the current feature branch with disabled push-hook
     When I run "git-town delete"
     And I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                   |
-      | other   | git push --no-verify origin {{ sha 'current commit' }}:refs/heads/current |
-      |         | git branch current {{ sha 'Committing open changes on deleted branch' }}  |
-      |         | git checkout current                                                      |
-      | current | git reset --soft HEAD~1                                                   |
+      | BRANCH | COMMAND                                       |
+      | other  | git branch current {{ sha 'current commit' }} |
+      |        | git push --no-verify -u origin current        |
+      |        | git checkout current                          |
     And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -31,11 +30,10 @@ Feature: undo deleting the current feature branch with disabled push-hook
     When I run "git-town delete"
     And I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                  |
-      | other   | git push origin {{ sha 'current commit' }}:refs/heads/current            |
-      |         | git branch current {{ sha 'Committing open changes on deleted branch' }} |
-      |         | git checkout current                                                     |
-      | current | git reset --soft HEAD~1                                                  |
+      | BRANCH | COMMAND                                       |
+      | other  | git branch current {{ sha 'current commit' }} |
+      |        | git push -u origin current                    |
+      |        | git checkout current                          |
     And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now
