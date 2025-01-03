@@ -27,6 +27,7 @@ func lintStructDefinition(typeSpec *ast.TypeSpec, fileSet *token.FileSet, issues
 		return
 	}
 	*issues = append(*issues, issue{
+		actual: fields,
 		expected: sortedFields,
 		position: fileSet.Position(typeSpec.Pos()),
 	})

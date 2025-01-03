@@ -24,6 +24,7 @@ func lintStructLiteralCallArg(callExpr *ast.CallExpr, fileSet *token.FileSet, is
 			return
 		}
 		*issues = append(*issues, issue{
+			actual: fieldNames,
 			expected: sortedFields,
 			position: fileSet.Position(compositeLit.Pos()),
 		})

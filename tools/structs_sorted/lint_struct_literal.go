@@ -27,6 +27,7 @@ func lintStructLiteralVariable(compositeLit *ast.CompositeLit, fileSet *token.Fi
 		return
 	}
 	*issues = append(*issues, issue{
+		actual: fieldNames,
 		expected: sortedFields,
 		position: fileSet.Position(compositeLit.Pos()),
 	})
