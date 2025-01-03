@@ -16,13 +16,11 @@ Feature: dry-run deleting the current feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                   |
-      | current | git fetch --prune --tags                                  |
-      |         | git push origin :current                                  |
-      |         | git add -A                                                |
-      |         | git commit -m "Committing open changes on deleted branch" |
-      |         | git checkout other                                        |
-      | other   | git branch -D current                                     |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git push origin :current |
+      |         | git checkout other       |
+      | other   | git branch -D current    |
     And the current branch is still "current"
     And the initial commits exist now
     And the initial branches and lineage exist now
