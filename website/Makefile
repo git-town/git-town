@@ -13,8 +13,11 @@ help:  # prints available targets
 serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
 	../tools/rta mdbook serve --open -n 127.0.0.1
 
-test:  # tests the website
+test: unit  # tests the website
 	cd .. && make --no-print-directory docs
+
+unit: ../tools/rta@${RTA_VERSION}  # runs the unit tests
+	cd ../tools && ./rta npm test
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 

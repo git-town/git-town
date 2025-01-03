@@ -119,6 +119,7 @@ UNIT_TEST_DIRS = \
 
 unit: install  # runs only the unit tests for changed code
 	@env GOGC=off go test -timeout=30s $(UNIT_TEST_DIRS)
+	cd website && make --no-print-directory unit
 
 unit-all: install  # runs all the unit tests
 	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
