@@ -10,19 +10,18 @@ Feature: already existing remote branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
-      | main   | git checkout -b existing |
-    And the current branch is now "existing"
+      | main   | git fetch --prune --tags |
+    And Git Town prints the error:
+      """
+      there is already a branch "existing" at the "origin" remote
+      """
+    And the current branch is still "main"
     And no commits exist now
-    And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                |
-      | existing | git checkout main      |
-      | main     | git branch -D existing |
+    Then Git Town runs no commands
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
