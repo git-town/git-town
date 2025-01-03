@@ -29,14 +29,11 @@ Feature: compress the commits on a feature branch verbosely
       |         | git branch -vva --sort=refname                     |
       |         | git remote get-url origin                          |
       |         | git cherry -v main feature                         |
-      | feature | git add -A                                         |
-      |         | git stash -m "Git Town WIP"                        |
-      |         | git reset --soft main                              |
+      | feature | git reset --soft main                              |
       |         | git commit -m "commit 1"                           |
       | <none>  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
       | <none>  | git stash list                                     |
-      | feature | git stash pop                                      |
       | <none>  | git branch -vva --sort=refname                     |
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
@@ -75,7 +72,6 @@ Feature: compress the commits on a feature branch verbosely
       | <none>  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
       | <none>  | git stash list                                     |
-      | feature | git stash pop                                      |
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -14,10 +14,7 @@ Feature: dry-run prepending a branch to a feature branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
-      | old    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b parent main |
-      | parent | git stash pop               |
+      | old    | git checkout -b parent main |
     And the current branch is still "old"
     And the initial commits exist now
     And the initial branches and lineage exist now

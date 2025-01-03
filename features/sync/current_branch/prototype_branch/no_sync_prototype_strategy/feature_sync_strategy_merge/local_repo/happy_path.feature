@@ -15,10 +15,7 @@ Feature: sync the current prototype branch in a local repo
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                       |
-      | prototype | git add -A                    |
-      |           | git stash -m "Git Town WIP"   |
-      |           | git merge --no-edit --ff main |
-      |           | git stash pop                 |
+      | prototype | git merge --no-edit --ff main |
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE                            |
       | main      | local    | main commit                        |
@@ -32,10 +29,7 @@ Feature: sync the current prototype branch in a local repo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
-      | prototype | git add -A                                           |
-      |           | git stash -m "Git Town WIP"                          |
-      |           | git reset --hard {{ sha-before-run 'local commit' }} |
-      |           | git stash pop                                        |
+      | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
     And the current branch is still "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now

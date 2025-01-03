@@ -13,11 +13,8 @@ Feature: local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | existing | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout -b new main    |
-      | new      | git stash pop               |
+      | BRANCH   | COMMAND                  |
+      | existing | git checkout -b new main |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
@@ -28,12 +25,9 @@ Feature: local repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | new      | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout existing       |
-      | existing | git branch -D new           |
-      |          | git stash pop               |
+      | BRANCH   | COMMAND               |
+      | new      | git checkout existing |
+      | existing | git branch -D new     |
     And the current branch is now "existing"
     And the initial commits exist now
     And this lineage exists now

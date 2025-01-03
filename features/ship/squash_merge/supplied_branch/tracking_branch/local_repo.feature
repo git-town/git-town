@@ -17,14 +17,11 @@ Feature: ship the supplied feature branch in a local repo
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |
-      | other  | git add -A                      |
-      |        | git stash -m "Git Town WIP"     |
-      |        | git checkout main               |
+      | other  | git checkout main               |
       | main   | git merge --squash --ff feature |
       |        | git commit -m "feature done"    |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-      |        | git stash pop                   |
     And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
@@ -40,13 +37,10 @@ Feature: ship the supplied feature branch in a local repo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git add -A                                    |
-      |        | git stash -m "Git Town WIP"                   |
-      |        | git checkout main                             |
+      | other  | git checkout main                             |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
-      | other  | git stash pop                                 |
     And the current branch is now "other"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -19,8 +19,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
@@ -45,7 +43,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "feature"
     And no rebase is now in progress
     And these commits exist now
@@ -75,7 +72,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
@@ -95,7 +91,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress

@@ -17,8 +17,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                      |
       | prototype | git fetch --prune --tags                     |
-      |           | git add -A                                   |
-      |           | git stash -m "Git Town WIP"                  |
       |           | git checkout main                            |
       | main      | git rebase origin/main --no-update-refs      |
       |           | git checkout prototype                       |
@@ -42,7 +40,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND            |
       | prototype | git rebase --abort |
-      |           | git stash pop      |
     And the current branch is still "prototype"
     And no rebase is now in progress
     And the initial commits exist now
@@ -64,7 +61,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | prototype | git -c core.editor=true rebase --continue |
-      |           | git stash pop                             |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
@@ -80,8 +76,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND       |
-      | prototype | git stash pop |
+      | BRANCH | COMMAND |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |

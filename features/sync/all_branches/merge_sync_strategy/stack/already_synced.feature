@@ -37,8 +37,6 @@ Feature: sync a stack making independent changes
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
@@ -54,7 +52,6 @@ Feature: sync a stack making independent changes
       |        | git merge --no-edit --ff origin/delta   |
       |        | git checkout main                       |
       | main   | git push --tags                         |
-      |        | git stash pop                           |
     And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -62,10 +59,7 @@ Feature: sync a stack making independent changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | main   | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git stash pop               |
+      | BRANCH | COMMAND |
     And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

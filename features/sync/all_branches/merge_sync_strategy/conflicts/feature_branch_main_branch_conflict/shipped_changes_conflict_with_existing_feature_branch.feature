@@ -18,8 +18,6 @@ Feature: shipped changes conflict with multiple existing feature branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
@@ -71,7 +69,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-      |        | git stash pop                         |
     And the current branch is now "main"
     And all branches are now synchronized
     And no merge is in progress

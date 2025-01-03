@@ -21,8 +21,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
@@ -57,7 +55,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git stash pop                                   |
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -74,7 +71,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git push                                       |
       |        | git checkout main                              |
       | main   | git push --tags                                |
-      |        | git stash pop                                  |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
@@ -118,7 +114,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-      |        | git stash pop                         |
     And all branches are now synchronized
     And the current branch is now "main"
     And no merge is in progress
@@ -145,4 +140,3 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-      |        | git stash pop                         |

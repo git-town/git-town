@@ -17,8 +17,6 @@ Feature: handle conflicts between the main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
     And Git Town prints the error:
@@ -36,10 +34,9 @@ Feature: handle conflicts between the main branch and its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | main    | git rebase --abort   |
-      |         | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH | COMMAND              |
+      | main   | git rebase --abort   |
+      |        | git checkout feature |
     And the current branch is still "feature"
     And no rebase is now in progress
     And the initial commits exist now
@@ -64,7 +61,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
@@ -83,7 +79,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress

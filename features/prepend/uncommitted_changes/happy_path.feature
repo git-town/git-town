@@ -15,10 +15,7 @@ Feature: prepend a branch to a feature branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
-      | old    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b parent main |
-      | parent | git stash pop               |
+      | old    | git checkout -b parent main |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
@@ -31,12 +28,9 @@ Feature: prepend a branch to a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | parent | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout old            |
-      | old    | git branch -D parent        |
-      |        | git stash pop               |
+      | BRANCH | COMMAND              |
+      | parent | git checkout old     |
+      | old    | git branch -D parent |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

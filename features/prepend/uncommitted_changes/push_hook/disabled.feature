@@ -16,11 +16,8 @@ Feature: auto-push new branches
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                            |
-      | old    | git add -A                         |
-      |        | git stash -m "Git Town WIP"        |
-      |        | git checkout -b new main           |
+      | old    | git checkout -b new main           |
       | new    | git push --no-verify -u origin new |
-      |        | git stash pop                      |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
@@ -33,13 +30,10 @@ Feature: auto-push new branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | new    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout old            |
-      | old    | git branch -D new           |
-      |        | git push origin :new        |
-      |        | git stash pop               |
+      | BRANCH | COMMAND              |
+      | new    | git checkout old     |
+      | old    | git branch -D new    |
+      |        | git push origin :new |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

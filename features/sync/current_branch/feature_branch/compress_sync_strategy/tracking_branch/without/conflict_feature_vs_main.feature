@@ -18,8 +18,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
@@ -44,7 +42,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "feature"
     And no merge is in progress
     And these commits exist now
@@ -73,7 +70,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
@@ -92,7 +88,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
@@ -111,7 +106,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress

@@ -19,8 +19,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout current                    |
@@ -38,7 +36,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "current"
     And no merge is in progress
     And the initial commits exist now
@@ -69,7 +66,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git push                                |
       |         | git checkout current                    |
       | current | git push --tags                         |
-      |         | git stash pop                           |
     And all branches are now synchronized
     And the current branch is still "current"
     And no merge is in progress

@@ -18,13 +18,10 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | other  | git fetch --prune --tags    |
-      |        | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
       |        | git checkout main           |
       | main   | git merge --ff-only feature |
       |        | git merge --abort           |
       |        | git checkout other          |
-      | other  | git stash pop               |
     And Git Town prints the error:
       """
       aborted because merge exited with error

@@ -26,9 +26,7 @@ Feature: sync before proposing
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
       | <none> | Looking for proposal online ... ok                                        |
-      | child  | git add -A                                                                |
-      |        | git stash -m "Git Town WIP"                                               |
-      |        | git checkout main                                                         |
+      | child  | git checkout main                                                         |
       | main   | git rebase origin/main --no-update-refs                                   |
       |        | git push                                                                  |
       |        | git checkout parent                                                       |
@@ -39,7 +37,6 @@ Feature: sync before proposing
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
-      |        | git stash pop                                                             |
       | <none> | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """

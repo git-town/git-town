@@ -16,13 +16,10 @@ Feature: delete the given branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | good   | git fetch --prune --tags    |
-      |        | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git push origin :dead       |
-      |        | git branch -D dead          |
-      |        | git stash pop               |
+      | BRANCH | COMMAND                  |
+      | good   | git fetch --prune --tags |
+      |        | git push origin :dead    |
+      |        | git branch -D dead       |
     And the current branch is still "good"
     And the branches are now
       | REPOSITORY    | BRANCHES   |
@@ -38,11 +35,8 @@ Feature: delete the given branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
-      | good   | git add -A                                  |
-      |        | git stash -m "Git Town WIP"                 |
-      |        | git branch dead {{ sha 'dead-end commit' }} |
+      | good   | git branch dead {{ sha 'dead-end commit' }} |
       |        | git push -u origin dead                     |
-      |        | git stash pop                               |
     And the current branch is still "good"
     And the initial commits exist now
     And the initial branches and lineage exist now

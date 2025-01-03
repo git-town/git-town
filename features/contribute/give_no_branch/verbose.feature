@@ -49,7 +49,6 @@ Feature: make the current branch a contribution branch verbosely
       |         | git stash -m "Git Town WIP"                           |
       | <none>  | git config --unset git-town-branch.feature.branchtype |
       |         | git stash list                                        |
-      | feature | git stash pop                                         |
     And Git Town prints:
       """
       Ran 15 shell commands

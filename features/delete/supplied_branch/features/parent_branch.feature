@@ -25,13 +25,10 @@ Feature: delete a parent branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                     |
-      | feature-3 | git fetch --prune --tags    |
-      |           | git add -A                  |
-      |           | git stash -m "Git Town WIP" |
-      |           | git push origin :feature-2  |
-      |           | git branch -D feature-2     |
-      |           | git stash pop               |
+      | BRANCH    | COMMAND                    |
+      | feature-3 | git fetch --prune --tags   |
+      |           | git push origin :feature-2 |
+      |           | git branch -D feature-2    |
     And the current branch is now "feature-3"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
@@ -50,11 +47,8 @@ Feature: delete a parent branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
-      | feature-3 | git add -A                                        |
-      |           | git stash -m "Git Town WIP"                       |
-      |           | git branch feature-2 {{ sha 'feature-2 commit' }} |
+      | feature-3 | git branch feature-2 {{ sha 'feature-2 commit' }} |
       |           | git push -u origin feature-2                      |
-      |           | git stash pop                                     |
     And the current branch is now "feature-3"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -20,8 +20,6 @@ Feature: handle merge conflicts between feature branch and main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
@@ -53,7 +51,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git stash pop                                   |
     And the current branch is now "main"
     And no merge is in progress
     And the initial commits exist now
@@ -70,7 +67,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-      |        | git stash pop                         |
     And the current branch is now "main"
     And no merge is in progress
     And these commits exist now
@@ -128,7 +124,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-      |        | git stash pop                         |
     And the current branch is now "main"
     And all branches are now synchronized
     And no merge is in progress
@@ -155,4 +150,3 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-      |        | git stash pop                         |

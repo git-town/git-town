@@ -10,11 +10,8 @@ Feature: inside an uncommitted subfolder on the current feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | main   | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new         |
-      | new    | git stash pop               |
+      | BRANCH | COMMAND             |
+      | main   | git checkout -b new |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
@@ -24,12 +21,9 @@ Feature: inside an uncommitted subfolder on the current feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | new    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout main           |
-      | main   | git branch -D new           |
-      |        | git stash pop               |
+      | BRANCH | COMMAND           |
+      | new    | git checkout main |
+      | main   | git branch -D new |
     And the current branch is now "main"
     And the initial commits exist now
     And the initial lineage exists now

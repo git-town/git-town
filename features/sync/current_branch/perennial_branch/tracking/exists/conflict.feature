@@ -17,8 +17,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | qa     | git fetch --prune --tags              |
-      |        | git add -A                            |
-      |        | git stash -m "Git Town WIP"           |
       |        | git rebase origin/qa --no-update-refs |
     And Git Town prints the error:
       """
@@ -38,7 +36,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
-      |        | git stash pop      |
     And the current branch is still "qa"
     And no rebase is now in progress
     And the initial commits exist now
@@ -61,7 +58,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git -c core.editor=true rebase --continue |
       |        | git push                                  |
       |        | git push --tags                           |
-      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress
@@ -77,7 +73,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | COMMAND         |
       | qa     | git push        |
       |        | git push --tags |
-      |        | git stash pop   |
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress

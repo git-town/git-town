@@ -11,11 +11,8 @@ Feature: already existing remote branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                       |
-      | old      | git add -A                    |
-      |          | git stash -m "Git Town WIP"   |
-      |          | git checkout -b existing main |
-      | existing | git stash pop                 |
+      | BRANCH | COMMAND                       |
+      | old    | git checkout -b existing main |
     And the current branch is now "existing"
     And the initial commits exist now
     And this lineage exists now
@@ -26,12 +23,9 @@ Feature: already existing remote branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | existing | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout old            |
-      | old      | git branch -D existing      |
-      |          | git stash pop               |
+      | BRANCH   | COMMAND                |
+      | existing | git checkout old       |
+      | old      | git branch -D existing |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

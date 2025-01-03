@@ -14,11 +14,8 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | old    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout -b new main    |
-      | new    | git stash pop               |
+      | BRANCH | COMMAND                  |
+      | old    | git checkout -b new main |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
@@ -31,12 +28,9 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | new    | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git checkout old            |
-      | old    | git branch -D new           |
-      |        | git stash pop               |
+      | BRANCH | COMMAND           |
+      | new    | git checkout old  |
+      | old    | git branch -D new |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

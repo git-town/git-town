@@ -15,11 +15,8 @@ Feature: local repository
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | good   | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git branch -D other         |
-      |        | git stash pop               |
+      | BRANCH | COMMAND             |
+      | good   | git branch -D other |
     And the current branch is still "good"
     And the branches are now
       | REPOSITORY | BRANCHES   |
@@ -35,10 +32,7 @@ Feature: local repository
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
-      | good   | git add -A                                |
-      |        | git stash -m "Git Town WIP"               |
-      |        | git branch other {{ sha 'other commit' }} |
-      |        | git stash pop                             |
+      | good   | git branch other {{ sha 'other commit' }} |
     And the current branch is still "good"
     And the initial commits exist now
     And the initial branches and lineage exist now

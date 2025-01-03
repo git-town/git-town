@@ -14,10 +14,7 @@ Feature: sync the current observed branch in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | other  | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git stash pop               |
+      | BRANCH | COMMAND |
     And all branches are now synchronized
     And the current branch is still "other"
     And the initial commits exist now
@@ -26,10 +23,7 @@ Feature: sync the current observed branch in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | other  | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git stash pop               |
+      | BRANCH | COMMAND |
     And the current branch is still "other"
     And the initial commits exist now
     And the initial branches and lineage exist now

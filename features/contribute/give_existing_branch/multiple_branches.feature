@@ -31,9 +31,6 @@ Feature: make multiple other branches contribution branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | main   | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git stash pop               |
+      | BRANCH | COMMAND |
     And there are now no contribution branches
     And the current branch is still "main"

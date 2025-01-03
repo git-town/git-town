@@ -23,12 +23,9 @@ Feature: does not compress observed branches in the stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
-      |        | git add -A                                      |
-      |        | git stash -m "Git Town WIP"                     |
       |        | git reset --soft observed                       |
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "child"
     And these commits exist now
@@ -45,11 +42,8 @@ Feature: does not compress observed branches in the stack
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | child  | git add -A                                      |
-      |        | git stash -m "Git Town WIP"                     |
-      |        | git reset --hard {{ sha 'child 2' }}            |
+      | child  | git reset --hard {{ sha 'child 2' }}            |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

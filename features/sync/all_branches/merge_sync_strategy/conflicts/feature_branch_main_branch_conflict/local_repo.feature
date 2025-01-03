@@ -19,9 +19,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | main   | git add -A                    |
-      |        | git stash -m "Git Town WIP"   |
-      |        | git checkout alpha            |
+      | main   | git checkout alpha            |
       | alpha  | git merge --no-edit --ff main |
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
@@ -47,7 +45,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout alpha                        |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git checkout main                         |
-      | main   | git stash pop                             |
     And the current branch is now "main"
     And the initial commits exist now
     And no merge is in progress
@@ -60,7 +57,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-      | main   | git stash pop                 |
     And the current branch is now "main"
     And no merge is in progress
     And these commits exist now
@@ -100,7 +96,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-      | main   | git stash pop                 |
     And all branches are now synchronized
     And the current branch is now "main"
     And no merge is in progress
@@ -122,4 +117,3 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | beta   | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-      | main   | git stash pop                 |

@@ -15,13 +15,10 @@ Feature: compress the commits on a local feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git fetch --prune --tags    |
-      |         | git add -A                  |
-      |         | git stash -m "Git Town WIP" |
-      |         | git reset --soft main       |
-      |         | git commit -m "commit 1"    |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git reset --soft main    |
+      |         | git commit -m "commit 1" |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
@@ -35,10 +32,7 @@ Feature: compress the commits on a local feature branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
-      | feature | git add -A                            |
-      |         | git stash -m "Git Town WIP"           |
-      |         | git reset --hard {{ sha 'commit 3' }} |
-      |         | git stash pop                         |
+      | feature | git reset --hard {{ sha 'commit 3' }} |
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

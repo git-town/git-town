@@ -22,8 +22,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | main   | git fetch --prune --tags                 |
-      |        | git add -A                               |
-      |        | git stash -m "Git Town WIP"              |
       |        | git checkout alpha                       |
       | alpha  | git rebase origin/alpha --no-update-refs |
       |        | git checkout beta                        |
@@ -47,7 +45,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
       |        | git checkout main  |
-      | main   | git stash pop      |
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -62,7 +59,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                        |
       | main   | git rebase origin/main --no-update-refs  |
       |        | git push --tags                          |
-      |        | git stash pop                            |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
@@ -94,7 +90,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                         |
       | main   | git rebase origin/main --no-update-refs   |
       |        | git push --tags                           |
-      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is now "main"
     And no rebase is now in progress
@@ -111,4 +106,3 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                        |
       | main   | git rebase origin/main --no-update-refs  |
       |        | git push --tags                          |
-      |        | git stash pop                            |

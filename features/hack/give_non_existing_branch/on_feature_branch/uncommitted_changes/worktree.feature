@@ -16,11 +16,8 @@ Feature: hack a new branch while the main branch is active in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | existing | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout -b new main    |
-      | new      | git stash pop               |
+      | BRANCH   | COMMAND                  |
+      | existing | git checkout -b new main |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION        | MESSAGE            |
@@ -35,12 +32,9 @@ Feature: hack a new branch while the main branch is active in another worktree
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                     |
-      | new      | git add -A                  |
-      |          | git stash -m "Git Town WIP" |
-      |          | git checkout existing       |
-      | existing | git branch -D new           |
-      |          | git stash pop               |
+      | BRANCH   | COMMAND               |
+      | new      | git checkout existing |
+      | existing | git branch -D new     |
     And the current branch is now "existing"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE            |

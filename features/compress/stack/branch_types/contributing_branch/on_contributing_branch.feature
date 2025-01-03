@@ -23,14 +23,11 @@ Feature: does not compress the active contribution branch
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
-      |              | git add -A                                      |
-      |              | git stash -m "Git Town WIP"                     |
       |              | git checkout child                              |
       | child        | git reset --soft contribution                   |
       |              | git commit -m "child 1"                         |
       |              | git push --force-with-lease --force-if-includes |
       |              | git checkout contribution                       |
-      | contribution | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "contribution"
     And these commits exist now
@@ -45,13 +42,10 @@ Feature: does not compress the active contribution branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
-      | contribution | git add -A                                      |
-      |              | git stash -m "Git Town WIP"                     |
-      |              | git checkout child                              |
+      | contribution | git checkout child                              |
       | child        | git reset --hard {{ sha 'child 2' }}            |
       |              | git push --force-with-lease --force-if-includes |
       |              | git checkout contribution                       |
-      | contribution | git stash pop                                   |
     And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

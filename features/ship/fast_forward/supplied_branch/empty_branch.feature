@@ -16,11 +16,8 @@ Feature: does not ship empty feature branches using the fast-forward strategy
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | other  | git fetch --prune --tags    |
-      |        | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git stash pop               |
+      | BRANCH | COMMAND                  |
+      | other  | git fetch --prune --tags |
     And Git Town prints the error:
       """
       the branch "empty" has no shippable changes

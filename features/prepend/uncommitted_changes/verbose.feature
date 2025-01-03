@@ -36,7 +36,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent parent  |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git stash list                                |
-      | parent | frontend | git stash pop                                 |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
@@ -69,7 +68,6 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.parent.parent |
       |        | backend  | git config git-town-branch.old.parent main       |
       |        | backend  | git stash list                                   |
-      | old    | frontend | git stash pop                                    |
     And Git Town prints:
       """
       Ran 18 shell commands.

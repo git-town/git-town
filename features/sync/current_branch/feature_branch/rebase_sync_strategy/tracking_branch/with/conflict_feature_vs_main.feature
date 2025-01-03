@@ -19,8 +19,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
@@ -45,7 +43,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
-      |         | git stash pop      |
     And the current branch is still "feature"
     And no rebase is now in progress
     And these commits exist now
@@ -79,7 +76,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
@@ -103,7 +99,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress

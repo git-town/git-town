@@ -15,12 +15,9 @@ Feature: compress the commits in offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git add -A                  |
-      |         | git stash -m "Git Town WIP" |
-      |         | git reset --soft main       |
-      |         | git commit -m "commit 1"    |
-      |         | git stash pop               |
+      | BRANCH  | COMMAND                  |
+      | feature | git reset --soft main    |
+      |         | git commit -m "commit 1" |
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |
@@ -34,10 +31,7 @@ Feature: compress the commits in offline mode
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
-      | feature | git add -A                            |
-      |         | git stash -m "Git Town WIP"           |
-      |         | git reset --hard {{ sha 'commit 2' }} |
-      |         | git stash pop                         |
+      | feature | git reset --hard {{ sha 'commit 2' }} |
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

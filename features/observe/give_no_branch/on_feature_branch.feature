@@ -20,9 +20,6 @@ Feature: observing the current feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git add -A                  |
-      |         | git stash -m "Git Town WIP" |
-      |         | git stash pop               |
+      | BRANCH | COMMAND |
     And the current branch is still "feature"
     And there are now no observed branches

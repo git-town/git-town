@@ -16,8 +16,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
@@ -42,7 +40,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "feature"
     And no merge is in progress
     And these commits exist now
@@ -62,7 +59,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "feature"
     And no merge is in progress
     And these commits exist now
@@ -89,7 +85,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git commit --no-edit                    |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-      |         | git stash pop                           |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
@@ -106,7 +101,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git commit --no-edit                    |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-      |         | git stash pop                           |
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
@@ -123,7 +117,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                 |
       | feature | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-      |         | git stash pop                           |
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress

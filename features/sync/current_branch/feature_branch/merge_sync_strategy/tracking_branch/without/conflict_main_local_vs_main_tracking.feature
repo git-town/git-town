@@ -16,8 +16,6 @@ Feature: handle conflicts between the main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
     And Git Town prints the error:
@@ -35,10 +33,9 @@ Feature: handle conflicts between the main branch and its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | main    | git rebase --abort   |
-      |         | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH | COMMAND              |
+      | main   | git rebase --abort   |
+      |        | git checkout feature |
     And the current branch is still "feature"
     And no rebase is now in progress
     And the initial commits exist now
@@ -53,10 +50,9 @@ Feature: handle conflicts between the main branch and its tracking branch
       Handle unfinished command: undo
       """
     And Git Town runs the commands
-      | BRANCH  | COMMAND              |
-      | main    | git rebase --abort   |
-      |         | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH | COMMAND              |
+      | main   | git rebase --abort   |
+      |        | git checkout feature |
     And the current branch is still "feature"
     And no rebase is now in progress
     And the initial commits exist now
@@ -82,7 +78,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit --ff main             |
       |         | git merge --no-edit --ff origin/feature   |
       |         | git push                                  |
-      |         | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
@@ -102,7 +97,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-      |         | git stash pop                           |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress

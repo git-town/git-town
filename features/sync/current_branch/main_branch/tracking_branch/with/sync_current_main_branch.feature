@@ -12,12 +12,9 @@ Feature: sync the main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
       |        | git push                                |
       |        | git push --tags                         |
-      |        | git stash pop                           |
     And the current branch is still "main"
     And all branches are now synchronized
     And these commits exist now
@@ -28,10 +25,7 @@ Feature: sync the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | main   | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
-      |        | git stash pop               |
+      | BRANCH | COMMAND |
     And the current branch is still "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

@@ -16,8 +16,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | prototype | git fetch --prune --tags                  |
-      |           | git add -A                                |
-      |           | git stash -m "Git Town WIP"               |
       |           | git checkout main                         |
       | main      | git rebase origin/main --no-update-refs   |
       |           | git checkout prototype                    |
@@ -41,7 +39,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND           |
       | prototype | git merge --abort |
-      |           | git stash pop     |
     And the current branch is still "prototype"
     And no rebase is now in progress
     And the initial commits exist now
@@ -63,7 +60,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND              |
       | prototype | git commit --no-edit |
-      |           | git stash pop        |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | prototype | local         | conflicting local commit                                       |
@@ -82,7 +78,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND              |
       | prototype | git commit --no-edit |
-      |           | git stash pop        |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | prototype | local         | conflicting local commit                                       |

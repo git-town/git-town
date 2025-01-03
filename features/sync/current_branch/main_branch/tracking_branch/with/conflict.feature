@@ -12,8 +12,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
     And Git Town prints the error:
       """
@@ -32,7 +30,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-      |        | git stash pop      |
     And the current branch is still "main"
     And no rebase is now in progress
     And the initial commits exist now
@@ -55,7 +52,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | main   | git -c core.editor=true rebase --continue |
       |        | git push                                  |
       |        | git push --tags                           |
-      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "main"
     And these committed files exist now
@@ -70,7 +66,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | BRANCH | COMMAND         |
       | main   | git push        |
       |        | git push --tags |
-      |        | git stash pop   |
     And all branches are now synchronized
     And the current branch is still "main"
     And these committed files exist now
