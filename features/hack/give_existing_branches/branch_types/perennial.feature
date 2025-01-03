@@ -14,7 +14,7 @@ Feature: hack an existing contribution branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "existing" is a perennial branch and therefore be a feature branch
+      branch "existing" is a perennial branch and cannot be a feature branch
       """
     And the current branch is still "main"
     And branch "existing" now has type "feature"
