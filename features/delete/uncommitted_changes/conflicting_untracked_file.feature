@@ -40,6 +40,7 @@ Feature: delete another than the current branch
       | BRANCH | PARENT |
       | good   | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -56,3 +57,7 @@ Feature: delete another than the current branch
       | dead   | local, origin | dead-end commit    |
       | good   | local, origin | good commit        |
     And the initial branches and lineage exist now
+    And the uncommitted file has content:
+      """
+      conflicting content
+      """
