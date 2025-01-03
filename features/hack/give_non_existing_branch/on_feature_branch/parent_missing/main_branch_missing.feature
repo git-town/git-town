@@ -1,4 +1,4 @@
-Feature: on a feature branch with a clean workspace but without main branch
+Feature: on a feature branch but without main branch
 
   Background:
     Given a Git repo with origin

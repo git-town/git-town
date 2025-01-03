@@ -1,5 +1,4 @@
-@smoke
-Feature: on a feature branch with a clean workspace
+Feature: hack with --prototype flag
 
   Background:
     Given a Git repo with origin
@@ -11,7 +10,7 @@ Feature: on a feature branch with a clean workspace
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    When I run "git-town hack new"
+    When I run "git-town hack new --prototype"
 
   Scenario: result
     Then Git Town runs the commands
@@ -21,6 +20,7 @@ Feature: on a feature branch with a clean workspace
       | main     | git rebase origin/main --no-update-refs |
       |          | git checkout -b new                     |
     And the current branch is now "new"
+    And branch "new" now has type "prototype"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |

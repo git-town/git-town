@@ -1,5 +1,5 @@
 @smoke
-Feature: on a feature branch with uncommitted changes
+Feature: on a feature branch
 
   Background:
     Given a Git repo with origin
@@ -15,10 +15,16 @@ Feature: on a feature branch with uncommitted changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git checkout -b new main |
+      | BRANCH   | COMMAND                                 |
+      | existing | git fetch --prune --tags                |
+      |          | git checkout main                       |
+      | main     | git rebase origin/main --no-update-refs |
+      |          | git checkout -b new                     |
     And the current branch is now "new"
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local         | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
@@ -27,9 +33,11 @@ Feature: on a feature branch with uncommitted changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git checkout existing |
-      | existing | git branch -D new     |
+      | BRANCH   | COMMAND                                     |
+      | new      | git checkout main                           |
+      | main     | git reset --hard {{ sha 'initial commit' }} |
+      |          | git checkout existing                       |
+      | existing | git branch -D new                           |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
