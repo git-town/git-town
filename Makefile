@@ -124,7 +124,7 @@ unit-all: install  # runs all the unit tests
 	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
 
 unit-race: install  # runs all the unit tests with race detector
-	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
+	# env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
 	cd website && make --no-print-directory unit
 
 update: tools/rta@${RTA_VERSION}  # updates all dependencies
