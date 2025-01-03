@@ -1,4 +1,4 @@
-Feature: make the current feature branch a contribution branch
+Feature: make the current feature branch a contribution branch with an untracked file present
 
   Background:
     Given a Git repo with origin
