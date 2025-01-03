@@ -12,13 +12,26 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | local, origin | child commit  |
     And origin ships the "child" branch using the "squash-merge" ship-strategy
     And the current branch is "child"
+    And an uncommitted file
     When I run "git-town prepend new"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                    |
-      | child  | git checkout -b new parent |
+      | BRANCH | COMMAND                     |
+      | child  | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout -b new parent  |
+      | new    | git stash pop               |
+    And Git Town prints:
+      """
+      branch "new" is now a child of "parent"
+      """
+    And Git Town prints:
+      """
+      branch "child" is now a child of "new"
+      """
     And the current branch is now "new"
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES                 |
       | local      | main, child, new, parent |
@@ -32,10 +45,14 @@ Feature: prepend a branch to a branch that was shipped at the remote
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND            |
-      | new    | git checkout child |
-      | child  | git branch -D new  |
+      | BRANCH | COMMAND                     |
+      | new    | git add -A                  |
+      |        | git stash -m "Git Town WIP" |
+      |        | git checkout child          |
+      | child  | git branch -D new           |
+      |        | git stash pop               |
     And the current branch is now "child"
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES            |
       | local      | main, child, parent |
