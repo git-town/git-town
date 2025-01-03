@@ -17,13 +17,11 @@ Feature: delete a branch within a branch chain
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                   |
-      | beta   | git fetch --prune --tags                                  |
-      |        | git push origin :beta                                     |
-      |        | git add -A                                                |
-      |        | git commit -m "Committing open changes on deleted branch" |
-      |        | git checkout alpha                                        |
-      | alpha  | git branch -D beta                                        |
+      | BRANCH | COMMAND                  |
+      | beta   | git fetch --prune --tags |
+      |        | git push origin :beta    |
+      |        | git checkout alpha       |
+      | alpha  | git branch -D beta       |
     And Git Town prints:
       """
       branch "gamma" is now a child of "alpha"
@@ -45,11 +43,10 @@ Feature: delete a branch within a branch chain
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                               |
-      | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta               |
-      |        | git branch beta {{ sha 'Committing open changes on deleted branch' }} |
-      |        | git checkout beta                                                     |
-      | beta   | git reset --soft HEAD~1                                               |
+      | BRANCH | COMMAND                                 |
+      | alpha  | git branch beta {{ sha 'beta commit' }} |
+      |        | git push -u origin beta                 |
+      |        | git checkout beta                       |
     And the current branch is now "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now
