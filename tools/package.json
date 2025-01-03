@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "test": "node --test './mdbook_preprocessor/util.test.js'"
+    "test": "node --test './**/*.test.js'"
   },
   "dependencies": {
     "gherkin-lint": "4.2.4",
