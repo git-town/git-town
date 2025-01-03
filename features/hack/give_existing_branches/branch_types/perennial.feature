@@ -17,7 +17,7 @@ Feature: hack an existing contribution branch
       branch "existing" is a perennial branch and cannot be a feature branch
       """
     And the current branch is still "main"
-    And branch "existing" now has type "feature"
+    And branch "existing" still has type "perennial"
     And the initial branches and lineage exist now
 
   Scenario: undo
@@ -26,4 +26,4 @@ Feature: hack an existing contribution branch
     And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And branch "existing" now has type "perennial"
+    And branch "existing" still has type "perennial"
