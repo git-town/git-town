@@ -11,9 +11,9 @@ golangci-lint 1.62.2
 goreleaser 1.26.2
 govulncheck 1.1.3
 mdbook 0.4.43
-node 22.12.0
-npm 22.12.0
-npx 22.12.0
+node 23.5.0
+npm 23.5.0
+npx 23.5.0
 scc 3.4.0
 shellcheck system 0.10.0
 shfmt 3.10.0
