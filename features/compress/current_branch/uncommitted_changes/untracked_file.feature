@@ -44,3 +44,4 @@ Feature: compress in the presence of an uncommitted file
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
+    And the uncommitted file still exists
