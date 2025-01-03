@@ -21,7 +21,6 @@ Feature: delete a parent branch
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-3 | local, origin | feature-3 commit |
     And the current branch is "feature-3"
-    And an uncommitted file
     When I run "git-town delete feature-2"
 
   Scenario: result
@@ -34,7 +33,6 @@ Feature: delete a parent branch
       |           | git branch -D feature-2     |
       |           | git stash pop               |
     And the current branch is now "feature-3"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
@@ -58,6 +56,5 @@ Feature: delete a parent branch
       |           | git push -u origin feature-2                      |
       |           | git stash pop                                     |
     And the current branch is now "feature-3"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -6,7 +6,6 @@ Feature: display all executed Git commands with uncommitted changes
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And an uncommitted file
 
   Scenario: result
     When I run "git-town hack new --verbose"
@@ -41,7 +40,6 @@ Feature: display all executed Git commands with uncommitted changes
       Ran 24 shell commands.
       """
     And the current branch is now "new"
-    And the uncommitted file still exists
 
   Scenario: undo
     Given I ran "git-town hack new"
@@ -70,4 +68,3 @@ Feature: display all executed Git commands with uncommitted changes
       Ran 17 shell commands.
       """
     And the current branch is now "main"
-    And the uncommitted file still exists

@@ -13,7 +13,6 @@ Feature: delete a branch within a branch chain
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
     And the current branch is "beta" and the previous branch is "alpha"
-    And an uncommitted file
     When I run "git-town delete"
 
   Scenario: result
@@ -52,6 +51,5 @@ Feature: delete a branch within a branch chain
       |        | git checkout beta                                                     |
       | beta   | git reset --soft HEAD~1                                               |
     And the current branch is now "beta"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

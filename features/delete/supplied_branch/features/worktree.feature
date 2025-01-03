@@ -13,7 +13,6 @@ Feature: delete a branch that is active in another worktree
       | good   | local, origin | good commit        | file             |
     And the current branch is "good"
     And branch "dead" is active in another worktree
-    And an uncommitted file
     When I run "git-town delete dead"
 
   Scenario: result
@@ -24,7 +23,6 @@ Feature: delete a branch that is active in another worktree
       """
       branch "dead" is active in another worktree
       """
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,4 +32,3 @@ Feature: delete a branch that is active in another worktree
       nothing to undo
       """
     And the current branch is still "good"
-    And the uncommitted file still exists

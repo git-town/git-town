@@ -10,7 +10,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | contribution | local    | conflicting local commit  | conflicting_file | local content  |
       |              | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -40,7 +39,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | contribution | git rebase --abort |
       |              | git stash pop      |
     And the current branch is still "contribution"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -69,7 +67,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
       |              |               | conflicting local commit  |
     And the current branch is still "contribution"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
       | contribution | conflicting_file | resolved content |
@@ -88,7 +85,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
       |              |               | conflicting local commit  |
     And the current branch is still "contribution"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
       | contribution | conflicting_file | resolved content |

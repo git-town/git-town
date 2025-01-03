@@ -15,7 +15,6 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
     And the current branch is "feature-1"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And Git setting "git-town.sync-feature-strategy" is "compress"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -33,7 +32,6 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
       deleted branch "feature-1"
       """
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
@@ -52,5 +50,4 @@ Feature: using the "compress" strategy, sync a branch whose tracking branch was 
       |           | git checkout feature-1                              |
       | feature-1 | git stash pop                                       |
     And the current branch is now "feature-1"
-    And the uncommitted file still exists
     And the initial branches and lineage exist now

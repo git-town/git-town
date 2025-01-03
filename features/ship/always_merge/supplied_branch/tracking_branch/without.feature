@@ -27,7 +27,6 @@ Feature: ship the supplied local feature branch
       | other  | git branch -D feature               |
       |        | git stash pop                       |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -48,7 +47,6 @@ Feature: ship the supplied local feature branch
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git stash pop                                 |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |

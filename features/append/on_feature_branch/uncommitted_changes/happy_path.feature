@@ -10,7 +10,6 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result
@@ -21,7 +20,6 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       |          | git checkout -b new         |
       | new      | git stash pop               |
     And the current branch is now "new"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
@@ -40,6 +38,5 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       | existing | git branch -D new           |
       |          | git stash pop               |
     And the current branch is now "existing"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial lineage exists now

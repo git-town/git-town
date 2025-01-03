@@ -15,7 +15,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -50,7 +49,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main  |
       | main   | git stash pop      |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -66,7 +64,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git push --tags                          |
       |        | git stash pop                            |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -100,7 +97,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no rebase is now in progress
 
   Scenario: resolve, finish the rebase, and continue

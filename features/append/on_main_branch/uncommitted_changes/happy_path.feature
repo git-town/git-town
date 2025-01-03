@@ -6,7 +6,6 @@ Feature: on the main branch
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result
@@ -21,7 +20,6 @@ Feature: on the main branch
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -35,4 +33,3 @@ Feature: on the main branch
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

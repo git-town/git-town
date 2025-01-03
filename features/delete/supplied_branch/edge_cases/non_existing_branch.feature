@@ -2,7 +2,6 @@ Feature: non-existing branch
 
   Scenario:
     Given a Git repo with origin
-    And an uncommitted file
     When I run "git-town delete non-existing"
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
@@ -12,4 +11,3 @@ Feature: non-existing branch
       there is no branch "non-existing"
       """
     And the current branch is now "main"
-    And the uncommitted file still exists

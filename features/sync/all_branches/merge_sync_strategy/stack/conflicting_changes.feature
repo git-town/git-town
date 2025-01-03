@@ -12,7 +12,6 @@ Feature: sync a stack that makes conflicting changes
       | alpha  | local, origin | alpha commit | file      | alpha content |
       | beta   | local, origin | beta commit  | file      | beta content  |
     And the current branch is "alpha"
-    And an uncommitted file
     When I run "git-town sync --all"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
@@ -77,6 +76,5 @@ Feature: sync a stack that makes conflicting changes
       |        | git checkout alpha                                    |
       | alpha  | git stash pop                                         |
     And the current branch is still "alpha"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

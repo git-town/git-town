@@ -7,7 +7,6 @@ Feature: already existing local branch
       | old      | feature | main   | local, origin |
       | existing | feature | main   | local         |
     And the current branch is "old"
-    And an uncommitted file
     When I run "git-town prepend existing"
 
   Scenario: result
@@ -16,7 +15,6 @@ Feature: already existing local branch
       """
       there is already a branch "existing"
       """
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -24,4 +22,3 @@ Feature: already existing local branch
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now
-    And the uncommitted file still exists

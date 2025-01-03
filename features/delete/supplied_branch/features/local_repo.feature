@@ -11,7 +11,6 @@ Feature: local repository
       | good   | local    | good commit  | file      |
       | other  | local    | other commit | file      |
     And the current branch is "good"
-    And an uncommitted file
     When I run "git-town delete other"
 
   Scenario: result
@@ -22,7 +21,6 @@ Feature: local repository
       |        | git branch -D other         |
       |        | git stash pop               |
     And the current branch is still "good"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES   |
       | local      | main, good |
@@ -42,6 +40,5 @@ Feature: local repository
       |        | git branch other {{ sha 'other commit' }} |
       |        | git stash pop                             |
     And the current branch is still "good"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

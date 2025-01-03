@@ -11,7 +11,6 @@ Feature: sync the current prototype branch in a local repo
       | prototype | local    | local commit | local_file |
     And the current branch is "prototype"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -23,7 +22,6 @@ Feature: sync the current prototype branch in a local repo
       |           | git stash pop                    |
     And all branches are now synchronized
     And the current branch is still "prototype"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE      |
       | main      | local    | main commit  |

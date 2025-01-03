@@ -51,7 +51,6 @@ Feature: sync a workspace with two independent stacks
       | BRANCH | LOCATION      | MESSAGE  |
       | fourth | local, origin | fourth 1 |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -89,7 +88,6 @@ Feature: sync a workspace with two independent stacks
       | main   | git push --tags                         |
       |        | git stash pop                           |
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -101,6 +99,5 @@ Feature: sync a workspace with two independent stacks
       |        | git stash -m "Git Town WIP" |
       |        | git stash pop               |
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

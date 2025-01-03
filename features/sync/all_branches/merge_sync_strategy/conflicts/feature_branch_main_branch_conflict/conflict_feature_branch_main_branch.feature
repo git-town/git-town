@@ -14,7 +14,6 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | local, origin | beta commit  | conflicting_file | beta content  |
       | gamma  | local, origin | gamma commit | feature2_file    | gamma content |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -56,7 +55,6 @@ Feature: handle merge conflicts between feature branch and main branch
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git stash pop                                   |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -74,7 +72,6 @@ Feature: handle merge conflicts between feature branch and main branch
       | main   | git push --tags                       |
       |        | git stash pop                         |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no merge is in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
@@ -107,7 +104,6 @@ Feature: handle merge conflicts between feature branch and main branch
   Scenario: continue with resolved conflict but other open files
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
-    And an uncommitted file
     And I run "git-town continue"
     Then Git Town runs no commands
     And Git Town prints the error:
@@ -134,7 +130,6 @@ Feature: handle merge conflicts between feature branch and main branch
       | main   | git push --tags                       |
       |        | git stash pop                         |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now

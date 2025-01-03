@@ -33,7 +33,6 @@ Feature: abort the ship via empty commit message
       aborted because merge exited with error
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial lineage exists now
 

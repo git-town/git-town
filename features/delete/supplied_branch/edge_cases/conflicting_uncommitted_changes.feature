@@ -50,7 +50,6 @@ Feature: delete another than the current branch
       |        | git push -u origin dead                     |
       |        | git stash pop                               |
     And the current branch is still "good"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |

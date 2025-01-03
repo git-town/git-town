@@ -17,7 +17,6 @@ Feature: does not compress the active contribution branch
       | child  | local, origin | child 1 | child_1   | child 1      |
       |        |               | child 2 | child_2   | child 2      |
     And the current branch is "contribution"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
@@ -41,7 +40,6 @@ Feature: does not compress the active contribution branch
       |              |               | contribution 2 |
     And file "contribution_1" still has content "contribution 1"
     And file "contribution_2" still has content "contribution 2"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -57,4 +55,3 @@ Feature: does not compress the active contribution branch
     And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

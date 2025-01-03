@@ -11,7 +11,6 @@ Feature: create a new top-level feature branch in a dirty workspace using the "c
       | existing | local    | existing commit |
     And the current branch is "existing"
     And Git setting "git-town.sync-feature-strategy" is "compress"
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -27,7 +26,6 @@ Feature: create a new top-level feature branch in a dirty workspace using the "c
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

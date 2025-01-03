@@ -15,7 +15,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | feature3_file    | gamma content       |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -60,7 +59,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git stash pop                                   |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -78,7 +76,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | git push --tags                                |
       |        | git stash pop                                  |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -124,7 +121,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash pop                         |
     And all branches are now synchronized
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no merge is in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |

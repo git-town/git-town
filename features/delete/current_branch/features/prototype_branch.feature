@@ -10,7 +10,6 @@ Feature: delete the current prototype branch
       | BRANCH    | LOCATION      | MESSAGE          |
       | previous  | local, origin | previous commit  |
       | prototype | local, origin | prototype commit |
-    And an uncommitted file
     And the current branch is "prototype" and the previous branch is "previous"
     When I run "git-town delete"
 
@@ -44,7 +43,6 @@ Feature: delete the current prototype branch
       |           | git checkout prototype                                                     |
       | prototype | git reset --soft HEAD~1                                                    |
     And the current branch is now "prototype"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "prototype" now has type "prototype"

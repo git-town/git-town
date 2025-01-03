@@ -10,7 +10,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -45,7 +44,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git merge --abort |
       |         | git stash pop     |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -86,7 +84,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

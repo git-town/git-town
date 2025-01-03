@@ -10,7 +10,6 @@ Feature: append to a perennial branch
       | BRANCH     | LOCATION | MESSAGE           |
       | production | origin   | production commit |
     And the current branch is "production"
-    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result
@@ -25,7 +24,6 @@ Feature: append to a perennial branch
     And this lineage exists now
       | BRANCH | PARENT     |
       | new    | production |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,4 +37,3 @@ Feature: append to a perennial branch
     And the current branch is now "production"
     And the initial commits exist now
     And the initial lineage exists now
-    And the uncommitted file still exists

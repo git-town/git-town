@@ -17,7 +17,6 @@ Feature: compresses active prototype branches
       | child  | local, origin | child 1 | child_1   | child 1      |
       |        |               | child 2 | child_2   | child 2      |
     And the current branch is "prototype"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
@@ -43,7 +42,6 @@ Feature: compresses active prototype branches
       | prototype | local, origin | prototype 1 |
     And file "parked_1" still has content "prototype 1"
     And file "parked_2" still has content "prototype 2"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -61,4 +59,3 @@ Feature: compresses active prototype branches
     And the current branch is still "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

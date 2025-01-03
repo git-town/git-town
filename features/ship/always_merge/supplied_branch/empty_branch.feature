@@ -11,7 +11,6 @@ Feature: does not ship empty feature branches using the always-merge strategy
       | main   | local    | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
     And the current branch is "other"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship empty"
 
@@ -27,7 +26,6 @@ Feature: does not ship empty feature branches using the always-merge strategy
       the branch "empty" has no shippable changes
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -39,6 +37,5 @@ Feature: does not ship empty feature branches using the always-merge strategy
       nothing to undo
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

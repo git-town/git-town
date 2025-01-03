@@ -17,7 +17,6 @@ Feature: does not compress non-active parked branches in the stack
       | child  | local, origin | child 1 | child_1   | child 1      |
       |        |               | child 2 | child_2   | child 2      |
     And the current branch is "child"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
@@ -39,7 +38,6 @@ Feature: does not compress non-active parked branches in the stack
       |        |               | parked 2 |
     And file "parked_1" still has content "parked 1"
     And file "parked_2" still has content "parked 2"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -53,4 +51,3 @@ Feature: does not compress non-active parked branches in the stack
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

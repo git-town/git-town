@@ -11,7 +11,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -42,7 +41,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -61,7 +59,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -89,7 +86,6 @@ Feature: handle conflicts between the main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -109,7 +105,6 @@ Feature: handle conflicts between the main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

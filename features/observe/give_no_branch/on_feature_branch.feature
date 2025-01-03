@@ -6,7 +6,6 @@ Feature: observing the current feature branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And an uncommitted file
     When I run "git-town observe"
 
   Scenario: result
@@ -17,7 +16,6 @@ Feature: observing the current feature branch
       """
     And the current branch is still "feature"
     And branch "feature" now has type "observed"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -28,4 +26,3 @@ Feature: observing the current feature branch
       |         | git stash pop               |
     And the current branch is still "feature"
     And there are now no observed branches
-    And the uncommitted file still exists

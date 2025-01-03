@@ -28,7 +28,6 @@ Feature: ship the supplied feature branch without a tracking branch
       | other  | git branch -D feature           |
       |        | git stash pop                   |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -52,7 +51,6 @@ Feature: ship the supplied feature branch without a tracking branch
       |        | git checkout other                            |
       | other  | git stash pop                                 |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

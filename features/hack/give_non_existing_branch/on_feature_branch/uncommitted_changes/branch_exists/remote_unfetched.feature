@@ -5,7 +5,6 @@ Feature: already existing remote branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | origin    |
-    And an uncommitted file
     When I run "git-town hack existing"
 
   Scenario: result
@@ -20,7 +19,6 @@ Feature: already existing remote branch
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

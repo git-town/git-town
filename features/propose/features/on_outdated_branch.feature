@@ -19,7 +19,6 @@ Feature: sync before proposing
     And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exist
     And the current branch is "child"
-    And an uncommitted file
     When I run "git-town propose"
 
   Scenario: result
@@ -47,7 +46,6 @@ Feature: sync before proposing
       https://github.com/git-town/git-town/compare/parent...child?expand=1
       """
     And the current branch is still "child"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

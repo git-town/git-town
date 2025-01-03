@@ -12,7 +12,6 @@ Feature: offline mode
       | feature | local, origin | feature commit |
       | other   | local, origin | other commit   |
     And the current branch is "feature"
-    And an uncommitted file
     When I run "git-town delete"
 
   Scenario: result
@@ -44,6 +43,5 @@ Feature: offline mode
       |         | git checkout feature                                                     |
       | feature | git reset --soft HEAD~1                                                  |
     And the current branch is now "feature"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

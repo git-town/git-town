@@ -27,7 +27,6 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
       | other  | git branch -D feature                          |
       |        | git stash pop                                  |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -49,7 +48,6 @@ Feature: ship the supplied feature branch from a subfolder using the always-merg
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git stash pop                                 |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |

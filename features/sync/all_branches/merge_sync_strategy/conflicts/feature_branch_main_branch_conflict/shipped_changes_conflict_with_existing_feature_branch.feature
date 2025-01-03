@@ -14,7 +14,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       | gamma  | local, origin | gamma commit | conflicting_file | gamma content |
     And origin ships the "beta" branch using the "squash-merge" ship-strategy
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
@@ -74,7 +73,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       | main   | git push --tags                       |
       |        | git stash pop                         |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now

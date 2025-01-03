@@ -6,7 +6,6 @@ Feature: observe the current perennial branch
       | NAME      | TYPE      | LOCATIONS |
       | perennial | perennial | local     |
     And the current branch is "perennial"
-    And an uncommitted file
     When I run "git-town observe"
 
   Scenario: result
@@ -18,7 +17,6 @@ Feature: observe the current perennial branch
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no observed branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -26,4 +24,3 @@ Feature: observe the current perennial branch
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no observed branches
-    And the uncommitted file still exists

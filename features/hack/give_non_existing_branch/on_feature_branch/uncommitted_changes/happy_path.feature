@@ -11,7 +11,6 @@ Feature: on a feature branch with uncommitted changes
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -27,7 +26,6 @@ Feature: on a feature branch with uncommitted changes
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

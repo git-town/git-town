@@ -6,7 +6,6 @@ Feature: prototype the current branch verbosely
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
     And the current branch is "feature"
-    And an uncommitted file
     When I run "git-town prototype --verbose"
 
   Scenario: result
@@ -31,7 +30,6 @@ Feature: prototype the current branch verbosely
       """
     And the current branch is still "feature"
     And branch "feature" now has type "prototype"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -58,4 +56,3 @@ Feature: prototype the current branch verbosely
       """
     And the current branch is still "feature"
     And branch "feature" now has type "feature"
-    And the uncommitted file still exists

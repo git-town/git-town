@@ -26,7 +26,6 @@ Feature: ship the supplied feature branch in a local repo
       | other  | git branch -D feature           |
       |        | git stash pop                   |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |

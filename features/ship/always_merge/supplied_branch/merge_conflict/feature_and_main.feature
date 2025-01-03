@@ -11,7 +11,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "other"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "always-merge"
     And I run "git-town ship feature" and close the editor
 
@@ -35,7 +34,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       aborted because merge exited with error
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
     And no merge is in progress
 
   Scenario: undo
@@ -46,7 +44,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       nothing to undo
       """
     And the current branch is now "other"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now

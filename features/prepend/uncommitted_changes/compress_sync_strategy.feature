@@ -10,7 +10,6 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And Git setting "git-town.sync-feature-strategy" is "compress"
-    And an uncommitted file
     When I run "git-town prepend parent"
 
   Scenario: result
@@ -21,7 +20,6 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
       |        | git checkout -b parent main |
       | parent | git stash pop               |
     And the current branch is now "parent"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -40,6 +38,5 @@ Feature: prepend a branch to a feature branch in a dirty workspace using the "co
       | old    | git branch -D parent        |
       |        | git stash pop               |
     And the current branch is now "old"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial lineage exists now

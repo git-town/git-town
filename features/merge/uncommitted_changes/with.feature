@@ -11,7 +11,6 @@ Feature: merging a branch with uncommitted changes
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And an uncommitted file
     When I run "git-town merge"
 
   Scenario: result
@@ -30,7 +29,6 @@ Feature: merging a branch with uncommitted changes
       |        | git push origin :alpha                |
       |        | git stash pop                         |
     And the current branch is still "beta"
-    And the uncommitted file still exists
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |

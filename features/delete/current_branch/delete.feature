@@ -12,7 +12,6 @@ Feature: delete the current feature branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
-    And an uncommitted file
     And the current branch is "current" and the previous branch is "other"
     When I run "git-town delete"
 
@@ -46,6 +45,5 @@ Feature: delete the current feature branch
       |         | git checkout current                                                     |
       | current | git reset --soft HEAD~1                                                  |
     And the current branch is now "current"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

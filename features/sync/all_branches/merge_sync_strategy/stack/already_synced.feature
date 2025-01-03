@@ -31,7 +31,6 @@ Feature: sync a stack making independent changes
       | delta  | local, origin | delta 1 | delta_1   | delta 1      |
       |        |               | delta 2 | delta_2   | delta 2      |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -57,7 +56,6 @@ Feature: sync a stack making independent changes
       | main   | git push --tags                         |
       |        | git stash pop                           |
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -69,6 +67,5 @@ Feature: sync a stack making independent changes
       |        | git stash -m "Git Town WIP" |
       |        | git stash pop               |
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

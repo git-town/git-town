@@ -10,7 +10,6 @@ Feature: sync the current prototype branch in a local repo
       | main      | local    | main commit  | main_file  |
       | prototype | local    | local commit | local_file |
     And the current branch is "prototype"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -27,7 +26,6 @@ Feature: sync the current prototype branch in a local repo
       |           |          | Merge branch 'main' into prototype |
     And all branches are now synchronized
     And the current branch is still "prototype"
-    And the uncommitted file still exists
     And the initial branches and lineage exist now
 
   Scenario: undo

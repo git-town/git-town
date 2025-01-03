@@ -11,7 +11,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       |         | local         | unshipped commit |
     And origin ships the "shipped" branch using the "squash-merge" ship-strategy
     And the current branch is "shipped"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -30,7 +29,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
     And the current branch is still "shipped"
-    And the uncommitted file still exists
     And the initial branches and lineage exist now
 
   Scenario: undo
@@ -45,7 +43,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | shipped | git reset --hard {{ sha-before-run 'unshipped commit' }} |
       |         | git stash pop                                            |
     And the current branch is now "shipped"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |

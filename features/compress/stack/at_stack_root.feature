@@ -27,7 +27,6 @@ Feature: compress the commits on an entire stack when at the stack root
       |        |               | gamma 2 | gamma_2   | gamma 2      |
       |        |               | gamma 3 | gamma_3   | gamma 3      |
     And the current branch is "alpha"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
@@ -59,7 +58,6 @@ Feature: compress the commits on an entire stack when at the stack root
     And file "alpha_1" still has content "alpha 1"
     And file "alpha_2" still has content "alpha 2"
     And file "alpha_3" still has content "alpha 3"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -80,4 +78,3 @@ Feature: compress the commits on an entire stack when at the stack root
     And the current branch is still "alpha"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

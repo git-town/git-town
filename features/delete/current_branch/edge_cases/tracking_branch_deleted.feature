@@ -12,7 +12,6 @@ Feature: the branch to delete has a deleted tracking branch
       | old    | local, origin | old commit   |
       | other  | local, origin | other commit |
     And origin deletes the "old" branch
-    And an uncommitted file
     And the current branch is "old" and the previous branch is "other"
     When I run "git-town delete"
 
@@ -48,5 +47,4 @@ Feature: the branch to delete has a deleted tracking branch
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, origin | other commit |
-    And the uncommitted file still exists
     And the initial branches and lineage exist now

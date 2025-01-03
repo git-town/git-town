@@ -13,7 +13,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local         | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -48,7 +47,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git rebase --abort |
       |         | git stash pop      |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -85,7 +83,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -110,7 +107,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

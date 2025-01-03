@@ -6,7 +6,6 @@ Feature: observe the current contribution branch
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
     And the current branch is "contribution"
-    And an uncommitted file
     When I run "git-town observe"
 
   Scenario: result
@@ -17,7 +16,6 @@ Feature: observe the current contribution branch
       """
     And branch "contribution" now has type "observed"
     And there are now no contribution branches
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -29,4 +27,3 @@ Feature: observe the current contribution branch
     And the current branch is still "contribution"
     And branch "contribution" now has type "contribution"
     And there are now no observed branches
-    And the uncommitted file still exists

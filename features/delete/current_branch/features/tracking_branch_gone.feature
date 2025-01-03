@@ -13,7 +13,6 @@ Feature: deleting a branch whose tracking branch is gone
       | other   | local, origin | other commit   |
     And origin deletes the "current" branch
     And the current branch is "current" and the previous branch is "other"
-    And an uncommitted file
     When I run "git-town delete"
 
   Scenario: result
@@ -44,7 +43,6 @@ Feature: deleting a branch whose tracking branch is gone
       |         | git checkout current                                                     |
       | current | git reset --soft HEAD~1                                                  |
     And the current branch is now "current"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local         | current commit |

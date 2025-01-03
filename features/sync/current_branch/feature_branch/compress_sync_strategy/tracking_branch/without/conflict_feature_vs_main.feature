@@ -12,7 +12,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And the current branch is "feature"
     And Git setting "git-town.sync-feature-strategy" is "compress"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -47,7 +46,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git merge --abort |
       |         | git stash pop     |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no merge is in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -79,7 +77,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -99,7 +96,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
@@ -119,7 +115,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

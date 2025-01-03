@@ -10,7 +10,6 @@ Feature: auto-push new branches
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And an uncommitted file
     When I run "git-town prepend new"
 
   Scenario: result
@@ -29,7 +28,6 @@ Feature: auto-push new branches
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -44,4 +42,3 @@ Feature: auto-push new branches
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now
-    And the uncommitted file still exists

@@ -12,7 +12,6 @@ Feature: hack a new branch while the main branch is active in another worktree
       |          | local    | local main commit  |
       | existing | local    | existing commit    |
     And branch "main" is active in another worktree
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -23,7 +22,6 @@ Feature: hack a new branch while the main branch is active in another worktree
       |          | git checkout -b new main    |
       | new      | git stash pop               |
     And the current branch is now "new"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH   | LOCATION        | MESSAGE            |
       | main     | origin          | origin main commit |
@@ -50,4 +48,3 @@ Feature: hack a new branch while the main branch is active in another worktree
       |          | worktree | local main commit  |
       | existing | local    | existing commit    |
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

@@ -11,7 +11,6 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And the current branch is "current" and the previous branch is "other"
-    And an uncommitted file
 
   Scenario: set to "false"
     Given Git setting "git-town.push-hook" is "false"
@@ -24,7 +23,6 @@ Feature: undo deleting the current feature branch with disabled push-hook
       |         | git checkout current                                                      |
       | current | git reset --soft HEAD~1                                                   |
     And the current branch is now "current"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -39,6 +37,5 @@ Feature: undo deleting the current feature branch with disabled push-hook
       |         | git checkout current                                                     |
       | current | git reset --soft HEAD~1                                                  |
     And the current branch is now "current"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

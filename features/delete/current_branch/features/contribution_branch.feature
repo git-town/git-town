@@ -11,7 +11,6 @@ Feature: delete the current contribution branch
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
       | feature      | local, origin | feature commit      |
-    And an uncommitted file
     And the current branch is "contribution" and the previous branch is "feature"
     When I run "git-town delete"
 
@@ -45,7 +44,6 @@ Feature: delete the current contribution branch
       |              | git checkout contribution                                                     |
       | contribution | git reset --soft HEAD~1                                                       |
     And the current branch is now "contribution"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"

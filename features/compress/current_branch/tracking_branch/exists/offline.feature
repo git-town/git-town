@@ -11,7 +11,6 @@ Feature: compress the commits in offline mode
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
-    And an uncommitted file
     When I run "git-town compress"
 
   Scenario: result
@@ -30,7 +29,6 @@ Feature: compress the commits in offline mode
       |         |          | commit 2 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -43,4 +41,3 @@ Feature: compress the commits in offline mode
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

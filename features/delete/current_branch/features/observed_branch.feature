@@ -11,7 +11,6 @@ Feature: delete the current observed branch
       | feature  | local, origin | feature commit  |
       | observed | local, origin | observed commit |
     And the current branch is "observed"
-    And an uncommitted file
     And the current branch is "observed" and the previous branch is "feature"
     When I run "git-town delete"
 
@@ -45,7 +44,6 @@ Feature: delete the current observed branch
       |          | git checkout observed                                                     |
       | observed | git reset --soft HEAD~1                                                   |
     And the current branch is now "observed"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "observed" now has type "observed"

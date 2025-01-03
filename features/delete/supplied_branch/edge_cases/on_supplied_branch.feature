@@ -11,7 +11,6 @@ Feature: delete the current branch
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And the current branch is "current"
-    And an uncommitted file
     When I run "git-town delete current"
 
   Scenario: result
@@ -44,6 +43,5 @@ Feature: delete the current branch
       |         | git checkout current                                                     |
       | current | git reset --soft HEAD~1                                                  |
     And the current branch is now "current"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

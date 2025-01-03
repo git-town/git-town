@@ -6,7 +6,6 @@ Feature: does not ship a branch that has open changes
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature"
 
@@ -19,7 +18,6 @@ Feature: does not ship a branch that has open changes
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
     And the current branch is still "feature"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

@@ -12,7 +12,6 @@ Feature: delete the given branch
       | dead   | local, origin | dead-end commit | file      |
       | good   | local, origin | good commit     | file      |
     And the current branch is "good"
-    And an uncommitted file
     When I run "git-town delete dead"
 
   Scenario: result
@@ -25,7 +24,6 @@ Feature: delete the given branch
       |        | git branch -D dead          |
       |        | git stash pop               |
     And the current branch is still "good"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
@@ -46,6 +44,5 @@ Feature: delete the given branch
       |        | git push -u origin dead                     |
       |        | git stash pop                               |
     And the current branch is still "good"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

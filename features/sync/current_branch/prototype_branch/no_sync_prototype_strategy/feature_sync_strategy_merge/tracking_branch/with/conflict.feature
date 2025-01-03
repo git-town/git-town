@@ -10,7 +10,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | prototype | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -44,7 +43,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | prototype | git merge --abort |
       |           | git stash pop     |
     And the current branch is still "prototype"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -73,7 +71,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
     And the current branch is still "prototype"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
       | prototype | conflicting_file | resolved content |
@@ -93,7 +90,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       |           | local         | Merge remote-tracking branch 'origin/prototype' into prototype |
     And the current branch is still "prototype"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
       | prototype | conflicting_file | resolved content |

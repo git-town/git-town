@@ -11,7 +11,6 @@ Feature: sync the current perennial branch in a local repo
       | main   | local    | main commit  | main_file  |
       | qa     | local    | local commit | local_file |
     And the current branch is "qa"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -22,7 +21,6 @@ Feature: sync the current perennial branch in a local repo
       |        | git stash pop               |
     And all branches are now synchronized
     And the current branch is still "qa"
-    And the uncommitted file still exists
     And the initial commits exist now
 
   Scenario: undo

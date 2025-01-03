@@ -17,7 +17,6 @@ Feature: does not compress an active observed branch
       | child  | local, origin | child 1 | child_1   | child 1      |
       |        |               | child 2 | child_2   | child 2      |
     And the current branch is "observed"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
@@ -41,7 +40,6 @@ Feature: does not compress an active observed branch
       |          |               | observed 2 |
     And file "observed_1" still has content "observed 1"
     And file "observed_2" still has content "observed 2"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -57,4 +55,3 @@ Feature: does not compress an active observed branch
     And the current branch is still "observed"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

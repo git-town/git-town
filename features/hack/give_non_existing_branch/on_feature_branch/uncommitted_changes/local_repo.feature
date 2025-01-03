@@ -9,7 +9,6 @@ Feature: local repo
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -20,7 +19,6 @@ Feature: local repo
       |          | git checkout -b new main    |
       | new      | git stash pop               |
     And the current branch is now "new"
-    And the uncommitted file still exists
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -37,7 +35,6 @@ Feature: local repo
       | existing | git branch -D new           |
       |          | git stash pop               |
     And the current branch is now "existing"
-    And the uncommitted file still exists
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |

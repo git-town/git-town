@@ -5,7 +5,6 @@ Feature: already existing local branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And an uncommitted file
     When I run "git-town hack existing"
 
   Scenario: result

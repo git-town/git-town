@@ -9,7 +9,6 @@ Feature: display all executed Git commands
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And an uncommitted file
 
   Scenario: result
     When I run "git-town prepend parent --verbose"

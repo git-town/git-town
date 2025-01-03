@@ -10,7 +10,6 @@ Feature: dry-run hacking a new feature branch
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And an uncommitted file
     When I run "git-town hack new --dry-run"
 
   Scenario: result
@@ -21,7 +20,6 @@ Feature: dry-run hacking a new feature branch
       |          | git checkout -b new main    |
       | new      | git stash pop               |
     And the current branch is still "existing"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -31,4 +29,3 @@ Feature: dry-run hacking a new feature branch
     And the current branch is still "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

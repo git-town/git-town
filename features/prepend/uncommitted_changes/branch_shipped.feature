@@ -12,7 +12,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | local, origin | child commit  |
     And origin ships the "child" branch using the "squash-merge" ship-strategy
     And the current branch is "child"
-    And an uncommitted file
     When I run "git-town prepend new"
 
   Scenario: result
@@ -32,7 +31,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | new    |
       | new    | parent |
       | parent | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,4 +47,3 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | local      | main, child, parent |
       | origin     | main, parent        |
     And the initial lineage exists now
-    And the uncommitted file still exists

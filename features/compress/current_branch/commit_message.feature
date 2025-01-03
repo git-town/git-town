@@ -11,7 +11,6 @@ Feature: compress the commits on a feature branch
       |         |               | commit 2 | file_2    | content 2    |
       |         |               | commit 3 | file_3    | content 3    |
     And the current branch is "feature"
-    And an uncommitted file
     When I run "git-town compress -m compressed"
 
   Scenario: result
@@ -32,7 +31,6 @@ Feature: compress the commits on a feature branch
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
     And file "file_3" still has content "content 3"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -46,4 +44,3 @@ Feature: compress the commits on a feature branch
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

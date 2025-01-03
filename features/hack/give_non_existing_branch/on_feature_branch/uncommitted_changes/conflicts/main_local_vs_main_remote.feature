@@ -10,7 +10,6 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -26,7 +25,6 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

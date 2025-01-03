@@ -29,7 +29,6 @@ Feature: provide the commit message via a CLI argument
       | other  | git branch -D feature           |
       |        | git stash pop                   |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |

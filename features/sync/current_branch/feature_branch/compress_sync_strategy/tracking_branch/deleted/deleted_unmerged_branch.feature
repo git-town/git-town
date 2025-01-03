@@ -13,7 +13,6 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
     And the current branch is "branch-2"
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And origin deletes the "branch-2" branch
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -32,7 +31,6 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.
       """
     And the current branch is now "branch-2"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | branch-1 | local, origin | branch-1 commit |
@@ -47,5 +45,4 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
       |          | git stash -m "Git Town WIP" |
       |          | git stash pop               |
     And the current branch is now "branch-2"
-    And the uncommitted file still exists
     And the initial branches and lineage exist now

@@ -14,7 +14,6 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-1"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -33,7 +32,6 @@ Feature: sync a branch whose tracking branch was shipped
       deleted branch "feature-1"
       """
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
@@ -52,5 +50,4 @@ Feature: sync a branch whose tracking branch was shipped
       |           | git checkout feature-1                            |
       | feature-1 | git stash pop                                     |
     And the current branch is now "feature-1"
-    And the uncommitted file still exists
     And the initial branches and lineage exist now

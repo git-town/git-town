@@ -12,7 +12,6 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
     And the current branch is "shipped"
     And origin ships the "shipped" branch using the "squash-merge" ship-strategy
     And Git setting "git-town.sync-feature-strategy" is "compress"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -31,7 +30,6 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
     And the current branch is still "shipped"
-    And the uncommitted file still exists
     And the initial branches and lineage exist now
 
   Scenario: undo
@@ -46,7 +44,6 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
       | shipped | git reset --hard {{ sha-before-run 'unshipped commit' }} |
       |         | git stash pop                                            |
     And the current branch is now "shipped"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |

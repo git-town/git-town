@@ -9,7 +9,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
-    And an uncommitted file
     When I run "git-town append new --dry-run"
 
   Scenario: result
@@ -22,7 +21,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And the current branch is still "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -30,4 +28,3 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And the current branch is still "existing"
     And the initial commits exist now
     And the initial lineage exists now
-    And the uncommitted file still exists

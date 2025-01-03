@@ -11,7 +11,6 @@ Feature: dry-run deleting the current feature branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
-    And an uncommitted file
     And the current branch is "current" and the previous branch is "other"
     When I run "git-town delete --dry-run"
 
@@ -25,7 +24,6 @@ Feature: dry-run deleting the current feature branch
       |         | git checkout other                                        |
       | other   | git branch -D current                                     |
     And the current branch is still "current"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -33,6 +31,5 @@ Feature: dry-run deleting the current feature branch
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is now "current"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

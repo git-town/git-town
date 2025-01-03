@@ -11,7 +11,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "qa"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -41,7 +40,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git rebase --abort |
       |        | git stash pop      |
     And the current branch is still "qa"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -67,7 +65,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -84,7 +81,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

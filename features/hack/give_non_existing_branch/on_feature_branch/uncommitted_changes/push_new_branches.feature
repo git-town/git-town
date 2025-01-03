@@ -7,7 +7,6 @@ Feature: auto-push the new branch
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -23,7 +22,6 @@ Feature: auto-push the new branch
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -38,4 +36,3 @@ Feature: auto-push the new branch
     And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

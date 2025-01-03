@@ -6,7 +6,6 @@ Feature: make another remote feature branch an observed branch
       | NAME           | TYPE    | PARENT | LOCATIONS |
       | remote-feature | feature | main   | origin    |
     And I run "git fetch"
-    And an uncommitted file
     When I run "git-town observe remote-feature"
 
   Scenario: result
@@ -19,7 +18,6 @@ Feature: make another remote feature branch an observed branch
       """
     And the current branch is now "remote-feature"
     And branch "remote-feature" now has type "observed"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -32,4 +30,3 @@ Feature: make another remote feature branch an observed branch
       |                | git stash pop                |
     And the current branch is now "main"
     And there are now no observed branches
-    And the uncommitted file still exists
