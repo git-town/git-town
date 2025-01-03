@@ -65,13 +65,10 @@ Feature: compress the commits on a feature branch verbosely
       |         | git remote get-url origin                          |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |
-      | feature | git add -A                                         |
-      |         | git stash -m "Git Town WIP"                        |
-      | <none>  | git rev-parse --short HEAD                         |
+      |         | git rev-parse --short HEAD                         |
       | feature | git reset --hard {{ sha 'commit 3' }}              |
       | <none>  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
-      | <none>  | git stash list                                     |
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
