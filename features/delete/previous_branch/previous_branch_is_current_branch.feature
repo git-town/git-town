@@ -16,12 +16,10 @@ Feature: deleting a branch without a useful previous branch setting
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                   |
-      | current | git fetch --prune --tags                                  |
-      |         | git add -A                                                |
-      |         | git commit -m "Committing open changes on deleted branch" |
-      |         | git checkout main                                         |
-      | main    | git branch -D current                                     |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git checkout main        |
+      | main    | git branch -D current    |
     And the current branch is now "main"
     And no uncommitted files exist now
     And the branches are now
