@@ -1,5 +1,8 @@
 {
   "type": "module",
+  "scripts": {
+    "test": "node --test './**/*.test.js'"
+  },
   "dependencies": {
     "gherkin-lint": "4.2.4",
     "text-runner": "5.0.2",
