@@ -15,11 +15,9 @@ Feature: in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                   |
-      | feature | git add -A                                                |
-      |         | git commit -m "Committing open changes on deleted branch" |
-      |         | git checkout main                                         |
-      | main    | git branch -D feature                                     |
+      | BRANCH  | COMMAND               |
+      | feature | git checkout main     |
+      | main    | git branch -D feature |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY | BRANCHES    |
@@ -34,10 +32,9 @@ Feature: in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                  |
-      | main    | git branch feature {{ sha 'Committing open changes on deleted branch' }} |
-      |         | git checkout feature                                                     |
-      | feature | git reset --soft HEAD~1                                                  |
+      | BRANCH | COMMAND                                       |
+      | main   | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout feature                          |
     And the current branch is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
