@@ -173,35 +173,35 @@ type FirstStringArgFromFuncCallExtractor struct {
 	FuncMatcher ExprMatcher
 }
 
-func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string, Result) {
+func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string, Result, error) {
 	// Check that this is a <Fun>(<Call>) expression.
 	call, ok := expr.(*ast.CallExpr)
 	if !ok {
-		return "", stringResult("not an ast.CallExpr")
+		return "", stringResult("not an ast.CallExpr"), nil
 	}
 	// Check that the call.Fun matches the FuncMatcher.
 	if r := self.FuncMatcher.Match(call.Fun); !r.Success() {
-		return "", fmtResult("call.Fun doesn't match: %v", r.FailureReason())
+		return "", fmtResult("call.Fun doesn't match: %v", r.FailureReason()), nil
 	}
 	// Check call.Args.
 	if len(call.Args) < 1 {
-		return "", fmtResult("len(call.Args) == %d, want at least 1", len(call.Args))
+		return "", fmtResult("len(call.Args) == %d, want at least 1", len(call.Args)), nil
 	}
 	firstArg := call.Args[0]
 	// Check the first arg type.
 	lit, ok := firstArg.(*ast.BasicLit)
 	if !ok {
-		return "", stringResult("the first call argument is not an ast.BasicLit")
+		return "", stringResult("the first call argument is not an ast.BasicLit"), nil
 	}
 	if lit.Kind != token.STRING {
-		return "", stringResult("the first call argument is not a STRING ast.BasicLit")
+		return "", stringResult("the first call argument is not a STRING ast.BasicLit"), nil
 	}
 	// The literal as is in code, including the quotes.
 	quotedLiteral := lit.Value
 	// https://go-review.googlesource.com/c/go/+/244960
 	literal, err := strconv.Unquote(quotedLiteral)
 	if err != nil {
-		return "", fmtResult("the first call argument is an invalid string literal: %v", err)
+		return "", okResult, fmt.Errorf("the first call argument is an invalid string literal: %v", err)
 	}
-	return literal, okResult
+	return literal, okResult, nil
 }
