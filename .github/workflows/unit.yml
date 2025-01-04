@@ -15,3 +15,5 @@ jobs:
         with:
           go-version-file: go.mod
       - run: make unit-race
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
