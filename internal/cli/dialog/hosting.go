@@ -29,11 +29,11 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 		},
 		{
 			Data: Some(configdomain.HostingPlatformBitbucket),
-			Text: "BitBucket",
+			Text: "Bitbucket",
 		},
 		{
 			Data: Some(configdomain.HostingPlatformBitbucketDatacenter),
-			Text: "BitBucket-Datacenter",
+			Text: "Bitbucket Data Center",
 		},
 		{
 			Data: Some(configdomain.HostingPlatformGitea),
