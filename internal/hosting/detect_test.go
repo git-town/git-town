@@ -31,7 +31,7 @@ func TestDetect(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("custom URL, override to BitBucket Datacenter", func(t *testing.T) {
+	t.Run("custom URL, override to Bitbucket Data Center", func(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
