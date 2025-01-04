@@ -13,15 +13,12 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       | main    | local         | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | remote feature commit      | feature_file     | feature content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git push                                |
@@ -46,9 +43,7 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -77,11 +72,9 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -98,11 +91,9 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git reset --soft main                      |
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
-      |         | git stash pop                              |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

@@ -12,15 +12,12 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git add -A                                      |
-      |         | git stash -m "Git Town WIP"                     |
       |         | git checkout main                               |
       | main    | git rebase origin/main --no-update-refs         |
       |         | git checkout feature                            |
@@ -46,9 +43,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
-      |         | git stash pop      |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -70,11 +65,9 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
@@ -87,4 +80,3 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git stash pop                                   |

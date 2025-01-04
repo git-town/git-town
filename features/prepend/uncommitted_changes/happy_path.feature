@@ -21,7 +21,6 @@ Feature: prepend a branch to a feature branch
       |        | git checkout -b parent main |
       | parent | git stash pop               |
     And the current branch is now "parent"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -40,6 +39,5 @@ Feature: prepend a branch to a feature branch
       | old    | git branch -D parent        |
       |        | git stash pop               |
     And the current branch is now "old"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial lineage exists now

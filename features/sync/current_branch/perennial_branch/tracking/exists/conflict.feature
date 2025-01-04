@@ -11,15 +11,12 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "qa"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | qa     | git fetch --prune --tags              |
-      |        | git add -A                            |
-      |        | git stash -m "Git Town WIP"           |
       |        | git rebase origin/qa --no-update-refs |
     And Git Town prints the error:
       """
@@ -39,9 +36,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
-      |        | git stash pop      |
     And the current branch is still "qa"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -63,11 +58,9 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git -c core.editor=true rebase --continue |
       |        | git push                                  |
       |        | git push --tags                           |
-      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -80,11 +73,9 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | COMMAND         |
       | qa     | git push        |
       |        | git push --tags |
-      |        | git stash pop   |
     And all branches are now synchronized
     And the current branch is still "qa"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

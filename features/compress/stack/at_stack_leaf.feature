@@ -27,15 +27,12 @@ Feature: compress the commits on an entire stack when at the stack root
       |        |               | gamma 2 | gamma_2   | gamma 2      |
       |        |               | gamma 3 | gamma_3   | gamma 3      |
     And the current branch is "gamma"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | gamma  | git fetch --prune --tags                        |
-      |        | git add -A                                      |
-      |        | git stash -m "Git Town WIP"                     |
       |        | git checkout alpha                              |
       | alpha  | git reset --soft main                           |
       |        | git commit -m "alpha 1"                         |
@@ -48,7 +45,6 @@ Feature: compress the commits on an entire stack when at the stack root
       | gamma  | git reset --soft beta                           |
       |        | git commit -m "gamma 1"                         |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "gamma"
     And these commits exist now
@@ -65,15 +61,12 @@ Feature: compress the commits on an entire stack when at the stack root
     And file "gamma_1" still has content "gamma 1"
     And file "gamma_2" still has content "gamma 2"
     And file "gamma_3" still has content "gamma 3"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | gamma  | git add -A                                      |
-      |        | git stash -m "Git Town WIP"                     |
-      |        | git checkout alpha                              |
+      | gamma  | git checkout alpha                              |
       | alpha  | git reset --hard {{ sha 'alpha 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
@@ -82,8 +75,6 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git checkout gamma                              |
       | gamma  | git reset --hard {{ sha 'gamma 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
     And the current branch is still "gamma"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

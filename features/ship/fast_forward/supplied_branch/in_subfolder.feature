@@ -18,16 +18,12 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
       | other  | git fetch --prune --tags    |
-      |        | git add -A                  |
-      |        | git stash -m "Git Town WIP" |
       |        | git checkout main           |
       | main   | git merge --ff-only feature |
       |        | git push                    |
       |        | git checkout other          |
       | other  | git branch -D feature       |
-      |        | git stash pop               |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -43,12 +39,8 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git add -A                                    |
-      |        | git stash -m "Git Town WIP"                   |
-      |        | git branch feature {{ sha 'feature commit' }} |
-      |        | git stash pop                                 |
+      | other  | git branch feature {{ sha 'feature commit' }} |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |

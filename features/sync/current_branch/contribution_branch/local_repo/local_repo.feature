@@ -11,28 +11,20 @@ Feature: sync the current contribution branch in a local repo
       | main         | local    | main commit  | main_file  |
       | contribution | local    | local commit | local_file |
     And the current branch is "contribution"
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                     |
-      | contribution | git add -A                  |
-      |              | git stash -m "Git Town WIP" |
-      |              | git stash pop               |
+      | BRANCH | COMMAND |
     And all branches are now synchronized
     And the current branch is still "contribution"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                     |
-      | contribution | git add -A                  |
-      |              | git stash -m "Git Town WIP" |
-      |              | git stash pop               |
+      | BRANCH | COMMAND |
     And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

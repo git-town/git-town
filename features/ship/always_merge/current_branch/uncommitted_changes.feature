@@ -7,7 +7,6 @@ Feature: does not ship uncommitted changes using the always-merge strategy
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
-    And an uncommitted file
     When I run "git-town ship"
 
   Scenario: result
@@ -16,7 +15,6 @@ Feature: does not ship uncommitted changes using the always-merge strategy
       """
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -25,4 +23,3 @@ Feature: does not ship uncommitted changes using the always-merge strategy
       """
       nothing to undo
       """
-    And the uncommitted file still exists

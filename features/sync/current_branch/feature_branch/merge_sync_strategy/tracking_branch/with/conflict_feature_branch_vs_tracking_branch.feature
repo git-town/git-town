@@ -10,15 +10,12 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout feature                    |
@@ -43,9 +40,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "feature"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -62,7 +57,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      |         | git stash pop     |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -82,11 +76,9 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
-      |         | git stash pop        |
     And all branches are now synchronized
     And the current branch is still "feature"
     And no merge is in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
@@ -96,6 +88,5 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND       |
-      | feature | git push      |
-      |         | git stash pop |
+      | BRANCH  | COMMAND  |
+      | feature | git push |

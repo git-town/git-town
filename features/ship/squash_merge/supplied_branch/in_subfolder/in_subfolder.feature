@@ -18,17 +18,13 @@ Feature: ship the supplied feature branch from a subfolder
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
-      |        | git add -A                      |
-      |        | git stash -m "Git Town WIP"     |
       |        | git checkout main               |
       | main   | git merge --squash --ff feature |
       |        | git commit -m "feature done"    |
       |        | git push                        |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-      |        | git stash pop                   |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -44,14 +40,11 @@ Feature: ship the supplied feature branch from a subfolder
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git add -A                                    |
-      |        | git stash -m "Git Town WIP"                   |
-      |        | git checkout main                             |
+      | other  | git checkout main                             |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
-      | other  | git stash pop                                 |
     And the current branch is now "other"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

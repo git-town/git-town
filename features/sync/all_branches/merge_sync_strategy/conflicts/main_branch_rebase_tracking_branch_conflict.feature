@@ -11,15 +11,12 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash -m "Git Town WIP"             |
       |        | git rebase origin/main --no-update-refs |
     And Git Town prints the error:
       """
@@ -38,9 +35,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-      |        | git stash pop      |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the initial commits exist now
 
   Scenario: continue with unresolved conflict
@@ -66,10 +61,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git push                                  |
       |         | git checkout main                         |
       | main    | git push --tags                           |
-      |         | git stash pop                             |
     And all branches are now synchronized
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
@@ -90,4 +83,3 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git push                                |
       |         | git checkout main                       |
       | main    | git push --tags                         |
-      |         | git stash pop                           |

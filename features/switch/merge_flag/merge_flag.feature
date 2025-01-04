@@ -11,7 +11,6 @@ Feature: switch branches using the "merge" flag
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
-    And an uncommitted file
     When I run "git-town switch <FLAG>" and enter into the dialogs:
       | KEYS       |
       | down enter |

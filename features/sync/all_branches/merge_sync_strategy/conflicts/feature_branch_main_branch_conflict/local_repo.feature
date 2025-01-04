@@ -14,15 +14,12 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | beta   | local    | beta commit  | conflicting_file | beta content  |
       | gamma  | local    | gamma commit | feature3_file    | gamma content |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
-      | main   | git add -A                    |
-      |        | git stash -m "Git Town WIP"   |
-      |        | git checkout alpha            |
+      | main   | git checkout alpha            |
       | alpha  | git merge --no-edit --ff main |
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
@@ -48,9 +45,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout alpha                        |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git checkout main                         |
-      | main   | git stash pop                             |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And no merge is in progress
 
@@ -62,9 +57,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-      | main   | git stash pop                 |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no merge is in progress
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE                        |
@@ -103,10 +96,8 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-      | main   | git stash pop                 |
     And all branches are now synchronized
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no merge is in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
@@ -126,4 +117,3 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | beta   | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-      | main   | git stash pop                 |

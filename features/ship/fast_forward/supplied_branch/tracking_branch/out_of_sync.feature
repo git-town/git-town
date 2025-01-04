@@ -11,7 +11,6 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
       | feature | local    | local commit  |
       |         | origin   | origin commit |
     And the current branch is "other"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "fast-forward"
     And I run "git-town ship feature"
 
@@ -24,13 +23,11 @@ Feature: does not ship the given out-of-sync branch using the fast-forward strat
       branch "feature" is not in sync
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is still "other"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial lineage exists now

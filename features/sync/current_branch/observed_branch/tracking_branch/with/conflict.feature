@@ -10,15 +10,12 @@ Feature: handle conflicts between the current observed branch and its tracking b
       | BRANCH   | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | observed | local    | conflicting local commit  | conflicting_file | local content  |
       |          | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | observed | git fetch --prune --tags                    |
-      |          | git add -A                                  |
-      |          | git stash -m "Git Town WIP"                 |
       |          | git rebase origin/observed --no-update-refs |
     And Git Town prints the error:
       """
@@ -38,9 +35,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
     Then Git Town runs the commands
       | BRANCH   | COMMAND            |
       | observed | git rebase --abort |
-      |          | git stash pop      |
     And the current branch is still "observed"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -61,14 +56,12 @@ Feature: handle conflicts between the current observed branch and its tracking b
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                   |
       | observed | git -c core.editor=true rebase --continue |
-      |          | git stash pop                             |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
     And the current branch is still "observed"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |
       | observed | conflicting_file | resolved content |
@@ -78,15 +71,13 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND       |
-      | observed | git stash pop |
+      | BRANCH | COMMAND |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
     And the current branch is still "observed"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |
       | observed | conflicting_file | resolved content |

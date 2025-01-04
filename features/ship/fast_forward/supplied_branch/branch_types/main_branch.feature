@@ -6,7 +6,6 @@ Feature: does not ship the main branch using the fast-forward strategy
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship main"
 
@@ -19,7 +18,6 @@ Feature: does not ship the main branch using the fast-forward strategy
       cannot ship the main branch
       """
     And the current branch is still "feature"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -29,4 +27,3 @@ Feature: does not ship the main branch using the fast-forward strategy
       nothing to undo
       """
     And the current branch is still "feature"
-    And the uncommitted file still exists

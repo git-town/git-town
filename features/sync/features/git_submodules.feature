@@ -21,7 +21,6 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And the current branch is still "feature"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

@@ -10,15 +10,12 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | contribution | local    | conflicting local commit  | conflicting_file | local content  |
       |              | origin   | conflicting origin commit | conflicting_file | origin content |
-    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                         |
       | contribution | git fetch --prune --tags                        |
-      |              | git add -A                                      |
-      |              | git stash -m "Git Town WIP"                     |
       |              | git rebase origin/contribution --no-update-refs |
     And Git Town prints the error:
       """
@@ -38,9 +35,7 @@ Feature: handle conflicts between the current contribution branch and its tracki
     Then Git Town runs the commands
       | BRANCH       | COMMAND            |
       | contribution | git rebase --abort |
-      |              | git stash pop      |
     And the current branch is still "contribution"
-    And the uncommitted file still exists
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -62,14 +57,12 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | COMMAND                                   |
       | contribution | git -c core.editor=true rebase --continue |
       |              | git push                                  |
-      |              | git stash pop                             |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
     And the current branch is still "contribution"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
       | contribution | conflicting_file | resolved content |
@@ -79,16 +72,14 @@ Feature: handle conflicts between the current contribution branch and its tracki
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH       | COMMAND       |
-      | contribution | git push      |
-      |              | git stash pop |
+      | BRANCH       | COMMAND  |
+      | contribution | git push |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
     And the current branch is still "contribution"
     And no rebase is now in progress
-    And the uncommitted file still exists
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
       | contribution | conflicting_file | resolved content |

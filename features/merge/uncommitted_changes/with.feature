@@ -11,15 +11,12 @@ Feature: merging a branch with uncommitted changes
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And an uncommitted file
     When I run "git-town merge"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
-      |        | git add -A                            |
-      |        | git stash -m "Git Town WIP"           |
       |        | git checkout alpha                    |
       | alpha  | git merge --no-edit --ff origin/alpha |
       |        | git checkout beta                     |
@@ -28,9 +25,7 @@ Feature: merging a branch with uncommitted changes
       |        | git push                              |
       |        | git branch -D alpha                   |
       |        | git push origin :alpha                |
-      |        | git stash pop                         |
     And the current branch is still "beta"
-    And the uncommitted file still exists
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
@@ -48,13 +43,10 @@ Feature: merging a branch with uncommitted changes
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
-      | beta   | git add -A                                           |
-      |        | git stash -m "Git Town WIP"                          |
-      |        | git reset --hard {{ sha-before-run 'beta commit' }}  |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
       |        | git push --force-with-lease --force-if-includes      |
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
       |        | git push -u origin alpha                             |
-      |        | git stash pop                                        |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

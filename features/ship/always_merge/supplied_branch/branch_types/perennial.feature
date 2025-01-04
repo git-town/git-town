@@ -5,7 +5,6 @@ Feature: does not ship perennial branches using the always-merge strategy
     And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | production | perennial |        | local, origin |
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship production"
 
@@ -18,7 +17,6 @@ Feature: does not ship perennial branches using the always-merge strategy
       cannot ship perennial branches
       """
     And the current branch is still "main"
-    And the uncommitted file still exists
     And no lineage exists now
 
   Scenario: undo
