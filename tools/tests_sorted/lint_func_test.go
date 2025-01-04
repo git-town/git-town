@@ -1,14 +1,100 @@
 package main
 
 import (
+	"fmt"
 	"go/ast"
 	"go/parser"
+	"go/token"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test/must"
 )
 
+func parseFuncDecl(t *testing.T, fset *token.FileSet, funcText string) *ast.FuncDecl {
+	t.Helper()
+	// Package declaration is mandatory.
+	// Concatenate the package and the function declaration with ';' to preserve
+	// line numbers in any compilation errors.
+	funcFile := fmt.Sprintf("package test; %s", funcText)
+	file, err := parser.ParseFile(fset, "test.go", funcFile, 0)
+	must.NoError(t, err)
+	must.SliceLen(t, 1, file.Decls) // We expect a single function.
+	return file.Decls[0].(*ast.FuncDecl)
+}
+
+// ignoreIssuePosition returns a must.Setting that causes issues to be compared
+// without taking issue.position into account.
+func ignoreIssuePosition() must.Setting {
+	return must.Cmp(cmp.Comparer(func(a, b issue) bool {
+		return cmp.Equal(a.expected, b.expected)
+	}))
+}
+
+func TestLintFuncDecl(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		desc       string
+		funcText   string
+		wantIssues Issues
+	}{
+		{
+			desc: "IgnoresOtherCalls",
+			funcText: `
+				func TestFoo(t *testing.T) {
+					t.Run("Bar")
+					foo.Run("Another")
+					t.NotRun("Unsorted")
+					t.Run("Sum"+"Call")
+					t.Run("Foo")
+				}`,
+			wantIssues: nil,
+		},
+		{
+			desc: "RightOrder",
+			funcText: `
+				func TestFoo(t *testing.T) {
+					t.Run("Bar")
+					t.Run("Foo")
+				}`,
+			wantIssues: nil,
+		},
+		{
+			desc: "WrongOrder",
+			funcText: `
+				func TestFoo(t *testing.T) {
+					t.Run("Foo")
+					t.Run("Bar")
+				}`,
+			wantIssues: Issues{
+				{
+					expected: []string{
+						"Bar",
+						"Foo",
+					},
+				},
+			},
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			fset := token.NewFileSet()
+			funcDecl := parseFuncDecl(t, fset, tc.funcText)
+
+			issues, err := lintFuncDecl(funcDecl, fset)
+
+			must.NoError(t, err)
+			must.Eq(t, tc.wantIssues, issues, ignoreIssuePosition())
+			// Defence in-depth. Verify that ignoreIssuePosition doesn't somehow entirely
+			// break the comparison. must.SliceLen check must be after must.Eq to
+			// preserve higher quality error messages from must.Eq.
+			must.SliceLen(t, len(tc.wantIssues), issues)
+		})
+	}
+}
+
 func funcType(t *testing.T, funcText string) *ast.FuncType {
+	t.Helper()
 	expr, err := parser.ParseExpr(funcText)
 	must.NoError(t, err)
 	return expr.(*ast.FuncType)
@@ -55,6 +141,7 @@ func TestIsTestFunc(t *testing.T) {
 }
 
 func funcStatements(t *testing.T, funcText string) []ast.Stmt {
+	t.Helper()
 	expr, err := parser.ParseExpr(funcText)
 	must.NoError(t, err)
 	funcLit := expr.(*ast.FuncLit)
