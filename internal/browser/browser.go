@@ -3,6 +3,7 @@ package browser
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/git-town/git-town/v17/internal/messages"
@@ -48,6 +49,9 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		if err == nil && len(output) > 0 {
 			return Some(browserCommand)
 		}
+	}
+	if browser := os.Getenv("BROWSER"); browser != "" {
+		return Some(browser)
 	}
 	return None[string]()
 }
