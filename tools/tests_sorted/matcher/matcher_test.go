@@ -37,18 +37,12 @@ func TestPositionalFields(t *testing.T) {
 	must.NoError(t, err)
 	funcType := expr.(*ast.FuncType)
 
-	var positionalIndices []int
-	var positionalFields []PositionalField
-	for i, field := range PositionalFields(funcType.Params) {
-		positionalIndices = append(positionalIndices, i)
-		positionalFields = append(positionalFields, field)
-	}
+	posFields := PositionalFields(funcType.Params)
 
-	must.Eq(t, []int{0, 1, 2}, positionalIndices)
-	must.Eq(t, len(positionalFields), 3)
-	must.Eq(t, "a", positionalFields[0].Name.Name)
-	must.Eq(t, "b", positionalFields[1].Name.Name)
-	must.Eq(t, "c", positionalFields[2].Name.Name)
+	must.Eq(t, len(posFields), 3)
+	must.Eq(t, "a", posFields[0].Name.Name)
+	must.Eq(t, "b", posFields[1].Name.Name)
+	must.Eq(t, "c", posFields[2].Name.Name)
 }
 
 func TestIdentSelectorMatcher(t *testing.T) {
