@@ -1,4 +1,6 @@
 // Package matcher declarative go/ast matchers.
+//
+//nolint:ireturn // Returning Result instead of a private struct.
 package matcher
 
 import (
@@ -193,7 +195,7 @@ func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string,
 	// https://go-review.googlesource.com/c/go/+/244960
 	literal, err := strconv.Unquote(quotedLiteral)
 	if err != nil {
-		return "", okResult, fmt.Errorf("the first call argument is an invalid string literal: %v", err)
+		return "", okResult, fmt.Errorf("the first call argument is an invalid string literal: %w", err)
 	}
 	return literal, okResult, nil
 }
