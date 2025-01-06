@@ -114,6 +114,10 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err != nil || exit {
 		return err
 	}
+	err = validateSyncData(data)
+	if err != nil {
+		return err
+	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	runProgram := NewMutable(&program.Program{})
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
@@ -376,4 +380,11 @@ func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitd
 		}
 	}
 	return result, nil
+}
+
+func validateSyncData(data syncData) error {
+	// ensure any branch that uses the ff-only sync strategy does not have unpushed local commits
+	perennialBranchesToSync := data.config.BranchesOfType(configdomain.BranchTypePerennialBranch, data.branchesToSync)
+	data.branchInfos[0].SyncStatus
+	return nil
 }
