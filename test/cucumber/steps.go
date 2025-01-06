@@ -1511,22 +1511,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^the uncommitted file is stashed$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		uncommittedFiles := devRepo.UncommittedFiles()
-		for _, ucf := range uncommittedFiles {
-			if ucf == state.uncommittedFileName.GetOrPanic() {
-				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
-			}
-		}
-		stashSize := asserts.NoError1(devRepo.StashSize(devRepo.TestRunner))
-		if stashSize != 1 {
-			return fmt.Errorf("expected 1 stash but found %d", stashSize)
-		}
-		return nil
-	})
-
 	sc.Step(`^the uncommitted file still exists$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
