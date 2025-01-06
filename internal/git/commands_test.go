@@ -1016,7 +1016,7 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
 		})
 
-		t.Run("complex example", func(t *testing.T) {
+		t.Run("complex example 2", func(t *testing.T) {
 			give := `
   main                      0a6a473f1f91a47c1d09c21a9042159fa173a9ae [origin/main] initial commit
 * production                0a6a473f1f91a47c1d09c21a9042159fa173a9ae [origin/production: behind 1] initial commit
