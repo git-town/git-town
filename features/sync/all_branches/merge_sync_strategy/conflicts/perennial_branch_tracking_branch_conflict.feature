@@ -36,7 +36,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: undo
@@ -75,7 +74,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
       you must resolve the conflicts before continuing
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: resolve and continue

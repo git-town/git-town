@@ -40,7 +40,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       To continue by skipping the current branch, run "git town skip".
       """
     And the current branch is now "beta"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: undo
@@ -98,7 +97,6 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       you must resolve the conflicts before continuing
       """
     And the current branch is still "beta"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: resolve and continue

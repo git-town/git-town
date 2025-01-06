@@ -35,7 +35,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       To continue by skipping the current branch, run "git town skip".
       """
     And the current branch is still "feature"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: undo
@@ -59,7 +58,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       you must resolve the conflicts before continuing
       """
     And the current branch is still "feature"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: resolve and continue

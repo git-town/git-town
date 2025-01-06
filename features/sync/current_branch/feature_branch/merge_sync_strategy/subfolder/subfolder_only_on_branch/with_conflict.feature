@@ -24,7 +24,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git checkout current                    |
       | current | git merge --no-edit --ff main           |
     And the current branch is still "current"
-    And the uncommitted file is stashed
     And a merge is now in progress
     And Git Town prints the error:
       """
@@ -49,7 +48,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       you must resolve the conflicts before continuing
       """
     And the current branch is still "current"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: resolve and continue

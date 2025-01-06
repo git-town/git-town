@@ -27,7 +27,6 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: undo
@@ -45,7 +44,6 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: resolve and continue

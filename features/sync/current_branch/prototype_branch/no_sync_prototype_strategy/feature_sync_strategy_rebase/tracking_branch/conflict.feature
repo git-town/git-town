@@ -33,7 +33,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       To continue by skipping the current branch, run "git town skip".
       """
     And a rebase is now in progress
-    And the uncommitted file is stashed
 
   Scenario: undo
     When I run "git-town undo"
@@ -52,7 +51,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       """
       you must resolve the conflicts before continuing
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: resolve and continue

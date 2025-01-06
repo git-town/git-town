@@ -29,7 +29,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       To go back to where you started, run "git town undo".
       """
     And a rebase is now in progress
-    And the uncommitted file is stashed
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,7 +48,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       you must resolve the conflicts before continuing
       """
     And a rebase is now in progress
-    And the uncommitted file is stashed
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"

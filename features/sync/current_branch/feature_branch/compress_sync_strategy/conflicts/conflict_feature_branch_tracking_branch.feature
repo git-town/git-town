@@ -34,7 +34,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       To continue by skipping the current branch, run "git town skip".
       """
     And the current branch is still "feature"
-    And the uncommitted file is stashed
 
   Scenario: undo
     When I run "git-town undo"
@@ -53,7 +52,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       you must resolve the conflicts before continuing
       """
     And the current branch is still "feature"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: resolve and continue

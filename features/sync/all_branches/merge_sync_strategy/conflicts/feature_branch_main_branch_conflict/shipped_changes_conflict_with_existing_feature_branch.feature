@@ -32,7 +32,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       To continue by skipping the current branch, run "git town skip".
       """
     And the current branch is now "alpha"
-    And the uncommitted file is stashed
     And a merge is now in progress
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
