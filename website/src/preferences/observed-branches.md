@@ -1,7 +1,8 @@
 # observed-branches
 
-This configuration setting stores the name of all
-[observed branches](../branch-types.md#observed-branches).
+This configuration setting stores additional hard-coded names of
+[observed branches](../branch-types.md#observed-branches) that aren't covered by
+[observed-regex](observed-regex.md).
 
 ## set observed branches
 
