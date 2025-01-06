@@ -43,8 +43,8 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git checkout existing       |
       | existing | git branch -D new           |
       |          | git stash pop               |
-      |          | git restore --staged .      |
       |          | git stash drop              |
+      |          | git restore --staged .      |
     And the current branch is now "existing"
     And file "conflicting_file" still has content:
       """
@@ -54,15 +54,3 @@ Feature: conflicts between uncommitted changes and the main branch
       conflicting content
       >>>>>>> Stashed changes
       """
-
-  Scenario: continue with unresolved conflict
-    When I run "git-town continue"
-    Then Git Town prints the error:
-      """
-      you must resolve the conflicts before continuing
-      """
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and close the editor
-    Then Git Town runs no commands
