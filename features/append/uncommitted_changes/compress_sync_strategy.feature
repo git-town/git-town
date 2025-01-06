@@ -1,7 +1,7 @@
 Feature: append a new feature branch in a dirty workspace using the "compress" sync strategy
 
-  # TODO: move to a subfolder of "clean_workspace"
-  # and remove the "clean_workspace" folder from the folder hierarchy
+# TODO: move to a subfolder of "clean_workspace"
+# and remove the "clean_workspace" folder from the folder hierarchy
 
   Background:
     Given a Git repo with origin
