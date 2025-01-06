@@ -18,5 +18,6 @@ func (self *StashPopIfNeeded) Run(args shared.RunArgs) error {
 		return nil
 	}
 	args.PrependOpcodes(&StashPop{})
+	args.PrependOpcodes(&ChangesUnstageAll{})
 	return nil
 }
