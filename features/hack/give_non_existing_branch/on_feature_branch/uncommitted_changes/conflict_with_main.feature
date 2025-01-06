@@ -19,6 +19,7 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b new main    |
       | new      | git stash pop               |
+      |          | git restore --staged .      |
       |          | git stash drop              |
     And Git Town prints:
       """
@@ -42,6 +43,7 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git checkout existing       |
       | existing | git branch -D new           |
       |          | git stash pop               |
+      |          | git restore --staged .      |
       |          | git stash drop              |
     And the current branch is now "existing"
     And file "conflicting_file" still has content:

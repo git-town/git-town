@@ -35,6 +35,7 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
       | alpha  | git stash pop                                   |
+      |        | git restore --staged .                          |
     And all branches are now synchronized
     And the current branch is still "alpha"
     And these commits exist now
@@ -58,6 +59,7 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
       | alpha  | git stash pop                                   |
+      |        | git restore --staged .                          |
     And the current branch is still "alpha"
     And the initial commits exist now
     And the initial branches and lineage exist now

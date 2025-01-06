@@ -16,6 +16,7 @@ Feature: on the main branch with uncommitted changes
       |        | git stash -m "Git Town WIP" |
       |        | git checkout -b new         |
       | new    | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "new"
     And the uncommitted file still exists
     And the initial commits exist now
@@ -32,6 +33,7 @@ Feature: on the main branch with uncommitted changes
       |        | git checkout main           |
       | main   | git branch -D new           |
       |        | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "main"
     And the uncommitted file still exists
     And the initial commits exist now

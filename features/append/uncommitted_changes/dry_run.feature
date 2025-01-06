@@ -19,6 +19,7 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b new         |
       | new      | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is still "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

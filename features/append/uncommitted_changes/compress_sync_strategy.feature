@@ -1,7 +1,7 @@
 Feature: append a new feature branch in a dirty workspace using the "compress" sync strategy
 
-# TODO: move to a subfolder of "clean_workspace"
-# and remove the "clean_workspace" folder from the folder hierarchy
+  # TODO: move to a subfolder of "clean_workspace"
+  # and remove the "clean_workspace" folder from the folder hierarchy
 
   Background:
     Given a Git repo with origin
@@ -25,6 +25,7 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b new         |
       | new      | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
@@ -41,6 +42,7 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       |          | git checkout existing       |
       | existing | git branch -D new           |
       |          | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now
