@@ -388,7 +388,7 @@ func validateSyncData(data syncData) error {
 		perennialBranchesToSync := data.config.BranchesOfType(configdomain.BranchTypePerennialBranch, data.branchesToSync.BranchNames())
 		for _, perennialBranchToSync := range perennialBranchesToSync {
 			if branchInfo, hasBranchInfo := data.branchInfos.FindByLocalName(perennialBranchToSync).Get(); hasBranchInfo {
-				fmt.Println("111111111111111111111111111111111111111111", perennialBranchToSync, branchInfo)
+				fmt.Println("111111111111111111111111111111111111111111", branchInfo)
 				switch branchInfo.SyncStatus {
 				case gitdomain.SyncStatusAhead, gitdomain.SyncStatusNotInSync:
 					return fmt.Errorf(messages.SyncPerennialBranchHasUnpushedCommits, perennialBranchToSync)

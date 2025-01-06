@@ -780,15 +780,15 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  branch-1                     111111 [origin/branch-1: behind 2] Commit message 1
-  remotes/origin/branch-1      222222 Commit message 1b`[1:]
+  branch-1                     1111111111111111111111111111111111111111 [origin/branch-1: behind 2] Commit message 1
+  remotes/origin/branch-1      2222222222222222222222222222222222222222 Commit message 1b`[1:]
 				want := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						LocalSHA:   Some(gitdomain.NewSHA("1111111111111111111111111111111111111111")),
 						SyncStatus: gitdomain.SyncStatusNotInSync,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
+						RemoteSHA:  Some(gitdomain.NewSHA("2222222222222222222222222222222222222222")),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -1009,6 +1009,42 @@ func TestBackendCommands(t *testing.T) {
 					SyncStatus: gitdomain.SyncStatusOtherWorktree,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-5")),
 					RemoteSHA:  Some(gitdomain.NewSHA("55555555")),
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			must.Eq(t, want, have)
+			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
+		})
+
+		t.Run("complex example", func(t *testing.T) {
+			give := `
+  main                      0a6a473f1f91a47c1d09c21a9042159fa173a9ae [origin/main] initial commit
+* production                0a6a473f1f91a47c1d09c21a9042159fa173a9ae [origin/production: behind 1] initial commit
+  remotes/origin/initial    0a6a473f1f91a47c1d09c21a9042159fa173a9ae initial commit
+  remotes/origin/main       0a6a473f1f91a47c1d09c21a9042159fa173a9ae initial commit
+  remotes/origin/production 86e26942672ef013f2c188e3be34a507c1e9c87a first commit
+`[1:]
+			want := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalSHA:   Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
+					RemoteSHA:  Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("production")),
+					LocalSHA:   Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
+					SyncStatus: gitdomain.SyncStatusBehind,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/production")),
+					RemoteSHA:  Some(gitdomain.NewSHA("86e26942672ef013f2c188e3be34a507c1e9c87a")),
+				},
+				gitdomain.BranchInfo{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					LocalSHA:   None[gitdomain.SHA](),
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+					RemoteSHA:  Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

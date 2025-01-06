@@ -10,8 +10,8 @@ Feature: sync the current perennial branch using the rebase sync strategy
       | production | origin   | first commit |
     And the current branch is "production"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
-    And inspect the repo
-    When I run "git-town sync"
+    # And inspect the repo
+    When I run "git-town sync -v"
 
   @debug
   @this
