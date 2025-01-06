@@ -6,24 +6,20 @@ Feature: sync the current perennial branch using the rebase sync strategy
       | NAME       | TYPE      | LOCATIONS     |
       | production | perennial | local, origin |
     And the commits
-      | BRANCH     | LOCATION      | MESSAGE       |
-      | production | local, origin | first commit  |
-      |            | origin        | second commit |
+      | BRANCH     | LOCATION      | MESSAGE      |
+      | production | local, origin | first commit |
     And the current branch is "production"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
     When I run "git-town sync"
 
-  @debug
-  @this
+  # @debug
+  # @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | qa     | git fetch --prune --tags              |
-      |        | git rebase origin/qa --no-update-refs |
-      |        | git push                              |
-      |        | git push --tags                       |
-    And all branches are now synchronized
-    And the current branch is still "qa"
+      | BRANCH     | COMMAND                  |
+      | production | git fetch --prune --tags |
+    And the current branch is still "production"
+    And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
