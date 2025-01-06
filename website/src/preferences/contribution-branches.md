@@ -1,7 +1,8 @@
 # contribution-branches
 
-This configuration setting stores the name of all
-[contribution branches](../branch-types.md#contribution-branches).
+This configuration setting stores additional hard-coded names of
+[contribution branches](../branch-types.md#contribution-branches) that aren't
+covered by [contribution-regex](contribution-regex.md).
 
 ## set contribution branches
 
