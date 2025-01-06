@@ -5,7 +5,7 @@ pull requests as branches get created, shipped, or deleted. To do so, Git Town
 needs your Bitbucket username and an
 [Bitbucket App Password](bitbucket-app-password.md).
 
-Bitbucket Datacenter capabilities are a little more restricted but the process
+Bitbucket Data Center capabilities are a little more restricted but the process
 is the same as for Bitbucket Cloud.
 
 ## config file
