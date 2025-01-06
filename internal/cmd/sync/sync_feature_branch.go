@@ -49,6 +49,9 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 			OriginalParentName: args.originalParentName,
 			OriginalParentSHA:  args.originalParentSHA,
 		})
+	case configdomain.SyncStrategyFFOnly:
+		// the ff-only strategy does not sync with the parent branch
+		// since it is intended for perennial branches only
 	}
 }
 
