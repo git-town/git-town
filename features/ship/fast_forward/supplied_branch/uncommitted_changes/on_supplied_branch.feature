@@ -7,6 +7,7 @@ Feature: does not ship a branch that has open changes
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And an uncommitted file
     When I run "git-town ship feature"
 
   Scenario: result
@@ -18,6 +19,7 @@ Feature: does not ship a branch that has open changes
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
     And the current branch is still "feature"
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -27,3 +29,4 @@ Feature: does not ship a branch that has open changes
       nothing to undo
       """
     And the current branch is still "feature"
+    And the uncommitted file still exists
