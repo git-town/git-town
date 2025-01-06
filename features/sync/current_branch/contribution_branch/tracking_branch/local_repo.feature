@@ -14,8 +14,7 @@ Feature: sync the current contribution branch in a local repo
     When I run "git-town sync"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
+    Then Git Town runs no commands
     And all branches are now synchronized
     And the current branch is still "contribution"
     And the initial commits exist now
@@ -23,8 +22,7 @@ Feature: sync the current contribution branch in a local repo
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
+    Then Git Town runs no commands
     And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now
