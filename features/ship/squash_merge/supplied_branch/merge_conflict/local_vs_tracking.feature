@@ -11,7 +11,6 @@ Feature: refuses shipping a branch with conflicts between the supplied feature b
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "other"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And I run "git-town ship feature -m 'feature done'"
 
@@ -24,13 +23,11 @@ Feature: refuses shipping a branch with conflicts between the supplied feature b
       branch "feature" is not in sync
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the current branch is still "other"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial lineage exists now

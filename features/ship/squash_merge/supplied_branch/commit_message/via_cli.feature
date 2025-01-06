@@ -10,7 +10,6 @@ Feature: provide the commit message via a CLI argument
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature -m 'feature done'"
 
@@ -18,8 +17,6 @@ Feature: provide the commit message via a CLI argument
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | other  | git fetch --prune --tags        |
-      |        | git add -A                      |
-      |        | git stash -m "Git Town WIP"     |
       |        | git checkout main               |
       | main   | git merge --squash --ff feature |
       |        | git commit -m "feature done"    |
@@ -27,9 +24,7 @@ Feature: provide the commit message via a CLI argument
       |        | git push origin :feature        |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-      |        | git stash pop                   |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -44,15 +39,12 @@ Feature: provide the commit message via a CLI argument
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git add -A                                    |
-      |        | git stash -m "Git Town WIP"                   |
-      |        | git checkout main                             |
+      | other  | git checkout main                             |
       | main   | git revert {{ sha 'feature done' }}           |
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout other                            |
-      | other  | git stash pop                                 |
     And the current branch is now "other"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

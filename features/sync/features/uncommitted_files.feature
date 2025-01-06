@@ -1,0 +1,50 @@
+Feature: sync all feature branches in the presence of uncommitted changes
+
+  Background:
+    Given a Git repo with origin
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
+      | feature-2 | feature | main   | local, origin |
+    And the commits
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | feature-1 | local, origin | feature 1 commit |
+      | feature-2 | local, origin | feature 2 commit |
+    And the current branch is "feature-1"
+    And an uncommitted file
+    When I run "git-town sync --all"
+
+  Scenario: result
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                                   |
+      | feature-1 | git fetch --prune --tags                  |
+      |           | git add -A                                |
+      |           | git stash -m "Git Town WIP"               |
+      |           | git checkout main                         |
+      | main      | git rebase origin/main --no-update-refs   |
+      |           | git checkout feature-1                    |
+      | feature-1 | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff origin/feature-1 |
+      |           | git checkout feature-2                    |
+      | feature-2 | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff origin/feature-2 |
+      |           | git checkout feature-1                    |
+      | feature-1 | git push --tags                           |
+      |           | git stash pop                             |
+    And the current branch is still "feature-1"
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | feature-1 | local, origin | feature 1 commit |
+      | feature-2 | local, origin | feature 2 commit |
+    And the uncommitted file still exists
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                     |
+      | feature-1 | git add -A                  |
+      |           | git stash -m "Git Town WIP" |
+      |           | git stash pop               |
+    And the current branch is still "feature-1"
+    And the initial commits exist now
+    And the uncommitted file still exists
