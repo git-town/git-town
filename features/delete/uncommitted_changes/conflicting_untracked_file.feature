@@ -24,6 +24,7 @@ Feature: delete another than the current branch
       |        | git push origin :dead       |
       |        | git branch -D dead          |
       |        | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is still "good"
     And the uncommitted file has content:
       """
@@ -49,6 +50,7 @@ Feature: delete another than the current branch
       |        | git branch dead {{ sha 'dead-end commit' }} |
       |        | git push -u origin dead                     |
       |        | git stash pop                               |
+      |        | git restore --staged .                      |
     And the current branch is still "good"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |

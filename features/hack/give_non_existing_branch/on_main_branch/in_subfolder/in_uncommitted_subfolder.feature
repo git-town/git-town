@@ -15,6 +15,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |        | git stash -m "Git Town WIP" |
       |        | git checkout -b new         |
       | new    | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
@@ -30,6 +31,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |        | git checkout main           |
       | main   | git branch -D new           |
       |        | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "main"
     And the initial commits exist now
     And the initial lineage exists now

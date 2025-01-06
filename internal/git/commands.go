@@ -836,6 +836,10 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }
 
+func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
+	return runner.Run("git", "restore", "--staged", ".")
+}
+
 // Version indicates whether the needed Git version is installed.
 func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)

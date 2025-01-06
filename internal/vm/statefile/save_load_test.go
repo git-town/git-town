@@ -67,6 +67,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchTypeOverrideRemove{Branch: "branch"},
 				&opcodes.ChangesDiscard{},
 				&opcodes.ChangesStage{},
+				&opcodes.ChangesUnstageAll{},
 				&opcodes.Checkout{Branch: "branch"},
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.CheckoutIfNeeded{Branch: "branch"},
@@ -291,6 +292,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "ChangesStage"
+    },
+    {
+      "data": {},
+      "type": "ChangesUnstageAll"
     },
     {
       "data": {

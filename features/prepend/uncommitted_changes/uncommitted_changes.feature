@@ -20,6 +20,7 @@ Feature: prepend a branch to a feature branch
       |        | git stash -m "Git Town WIP" |
       |        | git checkout -b parent main |
       | parent | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
@@ -39,6 +40,7 @@ Feature: prepend a branch to a feature branch
       |        | git checkout old            |
       | old    | git branch -D parent        |
       |        | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

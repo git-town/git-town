@@ -29,6 +29,7 @@ Feature: merging a branch with uncommitted changes
       |        | git branch -D alpha                   |
       |        | git push origin :alpha                |
       |        | git stash pop                         |
+      |        | git restore --staged .                |
     And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
@@ -55,6 +56,7 @@ Feature: merging a branch with uncommitted changes
       |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
       |        | git push -u origin alpha                             |
       |        | git stash pop                                        |
+      |        | git restore --staged .                               |
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
