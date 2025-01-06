@@ -480,7 +480,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
 
-		err := runtime.MergeFastForward(runtime.TestRunner, branch)
+		err := runtime.MergeFastForward(runtime.TestRunner, branch.BranchName())
 		must.NoError(t, err)
 
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
