@@ -10,8 +10,8 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
     And the current branch is "other"
-    And an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     And Git setting "git-town.ship-strategy" is "fast-forward"
+    And a folder "new_folder"
     When I run "git-town ship feature" in the "new_folder" folder
 
   Scenario: result

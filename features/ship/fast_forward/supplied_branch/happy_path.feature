@@ -10,7 +10,6 @@ Feature: ship the supplied feature branch
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship feature"
 
