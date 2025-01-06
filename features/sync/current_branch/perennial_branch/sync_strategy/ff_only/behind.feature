@@ -6,14 +6,15 @@ Feature: sync the current perennial branch using the rebase sync strategy
       | NAME       | TYPE      | LOCATIONS     |
       | production | perennial | local, origin |
     And the commits
-      | BRANCH     | LOCATION      | MESSAGE      |
-      | production | local, origin | first commit |
+      | BRANCH     | LOCATION | MESSAGE      |
+      | production | origin   | first commit |
     And the current branch is "production"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
+    And inspect the repo
     When I run "git-town sync"
 
-  # @debug
-  # @this
+  @debug
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH     | COMMAND                  |
