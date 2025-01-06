@@ -12,7 +12,7 @@ Feature: sync all feature branches in the presence of uncommitted changes
     And an uncommitted file
     When I run "git-town sync --all"
 
-  Scenario: with "merge" sync-feature strategy
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
