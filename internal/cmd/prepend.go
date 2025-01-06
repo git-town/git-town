@@ -154,7 +154,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomai
 type prependData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
-	branchesToSync      []configdomain.BranchToSync
+	branchesToSync      configdomain.BranchesToSync
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[hostingdomain.Connector]
