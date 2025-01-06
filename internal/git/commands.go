@@ -1034,10 +1034,10 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.Sy
 		return gitdomain.SyncStatusDeletedAtRemote, trackingBranchName
 	}
 	if isAhead, trackingBranchName := IsAhead(branchName, remoteText); isAhead {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
+		return gitdomain.SyncStatusAhead, trackingBranchName
 	}
 	if isBehind, trackingBranchName := IsBehind(branchName, remoteText); isBehind {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
+		return gitdomain.SyncStatusBehind, trackingBranchName
 	}
 	if isAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText); isAheadAndBehind {
 		return gitdomain.SyncStatusNotInSync, trackingBranchName

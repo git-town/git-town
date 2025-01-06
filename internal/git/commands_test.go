@@ -455,6 +455,15 @@ func TestBackendCommands(t *testing.T) {
 		must.False(t, runner.Commands.HasLocalBranch(runner, "b3"))
 	})
 
+	t.Run("IsBehind", func(t *testing.T) {
+		t.Parallel()
+		has, branchNameOpt := git.IsBehind("production", "[origin/production: behind 1] initial commit")
+		must.True(t, has)
+		branchName, hasBranchName := branchNameOpt.Get()
+		must.True(t, hasBranchName)
+		must.EqOp(t, "origin/production", branchName)
+	})
+
 	t.Run("lastBranchInRef", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{
