@@ -1,7 +1,7 @@
 @messyoutput
-Feature: switch to a branch that conflicts with the currently uncommitted changes
+Feature: switch to another branch with uncommitted changes
 
-  Scenario: switching to another branch
+  Background:
     Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
@@ -15,6 +15,8 @@ Feature: switch to a branch that conflicts with the currently uncommitted change
     When I run "git-town switch" and enter into the dialogs:
       | KEYS       |
       | down enter |
+
+  Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout beta |
