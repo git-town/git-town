@@ -10,7 +10,6 @@ Feature: ship the supplied local feature branch
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
     And the current branch is "other"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship feature" and close the editor
 
