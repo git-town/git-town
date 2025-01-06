@@ -13,8 +13,8 @@ Feature: sync the current perennial branch using the rebase sync strategy
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
     When I run "git-town sync"
 
-  # @debug
-  # @this
+  @debug
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
