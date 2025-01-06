@@ -20,6 +20,7 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b new         |
       | new      | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is now "new"
     And the uncommitted file still exists
     And these commits exist now
@@ -39,6 +40,7 @@ Feature: append a new feature branch to an existing feature branch with uncommit
       |          | git checkout existing       |
       | existing | git branch -D new           |
       |          | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is now "existing"
     And the uncommitted file still exists
     And the initial commits exist now

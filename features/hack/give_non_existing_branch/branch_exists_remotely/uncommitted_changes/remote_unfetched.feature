@@ -15,6 +15,7 @@ Feature: already existing remote branch
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b existing    |
       | existing | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is now "existing"
     And the uncommitted file still exists
     And no commits exist now
@@ -31,6 +32,7 @@ Feature: already existing remote branch
       |          | git checkout main           |
       | main     | git branch -D existing      |
       |          | git stash pop               |
+      |          | git restore --staged .      |
     And the current branch is now "main"
     And the uncommitted file still exists
     And the initial commits exist now

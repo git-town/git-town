@@ -22,6 +22,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git stash -m "Git Town WIP" |
       |        | git checkout -b new parent  |
       | new    | git stash pop               |
+      |        | git restore --staged .      |
     And Git Town prints:
       """
       branch "new" is now a child of "parent"
@@ -51,6 +52,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git checkout child          |
       | child  | git branch -D new           |
       |        | git stash pop               |
+      |        | git restore --staged .      |
     And the current branch is now "child"
     And the uncommitted file still exists
     And the branches are now
