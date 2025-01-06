@@ -19,8 +19,8 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash -m "Git Town WIP" |
       |          | git checkout -b new main    |
       | new      | git stash pop               |
-      |          | git restore --staged .      |
       |          | git stash drop              |
+      |          | git restore --staged .      |
     And Git Town prints:
       """
       conflicts between your uncommmitted changes and the main branch
