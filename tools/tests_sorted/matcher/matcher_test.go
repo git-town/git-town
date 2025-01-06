@@ -322,8 +322,9 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 					FuncMatcher: tc.funcMatcher,
 				}
 
-				_, r := e.Extract(expr)
+				_, r, err := e.Extract(expr)
 
+				must.NoError(t, err)
 				must.False(t, r.Success())
 				must.Eq(t, tc.wantReason, r.FailureReason())
 			})
@@ -340,10 +341,9 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 				FuncMatcher: &trueMatcher{},
 			}
 
-			_, r := e.Extract(expr)
+			_, _, err = e.Extract(expr)
 
-			must.False(t, r.Success())
-			must.StrHasPrefix(t, "the first call argument is an invalid string literal:", r.FailureReason())
+			must.ErrorContains(t, err, "the first call argument is an invalid string literal:")
 		})
 	})
 
@@ -354,8 +354,9 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 			FuncMatcher: &trueMatcher{},
 		}
 
-		arg, r := e.Extract(expr)
+		arg, r, err := e.Extract(expr)
 
+		must.NoError(t, err)
 		must.True(t, r.Success())
 		must.Eq(t, "arg1", arg)
 	})

@@ -30,7 +30,6 @@ Feature: merging a branch with uncommitted changes
       |        | git push origin :alpha                |
       |        | git stash pop                         |
     And the current branch is still "beta"
-    And the uncommitted file still exists
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
@@ -43,6 +42,7 @@ Feature: merging a branch with uncommitted changes
       | BRANCH | NAME       | CONTENT       |
       | beta   | alpha-file | alpha content |
       |        | beta-file  | beta content  |
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -58,3 +58,4 @@ Feature: merging a branch with uncommitted changes
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
+    And the uncommitted file still exists

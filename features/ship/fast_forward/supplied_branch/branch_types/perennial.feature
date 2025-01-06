@@ -5,7 +5,6 @@ Feature: does not ship perennial branches using the fast-forward strategy
     And the branches
       | NAME       | TYPE      | PARENT | LOCATIONS     |
       | production | perennial |        | local, origin |
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship production"
 
@@ -18,7 +17,6 @@ Feature: does not ship perennial branches using the fast-forward strategy
       cannot ship perennial branches
       """
     And the current branch is still "main"
-    And the uncommitted file still exists
     And no lineage exists now
 
   Scenario: undo

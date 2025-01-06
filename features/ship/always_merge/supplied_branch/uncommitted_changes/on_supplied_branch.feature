@@ -5,9 +5,12 @@ Feature: does not ship a branch that has open changes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
+    And the commits
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
+      | feature | local, origin | feature commit | conflicting_file | feature content |
     And the current branch is "feature"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "always-merge"
+    And an uncommitted file
     When I run "git-town ship feature"
 
   Scenario: result
@@ -29,3 +32,4 @@ Feature: does not ship a branch that has open changes
       nothing to undo
       """
     And the current branch is still "feature"
+    And the uncommitted file still exists

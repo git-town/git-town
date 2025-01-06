@@ -15,7 +15,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -23,8 +22,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And Git Town runs the commands
       | BRANCH | COMMAND                                  |
       | main   | git fetch --prune --tags                 |
-      |        | git add -A                               |
-      |        | git stash -m "Git Town WIP"              |
       |        | git checkout alpha                       |
       | alpha  | git rebase origin/alpha --no-update-refs |
       |        | git checkout beta                        |
@@ -39,7 +36,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: undo
@@ -48,9 +44,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
       |        | git checkout main  |
-      | main   | git stash pop      |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -64,9 +58,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                        |
       | main   | git rebase origin/main --no-update-refs  |
       |        | git push --tags                          |
-      |        | git stash pop                            |
     And the current branch is now "main"
-    And the uncommitted file still exists
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -82,7 +74,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
       you must resolve the conflicts before continuing
       """
-    And the uncommitted file is stashed
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -97,10 +88,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                         |
       | main   | git rebase origin/main --no-update-refs   |
       |        | git push --tags                           |
-      |        | git stash pop                             |
     And all branches are now synchronized
     And the current branch is now "main"
-    And the uncommitted file still exists
     And no rebase is now in progress
 
   Scenario: resolve, finish the rebase, and continue
@@ -115,4 +104,3 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                        |
       | main   | git rebase origin/main --no-update-refs  |
       |        | git push --tags                          |
-      |        | git stash pop                            |
