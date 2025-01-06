@@ -28,6 +28,7 @@ Feature: prepend a branch to a feature branch
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,3 +42,4 @@ Feature: prepend a branch to a feature branch
     And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now
+    And the uncommitted file still exists
