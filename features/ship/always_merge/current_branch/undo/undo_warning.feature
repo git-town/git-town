@@ -10,13 +10,11 @@ Feature: git-town undo prints a warning message for a merge commit
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "always-merge"
-    # "I ran" verifies the exit status.
     And I ran "git-town ship -m 'feature done'"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town prints something like:
-      # ".*" is the merge commit created by `git town ship`.
       """
       Cannot undo commit ".*" because it is on a perennial branch
       """
