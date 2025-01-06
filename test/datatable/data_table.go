@@ -9,10 +9,9 @@ import (
 	"sync"
 
 	"github.com/cucumber/godog"
-
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/exp/maps"
 )
@@ -22,6 +21,10 @@ import (
 type DataTable struct {
 	// table data organized as rows and columns
 	Cells [][]string `exhaustruct:"optional"`
+}
+
+type runner interface {
+	SHAsForCommit(name string) gitdomain.SHAs
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.

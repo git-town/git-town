@@ -1,9 +1,10 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // Commit commits all open changes as a new commit.
@@ -18,5 +19,5 @@ type Commit struct {
 }
 
 func (self *Commit) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, self.Message, self.FallbackToDefaultCommitMessage, self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride)
 }

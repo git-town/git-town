@@ -58,26 +58,21 @@ Please be aware that this sync strategy leads to more merge conflicts than the
 "merge" sync strategy when more than one Git user makes commits to the same
 branch.
 
-## change this setting
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ### config file
 
 In the [config file](../configuration-file.md) the sync-feature-strategy is part
 of the `[sync-strategy]` section:
 
 ```toml
-[sync-strategy]
-feature-branches = "merge"
+[sync]
+feature-strategy = "merge"
 ```
 
 ### Git metadata
 
 To manually configure the sync-feature-strategy in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.sync-feature-strategy <merge|rebase>
 ```
 

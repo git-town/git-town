@@ -3,12 +3,16 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // PushHook contains the push-hook configuration setting.
 type PushHook bool
+
+func (self PushHook) IsTrue() bool {
+	return bool(self)
+}
 
 func (self PushHook) Negate() NoPushHook {
 	boolValue := bool(self)

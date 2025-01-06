@@ -1,12 +1,12 @@
 package ship
 
 import (
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 type shipDataMerge struct {
@@ -35,11 +35,11 @@ func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShip
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
-	if squashMergeData.remotes.HasOrigin() && sharedData.config.NormalConfig.IsOnline() {
+	if squashMergeData.remotes.HasDev(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
 		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
 	prog.Value.Add(&opcodes.MergeSquashProgram{Authors: squashMergeData.authors, Branch: sharedData.branchNameToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
-	if squashMergeData.remotes.HasOrigin() && sharedData.config.NormalConfig.IsOnline() {
+	if squashMergeData.remotes.HasDev(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {

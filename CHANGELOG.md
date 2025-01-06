@@ -1,5 +1,86 @@
 # Git Town Changelog
 
+### 17.2.0 (2024-01-02)
+
+#### New Features
+
+- The new [always-merge ship strategy](https://www.git-town.com/preferences/ship-strategy.html#always-merge) always creates a merge commit when shipping a branch ([#4381](https://github.com/git-town/git-town/issues/4381)).
+- `git town prepend` now has a [--beam](https://www.git-town.com/commands/prepend.html#-b--beam) option. When enabled, it allows the user to choose one or more commits to move into the new branch that is getting prepended ([#4356](https://github.com/git-town/git-town/pull/4356)).
+- `git town prepend` now has a [--propose](https://www.git-town.com/commands/prepend.html#--propose) flag. When enabled, it automatically proposes the new branch. This is meant to be used together with `--beam` ([#4377](https://github.com/git-town/git-town/issues/4377)).
+- Git Town's `hack` command can now make any branch type a feature branch ([#4373](https://github.com/git-town/git-town/issues/4373)).
+- The new [git town status show command](https://www.git-town.com/commands/status-show.html) displays details about the currently interrupted Git Town command ([#4457](https://github.com/git-town/git-town/pull/4457)).
+- Git Town now adds a message to entries it creates on the Git stash. This helps identify which stash entries were created by Git Town ([#4479](https://github.com/git-town/git-town/pull/4479)).
+- If the only problem Git Town encounters is conflicts when running `git stash pop` at the end, it drops the stash entry and no longer returns with an error ([#4480](https://github.com/git-town/git-town/pull/4480)).
+
+#### Bug Fixes
+
+- The setup assistant no longer crashes when run in a brand-new repository ([#4365](https://github.com/git-town/git-town/pull/4365)).
+- `git town status reset` now works ([#4469](https://github.com/git-town/git-town/pull/4469)).
+
+#### Contributors
+
+Shoutout to @Crocmagnon, @kevgo, @legeana, @lud-wj, @ruudk, @stephenwade, @wayne-zhan for contributing feedback, ideas, documentation, and code to 104 shipped PRs and 7 resolved issues!
+
+### 17.1.1 (2024-12-20)
+
+Git Town 17.1.1 ships a bug fix that unblocks BitBucket Datacenter users.
+
+#### Bug Fixes
+
+- Fixes a bug in the BitBucket-Datacenter driver ([#4371](https://github.com/git-town/git-town/pull/4371)).
+
+#### Contributors
+
+Shoutout to @Crocmagnon, @kevgo, @stephenwade for contributing bug fixes and ideas to 13 shipped PRs.
+
+### 17.1.0 (2024-12-19)
+
+Git Town 17.1 unblocks users who have submitted urgent issues.
+
+#### New Features
+
+- The configuration file can now also be named ".git-town.toml", in addition to ".git-branches.toml". This helps users locate it when looking for "Git Town configuration". ([#4343](https://github.com/git-town/git-town/issues/4343)).
+- Supports development versions of Git ([#4344](https://github.com/git-town/git-town/pull/4344)).
+- `git town switch` no longer asks for ancestry information. This avoids the risk of accidentally selecting a wrong parent branch when one is under the assumption of selecting a branch to switch to ([#4340](https://github.com/git-town/git-town/issues/4340)).
+- Git Town now uses full-length SHA values to address commits. This improves reliability in very large repositories ([#4339](https://github.com/git-town/git-town/pull/4339)).
+
+#### Bug Fixes
+
+- The setup assistant now allows configuring a "BitBucket-Datacenter" setup ([#4360](https://github.com/git-town/git-town/pull/4360)).
+
+#### Contributors
+
+Shoutout to @kevgo, @lud-wj, @pratikpc, @ruudk, @stephenwade for contributing feedback, ideas, documentation, and code to 28 shipped PRs and 5 resolved issues!
+
+## 17.0.0 (2024-12-16)
+
+Git Town v17 modernizes some outdated concepts that were already documented. As always with major new Git Town releases, all changes are backwards compatible, so Git Town users don't need to change anything. The major version bump is merely a signal that you might need to update some of your own tooling around Git Town.
+
+#### BREAKING CHANGES
+
+- The configuration setting `create-prototype-branches` gets generalized into `new-branch-type`, which allows giving new branches all available branch types ([#3913](https://github.com/git-town/git-town/issues/3913)).
+- The output of `git town config` now displays data organized in more sections ([#3866](https://github.com/git-town/git-town/issues/3866)).
+- The config file gets generated without comments now, improving its readability ([#4335](https://github.com/git-town/git-town/pull/4335))
+- The output of `git town config` now indicates more precisely whether an configuration setting is not provided or empty ([#4265](https://github.com/git-town/git-town/pull/4265)).
+
+#### New Features
+
+- When removing a branch, `git town sync` and `git town delete` now also remove the changes of those branches from their descendents ([#4189](https://github.com/git-town/git-town/issues/4189)).
+- `git town set-parent` now also removes the changes from former parent branches ([#3473](https://github.com/git-town/git-town/issues/3473)).
+- Git Town can now auto-resolve merge conflicts that include deleted files ([#4289](https://github.com/git-town/git-town/pull/4289)).
+- The name of the Git remote used for development is now configurable ([#4165](https://github.com/git-town/git-town/issues/4165)).
+- The setup assistant (`git town config setup`) now asks for the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
+- `git town config` now displays the [sync-prototype-strategy](https://www.git-town.com/preferences/sync-prototype-strategy).
+
+#### Bug Fixes
+
+- Git Town no longer pops up the editor when continuing a command that got stuck in a rebase in certain situations ([#4285](https://github.com/git-town/git-town/pull/4285)).
+- Now only updates Git aliases when auto-updating of outdated configuration entries that aren't Git Town settings ([#4304](https://github.com/git-town/git-town/pull/4304)).
+
+#### Contributors
+
+Shoutout to @Crocmagnon, @WhosNickDoglio, @alphatroya, @avaz, @erik-rw, @kevgo, @koppor, @matthewgonzalez, @mklauer, @nishchay-manwani-glean, @pandvan, @ruudk, @sheldonhull, @smaldored, @stephenwade for contributing feedback, ideas, documentation, and code to 70 shipped PRs and 13 resolved issues!
+
 ## 16.7.0 (2024-11-30)
 
 #### New Features
@@ -102,7 +183,7 @@ Big shoutout to @LogvinovLeon, @alexw10, @charlierudolph, @cjol, @ericcao52, @ke
 
 - Full integration of proposals ([#2745](https://github.com/git-town/git-town/issues/2745)):
   - Git Town now updates all affected pull requests when you rename, prepend, or remove a branch or change its parent.
-  - If the parent of a branch is unknown but there's an open PR, Git Town will now grab the PR’s base branch as the parent.
+  - If the parent of a branch is unknown but there's an open PR, Git Town will now grab the PR's base branch as the parent.
   - `git town undo` now also reverts any changes made to pull requests ([#4049](https://github.com/git-town/git-town/issues/4049)).
 - Full integration with the Bitbucket Cloud API ([#973](https://github.com/git-town/git-town/issues/973)) and the gitea API ([#4044](https://github.com/git-town/git-town/pull/4044)).
 - `git town rename-branch` now maintains the Git configuration and reflog for renamed branches ([#4023](https://github.com/git-town/git-town/issues/4023)).

@@ -6,12 +6,12 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/cli/colors"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v16/internal/gohacks/slice"
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v17/internal/gohacks/slice"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"golang.org/x/exp/maps"
 )
 
@@ -33,23 +33,22 @@ func NewLineage() Lineage {
 func NewLineageFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (Lineage, error) {
 	result := NewLineage()
 	for key, value := range snapshot.LineageEntries() {
-		childName := key.ChildName()
-		if childName == "" {
+		child := key.ChildBranch()
+		if child == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
-			_ = removeLocalConfigValue(key.Key())
+			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
-		child := gitdomain.NewLocalBranchName(childName)
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
-			_ = removeLocalConfigValue(key.Key())
+			_ = removeLocalConfigValue(key.Key)
 			continue
 		}
-		if updateOutdated && childName == value {
-			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, childName)))
+		if updateOutdated && child.String() == value {
+			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
 			_ = removeLocalConfigValue(NewParentKey(child))
 		}
 		parent := gitdomain.NewLocalBranchName(value)

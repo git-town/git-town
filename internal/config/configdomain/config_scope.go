@@ -1,5 +1,7 @@
 package configdomain
 
+import "strings"
+
 // defines the type of Git configuration used
 type ConfigScope string
 
@@ -13,7 +15,7 @@ func (self ConfigScope) String() string {
 }
 
 func ParseConfigScope(text string) ConfigScope {
-	switch text {
+	switch strings.TrimSpace(text) {
 	case "local", "":
 		return ConfigScopeLocal
 	case "global":

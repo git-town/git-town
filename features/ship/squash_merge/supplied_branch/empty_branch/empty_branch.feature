@@ -11,23 +11,18 @@ Feature: does not ship empty feature branches
       | main   | local    | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
     And the current branch is "other"
-    And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship empty"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git stash pop            |
     And Git Town prints the error:
       """
       the branch "empty" has no shippable changes
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 

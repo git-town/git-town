@@ -3,9 +3,8 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
@@ -28,11 +27,10 @@ func TestUnvalidatedConfig(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			repo.CreateBranch("branch", "main")
-			err := repo.Config.NormalConfig.AddToContributionBranches("branch")
+			err := repo.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, "branch")
 			must.NoError(t, err)
 			repo.Config.Reload()
-			want := gitdomain.NewLocalBranchNames("branch")
-			must.Eq(t, want, repo.Config.NormalConfig.ContributionBranches)
+			must.Eq(t, configdomain.BranchTypeContributionBranch, repo.Config.BranchType("branch"))
 		})
 	})
 }

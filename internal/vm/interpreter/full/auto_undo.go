@@ -3,11 +3,11 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo"
-	lightInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/light"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo"
+	lightInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/light"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // autoUndo performs an automatic undo of the current Git Town command.
@@ -20,6 +20,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Backend:        args.Backend,
 		Config:         args.Config,
 		DryRun:         args.Config.NormalConfig.DryRun,
+		FinalMessages:  args.FinalMessages,
 		Git:            args.Git,
 		HasOpenChanges: false,
 		NoPushHook:     args.Config.NormalConfig.NoPushHook(),

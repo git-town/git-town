@@ -3,10 +3,10 @@ package dialog_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 

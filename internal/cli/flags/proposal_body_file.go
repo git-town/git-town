@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -22,5 +22,5 @@ func ProposalBodyFile() (AddFunc, ReadProposalBodyFileFlagFunc) {
 	return addFlag, readFlag
 }
 
-// reads gitdomain.ProposalBodyFile from the CLI args
+// ReadProposalBodyFileFlagFunc reads gitdomain.ProposalBodyFile from the CLI args.
 type ReadProposalBodyFileFlagFunc func(*cobra.Command) (gitdomain.ProposalBodyFile, error)

@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo"
-	"github.com/git-town/git-town/v16/internal/validate"
-	"github.com/git-town/git-town/v16/internal/vm/statefile"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo"
+	"github.com/git-town/git-town/v17/internal/validate"
+	"github.com/git-town/git-town/v17/internal/vm/statefile"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -69,7 +69,7 @@ func executeUndo(verbose configdomain.Verbose) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 	if err != nil || exit {
 		return data, false, err
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

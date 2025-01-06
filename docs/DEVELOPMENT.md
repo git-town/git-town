@@ -4,9 +4,9 @@ This page provides guidance for contributing to the Git Town codebase. For a
 comprehensive understanding of the architecture, refer to
 [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## setup
+## Setup
 
-1. install [Go](https://golang.org) version 1.22
+1. install [Go](https://golang.org) version 1.23
 2. install [Make](https://www.gnu.org/software/make)
    - Mac and Linux users have this out of the box
    - Windows users can install
@@ -18,7 +18,7 @@ comprehensive understanding of the architecture, refer to
 5. install Git Town locally into `~/go/bin`:
    <code type="make/command" dir="..">make install</code>
 
-## dependencies
+## Dependencies
 
 Add an external Go dependency:
 
@@ -44,7 +44,7 @@ make update
 
 </a>
 
-## unit tests
+## Unit tests
 
 Run unit tests for packages containing changes:
 
@@ -83,7 +83,7 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
-## end-to-end tests
+## End-to-end tests
 
 Run all end-to-end tests:
 
@@ -118,7 +118,8 @@ make cukethis
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
 GitLab or Bitbucket address. This causes `git push` operations in this test to
 also go to GitHub. To prevent this, set an environment variable
-`GIT_TOWN_REMOTE` with the desired value of the `origin` remote, and Git Town
+`GIT_TOWN_REMOTE` with the desired value of the
+[development remote](../website/src/preferences/dev-remote.md), and Git Town
 will use that value instead of what is configured in the repo.
 
 If Cucumber tests produce garbled output on Windows, try running them inside Git
@@ -129,12 +130,12 @@ To pause an end-to-end test so that you have time to inspect the status of the
 Git repository created by the test, add the step `And inspect the repo`. The
 test runner will pause and print the path of the test workspace. You can `cd`
 into that path in a separate terminal window and inspect the repos there. The
-developer's repo is in the `repo` folder. The origin repo is in the `origin`
-folder.
+developer's repo is in the `repo` folder. The remote repo (that would normally
+be on GitHub) is in the `origin` folder.
 
 To see all commit SHAs of the repo, add the `And inspect the commits` step.
 
-## inspecting variables
+## Inspecting variables
 
 Inspect basic variables in a unit test:
 
@@ -156,7 +157,7 @@ spew.Dump(variable)
 pretty.LDiff(t, var1, var2)
 ```
 
-## debug end-to-end tests
+## Debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, as well as the
 Git commands that the Git Town test suite runs under the hood, add a tag
@@ -167,11 +168,11 @@ Git commands that the Git Town test suite runs under the hood, add a tag
 Scenario: my awesome scenario
 ```
 
-To see all Git commands that the test runner and the Git Town command run,
-execute the Git Town command with the `--verbose` option. As an example, if the
-step `When I run "git-town append new"` mysteriously fails, you could change it
-to `When I run "git-town append new -v"`. Also add the tags `@debug @this` to
-see the CLI output on the console.
+To see all Git commands that the test runner and the Git Town command execute,
+run the Git Town command with the `--verbose` option. As an example, if the step
+`When I run "git-town append new"` mysteriously fails, you could change it to
+`When I run "git-town append new -v"`. Also add the tags `@debug @this` to see
+the CLI output on the console.
 
 To get a quick glance of which status the repo is at any point in time, insert
 the step `And display "<command_>"` running whatever command you want to execute
@@ -188,7 +189,7 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-## triangulate a hanging end-to-end test
+## Triangulate a hanging end-to-end test
 
 End-to-end tests sometimes hang due to Git Town waiting for input that the test
 doesn't enter. To find the hanging test you can do a binary search by executing
@@ -199,7 +200,7 @@ Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
 you hints at which test fails.
 
-## run linters
+## Run linters
 
 Quick and efficient linter during development:
 
@@ -223,15 +224,15 @@ make fix
 
 </a>
 
-## debug the dialogs
+## Debug the dialogs
 
 Run `git town debug` to see the commands to manually test Git Town's dialogs.
 
-## learn about the code and test architecture
+## Learn about the code and test architecture
 
 See file [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## website
+## Website
 
 The source code for the [website](https://www.git-town.com) is in the
 [website](../website) folder. This folder contains its own
@@ -243,3 +244,29 @@ To work on the website, cd into the `website` folder and run
 development server. The production site auto-updates on changes to the `main`
 branch. The site hoster is [Netlify](https://www.netlify.com). Netlify
 configuration is in [netlify.toml](../netlify.toml).
+
+### Style guide
+
+#### Headings
+
+- Use sentence case capitalization for headings.
+
+#### Commands
+
+- Command summaries
+  - Always add a command summary code block immediately after the page title.
+  - Sort positional arguments before options (starting with `-` or `--`).
+  - Sort `[-d | --detached]`, `[--dry-run]`, and `[-v | --verbose]` at the end
+    of the options. We should put the options specific to this command at the
+    beginning of the options list.
+  - Sort the remaining options alphabetically.
+
+- Document order
+  - Command summary code block
+  - Description (no heading)
+  - Other info (h3)
+  - Positional argument, if applicable (h2)
+  - Options (h2)
+    - Describe each command-line option with an h4 heading, in the same order as
+      the command summary
+  - Configuration, if applicable (h2)

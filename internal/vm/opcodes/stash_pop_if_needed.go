@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // StashPopIfNeeded restores stashed away changes into the workspace.
@@ -17,6 +17,9 @@ func (self *StashPopIfNeeded) Run(args shared.RunArgs) error {
 	if stashSize == 0 && !args.Config.Value.NormalConfig.DryRun {
 		return nil
 	}
-	args.PrependOpcodes(&StashPop{})
+	args.PrependOpcodes(
+		&StashPop{},
+		&ChangesUnstageAll{},
+	)
 	return nil
 }

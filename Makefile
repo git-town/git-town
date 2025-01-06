@@ -1,8 +1,8 @@
-RTA_VERSION = 0.8.1  # run-that-app version to use
+RTA_VERSION = 0.9.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "16.7.0"
+RELEASE_VERSION := "17.2.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
@@ -15,7 +15,7 @@ cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v16/internal/cmd.version=-dev -X github.com/git-town/git-town/v16/internal/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v17/internal/cmd.version=-dev -X github.com/git-town/git-town/v17/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: install  # creates a flamegraph for the end-to-end tests
@@ -32,13 +32,12 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: install tools/node_modules  # tests the documentation
 	@tools/rta node tools/node_modules/.bin/text-run --offline
 
-fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
+fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
-	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta ghokin fmt replace features/
 
@@ -49,13 +48,13 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	make --no-print-dir lint-smoke
+	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
 	make --no-print-directory lint-structs-sorted
 	git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
-	${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	tools/rta node tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
 	tools/rta staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
@@ -78,7 +77,7 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
-# @tools/rta ireturn --reject="github.com/git-town/git-town/v16/pkg/prelude.Option" github.com/git-town/git-town/...
+# @tools/rta ireturn --reject="github.com/git-town/git-town/v17/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
@@ -105,23 +104,39 @@ test-go:  # smoke tests while working on the Go code
 	@make --no-print-directory lint
 
 todo:  # displays all TODO items
-	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile
+	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile | grep -v internal/hosting/bitbucketdatacenter/connector.go
+
+UNIT_TEST_DIRS = \
+	./internal/... \
+	./pkg/... \
+	./test/... \
+	./tools/format_self/... \
+	./tools/format_unittests/... \
+	./tools/lint_steps/... \
+	./tools/stats_release/... \
+	./tools/structs_sorted/... \
+	./tools/tests_sorted/...
 
 unit: install  # runs only the unit tests for changed code
-	@env GOGC=off go test -timeout=30s ./internal/... ./pkg/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
+	@env GOGC=off go test -timeout=30s $(UNIT_TEST_DIRS)
 
 unit-all: install  # runs all the unit tests
-	env GOGC=off go test -count=1 -shuffle=on -timeout=60s ./internal/... ./pkg/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/... ./tools/lint_steps/...
+	env GOGC=off go test -count=1 -shuffle=on -timeout=60s $(UNIT_TEST_DIRS)
 
 unit-race: install  # runs all the unit tests with race detector
-	env GOGC=off go test -count=1 -timeout 60s -race ./internal/... ./pkg/... ./test/...
+	env GOGC=off go test -count=1 -timeout 60s -race $(UNIT_TEST_DIRS)
+	cd website && make --no-print-directory unit
 
 update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go work vendor
-	(cd tools && yarn upgrade --latest)
+	rm -rf tools/node_modules package-lock.json
+	cd tools && ./rta npx -y npm-check-updates -u
+	cd tools && ./rta npm install
 	tools/rta --update
+	tools/rta dprint config update
+	tools/rta dprint config update --config dprint-changelog.json
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
@@ -133,23 +148,26 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
-	@tools/rta deadcode -test github.com/git-town/git-town/v16 | grep -v BranchExists \
-	                                                           | grep -v 'Create$$' \
-	                                                           | grep -v CreateFile \
-	                                                           | grep -v CreateGitTown \
-	                                                           | grep -v EmptyConfigSnapshot \
-	                                                           | grep -v FileExists \
-	                                                           | grep -v FileHasContent \
-	                                                           | grep -v FilterErr \
-	                                                           | grep -v IsGitRepo \
-	                                                           | grep -v Memoized.AsFixture \
-																														 | grep -v NewCommitMessages \
-	                                                           | grep -v NewLineageWith \
-	                                                           | grep -v NewSHAs \
-	                                                           | grep -v NewSet \
-	                                                           | grep -v Paniced \
-	                                                           | grep -v Set.Add \
-	                                                           || true
+	@tools/rta deadcode -test github.com/git-town/git-town/v17 \
+		| grep -v BranchExists \
+		| grep -v 'Create$$' \
+		| grep -v CreateFile \
+		| grep -v CreateGitTown \
+		| grep -v EditDefaultMessage \
+		| grep -v EmptyConfigSnapshot \
+		| grep -v FileExists \
+		| grep -v FileHasContent \
+		| grep -v IsGitRepo \
+		| grep -v Memoized.AsFixture \
+		| grep -v NewCommitMessages \
+		| grep -v NewLineageWith \
+		| grep -v NewSHAs \
+		| grep -v pkg/prelude/ptr.go \
+		| grep -v Paniced \
+		| grep -v Set.Add \
+		| grep -v UseCustomMessageOr \
+		| grep -v UseDefaultMessage \
+		|| true
 	@tput sgr0 || true
 
 tools/rta@${RTA_VERSION}:
@@ -158,7 +176,8 @@ tools/rta@${RTA_VERSION}:
 	@mv tools/rta tools/rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} tools/rta
 
-tools/node_modules: tools/yarn.lock
+tools/node_modules: tools/package-lock.json tools/rta@${RTA_VERSION}
+	test -f tools/node_modules/.yarn-integrity && rm -rf tools/node_modules || true  # remove node_modules if installed with Yarn (TODO: remove after 2025-01-26)
 	@echo "Installing Node based tools"
-	@cd tools && yarn install
+	cd tools && ./rta npm ci
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command

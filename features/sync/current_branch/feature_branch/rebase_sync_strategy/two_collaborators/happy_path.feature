@@ -4,12 +4,12 @@ Feature: two people with rebase strategy sync changes made by them
     Given a Git repo with origin
     And the committed configuration file:
       """
-      [sync-strategy]
-      feature-branches = "rebase"
-
       [branches]
       main = "main"
       perennials = []
+
+      [sync]
+      feature-strategy = "rebase"
       """
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |

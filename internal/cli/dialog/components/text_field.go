@@ -5,8 +5,8 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v16/internal/cli/colors"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
 )
 
 func TextField(args TextFieldArgs) (string, bool, error) {
@@ -27,7 +27,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 	if err != nil {
 		return args.ExistingValue, false, err
 	}
-	result := dialogResult.(textFieldModel) //nolint:forcetypeassert
+	result := dialogResult.(textFieldModel)
 	return result.textInput.Value(), result.status == list.StatusAborted, nil
 }
 

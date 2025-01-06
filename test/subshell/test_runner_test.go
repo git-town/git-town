@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v16/test/ostools"
-	"github.com/git-town/git-town/v16/test/subshell"
+	"github.com/git-town/git-town/v17/test/ostools"
+	"github.com/git-town/git-town/v17/test/subshell"
 	"github.com/shoenig/test/must"
 )
 
@@ -30,6 +30,30 @@ func TestMockingRunner(t *testing.T) {
 		must.NoError(t, err)
 		// verify that it called our overridden "foo" command
 		must.EqOp(t, "foo called with: bar", res)
+	})
+
+	t.Run("MockCommitMessage", func(t *testing.T) {
+		t.Parallel()
+		dir := t.TempDir()
+		runner := subshell.TestRunner{
+			WorkingDir: dir,
+			HomeDir:    dir,
+			BinDir:     filepath.Join(dir, "bin"),
+		}
+
+		runner.MockCommitMessage("test commit message")
+
+		// Simulate Git calling the mock editor configured by MockCommitMessage and
+		// verify its effect.
+		// MockCommitMessage creates a custom editor that the runner makes available
+		// via the GIT_EDITOR environment variable. We verify the following:
+		// - GIT_EDITOR is available and executable.
+		// - The contents of the file provided in the first argument to $GIT_EDITOR
+		//   our expected commit message after the command has finished.
+		_ = runner.MustQuery("bash", "-c", `"$GIT_EDITOR" output`)
+		data, err := os.ReadFile(filepath.Join(dir, "output"))
+		must.NoError(t, err)
+		must.Eq(t, "test commit message\n", string(data))
 	})
 
 	t.Run("Run", func(t *testing.T) {

@@ -18,7 +18,7 @@ feature-regex = "^my-*"
 
 To manually set the feature regex, use the following command:
 
-```bash
+```wrap
 git config [--global] git-town.feature-regex '^user-.*'
 ```
 

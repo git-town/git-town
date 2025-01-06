@@ -3,8 +3,9 @@ package configdomain
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/pkg/set"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
@@ -12,10 +13,11 @@ type NormalConfigData struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
+	BranchTypeOverrides      BranchTypeOverrides
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
-	CreatePrototypeBranches  CreatePrototypeBranches
 	DefaultBranchType        BranchType
+	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
@@ -23,6 +25,7 @@ type NormalConfigData struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
+	NewBranchType            Option[BranchType]
 	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline
@@ -41,51 +44,8 @@ type NormalConfigData struct {
 	SyncUpstream             SyncUpstream
 }
 
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *NormalConfigData) ContainsLineage() bool {
-	return self.Lineage.Len() > 0
-}
-
 func (self *NormalConfigData) IsOnline() bool {
 	return self.Online().IsTrue()
-}
-
-func (self *NormalConfigData) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PerennialBranches, branch) {
-		return true
-	}
-	if perennialRegex, has := self.PerennialRegex.Get(); has {
-		return perennialRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *NormalConfigData) IsPrototypeBranch(branch gitdomain.LocalBranchName) bool {
-	if slices.Contains(self.PrototypeBranches, branch) {
-		return true
-	}
-	return self.DefaultBranchType == BranchTypePrototypeBranch
-}
-
-func (self *NormalConfigData) MatchesContributionRegex(branch gitdomain.LocalBranchName) bool {
-	if contributionRegex, has := self.ContributionRegex.Get(); has {
-		return contributionRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *NormalConfigData) MatchesFeatureBranchRegex(branch gitdomain.LocalBranchName) bool {
-	if featureRegex, has := self.FeatureRegex.Get(); has {
-		return featureRegex.MatchesBranch(branch)
-	}
-	return false
-}
-
-func (self *NormalConfigData) MatchesObservedRegex(branch gitdomain.LocalBranchName) bool {
-	if observedRegex, has := self.ObservedRegex.Get(); has {
-		return observedRegex.MatchesBranch(branch)
-	}
-	return false
 }
 
 func (self *NormalConfigData) NoPushHook() NoPushHook {
@@ -97,9 +57,11 @@ func (self *NormalConfigData) Online() Online {
 }
 
 func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
-	if self.IsPerennialBranch(branch) {
-		return BranchTypePerennialBranch
+	// check the branch type overrides
+	if branchTypeOverride, hasBranchTypeOverride := self.BranchTypeOverrides[branch]; hasBranchTypeOverride {
+		return branchTypeOverride
 	}
+	// check the configured branch lists
 	if slices.Contains(self.ContributionBranches, branch) {
 		return BranchTypeContributionBranch
 	}
@@ -109,19 +71,52 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
 	}
+	if slices.Contains(self.PerennialBranches, branch) {
+		return BranchTypePerennialBranch
+	}
 	if slices.Contains(self.PrototypeBranches, branch) {
 		return BranchTypePrototypeBranch
 	}
-	if self.MatchesFeatureBranchRegex(branch) {
-		return BranchTypeFeatureBranch
-	}
-	if self.MatchesContributionRegex(branch) {
+	// check if a regex matches
+	if regex, has := self.ContributionRegex.Get(); has && regex.MatchesBranch(branch) {
 		return BranchTypeContributionBranch
 	}
-	if self.MatchesObservedRegex(branch) {
+	if regex, has := self.FeatureRegex.Get(); has && regex.MatchesBranch(branch) {
+		return BranchTypeFeatureBranch
+	}
+	if regex, has := self.ObservedRegex.Get(); has && regex.MatchesBranch(branch) {
 		return BranchTypeObservedBranch
 	}
+	if regex, has := self.PerennialRegex.Get(); has && regex.MatchesBranch(branch) {
+		return BranchTypePerennialBranch
+	}
+	// branch doesn't match any of the overrides --> default branch type
 	return self.DefaultBranchType
+}
+
+func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
+	matching := set.New[gitdomain.LocalBranchName]()
+	switch branchType {
+	case BranchTypeContributionBranch:
+		matching.Add(self.ContributionBranches...)
+	case BranchTypeFeatureBranch:
+	case BranchTypeMainBranch:
+		// main branch is stored in ValidatedConfig
+	case BranchTypeObservedBranch:
+		matching.Add(self.ObservedBranches...)
+	case BranchTypeParkedBranch:
+		matching.Add(self.ParkedBranches...)
+	case BranchTypePerennialBranch:
+		matching.Add(self.PerennialBranches...)
+	case BranchTypePrototypeBranch:
+		matching.Add(self.PrototypeBranches...)
+	}
+	for key, value := range self.BranchTypeOverrides {
+		if value == branchType {
+			matching.Add(key)
+		}
+	}
+	return matching.Values()
 }
 
 func (self *NormalConfigData) ShouldPushNewBranches() bool {
@@ -133,10 +128,11 @@ func DefaultNormalConfig() NormalConfigData {
 		Aliases:                  Aliases{},
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
+		BranchTypeOverrides:      BranchTypeOverrides{},
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
-		CreatePrototypeBranches:  false,
 		DefaultBranchType:        BranchTypeFeatureBranch,
+		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
@@ -144,6 +140,7 @@ func DefaultNormalConfig() NormalConfigData {
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		HostingPlatform:          None[HostingPlatform](),
 		Lineage:                  NewLineage(),
+		NewBranchType:            None[BranchType](),
 		ObservedBranches:         gitdomain.LocalBranchNames{},
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,

@@ -13,7 +13,7 @@ Feature: ship a coworker's feature branch
       | feature | local, origin | developer commit 1 | developer <developer@example.com> |
       |         |               | developer commit 2 | developer <developer@example.com> |
       |         |               | coworker commit    | coworker <coworker@example.com>   |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
 
   Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and enter into the dialog:

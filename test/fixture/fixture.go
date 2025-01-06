@@ -7,17 +7,18 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/asserts"
-	"github.com/git-town/git-town/v16/test/commands"
-	"github.com/git-town/git-town/v16/test/datatable"
-	testgit "github.com/git-town/git-town/v16/test/git"
-	"github.com/git-town/git-town/v16/test/helpers"
-	"github.com/git-town/git-town/v16/test/subshell"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
+	"github.com/git-town/git-town/v17/test/commands"
+	"github.com/git-town/git-town/v17/test/datatable"
+	"github.com/git-town/git-town/v17/test/helpers"
+	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testgit"
+	"github.com/git-town/git-town/v17/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.
@@ -69,22 +70,21 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 		WorkingDir:       workTreePath,
 	}
 	gitCommands := git.Commands{
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
 		TestRunner: &runner,
 		Commands:   &gitCommands,
 		Config:     devRepo.Config,
+		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 	})
 }
 
 // AddSubmodule adds a submodule repository.
 func (self *Fixture) AddSubmoduleRepo() {
 	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
-	}
+	asserts.NoError(err)
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRun("git", "config", "--global", "protocol.file.allow", "always")
 	self.SubmoduleRepo = MutableSome(&submoduleRepo)
@@ -105,22 +105,21 @@ func (self *Fixture) Branches() datatable.DataTable {
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := gitdomain.NewLocalBranchName("main")
 	initialBranch := gitdomain.NewLocalBranchName("initial")
-	localBranches, err := self.DevRepo.GetOrPanic().LocalBranches()
-	asserts.NoError(err)
+	localBranches := asserts.NoError1(self.DevRepo.GetOrPanic().LocalBranches())
 	localBranchesJoined := localBranches.RemoveWorktreeMarkers().Remove(initialBranch).Hoist(mainBranch).Join(", ")
 	originRepo, hasOriginRepo := self.OriginRepo.Get()
 	if !hasOriginRepo {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, err := originRepo.LocalBranches()
-	asserts.NoError(err)
+	originBranches := asserts.NoError1(originRepo.LocalBranches())
 	originBranchesJoined := originBranches.Remove(initialBranch).Hoist(mainBranch).Join(", ")
+	originName := self.DevRepo.Value.Config.NormalConfig.DevRemote.String()
 	if localBranchesJoined == originBranchesJoined {
-		result.AddRow("local, origin", localBranchesJoined)
+		result.AddRow("local, "+originName, localBranchesJoined)
 	} else {
 		result.AddRow("local", localBranchesJoined)
-		result.AddRow("origin", originBranchesJoined)
+		result.AddRow(originName, originBranchesJoined)
 	}
 	return result
 }
@@ -132,26 +131,26 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	var mainBranch gitdomain.BranchName
 	mainIsLocal := self.DevRepo.Value.BranchExists(self.DevRepo.Value, "main")
 	if mainIsLocal {
-		mainBranch = gitdomain.NewLocalBranchName("main").BranchName()
+		mainBranch = gitdomain.NewBranchName("main")
 	} else {
-		mainBranch = gitdomain.NewRemoteBranchName("origin/main").BranchName()
+		mainBranch = gitdomain.NewBranchName("origin/main")
 	}
 	localCommits := self.DevRepo.GetOrPanic().Commits(fields, mainBranch, lineage)
 	builder.AddMany(localCommits, "local")
 	if coworkerRepo, hasCoworkerRepo := self.CoworkerRepo.Get(); hasCoworkerRepo {
-		coworkerCommits := coworkerRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		coworkerCommits := coworkerRepo.Commits(fields, "main", lineage)
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originCommits := originRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
-		builder.AddMany(originCommits, gitdomain.RemoteOrigin.String())
+		originCommits := originRepo.Commits(fields, "main", lineage)
+		builder.AddMany(originCommits, self.DevRepo.Value.Config.NormalConfig.DevRemote.String())
 	}
 	if upstreamRepo, hasUpstreamRepo := self.UpstreamRepo.Get(); hasUpstreamRepo {
-		upstreamCommits := upstreamRepo.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		upstreamCommits := upstreamRepo.Commits(fields, "main", lineage)
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	if secondWorkTree, hasSecondWorkTree := self.SecondWorktree.Get(); hasSecondWorkTree {
-		secondWorktreeCommits := secondWorkTree.Commits(fields, gitdomain.NewBranchName("main"), lineage)
+		secondWorktreeCommits := secondWorkTree.Commits(fields, "main", lineage)
 		builder.AddMany(secondWorktreeCommits, "worktree")
 	}
 	return builder.Table(fields)
@@ -179,7 +178,7 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if originRepo, hasOriginRepo := self.OriginRepo.Get(); hasOriginRepo {
-		originRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
+		originRepo.CheckoutBranch("initial")
 	}
 }
 
@@ -239,7 +238,7 @@ func developerRepoPath(rootDir string) string {
 }
 
 func initializeWorkspace(repo *commands.TestCommands) {
-	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
+	asserts.NoError(repo.Config.SetMainBranch("main"))
 	asserts.NoError(repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
 	// NOTE: the developer repos receives the initial branch from origin

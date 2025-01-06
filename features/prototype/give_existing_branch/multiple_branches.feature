@@ -16,31 +16,30 @@ Feature: prototype multiple other branches
       """
       branch "feature" is now a prototype branch
       """
-    And branch "feature" is now prototype
+    And branch "feature" now has type "prototype"
     And Git Town prints:
       """
       branch "contribution" is now a prototype branch
       """
-    And branch "contribution" is now prototype
+    And branch "contribution" now has type "prototype"
     And Git Town prints:
       """
       branch "observed" is now a prototype branch
       """
-    And branch "observed" is now prototype
+    And branch "observed" now has type "prototype"
     And Git Town prints:
       """
       branch "parked" is now a prototype branch
       """
-    And branch "parked" is now prototype
-    And branch "parked" is still parked
+    And branch "parked" now has type "prototype"
     And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And there are now no prototype branches
-    And branch "contribution" is now a contribution branch
-    And branch "observed" is now observed
-    And branch "parked" is still parked
+    And branch "contribution" now has type "contribution"
+    And branch "observed" now has type "observed"
+    And branch "parked" now has type "parked"
     And the current branch is still "main"
     And the initial branches and lineage exist now

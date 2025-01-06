@@ -27,11 +27,6 @@ func (self Set[T]) AddSet(other Set[T]) {
 	self.Add(other.Values()...)
 }
 
-func (self Set[T]) Contains(value T) bool {
-	_, has := self[value]
-	return has
-}
-
 func (self Set[T]) Values() []T {
 	result := maps.Keys(self)
 	slices.Sort(result)

@@ -6,7 +6,7 @@ Feature: preserve the previous Git branch
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | previous | feature | main   | local     |
       | current  | feature | main   | local     |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
 
   Scenario: current branch gone
     Given the commits

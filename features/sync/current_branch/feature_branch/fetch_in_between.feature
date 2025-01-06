@@ -1,6 +1,6 @@
 Feature: do not undo branches that were pulled in through "git fetch" while resolving conflicts
 
-  Background: I fetch updates while resolving merge conflicts
+  Background:
     Given a Git repo with origin
     And the branches
       | NAME       | TYPE    | PARENT | LOCATIONS     |

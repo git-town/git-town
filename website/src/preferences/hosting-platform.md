@@ -4,12 +4,9 @@ To talk to the API of your code hosting platform, Git Town needs to know which
 platform (GitHub, Gitlab, Bitbucket, etc) you use.
 
 By default, Git Town determines the code hosting platform by looking at the URL
-of the `origin` remote. If that's not successful, for example when using private
-instances of code hosting platforms, you can tell Git Town through this
-configuration setting which code hosting platform you use.
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
+of the [development remote](dev-remote.md). If that's not successful, for
+example when using private instances of code hosting platforms, you can tell Git
+Town through this configuration setting which code hosting platform you use.
 
 ## values
 
@@ -36,7 +33,7 @@ platform = "<value>"
 
 To configure the hosting platform in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.hosting-platform <value>
 ```
 

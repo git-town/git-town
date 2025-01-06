@@ -1,6 +1,6 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v16/pkg/prelude"
+import . "github.com/git-town/git-town/v17/pkg/prelude"
 
 // configuration setting that allows defining branches matching this regular expression as contribution branches
 type ContributionRegex struct {

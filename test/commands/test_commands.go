@@ -7,17 +7,17 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	prodgit "github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/slice"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/asserts"
-	"github.com/git-town/git-town/v16/test/datatable"
-	"github.com/git-town/git-town/v16/test/git"
-	"github.com/git-town/git-town/v16/test/subshell"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	prodgit "github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/slice"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/asserts"
+	"github.com/git-town/git-town/v17/test/datatable"
+	"github.com/git-town/git-town/v17/test/subshell"
+	"github.com/git-town/git-town/v17/test/testgit"
 )
 
 const ConfigFileCommitMessage = "persisted config file"
@@ -26,7 +26,8 @@ const ConfigFileCommitMessage = "persisted config file"
 type TestCommands struct {
 	*subshell.TestRunner
 	*prodgit.Commands
-	Config config.UnvalidatedConfig
+	Config    config.UnvalidatedConfig
+	SnapShots map[configdomain.ConfigScope]configdomain.SingleSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -52,7 +53,10 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
-	output := self.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
+	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")
+	if output == "" {
+		return result
+	}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
@@ -68,13 +72,12 @@ func (self *TestCommands) CommitStagedChanges(message gitdomain.CommitMessage) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchName, lineage configdomain.Lineage) []git.Commit {
+func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchName, lineage configdomain.Lineage) []testgit.Commit {
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
-	branches, err := self.LocalBranchesMainFirst(mainBranch.LocalName())
-	asserts.NoError(err)
-	var result []git.Commit
+	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch.LocalName()))
+	var result []testgit.Commit
 	for _, branch := range branches {
 		if strings.HasPrefix(branch.String(), "+ ") {
 			// branch is checked out in another workspace --> skip here
@@ -88,8 +91,8 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []git.Commit {
-	args := []string{"log", "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse"}
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
+	args := []string{"log", "--format=%H|%s|%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
 	} else {
@@ -97,13 +100,13 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 	}
 	output := self.MustQuery("git", args...)
 	lines := strings.Split(output, "\n")
-	result := make([]git.Commit, 0, len(lines))
+	result := make([]testgit.Commit, 0, len(lines))
 	for _, line := range lines {
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
 		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
+		commit := testgit.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
 			continue
 		}
@@ -128,8 +131,7 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) {
-	err := self.CreateAndCheckoutBranchWithParent(self, name, parent)
-	asserts.NoError(err)
+	asserts.NoError(self.CreateAndCheckoutBranchWithParent(self, name, parent))
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
@@ -140,15 +142,17 @@ func (self *TestCommands) CreateBranch(name gitdomain.LocalBranchName, parent gi
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
-// CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
-// The parent branch must already exist.
-func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
-	self.CreateBranch(branch, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.SetParent(branch, parent))
+func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, parentOpt Option[gitdomain.LocalBranchName], branchType configdomain.BranchType) {
+	if parent, hasParent := parentOpt.Get(); hasParent {
+		self.CreateFeatureBranch(name, parent.BranchName())
+	} else {
+		self.CreateBranch(name, "main")
+	}
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(branchType, name))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (self *TestCommands) CreateCommit(commit git.Commit) {
+func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 	self.CheckoutBranch(commit.Branch)
 	self.CreateFile(commit.FileName, commit.FileContent)
 	self.MustRun("git", "add", commit.FileName)
@@ -159,16 +163,10 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.MustRun("git", commands...)
 }
 
-// creates a contribution branches with the given name in this repository
-func (self *TestCommands) CreateContributionBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.AddToContributionBranches(name))
-}
-
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.CreateBranch(name, parent)
-	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
+	asserts.NoError(self.Config.NormalConfig.SetParent(name, parent.LocalName()))
 }
 
 // creates a file with the given name and content in this repository
@@ -184,30 +182,6 @@ func (self *TestCommands) CreateFile(name, content string) {
 func (self *TestCommands) CreateFolder(name string) {
 	folderPath := filepath.Join(self.WorkingDir, name)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
-}
-
-// creates an observed branch with the given name in this repository
-func (self *TestCommands) CreateObservedBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.AddToObservedBranches(name))
-}
-
-// creates a parked branch with the given name and parent in this repository
-func (self *TestCommands) CreateParkedBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.AddToParkedBranches(name))
-}
-
-// creates a perennial branch with the given name in this repository
-func (self *TestCommands) CreatePerennialBranch(name gitdomain.LocalBranchName) {
-	self.CreateBranch(name, "main")
-	asserts.NoError(self.Config.NormalConfig.AddToPerennialBranches(name))
-}
-
-// creates a prototype branch with the given name and parent in this repository
-func (self *TestCommands) CreatePrototypeBranch(name, parent gitdomain.LocalBranchName) {
-	self.CreateFeatureBranch(name, parent.BranchName())
-	asserts.NoError(self.Config.NormalConfig.AddToPrototypeBranches(name))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -241,7 +215,7 @@ func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, linea
 		if self.BranchExists(self, parent) {
 			return Some(parent.BranchName())
 		}
-		if self.BranchExistsRemotely(self, parent) {
+		if self.BranchExistsRemotely(self, parent, gitdomain.RemoteOrigin) {
 			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
 		}
 		branch = parent
@@ -255,9 +229,7 @@ func (self *TestCommands) Fetch() {
 
 // FileContent provides the current content of a file.
 func (self *TestCommands) FileContent(filename string) string {
-	content, err := self.FileContentErr(filename)
-	asserts.NoError(err)
-	return content
+	return asserts.NoError1(self.FileContentErr(filename))
 }
 
 // FileContent provides the current content of a file.
@@ -293,8 +265,7 @@ func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []stri
 func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := self.LocalBranchesMainFirst(mainBranch)
-	asserts.NoError(err)
+	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch))
 	var lastBranch gitdomain.LocalBranchName
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
@@ -317,20 +288,17 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
-func (self *TestCommands) GitConfig(scope configdomain.ConfigScope, name configdomain.Key) Option[string] {
-	args := []string{"config"}
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		args = append(args, "--global")
-	case configdomain.ConfigScopeLocal:
-		args = append(args, "--local")
+func (self *TestCommands) FilesInWorkspace() []string {
+	files := asserts.NoError1(os.ReadDir(self.WorkingDir))
+	result := make([]string, 0, len(files))
+	for _, file := range files {
+		fileName := file.Name()
+		if fileName == ".git" {
+			continue
+		}
+		result = append(result, fileName)
 	}
-	args = append(args, "--get", name.String())
-	output, err := self.Query("git", args...)
-	if err != nil {
-		return None[string]()
-	}
-	return Some(output)
+	return result
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
@@ -357,7 +325,7 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	_, localGitConfig, _ := self.Config.NormalConfig.GitConfig.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	_, localGitConfig, _ := self.Config.NormalConfig.GitConfigAccess.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	lineage := localGitConfig.Lineage
 	for _, entry := range lineage.Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())
@@ -413,6 +381,12 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 	return self.Run("git", "rebase", branch.String())
 }
 
+func (self *TestCommands) Reload() {
+	globalConfigSnapshot, localConfigSnapshot := self.Config.Reload()
+	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
+	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
+}
+
 // RemoveBranch deletes the branch with the given name from this repo.
 func (self *TestCommands) RemoveBranch(name gitdomain.LocalBranchName) {
 	self.MustRun("git", "branch", "-D", name.String())
@@ -425,7 +399,7 @@ func (self *TestCommands) RemoveMainBranchConfiguration() {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.Config.NormalConfig.GitConfig.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+	return self.Config.NormalConfig.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
@@ -434,7 +408,7 @@ func (self *TestCommands) RemoveRemote(name gitdomain.Remote) {
 	self.MustRun("git", "remote", "rm", name.String())
 }
 
-// RemoveUnnecessaryFiles trims all files that aren'self necessary in this repo.
+// RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (self *TestCommands) RemoveUnnecessaryFiles() {
 	fullPath := filepath.Join(self.WorkingDir, ".git", "hooks")
 	asserts.NoError(os.RemoveAll(fullPath))
@@ -442,9 +416,14 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "description"))
 }
 
+func (self *TestCommands) RenameRemote(oldName, newName string) {
+	self.RemotesCache.Invalidate()
+	self.MustRun("git", "remote", "rename", oldName, newName)
+}
+
 // SHAForCommit provides the SHA for the commit with the given name.
 func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
-	output := self.MustQuery("git", "reflog", "--format=%h %s")
+	output := self.MustQuery("git", "reflog", "--format=%H %s")
 	if output == "" {
 		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
 	}

@@ -3,9 +3,9 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 type MergeSquashAutoUndo struct {

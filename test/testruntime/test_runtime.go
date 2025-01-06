@@ -5,15 +5,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/config/gitconfig"
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/commands"
-	testshell "github.com/git-town/git-town/v16/test/subshell"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/gitconfig"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/commands"
+	testshell "github.com/git-town/git-town/v17/test/subshell"
 	"github.com/shoenig/test/must"
 )
 
@@ -49,26 +50,35 @@ func Create(t *testing.T) commands.TestCommands {
 func CreateGitTown(t *testing.T) commands.TestCommands {
 	t.Helper()
 	repo := Create(t)
-	repo.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewBranchName("initial"))
-	err := repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main"))
+	repo.CreateBranch("main", "initial")
+	err := repo.Config.SetMainBranch("main")
 	must.NoError(t, err)
 	err = repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{})
 	must.NoError(t, err)
 	return repo
 }
 
-// initialize creates a fully functioning test.Runner in the given working directory,
+// Initialize creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func Initialize(workingDir, homeDir, binDir string) commands.TestCommands {
-	runtime := New(workingDir, homeDir, binDir)
-	runtime.MustRun("git", "init", "--initial-branch=initial")
-	runtime.MustRun("git", "config", "--global", "user.name", "user")
-	runtime.MustRun("git", "config", "--global", "user.email", "email@example.com")
+	runtime := InitializeNoInitialCommit(workingDir, homeDir, binDir)
 	runtime.MustRun("git", "commit", "--allow-empty", "-m", "initial commit")
 	return runtime
 }
 
-// newRuntime provides a new test.Runner instance working in the given directory.
+// InitializeNoInitialCommit creates a fully functioning test.Runner in the given working directory,
+// including necessary Git configuration to make commits. Creates missing folders as needed.
+// Does not create an initial commit.
+// This is useful for scenarios that require testing the behavior of Git Town in a fresh repository.
+func InitializeNoInitialCommit(workingDir, homeDir, binDir string) commands.TestCommands {
+	runtime := New(workingDir, homeDir, binDir)
+	runtime.MustRun("git", "init", "--initial-branch=initial")
+	runtime.MustRun("git", "config", "--global", "user.name", "user")
+	runtime.MustRun("git", "config", "--global", "user.email", "email@example.com")
+	return runtime
+}
+
+// New provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	testRunner := testshell.TestRunner{
@@ -79,23 +89,25 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		WorkingDir:       workingDir,
 	}
 	gitCommands := git.Commands{
-		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-		RemotesCache:       &cache.Remotes{},
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
-	unvalidatedConfig, _ := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
+	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
 			Runner: &testRunner,
 		},
-		ConfigFile:   None[configdomain.PartialConfig](),
-		DryRun:       false,
-		GitVersion:   git.Version{Major: 2, Minor: 38},
-		GlobalConfig: configdomain.EmptyPartialConfig(),
-		LocalConfig:  configdomain.EmptyPartialConfig(),
+		ConfigFile:    None[configdomain.PartialConfig](),
+		DryRun:        false,
+		FinalMessages: stringslice.NewCollector(),
+		GitVersion:    git.Version{Major: 2, Minor: 38},
+		GlobalConfig:  configdomain.EmptyPartialConfig(),
+		LocalConfig:   configdomain.EmptyPartialConfig(),
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
 		Commands:   &gitCommands,
 		Config:     unvalidatedConfig,
+		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 		TestRunner: &testRunner,
 	}
 	return testCommands

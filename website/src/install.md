@@ -29,7 +29,7 @@ You can install Git Town on Windows using:
   `choco install git-town`
 - [Scoop](https://scoop.sh/#/apps?q=git+town): `scoop install git-town`
 - the
-  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v16.7.0/git-town_windows_intel_64.msi)
+  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v17.2.0/git-town_windows_intel_64.msi)
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
@@ -79,7 +79,7 @@ You can install Git Town on BSD via
 [freshports](https://www.freshports.org/devel/git-town) or by downloading the
 matching binaries from the GitHub release.
 
-## manual installation
+## Manual installation
 
 ```
 curl https://www.git-town.com/install.sh | sh
@@ -90,13 +90,13 @@ For a fully custom installation,
 your CPU architecture, extract it, and move the `git-town` executable into a
 directory listed in your `$PATH`, for example `/usr/local/bin`.
 
-## compile from source
+## Compile from source
 
 If you have the [Go compiler](https://go.dev) installed, you can compile the
 latest version of Git Town from source by running:
 
 ```
-go get github.com/git-town/git-town
+go get github.com/git-town/git-town/v17
 ```
 
 ## New releases
@@ -109,7 +109,7 @@ get notifications about new releases.
 
 To remove Git Town from your system:
 
-2. Remove the Git Town configuration from your repositories: in each repo, run
+1. Remove the Git Town configuration from your repositories: in each repo, run
    `git town config remove`
-3. If your operating system or package manager provides an uninstaller for Git
+2. If your operating system or package manager provides an uninstaller for Git
    Town, run it. If you installed Git Town manually, delete the binary.

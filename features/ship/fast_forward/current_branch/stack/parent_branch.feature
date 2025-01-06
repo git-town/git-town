@@ -11,7 +11,7 @@ Feature: ship a parent branch using the fast-forward strategy
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And the current branch is "parent"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result

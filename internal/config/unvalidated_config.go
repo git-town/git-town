@@ -1,12 +1,12 @@
 package config
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/config/gitconfig"
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/gitconfig"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 type UnvalidatedConfig struct {
@@ -21,7 +21,8 @@ func (self *UnvalidatedConfig) BranchType(branch gitdomain.LocalBranchName) conf
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
 func (self *UnvalidatedConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return self.UnvalidatedConfig.IsMainBranch(branch) || self.NormalConfig.IsPerennialBranch(branch)
+	branchType := self.BranchType(branch)
+	return branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 }
 
 func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
@@ -31,31 +32,32 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
-func (self *UnvalidatedConfig) Reload() {
-	_, globalGitConfig, _ := self.NormalConfig.GitConfig.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	_, localGitConfig, _ := self.NormalConfig.GitConfig.LoadLocal(false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
+	globalSnapshot, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadGlobal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.LoadLocal(false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
 		ConfigFile:       self.NormalConfig.ConfigFile,
 		DryRun:           self.NormalConfig.DryRun,
-		GitConfig:        self.NormalConfig.GitConfig,
+		GitConfigAccess:  self.NormalConfig.GitConfigAccess,
 		GitVersion:       self.NormalConfig.GitVersion,
 		GlobalGitConfig:  globalGitConfig,
 		LocalGitConfig:   localGitConfig,
 		NormalConfigData: normalConfig,
 	}
+	return globalSnapshot, localSnapshot
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.NormalConfig.GitConfig.RemoveLocalConfigValue(configdomain.KeyMainBranch)
+	_ = self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyMainBranch)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return self.NormalConfig.GitConfig.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return self.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
@@ -74,7 +76,7 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
-			GitConfig:        gitAccess,
+			GitConfigAccess:  gitAccess,
 			GitVersion:       gitVersion,
 			GlobalGitConfig:  configdomain.EmptyPartialConfig(),
 			LocalGitConfig:   configdomain.EmptyPartialConfig(),
@@ -106,28 +108,28 @@ func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, 
 	return unvalidatedConfig, normalConfig
 }
 
-func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) (UnvalidatedConfig, stringslice.Collector) {
+func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := MergeConfigs(args.ConfigFile, args.GlobalConfig, args.LocalConfig)
-	finalMessages := stringslice.NewCollector()
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       args.ConfigFile,
 			DryRun:           args.DryRun,
-			GitConfig:        args.Access,
+			GitConfigAccess:  args.Access,
 			GitVersion:       args.GitVersion,
 			GlobalGitConfig:  args.GlobalConfig,
 			LocalGitConfig:   args.LocalConfig,
 			NormalConfigData: normalConfig,
 		},
 		UnvalidatedConfig: unvalidatedConfig,
-	}, finalMessages
+	}
 }
 
 type NewUnvalidatedConfigArgs struct {
-	Access       gitconfig.Access
-	ConfigFile   Option[configdomain.PartialConfig]
-	DryRun       configdomain.DryRun
-	GitVersion   git.Version
-	GlobalConfig configdomain.PartialConfig
-	LocalConfig  configdomain.PartialConfig
+	Access        gitconfig.Access
+	ConfigFile    Option[configdomain.PartialConfig]
+	DryRun        configdomain.DryRun
+	FinalMessages stringslice.Collector
+	GitVersion    git.Version
+	GlobalConfig  configdomain.PartialConfig
+	LocalConfig   configdomain.PartialConfig
 }

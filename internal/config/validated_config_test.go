@@ -5,12 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/git/giturl"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/git/giturl"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
@@ -26,6 +26,7 @@ func TestValidatedConfig(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
+					DefaultBranchType:    configdomain.BranchTypeFeatureBranch,
 					PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 					ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
 					ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
@@ -119,6 +120,7 @@ func TestValidatedConfig(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					ContributionBranches: gitdomain.LocalBranchNames{contribution},
+					DefaultBranchType:    configdomain.BranchTypeFeatureBranch,
 					ObservedBranches:     gitdomain.LocalBranchNames{observed},
 					ParkedBranches:       gitdomain.LocalBranchNames{parked},
 					PerennialBranches:    gitdomain.LocalBranchNames{perennial1},

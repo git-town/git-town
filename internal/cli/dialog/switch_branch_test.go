@@ -3,9 +3,9 @@ package dialog_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -181,9 +181,9 @@ func newSwitchBranchBubbleListEntries(entries []dialog.SwitchBranchEntry) []list
 	result := make([]list.Entry[dialog.SwitchBranchEntry], len(entries))
 	for e, entry := range entries {
 		result[e] = list.Entry[dialog.SwitchBranchEntry]{
-			Data:    entry,
-			Enabled: !entry.OtherWorktree,
-			Text:    entry.String(),
+			Data:     entry,
+			Disabled: entry.OtherWorktree,
+			Text:     entry.String(),
 		}
 	}
 	return result

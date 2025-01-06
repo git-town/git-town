@@ -1,8 +1,8 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/undo/undodomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/undo/undodomain"
 )
 
 // SingleCacheDiff provides a diff of the two given SingleCache instances.

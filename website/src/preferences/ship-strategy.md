@@ -17,15 +17,28 @@ You need to configure an API token in the
 `api` is the default value because it does exactly what you normally do
 manually.
 
+### always-merge
+
+The `always-merge` ship strategy creates a merge commit via `git merge --no-ff`.
+
+This strategy allows visually grouping related feature commits together which
+may aid in understanding project history in certain situations.
+
+It is not generally recommended to revert merge commits, so `git town undo` will
+not create a merge reversal commit if the merge commit has been pushed already.
+See
+[howto/revert-a-faulty-merge.txt](https://github.com/git/git/blob/master/Documentation/howto/revert-a-faulty-merge.txt)
+in the official Git documentation for more information.
+
 ### fast-forward
 
 The `fast-forward` ship strategy prevents false merge conflicts when using
 [stacked changes](../stacked-changes.md). It merges the branch to ship into its
 parent (typically the main branch) by running
 [git merge --ff-only](https://git-scm.com/docs/git-merge#Documentation/git-merge.txt---ff-only)
-and then pushes the new commits on the parent branch to origin. This way the
-parent branch contains the exact same commits as the branch that has just been
-shipped.
+and then pushes the new commits on the parent branch to the
+[development remote](dev-remote.md). This way the parent branch contains the
+exact same commits as the branch that has just been shipped.
 
 For details why this is needed check out this
 [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
@@ -47,24 +60,26 @@ feature branch to ship in your local Git repository. While doing so it squashes
 all commits on the feature branch into a single commit and lets you edit the
 commit message.
 
-## change this setting
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ### config file
 
 Set the ship-strategy in the [config file](../configuration-file.md):
 
 ```toml
-ship-strategy = "api"
+ship.strategy = "api"
+```
+
+or
+
+```toml
+[ship]
+strategy = "api"
 ```
 
 ### Git metadata
 
 To manually configure the ship-strategy in Git metadata, run:
 
-```
+```wrap
 git config [--global] git-town.ship-strategy <api|squash-merge>
 ```
 

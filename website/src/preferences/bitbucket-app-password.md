@@ -17,10 +17,10 @@ the menu on the left `App passwords`. You need to enable these permissions:
 - repository: read and write
 - pull requests: read and write
 
-## Bitbucket Datacenter
+## Bitbucket Data Center
 
-Git Town can interact with Bitbucket Datacenter in your name. To do so, Git Town
-needs your [Bitbucket username](bitbucket-username.md) and an
+Git Town can interact with Bitbucket Data Center in your name. To do so, Git
+Town needs your [Bitbucket username](bitbucket-username.md) and an
 [HTTP access token](https://confluence.atlassian.com/bitbucketserver/http-access-tokens-939515499.html).
 
 An HTTP access token is not the password of your Bitbucket account. It's a
@@ -32,11 +32,6 @@ the left `HTTP access tokens`. You need to enable these permissions:
 - Project read
 - Repository write
 
-## Setup app password
-
-The best way to enter the Bitbucket app password is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since your App Password is confidential, you cannot add it to the config file.
@@ -45,7 +40,7 @@ Since your App Password is confidential, you cannot add it to the config file.
 
 You can configure the App Password manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.bitbucket-app-password <token>
 ```
 

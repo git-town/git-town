@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 const (
 	ShipStrategyAPI         ShipStrategy = "api"          // shipping via the code hosting API
-	ShipStragegyFastForward ShipStrategy = "fast-forward" // shipping by doing a local fast-forward
+	ShipStrategyAlwaysMerge ShipStrategy = "always-merge" // shipping by doing a local merge commit (merge --no-ff)
+	ShipStrategyFastForward ShipStrategy = "fast-forward" // shipping by doing a local fast-forward
 	ShipStrategySquashMerge ShipStrategy = "squash-merge" // shipping by doing a local squash-merge
 )
 
@@ -37,7 +38,8 @@ func ParseShipStrategy(text string) (Option[ShipStrategy], error) {
 func ShipStrategies() []ShipStrategy {
 	return []ShipStrategy{
 		ShipStrategyAPI,
-		ShipStragegyFastForward,
+		ShipStrategyAlwaysMerge,
+		ShipStrategyFastForward,
 		ShipStrategySquashMerge,
 	}
 }

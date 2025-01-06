@@ -6,8 +6,7 @@ Feature: does not ship the main branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship main"
 
   Scenario: result
@@ -19,7 +18,6 @@ Feature: does not ship the main branch
       cannot ship the main branch
       """
     And the current branch is still "feature"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

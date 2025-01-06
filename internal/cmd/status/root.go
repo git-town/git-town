@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	"github.com/git-town/git-town/v16/internal/vm/statefile"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	"github.com/git-town/git-town/v17/internal/vm/statefile"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -43,6 +43,7 @@ func RootCommand() *cobra.Command {
 	addPendingFlag(&cmd)
 	addVerboseFlag(&cmd)
 	cmd.AddCommand(resetRunstateCommand())
+	cmd.AddCommand(showRunstateCommand())
 	return &cmd
 }
 
@@ -67,7 +68,7 @@ func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) e
 	}
 	displayStatus(data, pending)
 	if !pending {
-		print.Footer(verbose, *repo.CommandsCounter.Value, print.NoFinalMessages)
+		print.Footer(verbose, *repo.CommandsCounter.Value, []string{})
 	}
 	return nil
 }

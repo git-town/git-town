@@ -1,8 +1,8 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -31,5 +31,5 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadShipStrategyFunc is the type signature for the function that reads the ship "strategy" flag from the args to the given Cobra command.
 type ReadShipStrategyFunc func(*cobra.Command) (Option[configdomain.ShipStrategy], error)

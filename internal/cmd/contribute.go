@@ -4,15 +4,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/config"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	configInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/config"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -69,14 +68,11 @@ func executeContribute(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = validateContributeData(data); err != nil {
+	if err = validateContributeData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToMark.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.AddToContributionBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonContributionBranchTypes(data.branchesToMark, repo.UnvalidatedConfig); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, branchNames...); err != nil {
 		return err
 	}
 	printContributeBranches(branchNames)
@@ -112,31 +108,6 @@ func printContributeBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonContributionBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.NormalConfig.RemoveFromObservedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeContributionBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
-}
-
 func determineContributeData(args []string, repo execute.OpenRepoResult) (contributeData, error) {
 	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -151,7 +122,7 @@ func determineContributeData(args []string, repo execute.OpenRepoResult) (contri
 	}, err
 }
 
-func validateContributeData(data contributeData) error {
+func validateContributeData(data contributeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToMark {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
@@ -167,7 +138,7 @@ func validateContributeData(data contributeData) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

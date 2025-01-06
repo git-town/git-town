@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -19,5 +19,5 @@ func Displaytypes() (AddFunc, ReadDisplayTypesFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the display-types flag from the args to the given Cobra command
+// ReadDisplayTypesFlagFunc is the type signature for the function that reads the "display-types" flag from the args to the given Cobra command.
 type ReadDisplayTypesFlagFunc func(*cobra.Command) (configdomain.DisplayTypes, error)

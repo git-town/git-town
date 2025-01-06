@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v16/internal/cli/colors"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v17/internal/cli/colors"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
 )
 
 func TextDisplay(title, text string, inputs TestInput) (bool, error) {
@@ -21,7 +21,7 @@ func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	result := dialogResult.(textDisplayModel) //nolint:forcetypeassert
+	result := dialogResult.(textDisplayModel)
 	return result.status == list.StatusAborted, nil
 }
 

@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -19,5 +19,5 @@ func ShipIntoNonPerennialParent() (AddFunc, ReadShipIntoNonPerennialParentFlagFu
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadShipIntoNonPerennialParentFlagFunc is the type signature for the function that reads the "to-parent" flag from the args to the given Cobra command.
 type ReadShipIntoNonPerennialParentFlagFunc func(*cobra.Command) (configdomain.ShipIntoNonperennialParent, error)

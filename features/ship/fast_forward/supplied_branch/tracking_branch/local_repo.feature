@@ -10,22 +10,17 @@ Feature: ship the supplied feature branch in a local repo using the fast-forward
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
     And the current branch is "other"
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship feature"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                     |
-      | other  | git add -A                  |
-      |        | git stash                   |
-      |        | git checkout main           |
+      | other  | git checkout main           |
       | main   | git merge --ff-only feature |
       |        | git checkout other          |
       | other  | git branch -D feature       |
-      |        | git stash pop               |
     And the current branch is now "other"
-    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -40,13 +35,10 @@ Feature: ship the supplied feature branch in a local repo using the fast-forward
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | other  | git add -A                                    |
-      |        | git stash                                     |
-      |        | git checkout main                             |
+      | other  | git checkout main                             |
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
-      | other  | git stash pop                                 |
     And the current branch is now "other"
     And the initial commits exist now
     And the initial branches and lineage exist now

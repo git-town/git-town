@@ -10,7 +10,7 @@ Feature: shipping a prototype branch using the fast-forward strategy
       | BRANCH    | LOCATION      | MESSAGE          |
       | prototype | local, origin | prototype commit |
     And the current branch is "prototype"
-    And Git Town setting "ship-strategy" is "fast-forward"
+    And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship"
 
   Scenario: result
@@ -43,4 +43,4 @@ Feature: shipping a prototype branch using the fast-forward strategy
       | BRANCH | LOCATION      | MESSAGE          |
       | main   | local, origin | prototype commit |
     And the initial branches and lineage exist now
-    And branch "prototype" is now prototype
+    And branch "prototype" now has type "prototype"

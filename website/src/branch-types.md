@@ -1,4 +1,4 @@
-# Branch Types
+# Branch types
 
 Git Town supports many different types of Git branches. When properly
 configured, you can run `git town sync` or `git town sync --all` at any time and
@@ -66,7 +66,7 @@ to a feature branch by running [git town hack](commands/hack.md) on it. You can
 also define an [observed-regex](preferences/observed-regex.md) in your Git
 configuration or the config file.
 
-## Parked Branches
+## Parked branches
 
 Parked branches don't get synced at all unless you run `git town sync` directly
 on a parked branch. You might want to park a branch if you
@@ -79,7 +79,7 @@ on a parked branch. You might want to park a branch if you
 You can park any feature branch by running [git town park](commands/park.md) on
 it. Unpark a parked branch by running `git town hack` on it.
 
-## Prototype Branches
+## Prototype branches
 
 A prototype branch is a local-only feature branch that incorporates updates from
 its parent branch but is not pushed to the remote repository. Prototype branches
@@ -108,9 +108,9 @@ You can compress and ship prototype branches as usual. Parking and unparking a
 prototype branch maintains its prototype status. When you change a prototype
 branch to an observed or contribution branch it loses its prototype status.
 
-To designate any feature branch as a prototype branch, execute
-[git town prototype](commands/prototype.md) on it. To convert a prototype branch
-to a feature branch, use [git town hack](commands/hack.md).
+To designate any feature branch as a prototype branch, run
+[git town prototype](commands/prototype.md). To convert a prototype branch to a
+feature branch, run [git town hack](commands/hack.md).
 
 ## Configuring branch types
 
@@ -124,7 +124,7 @@ You can set the types of indivdiual branches with these commands:
 
 These preferences allow you to configure the types of larger groups of branches:
 
-- [create-prototype-branches](preferences/create-prototype-branches.md),
 - [default-branch-type](preferences/default-branch-type.md),
 - [feature-regex](preferences/feature-regex.md), and
+- [new-branch-type](preferences/new-branch-type.md),
 - [perennial-regex](preferences/perennial-regex.md) preferences.

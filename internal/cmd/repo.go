@@ -3,16 +3,16 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/browser"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/browser"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -66,9 +66,9 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {
 	var remoteOpt Option[gitdomain.Remote]
 	if len(args) > 0 {
-		remoteOpt = Some(gitdomain.NewRemote(args[0]))
+		remoteOpt = gitdomain.NewRemote(args[0])
 	} else {
-		remoteOpt = Some(gitdomain.RemoteOrigin)
+		remoteOpt = Some(repo.UnvalidatedConfig.NormalConfig.DevRemote)
 	}
 	remote, hasRemote := remoteOpt.Get()
 	if !hasRemote {

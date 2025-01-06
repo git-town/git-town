@@ -51,15 +51,12 @@ Feature: sync a workspace with two independent stacks
       | BRANCH | LOCATION      | MESSAGE  |
       | fourth | local, origin | fourth 1 |
     And the current branch is "main"
-    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                 |
       | main   | git fetch --prune --tags                |
-      |        | git add -A                              |
-      |        | git stash                               |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout first                      |
       | first  | git merge --no-edit --ff main           |
@@ -87,20 +84,14 @@ Feature: sync a workspace with two independent stacks
       |        | git merge --no-edit --ff origin/four    |
       |        | git checkout main                       |
       | main   | git push --tags                         |
-      |        | git stash pop                           |
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND       |
-      | main   | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+      | BRANCH | COMMAND |
     And the current branch is still "main"
-    And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -10,26 +10,21 @@ their parent and tracking branches. When not set, Git Town uses the
 `sync-prototype-strategy` accepts the same options as
 [sync-feature-strategy](sync-feature-strategy.md#options).
 
-## change this setting
-
-The best way to change this setting is via the
-[setup assistant](../configuration.md).
-
 ### config file
 
 In the [config file](../configuration-file.md) the sync-prototype-strategy is
 part of the `[sync-strategy]` section:
 
 ```toml
-[sync-strategy]
-prototype-branches = "merge"
+[sync]
+prototype-strategy = "merge"
 ```
 
 ### Git metadata
 
 To manually configure the sync-prototype-strategy in Git, run this command:
 
-```
+```wrap
 git config [--global] git-town.sync-prototype-strategy <merge|rebase>
 ```
 

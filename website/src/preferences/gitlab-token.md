@@ -6,9 +6,6 @@ a
 [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 with `api` scope. You can create one in your account settings.
 
-The best way to enter your token is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since your API token is confidential, you cannot add it to the config file.
@@ -17,7 +14,7 @@ Since your API token is confidential, you cannot add it to the config file.
 
 You can configure the API token manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.gitlab-token <token>
 ```
 

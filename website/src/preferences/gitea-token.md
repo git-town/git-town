@@ -10,9 +10,6 @@ permissions:
 
 - read and write the repository
 
-The best way to enter your token is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since your API token is confidential, you cannot add it to the config file.
@@ -21,7 +18,7 @@ Since your API token is confidential, you cannot add it to the config file.
 
 You can configure the API token manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.gitea-token <token>
 ```
 

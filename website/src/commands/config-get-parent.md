@@ -1,9 +1,15 @@
 # git town config get-parent
 
-The _get-parent_ subcommand of the Git Town's _config_ command outputs the name
-of the parent branch if one exists, otherwise nothing.
+```command-summary
+git town config get-parent [<branch-name>] [-v | --verbose]
+```
 
-### --verbose / -v
+The _config get-parent_ command outputs the parent branch of the current or
+given branch.
+
+## Options
+
+#### `-v`<br>`--verbose`
 
 The `--verbose` aka `-v` flag prints all Git commands run under the hood to
 determine the repository state.

@@ -5,10 +5,6 @@ parent branch for new feature branches created with
 [git town hack](../commands/hack.md) and the default branch into which Git Town
 [ships](../commands/ship.md) finished feature branches.
 
-The best way to change this setting is via the
-[setup assistant](../configuration.md). Git Town commands also prompt for this
-setting if needed.
-
 ## config file
 
 In the [config file](../configuration-file.md) the main branch is part of the
@@ -23,7 +19,7 @@ main = "config-main"
 
 To configure the main branch in Git, run this command:
 
-```bash
+```wrap
 git config [--global] git-town.main-branch <value>
 ```
 

@@ -1,4 +1,4 @@
-go 1.22
+go 1.23
 
 use (
 	.
@@ -7,4 +7,5 @@ use (
 	./tools/lint_steps
 	./tools/stats_release
 	./tools/structs_sorted
+	./tools/tests_sorted
 )

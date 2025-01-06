@@ -10,7 +10,7 @@ Feature: does not ship an empty branch
       | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
       | main   | local    | main commit  | common_file | common content |
       | empty  | local    | empty commit | common_file | common content |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship"
 
   Scenario: result

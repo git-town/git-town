@@ -4,28 +4,27 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"slices"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/cmd/ship"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/cmd/ship"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -190,7 +189,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if !hasOldBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -217,7 +216,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
 	if force.IsFalse() {
-		if validatedConfig.NormalConfig.IsPerennialBranch(oldBranchName) {
+		if validatedConfig.BranchType(oldBranchName) == configdomain.BranchTypePerennialBranch {
 			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -230,12 +229,12 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
@@ -274,25 +273,18 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.dryRun {
-		if data.config.NormalConfig.IsPerennialBranch(data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesPerennialRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesPerennialAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.PrototypeBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesPrototypeRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesPrototypeAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.ObservedBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesObservedRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesObservedAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.ContributionBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesContributionRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesContributionAdd{Branch: data.newBranch})
-		}
-		if slices.Contains(data.config.NormalConfig.ParkedBranches, data.initialBranch) {
-			result.Value.Add(&opcodes.BranchesParkedRemove{Branch: oldLocalBranch})
-			result.Value.Add(&opcodes.BranchesParkedAdd{Branch: data.newBranch})
+		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
+			result.Value.Add(
+				&opcodes.ConfigSet{
+					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(data.newBranch).Key,
+					Scope: configdomain.ConfigScopeLocal,
+					Value: override.String(),
+				},
+				&opcodes.ConfigRemove{
+					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(oldLocalBranch).Key,
+					Scope: configdomain.ConfigScopeLocal,
+				},
+			)
 		}
 		if parentBranch, hasParent := data.config.NormalConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
 			result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})

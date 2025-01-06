@@ -10,7 +10,7 @@ Feature: shipping a prototype branch
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | prototype | local, origin | prototype commit |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and enter "prototype done" for the commit message
 
   Scenario: result
@@ -48,4 +48,4 @@ Feature: shipping a prototype branch
       |           |               | Revert "prototype done" |
       | prototype | local, origin | prototype commit        |
     And the initial branches and lineage exist now
-    And branch "prototype" is now prototype
+    And branch "prototype" now has type "prototype"

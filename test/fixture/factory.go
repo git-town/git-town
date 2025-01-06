@@ -1,12 +1,12 @@
 package fixture
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v16/test/filesystem"
-	"github.com/git-town/git-town/v16/test/helpers"
+	"github.com/git-town/git-town/v17/test/asserts"
+	"github.com/git-town/git-town/v17/test/filesystem"
+	"github.com/git-town/git-town/v17/test/helpers"
 )
 
 // Factory manages the Git setup for the entire test suite.
@@ -30,19 +30,23 @@ type Factory struct {
 // creates a new FixtureFactory instance
 func CreateFactory() Factory {
 	baseDir, err := os.MkdirTemp("", "")
-	if err != nil {
-		log.Fatalf("cannot create base directory for feature specs: %s", err)
-	}
+	asserts.NoError(err)
 	// Evaluate symlinks as Mac temp dir is symlinked
 	evalBaseDir, err := filepath.EvalSymlinks(baseDir)
-	if err != nil {
-		log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
-	}
+	asserts.NoError(err)
 	return Factory{
 		Counter:  helpers.AtomicCounter{},
 		Dir:      evalBaseDir,
 		memoized: NewMemoized(filepath.Join(evalBaseDir, "memoized")),
 	}
+}
+
+// CreateEmptyFixture provides an empty Fixture consisting of a brand-new Git repository.
+// This is useful for scenarios that require testing the behavior of Git Town in a fresh repository.
+func (self *Factory) CreateEmptyFixture(scenarioName string) Fixture {
+	envDirName := filesystem.FolderName(scenarioName) + "_" + self.Counter.NextAsString()
+	envPath := filepath.Join(self.Dir, envDirName)
+	return NewFresh(envPath).AsFixture()
 }
 
 // CreateFixture provides a new Fixture for the scenario with the given name.

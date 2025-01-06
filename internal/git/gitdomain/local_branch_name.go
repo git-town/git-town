@@ -1,6 +1,6 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v16/pkg/prelude"
+import . "github.com/git-town/git-town/v17/pkg/prelude"
 
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,
@@ -44,6 +44,6 @@ func (self LocalBranchName) Location() Location {
 func (self LocalBranchName) String() string { return string(self) }
 
 // TrackingBranch provides the name of the tracking branch for this local branch.
-func (self LocalBranchName) TrackingBranch() RemoteBranchName {
-	return self.AtRemote(RemoteOrigin)
+func (self LocalBranchName) TrackingBranch(devRemote Remote) RemoteBranchName {
+	return self.AtRemote(devRemote)
 }

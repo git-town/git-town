@@ -3,12 +3,12 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
-// SquashMerge squash merges the branch with the given name into the current branch.
+// MergeFastForward fast-forwards the current branch to point to the commits on the given branch.
 type MergeFastForward struct {
 	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods

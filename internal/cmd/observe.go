@@ -4,15 +4,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/config"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	configInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/config"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -68,15 +67,12 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validateObserveData(data)
+	err = validateObserveData(data, repo)
 	if err != nil {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.AddToObservedBranches(branchNames...); err != nil {
-		return err
-	}
-	if err = removeNonObserveBranchTypes(data.branchesToObserve, repo.UnvalidatedConfig); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeObservedBranch, branchNames...); err != nil {
 		return err
 	}
 	printObservedBranches(branchNames)
@@ -112,31 +108,6 @@ func printObservedBranches(branches gitdomain.LocalBranchNames) {
 	}
 }
 
-func removeNonObserveBranchTypes(branches configdomain.BranchesAndTypes, config config.UnvalidatedConfig) error {
-	for branchName, branchType := range branches {
-		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
-			if err := config.NormalConfig.RemoveFromContributionBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypeParkedBranch:
-			if err := config.NormalConfig.RemoveFromParkedBranches(branchName); err != nil {
-				return err
-			}
-		case configdomain.BranchTypePrototypeBranch:
-			if err := config.NormalConfig.RemoveFromPrototypeBranches(branchName); err != nil {
-				return err
-			}
-		case
-			configdomain.BranchTypeFeatureBranch,
-			configdomain.BranchTypeObservedBranch,
-			configdomain.BranchTypeMainBranch,
-			configdomain.BranchTypePerennialBranch:
-		}
-	}
-	return nil
-}
-
 func determineObserveData(args []string, repo execute.OpenRepoResult) (observeData, error) {
 	branchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -151,7 +122,7 @@ func determineObserveData(args []string, repo execute.OpenRepoResult) (observeDa
 	}, err
 }
 
-func validateObserveData(data observeData) error {
+func validateObserveData(data observeData, repo execute.OpenRepoResult) error {
 	for branchName, branchType := range data.branchesToObserve {
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
@@ -167,7 +138,7 @@ func validateObserveData(data observeData) error {
 			configdomain.BranchTypePrototypeBranch:
 		}
 		hasLocalBranch := data.branchInfos.HasLocalBranch(branchName)
-		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName)
+		hasRemoteBranch := data.branchInfos.HasMatchingTrackingBranchFor(branchName, repo.UnvalidatedConfig.NormalConfig.DevRemote)
 		if !hasLocalBranch && !hasRemoteBranch {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}

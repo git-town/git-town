@@ -1,13 +1,13 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	"github.com/git-town/git-town/v16/pkg/set"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/pkg/set"
 )
 
 // BranchProgram syncs the given branch.
@@ -16,7 +16,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	originalParentSHA := None[gitdomain.SHA]()
 	parentName, hasParentName := originalParentName.Get()
 	if hasParentName {
-		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName).Get(); hasParentBranchInfo {
+		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
 			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
@@ -64,7 +64,7 @@ type BranchProgramArgs struct {
 // LocalBranchProgram provides the program to sync a local branch.
 func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(localName)
-	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
+	if isMainOrPerennialBranch && !args.Remotes.HasDev(args.Config.NormalConfig.DevRemote) {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
@@ -113,7 +113,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			trackingBranchName: branchInfo.RemoteName,
 		})
 	}
-	if args.PushBranches.IsTrue() && args.Remotes.HasOrigin() && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
+	if args.PushBranches.IsTrue() && args.Remotes.HasDev(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
@@ -179,11 +179,12 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 		&opcodes.RebaseOnto{
 			BranchToRebaseAgainst: args.Ancestor,
 			BranchToRebaseOnto:    args.RebaseOnto,
+			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
 	if args.HasTrackingBranch {
 		args.Program.Value.Add(
-			&opcodes.ForcePush{ForceIfIncludes: false},
+			&opcodes.PushCurrentBranchForce{ForceIfIncludes: false},
 		)
 	}
 }

@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -19,5 +19,5 @@ func Stack(description string) (AddFunc, ReadStackFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadStackFlagFunc is the type signature for the function that reads the "stack" flag from the args to the given Cobra command.
 type ReadStackFlagFunc func(*cobra.Command) (configdomain.FullStack, error)

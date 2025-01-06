@@ -9,7 +9,7 @@ Feature: must provide a commit message
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and close the editor
 
   Scenario: result
@@ -31,7 +31,8 @@ Feature: must provide a commit message
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """

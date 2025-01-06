@@ -3,8 +3,8 @@ package configdomain
 import (
 	"regexp"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // a regular expression in the Git Town configuration

@@ -38,8 +38,8 @@ linters-settings:
     allow:
       - error
       - stdlib
-      - github.com/git-town/git-town/v16/internal/git.FrontendRunner
-      - github.com/git-town/git-town/v16/internal/git.BackendRunner
+      - github.com/git-town/git-town/v17/internal/git.FrontendRunner
+      - github.com/git-town/git-town/v17/internal/git.BackendRunner
   tagliatelle:
     case:
       use-field-name: true
@@ -50,7 +50,7 @@ issues:
   # List of regexps of issue texts to exclude, empty list by default.
   # But independently from this option we use default exclude patterns,
   # it can be disabled by `exclude-use-default: false`. To list all
-  # excluded by default patterns execute `golangci-lint run --help`
+  # excluded by default patterns, run `golangci-lint run --help`
   exclude:
     - Using the variable on range scope `(input|expected)` in function literal
   exclude-rules:
@@ -68,7 +68,7 @@ issues:
       text: "do not define dynamic errors"
     - linters:
         - ireturn
-      text: github.com/git-town/git-town/v16/internal/(hosting/hostingdomain.Connector|hosting.Connector)
+      text: github.com/git-town/git-town/v17/internal/(hosting/hostingdomain.Connector|hosting.Connector)
     - path: internal/gohacks/cache/cache.go
       linters:
         - ireturn

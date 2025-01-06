@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // ConnectorProposalMerge squash merges the branch with the given name into the current branch.
@@ -38,7 +38,6 @@ func (self *ConnectorProposalMerge) AutomaticUndoError() error {
 
 func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	commitMessage, hasCommitMessage := self.CommitMessage.Get()
-	//nolint:nestif
 	if !hasCommitMessage {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.

@@ -12,7 +12,7 @@ Feature: push-hook setting set to "false"
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And Git Town setting "push-hook" is "false"
+    And Git setting "git-town.push-hook" is "false"
 
   Scenario: result
     When I run "git-town sync"
@@ -39,8 +39,8 @@ Feature: push-hook setting set to "false"
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town prints:
+    Then Git Town runs no commands
+    And Git Town prints:
       """
       nothing to undo
       """
-    And Git Town runs no commands

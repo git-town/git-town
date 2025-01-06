@@ -3,14 +3,15 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	"github.com/git-town/git-town/v16/internal/subshell"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
-	testgit "github.com/git-town/git-town/v16/test/git"
-	"github.com/git-town/git-town/v16/test/testruntime"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	"github.com/git-town/git-town/v17/internal/subshell"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v17/test/testgit"
+	"github.com/git-town/git-town/v17/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
@@ -401,7 +402,7 @@ func TestBackendCommands(t *testing.T) {
 			repo.CheckoutBranch(main.LocalBranchName())
 			err := repo.DeleteLocalBranch(repo.TestRunner, branch)
 			must.NoError(t, err)
-			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch().BranchName(), main.BranchName())
+			have, err := repo.FirstCommitMessageInBranch(repo.TestRunner, branch.TrackingBranch(gitdomain.RemoteOrigin).BranchName(), main.BranchName())
 			must.NoError(t, err)
 			want := Some(gitdomain.CommitMessage("commit message 1"))
 			must.Eq(t, want, have)
@@ -447,11 +448,11 @@ func TestBackendCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch(gitdomain.NewLocalBranchName("b1"), initial.BranchName())
-		runner.CreateBranch(gitdomain.NewLocalBranchName("b2"), initial.BranchName())
-		must.True(t, runner.Commands.HasLocalBranch(runner, gitdomain.NewLocalBranchName("b1")))
-		must.True(t, runner.Commands.HasLocalBranch(runner, gitdomain.NewLocalBranchName("b2")))
-		must.False(t, runner.Commands.HasLocalBranch(runner, gitdomain.NewLocalBranchName("b3")))
+		runner.CreateBranch("b1", initial.BranchName())
+		runner.CreateBranch("b2", initial.BranchName())
+		must.True(t, runner.Commands.HasLocalBranch(runner, "b1"))
+		must.True(t, runner.Commands.HasLocalBranch(runner, "b2"))
+		must.False(t, runner.Commands.HasLocalBranch(runner, "b3"))
 	})
 
 	t.Run("lastBranchInRef", func(t *testing.T) {
@@ -464,6 +465,76 @@ func TestBackendCommands(t *testing.T) {
 			have := git.LastBranchInRef(give)
 			must.EqOp(t, want, have)
 		}
+	})
+
+	t.Run("MergeFastForward", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
+
+		err := runtime.MergeFastForward(runtime.TestRunner, branch)
+		must.NoError(t, err)
+
+		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
+		must.NoError(t, err)
+		haveMessages := commits.Messages()
+		wantMessages := gitdomain.NewCommitMessages("first commit", "initial commit")
+		must.Eq(t, wantMessages, haveMessages)
+	})
+
+	t.Run("MergeNoFastForward", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
+
+		err := runtime.MergeNoFastForward(runtime.TestRunner, configdomain.UseDefaultMessage(), branch)
+		must.NoError(t, err)
+
+		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
+		must.NoError(t, err)
+		haveMessages := commits.Messages()
+		wantMessages := gitdomain.NewCommitMessages("Merge branch 'branch' into initial", "initial commit", "first commit")
+		must.SliceContainsAll(t, wantMessages, haveMessages)
+	})
+
+	t.Run("MergeNoFastForwardWithCommitMessage", func(t *testing.T) {
+		t.Parallel()
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		mergeMessage := gitdomain.CommitMessage("merge message")
+		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
+
+		err := runtime.MergeNoFastForward(runtime.TestRunner, configdomain.UseCustomMessage(mergeMessage), branch)
+		must.NoError(t, err)
+
+		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
+		must.NoError(t, err)
+		haveMessages := commits.Messages()
+		wantMessages := gitdomain.NewCommitMessages("merge message", "initial commit", "first commit")
+		must.SliceContainsAll(t, wantMessages, haveMessages)
 	})
 
 	t.Run("NewUnmergedStage", func(t *testing.T) {
@@ -1014,10 +1085,10 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch(gitdomain.NewLocalBranchName("feature1"), initial.BranchName())
-		runtime.CreateBranch(gitdomain.NewLocalBranchName("feature2"), initial.BranchName())
-		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("feature1"))
-		runtime.CheckoutBranch(gitdomain.NewLocalBranchName("feature2"))
+		runtime.CreateBranch("feature1", initial.BranchName())
+		runtime.CreateBranch("feature2", initial.BranchName())
+		runtime.CheckoutBranch("feature1")
+		runtime.CheckoutBranch("feature2")
 		have := runtime.Commands.PreviouslyCheckedOutBranch(runtime.TestRunner)
 		must.Eq(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
 	})
@@ -1049,8 +1120,8 @@ func TestBackendCommands(t *testing.T) {
 				CommandsCounter: NewMutable(new(gohacks.Counter)),
 			}
 			cmds := git.Commands{
-				CurrentBranchCache: &cache.LocalBranchWithPrevious{},
-				RemotesCache:       &cache.Remotes{},
+				CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+				RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 			}
 			have := cmds.RootDirectory(runner)
 			must.True(t, have.IsNone())
@@ -1067,7 +1138,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			err = local.CreateTrackingBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin, false)
 			must.NoError(t, err)
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.False(t, shouldPush)
 		})
@@ -1085,7 +1156,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "local_file",
 				Message:     "add local file",
 			})
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -1104,7 +1175,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})
@@ -1129,7 +1200,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "add remote file",
 			})
 			local.Fetch()
-			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch")
+			shouldPush, err := local.ShouldPushBranch(local.TestRunner, "branch", gitdomain.RemoteOrigin)
 			must.NoError(t, err)
 			must.True(t, shouldPush)
 		})

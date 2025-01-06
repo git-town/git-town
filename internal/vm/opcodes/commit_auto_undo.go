@@ -3,10 +3,11 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // CommitAutoUndo is a Commit that automatically aborts the Git Town command on failure.
@@ -28,7 +29,7 @@ func (self *CommitAutoUndo) AutomaticUndoError() error {
 }
 
 func (self *CommitAutoUndo) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, self.Message, self.FallbackToDefaultCommitMessage, self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride)
 }
 
 func (self *CommitAutoUndo) ShouldUndoOnError() bool {

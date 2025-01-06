@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -23,15 +23,15 @@ func TestRunState(t *testing.T) {
 			DryRun:  true,
 			AbortProgram: program.Program{
 				&opcodes.BranchCurrentResetToSHAIfNeeded{
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
+					MustHaveSHA: "222222",
+					SetToSHA:    "111111",
 					Hard:        false,
 				},
 			},
 			RunProgram: program.Program{
 				&opcodes.BranchCurrentResetToSHAIfNeeded{
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
+					MustHaveSHA: "222222",
+					SetToSHA:    "111111",
 					Hard:        false,
 				},
 			},

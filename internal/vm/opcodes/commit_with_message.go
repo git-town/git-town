@@ -1,9 +1,10 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // CommitWithMessage commits all open changes using the given commit message.
@@ -14,5 +15,5 @@ type CommitWithMessage struct {
 }
 
 func (self *CommitWithMessage) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, Some(self.Message), false, self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, configdomain.UseCustomMessage(self.Message), self.AuthorOverride)
 }

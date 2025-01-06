@@ -5,7 +5,7 @@ Feature: detached sync the current feature branch using the "rebase" sync-featur
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And Git Town setting "sync-feature-strategy" is "rebase"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |

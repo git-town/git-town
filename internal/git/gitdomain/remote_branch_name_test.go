@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/test/asserts"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/test/asserts"
 	"github.com/shoenig/test/must"
 )
 
@@ -61,7 +61,7 @@ func TestRemoteBranchName(t *testing.T) {
 		remoteBranch := gitdomain.NewRemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
 		must.EqOp(t, gitdomain.RemoteOrigin, remote)
-		must.EqOp(t, gitdomain.NewLocalBranchName("branch"), localBranch)
+		must.EqOp(t, "branch", localBranch)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {

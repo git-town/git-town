@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // Open opens a new window/tab in the default browser with the given URL.

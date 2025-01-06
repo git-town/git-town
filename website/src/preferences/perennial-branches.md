@@ -15,14 +15,14 @@ defined as part of the `[branches]` section:
 
 ```toml
 [branches]
-perennials = [ "branch", "other-branch" ]
+perennials = ["branch", "other-branch"]
 ```
 
 ## configure in Git metadata
 
 You can configure the perennial branches manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.perennial-branches "branch other-branch"
 ```
 

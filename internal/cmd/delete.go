@@ -5,28 +5,28 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/cmd/ship"
-	"github.com/git-town/git-town/v16/internal/cmd/sync"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/slice"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/cmd/ship"
+	"github.com/git-town/git-town/v17/internal/cmd/sync"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/slice"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -166,7 +166,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if branchToDelete.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDelete)
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -202,26 +202,22 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		mainBranch:         validatedConfig.ValidatedConfigData.MainBranch,
 		previousBranch:     previousBranchOpt,
 	})
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
-	if err != nil {
-		return data, false, err
-	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
-		ConnectorOpt:               connectorOpt,
+		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchNameToDelete,
 		OldBranchHasTrackingBranch: branchToDelete.HasTrackingBranch(),
 	})
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
-	_, nonExistingBranches := branchesSnapshot.Branches.Select(lineageBranches...)
+	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return deleteData{
 		branchToDeleteInfo:       *branchToDelete,
 		branchToDeleteType:       branchTypeToDelete,
 		branchWhenDone:           branchWhenDone,
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
-		connector:                connectorOpt,
+		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
@@ -252,6 +248,13 @@ func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runPro
 		configdomain.BranchTypePerennialBranch:
 		panic(fmt.Sprintf("this branch type should have been filtered in validation: %s", data.branchToDeleteType))
 	}
+	localBranchNameToDelete := data.branchToDeleteInfo.LocalBranchName()
+	if _, hasOverride := data.config.NormalConfig.BranchTypeOverrides[localBranchNameToDelete]; hasOverride {
+		prog.Value.Add(&opcodes.ConfigRemove{
+			Key:   configdomain.NewBranchTypeOverrideKeyForBranch(localBranchNameToDelete).Key,
+			Scope: configdomain.ConfigScopeLocal,
+		})
+	}
 	localBranchNameToDelete, hasLocalBranchToDelete := data.branchToDeleteInfo.LocalName.Get()
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
@@ -278,7 +281,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 				prog.Value.Add(&opcodes.ChangesStage{})
 				prog.Value.Add(&opcodes.CommitWithMessage{
 					AuthorOverride: None[gitdomain.Author](),
-					Message:        gitdomain.CommitMessage("Committing open changes on deleted branch"),
+					Message:        "Committing open changes on deleted branch",
 				})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
 				prog.Value.Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
@@ -351,11 +354,10 @@ func validateDeleteData(data deleteData) error {
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeParkedBranch,
 		configdomain.BranchTypePrototypeBranch:
-		return nil
 	case configdomain.BranchTypeMainBranch:
 		return errors.New(messages.DeleteCannotDeleteMainBranch)
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.DeleteCannotDeletePerennialBranches)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %s", data.branchToDeleteType))
+	return nil
 }

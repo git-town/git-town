@@ -5,9 +5,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog"
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/cli/dialog"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -25,9 +25,8 @@ func enterPerennialBranches() *cobra.Command {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
 			existingPerennialBranches := gitdomain.NewLocalBranchNames("branch-2", "branch-4")
-			main := gitdomain.NewLocalBranchName("main")
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err = dialog.PerennialBranches(localBranches, existingPerennialBranches, main, dialogTestInputs.Next())
+			_, _, err = dialog.PerennialBranches(localBranches, existingPerennialBranches, "main", dialogTestInputs.Next())
 			return err
 		},
 	}

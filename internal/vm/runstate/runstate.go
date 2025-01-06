@@ -4,14 +4,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // RunState represents the current state of a Git Town command,
@@ -29,7 +29,7 @@ type RunState struct {
 	EndStashSize             Option[gitdomain.StashSize]                // size of the Git stash after the Git Town command that this RunState is for ran
 	FinalUndoProgram         program.Program                            `exhaustruct:"optional"` // additional opcodes to run after this RunState was undone
 	RunProgram               program.Program                            // remaining opcodes of the Git Town command that this RunState is for
-	TouchedBranches          []gitdomain.BranchName                     // the branches that are touched by the Git Town command that this RunState is for
+	TouchedBranches          gitdomain.BranchNames                      // the branches that are touched by the Git Town command that this RunState is for
 	UndoAPIProgram           program.Program                            // opcodes to undo changes at external systems
 	UndoablePerennialCommits []gitdomain.SHA                            `exhaustruct:"optional"` // contains the SHAs of commits on perennial branches that can safely be undone
 	UnfinishedDetails        OptionalMutable[UnfinishedRunStateDetails] `exhaustruct:"optional"`
@@ -119,8 +119,32 @@ func (self *RunState) String() string {
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
 	if unfinishedDetails, hasUnfinishedDetails := self.UnfinishedDetails.Get(); hasUnfinishedDetails {
-		result.WriteString("  UnfineshedDetails: ")
+		result.WriteString("  UnfinishedDetails: ")
 		result.WriteString(unfinishedDetails.String())
 	}
+	result.WriteString("  Touched branches: ")
+	result.WriteString(self.TouchedBranches.Join(", "))
+	result.WriteString("\n  Before snapshot: \n")
+	writeBranchInfos(&result, self.BeginBranchesSnapshot.Branches)
+	result.WriteString("\n  After snapshot: \n")
+	if endSnapshot, has := self.EndBranchesSnapshot.Get(); has {
+		writeBranchInfos(&result, endSnapshot.Branches)
+	} else {
+		result.WriteString("(none)")
+	}
 	return result.String()
+}
+
+func writeBranchInfos(result *strings.Builder, branchInfos gitdomain.BranchInfos) {
+	for _, branchInfo := range branchInfos {
+		result.WriteString("    Branch: ")
+		result.WriteString(branchInfo.GetLocalOrRemoteName().String())
+		result.WriteString(" (")
+		result.WriteString(string(branchInfo.SyncStatus))
+		result.WriteString(")\n      Local: ")
+		result.WriteString(branchInfo.LocalSHA.StringOr("(none)"))
+		result.WriteString("\n      Remote: ")
+		result.WriteString(branchInfo.RemoteSHA.StringOr("(none)"))
+		result.WriteRune('\n')
+	}
 }

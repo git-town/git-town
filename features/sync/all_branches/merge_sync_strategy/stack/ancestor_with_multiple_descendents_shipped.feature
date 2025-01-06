@@ -20,7 +20,7 @@ Feature: shipped branch with multiple descendents
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           | FILE NAME       | FILE CONTENT       |
       | feature-1b | local, origin | feature-1b commit | feature-1b-file | feature 1b content |
-    And Git Town setting "sync-feature-strategy" is "merge"
+    And Git setting "git-town.sync-feature-strategy" is "merge"
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And the current branch is "feature-1"
     When I run "git-town sync --all"

@@ -8,20 +8,20 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/cache"
-	"github.com/git-town/git-town/v16/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v16/internal/messages"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/cache"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/messages"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type Commands struct {
-	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
-	RemotesCache       *cache.Remotes                 // caches Git remotes
+	CurrentBranchCache *cache.WithPrevious[gitdomain.LocalBranchName] // caches the currently checked out Git branch
+	RemotesCache       *cache.Cache[gitdomain.Remotes]                // caches Git remotes
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -56,8 +56,8 @@ func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.Loc
 	return err == nil
 }
 
-func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "ls-remote", "origin", branch.String())
+func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
 }
 
@@ -72,10 +72,30 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
+func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
 	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
+	}
+	if output == "" {
+		// We are in a brand-new repo.
+		// Even though `git branch` returns nothing, `git branch --show-current` will return the initial branch name.
+		currentBranch, err := self.CurrentBranchUncached(querier)
+		if err != nil {
+			return gitdomain.EmptyBranchesSnapshot(), err
+		}
+		return gitdomain.BranchesSnapshot{
+			Active: Some(currentBranch),
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(currentBranch),
+					LocalSHA:   None[gitdomain.SHA](),
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
+					RemoteName: None[gitdomain.RemoteBranchName](),
+					RemoteSHA:  None[gitdomain.SHA](),
+				},
+			},
+		}, nil
 	}
 	branches, currentBranchOpt := ParseVerboseBranchesOutput(output)
 	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
@@ -123,6 +143,10 @@ func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string)
 	return runner.Run("git", "checkout", "--theirs", file)
 }
 
+func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) error {
+	return runner.Run("git", "cherry-pick", sha.String())
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
@@ -141,12 +165,18 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
 
 // Commit performs a commit of the staged changes.
 // If no commit message is provided, asks the user to enter one.
-func (self *Commands) Commit(runner gitdomain.Runner, message Option[gitdomain.CommitMessage], useDefaultMessage bool, author Option[gitdomain.Author]) error {
+func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author]) error {
 	gitArgs := []string{"commit"}
-	if messageContent, has := message.Get(); has {
-		gitArgs = append(gitArgs, "-m", messageContent.String())
-	} else if useDefaultMessage {
+	switch {
+	case useMessage.IsCustomMessage():
+		message := useMessage.GetCustomMessageOrPanic()
+		gitArgs = append(gitArgs, "-m", message.String())
+	case useMessage.IsUseDefault():
 		gitArgs = append(gitArgs, "--no-edit")
+	case useMessage.IsEditDefault():
+		// This is the default behaviour of `git commit`.
+	default:
+		return fmt.Errorf("unhandled %#v case", useMessage)
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {
 		gitArgs = append(gitArgs, "--author", author.String())
@@ -185,7 +215,7 @@ func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch, 
 }
 
 func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdomain.Commits, error) {
-	output, err := querier.QueryTrim("git", "log", "--pretty=format:%h %s", "-10")
+	output, err := querier.QueryTrim("git", "log", "--pretty=format:%H %s", "-10")
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
@@ -252,12 +282,12 @@ func (self *Commands) CreateBranch(runner gitdomain.Runner, name gitdomain.Local
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, gitdomain.RemoteOrigin.String(), localSHA.String()+":refs/heads/"+branch.String())
+	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
 	return runner.Run("git", args...)
 }
 
@@ -293,8 +323,8 @@ func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bo
 // CurrentBranch provides the currently checked out branch.
 func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
-	output, err := querier.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
-	if err == nil && output != "HEAD" {
+	output, err := querier.QueryTrim("git", "branch", "--show-current")
+	if err == nil && output != "" {
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
@@ -303,7 +333,7 @@ func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomai
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
 func (self *Commands) CurrentSHA(querier gitdomain.Querier) (gitdomain.SHA, error) {
-	return self.SHAForBranch(querier, gitdomain.NewBranchName("HEAD"))
+	return self.SHAForBranch(querier, "HEAD")
 }
 
 func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
@@ -316,6 +346,16 @@ func (self *Commands) DefaultBranch(querier gitdomain.Querier) Option[gitdomain.
 		return None[gitdomain.LocalBranchName]()
 	}
 	return Some(gitdomain.LocalBranchName(name))
+}
+
+func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote {
+	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
+	if err != nil {
+		// Git returns an error if the user has not configured a default remote name.
+		// Use the Git default of "origin".
+		return gitdomain.RemoteOrigin
+	}
+	return gitdomain.Remote(output)
 }
 
 // DeleteHostingPlatform removes the hosting platform config entry.
@@ -491,6 +531,28 @@ func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain
 	return runner.Run("git", "merge", "--ff-only", branch.String())
 }
 
+// MergeNoFastForward merges branch into the current branch and always creates a merge commit.
+func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage configdomain.UseMessage, branch gitdomain.LocalBranchName) error {
+	gitArgs := []string{"merge", "--no-ff"}
+	switch {
+	case useMessage.IsCustomMessage():
+		message := useMessage.GetCustomMessageOrPanic()
+		gitArgs = append(gitArgs, "-m", message.String())
+	case useMessage.IsUseDefault():
+		gitArgs = append(gitArgs, "--no-edit")
+	case useMessage.IsEditDefault():
+		// Unlike `git commit`, `git merge` only launches the editor in a tty.
+		// Until cucumber tests run git subcommands in a tty we have to explicitly set
+		// `--edit` mode to test commit message behaviour.
+		gitArgs = append(gitArgs, "--edit")
+	default:
+		return fmt.Errorf("unhandled %#v case", useMessage)
+	}
+	// Add branch name as the last argument.
+	gitArgs = append(gitArgs, "--", branch.String())
+	return runner.Run("git", gitArgs...)
+}
+
 // NavigateToDir changes into the root directory of the current repository.
 func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
 	return os.Chdir(dir.String())
@@ -510,7 +572,11 @@ func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.Loc
 
 // PopStash restores stashed-away changes into the workspace.
 func (self *Commands) PopStash(runner gitdomain.Runner) error {
-	return runner.Run("git", "stash", "pop")
+	err := runner.Run("git", "stash", "pop")
+	if err != nil {
+		_ = runner.Run("git", "stash", "drop")
+	}
+	return err
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
@@ -554,8 +620,13 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName) error {
-	return runner.Run("git", "rebase", "--onto", branchToRebaseOnto.String(), branchToRebaseAgainst.String())
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseAgainst gitdomain.BranchName, branchToRebaseOnto gitdomain.LocalBranchName, upstream Option[gitdomain.LocalBranchName]) error {
+	args := []string{"rebase", "--onto", branchToRebaseOnto.String()}
+	if upstream, hasUpstream := upstream.Get(); hasUpstream {
+		args = append(args, upstream.String())
+	}
+	args = append(args, branchToRebaseAgainst.String())
+	return runner.Run("git", args...)
 }
 
 // Remotes provides the names of all Git remotes in this repository.
@@ -654,7 +725,8 @@ func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdo
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
 func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
-	return runner.Run("git", "push", "--force-with-lease", gitdomain.RemoteOrigin.String(), sha.String()+":"+branch.LocalBranchName().String())
+	remote := branch.Remote()
+	return runner.Run("git", "push", "--force-with-lease", remote.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
@@ -721,8 +793,8 @@ func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname config
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch().String())
+func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch(devRemote).String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
@@ -751,7 +823,7 @@ func (self *Commands) Stash(runner gitdomain.Runner) error {
 	if err != nil {
 		return err
 	}
-	return runner.Run("git", "stash")
+	return runner.Run("git", "stash", "-m", "Git Town WIP")
 }
 
 // StashSize provides the number of stashes in this repository.
@@ -764,9 +836,13 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }
 
+func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
+	return runner.Run("git", "restore", "--staged", ".")
+}
+
 // Version indicates whether the needed Git version is installed.
 func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
-	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
+	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
 	output, err := querier.QueryTrim("git", "version")
 	if err != nil {
 		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)

@@ -8,12 +8,12 @@ Feature: one person making a series of commits and syncs in between
     Given a Git repo with origin
     And the committed configuration file:
       """
-      [sync-strategy]
-      feature-branches = "compress"
-
       [branches]
       main = "main"
       perennials = []
+
+      [sync]
+      feature-strategy = "compress"
       """
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |

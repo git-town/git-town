@@ -3,7 +3,7 @@ package shared
 import (
 	"reflect"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 )
 
 func BranchesInOpcode(code Opcode) []gitdomain.BranchName {

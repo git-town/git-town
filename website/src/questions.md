@@ -2,7 +2,7 @@
 
 ### Does Git Town enforce any specific conventions for branches or commits?
 
-No, Git Town doesn’t impose any rules for branch or commit naming. It works with
+No, Git Town doesn't impose any rules for branch or commit naming. It works with
 a wide range of Git branching strategies and workflows. If you find it doesn't
 mesh with your specific setup,
 [reach out to us](https://github.com/git-town/git-town/issues/new).
@@ -19,8 +19,8 @@ you commit directly to the main branch!
 ### How is Git Town different from the [git-flow](https://github.com/nvie/gitflow) tool?
 
 `git-flow` is a specialized Git extension designed around providing opinionated
-support for the Git Flow branching model. It doesn’t help with keeping your
-branches or team in sync. Git Town, on the other hand, doesn’t mind which
+support for the Git Flow branching model. It doesn't help with keeping your
+branches or team in sync. Git Town, on the other hand, doesn't mind which
 branching model you use&mdash;it focuses on syncing your team's work and keeping
 your repo tidy by cleaning up old branches. You can use Git Town alongside
 `git-flow` if that fits your workflow.

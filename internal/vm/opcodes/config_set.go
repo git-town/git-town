@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 type ConfigSet struct {
@@ -13,5 +13,5 @@ type ConfigSet struct {
 }
 
 func (self *ConfigSet) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitConfig.SetConfigValue(self.Scope, self.Key, self.Value)
+	return args.Config.Value.NormalConfig.GitConfigAccess.SetConfigValue(self.Scope, self.Key, self.Value)
 }

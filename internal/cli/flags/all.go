@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -19,5 +19,5 @@ func All(desc string) (AddFunc, ReadAllFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the dry-run flag from the args to the given Cobra command
+// ReadAllFlagFunc is the type signature for the function that reads the "all" flag from the args to the given Cobra command.
 type ReadAllFlagFunc func(*cobra.Command) (configdomain.AllBranches, error)

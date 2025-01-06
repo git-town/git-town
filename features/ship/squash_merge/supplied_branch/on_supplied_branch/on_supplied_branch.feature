@@ -9,7 +9,7 @@ Feature: ship the current feature branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

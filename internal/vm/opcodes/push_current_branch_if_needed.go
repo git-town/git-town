@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // PushCurrentBranchIfNeeded pushes the current branch to its existing tracking branch
@@ -13,13 +13,13 @@ type PushCurrentBranchIfNeeded struct {
 }
 
 func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch)
+	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
 		return err
 	}
 	if !shouldPush {
 		return nil
 	}
-	args.PrependOpcodes(&PushCurrentBranch{CurrentBranch: self.CurrentBranch})
+	args.PrependOpcodes(&PushCurrentBranch{})
 	return nil
 }

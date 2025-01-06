@@ -11,8 +11,7 @@ Feature: ship a feature branch that is active in another worktree
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
     And branch "feature" is active in another worktree
-    And an uncommitted file
-    And Git Town setting "ship-strategy" is "squash-merge"
+    And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship feature"
 
   Scenario: result
@@ -24,7 +23,6 @@ Feature: ship a feature branch that is active in another worktree
       branch "feature" is active in another worktree
       """
     And the current branch is still "other"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

@@ -7,9 +7,6 @@ a
 with the `repo` scope. You can create one in your
 [account settings](https://github.com/settings/tokens/new).
 
-The best way to enter your token is via the
-[setup assistant](../configuration.md).
-
 ## config file
 
 Since your API token is confidential, you cannot add it to the config file.
@@ -18,7 +15,7 @@ Since your API token is confidential, you cannot add it to the config file.
 
 You can configure the API token manually by running:
 
-```bash
+```wrap
 git config [--global] git-town.github-token <token>
 ```
 

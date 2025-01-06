@@ -3,12 +3,11 @@ package bitbucketcloud_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/git/giturl"
-	"github.com/git-town/git-town/v16/internal/hosting/bitbucketcloud"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/giturl"
+	"github.com/git-town/git-town/v17/internal/hosting/bitbucketcloud"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -59,8 +58,7 @@ func TestBitbucketConnector(t *testing.T) {
 			HostingPlatform: None[configdomain.HostingPlatform](),
 			RemoteURL:       url,
 		})
-		main := gitdomain.NewLocalBranchName("main")
-		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"), main, "", "")
+		have, err := connector.NewProposalURL("branch", "parent-branch", "main", "", "")
 		must.NoError(t, err)
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
 		must.EqOp(t, want, have)

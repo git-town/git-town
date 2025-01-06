@@ -3,8 +3,8 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks/slice"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
 
@@ -36,9 +36,9 @@ func TestHoist(t *testing.T) {
 
 	t.Run("aliased slice type", func(t *testing.T) {
 		t.Parallel()
-		list := gitdomain.LocalBranchNames{gitdomain.NewLocalBranchName("alpha"), gitdomain.NewLocalBranchName("initial"), gitdomain.NewLocalBranchName("omega")}
-		have := slice.Hoist(list, gitdomain.NewLocalBranchName("initial"))
-		want := gitdomain.LocalBranchNames{gitdomain.NewLocalBranchName("initial"), gitdomain.NewLocalBranchName("alpha"), gitdomain.NewLocalBranchName("omega")}
+		list := gitdomain.LocalBranchNames{"alpha", "initial", "omega"}
+		have := slice.Hoist(list, "initial")
+		want := gitdomain.LocalBranchNames{"initial", "alpha", "omega"}
 		must.Eq(t, want, have)
 	})
 }

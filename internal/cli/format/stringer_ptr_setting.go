@@ -3,7 +3,7 @@ package format
 import (
 	"fmt"
 
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // OptionalStringerSetting provides a printable version of the given configuration value.

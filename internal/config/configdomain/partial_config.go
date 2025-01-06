@@ -1,10 +1,10 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/gohacks"
-	"github.com/git-town/git-town/v16/internal/gohacks/mapstools"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks"
+	"github.com/git-town/git-town/v17/internal/gohacks/mapstools"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 )
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
@@ -12,10 +12,11 @@ type PartialConfig struct {
 	Aliases                  Aliases
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
+	BranchTypeOverrides      BranchTypeOverrides
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
-	CreatePrototypeBranches  Option[CreatePrototypeBranches]
 	DefaultBranchType        Option[BranchType]
+	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
@@ -26,6 +27,7 @@ type PartialConfig struct {
 	HostingPlatform          Option[HostingPlatform]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
+	NewBranchType            Option[BranchType]
 	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
@@ -53,11 +55,25 @@ func EmptyPartialConfig() PartialConfig {
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
 	ec := gohacks.ErrorCollector{}
 	aliases := snapshot.Aliases()
-	createPrototypeBranches, err := ParseCreatePrototypeBranches(snapshot[KeyCreatePrototypeBranches], KeyCreatePrototypeBranches)
+	branchTypeOverrides, err := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
+	ec.Check(err)
+	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
+	ec.Check(err)
+	defaultBranchType, err := ParseBranchType(snapshot[KeyDefaultBranchType])
+	ec.Check(err)
+	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
 	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
 	ec.Check(err)
+	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
+	ec.Check(err)
+	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
+	ec.Check(err)
+	observedRegex, err := ParseObservedRegex(snapshot[KeyObservedRegex])
+	ec.Check(err)
 	offline, err := ParseOffline(snapshot[KeyOffline], KeyOffline)
+	ec.Check(err)
+	perennialRegex, err := ParsePerennialRegex(snapshot[KeyPerennialRegex])
 	ec.Check(err)
 	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
 	ec.Check(err)
@@ -77,26 +93,15 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream)
 	ec.Check(err)
-	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
-	ec.Check(err)
-	perennialRegex, err := ParsePerennialRegex(snapshot[KeyPerennialRegex])
-	ec.Check(err)
-	defaultBranchType, err := ParseBranchType(snapshot[KeyDefaultBranchType])
-	ec.Check(err)
-	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
-	ec.Check(err)
-	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
-	ec.Check(err)
-	observedRegex, err := ParseObservedRegex(snapshot[KeyObservedRegex])
-	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
+		BranchTypeOverrides:      branchTypeOverrides,
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		ContributionRegex:        contributionRegex,
-		CreatePrototypeBranches:  createPrototypeBranches,
 		DefaultBranchType:        defaultBranchType,
+		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
@@ -107,6 +112,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		HostingPlatform:          hostingPlatform,
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
+		NewBranchType:            newBranchType,
 		ObservedBranches:         gitdomain.ParseLocalBranchNames(snapshot[KeyObservedBranches]),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
@@ -135,10 +141,11 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Aliases:                  mapstools.Merge(other.Aliases, self.Aliases),
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
+		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
-		CreatePrototypeBranches:  other.CreatePrototypeBranches.Or(self.CreatePrototypeBranches),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
+		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
@@ -149,6 +156,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		HostingPlatform:          other.HostingPlatform.Or(self.HostingPlatform),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
+		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedBranches:         append(other.ObservedBranches, self.ObservedBranches...),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
@@ -174,10 +182,11 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		Aliases:                  self.Aliases,
 		BitbucketAppPassword:     self.BitbucketAppPassword,
 		BitbucketUsername:        self.BitbucketUsername,
+		BranchTypeOverrides:      self.BranchTypeOverrides,
 		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
-		CreatePrototypeBranches:  self.CreatePrototypeBranches.GetOrElse(defaults.CreatePrototypeBranches),
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
+		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
 		FeatureRegex:             self.FeatureRegex,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,
@@ -185,6 +194,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		HostingOriginHostname:    self.HostingOriginHostname,
 		HostingPlatform:          self.HostingPlatform,
 		Lineage:                  self.Lineage,
+		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
 		ObservedBranches:         self.ObservedBranches,
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),

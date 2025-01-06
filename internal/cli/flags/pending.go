@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -22,5 +22,5 @@ func Pending() (AddFunc, ReadPendingFlagFunc) {
 	return addFlag, readFlag
 }
 
-// the type signature for the function that reads the pending flag from the args to the given Cobra command
+// ReadPendingFlagFunc is the type signature for the function that reads the "pending" flag from the args to the given Cobra command.
 type ReadPendingFlagFunc func(*cobra.Command) (configdomain.Pending, error)

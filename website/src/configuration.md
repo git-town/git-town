@@ -1,17 +1,18 @@
-# Configuration
+# Set up configuration
 
-If your repository already contains a `.git-branches.toml` file, you are good to
-go. If not or something doesn't work, run Git Town's setup assistant. It walks
-you through every configuration option and gives you a chance to adjust it.
+If your repository already contains a `.git-branches.toml` or `.git-town.toml`
+file, you are good to go. If not or something doesn't work, run Git Town's setup
+assistant. It walks you through every configuration option and gives you a
+chance to adjust it.
 
 ```
 git town config setup
 ```
 
-More information about the configuration file including how to create one
-manually is [here](configuration-file.md).
+You can find more background around how Git Town stores configuration in the
+[overview of all configuration options](preferences.md).
 
-### Access Tokens
+### Access tokens
 
 API access multiplies Git Town's utility:
 
@@ -27,4 +28,4 @@ Configuring API access takes only one minute. Here is how you do it:
 - GitLab: [access token](preferences/gitlab-token.md)
 - Bitbucket: [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
-- gitea: [access token](preferences/gitea-token.md)
+- Gitea: [access token](preferences/gitea-token.md)

@@ -9,7 +9,7 @@
   <img src="https://github.com/git-town/git-town/actions/workflows/unit.yml/badge.svg" alt="unit test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/lint_docs.yml/badge.svg" alt="linters and documentation test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/windows.yml/badge.svg" alt="windows tests">
-  <a href="https://goreportcard.com/report/github.com/git-town/git-town"><img src="https://goreportcard.com/badge/github.com/git-town/git-town" alt="Go report card status"></a>
+  <a href="https://goreportcard.com/report/github.com/git-town/git-town"><img src="https://goreportcard.com/badge/github.com/git-town/git-town/v17" alt="Go report card status"></a>
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
@@ -56,9 +56,9 @@ development. Supports mono-repos and stacked changes. Check out
 
 #### Dealing with errors
 
-- [continue](https://www.git-town.com/commands/continue.html) - restart the last
-  Git Town command after having resolved conflicts
-- [skip](https://www.git-town.com/commands/skip.html) - restart the last run Git
+- [continue](https://www.git-town.com/commands/continue.html) - resume the last
+  run Git Town command after having resolved conflicts
+- [skip](https://www.git-town.com/commands/skip.html) - resume the last run Git
   Town command by skipping the current branch
 - [status](https://www.git-town.com/commands/status.html) - displays or resets
   the current suspended Git Town command
@@ -73,9 +73,13 @@ development. Supports mono-repos and stacked changes. Check out
   visual setup assistant
 - [offline](https://www.git-town.com/commands/offline.html) - start or stop
   running in offline mode
+- [completions](https://www.git-town.com/commands/completions) -
+  auto-completions for bash, zsh, fish, and PowerShell
 
 #### Advanced development commands
 
+- [branch](https://www.git-town.com/commands/branch) - display the local branch
+  hierarchy
 - [compress](https://www.git-town.com/commands/compress.html) - squash all
   commits on feature branches down to a single commit
 - [delete](https://www.git-town.com/commands/delete.html) - remove a feature

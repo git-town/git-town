@@ -6,7 +6,7 @@ package ostools
 import (
 	"os"
 
-	"github.com/git-town/git-town/v16/test/asserts"
+	"github.com/git-town/git-town/v17/test/asserts"
 )
 
 // This package contains platform-specific testing tool implementations for Unix-like platforms.

@@ -5,24 +5,24 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v16/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v16/internal/cli/flags"
-	"github.com/git-town/git-town/v16/internal/cli/print"
-	"github.com/git-town/git-town/v16/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/execute"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/hosting"
-	"github.com/git-town/git-town/v16/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v16/internal/messages"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v16/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v17/internal/cli/flags"
+	"github.com/git-town/git-town/v17/internal/cli/print"
+	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/execute"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/hosting"
+	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -183,7 +183,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, gitdomain.RemoteOrigin, print.Logger{})
+	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -216,7 +216,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		if !hasBranchInfo {
 			return data, exit, fmt.Errorf(messages.CompressNoBranchInfo, branchNameToCompress)
 		}
-		branchType := validatedConfig.BranchType(branchNameToCompress.BranchName().LocalName())
+		branchType := validatedConfig.BranchType(branchNameToCompress)
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
 			return data, exit, err
 		}
@@ -224,7 +224,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 			return data, exit, err
 		}
 		parent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToCompress)
-		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress.BranchName().LocalName(), parent)
+		commits, err := repo.Git.CommitsInBranch(repo.Backend, branchNameToCompress, parent)
 		if err != nil {
 			return data, exit, err
 		}
@@ -276,7 +276,7 @@ func compressProgram(data compressBranchesData) program.Program {
 	for _, branchToCompress := range data.branchesToCompress {
 		compressBranchProgram(prog, branchToCompress, data.config.NormalConfig.Online(), data.initialBranch)
 	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch.BranchName().LocalName()})
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

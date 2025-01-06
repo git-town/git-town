@@ -1,13 +1,16 @@
 package undobranches
 
 import (
+	"fmt"
 	"slices"
 
-	"github.com/git-town/git-town/v16/internal/config"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/undo/undodomain"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/config"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v17/internal/undo/undodomain"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.
@@ -65,6 +68,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
 			result.Add(&opcodes.CommitRevertIfNeeded{SHA: change.After})
 			result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branch})
+		} else {
+			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, change.After))
 		}
 	}
 
@@ -85,7 +90,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.Config)
 
-	// reset inconsintently changed perennial branches
+	// reset inconsistently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if isOmni, branchName, afterSHA := inconsistentlyChangedPerennial.After.IsOmniBranch(); isOmni {
 			if slices.Contains(args.UndoablePerennialCommits, afterSHA) {
@@ -93,10 +98,12 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 				result.Add(&opcodes.CommitRevertIfNeeded{SHA: afterSHA})
 				result.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: branchName})
 			}
+		} else {
+			args.FinalMessages.Add(fmt.Sprintf(messages.UndoCannotRevertCommitOnPerennialBranch, afterSHA))
 		}
 	}
 
-	// reset inconsintently changed feature branches
+	// reset inconsistently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
 		hasBeforeLocal, beforeLocalName, beforeLocalSHA := inconsistentChange.Before.GetLocal()
 		hasBeforeRemote, beforeRemoteName, beforeRemoteSHA := inconsistentChange.Before.GetRemoteBranch()
@@ -186,6 +193,7 @@ type BranchChangesUndoProgramArgs struct {
 	BeginBranch              gitdomain.LocalBranchName
 	Config                   config.ValidatedConfig
 	EndBranch                gitdomain.LocalBranchName
+	FinalMessages            stringslice.Collector
 	UndoAPIProgram           program.Program
 	UndoablePerennialCommits []gitdomain.SHA
 }

@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v16/internal/vm/shared"
+	"github.com/git-town/git-town/v17/internal/vm/shared"
 )
 
 // PushCurrentBranchForceIfNeeded force-pushes the branch with the given name to the origin remote.
@@ -15,13 +15,13 @@ func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, currentBranch)
+	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, currentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
 		return err
 	}
 	if !shouldPush {
 		return nil
 	}
-	args.PrependOpcodes(&ForcePush{ForceIfIncludes: self.ForceIfIncludes})
+	args.PrependOpcodes(&PushCurrentBranchForce{ForceIfIncludes: self.ForceIfIncludes})
 	return nil
 }

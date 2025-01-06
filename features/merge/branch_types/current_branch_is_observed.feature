@@ -3,8 +3,9 @@ Feature: does not merge observed branches
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME    | TYPE     | LOCATIONS |
-      | current | observed | local     |
+      | NAME    | TYPE     | PARENT | LOCATIONS |
+      | parent  | feature  | main   | local     |
+      | current | observed | parent | local     |
     And the current branch is "current"
     When I run "git-town merge"
 
@@ -14,7 +15,7 @@ Feature: does not merge observed branches
       | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot merge branch "current" because it has no parent
+      cannot merge observed branches
       """
 
   Scenario: undo

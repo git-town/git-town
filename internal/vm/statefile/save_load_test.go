@@ -6,14 +6,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
-	"github.com/git-town/git-town/v16/internal/git/gitdomain"
-	"github.com/git-town/git-town/v16/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v16/internal/vm/opcodes"
-	"github.com/git-town/git-town/v16/internal/vm/program"
-	"github.com/git-town/git-town/v16/internal/vm/runstate"
-	"github.com/git-town/git-town/v16/internal/vm/statefile"
-	. "github.com/git-town/git-town/v16/pkg/prelude"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v17/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v17/internal/vm/runstate"
+	"github.com/git-town/git-town/v17/internal/vm/statefile"
+	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -63,18 +63,11 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchReset{Target: "branch"},
 				&opcodes.BranchTrackingCreate{Branch: "branch"},
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
-				&opcodes.BranchesContributionAdd{Branch: "branch"},
-				&opcodes.BranchesContributionRemove{Branch: "branch"},
-				&opcodes.BranchesObservedAdd{Branch: "branch"},
-				&opcodes.BranchesObservedRemove{Branch: "branch"},
-				&opcodes.BranchesParkedAdd{Branch: "branch"},
-				&opcodes.BranchesParkedRemove{Branch: "branch"},
-				&opcodes.BranchesPerennialAdd{Branch: "branch"},
-				&opcodes.BranchesPerennialRemove{Branch: "branch"},
-				&opcodes.BranchesPrototypeAdd{Branch: "branch"},
-				&opcodes.BranchesPrototypeRemove{Branch: "branch"},
+				&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypeFeatureBranch},
+				&opcodes.BranchTypeOverrideRemove{Branch: "branch"},
 				&opcodes.ChangesDiscard{},
 				&opcodes.ChangesStage{},
+				&opcodes.ChangesUnstageAll{},
 				&opcodes.Checkout{Branch: "branch"},
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
 				&opcodes.CheckoutIfNeeded{Branch: "branch"},
@@ -100,9 +93,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
 				&opcodes.Merge{Branch: "branch"},
 				&opcodes.MergeAbort{},
+				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParent{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
@@ -111,7 +105,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
-				&opcodes.PushCurrentBranch{CurrentBranch: "branch"},
+				&opcodes.PushCurrentBranch{},
+				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
@@ -120,7 +115,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseBranch{Branch: "branch"},
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
-				&opcodes.RebaseOnto{BranchToRebaseAgainst: "branch-1", BranchToRebaseOnto: "branch-2"},
+				&opcodes.RebaseOnto{BranchToRebaseAgainst: "branch-1", BranchToRebaseOnto: "branch-2", Upstream: Some(gitdomain.NewLocalBranchName("upstream"))},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch"},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
@@ -134,7 +129,7 @@ func TestLoadSave(t *testing.T) {
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
-				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
+				EndBranch: "end-branch",
 				EndTime:   time.Time{},
 			}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
@@ -279,63 +274,16 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "Branch": "branch",
+        "BranchType": "feature"
       },
-      "type": "BranchesContributionAdd"
+      "type": "BranchTypeOverrideSet"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "BranchesContributionRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesObservedAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesObservedRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesParkedAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesParkedRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPerennialAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPerennialRemove"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPrototypeAdd"
-    },
-    {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchesPrototypeRemove"
+      "type": "BranchTypeOverrideRemove"
     },
     {
       "data": {},
@@ -344,6 +292,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "ChangesStage"
+    },
+    {
+      "data": {},
+      "type": "ChangesUnstageAll"
     },
     {
       "data": {
@@ -510,16 +462,15 @@ func TestLoadSave(t *testing.T) {
       "type": "MergeAbort"
     },
     {
-      "data": {},
-      "type": "MergeContinue"
+      "data": {
+        "Branch": "branch",
+        "CommitMessage": "commit message"
+      },
+      "type": "MergeAlwaysProgram"
     },
     {
-      "data": {
-        "CurrentParent": "parent",
-        "OriginalParentName": "original-parent",
-        "OriginalParentSHA": "123456"
-      },
-      "type": "MergeParent"
+      "data": {},
+      "type": "MergeContinue"
     },
     {
       "data": {
@@ -528,6 +479,14 @@ func TestLoadSave(t *testing.T) {
         "OriginalParentSHA": "123456"
       },
       "type": "MergeParentIfNeeded"
+    },
+    {
+      "data": {
+        "CurrentParent": "parent",
+        "OriginalParentName": "original-parent",
+        "OriginalParentSHA": "123456"
+      },
+      "type": "MergeParentResolvePhantomConflicts"
     },
     {
       "data": {
@@ -589,10 +548,14 @@ func TestLoadSave(t *testing.T) {
       "type": "PullCurrentBranch"
     },
     {
-      "data": {
-        "CurrentBranch": "branch"
-      },
+      "data": {},
       "type": "PushCurrentBranch"
+    },
+    {
+      "data": {
+        "ForceIfIncludes": true
+      },
+      "type": "PushCurrentBranchForce"
     },
     {
       "data": {
@@ -637,7 +600,8 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "BranchToRebaseAgainst": "branch-1",
-        "BranchToRebaseOnto": "branch-2"
+        "BranchToRebaseOnto": "branch-2",
+        "Upstream": "upstream"
       },
       "type": "RebaseOnto"
     },

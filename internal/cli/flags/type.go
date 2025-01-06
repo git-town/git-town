@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v16/internal/config/configdomain"
+	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -56,5 +56,5 @@ func SplitBranchTypeNames(text string) []string {
 	return result
 }
 
-// the type signature for the function that reads the "type" flag from the args to the given Cobra command
+// ReadTypeFlagFunc is the type signature for the function that reads the "type" flag from the args to the given Cobra command.
 type ReadTypeFlagFunc func(*cobra.Command) ([]configdomain.BranchType, error)
