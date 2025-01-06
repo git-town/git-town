@@ -449,6 +449,8 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 			)
+		case configdomain.SyncStrategyFFOnly:
+			// the ff-only sync strategy does not sync with the parent
 		}
 	}
 }
