@@ -52,6 +52,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
 	make --no-print-directory lint-structs-sorted
+	make --no-print-directory lint-tests-sorted
 	git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
 	tools/rta node tools/node_modules/.bin/gherkin-lint
@@ -83,6 +84,9 @@ lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get q
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
+
+lint-tests-sorted:
+	@(cd tools/tests_sorted && go build) && ./tools/tests_sorted/tests_sorted
 
 smoke: install  # run the smoke tests
 	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1

@@ -244,6 +244,7 @@ and will be removed in future versions of Git Town.`
 	SwitchNoBranches                        = "no branches to switch to"
 	SwitchUncommittedChanges                = "uncommitted changes"
 	SyncFeatureBranches                     = "Sync feature branches: %s\n"
+	SyncPerennialBranchHasUnpushedCommits   = `cannot sync branch %q because it has unpushed local commits`
 	SyncPerennialBranches                   = "Sync perennial branches: %s\n"
 	SyncPrototypeBranches                   = "Sync prototype branches: %s\n"
 	SyncStatusNotRecognized                 = "cannot determine the sync status for Git remote %q and branch name %q"

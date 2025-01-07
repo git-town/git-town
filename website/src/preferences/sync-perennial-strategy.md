@@ -5,9 +5,12 @@ branches with changes from their tracking branches.
 
 ## options
 
-When set to `rebase` (the default value), Git Town rebases local perennial
-branches against their tracking branch. When set to `merge`, it merges the
-tracking branch into the local perennial branch.
+- `rebase` (default value): Git Town rebases local perennial branches onto their
+  tracking branch.
+- `ff-only`: Git Town fast-forwards the local branch to match the tracking
+  branch. If a fast-forward is not possible, Git Town exits with an error. This
+  is ideal when you want an explicit warning about unpushed local commits.
+- `merge`: Git Town merges the tracking branch into the local perennial branch.
 
 ## in config file
 

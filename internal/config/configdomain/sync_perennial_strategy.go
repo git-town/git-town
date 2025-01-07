@@ -16,6 +16,7 @@ func (self SyncPerennialStrategy) SyncStrategy() SyncStrategy {
 const (
 	SyncPerennialStrategyMerge  = SyncPerennialStrategy(SyncStrategyMerge)
 	SyncPerennialStrategyRebase = SyncPerennialStrategy(SyncStrategyRebase)
+	SyncPerennialStrategyFFOnly = SyncPerennialStrategy(SyncStrategyFFOnly)
 )
 
 func ParseSyncPerennialStrategy(text string) (Option[SyncPerennialStrategy], error) {
