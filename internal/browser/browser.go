@@ -33,6 +33,7 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		return Some("start")
 	}
 	openBrowserCommands := []string{
+		os.Getenv("BROWSER"),
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
 		"xdg-open",
@@ -43,7 +44,6 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		"opera",
 		"mozilla",
 		"netscape",
-		os.Getenv("BROWSER"),
 	}
 	for _, browserCommand := range openBrowserCommands {
 		output, err := runner.Query("which", browserCommand)
