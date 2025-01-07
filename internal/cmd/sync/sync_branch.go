@@ -119,6 +119,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
 		case isPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
+			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
