@@ -13,7 +13,6 @@ Feature: "ff-only" configured as sync-feature-strategy
     And Git setting "git-town.sync-feature-strategy" is "ff-only"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
