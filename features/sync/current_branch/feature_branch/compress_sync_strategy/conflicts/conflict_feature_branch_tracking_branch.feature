@@ -18,10 +18,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
