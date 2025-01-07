@@ -13,11 +13,11 @@ func shipProgramAlwaysMerge(prog Mutable[program.Program], sharedData sharedShip
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
-	if mergeData.remotes.HasDev(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
+	if mergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
 		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
 	prog.Value.Add(&opcodes.MergeAlwaysProgram{Branch: sharedData.branchNameToShip, CommitMessage: commitMessage})
-	if mergeData.remotes.HasDev(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
+	if mergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {
