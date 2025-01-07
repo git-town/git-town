@@ -25,12 +25,11 @@ Feature: on a forked repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                     |
-      | new    | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-      |        | git branch -D new                           |
+      | BRANCH | COMMAND           |
+      | new    | git checkout main |
+      | main   | git branch -D new |
     And the current branch is now "main"
     And these commits exist now
-      | BRANCH | LOCATION | MESSAGE         |
-      | main   | upstream | upstream commit |
+      | BRANCH | LOCATION                | MESSAGE         |
+      | main   | local, origin, upstream | upstream commit |
     And no lineage exists now

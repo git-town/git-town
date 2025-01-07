@@ -114,10 +114,11 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
+		isPerennialBranch := branchType == configdomain.BranchTypePerennialBranch
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
-		case isMainOrPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
+		case isPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
 		case isMainOrPerennialBranch:
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
