@@ -25,9 +25,7 @@ Feature: propose a newly prepended branch
       | BRANCH   | COMMAND                                                                 |
       | existing | git fetch --prune --tags                                                |
       | <none>   | Looking for proposal online ... ok                                      |
-      | existing | git checkout main                                                       |
-      | main     | git rebase origin/main --no-update-refs                                 |
-      |          | git checkout parent                                                     |
+      | existing | git checkout parent                                                     |
       | parent   | git rebase main --no-update-refs                                        |
       |          | git push --force-with-lease --force-if-includes                         |
       |          | git checkout existing                                                   |

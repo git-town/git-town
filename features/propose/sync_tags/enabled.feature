@@ -21,9 +21,6 @@ Feature: don't sync tags while proposing
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --no-tags                                        |
       | <none>  | Looking for proposal online ... ok                                 |
-      | feature | git checkout main                                                  |
-      | main    | git rebase origin/main --no-update-refs                            |
-      |         | git checkout feature                                               |
       | feature | git merge --no-edit --ff main                                      |
       |         | git merge --no-edit --ff origin/feature                            |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |

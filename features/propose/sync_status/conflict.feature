@@ -18,13 +18,10 @@ Feature: merge conflict
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      | <none>  | Looking for proposal online ... ok      |
-      | feature | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff main           |
+      | BRANCH  | COMMAND                            |
+      | feature | git fetch --prune --tags           |
+      | <none>  | Looking for proposal online ... ok |
+      | feature | git merge --no-edit --ff main      |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

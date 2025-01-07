@@ -16,10 +16,7 @@ Feature: append a new branch when prototype branches are configured via a deprec
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
-      |          | git checkout main                        |
-      | main     | git rebase origin/main --no-update-refs  |
-      |          | git checkout existing                    |
-      | existing | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And Git Town prints:

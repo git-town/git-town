@@ -19,10 +19,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
-      |        | git checkout main                               |
-      | main   | git rebase origin/main --no-update-refs         |
-      |        | git checkout alpha                              |
-      | alpha  | git rebase main --no-update-refs                |
+      |        | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
       | beta   | git rebase main --no-update-refs                |
