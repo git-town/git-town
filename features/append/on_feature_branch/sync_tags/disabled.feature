@@ -11,10 +11,9 @@ Feature: don't sync tags while appending
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --no-tags             |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout -b new                     |
+      | BRANCH | COMMAND                     |
+      | main   | git fetch --prune --no-tags |
+      |        | git checkout -b new         |
     And the initial tags exist now
 
   Scenario: undo
