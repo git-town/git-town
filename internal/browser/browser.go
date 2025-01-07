@@ -3,6 +3,7 @@ package browser
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/git-town/git-town/v17/internal/messages"
@@ -31,7 +32,11 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		//       So we are using "start" here.
 		return Some("start")
 	}
-	openBrowserCommands := []string{
+	openBrowserCommands := []string{}
+	if browser := os.Getenv("BROWSER"); browser != "" {
+		openBrowserCommands = append(openBrowserCommands, browser)
+	}
+	openBrowserCommands = append(openBrowserCommands,
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
 		"xdg-open",
@@ -42,7 +47,7 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		"opera",
 		"mozilla",
 		"netscape",
-	}
+	)
 	for _, browserCommand := range openBrowserCommands {
 		output, err := runner.Query("which", browserCommand)
 		if err == nil && len(output) > 0 {

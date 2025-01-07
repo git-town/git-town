@@ -27,10 +27,6 @@ Feature: display all executed Git commands
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | backend  | git remote get-url origin                            |
       |          | backend  | git log main..existing --format=%s --reverse         |
-      | existing | frontend | git checkout main                                    |
-      | main     | frontend | git rebase origin/main --no-update-refs              |
-      |          | backend  | git rev-list --left-right main...origin/main         |
-      | main     | frontend | git checkout existing                                |
       | existing | frontend | git merge --no-edit --ff main                        |
       |          | frontend | git merge --no-edit --ff origin/existing             |
       |          | backend  | git rev-list --left-right existing...origin/existing |
@@ -45,7 +41,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                       |
     And Git Town prints:
       """
-      Ran 29 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "new"
 

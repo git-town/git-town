@@ -26,15 +26,13 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       | <none>  | frontend | Looking for proposal online ... ok                                 |
       |         | backend  | git log main..feature --format=%s --reverse                        |
-      | feature | frontend | git checkout main                                                  |
-      | main    | frontend | git rebase origin/main --no-update-refs                            |
-      |         | backend  | git rev-list --left-right main...origin/main                       |
-      | main    | frontend | git checkout feature                                               |
       | feature | frontend | git merge --no-edit --ff main                                      |
       |         | frontend | git merge --no-edit --ff origin/feature                            |
       |         | backend  | git rev-list --left-right feature...origin/feature                 |
       |         | backend  | git rev-parse --abbrev-ref --symbolic-full-name @{u}               |
       |         | backend  | git show-ref --verify --quiet refs/heads/main                      |
+      |         | backend  | git checkout main                                                  |
+      |         | backend  | git checkout feature                                               |
       |         | backend  | which wsl-open                                                     |
       |         | backend  | which garcon-url-handler                                           |
       |         | backend  | which xdg-open                                                     |
@@ -46,7 +44,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And Git Town prints:
       """
-      Ran 30 shell commands.
+      Ran 28 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """

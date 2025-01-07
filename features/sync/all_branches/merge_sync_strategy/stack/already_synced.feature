@@ -35,23 +35,22 @@ Feature: sync a stack making independent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/alpha   |
-      |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff alpha          |
-      |        | git merge --no-edit --ff origin/beta    |
-      |        | git checkout gamma                      |
-      | gamma  | git merge --no-edit --ff beta           |
-      |        | git merge --no-edit --ff origin/gamma   |
-      |        | git checkout delta                      |
-      | delta  | git merge --no-edit --ff gamma          |
-      |        | git merge --no-edit --ff origin/delta   |
-      |        | git checkout main                       |
-      | main   | git push --tags                         |
+      | BRANCH | COMMAND                               |
+      | main   | git fetch --prune --tags              |
+      |        | git checkout alpha                    |
+      | alpha  | git merge --no-edit --ff main         |
+      |        | git merge --no-edit --ff origin/alpha |
+      |        | git checkout beta                     |
+      | beta   | git merge --no-edit --ff alpha        |
+      |        | git merge --no-edit --ff origin/beta  |
+      |        | git checkout gamma                    |
+      | gamma  | git merge --no-edit --ff beta         |
+      |        | git merge --no-edit --ff origin/gamma |
+      |        | git checkout delta                    |
+      | delta  | git merge --no-edit --ff gamma        |
+      |        | git merge --no-edit --ff origin/delta |
+      |        | git checkout main                     |
+      | main   | git push --tags                       |
     And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

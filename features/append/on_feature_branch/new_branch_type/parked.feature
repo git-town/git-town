@@ -16,10 +16,7 @@ Feature: append a new branch when parked branches are configured
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git fetch --prune --tags                 |
-      |          | git checkout main                        |
-      | main     | git rebase origin/main --no-update-refs  |
-      |          | git checkout existing                    |
-      | existing | git merge --no-edit --ff main            |
+      |          | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
     And the current branch is now "new"

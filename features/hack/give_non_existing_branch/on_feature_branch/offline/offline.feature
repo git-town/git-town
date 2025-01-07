@@ -10,9 +10,8 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout -b new                     |
+      | BRANCH | COMMAND             |
+      | main   | git checkout -b new |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

@@ -22,10 +22,7 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | old    | git fetch --prune --tags                        |
-      |        | git checkout main                               |
-      | main   | git rebase origin/main --no-update-refs         |
-      |        | git checkout old                                |
-      | old    | git merge --no-edit --ff main                   |
+      |        | git merge --no-edit --ff main                   |
       |        | git merge --no-edit --ff origin/old             |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
@@ -52,13 +49,10 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | parent | main   |
     When I run "git town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | parent | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout parent                     |
-      | parent | git merge --no-edit --ff main           |
-      |        | git push -u origin parent               |
+      | BRANCH | COMMAND                       |
+      | parent | git fetch --prune --tags      |
+      |        | git merge --no-edit --ff main |
+      |        | git push -u origin parent     |
     And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |

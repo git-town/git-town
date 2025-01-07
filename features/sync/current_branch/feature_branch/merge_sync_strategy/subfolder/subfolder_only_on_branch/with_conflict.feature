@@ -17,12 +17,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | current | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout current                    |
-      | current | git merge --no-edit --ff main           |
+      | BRANCH  | COMMAND                       |
+      | current | git fetch --prune --tags      |
+      |         | git merge --no-edit --ff main |
     And the current branch is still "current"
     And a merge is now in progress
     And Git Town prints the error:
