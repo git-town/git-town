@@ -9,7 +9,8 @@ branches with changes from their tracking branches.
   their tracking branch.
 - `ff-only`: Git Town fast-forwards the local branch to match the tracking
   branch. If a fast-forward is not possible, it exits with an error message.
-  This strategy is great if you want get warned about unpushed local commits.
+  This strategy is a good fit if you want get warned about unpushed local
+  commits.
 - `merge`: Git Town merges the tracking branch into the local perennial branch.
 
 ## in config file
