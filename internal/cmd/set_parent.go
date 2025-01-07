@@ -296,6 +296,5 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			)
 		}
 	}
-	optimizedProgram := optimizer.Optimize(prog)
-	return optimizedProgram, false
+	return optimizer.Optimize(prog), false
 }
