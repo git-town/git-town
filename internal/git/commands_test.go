@@ -777,7 +777,7 @@ func TestBackendCommands(t *testing.T) {
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						SyncStatus: gitdomain.SyncStatusNotInSync,
+						SyncStatus: gitdomain.SyncStatusAhead,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 					},
@@ -795,7 +795,7 @@ func TestBackendCommands(t *testing.T) {
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 						LocalSHA:   Some(gitdomain.NewSHA("1111111111111111111111111111111111111111")),
-						SyncStatus: gitdomain.SyncStatusNotInSync,
+						SyncStatus: gitdomain.SyncStatusBehind,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 						RemoteSHA:  Some(gitdomain.NewSHA("2222222222222222222222222222222222222222")),
 					},
@@ -907,7 +907,7 @@ func TestBackendCommands(t *testing.T) {
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.NewLocalBranchName("feature")),
 						LocalSHA:   Some(gitdomain.NewSHA("62bf22e")),
-						SyncStatus: gitdomain.SyncStatusNotInSync,
+						SyncStatus: gitdomain.SyncStatusAhead,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature")),
 						RemoteSHA:  Some(gitdomain.NewSHA("4989007")),
 					},
@@ -980,7 +980,7 @@ func TestBackendCommands(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
 					LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
-					SyncStatus: gitdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusAhead,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 					RemoteSHA:  Some(gitdomain.NewSHA("307a7bf4")),
 				},
@@ -994,14 +994,14 @@ func TestBackendCommands(t *testing.T) {
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("branch-3")),
 					LocalSHA:   Some(gitdomain.NewSHA("f4ebec0a")),
-					SyncStatus: gitdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusBehind,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
 					RemoteSHA:  Some(gitdomain.NewSHA("bc39378a")),
 				},
 				gitdomain.BranchInfo{
 					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
 					LocalSHA:   Some(gitdomain.NewSHA("41c3f128")),
-					SyncStatus: gitdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusBehind,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("02c192178")),
 				},

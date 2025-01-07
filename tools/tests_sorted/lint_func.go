@@ -2,9 +2,42 @@ package main
 
 import (
 	"go/ast"
+	"go/token"
+	"slices"
 
 	"github.com/git-town/git-town/tools/tests_sorted/matcher"
 )
+
+// lintFuncDecl returns a list of issues in a given ast.FuncDecl.
+func lintFuncDecl(funcDecl *ast.FuncDecl, fileSet *token.FileSet) (Issues, error) {
+	return lintFuncImpl(fileSet.Position(funcDecl.Pos()), funcDecl.Type, funcDecl.Body)
+}
+
+// lintFuncImpl returns a list of issues in a function described by its
+// position, type and body.
+func lintFuncImpl(pos token.Position, funcType *ast.FuncType, funcBody *ast.BlockStmt) (Issues, error) {
+	if !isTestFunc(funcType) {
+		return nil, nil
+	}
+
+	subtests, err := tRunSubtestNames(funcBody.List)
+	if err != nil {
+		return nil, err
+	}
+	sortedSubtests := make([]string, len(subtests))
+	copy(sortedSubtests, subtests)
+	slices.Sort(sortedSubtests)
+
+	if !slices.Equal(subtests, sortedSubtests) {
+		return Issues{
+			issue{
+				expected: sortedSubtests,
+				position: pos,
+			},
+		}, nil
+	}
+	return nil, nil
+}
 
 // isTestFunc returns true if a given funcType describes a test function/helper.
 //
