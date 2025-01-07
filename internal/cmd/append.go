@@ -291,6 +291,5 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	optimizedProgram := optimizer.Optimize(prog.Immutable())
-	return optimizedProgram
+	return optimizer.Optimize(prog.Immutable())
 }
