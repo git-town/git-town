@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -16,7 +15,7 @@ func parseFuncDecl(t *testing.T, fset *token.FileSet, funcText string) *ast.Func
 	// Package declaration is mandatory.
 	// Concatenate the package and the function declaration with ';' to preserve
 	// line numbers in any compilation errors.
-	funcFile := fmt.Sprintf("package test; %s", funcText)
+	funcFile := "package test; " + funcText
 	file, err := parser.ParseFile(fset, "test.go", funcFile, 0)
 	must.NoError(t, err)
 	must.SliceLen(t, 1, file.Decls) // We expect a single function.
@@ -78,6 +77,7 @@ func TestLintFuncDecl(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
+			t.Parallel()
 			fset := token.NewFileSet()
 			funcDecl := parseFuncDecl(t, fset, tc.funcText)
 
@@ -131,6 +131,7 @@ func TestIsTestFunc(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
+			t.Parallel()
 			fType := funcType(t, tc.expr)
 
 			got := isTestFunc(fType)
@@ -199,6 +200,7 @@ func TestTRunSubtestNames(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
+			t.Parallel()
 			statements := funcStatements(t, tc.expr)
 
 			got, err := tRunSubtestNames(statements)
