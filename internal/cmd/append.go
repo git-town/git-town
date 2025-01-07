@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"slices"
 
@@ -292,6 +291,5 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	fmt.Println("1111111111111111111111111111111111111111111\n", prog)
 	return optimizer.Optimize(prog.Immutable())
 }
