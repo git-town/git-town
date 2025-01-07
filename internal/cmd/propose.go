@@ -342,8 +342,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		ProposalBody:  data.proposalBody,
 		ProposalTitle: data.proposalTitle,
 	})
-	optimizedProgram := optimizer.Optimize(prog.Immutable())
-	return optimizedProgram
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateBranchTypeToPropose(branchType configdomain.BranchType) error {
