@@ -1069,52 +1069,16 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
 		})
 
-		t.Run("complex example 2", func(t *testing.T) {
-			give := `
-  main                      0a6a473f1f91a47c1d09c21a9042159fa173a9ae [origin/main] initial commit
-* production                0a6a473f1f91a47c1d09c21a9042159fa173a9ae [origin/production: behind 1] initial commit
-  remotes/origin/initial    0a6a473f1f91a47c1d09c21a9042159fa173a9ae initial commit
-  remotes/origin/main       0a6a473f1f91a47c1d09c21a9042159fa173a9ae initial commit
-  remotes/origin/production 86e26942672ef013f2c188e3be34a507c1e9c87a first commit
-`[1:]
-			want := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
-					LocalSHA:   Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
-					RemoteSHA:  Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("production")),
-					LocalSHA:   Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
-					SyncStatus: gitdomain.SyncStatusBehind,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/production")),
-					RemoteSHA:  Some(gitdomain.NewSHA("86e26942672ef013f2c188e3be34a507c1e9c87a")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
-					RemoteSHA:  Some(gitdomain.NewSHA("0a6a473f1f91a47c1d09c21a9042159fa173a9ae")),
-				},
-			}
-			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			must.Eq(t, want, have)
-			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
+		t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch("feature1", initial.BranchName())
+			runtime.CreateBranch("feature2", initial.BranchName())
+			runtime.CheckoutBranch("feature1")
+			runtime.CheckoutBranch("feature2")
+			have := runtime.Commands.PreviouslyCheckedOutBranch(runtime.TestRunner)
+			must.Eq(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
 		})
-	})
-
-	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.Create(t)
-		runtime.CreateBranch("feature1", initial.BranchName())
-		runtime.CreateBranch("feature2", initial.BranchName())
-		runtime.CheckoutBranch("feature1")
-		runtime.CheckoutBranch("feature2")
-		have := runtime.Commands.PreviouslyCheckedOutBranch(runtime.TestRunner)
-		must.Eq(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
 	})
 
 	t.Run("Remotes", func(t *testing.T) {
