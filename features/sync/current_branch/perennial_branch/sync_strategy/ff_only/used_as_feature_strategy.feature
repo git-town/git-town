@@ -18,8 +18,7 @@ Feature: "ff-only" configured as sync-feature-strategy
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
-      | main    | git merge --ff-only origin/main    |
-      |         | git checkout feature               |
+      | main    | git checkout feature               |
       | feature | git merge --ff-only origin/feature |
     And the current branch is still "feature"
     And these branches exist now

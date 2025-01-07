@@ -14,10 +14,9 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                               |
-      | production | git fetch --prune --tags              |
-      |            | git merge --ff-only origin/production |
-      |            | git push --tags                       |
+      | BRANCH     | COMMAND                  |
+      | production | git fetch --prune --tags |
+      |            | git push --tags          |
     And the current branch is still "production"
     And the initial branches and lineage exist now
     And the initial commits exist now

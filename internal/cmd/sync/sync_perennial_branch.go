@@ -8,7 +8,9 @@ import (
 // PerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
 func PerennialBranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	if remoteBranch, hasRemoteBranch := branch.RemoteName.Get(); hasRemoteBranch {
-		updateCurrentPerennialBranchOpcode(args.Program, remoteBranch, args.Config.NormalConfig.SyncPerennialStrategy)
+		if branch.SyncStatus != gitdomain.SyncStatusUpToDate {
+			updateCurrentPerennialBranchOpcode(args.Program, remoteBranch, args.Config.NormalConfig.SyncPerennialStrategy)
+		}
 	}
 	if localBranch, hasLocalBranch := branch.LocalName.Get(); hasLocalBranch {
 		if localBranch == args.Config.ValidatedConfigData.MainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue() {
