@@ -20,12 +20,10 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: result
     Then I am not prompted for any parent branches
     And Git Town runs the commands
-      | BRANCH | COMMAND                                  |
-      | main   | git fetch --prune --tags                 |
-      |        | git checkout alpha                       |
-      | alpha  | git rebase origin/alpha --no-update-refs |
-      |        | git checkout beta                        |
-      | beta   | git rebase origin/beta --no-update-refs  |
+      | BRANCH | COMMAND                                 |
+      | main   | git fetch --prune --tags                |
+      |        | git checkout beta                       |
+      | beta   | git rebase origin/beta --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

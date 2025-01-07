@@ -117,6 +117,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
+		case isMainOrPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
 		case isMainOrPerennialBranch:
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
@@ -195,6 +196,23 @@ type RemoveAncestorCommitsArgs struct {
 	HasTrackingBranch bool
 	Program           Mutable[program.Program]
 	RebaseOnto        gitdomain.LocalBranchName
+}
+
+func shouldPushPerennialBranch(syncStatus gitdomain.SyncStatus) bool {
+	switch syncStatus {
+	case
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusBehind,
+		gitdomain.SyncStatusLocalOnly,
+		gitdomain.SyncStatusNotInSync:
+		return true
+	case
+		gitdomain.SyncStatusDeletedAtRemote,
+		gitdomain.SyncStatusOtherWorktree,
+		gitdomain.SyncStatusRemoteOnly,
+		gitdomain.SyncStatusUpToDate:
+	}
+	return false
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
