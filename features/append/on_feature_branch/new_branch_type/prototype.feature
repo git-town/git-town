@@ -12,8 +12,6 @@ Feature: append a new branch when prototype branches are configured
     And Git setting "git-town.new-branch-type" is "prototype"
     When I run "git-town append new"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |

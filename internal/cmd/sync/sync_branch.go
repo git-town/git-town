@@ -114,11 +114,13 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
-		isPerennialBranch := branchType == configdomain.BranchTypePerennialBranch
+		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
-		case isPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
+		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue():
+			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
+		case isMainOrPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
 			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
