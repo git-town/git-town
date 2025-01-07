@@ -49,13 +49,11 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: skip
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                  |
-      | beta   | git rebase --abort                       |
-      |        | git checkout gamma                       |
-      | gamma  | git rebase origin/gamma --no-update-refs |
-      |        | git checkout main                        |
-      | main   | git rebase origin/main --no-update-refs  |
-      |        | git push --tags                          |
+      | BRANCH | COMMAND                                 |
+      | beta   | git rebase --abort                      |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git push --tags                         |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
@@ -81,8 +79,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND                                   |
       | beta   | git -c core.editor=true rebase --continue |
       |        | git push                                  |
-      |        | git checkout gamma                        |
-      | gamma  | git rebase origin/gamma --no-update-refs  |
       |        | git checkout main                         |
       | main   | git rebase origin/main --no-update-refs   |
       |        | git push --tags                           |
@@ -95,10 +91,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                  |
-      | beta   | git push                                 |
-      |        | git checkout gamma                       |
-      | gamma  | git rebase origin/gamma --no-update-refs |
-      |        | git checkout main                        |
-      | main   | git rebase origin/main --no-update-refs  |
-      |        | git push --tags                          |
+      | BRANCH | COMMAND                                 |
+      | beta   | git push                                |
+      |        | git checkout main                       |
+      | main   | git rebase origin/main --no-update-refs |
+      |        | git push --tags                         |
