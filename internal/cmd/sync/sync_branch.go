@@ -100,7 +100,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branchInfo)
 	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branchInfo.RemoteName, args.Program)
+		ObservedBranchProgram(branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
