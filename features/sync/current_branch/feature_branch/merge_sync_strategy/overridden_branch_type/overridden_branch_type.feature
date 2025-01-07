@@ -17,13 +17,10 @@ Feature: sync the current branch which has a branch-type override
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                                 |
-      | contribution | git fetch --prune --tags                |
-      |              | git checkout main                       |
-      | main         | git rebase origin/main --no-update-refs |
-      |              | git checkout contribution               |
-      | contribution | git merge --no-edit --ff main           |
-      |              | git push -u origin contribution         |
+      | BRANCH       | COMMAND                         |
+      | contribution | git fetch --prune --tags        |
+      |              | git merge --no-edit --ff main   |
+      |              | git push -u origin contribution |
     And all branches are now synchronized
     And the current branch is still "contribution"
     And these commits exist now
