@@ -479,10 +479,8 @@ func TestBackendCommands(t *testing.T) {
 			Message:     "first commit",
 		})
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
-
 		err := runtime.MergeFastForward(runtime.TestRunner, branch.BranchName())
 		must.NoError(t, err)
-
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
 		must.NoError(t, err)
 		haveMessages := commits.Messages()
@@ -502,10 +500,8 @@ func TestBackendCommands(t *testing.T) {
 			Message:     "first commit",
 		})
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
-
 		err := runtime.MergeNoFastForward(runtime.TestRunner, configdomain.UseDefaultMessage(), branch)
 		must.NoError(t, err)
-
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
 		must.NoError(t, err)
 		haveMessages := commits.Messages()
@@ -526,10 +522,8 @@ func TestBackendCommands(t *testing.T) {
 		})
 		mergeMessage := gitdomain.CommitMessage("merge message")
 		runtime.CheckoutBranch(initial) // CreateCommit checks out `branch`, go back to `initial`.
-
 		err := runtime.MergeNoFastForward(runtime.TestRunner, configdomain.UseCustomMessage(mergeMessage), branch)
 		must.NoError(t, err)
-
 		commits, err := runtime.Commands.CommitsInPerennialBranch(runtime) // Current branch.
 		must.NoError(t, err)
 		haveMessages := commits.Messages()
@@ -577,7 +571,7 @@ func TestBackendCommands(t *testing.T) {
 	})
 
 	t.Run("RepoStatus", func(t *testing.T) {
-		t.Run("HasOpenChanges", func(t *testing.T) {
+		t.Run("OpenChanges", func(t *testing.T) {
 			t.Parallel()
 			t.Run("no open changes", func(t *testing.T) {
 				t.Parallel()
