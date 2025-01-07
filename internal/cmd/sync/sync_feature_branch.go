@@ -49,6 +49,9 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 			OriginalParentName: args.originalParentName,
 			OriginalParentSHA:  args.originalParentSHA,
 		})
+	case configdomain.SyncStrategyFFOnly:
+		// The ff-only strategy does not sync with the parent branch.
+		// It is intended for perennial branches only.
 	}
 }
 
@@ -72,6 +75,10 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 	case configdomain.SyncStrategyRebase:
 		if args.Offline.IsFalse() {
 			args.Program.Value.Add(&opcodes.RebaseTrackingBranch{RemoteBranch: trackingBranch, PushBranches: args.PushBranches})
+		}
+	case configdomain.SyncStrategyFFOnly:
+		if args.Offline.IsFalse() {
+			args.Program.Value.Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
 		}
 	}
 }

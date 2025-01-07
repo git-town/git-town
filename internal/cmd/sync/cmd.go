@@ -114,6 +114,10 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err != nil || exit {
 		return err
 	}
+	err = validateSyncData(data)
+	if err != nil {
+		return err
+	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	runProgram := NewMutable(&program.Program{})
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
@@ -376,4 +380,22 @@ func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitd
 		}
 	}
 	return result, nil
+}
+
+func validateSyncData(data syncData) error {
+	// ensure any branch that uses the ff-only sync strategy does not have unpushed local commits
+	if data.config.NormalConfig.SyncPerennialStrategy == configdomain.SyncPerennialStrategyFFOnly {
+		perennialBranchesToSync := data.config.BranchesOfType(configdomain.BranchTypePerennialBranch, data.branchesToSync.BranchNames())
+		for _, perennialBranchToSync := range perennialBranchesToSync {
+			if branchInfo, hasBranchInfo := data.branchInfos.FindByLocalName(perennialBranchToSync).Get(); hasBranchInfo {
+				switch branchInfo.SyncStatus {
+				case gitdomain.SyncStatusAhead, gitdomain.SyncStatusNotInSync:
+					return fmt.Errorf(messages.SyncPerennialBranchHasUnpushedCommits, perennialBranchToSync)
+				case gitdomain.SyncStatusBehind, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusOtherWorktree, gitdomain.SyncStatusRemoteOnly, gitdomain.SyncStatusUpToDate:
+					// no problem with these sync statuses
+				}
+			}
+		}
+	}
+	return nil
 }

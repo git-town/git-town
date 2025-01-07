@@ -16,6 +16,7 @@ func (self SyncStrategy) String() string { return string(self) }
 const (
 	SyncStrategyMerge    = SyncStrategy("merge")
 	SyncStrategyRebase   = SyncStrategy("rebase")
+	SyncStrategyFFOnly   = SyncStrategy("ff-only")
 	SyncStrategyCompress = SyncStrategy("compress")
 )
 
@@ -38,6 +39,7 @@ func SyncStrategies() []SyncStrategy {
 	return []SyncStrategy{
 		SyncStrategyMerge,
 		SyncStrategyRebase,
+		SyncStrategyFFOnly,
 		SyncStrategyCompress,
 	}
 }

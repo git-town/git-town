@@ -471,6 +471,15 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("IsBehind", func(t *testing.T) {
+		t.Parallel()
+		has, branchNameOpt := git.IsBehind("production", "[origin/production: behind 1] initial commit")
+		must.True(t, has)
+		branchName, hasBranchName := branchNameOpt.Get()
+		must.True(t, hasBranchName)
+		must.EqOp(t, "origin/production", branchName)
+	})
+
 	t.Run("IsInSync", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is actually in sync", func(t *testing.T) {
@@ -799,7 +808,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 		})
 
-		t.Run("recognizes the branch sync status", func(t *testing.T) {
+		t.Run("recognize the branch sync status", func(t *testing.T) {
 			t.Parallel()
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
 				t.Parallel()
@@ -822,15 +831,15 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  branch-1                     111111 [origin/branch-1: behind 2] Commit message 1
-  remotes/origin/branch-1      222222 Commit message 1b`[1:]
+  branch-1                     1111111111111111111111111111111111111111 [origin/branch-1: behind 2] Commit message 1
+  remotes/origin/branch-1      2222222222222222222222222222222222222222 Commit message 1b`[1:]
 				want := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
+						LocalSHA:   Some(gitdomain.NewSHA("1111111111111111111111111111111111111111")),
 						SyncStatus: gitdomain.SyncStatusBehind,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
+						RemoteSHA:  Some(gitdomain.NewSHA("2222222222222222222222222222222222222222")),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -855,7 +864,7 @@ func TestBackendCommands(t *testing.T) {
 				must.Eq(t, want, have)
 			})
 
-			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
+			t.Run("branch is in sync", func(t *testing.T) {
 				t.Parallel()
 				give := `
   branch-1                     111111 [origin/branch-1] Commit message 1
@@ -908,31 +917,19 @@ func TestBackendCommands(t *testing.T) {
 
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
 				t.Parallel()
-				t.Run("branch is active in another worktree", func(t *testing.T) {
-					t.Parallel()
-					give := `+ branch-1    3d0c4c13 (/path/to/other/worktree) [origin/branch-1] commit message`
-					want := gitdomain.BranchInfos{
-						gitdomain.BranchInfo{
-							LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-							LocalSHA:   Some(gitdomain.NewSHA("3d0c4c13")),
-							SyncStatus: gitdomain.SyncStatusOtherWorktree,
-							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-							RemoteSHA:  None[gitdomain.SHA](),
-						},
-					}
-					have, _ := git.ParseVerboseBranchesOutput(give)
-					must.Eq(t, want, have)
-				})
+				isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: gone] commit message")
+				must.True(t, isGone)
+				must.Eq(t, Some(gitdomain.NewRemoteBranchName("origin/branch-1")), remoteBranchName)
 			})
 
-			t.Run("remote gone", func(t *testing.T) {
+			t.Run("branch is active in another worktree", func(t *testing.T) {
 				t.Parallel()
-				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
+				give := `+ branch-1    3d0c4c13 (/path/to/other/worktree) [origin/branch-1] commit message`
 				want := gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
 						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
-						SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+						LocalSHA:   Some(gitdomain.NewSHA("3d0c4c13")),
+						SyncStatus: gitdomain.SyncStatusOtherWorktree,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
 						RemoteSHA:  None[gitdomain.SHA](),
 					},
