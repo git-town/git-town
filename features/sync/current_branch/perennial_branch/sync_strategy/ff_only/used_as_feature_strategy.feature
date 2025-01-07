@@ -17,9 +17,7 @@ Feature: "ff-only" configured as sync-feature-strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git checkout feature               |
-      | feature | git merge --ff-only origin/feature |
+      |         | git merge --ff-only origin/feature |
     And the current branch is still "feature"
     And these branches exist now
       | REPOSITORY    | BRANCHES      |
