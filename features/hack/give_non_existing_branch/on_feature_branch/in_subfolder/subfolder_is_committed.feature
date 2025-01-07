@@ -13,11 +13,10 @@ Feature: inside a committed subfolder that exists only on the current feature br
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | existing | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git checkout -b new                     |
+      | BRANCH   | COMMAND                  |
+      | existing | git fetch --prune --tags |
+      |          | git checkout main        |
+      | main     | git checkout -b new      |
     And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
