@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/optimizer"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/runstate"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
@@ -284,7 +285,7 @@ func compressProgram(data compressBranchesData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog.Immutable()
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
