@@ -11,6 +11,8 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And the current branch is "existing"
     When I run "git-town append new --dry-run"
 
+  @debug
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
