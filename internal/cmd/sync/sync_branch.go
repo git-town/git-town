@@ -114,9 +114,14 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
+		isMainBranch := branchType == configdomain.BranchTypeMainBranch
 		switch {
 		case !branchInfo.HasTrackingBranch():
 			args.Program.Value.Add(&opcodes.BranchTrackingCreate{Branch: localName})
+		case isMainBranch && args.Remotes.HasUpstream() && args.Config.NormalConfig.SyncUpstream.IsTrue():
+			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
+		case isMainOrPerennialBranch && !shouldPushPerennialBranch(branchInfo.SyncStatus):
+			// don't push if its a perennial branch that doesn't need pushing
 		case isMainOrPerennialBranch:
 			args.Program.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: localName})
 		default:
@@ -195,6 +200,23 @@ type RemoveAncestorCommitsArgs struct {
 	HasTrackingBranch bool
 	Program           Mutable[program.Program]
 	RebaseOnto        gitdomain.LocalBranchName
+}
+
+func shouldPushPerennialBranch(syncStatus gitdomain.SyncStatus) bool {
+	switch syncStatus {
+	case
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusBehind,
+		gitdomain.SyncStatusLocalOnly,
+		gitdomain.SyncStatusNotInSync:
+		return true
+	case
+		gitdomain.SyncStatusDeletedAtRemote,
+		gitdomain.SyncStatusOtherWorktree,
+		gitdomain.SyncStatusRemoteOnly,
+		gitdomain.SyncStatusUpToDate:
+	}
+	return false
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.

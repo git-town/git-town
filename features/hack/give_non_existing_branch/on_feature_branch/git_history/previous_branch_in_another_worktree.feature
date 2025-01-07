@@ -12,11 +12,10 @@ Feature: previous branch is checked out in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | current | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout -b new                     |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git checkout main        |
+      | main    | git checkout -b new      |
     And the current branch is now "new"
     And the previous Git branch is now "current"
 

@@ -20,10 +20,7 @@ Feature: sync all feature branches in the presence of uncommitted changes
       | feature-1 | git fetch --prune --tags                  |
       |           | git add -A                                |
       |           | git stash -m "Git Town WIP"               |
-      |           | git checkout main                         |
-      | main      | git rebase origin/main --no-update-refs   |
-      |           | git checkout feature-1                    |
-      | feature-1 | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/feature-1 |
       |           | git checkout feature-2                    |
       | feature-2 | git merge --no-edit --ff main             |

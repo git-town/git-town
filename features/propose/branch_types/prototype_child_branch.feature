@@ -18,9 +18,7 @@ Feature: Create proposals for prototype branches
       | BRANCH    | COMMAND                                                                       |
       | prototype | git fetch --prune --tags                                                      |
       | <none>    | Looking for proposal online ... ok                                            |
-      | prototype | git checkout main                                                             |
-      | main      | git rebase origin/main --no-update-refs                                       |
-      |           | git checkout parent                                                           |
+      | prototype | git checkout parent                                                           |
       | parent    | git merge --no-edit --ff main                                                 |
       |           | git push -u origin parent                                                     |
       |           | git checkout prototype                                                        |

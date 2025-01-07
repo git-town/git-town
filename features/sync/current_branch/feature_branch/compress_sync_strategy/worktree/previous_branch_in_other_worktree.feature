@@ -17,15 +17,12 @@ Feature: sync while the previous branch is checked out in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | current | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout current                    |
-      | current | git merge --no-edit --ff main           |
-      |         | git push -u origin current              |
+      | BRANCH  | COMMAND                       |
+      | current | git fetch --prune --tags      |
+      |         | git merge --no-edit --ff main |
+      |         | git push -u origin current    |
     And the current branch is still "current"
-    And the previous Git branch is now "main"
+    And the previous Git branch is still "previous"
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,6 +30,6 @@ Feature: sync while the previous branch is checked out in another worktree
       | BRANCH  | COMMAND                  |
       | current | git push origin :current |
     And the current branch is now "current"
-    And the previous Git branch is now "main"
+    And the previous Git branch is still "previous"
     And the initial commits exist now
     And the initial branches and lineage exist now

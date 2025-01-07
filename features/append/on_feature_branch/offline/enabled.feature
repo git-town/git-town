@@ -15,9 +15,6 @@ Feature: append in offline mode
     When I run "git-town append new"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
-      | existing | git checkout main                        |
-      | main     | git rebase origin/main --no-update-refs  |
-      |          | git checkout existing                    |
       | existing | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |

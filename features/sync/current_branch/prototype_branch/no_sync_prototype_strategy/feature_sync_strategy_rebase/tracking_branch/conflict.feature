@@ -17,10 +17,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                      |
       | prototype | git fetch --prune --tags                     |
-      |           | git checkout main                            |
-      | main      | git rebase origin/main --no-update-refs      |
-      |           | git checkout prototype                       |
-      | prototype | git rebase main --no-update-refs             |
+      |           | git rebase main --no-update-refs             |
       |           | git rebase origin/prototype --no-update-refs |
     And Git Town prints the error:
       """

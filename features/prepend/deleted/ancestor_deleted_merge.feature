@@ -20,8 +20,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | BRANCH   | COMMAND                                  |
       | branch-2 | git fetch --prune --tags                 |
       |          | git checkout main                        |
-      | main     | git rebase origin/main --no-update-refs  |
-      |          | git branch -D branch-1                   |
+      | main     | git branch -D branch-1                   |
       |          | git checkout branch-2                    |
       | branch-2 | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/branch-2 |
