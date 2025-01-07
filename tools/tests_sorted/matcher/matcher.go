@@ -1,11 +1,12 @@
 // Package matcher declarative go/ast matchers.
+//
+//nolint:ireturn // Returning Result instead of a private struct.
 package matcher
 
 import (
 	"fmt"
 	"go/ast"
 	"go/token"
-	"iter"
 	"strconv"
 )
 
@@ -58,7 +59,7 @@ type FieldListMatcher interface {
 	Match(fields *ast.FieldList) Result
 }
 
-// PositionalFields yields (name, field) for each name in ast.FieldList in logical order.
+// PositionalFields returns (name, field) for each name in ast.FieldList in logical order.
 // For example func(a, b string, c int) will result in
 // - fields[0]: ast.Field{Names: []{"a", "b"}}
 // - fields[1]: ast.Field{Names: []{"c"}}
@@ -66,18 +67,14 @@ type FieldListMatcher interface {
 // - ("a", fields[0])
 // - ("b", fields[0])
 // - ("c", fields[1])
-func PositionalFields(fields *ast.FieldList) iter.Seq2[int, PositionalField] {
-	return func(yield func(int, PositionalField) bool) {
-		i := 0
-		for _, field := range fields.List {
-			for _, name := range field.Names {
-				if !yield(i, PositionalField{Name: name, Field: field}) {
-					return // Stopping early.
-				}
-				i++
-			}
+func PositionalFields(fields *ast.FieldList) []PositionalField {
+	var posFields []PositionalField
+	for _, field := range fields.List {
+		for _, name := range field.Names {
+			posFields = append(posFields, PositionalField{Name: name, Field: field})
 		}
 	}
+	return posFields
 }
 
 // IdentSelectorMatcher matches ast.SelectorExpr where both the selector
@@ -148,10 +145,7 @@ type FieldListPrefixMatcher struct {
 }
 
 func (self *FieldListPrefixMatcher) Match(fields *ast.FieldList) Result {
-	var posFields []PositionalField
-	for _, field := range PositionalFields(fields) {
-		posFields = append(posFields, field)
-	}
+	posFields := PositionalFields(fields)
 	for i, fieldMatcher := range self.Prefix {
 		if i >= len(posFields) {
 			return fmtResult("not enough fields, want at least %d, got %d", len(self.Prefix), len(posFields))
@@ -201,7 +195,7 @@ func (self *FirstStringArgFromFuncCallExtractor) Extract(expr ast.Expr) (string,
 	// https://go-review.googlesource.com/c/go/+/244960
 	literal, err := strconv.Unquote(quotedLiteral)
 	if err != nil {
-		return "", okResult, fmt.Errorf("the first call argument is an invalid string literal: %v", err)
+		return "", okResult, fmt.Errorf("the first call argument is an invalid string literal: %w", err)
 	}
 	return literal, okResult, nil
 }
