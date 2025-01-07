@@ -43,15 +43,13 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		"opera",
 		"mozilla",
 		"netscape",
+		os.Getenv("BROWSER"),
 	}
 	for _, browserCommand := range openBrowserCommands {
 		output, err := runner.Query("which", browserCommand)
 		if err == nil && len(output) > 0 {
 			return Some(browserCommand)
 		}
-	}
-	if browser := os.Getenv("BROWSER"); browser != "" {
-		return Some(browser)
 	}
 	return None[string]()
 }
