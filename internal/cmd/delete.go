@@ -263,8 +263,7 @@ func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runPro
 		StashOpenChanges:         hasLocalBranchToDelete && data.initialBranch != localBranchNameToDelete && data.hasOpenChanges,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
-	optimizedProgram := optimizer.Optimize(prog.Immutable())
-	return optimizedProgram, undoProg.Immutable()
+	return optimizer.Optimize(prog.Immutable()), undoProg.Immutable()
 }
 
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
