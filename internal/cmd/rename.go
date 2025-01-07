@@ -22,6 +22,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/optimizer"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/runstate"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
@@ -262,19 +263,19 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 }
 
 func renameProgram(data renameData, finalMessages stringslice.Collector) program.Program {
-	result := NewMutable(&program.Program{})
+	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
-		return result.Immutable()
+		return prog.Immutable()
 	}
-	result.Value.Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
+	prog.Value.Add(&opcodes.BranchLocalRename{OldName: oldLocalBranch, NewName: data.newBranch})
 	if data.initialBranch == oldLocalBranch {
-		result.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.newBranch})
 	}
 	if !data.dryRun {
 		if override, hasBranchTypeOverride := data.config.NormalConfig.BranchTypeOverrides[oldLocalBranch]; hasBranchTypeOverride {
-			result.Value.Add(
+			prog.Value.Add(
 				&opcodes.ConfigSet{
 					Key:   configdomain.NewBranchTypeOverrideKeyForBranch(data.newBranch).Key,
 					Scope: configdomain.ConfigScopeLocal,
@@ -287,38 +288,38 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 			)
 		}
 		if parentBranch, hasParent := data.config.NormalConfig.Lineage.Parent(oldLocalBranch).Get(); hasParent {
-			result.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
+			prog.Value.Add(&opcodes.LineageParentSet{Branch: data.newBranch, Parent: parentBranch})
 		}
-		result.Value.Add(&opcodes.LineageParentRemove{Branch: oldLocalBranch})
+		prog.Value.Add(&opcodes.LineageParentRemove{Branch: oldLocalBranch})
 	}
 	for _, child := range data.config.NormalConfig.Lineage.Children(oldLocalBranch) {
-		result.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
+		prog.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
 		if data.oldBranch.HasTrackingBranch() && data.config.NormalConfig.IsOnline() {
-			result.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
-			updateChildBranchProposalsToBranch(result.Value, data.proposalsOfChildBranches, data.newBranch)
+			prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
+			updateChildBranchProposalsToBranch(prog.Value, data.proposalsOfChildBranches, data.newBranch)
 			proposal, hasProposal := data.proposal.Get()
 			connector, hasConnector := data.connector.Get()
 			connectorCanUpdateProposalSource := hasConnector && connector.UpdateProposalSourceFn().IsSome()
 			if hasProposal && hasConnector && connectorCanUpdateProposalSource {
-				result.Value.Add(&opcodes.ProposalUpdateSource{
+				prog.Value.Add(&opcodes.ProposalUpdateSource{
 					NewBranch:      data.newBranch,
 					OldBranch:      data.oldBranch.LocalBranchName(),
 					ProposalNumber: proposal.Number,
 				})
 			}
-			result.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
+			prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
-	cmdhelpers.Wrap(result, cmdhelpers.WrapOptions{
+	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return result.Immutable()
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func updateChildBranchProposalsToBranch(prog *program.Program, proposals []hostingdomain.Proposal, target gitdomain.LocalBranchName) {
