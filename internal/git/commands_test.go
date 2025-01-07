@@ -1068,17 +1068,17 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, want, have)
 			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
 		})
+	})
 
-		t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
-			t.Parallel()
-			runtime := testruntime.Create(t)
-			runtime.CreateBranch("feature1", initial.BranchName())
-			runtime.CreateBranch("feature2", initial.BranchName())
-			runtime.CheckoutBranch("feature1")
-			runtime.CheckoutBranch("feature2")
-			have := runtime.Commands.PreviouslyCheckedOutBranch(runtime.TestRunner)
-			must.Eq(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
-		})
+	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch("feature1", initial.BranchName())
+		runtime.CreateBranch("feature2", initial.BranchName())
+		runtime.CheckoutBranch("feature1")
+		runtime.CheckoutBranch("feature2")
+		have := runtime.Commands.PreviouslyCheckedOutBranch(runtime.TestRunner)
+		must.Eq(t, Some(gitdomain.NewLocalBranchName("feature1")), have)
 	})
 
 	t.Run("Remotes", func(t *testing.T) {
