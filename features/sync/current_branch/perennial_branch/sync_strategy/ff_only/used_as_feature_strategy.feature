@@ -32,9 +32,8 @@ Feature: "ff-only" configured as sync-feature-strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                        |
-      | main   | git branch production {{ sha 'first commit' }} |
-      |        | git checkout production                        |
-    And the current branch is still "production"
+      | BRANCH  | COMMAND                                     |
+      | feature | git reset --hard {{ sha 'initial commit' }} |
+    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
