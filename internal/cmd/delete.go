@@ -24,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/optimizer"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/runstate"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
@@ -262,7 +263,7 @@ func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runPro
 		StashOpenChanges:         hasLocalBranchToDelete && data.initialBranch != localBranchNameToDelete && data.hasOpenChanges,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch, Some(data.initialBranch)},
 	})
-	return prog.Immutable(), undoProg.Immutable()
+	return optimizer.Optimize(prog.Immutable()), undoProg.Immutable()
 }
 
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
