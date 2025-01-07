@@ -527,7 +527,7 @@ func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomai
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
-func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--ff-only", branch.String())
 }
 
@@ -1034,10 +1034,10 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.Sy
 		return gitdomain.SyncStatusDeletedAtRemote, trackingBranchName
 	}
 	if isAhead, trackingBranchName := IsAhead(branchName, remoteText); isAhead {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
+		return gitdomain.SyncStatusAhead, trackingBranchName
 	}
 	if isBehind, trackingBranchName := IsBehind(branchName, remoteText); isBehind {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
+		return gitdomain.SyncStatusBehind, trackingBranchName
 	}
 	if isAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText); isAheadAndBehind {
 		return gitdomain.SyncStatusNotInSync, trackingBranchName
