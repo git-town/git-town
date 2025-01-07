@@ -11,7 +11,7 @@ Feature: sync the current perennial branch using the rebase sync strategy
     And the current branch is "production"
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
     # And inspect the repo
-    When I run "git-town sync -v"
+    When I run "git-town sync"
 
   @debug
   @this
@@ -19,13 +19,12 @@ Feature: sync the current perennial branch using the rebase sync strategy
     Then Git Town runs the commands
       | BRANCH     | COMMAND                  |
       | production | git fetch --prune --tags |
+      |            | git push                 |
     And the current branch is still "production"
     And the initial branches and lineage exist now
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | main commit   |
-      | qa     | local, origin | origin commit |
-      |        |               | local commit  |
+      | BRANCH     | LOCATION | MESSAGE      |
+      | production | origin   | first commit |
 
   Scenario: undo
     When I run "git-town undo"

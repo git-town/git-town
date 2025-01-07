@@ -204,5 +204,7 @@ func updateCurrentPerennialBranchOpcode(prog Mutable[program.Program], otherBran
 		prog.Value.Add(&opcodes.Merge{Branch: otherBranch.BranchName()})
 	case configdomain.SyncPerennialStrategyRebase:
 		prog.Value.Add(&opcodes.RebaseBranch{Branch: otherBranch.BranchName()})
+	case configdomain.SyncPerennialStrategyFFOnly:
+		prog.Value.Add(&opcodes.MergeFastForward{Branch: otherBranch.BranchName()})
 	}
 }
