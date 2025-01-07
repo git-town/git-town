@@ -15,15 +15,12 @@ Feature: auto-push new branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | old    | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout old                        |
-      | old    | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/old     |
-      |        | git checkout -b new main                |
-      | new    | git push -u origin new                  |
+      | BRANCH | COMMAND                             |
+      | old    | git fetch --prune --tags            |
+      |        | git merge --no-edit --ff main       |
+      |        | git merge --no-edit --ff origin/old |
+      |        | git checkout -b new main            |
+      | new    | git push -u origin new              |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
