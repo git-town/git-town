@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/optimizer"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/runstate"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
@@ -133,6 +134,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		}
 		shipProgramSquashMerge(prog, sharedData, squashMergeData, message)
 	}
+	optimizedProgram := optimizer.Optimize(prog.Immutable())
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: sharedData.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -142,8 +144,8 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		RunProgram:            prog.Immutable(),
-		TouchedBranches:       prog.Value.TouchedBranches(),
+		RunProgram:            optimizedProgram,
+		TouchedBranches:       optimizedProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

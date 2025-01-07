@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v17/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v17/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v17/internal/vm/opcodes"
+	"github.com/git-town/git-town/v17/internal/vm/optimizer"
 	"github.com/git-town/git-town/v17/internal/vm/program"
 	"github.com/git-town/git-town/v17/internal/vm/runstate"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
@@ -379,7 +380,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	return prog.Immutable()
+	return optimizer.Optimize(prog.Immutable())
 }
 
 // provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
