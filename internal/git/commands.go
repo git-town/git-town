@@ -527,7 +527,7 @@ func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomai
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
-func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--ff-only", branch.String())
 }
 
