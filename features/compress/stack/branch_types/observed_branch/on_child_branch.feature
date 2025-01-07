@@ -17,19 +17,15 @@ Feature: does not compress observed branches in the stack
       | child  | local, origin | child 1 | child_1   | child 1      |
       |        |               | child 2 | child_2   | child 2      |
     And the current branch is "child"
-    And an uncommitted file
     When I run "git-town compress --stack"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
-      |        | git add -A                                      |
-      |        | git stash -m "Git Town WIP"                     |
       |        | git reset --soft observed                       |
       |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
     And all branches are now synchronized
     And the current branch is still "child"
     And these commits exist now
@@ -41,18 +37,13 @@ Feature: does not compress observed branches in the stack
     And file "observed_2" still has content "observed 2"
     And file "child_1" still has content "child 1"
     And file "child_2" still has content "child 2"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | child  | git add -A                                      |
-      |        | git stash -m "Git Town WIP"                     |
-      |        | git reset --hard {{ sha 'child 2' }}            |
+      | child  | git reset --hard {{ sha 'child 2' }}            |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git stash pop                                   |
     And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now
-    And the uncommitted file still exists

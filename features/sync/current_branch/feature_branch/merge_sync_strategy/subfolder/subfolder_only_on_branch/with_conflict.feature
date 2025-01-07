@@ -13,21 +13,17 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         |               | folder commit              | new_folder/file1 |                 |
       | other   | local, origin | other commit               | file2            |                 |
     And the current branch is "current"
-    And an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | current | git fetch --prune --tags                |
-      |         | git add -A                              |
-      |         | git stash -m "Git Town WIP"             |
       |         | git checkout main                       |
       | main    | git rebase origin/main --no-update-refs |
       |         | git checkout current                    |
       | current | git merge --no-edit --ff main           |
     And the current branch is still "current"
-    And the uncommitted file is stashed
     And a merge is now in progress
     And Git Town prints the error:
       """
@@ -39,9 +35,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
-      |         | git stash pop     |
     And the current branch is still "current"
-    And the uncommitted file still exists
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -54,7 +48,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       you must resolve the conflicts before continuing
       """
     And the current branch is still "current"
-    And the uncommitted file is stashed
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -71,10 +64,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git push                                |
       |         | git checkout current                    |
       | current | git push --tags                         |
-      |         | git stash pop                           |
     And all branches are now synchronized
     And the current branch is still "current"
-    And the uncommitted file still exists
     And no merge is in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |

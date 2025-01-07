@@ -1,4 +1,4 @@
-# Configuration
+# Set up configuration
 
 If your repository already contains a `.git-branches.toml` or `.git-town.toml`
 file, you are good to go. If not or something doesn't work, run Git Town's setup
@@ -9,8 +9,8 @@ chance to adjust it.
 git town config setup
 ```
 
-More information about the configuration file including how to create one
-manually is [here](configuration-file.md).
+You can find more background around how Git Town stores configuration in the
+[overview of all configuration options](preferences.md).
 
 ### Access tokens
 

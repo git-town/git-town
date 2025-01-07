@@ -6,8 +6,8 @@ Feature: does not ship a branch that has open changes
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And an uncommitted file
     When I run "git-town ship feature"
 
   Scenario: result
@@ -29,3 +29,4 @@ Feature: does not ship a branch that has open changes
       nothing to undo
       """
     And the current branch is still "feature"
+    And the uncommitted file still exists

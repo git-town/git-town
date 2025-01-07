@@ -68,6 +68,7 @@ func All() []shared.Opcode {
 		&CheckoutParentOrMain{},
 		&CheckoutUncached{},
 		&ChangesStage{},
+		&ChangesUnstageAll{},
 		&Commit{},
 		&CommitAutoUndo{},
 		&CommitMessageCommentOut{},

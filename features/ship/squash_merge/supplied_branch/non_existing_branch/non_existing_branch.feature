@@ -3,7 +3,6 @@ Feature: does not ship a non-existing branch
   Background:
     Given a Git repo with origin
     And the current branch is "main"
-    And an uncommitted file
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship non-existing-branch"
 
@@ -16,7 +15,6 @@ Feature: does not ship a non-existing branch
       there is no branch "non-existing-branch"
       """
     And the current branch is now "main"
-    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

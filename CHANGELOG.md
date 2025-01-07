@@ -7,6 +7,7 @@
 - The new [always-merge ship strategy](https://www.git-town.com/preferences/ship-strategy.html#always-merge) always creates a merge commit when shipping a branch ([#4381](https://github.com/git-town/git-town/issues/4381)).
 - `git town prepend` now has a [--beam](https://www.git-town.com/commands/prepend.html#-b--beam) option. When enabled, it allows the user to choose one or more commits to move into the new branch that is getting prepended ([#4356](https://github.com/git-town/git-town/pull/4356)).
 - `git town prepend` now has a [--propose](https://www.git-town.com/commands/prepend.html#--propose) flag. When enabled, it automatically proposes the new branch. This is meant to be used together with `--beam` ([#4377](https://github.com/git-town/git-town/issues/4377)).
+- Git Town's `hack` command can now make any branch type a feature branch ([#4373](https://github.com/git-town/git-town/issues/4373)).
 - The new [git town status show command](https://www.git-town.com/commands/status-show.html) displays details about the currently interrupted Git Town command ([#4457](https://github.com/git-town/git-town/pull/4457)).
 - Git Town now adds a message to entries it creates on the Git stash. This helps identify which stash entries were created by Git Town ([#4479](https://github.com/git-town/git-town/pull/4479)).
 - If the only problem Git Town encounters is conflicts when running `git stash pop` at the end, it drops the stash entry and no longer returns with an error ([#4480](https://github.com/git-town/git-town/pull/4480)).
