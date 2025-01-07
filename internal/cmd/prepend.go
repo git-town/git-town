@@ -380,8 +380,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	optimizedProgram := optimizer.Optimize(prog.Immutable())
-	return optimizedProgram
+	return optimizer.Optimize(prog.Immutable())
 }
 
 // provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
