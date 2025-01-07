@@ -9,6 +9,10 @@ repository in your browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
 [Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
 
+On non-Windows systems, Git Town will first read the `BROWSER` environment
+variable to determine the browser command. If it isn't set, Git Town will try
+various common commands like `open`, `xdg-open`, or `x-www-browser`.
+
 ## Positional arguments
 
 When called without arguments, the _repo_ command shows the repository at the

@@ -3,23 +3,23 @@ RTA_VERSION = 0.9.0  # run-that-app version to use
 # internal data and state
 .DEFAULT_GOAL := help
 RELEASE_VERSION := "17.2.0"
-GO_BUILD_ARGS = LANG=C GOGC=off
+GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
-	@env $(GO_BUILD_ARGS) skipmessyoutput=1 go test -v
+	@env $(GO_TEST_ARGS) skipmessyoutput=1 go test -v
 
 cukeall: install  # runs all end-to-end tests
-	@env $(GO_BUILD_ARGS) go test -v
+	@env $(GO_TEST_ARGS) go test -v
 
 cukethis: install  # runs the end-to-end tests that have a @this tag
-	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
+	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v17/internal/cmd.version=-dev -X github.com/git-town/git-town/v17/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: install  # creates a flamegraph for the end-to-end tests
-	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
+	env $(GO_TEST_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
@@ -85,7 +85,7 @@ lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
 
 smoke: install  # run the smoke tests
-	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
+	@env $(GO_TEST_ARGS) smoke=1 go test . -v -count=1
 
 smokewin: install  # runs the Windows smoke tests
 	@env smoke=1 go test . -v -count=1
