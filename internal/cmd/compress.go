@@ -285,8 +285,7 @@ func compressProgram(data compressBranchesData) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	optimizedProgram := optimizer.Optimize(prog.Immutable())
-	return optimizedProgram
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
