@@ -17,10 +17,7 @@ Feature: do not ask for lineage of branches that don't need to get synced
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-1 | git fetch --prune --tags                  |
-      |           | git checkout main                         |
-      | main      | git rebase origin/main --no-update-refs   |
-      |           | git checkout feature-1                    |
-      | feature-1 | git merge --no-edit --ff main             |
+      |           | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/feature-1 |
     And Git Town prints the error:
       """

@@ -31,8 +31,6 @@ Feature: display all executed Git commands
       |          | backend  | git remote get-url origin                          |
       |          | backend  | git log main..branch-2 --format=%s --reverse       |
       | branch-2 | frontend | git checkout main                                  |
-      | main     | frontend | git rebase origin/main --no-update-refs            |
-      |          | backend  | git rev-list --left-right main...origin/main       |
       |          | backend  | git config --unset git-town-branch.branch-2.parent |
       | main     | frontend | git rebase --onto main branch-2                    |
       |          | frontend | git branch -D branch-2                             |
@@ -44,7 +42,7 @@ Feature: display all executed Git commands
       |          | backend  | git stash list                                     |
     And Git Town prints:
       """
-      Ran 25 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "main"
     And the branches are now

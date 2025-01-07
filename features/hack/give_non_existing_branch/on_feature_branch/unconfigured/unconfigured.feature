@@ -10,10 +10,9 @@ Feature: missing configuration
 
   Scenario: result
     And Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout -b feature                 |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git checkout -b feature  |
     And the main branch is now "main"
     And the current branch is now "feature"
     And this lineage exists now

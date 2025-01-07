@@ -55,35 +55,34 @@ Feature: sync a workspace with two independent stacks
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout first                      |
-      | first  | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/first   |
-      |        | git checkout second                     |
-      | second | git merge --no-edit --ff first          |
-      |        | git merge --no-edit --ff origin/second  |
-      |        | git checkout third                      |
-      | third  | git merge --no-edit --ff second         |
-      |        | git merge --no-edit --ff origin/third   |
-      |        | git checkout fourth                     |
-      | fourth | git merge --no-edit --ff third          |
-      |        | git merge --no-edit --ff origin/fourth  |
-      |        | git checkout one                        |
-      | one    | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/one     |
-      |        | git checkout two                        |
-      | two    | git merge --no-edit --ff one            |
-      |        | git merge --no-edit --ff origin/two     |
-      |        | git checkout three                      |
-      | three  | git merge --no-edit --ff two            |
-      |        | git merge --no-edit --ff origin/three   |
-      |        | git checkout four                       |
-      | four   | git merge --no-edit --ff three          |
-      |        | git merge --no-edit --ff origin/four    |
-      |        | git checkout main                       |
-      | main   | git push --tags                         |
+      | BRANCH | COMMAND                                |
+      | main   | git fetch --prune --tags               |
+      |        | git checkout first                     |
+      | first  | git merge --no-edit --ff main          |
+      |        | git merge --no-edit --ff origin/first  |
+      |        | git checkout second                    |
+      | second | git merge --no-edit --ff first         |
+      |        | git merge --no-edit --ff origin/second |
+      |        | git checkout third                     |
+      | third  | git merge --no-edit --ff second        |
+      |        | git merge --no-edit --ff origin/third  |
+      |        | git checkout fourth                    |
+      | fourth | git merge --no-edit --ff third         |
+      |        | git merge --no-edit --ff origin/fourth |
+      |        | git checkout one                       |
+      | one    | git merge --no-edit --ff main          |
+      |        | git merge --no-edit --ff origin/one    |
+      |        | git checkout two                       |
+      | two    | git merge --no-edit --ff one           |
+      |        | git merge --no-edit --ff origin/two    |
+      |        | git checkout three                     |
+      | three  | git merge --no-edit --ff two           |
+      |        | git merge --no-edit --ff origin/three  |
+      |        | git checkout four                      |
+      | four   | git merge --no-edit --ff three         |
+      |        | git merge --no-edit --ff origin/four   |
+      |        | git checkout main                      |
+      | main   | git push --tags                        |
     And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

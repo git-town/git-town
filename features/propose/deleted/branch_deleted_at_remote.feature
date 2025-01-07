@@ -14,11 +14,10 @@ Feature: proposing a branch that was deleted at the remote
 
   Scenario: a PR for this branch exists already
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git branch -D feature                   |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git checkout main        |
+      | main    | git branch -D feature    |
     And Git Town prints:
       """
       branch "feature" was deleted at the remote

@@ -21,10 +21,7 @@ Feature: compatibility between different sync-feature-strategy settings
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git rebase origin/main --no-update-refs         |
-      |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
@@ -39,10 +36,7 @@ Feature: compatibility between different sync-feature-strategy settings
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
@@ -70,10 +64,7 @@ Feature: compatibility between different sync-feature-strategy settings
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git rebase origin/main --no-update-refs         |
-      |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
     And Git Town prints the error:
