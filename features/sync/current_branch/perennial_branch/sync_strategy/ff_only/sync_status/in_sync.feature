@@ -1,4 +1,4 @@
-Feature: sync the current perennial branch using the rebase sync strategy
+Feature: sync the current perennial branch using the ff-only sync strategy when already in sync with the tracking branch
 
   Background:
     Given a Git repo with origin
