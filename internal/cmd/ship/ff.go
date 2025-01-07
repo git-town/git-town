@@ -16,7 +16,7 @@ func shipProgramFastForward(prog Mutable[program.Program], sharedData sharedShip
 	if squashMergeData.remotes.HasDev(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
 		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
-	prog.Value.Add(&opcodes.MergeFastForward{Branch: sharedData.branchNameToShip})
+	prog.Value.Add(&opcodes.MergeFastForward{Branch: sharedData.branchNameToShip.BranchName()})
 	if squashMergeData.remotes.HasDev(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}

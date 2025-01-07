@@ -10,7 +10,7 @@ import (
 
 // MergeFastForward fast-forwards the current branch to point to the commits on the given branch.
 type MergeFastForward struct {
-	Branch gitdomain.LocalBranchName
+	Branch gitdomain.BranchName
 	undeclaredOpcodeMethods
 }
 
