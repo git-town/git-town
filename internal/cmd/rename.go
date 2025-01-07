@@ -319,8 +319,7 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	optimizedProgram := optimizer.Optimize(result.Immutable())
-	return optimizedProgram
+	return optimizer.Optimize(result.Immutable())
 }
 
 func updateChildBranchProposalsToBranch(prog *program.Program, proposals []hostingdomain.Proposal, target gitdomain.LocalBranchName) {
