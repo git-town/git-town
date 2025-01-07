@@ -13,7 +13,6 @@ Feature: on a forked repo
     Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
       | main   | git fetch --prune --tags                  |
-      |        | git rebase origin/main --no-update-refs   |
       |        | git fetch upstream main                   |
       |        | git rebase upstream/main --no-update-refs |
       |        | git push                                  |
@@ -26,11 +25,12 @@ Feature: on a forked repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND           |
-      | new    | git checkout main |
-      | main   | git branch -D new |
+      | BRANCH | COMMAND                                     |
+      | new    | git checkout main                           |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
+      |        | git branch -D new                           |
     And the current branch is now "main"
     And these commits exist now
-      | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, origin, upstream | upstream commit |
+      | BRANCH | LOCATION | MESSAGE         |
+      | main   | upstream | upstream commit |
     And no lineage exists now
