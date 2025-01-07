@@ -341,8 +341,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	optimizedProgram := optimizer.Optimize(prog.Immutable())
-	return optimizedProgram
+	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateMergeData(data mergeData) error {
