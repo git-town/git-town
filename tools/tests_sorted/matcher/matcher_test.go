@@ -1,43 +1,56 @@
-package matcher
+//nolint:ireturn // Returning Result instead of a private struct.
+package matcher_test
 
 import (
 	"go/ast"
 	"go/parser"
 	"testing"
 
+	"github.com/git-town/git-town/tools/tests_sorted/matcher"
 	"github.com/shoenig/test/must"
 )
 
+type boolResult bool
+
+func (self boolResult) Success() bool {
+	return bool(self)
+}
+
+func (self boolResult) FailureReason() string {
+	return "fake failure"
+}
+
 type trueMatcher struct{}
 
-func (self *trueMatcher) Match(ast.Expr) Result {
-	return okResult
+func (self *trueMatcher) Match(ast.Expr) matcher.Result {
+	return boolResult(true)
 }
 
 type falseMatcher struct{}
 
-func (self *falseMatcher) Match(ast.Expr) Result {
-	return stringResult("fake failure")
+func (self *falseMatcher) Match(ast.Expr) matcher.Result {
+	return boolResult(false)
 }
 
 type trueFieldMatcher struct{}
 
-func (self *trueFieldMatcher) Match(PositionalField) Result {
-	return okResult
+func (self *trueFieldMatcher) Match(matcher.PositionalField) matcher.Result {
+	return boolResult(true)
 }
 
 type falseFieldMatcher struct{}
 
-func (self *falseFieldMatcher) Match(PositionalField) Result {
-	return stringResult("fake field failure")
+func (self *falseFieldMatcher) Match(matcher.PositionalField) matcher.Result {
+	return boolResult(false)
 }
 
 func TestPositionalFields(t *testing.T) {
+	t.Parallel()
 	expr, err := parser.ParseExpr(`func(a, b string, c bool)`)
 	must.NoError(t, err)
 	funcType := expr.(*ast.FuncType)
 
-	posFields := PositionalFields(funcType.Params)
+	posFields := matcher.PositionalFields(funcType.Params)
 
 	must.Eq(t, len(posFields), 3)
 	must.Eq(t, "a", posFields[0].Name.Name)
@@ -52,17 +65,17 @@ func TestIdentSelectorMatcher(t *testing.T) {
 		t.Parallel()
 		for _, tc := range []struct {
 			expr       string
-			matcher    *IdentSelectorMatcher
+			matcher    *matcher.IdentSelectorMatcher
 			wantReason string
 		}{
 			{
 				expr:       `func()`,
-				matcher:    &IdentSelectorMatcher{},
+				matcher:    &matcher.IdentSelectorMatcher{},
 				wantReason: "not an ast.SelectorExpr",
 			},
 			{
 				expr: `foo().bar`,
-				matcher: &IdentSelectorMatcher{
+				matcher: &matcher.IdentSelectorMatcher{
 					Namespace: "foo",
 					Name:      "bar",
 				},
@@ -70,7 +83,7 @@ func TestIdentSelectorMatcher(t *testing.T) {
 			},
 			{
 				expr: `notFoo.bar`,
-				matcher: &IdentSelectorMatcher{
+				matcher: &matcher.IdentSelectorMatcher{
 					Namespace: "foo",
 					Name:      "bar",
 				},
@@ -78,7 +91,7 @@ func TestIdentSelectorMatcher(t *testing.T) {
 			},
 			{
 				expr: `foo.notBar`,
-				matcher: &IdentSelectorMatcher{
+				matcher: &matcher.IdentSelectorMatcher{
 					Namespace: "foo",
 					Name:      "bar",
 				},
@@ -98,7 +111,7 @@ func TestIdentSelectorMatcher(t *testing.T) {
 		t.Run("Success", func(t *testing.T) {
 			expr, err := parser.ParseExpr(`foo.bar`)
 			must.NoError(t, err)
-			m := &IdentSelectorMatcher{
+			m := &matcher.IdentSelectorMatcher{
 				Namespace: "foo",
 				Name:      "bar",
 			}
@@ -114,9 +127,10 @@ func TestPointerMatcher(t *testing.T) {
 	t.Parallel()
 
 	t.Run("InnerMatchFailure", func(t *testing.T) {
+		t.Parallel()
 		expr, err := parser.ParseExpr(`*foo`)
 		must.NoError(t, err)
-		m := &PointerMatcher{
+		m := &matcher.PointerMatcher{
 			InnerMatcher: &falseMatcher{},
 		}
 
@@ -127,9 +141,10 @@ func TestPointerMatcher(t *testing.T) {
 	})
 
 	t.Run("NotStarExpr", func(t *testing.T) {
+		t.Parallel()
 		expr, err := parser.ParseExpr(`Foo`)
 		must.NoError(t, err)
-		m := &PointerMatcher{
+		m := &matcher.PointerMatcher{
 			InnerMatcher: &trueMatcher{},
 		}
 
@@ -140,9 +155,10 @@ func TestPointerMatcher(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		expr, err := parser.ParseExpr(`*foo`)
 		must.NoError(t, err)
-		m := &PointerMatcher{
+		m := &matcher.PointerMatcher{
 			InnerMatcher: &trueMatcher{},
 		}
 
@@ -152,24 +168,25 @@ func TestPointerMatcher(t *testing.T) {
 	})
 }
 
-func firstFuncParam(t *testing.T, funcTypeText string) PositionalField {
+func firstFuncParam(t *testing.T, funcTypeText string) matcher.PositionalField {
 	t.Helper()
 	expr, err := parser.ParseExpr(funcTypeText)
 	must.NoError(t, err)
 	funcType := expr.(*ast.FuncType)
-	for _, field := range PositionalFields(funcType.Params) {
+	for _, field := range matcher.PositionalFields(funcType.Params) {
 		return field
 	}
 	must.Unreachable(t)
-	return PositionalField{}
+	return matcher.PositionalField{}
 }
 
 func TestFieldMatcher(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Failure", func(t *testing.T) {
+		t.Parallel()
 		field := firstFuncParam(t, `func(notA string)`)
-		m := &FieldMatcher{
+		m := &matcher.FieldMatcher{
 			Name:        "a",
 			TypeMatcher: &trueMatcher{},
 		}
@@ -181,8 +198,9 @@ func TestFieldMatcher(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		field := firstFuncParam(t, `func(a string)`)
-		m := &FieldMatcher{
+		m := &matcher.FieldMatcher{
 			Name:        "a",
 			TypeMatcher: &trueMatcher{},
 		}
@@ -208,8 +226,8 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 		t.Parallel()
 		t.Run("NotEnoughFields", func(t *testing.T) {
 			params := funcParams(t, `func()`)
-			m := &FieldListPrefixMatcher{
-				Prefix: []PositionalFieldMatcher{
+			m := &matcher.FieldListPrefixMatcher{
+				Prefix: []matcher.PositionalFieldMatcher{
 					&trueFieldMatcher{},
 					&trueFieldMatcher{},
 				},
@@ -222,8 +240,8 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 		})
 		t.Run("FieldDoesNotMatch", func(t *testing.T) {
 			params := funcParams(t, `func(a string)`)
-			m := &FieldListPrefixMatcher{
-				Prefix: []PositionalFieldMatcher{
+			m := &matcher.FieldListPrefixMatcher{
+				Prefix: []matcher.PositionalFieldMatcher{
 					&falseFieldMatcher{},
 				},
 			}
@@ -231,7 +249,7 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 			r := m.Match(params)
 
 			must.False(t, r.Success())
-			must.Eq(t, "field[0] doesn't match: fake field failure", r.FailureReason())
+			must.Eq(t, "field[0] doesn't match: fake failure", r.FailureReason())
 		})
 	})
 
@@ -240,13 +258,13 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 		for _, tc := range []struct {
 			desc    string
 			params  *ast.FieldList
-			matcher *FieldListPrefixMatcher
+			matcher *matcher.FieldListPrefixMatcher
 		}{
 			{
 				desc:   "EqualLenMatchers",
 				params: funcParams(t, `func(a, b, c string)`),
-				matcher: &FieldListPrefixMatcher{
-					Prefix: []PositionalFieldMatcher{
+				matcher: &matcher.FieldListPrefixMatcher{
+					Prefix: []matcher.PositionalFieldMatcher{
 						&trueFieldMatcher{},
 						&trueFieldMatcher{},
 						&trueFieldMatcher{},
@@ -255,14 +273,14 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 			}, {
 				desc:   "NoMatchersNoParams",
 				params: funcParams(t, `func()`),
-				matcher: &FieldListPrefixMatcher{
-					Prefix: []PositionalFieldMatcher{},
+				matcher: &matcher.FieldListPrefixMatcher{
+					Prefix: []matcher.PositionalFieldMatcher{},
 				},
 			}, {
 				desc:   "SomeMatchers",
 				params: funcParams(t, `func(a, b, c string)`),
-				matcher: &FieldListPrefixMatcher{
-					Prefix: []PositionalFieldMatcher{
+				matcher: &matcher.FieldListPrefixMatcher{
+					Prefix: []matcher.PositionalFieldMatcher{
 						&trueFieldMatcher{},
 						&trueFieldMatcher{},
 					},
@@ -270,6 +288,7 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 			},
 		} {
 			t.Run(tc.desc, func(t *testing.T) {
+				t.Parallel()
 				r := tc.matcher.Match(tc.params)
 
 				must.True(t, r.Success())
@@ -283,7 +302,7 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 
 	t.Run("Failure", func(t *testing.T) {
 		for _, tc := range []struct {
-			funcMatcher ExprMatcher
+			funcMatcher matcher.ExprMatcher
 			expr        string
 			wantReason  string
 		}{
@@ -310,9 +329,10 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 			},
 		} {
 			t.Run(tc.wantReason, func(t *testing.T) {
+				t.Parallel()
 				expr, err := parser.ParseExpr(tc.expr)
 				must.NoError(t, err)
-				e := &FirstStringArgFromFuncCallExtractor{
+				e := &matcher.FirstStringArgFromFuncCallExtractor{
 					FuncMatcher: tc.funcMatcher,
 				}
 
@@ -324,6 +344,7 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 			})
 		}
 		t.Run("UnquoteError", func(t *testing.T) {
+			t.Parallel()
 			// Construct a correct string literal, and then make it invalid by assigning
 			// a known badly quoted string to its Value.
 			expr, err := parser.ParseExpr(`foo("test")`)
@@ -331,7 +352,7 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 			call := expr.(*ast.CallExpr)
 			arg := call.Args[0].(*ast.BasicLit)
 			arg.Value = `"foo` // Intentionally badly quoted for this test.
-			e := &FirstStringArgFromFuncCallExtractor{
+			e := &matcher.FirstStringArgFromFuncCallExtractor{
 				FuncMatcher: &trueMatcher{},
 			}
 
@@ -342,9 +363,10 @@ func TestFirstStringArgFromFuncCallExtractor(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		expr, err := parser.ParseExpr(`foo("arg1")`)
 		must.NoError(t, err)
-		e := &FirstStringArgFromFuncCallExtractor{
+		e := &matcher.FirstStringArgFromFuncCallExtractor{
 			FuncMatcher: &trueMatcher{},
 		}
 
