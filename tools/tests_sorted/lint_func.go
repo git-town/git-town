@@ -65,7 +65,7 @@ func isTestFunc(funcType *ast.FuncType) bool {
 // tRunSubtestNames returns a list of subtest names from `t.Run(...)`
 // invocations.
 func tRunSubtestNames(statements []ast.Stmt) ([]string, error) {
-	var subtests []string
+	var subtests []string //nolint:prealloc // alexkohler/prealloc#16
 	testNameExtractor := &matcher.FirstStringArgFromFuncCallExtractor{
 		FuncMatcher: &matcher.IdentSelectorMatcher{
 			Namespace: "t",
