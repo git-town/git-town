@@ -224,10 +224,9 @@ make fix
 
 </a>
 
-Most linters in the Golang ecosystem are maintained by third-parties and
-therefore of mixed quality. If a linter creates false positive warnings, it is
-okay to
-[disable it for that line](https://golangci-lint.run/usage/false-positives/).
+The Git Town codebase relies heavily on automation like linters to find as many
+code smells as possible. If a linter creates false positive warnings, it is okay
+to [disable it for that line](https://golangci-lint.run/usage/false-positives).
 
 ## Debug the dialogs
 
