@@ -13,8 +13,9 @@ Feature: syncing a stack that contains an observed branch
       | BRANCH   | LOCATION | MESSAGE    |
       | observed | origin   | new commit |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    When I run "git-town sync --stack"
+    When I run "git-town sync --stack -v"
 
+  @debug
   @this
   Scenario: result
     Then Git Town runs the commands
