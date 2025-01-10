@@ -6,7 +6,6 @@ Feature: syncing a stack that contains an observed branch
       | NAME     | TYPE   | LOCATIONS |
       | observed | (none) | origin    |
     And the current branch is "main"
-    # And inspect the repo
     And I ran "git fetch"
     And I ran "git-town observe observed"
     And the commits
@@ -15,6 +14,7 @@ Feature: syncing a stack that contains an observed branch
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --stack"
 
+  @debug
   @this
   Scenario: result
     Then Git Town runs the commands

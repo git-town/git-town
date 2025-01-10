@@ -133,6 +133,13 @@ func TestLineage(t *testing.T) {
 				must.Eq(t, want, have)
 			})
 		})
+		t.Run("branch without an ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			have := lineage.BranchLineageWithoutRoot(one)
+			want := gitdomain.LocalBranchNames{one}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("BranchNames", func(t *testing.T) {

@@ -1,6 +1,8 @@
 package config
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
 	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
@@ -36,6 +38,16 @@ func (self *ValidatedConfig) BranchesOfType(branchType configdomain.BranchType, 
 	result := gitdomain.LocalBranchNames{}
 	for _, branch := range branches {
 		if self.BranchType(branch) == branchType {
+			result = append(result, branch)
+		}
+	}
+	return result
+}
+
+func (self *ValidatedConfig) BranchesOfTypes(branchTypes []configdomain.BranchType, branches gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames{}
+	for _, branch := range branches {
+		if slices.Contains(branchTypes, self.BranchType(branch)) {
 			result = append(result, branch)
 		}
 	}
