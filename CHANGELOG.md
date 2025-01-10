@@ -1,6 +1,6 @@
 # Git Town Changelog
 
-### 17.2.0 (2024-01-02)
+## 17.2.0 (2024-01-02)
 
 #### New Features
 
@@ -21,7 +21,7 @@
 
 Shoutout to @Crocmagnon, @kevgo, @legeana, @lud-wj, @ruudk, @stephenwade, @wayne-zhan for contributing feedback, ideas, documentation, and code to 104 shipped PRs and 7 resolved issues!
 
-### 17.1.1 (2024-12-20)
+## 17.1.1 (2024-12-20)
 
 Git Town 17.1.1 ships a bug fix that unblocks BitBucket Datacenter users.
 
@@ -33,7 +33,7 @@ Git Town 17.1.1 ships a bug fix that unblocks BitBucket Datacenter users.
 
 Shoutout to @Crocmagnon, @kevgo, @stephenwade for contributing bug fixes and ideas to 13 shipped PRs.
 
-### 17.1.0 (2024-12-19)
+## 17.1.0 (2024-12-19)
 
 Git Town 17.1 unblocks users who have submitted urgent issues.
 
