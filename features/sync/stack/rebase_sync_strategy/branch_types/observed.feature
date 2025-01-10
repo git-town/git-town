@@ -6,20 +6,20 @@ Feature: syncing a stack that contains an observed branch
       | NAME     | TYPE   | LOCATIONS |
       | observed | (none) | origin    |
     And the current branch is "main"
+    # And inspect the repo
+    And I ran "git fetch"
     And I ran "git-town observe observed"
     And the commits
       | BRANCH   | LOCATION | MESSAGE    |
       | observed | origin   | new commit |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    # And inspect the repo
     When I run "git-town sync --stack"
 
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git push --tags          |
+      | BRANCH   | COMMAND                  |
+      | observed | git fetch --prune --tags |
     And all branches are now synchronized
     And the current branch is still "main"
     And these commits exist now
