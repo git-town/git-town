@@ -34,7 +34,7 @@ func (self *ValidatedConfig) BranchesAndTypes(branches gitdomain.LocalBranchName
 	return result
 }
 
-func (self *ValidatedConfig) BranchesOfType(branchType configdomain.BranchType, branches gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
+func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames, branchType configdomain.BranchType) gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for _, branch := range branches {
 		if self.BranchType(branch) == branchType {
