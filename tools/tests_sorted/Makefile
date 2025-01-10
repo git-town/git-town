@@ -3,6 +3,5 @@ help:  # prints all available targets
 
 test:  # runs all tests
 	go test ./...
-	# prealloc suggests a premature optimisation.
-	../rta golangci-lint run --disable prealloc
+	../rta golangci-lint run
 	../rta deadcode github.com/git-town/git-town/tools/tests_sorted

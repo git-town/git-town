@@ -224,6 +224,10 @@ make fix
 
 </a>
 
+The Git Town codebase relies heavily on automation like linters to find as many
+code smells as possible. If a linter creates false positive warnings, it is okay
+to [disable it for that line](https://golangci-lint.run/usage/false-positives).
+
 ## Debug the dialogs
 
 Run `git town debug` to see the commands to manually test Git Town's dialogs.
