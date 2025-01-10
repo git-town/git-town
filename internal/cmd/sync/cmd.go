@@ -385,7 +385,7 @@ func BranchesToSync(branchInfosToSync gitdomain.BranchInfos, allBranchInfos gitd
 func validateSyncData(data syncData) error {
 	// ensure any branch that uses the ff-only sync strategy does not have unpushed local commits
 	if data.config.NormalConfig.SyncPerennialStrategy == configdomain.SyncPerennialStrategyFFOnly {
-		perennialBranchesToSync := data.config.BranchesOfType(configdomain.BranchTypePerennialBranch, data.branchesToSync.BranchNames())
+		perennialBranchesToSync := data.config.BranchesOfType(data.branchesToSync.BranchNames(), configdomain.BranchTypePerennialBranch)
 		for _, perennialBranchToSync := range perennialBranchesToSync {
 			if branchInfo, hasBranchInfo := data.branchInfos.FindByLocalName(perennialBranchToSync).Get(); hasBranchInfo {
 				switch branchInfo.SyncStatus {
