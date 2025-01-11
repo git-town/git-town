@@ -3,8 +3,8 @@ Feature: does not compress an active observed branch
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE     | PARENT | LOCATIONS     |
-      | observed | observed |        | local, origin |
+      | NAME     | TYPE     | LOCATIONS     |
+      | observed | observed | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE    | FILE NAME  | FILE CONTENT |
       | observed | local, origin | observed 1 | observed_1 | observed 1   |
@@ -19,6 +19,8 @@ Feature: does not compress an active observed branch
     And the current branch is "observed"
     When I run "git-town compress --stack"
 
+  @debug
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
