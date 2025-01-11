@@ -19,8 +19,6 @@ Feature: does not compress an active observed branch
     And the current branch is "observed"
     When I run "git-town compress --stack"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |

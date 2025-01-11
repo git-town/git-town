@@ -212,7 +212,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	} else {
 		branchNamesToCompress = gitdomain.LocalBranchNames{initialBranch}
 	}
-	branchesToCompress := make([]compressBranchData, 0, len(branchNamesToCompress))
+	branchesToCompress := []compressBranchData{}
 	for _, branchNameToCompress := range branchNamesToCompress {
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToCompress).Get()
 		if !hasBranchInfo {
@@ -220,6 +220,9 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		}
 		branchType := validatedConfig.BranchType(branchNameToCompress)
 		if err := validateCanCompressBranchType(branchNameToCompress, branchType); err != nil {
+			if compressEntireStack {
+				continue
+			}
 			return data, exit, err
 		}
 		if err := validateBranchIsSynced(branchNameToCompress, branchInfo.SyncStatus); err != nil {
