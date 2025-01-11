@@ -14,46 +14,26 @@ Feature: syncing a stack that contains an observed branch
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --stack"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | observed | git fetch --prune --tags |
+      | BRANCH   | COMMAND                                     |
+      | observed | git fetch --prune --tags                    |
+      |          | git rebase origin/observed --no-update-refs |
     And all branches are now synchronized
-    And the current branch is still "main"
+    And the current branch is still "observed"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE              |
-      | main   | local, origin | origin main commit   |
-      |        |               | local main commit    |
-      | child  | local, origin | origin child commit  |
-      |        |               | origin parent commit |
-      |        |               | origin main commit   |
-      |        |               | local main commit    |
-      |        |               | local parent commit  |
-      |        |               | local child commit   |
-      | parent | local, origin | origin parent commit |
-      |        |               | origin main commit   |
-      |        |               | local main commit    |
-      |        |               | local parent commit  |
+      | BRANCH   | LOCATION      | MESSAGE    |
+      | observed | local, origin | new commit |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                                         |
-      | child  | git reset --hard {{ sha-before-run 'local child commit' }}                                      |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                             |
-      | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                              |
-    And the current branch is still "child"
+      | BRANCH   | COMMAND                                     |
+      | observed | git reset --hard {{ sha 'initial commit' }} |
+    And the current branch is still "observed"
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE              |
-      | main   | local, origin | origin main commit   |
-      |        |               | local main commit    |
-      | child  | local         | local child commit   |
-      |        | origin        | origin child commit  |
-      | parent | local         | local parent commit  |
-      |        | origin        | origin parent commit |
-    And the initial branches and lineage exist now
+      | BRANCH   | LOCATION | MESSAGE    |
+      | observed | origin   | new commit |
+    And these branches exist now
+      | REPOSITORY    | BRANCHES       |
+      | local, origin | main, observed |
