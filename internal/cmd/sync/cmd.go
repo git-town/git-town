@@ -284,12 +284,13 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if err != nil || exit {
 		return data, exit, err
 	}
+	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
 	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case syncStack.Enabled():
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
 	default:
 		branchNamesToSync = gitdomain.LocalBranchNames{initialBranch}
 	}

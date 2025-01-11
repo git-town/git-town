@@ -44,7 +44,7 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 	return result
 }
 
-func (self *ValidatedConfig) BranchesOfTypes(branchTypes []configdomain.BranchType, branches gitdomain.LocalBranchNames) gitdomain.LocalBranchNames {
+func (self *ValidatedConfig) BranchesOfTypes(branches gitdomain.LocalBranchNames, branchTypes []configdomain.BranchType) gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for _, branch := range branches {
 		if slices.Contains(branchTypes, self.BranchType(branch)) {

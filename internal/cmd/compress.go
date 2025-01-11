@@ -205,7 +205,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	if err != nil || exit {
 		return data, exit, err
 	}
-	perennialBranches := validatedConfig.BranchesOfTypes()
+	perennialBranches := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToCompress gitdomain.LocalBranchNames
 	if compressEntireStack {
 		branchNamesToCompress = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranches)
