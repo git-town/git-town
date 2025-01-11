@@ -23,6 +23,16 @@ func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullC
 	}
 }
 
+func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames{}
+	for branchName, branchType := range *self {
+		if slices.Contains(branchTypes, branchType) {
+			result = append(result, branchName)
+		}
+	}
+	return result
+}
+
 func (self *BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
 	result := maps.Keys(*self)
 	slices.Sort(result)

@@ -97,7 +97,7 @@ func TestLineage(t *testing.T) {
 		t.Run("only root exists", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
-			have := lineage.BranchLineageWithoutRoot(main)
+			have := lineage.BranchLineageWithoutRoot(main, gitdomain.LocalBranchNames{main})
 			want := gitdomain.LocalBranchNames{}
 			must.Eq(t, want, have)
 		})
@@ -106,7 +106,7 @@ func TestLineage(t *testing.T) {
 			lineage := configdomain.NewLineageWith(configdomain.LineageData{
 				one: main,
 			})
-			have := lineage.BranchLineageWithoutRoot(one)
+			have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main})
 			want := gitdomain.LocalBranchNames{one}
 			must.Eq(t, want, have)
 		})
@@ -119,19 +119,26 @@ func TestLineage(t *testing.T) {
 			want := gitdomain.LocalBranchNames{one, two}
 			t.Run("given root", func(t *testing.T) {
 				t.Parallel()
-				have := lineage.BranchLineageWithoutRoot(main)
+				have := lineage.BranchLineageWithoutRoot(main, gitdomain.LocalBranchNames{main})
 				must.Eq(t, want, have)
 			})
 			t.Run("given middle branch", func(t *testing.T) {
 				t.Parallel()
-				have := lineage.BranchLineageWithoutRoot(one)
+				have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main})
 				must.Eq(t, want, have)
 			})
 			t.Run("given leaf branch", func(t *testing.T) {
 				t.Parallel()
-				have := lineage.BranchLineageWithoutRoot(two)
+				have := lineage.BranchLineageWithoutRoot(two, gitdomain.LocalBranchNames{main})
 				must.Eq(t, want, have)
 			})
+		})
+		t.Run("branch without an ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.Lineage{}
+			have := lineage.BranchLineageWithoutRoot(one, gitdomain.LocalBranchNames{main})
+			want := gitdomain.LocalBranchNames{one}
+			must.Eq(t, want, have)
 		})
 	})
 

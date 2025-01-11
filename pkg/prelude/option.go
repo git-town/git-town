@@ -133,3 +133,13 @@ func NewOption[T comparable](value T) Option[T] {
 	}
 	return Some(value)
 }
+
+// None instantiates an empty Option of the given type.
+func None[T any]() Option[T] {
+	return Option[T]{nil}
+}
+
+// Some instantiates a new Option containing the given value.
+func Some[T any](value T) Option[T] {
+	return Option[T]{&value}
+}
