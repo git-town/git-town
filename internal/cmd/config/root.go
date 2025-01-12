@@ -91,7 +91,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("run pre-push hook", format.Bool(bool(config.NormalConfig.PushHook)))
 	print.Entry("feature sync strategy", config.NormalConfig.SyncFeatureStrategy.String())
 	print.Entry("perennial sync strategy", config.NormalConfig.SyncPerennialStrategy.String())
-	print.Entry("sync-prototype strategy", config.NormalConfig.SyncPrototypeStrategy.String())
+	print.Entry("prototype sync strategy", config.NormalConfig.SyncPrototypeStrategy.String())
 	print.Entry("sync tags", format.Bool(config.NormalConfig.SyncTags.IsTrue()))
 	print.Entry("sync with upstream", format.Bool(config.NormalConfig.SyncUpstream.IsTrue()))
 	fmt.Println()
