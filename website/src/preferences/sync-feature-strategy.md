@@ -1,13 +1,13 @@
-# sync-feature-strategy
+# Feature sync strategy
 
-The `sync-feature-strategy` setting specifies how to update local feature
-branches with changes from their parent and tracking branches.
+This setting specifies how to update local feature branches with changes from
+their parent and tracking branches.
 
 ## options
 
 ### merge
 
-When using the "merge" sync-feature-strategy,
+When using the "merge" feature sync strategy,
 [git town sync](../commands/sync.md) merges the parent and tracking branches
 into local feature branches.
 
@@ -60,7 +60,7 @@ branch.
 
 ### config file
 
-In the [config file](../configuration-file.md) the sync-feature-strategy is part
+In the [config file](../configuration-file.md) the feature sync strategy is part
 of the `[sync-strategy]` section:
 
 ```toml
@@ -70,7 +70,7 @@ feature-strategy = "merge"
 
 ### Git metadata
 
-To manually configure the sync-feature-strategy in Git, run this command:
+To manually configure the feature sync strategy in Git, run this command:
 
 ```wrap
 git config [--global] git-town.sync-feature-strategy <merge|rebase>
