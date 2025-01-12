@@ -84,7 +84,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
 	fmt.Println()
 	print.Header("Ship")
-	print.Entry("delete the tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.IsTrue()))
+	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.IsTrue()))
 	print.Entry("strategy", config.NormalConfig.ShipStrategy.String())
 	fmt.Println()
 	print.Header("Sync")
