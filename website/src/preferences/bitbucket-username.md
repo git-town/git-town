@@ -1,12 +1,9 @@
-# bitbucket-username
+# Bitbucket username
 
-Git Town can interact with Bitbucket Cloud in your name, for example to update
-pull requests as branches get created, shipped, or deleted. To do so, Git Town
-needs your Bitbucket username and an
-[Bitbucket App Password](bitbucket-app-password.md).
-
-Bitbucket Data Center capabilities are a little more restricted but the process
-is the same as for Bitbucket Cloud.
+Git Town can interact with Bitbucket Cloud and Bitbucket Data Center in your
+name, for example to update pull requests as branches get created, shipped, or
+deleted. To do so, Git Town needs your Bitbucket username and a
+[Bitbucket app password](bitbucket-app-password.md).
 
 ## config file
 
