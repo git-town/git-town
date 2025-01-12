@@ -1,6 +1,6 @@
-# sync-tags
+# Sync tags
 
-The sync-tags setting configures whether to sync Git tags with the
+This setting configures whether to sync Git tags with the
 [development remote](dev-remote.md).
 
 ## options
@@ -11,8 +11,8 @@ Git tags in addition to branches and commits. When set to `false`,
 
 ## in config file
 
-In the [config file](../configuration-file.md) the sync-tags setting can be set
-like this:
+In the [config file](../configuration-file.md) syncing tags can be set like
+this:
 
 ```toml
 [sync]
@@ -21,7 +21,7 @@ tags = true
 
 ## in Git metadata
 
-To manually configure `sync-tags` in Git, run this command:
+To manually configure syncing tags in Git, run this command:
 
 ```wrap
 git config [--global] git-town.sync-tags <true|false>
