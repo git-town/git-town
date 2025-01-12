@@ -78,7 +78,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("hosting platform", format.OptionalStringerSetting(config.NormalConfig.HostingPlatform))
-	print.Entry("hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
+	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
