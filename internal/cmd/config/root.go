@@ -78,7 +78,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("push new branches", format.Bool(config.NormalConfig.ShouldPushNewBranches()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("dev remote", config.NormalConfig.DevRemote.String())
+	print.Entry("development remote", config.NormalConfig.DevRemote.String())
 	print.Entry("hosting platform", format.OptionalStringerSetting(config.NormalConfig.HostingPlatform))
 	print.Entry("hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
