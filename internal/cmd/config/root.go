@@ -85,7 +85,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Ship")
 	print.Entry("delete tracking branch", format.Bool(config.NormalConfig.ShipDeleteTrackingBranch.IsTrue()))
-	print.Entry("strategy", config.NormalConfig.ShipStrategy.String())
+	print.Entry("ship strategy", config.NormalConfig.ShipStrategy.String())
 	fmt.Println()
 	print.Header("Sync")
 	print.Entry("run pre-push hook", format.Bool(bool(config.NormalConfig.PushHook)))
