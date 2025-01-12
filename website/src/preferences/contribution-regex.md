@@ -1,4 +1,4 @@
-# contribution-regex
+# Contribution regex
 
 Branches matching this regular expression are treated as
 [contribution branches](../branch-types.md#contribution-branches).
@@ -17,7 +17,7 @@ contribution-regex = "^renovate/"
 
 ## configure in Git metadata
 
-To manually set the feature regex, run this command:
+To manually set the contribution regex, run this command:
 
 ```wrap
 git config [--global] git-town.contribution-regex '^renovate/'
