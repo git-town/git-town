@@ -1,4 +1,4 @@
-# main-branch
+# Main branch
 
 This setting stores the name of the main branch. The main branch is the default
 parent branch for new feature branches created with
