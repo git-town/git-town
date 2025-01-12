@@ -51,6 +51,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
+	make --no-print-directory lint-print-config
 	make --no-print-directory lint-structs-sorted
 	make --no-print-directory lint-tests-sorted
 	git diff --check
@@ -77,6 +78,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/tests_sorted && ../rta golangci-lint run)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
+
+lint-print-config:
+	@tools/rta node tools/print_config_exhaustive/lint.js
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
