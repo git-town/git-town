@@ -4,7 +4,7 @@ RTA_VERSION = 0.10.1  # run-that-app version to use
 .DEFAULT_GOAL := help
 RELEASE_VERSION := "17.2.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
-MDBOOK_PATH := $(shell tools/rta --which mdbook-lint)
+MDBOOK_PATH := $(shell dirname $(shell tools/rta --which --optional mdbook-linkcheck))
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
 	@env $(GO_TEST_ARGS) skipmessyoutput=1 go test -v
@@ -58,7 +58,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	# (cd tools/lint_steps && go build && ./lint_steps)
 	# tools/rta node tools/node_modules/.bin/gherkin-lint
 	# tools/rta actionlint
-	(cd website && PATH=$(MDBOOK_DIR):$$PATH ../tools/rta mdbook build)
+	(cd website && env PATH=$(MDBOOK_PATH):$$PATH ../tools/rta --optional mdbook build)
 	# tools/rta staticcheck ./...
 	# tools/ensure_no_files_with_dashes.sh
 	# tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
