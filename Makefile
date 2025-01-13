@@ -49,21 +49,21 @@ install:  # builds for the current platform
 	@go install -ldflags="-s -w"
 
 lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
-	# make --no-print-directory lint-smoke
-	# @tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
-	# make --no-print-directory deadcode
-	# make --no-print-directory lint-structs-sorted
-	# make --no-print-directory lint-tests-sorted
-	# git diff --check
-	# (cd tools/lint_steps && go build && ./lint_steps)
-	# tools/rta node tools/node_modules/.bin/gherkin-lint
-	# tools/rta actionlint
+	make --no-print-directory lint-smoke
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
+	make --no-print-directory deadcode
+	make --no-print-directory lint-structs-sorted
+	make --no-print-directory lint-tests-sorted
+	git diff --check
+	(cd tools/lint_steps && go build && ./lint_steps)
+	tools/rta node tools/node_modules/.bin/gherkin-lint
+	tools/rta actionlint
 	(cd website && env PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta --optional mdbook build)
-	# tools/rta staticcheck ./...
-	# tools/ensure_no_files_with_dashes.sh
-	# tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
-	# tools/rta golangci-lint cache clean
-	# tools/rta golangci-lint run
+	tools/rta staticcheck ./...
+	tools/ensure_no_files_with_dashes.sh
+	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
+	tools/rta golangci-lint cache clean
+	tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	tools/rta govulncheck ./...
