@@ -4,7 +4,7 @@ RTA_VERSION = 0.10.2  # run-that-app version to use
 MDBOOK_LINKCHECK_PATH := $(shell dirname $(shell ../tools/rta --which --optional mdbook-linkcheck))
 
 build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
-	env PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook build
+	PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook build
 
 clean: ../tools/rta@${RTA_VERSION}  # removes all build artifacts
 	../tools/rta mdbook clean
@@ -14,7 +14,7 @@ help:  # prints available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
-	env PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook serve --open -n 127.0.0.1
+	PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook serve --open -n 127.0.0.1
 
 test: build unit  # tests the website
 	cd .. && make --no-print-directory docs
