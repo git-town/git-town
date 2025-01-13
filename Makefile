@@ -1,4 +1,4 @@
-RTA_VERSION = 0.10.2  # run-that-app version to use
+RTA_VERSION = 0.10.3  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
