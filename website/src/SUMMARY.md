@@ -35,7 +35,7 @@
     - [delete](commands/delete.md)
     - [rename](commands/rename.md)
     - [repo](commands/repo.md)
-    - [ship](commands/ship.md)
+    - [ship](commands/ship2.md)
   - [Installation commands](installation-commands.md)
     - [completions](commands/completions.md)
   - [Configuration commands](configuration-commands.md)
