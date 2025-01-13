@@ -16,7 +16,7 @@ help:  # prints available targets
 serve: ../tools/rta@${RTA_VERSION}  # runs a local development server of the website
 	env PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook serve --open -n 127.0.0.1
 
-test: unit  # tests the website
+test: build unit  # tests the website
 	cd .. && make --no-print-directory docs
 
 unit: ../tools/rta@${RTA_VERSION}  # runs the unit tests
