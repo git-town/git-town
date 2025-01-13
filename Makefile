@@ -1,4 +1,4 @@
-RTA_VERSION = 0.9.0  # run-that-app version to use
+RTA_VERSION = 0.10.2  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -64,6 +64,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	tools/rta golangci-lint run
 
 lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
+	(cd website && make test)
 	tools/rta govulncheck ./...
 	@echo lint tools/format_self
 	@(cd tools/format_self && ../rta golangci-lint run)
