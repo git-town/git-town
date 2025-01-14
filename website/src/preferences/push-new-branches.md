@@ -1,4 +1,4 @@
-# push-new-branches
+# Push new branches
 
 By default, Git Town does not push new feature branches to the
 [development remote](dev-remote.md) since that would make creating branches

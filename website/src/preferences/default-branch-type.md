@@ -1,4 +1,4 @@
-# default-branch-type
+# Default branch type
 
 This setting defines the default branch type for Git Town when the branch type
 is unknown. It applies to branches not listed in [main-branch](main-branch.md),

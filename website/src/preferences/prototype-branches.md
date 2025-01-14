@@ -1,6 +1,6 @@
-# prototype-branches
+# Prototype branches
 
-This configuration setting stores hard-coded names of
+This setting stores hard-coded names of
 [prototype branches](../branch-types.md#prototype-branches).
 
 ## set prototype branches

@@ -1,8 +1,8 @@
-# sync-upstream
+# Sync with upstream
 
-The sync-upstream setting configures whether to pull in updates from the
-`upstream` remote. This is intended for codebases that are forks of other
-codebases and want to stay in sync with the codebase they are forked from.
+This setting configures whether to pull in updates from the `upstream` remote.
+This is intended for codebases that are forks of other codebases and want to
+stay in sync with the codebase they are forked from.
 
 ## options
 
@@ -13,8 +13,8 @@ from upstream even if that remote exists.
 
 ## in config file
 
-In the [config file](../configuration-file.md) the sync-upstream setting can be
-set like this:
+In the [config file](../configuration-file.md) syncing with upstream can be set
+like this:
 
 ```toml
 [sync]
@@ -23,7 +23,7 @@ upstream = true
 
 ## in Git metadata
 
-To manually configure `sync-upstream` in Git, run this command:
+To manually configure syncing with upstream in Git, run this command:
 
 ```wrap
 git config [--global] git-town.sync-upstream <true|false>

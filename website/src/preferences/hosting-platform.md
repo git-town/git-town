@@ -1,4 +1,4 @@
-# hosting.platform
+# Hosting platform
 
 To talk to the API of your code hosting platform, Git Town needs to know which
 platform (GitHub, Gitlab, Bitbucket, etc) you use.

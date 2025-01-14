@@ -1,4 +1,4 @@
-Feature: sync the current feature branch using the "rebase" sync-feature strategy
+Feature: sync the current feature branch using the "rebase" feature sync strategy
 
   Background:
     Given a Git repo with origin

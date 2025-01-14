@@ -1,6 +1,6 @@
-# parked-branches
+# Parked branches
 
-This configuration setting stores hard-coded names of
+This setting stores hard-coded names of
 [parked branches](../branch-types.md#observed-branches).
 
 ## set parked branches

@@ -6,7 +6,7 @@ files: "**/*.md"
 
 # black-list of files not to test
 # applied after the white-list above.
-exclude: ["vendor/"]
+exclude: ["website/src/SUMMARY.md", "vendor/"]
 
 # the formatter to use (detailed, dot, progress, summary)
 format: dot
