@@ -34,7 +34,7 @@ Feature: show the configuration when using an alternative config file
       Hosting:
         development remote: origin
         hosting platform: (not set)
-        hostname: (not set)
+        origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
         Gitea token: (not set)
@@ -42,14 +42,14 @@ Feature: show the configuration when using an alternative config file
         GitLab token: (not set)
 
       Ship:
-        delete the tracking branch: yes
-        strategy: api
+        delete tracking branch: yes
+        ship strategy: api
 
       Sync:
         run pre-push hook: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync-prototype strategy: merge
+        feature sync strategy: merge
+        perennial sync strategy: rebase
+        prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
       """

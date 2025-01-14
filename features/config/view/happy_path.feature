@@ -41,7 +41,7 @@ Feature: show the configuration
       Hosting:
         development remote: origin
         hosting platform: (not set)
-        hostname: (not set)
+        origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
         Gitea token: (not set)
@@ -49,14 +49,14 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Ship:
-        delete the tracking branch: yes
-        strategy: squash-merge
+        delete tracking branch: yes
+        ship strategy: squash-merge
 
       Sync:
         run pre-push hook: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync-prototype strategy: merge
+        feature sync strategy: merge
+        perennial sync strategy: rebase
+        prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
       """
@@ -117,7 +117,7 @@ Feature: show the configuration
       Hosting:
         development remote: origin
         hosting platform: github
-        hostname: github.com
+        origin hostname: github.com
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
         Gitea token: (not set)
@@ -125,14 +125,14 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Ship:
-        delete the tracking branch: yes
-        strategy: squash-merge
+        delete tracking branch: yes
+        ship strategy: squash-merge
 
       Sync:
         run pre-push hook: yes
-        sync-feature strategy: rebase
-        sync-perennial strategy: merge
-        sync-prototype strategy: compress
+        feature sync strategy: rebase
+        perennial sync strategy: merge
+        prototype sync strategy: compress
         sync tags: no
         sync with upstream: yes
       """
@@ -211,7 +211,7 @@ Feature: show the configuration
       Hosting:
         development remote: origin
         hosting platform: github
-        hostname: github.com
+        origin hostname: github.com
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
         Gitea token: (not set)
@@ -219,14 +219,14 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Ship:
-        delete the tracking branch: no
-        strategy: squash-merge
+        delete tracking branch: no
+        ship strategy: squash-merge
 
       Sync:
         run pre-push hook: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: merge
-        sync-prototype strategy: compress
+        feature sync strategy: merge
+        perennial sync strategy: merge
+        prototype sync strategy: compress
         sync tags: no
         sync with upstream: no
       """
@@ -266,7 +266,7 @@ Feature: show the configuration
       Hosting:
         development remote: origin
         hosting platform: (not set)
-        hostname: (not set)
+        origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
         Gitea token: (not set)
@@ -274,14 +274,14 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Ship:
-        delete the tracking branch: yes
-        strategy: api
+        delete tracking branch: yes
+        ship strategy: api
 
       Sync:
         run pre-push hook: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync-prototype strategy: merge
+        feature sync strategy: merge
+        perennial sync strategy: rebase
+        prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
 
@@ -323,7 +323,7 @@ Feature: show the configuration
       Hosting:
         development remote: origin
         hosting platform: (not set)
-        hostname: (not set)
+        origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
         Gitea token: (not set)
@@ -331,14 +331,14 @@ Feature: show the configuration
         GitLab token: (not set)
 
       Ship:
-        delete the tracking branch: yes
-        strategy: api
+        delete tracking branch: yes
+        ship strategy: api
 
       Sync:
         run pre-push hook: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
-        sync-prototype strategy: merge
+        feature sync strategy: merge
+        perennial sync strategy: rebase
+        prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
       """

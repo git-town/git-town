@@ -1,7 +1,7 @@
-# sync-perennial-strategy
+# Perennial sync strategy
 
-The sync-perennial-strategy setting specifies how to update local perennial
-branches with changes from their tracking branches.
+This setting specifies how to update local perennial branches with changes from
+their tracking branches.
 
 ## options
 
@@ -14,7 +14,7 @@ branches with changes from their tracking branches.
 
 ## in config file
 
-In the [config file](../configuration-file.md) the sync-perennial-strategy is
+In the [config file](../configuration-file.md) the perennial sync strategy is
 part of the `[sync-strategy]` section:
 
 ```toml
@@ -24,7 +24,7 @@ perennial-strategy = "rebase"
 
 ## in Git metadata
 
-To manually configure the sync-perennial-strategy in Git, run this command:
+To manually configure the perennial sync strategy in Git, run this command:
 
 ```wrap
 git config [--global] git-town.sync-perennial-strategy <merge|rebase>

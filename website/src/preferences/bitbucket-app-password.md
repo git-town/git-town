@@ -1,12 +1,12 @@
-# bitbucket-app-password
+# Bitbucket access token
 
 ## Bitbucket Cloud
 
 Git Town can interact with Bitbucket Cloud in your name, for example to update
 pull requests as branches get created, shipped, or deleted, or to ship pull
 requests. To do so, Git Town needs your
-[Bitbucket username](bitbucket-username.md) and an
-[Bitbucket App Password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords).
+[Bitbucket username](bitbucket-username.md) and a
+[Bitbucket app password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords).
 
 An app password is not the password of your Bitbucket account. It's a special
 password that you create so that external applications can interact with
@@ -34,11 +34,12 @@ the left `HTTP access tokens`. You need to enable these permissions:
 
 ## config file
 
-Since your App Password is confidential, you cannot add it to the config file.
+Since your app password or access token is confidential, you cannot add it to
+the config file.
 
 ## Git metadata
 
-You can configure the App Password manually by running:
+You can configure the app password or access token manually by running:
 
 ```wrap
 git config [--global] git-town.bitbucket-app-password <token>

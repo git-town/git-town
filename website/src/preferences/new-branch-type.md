@@ -1,8 +1,8 @@
-# new-branch-type configuration setting
+# New branch type
 
-The "new-branch-type" setting defines the [type](../branch-types.md) for new
-branches created using the [git town hack](../commands/hack.md),
-[append](../commands/append.md), or [prepend](../commands/prepend.md) commands.
+This setting defines the [type](../branch-types.md) for new branches created
+using the [git town hack](../commands/hack.md), [append](../commands/append.md),
+or [prepend](../commands/prepend.md) commands.
 
 Before setting this, try to configure the branch type using one of these more
 broadly applicable configuration entries:
