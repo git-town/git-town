@@ -29,6 +29,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: qa, staging
         perennial regex: ^release-
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -38,11 +39,14 @@ Feature: show the configuration
         push new branches: no
 
       Hosting:
+        development remote: origin
         hosting platform: (not set)
         hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete the tracking branch: yes
@@ -101,6 +105,7 @@ Feature: show the configuration
         parked branches: (none)
         perennial branches: public, staging
         perennial regex: ^release-
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -110,11 +115,14 @@ Feature: show the configuration
         push new branches: yes
 
       Hosting:
+        development remote: origin
         hosting platform: github
         hostname: github.com
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete the tracking branch: yes
@@ -191,6 +199,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: ^git-perennial-
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -200,11 +209,14 @@ Feature: show the configuration
         push new branches: no
 
       Hosting:
+        development remote: origin
         hosting platform: github
         hostname: github.com
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete the tracking branch: no
@@ -242,6 +254,7 @@ Feature: show the configuration
         parked branches: (none)
         perennial branches: qa
         perennial regex: (not set)
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -251,11 +264,14 @@ Feature: show the configuration
         push new branches: no
 
       Hosting:
+        development remote: origin
         hosting platform: (not set)
         hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete the tracking branch: yes
@@ -295,6 +311,7 @@ Feature: show the configuration
         parked branches: (none)
         perennial branches: (none)
         perennial regex: (not set)
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -304,11 +321,14 @@ Feature: show the configuration
         push new branches: no
 
       Hosting:
+        development remote: origin
         hosting platform: (not set)
         hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete the tracking branch: yes

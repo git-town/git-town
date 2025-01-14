@@ -23,6 +23,7 @@ Feature: show the configuration from a subfolder
         parked branches: (none)
         perennial branches: public
         perennial regex: (not set)
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -32,11 +33,14 @@ Feature: show the configuration from a subfolder
         push new branches: no
 
       Hosting:
+        development remote: origin
         hosting platform: (not set)
         hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete the tracking branch: yes
