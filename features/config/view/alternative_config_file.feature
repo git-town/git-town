@@ -22,6 +22,7 @@ Feature: show the configuration when using an alternative config file
         parked branches: (none)
         perennial branches: public, staging
         perennial regex: (not set)
+        prototype branches: (none)
 
       Configuration:
         offline: no
@@ -31,11 +32,14 @@ Feature: show the configuration when using an alternative config file
         push new branches: no
 
       Hosting:
+        development remote: origin
         hosting platform: (not set)
         origin hostname: (not set)
+        Bitbucket username: (not set)
+        Bitbucket app password: (not set)
+        Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-        Gitea token: (not set)
 
       Ship:
         delete tracking branch: yes
