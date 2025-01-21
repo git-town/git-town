@@ -40,5 +40,5 @@ tags = true
 upstream = true
 
 [sync-strategy]
-prototype-branche = "merge"
+prototype-branches = "merge"
 ```
