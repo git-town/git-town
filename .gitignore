@@ -18,4 +18,5 @@ tools/shellcheck*
 tools/shfmt*
 website/bin/
 website/book/
+website/rta*
 www/
