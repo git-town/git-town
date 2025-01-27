@@ -26,6 +26,6 @@ unit: rta@${RTA_VERSION}  # runs the unit tests
 
 rta@${RTA_VERSION}:
 	@rm -f rta*
-	@(cd curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
+	@(curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv rta rta@${RTA_VERSION}
 	@ln -s rta@${RTA_VERSION} rta
