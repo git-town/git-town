@@ -1,6 +1,22 @@
 # Git Town Changelog
 
-## 17.2.0 (2024-01-02)
+## 17.2.1 (2025-01-27)
+
+#### New Features
+
+- The new [ff-only sync strategy]() provides a more elegant way to sync perennial branches that are protected against pushes and therefore should not receive local commits. Rather than getting stuck trying to push a local commit, forcing to `git town skip` the affected branch, this new sync strategy aborts the sync before it begins and provides better guidance to the user ([#4104](https://github.com/git-town/git-town/issues/4104)).
+- Git Town commands now uses the command listed in the `BROWSER` environment variable to open a browser. If no such environment variable exists, it opens the browser as before ([#4495](https://github.com/git-town/git-town/pull/4495)).
+- git sync: syncs perennial, contribution, and observed branches without changes faster ([#4510](https://github.com/git-town/git-town/pull/4510), [#4513](https://github.com/git-town/git-town/pull/4513)).
+
+#### Bug Fixes
+
+- git sync: `--stack` now syncs observed branches correctly ([#4518](https://github.com/git-town/git-town/issues/4518)).
+
+#### Contributors
+
+Shoutout to @davidolrik, @FirelightFlagboy, @kevgo, @legeana, @sergej-koscejev, @stephenwade, @tugrulates, @wayne-zhan, @wlohrmann-hf for contributing ideas, feedback, and code to 56 shipped PRs and 10 resolved issues!
+
+## 17.2.0 (2025-01-02)
 
 #### New Features
 
