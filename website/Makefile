@@ -1,7 +1,7 @@
 RTA_VERSION = 0.10.3  # run-that-app version to use
 
 .DEFAULT_GOAL := help
-MDBOOK_LINKCHECK_PATH := $(shell dirname $(shell rta --which --optional mdbook-linkcheck))
+MDBOOK_LINKCHECK_PATH := $(shell dirname $(shell rta --which mdbook-linkcheck))
 
 build: rta@${RTA_VERSION}  # transpiles the website to HTML
 	PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH rta mdbook build
