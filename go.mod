@@ -3,7 +3,7 @@ module github.com/git-town/git-town/v17
 go 1.23
 
 require (
-	code.gitea.io/sdk/gitea v0.19.0
+	code.gitea.io/sdk/gitea v0.20.0
 	github.com/BurntSushi/toml v1.4.0
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/carlmjohnson/requests v0.24.3
@@ -24,15 +24,16 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
 	github.com/xanzy/go-gitlab v0.114.0
-	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
-	golang.org/x/oauth2 v0.24.0
+	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
+	golang.org/x/oauth2 v0.25.0
 )
 
 require (
+	github.com/42wim/httpsig v1.2.2 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/lipgloss v1.0.0 // indirect
-	github.com/charmbracelet/x/ansi v0.5.2 // indirect
+	github.com/charmbracelet/x/ansi v0.8.0 // indirect
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/cucumber/gherkin/go/v26 v26.2.0 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
@@ -57,10 +58,10 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
-	golang.org/x/crypto v0.29.0 // indirect
-	golang.org/x/net v0.31.0 // indirect
-	golang.org/x/sync v0.9.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
-	golang.org/x/text v0.20.0 // indirect
-	golang.org/x/time v0.8.0 // indirect
+	golang.org/x/crypto v0.32.0 // indirect
+	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/time v0.9.0 // indirect
 )
