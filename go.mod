@@ -1,6 +1,6 @@
 module github.com/git-town/git-town/v17
 
-go 1.23
+go 1.23.5
 
 require (
 	code.gitea.io/sdk/gitea v0.20.0
