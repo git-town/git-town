@@ -2,9 +2,8 @@ package set
 
 import (
 	"cmp"
+	"maps"
 	"slices"
-
-	"golang.org/x/exp/maps"
 )
 
 // Set implements a simple generic Set implementation.
@@ -28,7 +27,7 @@ func (self Set[T]) AddSet(other Set[T]) {
 }
 
 func (self Set[T]) Values() []T {
-	result := maps.Keys(self)
+	result := slices.Collect(maps.Keys(self))
 	slices.Sort(result)
 	return result
 }
