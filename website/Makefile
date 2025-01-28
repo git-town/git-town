@@ -1,4 +1,4 @@
-RTA_VERSION = 0.10.5  # run-that-app version to use
+RTA_VERSION = 0.10.6  # run-that-app version to use
 
 .DEFAULT_GOAL := help
 MDBOOK_LINKCHECK_PATH := $(shell dirname $(shell ../tools/rta --which --optional mdbook-linkcheck))
