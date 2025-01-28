@@ -213,6 +213,7 @@ func DECSLRM(left, right int) string {
 //	CSI <top> ; <bottom> r
 //
 // See: https://vt100.net/docs/vt510-rm/DECSTBM.html
+//
 // Deprecated: use [SetTopBottomMargins] instead.
 func SetScrollingRegion(t, b int) string {
 	if t < 0 {

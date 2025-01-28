@@ -3,6 +3,7 @@ package datatable
 import (
 	"fmt"
 	"log"
+	"maps"
 	"regexp"
 	"sort"
 	"strings"
@@ -13,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
 	"github.com/sergi/go-diff/diffmatchpatch"
-	"golang.org/x/exp/maps"
 )
 
 // DataTable allows comparing user-generated data with Gherkin tables.
@@ -101,7 +101,7 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 					if !found {
 						fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
 						fmt.Printf("I have records about %d commits:\n", len(initialDevSHAs))
-						for _, key := range maps.Keys(initialDevSHAs) {
+						for key := range maps.Keys(initialDevSHAs) {
 							fmt.Println("  -", key)
 						}
 						panic("see error above")
@@ -117,7 +117,7 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 					if !found {
 						fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
 						fmt.Printf("I have records about %d commits:\n", len(initialOriginSHAs))
-						for _, key := range maps.Keys(initialOriginSHAs) {
+						for key := range maps.Keys(initialOriginSHAs) {
 							fmt.Println("  -", key)
 						}
 					}
@@ -137,7 +137,7 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, worktreeRepo 
 					if !found {
 						fmt.Printf("I cannot find the initial worktree commit %q.\n", commitName)
 						fmt.Printf("I have records about %d commits:\n", len(initialWorktreeSHAs))
-						for _, key := range maps.Keys(initialWorktreeSHAs) {
+						for key := range maps.Keys(initialWorktreeSHAs) {
 							fmt.Println("  -", key)
 						}
 					}
