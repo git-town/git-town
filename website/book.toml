@@ -17,3 +17,4 @@ no-section-label = true
 smart-punctuation = true
 
 [output.linkcheck]
+optional = true
