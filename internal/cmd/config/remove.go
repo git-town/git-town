@@ -1,6 +1,7 @@
 package config
 
 import (
+	"maps"
 	"slices"
 	"strings"
 
@@ -9,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v17/internal/config/configdomain"
 	"github.com/git-town/git-town/v17/internal/execute"
 	"github.com/spf13/cobra"
-	"golang.org/x/exp/maps"
 )
 
 const removeConfigDesc = "Removes the Git Town configuration"
@@ -49,7 +49,7 @@ func executeRemoveConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	aliasNames := maps.Keys(repo.UnvalidatedConfig.NormalConfig.Aliases)
+	aliasNames := slices.Collect(maps.Keys(repo.UnvalidatedConfig.NormalConfig.Aliases))
 	slices.Sort(aliasNames)
 	for _, aliasName := range aliasNames {
 		if strings.HasPrefix(repo.UnvalidatedConfig.NormalConfig.Aliases[aliasName], "town ") {

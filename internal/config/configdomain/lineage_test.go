@@ -170,7 +170,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.NewLineage()
 			have := lineage.BranchesWithParents()
-			want := gitdomain.LocalBranchNames{}
+			want := gitdomain.LocalBranchNames(nil)
 			must.Eq(t, want, have)
 		})
 	})

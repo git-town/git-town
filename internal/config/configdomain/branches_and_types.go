@@ -1,10 +1,10 @@
 package configdomain
 
 import (
+	"maps"
 	"slices"
 
 	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"golang.org/x/exp/maps"
 )
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType
@@ -34,7 +34,7 @@ func (self *BranchesAndTypes) BranchesOfTypes(branchTypes ...BranchType) gitdoma
 }
 
 func (self *BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
-	result := maps.Keys(*self)
+	result := slices.Collect(maps.Keys(*self))
 	slices.Sort(result)
 	return result
 }
