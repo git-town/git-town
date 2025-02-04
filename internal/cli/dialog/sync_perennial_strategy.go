@@ -23,8 +23,8 @@ made to their tracking branch somewhere else.
 func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
 	entries := list.Entries[configdomain.SyncPerennialStrategy]{
 		{
-			Data: configdomain.SyncPerennialStrategyMerge,
-			Text: "merge updates from the tracking branch into perennial branches",
+			Data: configdomain.SyncPerennialStrategyFFOnly,
+			Text: "fast-forward perennial branches to their tracking branch",
 		},
 		{
 			Data: configdomain.SyncPerennialStrategyRebase,
