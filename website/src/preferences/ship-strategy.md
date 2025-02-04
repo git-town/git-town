@@ -1,13 +1,13 @@
-# ship-strategy
+# Ship strategy
 
-The `ship-strategy` setting defines how [git town ship](../commands/ship.md)
-merges finished feature branches into the main branch.
+This setting defines how [git town ship](../commands/ship.md) merges finished
+feature branches into the main branch.
 
 ## options
 
 ### api
 
-When using the "api" ship-strategy, [git town ship](../commands/ship.md) presses
+When using the "api" ship strategy, [git town ship](../commands/ship.md) presses
 the "merge" button for the proposal in the web UI of your code hosting platform
 via an API call.
 
@@ -62,7 +62,7 @@ commit message.
 
 ### config file
 
-Set the ship-strategy in the [config file](../configuration-file.md):
+Set the ship strategy in the [config file](../configuration-file.md):
 
 ```toml
 ship.strategy = "api"
@@ -77,7 +77,7 @@ strategy = "api"
 
 ### Git metadata
 
-To manually configure the ship-strategy in Git metadata, run:
+To manually configure the ship strategy in Git metadata, run:
 
 ```wrap
 git config [--global] git-town.ship-strategy <api|squash-merge>

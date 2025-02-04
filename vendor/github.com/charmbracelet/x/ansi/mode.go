@@ -51,7 +51,8 @@ type Mode interface {
 // SetMode (SM) returns a sequence to set a mode.
 // The mode arguments are a list of modes to set.
 //
-// If one of the modes is a [DECMode], the sequence will use the DEC format.
+// If one of the modes is a [DECMode], the function will returns two escape
+// sequences.
 //
 // ANSI format:
 //
@@ -74,7 +75,8 @@ func SM(modes ...Mode) string {
 // ResetMode (RM) returns a sequence to reset a mode.
 // The mode arguments are a list of modes to reset.
 //
-// If one of the modes is a [DECMode], the sequence will use the DEC format.
+// If one of the modes is a [DECMode], the function will returns two escape
+// sequences.
 //
 // ANSI format:
 //
@@ -94,9 +96,9 @@ func RM(modes ...Mode) string {
 	return ResetMode(modes...)
 }
 
-func setMode(reset bool, modes ...Mode) string {
+func setMode(reset bool, modes ...Mode) (s string) {
 	if len(modes) == 0 {
-		return ""
+		return
 	}
 
 	cmd := "h"
@@ -113,21 +115,24 @@ func setMode(reset bool, modes ...Mode) string {
 		return seq + strconv.Itoa(modes[0].Mode()) + cmd
 	}
 
-	var dec bool
-	list := make([]string, len(modes))
-	for i, m := range modes {
-		list[i] = strconv.Itoa(m.Mode())
+	dec := make([]string, 0, len(modes)/2)
+	ansi := make([]string, 0, len(modes)/2)
+	for _, m := range modes {
 		switch m.(type) {
 		case DECMode:
-			dec = true
+			dec = append(dec, strconv.Itoa(m.Mode()))
+		case ANSIMode:
+			ansi = append(ansi, strconv.Itoa(m.Mode()))
 		}
 	}
 
-	if dec {
-		seq += "?"
+	if len(ansi) > 0 {
+		s += seq + strings.Join(ansi, ";") + cmd
 	}
-
-	return seq + strings.Join(list, ";") + cmd
+	if len(dec) > 0 {
+		s += seq + "?" + strings.Join(dec, ";") + cmd
+	}
+	return
 }
 
 // RequestMode (DECRQM) returns a sequence to request a mode from the terminal.

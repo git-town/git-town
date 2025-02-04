@@ -1,8 +1,4 @@
-# dev-remote
-
-```
-git-town.dev-remote=<remote>
-```
+# Development remote
 
 This setting lets you override the name of the Git remote used for development.
 This is the remote that branches get pushed to, and into which branches get

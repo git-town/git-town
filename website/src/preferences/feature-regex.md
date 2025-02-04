@@ -1,4 +1,4 @@
-# feature-regex
+# Feature regex
 
 Branches matching this regular expression are treated as feature branches. This
 setting is relevant only when the [default-branch-type](default-branch-type.md)

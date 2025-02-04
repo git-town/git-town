@@ -1,18 +1,18 @@
-# sync-prototype-strategy
+# Prototype sync strategy
 
-The `sync-prototype-strategy` setting specifies how to update local
+This setting specifies how to update local
 [prototype branches](../branch-types.md#prototype-branches) with changes from
 their parent and tracking branches. When not set, Git Town uses the
-[sync-feature-strategy](sync-feature-strategy.md).
+[feature sync strategy](sync-feature-strategy.md).
 
 ## options
 
-`sync-prototype-strategy` accepts the same options as
-[sync-feature-strategy](sync-feature-strategy.md#options).
+This setting accepts the same options as the
+[feature sync strategy](sync-feature-strategy.md#options).
 
 ### config file
 
-In the [config file](../configuration-file.md) the sync-prototype-strategy is
+In the [config file](../configuration-file.md) the prototype sync strategy is
 part of the `[sync-strategy]` section:
 
 ```toml
@@ -22,7 +22,7 @@ prototype-strategy = "merge"
 
 ### Git metadata
 
-To manually configure the sync-prototype-strategy in Git, run this command:
+To manually configure the prototype sync strategy in Git, run this command:
 
 ```wrap
 git config [--global] git-town.sync-prototype-strategy <merge|rebase>

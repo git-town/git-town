@@ -1,8 +1,8 @@
-RTA_VERSION = 0.10.3  # run-that-app version to use
+RTA_VERSION = 0.11.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "17.2.0"
+RELEASE_VERSION := "17.3.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
@@ -51,13 +51,14 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
+	make --no-print-directory lint-print-config
 	make --no-print-directory lint-structs-sorted
 	make --no-print-directory lint-tests-sorted
 	git diff --check
 	(cd tools/lint_steps && go build && ./lint_steps)
 	tools/rta node tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
-	tools/rta staticcheck ./...
+# tools/rta staticcheck ./...  # TODO: enable after staticcheck was compiled with Go 1.23.5 or newer
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	tools/rta golangci-lint cache clean
@@ -78,6 +79,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/tests_sorted && ../rta golangci-lint run)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
+
+lint-print-config:
+	@tools/rta node tools/print_config_exhaustive/lint.js
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...

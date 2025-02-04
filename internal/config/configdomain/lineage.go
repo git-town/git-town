@@ -3,6 +3,7 @@ package configdomain
 import (
 	"cmp"
 	"fmt"
+	"maps"
 	"slices"
 	"strings"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v17/internal/gohacks/slice"
 	"github.com/git-town/git-town/v17/internal/messages"
 	. "github.com/git-town/git-town/v17/pkg/prelude"
-	"golang.org/x/exp/maps"
 )
 
 // Lineage encapsulates all data and functionality around parent branches.
@@ -107,7 +107,7 @@ func (self Lineage) BranchLineageWithoutRoot(branch gitdomain.LocalBranchName, p
 
 // BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
 func (self Lineage) BranchNames() gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames(maps.Keys(self.data))
+	result := gitdomain.LocalBranchNames(slices.Collect(maps.Keys(self.data)))
 	result.Sort()
 	return result
 }
@@ -124,7 +124,7 @@ func (self Lineage) BranchesAndAncestors(branchNames gitdomain.LocalBranchNames)
 
 // provides all branches for which the parent is known
 func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
-	var result gitdomain.LocalBranchNames = maps.Keys(self.data)
+	var result gitdomain.LocalBranchNames = slices.Collect(maps.Keys(self.data))
 	result.Sort()
 	return result
 }

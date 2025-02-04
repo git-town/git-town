@@ -1,8 +1,8 @@
-# push-hook configuration setting
+# Run pre-push hook
 
-The "push-hook" setting determines whether Git Town allows or prevents Git hooks
-while pushing branches. Hooks are enabled by default. If your Git hooks are
-slow, you can disable them to speed up branch syncing.
+This setting determines whether Git Town allows or prevents Git hooks while
+pushing branches. Hooks are enabled by default. If your Git hooks are slow, you
+can disable them to speed up branch syncing.
 
 When disabled, Git Town pushes using the
 [--no-verify](https://git-scm.com/docs/git-push) option. This omits the
@@ -10,7 +10,7 @@ When disabled, Git Town pushes using the
 
 ## config file
 
-To configure the push hook in the
+To configure running the push hook in the
 [configuration file](../configuration-file.md):
 
 ```toml
@@ -20,7 +20,7 @@ push-hook = true
 
 ## Git metadata
 
-To configure the push hook manually in Git, run this command:
+To configure running the push hook manually in Git, run this command:
 
 ```wrap
 git config [--global] git-town.push-hook <true|false>

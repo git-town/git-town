@@ -1,4 +1,4 @@
-# github-token
+# GitHub token
 
 Git Town can interact with GitHub in your name, for example to update pull
 requests as branches get created, shipped, or deleted. To do so, Git Town needs

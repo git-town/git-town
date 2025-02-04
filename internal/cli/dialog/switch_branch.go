@@ -63,7 +63,7 @@ func (self SwitchModel) View() string {
 	if self.UncommittedChanges {
 		s.WriteString("\n")
 		s.WriteString(colors.BoldCyan().Styled(messages.SwitchUncommittedChanges))
-		s.WriteString("\n")
+		s.WriteString("\n\n")
 	}
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
