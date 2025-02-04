@@ -31,7 +31,7 @@ perennial-strategy = "rebase"
 To manually configure the perennial sync strategy in Git, run this command:
 
 ```wrap
-git config [--global] git-town.sync-perennial-strategy <merge|rebase>
+git config [--global] git-town.sync-perennial-strategy <ff-only|rebase>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on

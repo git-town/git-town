@@ -97,7 +97,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is now "compress"
-    And local Git setting "git-town.sync-perennial-strategy" is now "merge"
+    And local Git setting "git-town.sync-perennial-strategy" is now "ff-only"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.perennial-regex" now doesn't exist
