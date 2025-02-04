@@ -272,7 +272,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}
 	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
-	proposalOpt := ship.FindProposal(connector, initialBranch, Some(ancestor))
+	proposalOpt := None[hostingdomain.Proposal]()
+	if !repo.IsOffline {
+		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
+	}
 	return prependData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
