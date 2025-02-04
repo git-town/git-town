@@ -7,7 +7,7 @@ their parent and tracking branches.
 
 ### merge
 
-When using the "merge" feature sync strategy,
+When using the "merge" feature sync strategy (which is the default),
 [git town sync](../commands/sync.md) merges the parent and tracking branches
 into local feature branches.
 
