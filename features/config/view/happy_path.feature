@@ -225,7 +225,7 @@ Feature: show the configuration
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge
-        perennial sync strategy: merge
+        perennial sync strategy: ff-only
         prototype sync strategy: compress
         sync tags: no
         sync with upstream: no
