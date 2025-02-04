@@ -168,6 +168,7 @@ func TestSwitchBranch(t *testing.T) {
 			want := `
 ` + cyanBold + `uncommitted changes` + reset + `
 
+
 > main
 
 
