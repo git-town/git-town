@@ -23,12 +23,12 @@ made to their tracking branch somewhere else.
 func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
 	entries := list.Entries[configdomain.SyncPerennialStrategy]{
 		{
-			Data: configdomain.SyncPerennialStrategyRebase,
-			Text: "rebase perennial branches against their tracking branch",
-		},
-		{
 			Data: configdomain.SyncPerennialStrategyFFOnly,
 			Text: "fast-forward perennial branches to their tracking branch",
+		},
+		{
+			Data: configdomain.SyncPerennialStrategyRebase,
+			Text: "rebase perennial branches against their tracking branch",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
