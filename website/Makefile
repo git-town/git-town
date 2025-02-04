@@ -1,11 +1,10 @@
-RTA_VERSION = 0.10.6  # run-that-app version to use
+RTA_VERSION = 0.11.0  # run-that-app version to use
 
 .DEFAULT_GOAL := help
-MDBOOK_LINKCHECK_PATH := $(shell dirname $(shell ./rta --which mdbook-linkcheck))
 
 build: ../tools/rta@${RTA_VERSION}  # transpiles the website to HTML
 	ls -la ~/.run-that-app/apps/mdbook-linkcheck/0.7.7/
-	PATH=$(MDBOOK_LINKCHECK_PATH):$$PATH ../tools/rta mdbook build
+	./rta --include=mdbook-linkcheck mdbook build
 
 clean: rta@${RTA_VERSION}  # removes all build artifacts
 	./rta mdbook clean
