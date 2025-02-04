@@ -1,6 +1,6 @@
 # Git Town Changelog
 
-## 17.2.1 (2025-01-27)
+## 17.3.0 (2025-01-27)
 
 #### New Features
 
