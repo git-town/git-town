@@ -86,7 +86,7 @@ Feature: show the configuration
 
       [sync]
       feature-strategy = "rebase"
-      perennial-strategy = "merge"
+      perennial-strategy = "ff-only"
       prototype-strategy = "compress"
       tags = false
       upstream = true
@@ -131,7 +131,7 @@ Feature: show the configuration
       Sync:
         run pre-push hook: yes
         feature sync strategy: rebase
-        perennial sync strategy: merge
+        perennial sync strategy: ff-only
         prototype sync strategy: compress
         sync tags: no
         sync with upstream: yes
@@ -153,7 +153,7 @@ Feature: show the configuration
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.sync-upstream" is "false"
     And Git setting "git-town.sync-tags" is "false"
-    And Git setting "git-town.sync-perennial-strategy" is "merge"
+    And Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And Git setting "git-town.sync-prototype-strategy" is "compress"
     And the configuration file:

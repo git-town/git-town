@@ -1,11 +1,11 @@
-Feature: with sync-perennial-strategy set to "merge"
+Feature: with sync-perennial-strategy set to "ff-only"
 
   Background:
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And Git setting "git-town.sync-perennial-strategy" is "merge"
+    And Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |

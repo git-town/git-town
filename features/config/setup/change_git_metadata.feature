@@ -76,7 +76,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.github-token" is now "123456"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
-    And local Git setting "git-town.sync-perennial-strategy" is now "merge"
+    And local Git setting "git-town.sync-perennial-strategy" is now "ff-only"
     And local Git setting "git-town.sync-prototype-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "false"
     And local Git setting "git-town.sync-tags" is now "true"
