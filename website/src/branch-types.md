@@ -104,9 +104,9 @@ prototype status since it now has an official tracking branch that other people
 look at. In this situation you can keep syncing without pushes by using the
 `--no-push` sync option.
 
-You can compress and ship prototype branches as usual. Parking and unparking a
-prototype branch maintains its prototype status. When you change a prototype
-branch to an observed or contribution branch it loses its prototype status.
+You can compress and ship prototype branches as usual. When you park a prototype
+branch or change it into an observed or contribution branch, it loses its
+prototype status.
 
 To designate any feature branch as a prototype branch, run
 [git town prototype](commands/prototype.md). To convert a prototype branch to a
