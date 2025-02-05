@@ -177,7 +177,8 @@ func TestBackendCommands(t *testing.T) {
 			commits, err := runtime.Commands.CommitsInFeatureBranch(runtime.TestRunner, branch, gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
 			haveMessages := commits.Messages()
-			wantMessages := gitdomain.NewCommitMessages("commit 1\n\nbody line 1a\nbody line 1b", "commit 2\n\nbody line 2a\nbody line 2b")
+			// this method returns commit titles only, use CommitMessage() to get the full commit message for a particular commit
+			wantMessages := gitdomain.NewCommitMessages("commit 1", "commit 2")
 			must.Eq(t, wantMessages, haveMessages)
 		})
 		t.Run("feature branch contains no commits", func(t *testing.T) {
