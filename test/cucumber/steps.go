@@ -286,7 +286,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" has this full commit message`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
+	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" now has this full commit message`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)

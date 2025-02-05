@@ -24,7 +24,7 @@ Feature: compress keeps the full commit message of the first commit
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
       | feature | local, origin | commit 1 |
-    And commit "commit 1" on branch "feature" has this full commit message
+    And commit "commit 1" on branch "feature" now has this full commit message
       """
       commit 1
 
