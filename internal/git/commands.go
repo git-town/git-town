@@ -189,6 +189,19 @@ func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA
 	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
 }
 
+func (self *Commands) CommitSHA(querier gitdomain.Querier, title string, branch, parent gitdomain.LocalBranchName) (gitdomain.SHA, error) {
+	commits, err := self.CommitsInFeatureBranch(querier, branch, parent)
+	if err != nil {
+		return "", err
+	}
+	for _, commit := range commits {
+		if commit.Message.Parts().Subject == title {
+			return commit.SHA, nil
+		}
+	}
+	return "", fmt.Errorf("no commit with title %q found", title)
+}
+
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
 		return self.CommitsInFeatureBranch(querier, branch, parent)

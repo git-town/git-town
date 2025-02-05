@@ -286,10 +286,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^commit "([^"]+)" has this full commit message`, func(ctx context.Context, shaText string, expected *godog.DocString) error {
+	sc.Step(`^commit "([^"]+)" on branch "([^"]+)" has this full commit message`, func(ctx context.Context, title, branchText string, expected *godog.DocString) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		sha := gitdomain.NewSHA(shaText)
+		branch := gitdomain.NewLocalBranchName(branchText)
+		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
+		sha := asserts.NoError1(devRepo.CommitSHA(devRepo, title, branch, parent))
 		have := asserts.NoError1(devRepo.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
 		if have != want {

@@ -18,14 +18,14 @@ Feature: compress keeps the full commit message of the first commit
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git reset --soft main                           |
-      |         | git commit -m "commit 1                         |
+      |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
       | feature | local, origin | commit 1 |
-    And commit "commit 1" has this full commit message
+    And commit "commit 1" on branch "feature" has this full commit message
       """
       commit 1
 
