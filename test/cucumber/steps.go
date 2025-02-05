@@ -295,7 +295,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		have := asserts.NoError1(devRepo.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
 		if have != want {
-			return fmt.Errorf("want:\n%q\n\nhave:\n%q", have, want)
+			return fmt.Errorf("\nwant:\n%q\n\nhave:\n%q", want, have)
 		}
 		return nil
 	})
