@@ -12,7 +12,6 @@ Feature: compress keeps the full commit message of the first commit
     And the current branch is "feature"
     When I run "git-town compress"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
