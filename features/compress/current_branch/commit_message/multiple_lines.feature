@@ -18,7 +18,7 @@ Feature: compress keeps the full commit message of the first commit
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git reset --soft main                           |
-      |         | git commit -m "commit 1"                        |
+      |         | git commit -m "commit 1                         |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
