@@ -241,12 +241,10 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		if messageContent, has := message.Get(); has {
 			newCommitMessage = messageContent
 		} else {
-			commit := commits[0]
-			fullCommitMessage, err := repo.Git.CommitMessage(repo.Backend, commit.SHA)
+			newCommitMessage, err = repo.Git.CommitMessage(repo.Backend, commits[0].SHA)
 			if err != nil {
 				return data, false, err
 			}
-			newCommitMessage = fullCommitMessage
 		}
 		parentBranch, hasParent := parent.Get()
 		if !hasParent {
