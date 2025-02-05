@@ -157,6 +157,40 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("CommitsInFeatureBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("feature branch contains commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file1",
+				Message:  "commit 1\n\nbody line 1a\nbody line 1b",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   branch,
+				FileName: "file2",
+				Message:  "commit 2\n\nbody line 2a\nbody line 2b",
+			})
+			commits, err := runtime.Commands.CommitsInFeatureBranch(runtime.TestRunner, branch, gitdomain.NewLocalBranchName("initial"))
+			must.NoError(t, err)
+			haveMessages := commits.Messages()
+			wantMessages := gitdomain.NewCommitMessages("commit 1\n\nbody line 1a\nbody line 1b", "commit 2\n\nbody line 2a\nbody line 2b")
+			must.Eq(t, wantMessages, haveMessages)
+		})
+		t.Run("feature branch contains no commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := gitdomain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch, initial.BranchName())
+			commits, err := runtime.Commands.CommitsInFeatureBranch(runtime, branch, gitdomain.NewLocalBranchName("initial"))
+			must.NoError(t, err)
+			must.EqOp(t, 0, len(commits))
+		})
+	})
+
 	t.Run("CurrentBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)

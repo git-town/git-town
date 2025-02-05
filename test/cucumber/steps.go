@@ -286,6 +286,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^commit "([^"]+)" has this full commit message`, func(ctx context.Context, shaText string, expected *godog.DocString) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		sha := gitdomain.NewSHA(shaText)
+		have := asserts.NoError1(devRepo.CommitMessage(devRepo, sha)).String()
+		want := expected.Content
+		if have != want {
+			return fmt.Errorf("want:\n%q\n\nhave:\n%q", have, want)
+		}
+		return nil
+	})
+
 	sc.Step(`^display "([^"]+)"$`, func(ctx context.Context, command string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

@@ -184,6 +184,11 @@ func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.Us
 	return runner.Run("git", gitArgs...)
 }
 
+func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
+	output, err := querier.QueryTrim("git", "log", "--format=%B", "-n", "1", sha.String())
+	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
+}
+
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
 		return self.CommitsInFeatureBranch(querier, branch, parent)
