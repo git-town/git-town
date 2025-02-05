@@ -15,31 +15,32 @@ Feature: compress the commits on a feature branch verbosely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                            |
-      |         | git version                                        |
-      |         | git rev-parse --show-toplevel                      |
-      |         | git config -lz --includes --global                 |
-      |         | git config -lz --includes --local                  |
-      |         | git rev-parse --verify --abbrev-ref @{-1}          |
-      |         | git status --long --ignore-submodules              |
-      |         | git remote                                         |
-      |         | git branch --show-current                          |
-      | feature | git fetch --prune --tags                           |
-      | <none>  | git stash list                                     |
-      |         | git branch -vva --sort=refname                     |
-      |         | git remote get-url origin                          |
-      |         | git cherry -v main feature                         |
-      | feature | git reset --soft main                              |
-      |         | git commit -m "commit 1"                           |
-      | <none>  | git rev-list --left-right feature...origin/feature |
-      | feature | git push --force-with-lease --force-if-includes    |
-      | <none>  | git branch -vva --sort=refname                     |
-      |         | git config -lz --includes --global                 |
-      |         | git config -lz --includes --local                  |
-      |         | git stash list                                     |
+      | BRANCH  | COMMAND                                                  |
+      |         | git version                                              |
+      |         | git rev-parse --show-toplevel                            |
+      |         | git config -lz --includes --global                       |
+      |         | git config -lz --includes --local                        |
+      |         | git rev-parse --verify --abbrev-ref @{-1}                |
+      |         | git status --long --ignore-submodules                    |
+      |         | git remote                                               |
+      |         | git branch --show-current                                |
+      | feature | git fetch --prune --tags                                 |
+      | <none>  | git stash list                                           |
+      |         | git branch -vva --sort=refname                           |
+      |         | git remote get-url origin                                |
+      |         | git cherry -v main feature                               |
+      |         | git log --format=%B -n 1 {{ sha-before-run 'commit 1' }} |
+      | feature | git reset --soft main                                    |
+      |         | git commit -m "commit 1"                                 |
+      | <none>  | git rev-list --left-right feature...origin/feature       |
+      | feature | git push --force-with-lease --force-if-includes          |
+      | <none>  | git branch -vva --sort=refname                           |
+      |         | git config -lz --includes --global                       |
+      |         | git config -lz --includes --local                        |
+      |         | git stash list                                           |
     And Git Town prints:
       """
-      Ran 21 shell commands
+      Ran 22 shell commands
       """
     And all branches are now synchronized
     And the current branch is still "feature"
