@@ -106,7 +106,12 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 			continue
 		}
 		parts := strings.Split(line, "|")
-		commit := testgit.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: gitdomain.CommitMessage(parts[1]), Author: gitdomain.Author(parts[2])}
+		commit := testgit.Commit{
+			Branch:  branch,
+			SHA:     gitdomain.NewSHA(parts[0]),
+			Message: gitdomain.CommitMessage(parts[1]),
+			Author:  gitdomain.Author(parts[2]),
+		}
 		if strings.EqualFold(commit.Message.String(), "initial commit") || strings.EqualFold(commit.Message.String(), ConfigFileCommitMessage) {
 			continue
 		}
