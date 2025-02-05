@@ -51,6 +51,16 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 	asserts.NoError(self.Commands.CheckoutBranch(self.TestRunner, branch, false))
 }
 
+func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, branch, parent gitdomain.LocalBranchName) gitdomain.SHA {
+	commits := asserts.NoError1(self.CommitsInFeatureBranch(querier, branch, parent))
+	for _, commit := range commits {
+		if commit.Message.Parts().Subject == title {
+			return commit.SHA
+		}
+	}
+	panic(fmt.Errorf("no commit with title %q found", title))
+}
+
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
 	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")

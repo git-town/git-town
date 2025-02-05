@@ -291,7 +291,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(branchText)
 		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
-		sha := asserts.NoError1(devRepo.CommitSHA(devRepo, title, branch, parent))
+		sha := devRepo.CommitSHA(devRepo, title, branch, parent)
 		have := asserts.NoError1(devRepo.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
 		if have != want {
