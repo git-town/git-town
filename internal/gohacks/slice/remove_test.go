@@ -11,12 +11,11 @@ import (
 func TestRemove(t *testing.T) {
 	t.Parallel()
 
-	t.Run("slice type", func(t *testing.T) {
+	t.Run("empty slice", func(t *testing.T) {
 		t.Parallel()
-		list := []string{"one", "two", "three"}
-		have := slice.Remove(list, "two")
-		want := []string{"one", "three"}
-		must.Eq(t, want, have)
+		list := []string{}
+		have := slice.Remove(list, "foo")
+		must.Len(t, 0, have)
 	})
 
 	t.Run("slice alias type", func(t *testing.T) {
@@ -27,10 +26,11 @@ func TestRemove(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("empty slice", func(t *testing.T) {
+	t.Run("slice type", func(t *testing.T) {
 		t.Parallel()
-		list := []string{}
-		have := slice.Remove(list, "foo")
-		must.Len(t, 0, have)
+		list := []string{"one", "two", "three"}
+		have := slice.Remove(list, "two")
+		want := []string{"one", "three"}
+		must.Eq(t, want, have)
 	})
 }

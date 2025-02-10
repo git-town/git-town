@@ -12,7 +12,6 @@ import (
 
 // file paths to ignore
 var ignorePaths = []string{ //nolint:gochecknoglobals
-	"internal/gohacks/slice/remove_test.go",
 	"internal/gohacks/slice/truncate_last_test.go",
 	"internal/gohacks/stringslice/collector_test.go",
 	"internal/gohacks/stringslice/lines_with_prefix_test.go",
