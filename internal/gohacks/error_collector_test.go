@@ -11,14 +11,6 @@ import (
 func TestErrorCollector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("captures the first error it receives", func(t *testing.T) {
-		t.Parallel()
-		fc := gohacks.ErrorCollector{}
-		fc.Check(errors.New("first"))
-		fc.Check(errors.New("second"))
-		must.ErrorContains(t, fc.Err, "first")
-	})
-
 	t.Run("Check", func(t *testing.T) {
 		t.Parallel()
 		t.Run("captures the first error it receives", func(t *testing.T) {
@@ -44,5 +36,13 @@ func TestErrorCollector(t *testing.T) {
 			fc.Fail("failed %s", "reason")
 			must.ErrorContains(t, fc.Err, "failed reason")
 		})
+	})
+
+	t.Run("captures the first error it receives", func(t *testing.T) {
+		t.Parallel()
+		fc := gohacks.ErrorCollector{}
+		fc.Check(errors.New("first"))
+		fc.Check(errors.New("second"))
+		must.ErrorContains(t, fc.Err, "first")
 	})
 }
