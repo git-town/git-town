@@ -11,6 +11,12 @@ import (
 func TestNewHostingPlatform(t *testing.T) {
 	t.Parallel()
 
+	t.Run("invalid content", func(t *testing.T) {
+		t.Parallel()
+		_, err := configdomain.ParseHostingPlatform("zonk")
+		must.Error(t, err)
+	})
+
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.HostingPlatform]{
@@ -33,11 +39,5 @@ func TestNewHostingPlatform(t *testing.T) {
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
-	})
-
-	t.Run("invalid content", func(t *testing.T) {
-		t.Parallel()
-		_, err := configdomain.ParseHostingPlatform("zonk")
-		must.Error(t, err)
 	})
 }
