@@ -11,6 +11,13 @@ import (
 func TestGetAll(t *testing.T) {
 	t.Parallel()
 
+	t.Run("all are None values", func(t *testing.T) {
+		t.Parallel()
+		give := []Option[int]{None[int](), None[int]()}
+		have := slice.GetAll(give)
+		must.Len(t, 0, have)
+	})
+
 	t.Run("all are Some values", func(t *testing.T) {
 		t.Parallel()
 		give := []Option[int]{Some(1), Some(2), Some(3)}
@@ -19,9 +26,9 @@ func TestGetAll(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("all are None values", func(t *testing.T) {
+	t.Run("empty list", func(t *testing.T) {
 		t.Parallel()
-		give := []Option[int]{None[int](), None[int]()}
+		give := []Option[int]{}
 		have := slice.GetAll(give)
 		must.Len(t, 0, have)
 	})
@@ -32,12 +39,5 @@ func TestGetAll(t *testing.T) {
 		have := slice.GetAll(give)
 		want := []int{1, 3}
 		must.Eq(t, want, have)
-	})
-
-	t.Run("empty list", func(t *testing.T) {
-		t.Parallel()
-		give := []Option[int]{}
-		have := slice.GetAll(give)
-		must.Len(t, 0, have)
 	})
 }
