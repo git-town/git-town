@@ -13,7 +13,6 @@ import (
 // file paths to ignore
 var ignorePaths = []string{ //nolint:gochecknoglobals
 	// Need fixing.
-	"internal/cli/dialog/components/checklist_test.go",
 	"internal/cli/dialog/components/test_input_test.go",
 	"internal/cli/format/indent_test.go",
 	"internal/cmd/completions_test.go",
