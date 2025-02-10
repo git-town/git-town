@@ -34,42 +34,6 @@ func TestTestInputs(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("TestInputs.Next", func(t *testing.T) {
-		t.Parallel()
-		testInputs := components.NewTestInputs(
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}},
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		)
-		// request the first entry: A
-		haveNext := testInputs.Next()
-		wantNext := components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
-		must.Eq(t, wantNext, haveNext)
-		wantRemaining := components.NewTestInputs(
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		)
-		must.Eq(t, wantRemaining, testInputs)
-		// request the next entry: B
-		haveNext = testInputs.Next()
-		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
-		must.Eq(t, wantNext, haveNext)
-		wantRemaining = components.NewTestInputs(
-			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
-		)
-		must.Eq(t, wantRemaining, testInputs)
-		// request the next entry: C
-		haveNext = testInputs.Next()
-		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
-		must.Eq(t, wantNext, haveNext)
-		must.EqOp(t, 0, testInputs.Len())
-		// request the next entry: empty
-		haveNext = testInputs.Next()
-		wantNext = components.TestInput{}
-		must.Eq(t, wantNext, haveNext)
-		must.EqOp(t, 0, testInputs.Len())
-	})
-
 	t.Run("ParseTestInput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple values", func(t *testing.T) {
@@ -104,5 +68,41 @@ func TestTestInputs(t *testing.T) {
 			want := components.TestInput{}
 			must.Eq(t, want, have)
 		})
+	})
+
+	t.Run("TestInputs.Next", func(t *testing.T) {
+		t.Parallel()
+		testInputs := components.NewTestInputs(
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}},
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+		)
+		// request the first entry: A
+		haveNext := testInputs.Next()
+		wantNext := components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
+		must.Eq(t, wantNext, haveNext)
+		wantRemaining := components.NewTestInputs(
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+		)
+		must.Eq(t, wantRemaining, testInputs)
+		// request the next entry: B
+		haveNext = testInputs.Next()
+		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}
+		must.Eq(t, wantNext, haveNext)
+		wantRemaining = components.NewTestInputs(
+			components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+		)
+		must.Eq(t, wantRemaining, testInputs)
+		// request the next entry: C
+		haveNext = testInputs.Next()
+		wantNext = components.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}
+		must.Eq(t, wantNext, haveNext)
+		must.EqOp(t, 0, testInputs.Len())
+		// request the next entry: empty
+		haveNext = testInputs.Next()
+		wantNext = components.TestInput{}
+		must.Eq(t, wantNext, haveNext)
+		must.EqOp(t, 0, testInputs.Len())
 	})
 }
