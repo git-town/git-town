@@ -11,6 +11,14 @@ import (
 func TestHoist(t *testing.T) {
 	t.Parallel()
 
+	t.Run("aliased slice type", func(t *testing.T) {
+		t.Parallel()
+		list := gitdomain.LocalBranchNames{"alpha", "initial", "omega"}
+		have := slice.Hoist(list, "initial")
+		want := gitdomain.LocalBranchNames{"initial", "alpha", "omega"}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("already hoisted", func(t *testing.T) {
 		t.Parallel()
 		list := []string{"initial", "one", "two"}
@@ -32,13 +40,5 @@ func TestHoist(t *testing.T) {
 		list := []string{}
 		have := slice.Hoist(list, "initial")
 		must.Len(t, 0, have)
-	})
-
-	t.Run("aliased slice type", func(t *testing.T) {
-		t.Parallel()
-		list := gitdomain.LocalBranchNames{"alpha", "initial", "omega"}
-		have := slice.Hoist(list, "initial")
-		want := gitdomain.LocalBranchNames{"initial", "alpha", "omega"}
-		must.Eq(t, want, have)
 	})
 }
