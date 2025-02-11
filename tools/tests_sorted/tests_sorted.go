@@ -12,7 +12,6 @@ import (
 
 // file paths to ignore
 var ignorePaths = []string{ //nolint:gochecknoglobals
-	"test/datatable/data_table_test.go",
 	"test/filesystem/copy_directory_test.go",
 	"test/fixture/factory_test.go",
 	"test/fixture/fixture_test.go",

@@ -12,6 +12,30 @@ import (
 func TestDataTable(t *testing.T) {
 	t.Parallel()
 
+	t.Run("RemoveText", func(t *testing.T) {
+		t.Parallel()
+		table := datatable.DataTable{}
+		table.AddRow("local", "main, initial, foo")
+		table.AddRow("origin", "initial, bar")
+		table.RemoveText("initial, ")
+		expected := "| local  | main, foo |\n| origin | bar       |\n"
+		must.EqOp(t, expected, table.String())
+	})
+
+	t.Run("Sort", func(t *testing.T) {
+		t.Parallel()
+		table := datatable.DataTable{}
+		table.AddRow("gamma", "3")
+		table.AddRow("beta", "2")
+		table.AddRow("alpha", "1")
+		table.Sort()
+		want := datatable.DataTable{Cells: [][]string{{"alpha", "1"}, {"beta", "2"}, {"gamma", "3"}}}
+		diff, errCnt := table.EqualDataTable(want)
+		if errCnt > 0 {
+			t.Errorf("\nERROR! Found %d differences\n\n%s", errCnt, diff)
+		}
+	})
+
 	t.Run("String serialization", func(t *testing.T) {
 		t.Parallel()
 		t.Run("normal table", func(t *testing.T) {
@@ -38,30 +62,6 @@ func TestDataTable(t *testing.T) {
 			have := table.String()
 			must.EqOp(t, want, have)
 		})
-	})
-
-	t.Run("RemoveText", func(t *testing.T) {
-		t.Parallel()
-		table := datatable.DataTable{}
-		table.AddRow("local", "main, initial, foo")
-		table.AddRow("origin", "initial, bar")
-		table.RemoveText("initial, ")
-		expected := "| local  | main, foo |\n| origin | bar       |\n"
-		must.EqOp(t, expected, table.String())
-	})
-
-	t.Run("Sort", func(t *testing.T) {
-		t.Parallel()
-		table := datatable.DataTable{}
-		table.AddRow("gamma", "3")
-		table.AddRow("beta", "2")
-		table.AddRow("alpha", "1")
-		table.Sort()
-		want := datatable.DataTable{Cells: [][]string{{"alpha", "1"}, {"beta", "2"}, {"gamma", "3"}}}
-		diff, errCnt := table.EqualDataTable(want)
-		if errCnt > 0 {
-			t.Errorf("\nERROR! Found %d differences\n\n%s", errCnt, diff)
-		}
 	})
 
 	t.Run("Strings", func(t *testing.T) {
