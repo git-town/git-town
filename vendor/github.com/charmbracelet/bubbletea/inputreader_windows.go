@@ -57,7 +57,7 @@ func newInputReader(r io.Reader) (cancelreader.CancelReader, error) {
 func (r *conInputReader) Cancel() bool {
 	r.setCanceled()
 
-	return windows.CancelIo(r.conin) == nil
+	return windows.CancelIoEx(r.conin, nil) == nil || windows.CancelIo(r.conin) == nil
 }
 
 // Close implements cancelreader.CancelReader.
@@ -73,8 +73,11 @@ func (r *conInputReader) Close() error {
 }
 
 // Read implements cancelreader.CancelReader.
-func (*conInputReader) Read(_ []byte) (n int, err error) {
-	return 0, nil
+func (r *conInputReader) Read(_ []byte) (n int, err error) {
+	if r.isCanceled() {
+		err = cancelreader.ErrCanceled
+	}
+	return
 }
 
 func prepareConsole(input windows.Handle, modes ...uint32) (originalMode uint32, err error) {
@@ -104,4 +107,11 @@ func (c *cancelMixin) setCanceled() {
 	defer c.lock.Unlock()
 
 	c.unsafeCanceled = true
+}
+
+func (c *cancelMixin) isCanceled() bool {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
+	return c.unsafeCanceled
 }
