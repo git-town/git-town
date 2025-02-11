@@ -15,10 +15,11 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                      |
-      | prototype | git fetch --prune --tags                     |
-      |           | git rebase main --no-update-refs             |
-      |           | git rebase origin/prototype --no-update-refs |
+      | BRANCH    | COMMAND                                         |
+      | prototype | git fetch --prune --tags                        |
+      |           | git rebase main --no-update-refs                |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git rebase origin/prototype --no-update-refs    |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -54,12 +55,13 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                   |
-      | prototype | git -c core.editor=true rebase --continue |
+      | BRANCH    | COMMAND                                         |
+      | prototype | git -c core.editor=true rebase --continue       |
+      |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
-      |           | local         | conflicting local commit  |
+      |           |               | conflicting local commit  |
     And the current branch is still "prototype"
     And no rebase is now in progress
     And these committed files exist now
@@ -71,11 +73,12 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
+      | BRANCH    | COMMAND                                         |
+      | prototype | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
-      |           | local         | conflicting local commit  |
+      |           |               | conflicting local commit  |
     And the current branch is still "prototype"
     And no rebase is now in progress
     And these committed files exist now
