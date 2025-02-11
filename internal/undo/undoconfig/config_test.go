@@ -51,32 +51,28 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("removing a value from the global cache", func(t *testing.T) {
+	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: configdomain.SingleSnapshot{
+			Global: configdomain.SingleSnapshot{},
+			Local: configdomain.SingleSnapshot{
+				configdomain.KeyOffline: "0",
+			},
+		}
+		after := undoconfig.ConfigSnapshot{
+			Global: configdomain.SingleSnapshot{},
+			Local: configdomain.SingleSnapshot{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
-			Local: configdomain.SingleSnapshot{},
-		}
-		after := undoconfig.ConfigSnapshot{
-			Global: configdomain.SingleSnapshot{
-				configdomain.KeyOffline: "0",
-			},
-			Local: configdomain.SingleSnapshot{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
-			Global: undoconfig.ConfigDiff{
-				Added: []configdomain.Key{},
-				Removed: map[configdomain.Key]string{
-					configdomain.KeySyncPerennialStrategy: "1",
-				},
-				Changed: map[configdomain.Key]undodomain.Change[string]{},
-			},
+			Global: emptyConfigDiff(),
 			Local: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key{},
+				Added: []configdomain.Key{
+					configdomain.KeySyncPerennialStrategy,
+				},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
 			},
@@ -84,10 +80,9 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcodes.ConfigSet{
+			&opcodes.ConfigRemove{
 				Key:   configdomain.KeySyncPerennialStrategy,
-				Scope: configdomain.ConfigScopeGlobal,
-				Value: "1",
+				Scope: configdomain.ConfigScopeLocal,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -132,85 +127,6 @@ func TestConfigUndo(t *testing.T) {
 				Key:   configdomain.KeyOffline,
 				Scope: configdomain.ConfigScopeGlobal,
 				Value: "0",
-			},
-		}
-		must.Eq(t, wantProgram, haveProgram)
-	})
-
-	t.Run("adding a value to the local cache", func(t *testing.T) {
-		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
-			Global: configdomain.SingleSnapshot{},
-			Local: configdomain.SingleSnapshot{
-				configdomain.KeyOffline: "0",
-			},
-		}
-		after := undoconfig.ConfigSnapshot{
-			Global: configdomain.SingleSnapshot{},
-			Local: configdomain.SingleSnapshot{
-				configdomain.KeyOffline:               "0",
-				configdomain.KeySyncPerennialStrategy: "1",
-			},
-		}
-		haveDiff := undoconfig.NewConfigDiffs(before, after)
-		wantDiff := undoconfig.ConfigDiffs{
-			Global: emptyConfigDiff(),
-			Local: undoconfig.ConfigDiff{
-				Added: []configdomain.Key{
-					configdomain.KeySyncPerennialStrategy,
-				},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]undodomain.Change[string]{},
-			},
-		}
-		must.Eq(t, wantDiff, haveDiff)
-		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
-			&opcodes.ConfigRemove{
-				Key:   configdomain.KeySyncPerennialStrategy,
-				Scope: configdomain.ConfigScopeLocal,
-			},
-		}
-		must.Eq(t, wantProgram, haveProgram)
-	})
-
-	t.Run("removing a value from the local cache", func(t *testing.T) {
-		t.Parallel()
-		before := undoconfig.ConfigSnapshot{
-			Global: configdomain.SingleSnapshot{},
-			Local: configdomain.SingleSnapshot{
-				configdomain.KeyOffline:               "0",
-				configdomain.KeySyncPerennialStrategy: "1",
-			},
-		}
-		after := undoconfig.ConfigSnapshot{
-			Global: configdomain.SingleSnapshot{},
-			Local: configdomain.SingleSnapshot{
-				configdomain.KeyOffline: "0",
-			},
-		}
-		haveDiff := undoconfig.NewConfigDiffs(before, after)
-		wantDiff := undoconfig.ConfigDiffs{
-			Global: undoconfig.ConfigDiff{
-				Added:   []configdomain.Key{},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]undodomain.Change[string]{},
-			},
-			Local: undoconfig.ConfigDiff{
-				Added: []configdomain.Key{},
-				Removed: map[configdomain.Key]string{
-					configdomain.KeySyncPerennialStrategy: "1",
-				},
-				Changed: map[configdomain.Key]undodomain.Change[string]{},
-			},
-		}
-		must.Eq(t, wantDiff, haveDiff)
-		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
-			&opcodes.ConfigSet{
-				Key:   configdomain.KeySyncPerennialStrategy,
-				Scope: configdomain.ConfigScopeLocal,
-				Value: "1",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -343,6 +259,90 @@ func TestConfigUndo(t *testing.T) {
 				Key:   configdomain.KeyPerennialBranches,
 				Scope: configdomain.ConfigScopeLocal,
 				Value: "prod",
+			},
+		}
+		must.Eq(t, wantProgram, haveProgram)
+	})
+
+	t.Run("removing a value from the global cache", func(t *testing.T) {
+		t.Parallel()
+		before := undoconfig.ConfigSnapshot{
+			Global: configdomain.SingleSnapshot{
+				configdomain.KeyOffline:               "0",
+				configdomain.KeySyncPerennialStrategy: "1",
+			},
+			Local: configdomain.SingleSnapshot{},
+		}
+		after := undoconfig.ConfigSnapshot{
+			Global: configdomain.SingleSnapshot{
+				configdomain.KeyOffline: "0",
+			},
+			Local: configdomain.SingleSnapshot{},
+		}
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
+			Global: undoconfig.ConfigDiff{
+				Added: []configdomain.Key{},
+				Removed: map[configdomain.Key]string{
+					configdomain.KeySyncPerennialStrategy: "1",
+				},
+				Changed: map[configdomain.Key]undodomain.Change[string]{},
+			},
+			Local: undoconfig.ConfigDiff{
+				Added:   []configdomain.Key{},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]undodomain.Change[string]{},
+			},
+		}
+		must.Eq(t, wantDiff, haveDiff)
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			&opcodes.ConfigSet{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeGlobal,
+				Value: "1",
+			},
+		}
+		must.Eq(t, wantProgram, haveProgram)
+	})
+
+	t.Run("removing a value from the local cache", func(t *testing.T) {
+		t.Parallel()
+		before := undoconfig.ConfigSnapshot{
+			Global: configdomain.SingleSnapshot{},
+			Local: configdomain.SingleSnapshot{
+				configdomain.KeyOffline:               "0",
+				configdomain.KeySyncPerennialStrategy: "1",
+			},
+		}
+		after := undoconfig.ConfigSnapshot{
+			Global: configdomain.SingleSnapshot{},
+			Local: configdomain.SingleSnapshot{
+				configdomain.KeyOffline: "0",
+			},
+		}
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
+			Global: undoconfig.ConfigDiff{
+				Added:   []configdomain.Key{},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]undodomain.Change[string]{},
+			},
+			Local: undoconfig.ConfigDiff{
+				Added: []configdomain.Key{},
+				Removed: map[configdomain.Key]string{
+					configdomain.KeySyncPerennialStrategy: "1",
+				},
+				Changed: map[configdomain.Key]undodomain.Change[string]{},
+			},
+		}
+		must.Eq(t, wantDiff, haveDiff)
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			&opcodes.ConfigSet{
+				Key:   configdomain.KeySyncPerennialStrategy,
+				Scope: configdomain.ConfigScopeLocal,
+				Value: "1",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
