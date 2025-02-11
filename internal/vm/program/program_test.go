@@ -15,6 +15,25 @@ import (
 func TestProgram(t *testing.T) {
 	t.Parallel()
 
+	t.Run("AddProgram", func(t *testing.T) {
+		t.Parallel()
+		t.Run("append a populated list", func(t *testing.T) {
+			t.Parallel()
+			have := program.Program{&opcodes.MergeAbort{}}
+			other := program.Program{&opcodes.StashOpenChanges{}}
+			have.AddProgram(other)
+			want := []shared.Opcode{&opcodes.MergeAbort{}, &opcodes.StashOpenChanges{}}
+			must.Eq(t, want, have)
+		})
+		t.Run("append an empty list", func(t *testing.T) {
+			t.Parallel()
+			have := program.Program{&opcodes.MergeAbort{}}
+			other := program.Program{}
+			have.AddProgram(other)
+			must.Eq(t, []shared.Opcode{&opcodes.MergeAbort{}}, have)
+		})
+	})
+
 	t.Run("Append", func(t *testing.T) {
 		t.Parallel()
 		t.Run("append a single opcode", func(t *testing.T) {
@@ -36,25 +55,6 @@ func TestProgram(t *testing.T) {
 			have := program.Program{}
 			have.Add()
 			must.Len(t, 0, have)
-		})
-	})
-
-	t.Run("AddProgram", func(t *testing.T) {
-		t.Parallel()
-		t.Run("append a populated list", func(t *testing.T) {
-			t.Parallel()
-			have := program.Program{&opcodes.MergeAbort{}}
-			other := program.Program{&opcodes.StashOpenChanges{}}
-			have.AddProgram(other)
-			want := []shared.Opcode{&opcodes.MergeAbort{}, &opcodes.StashOpenChanges{}}
-			must.Eq(t, want, have)
-		})
-		t.Run("append an empty list", func(t *testing.T) {
-			t.Parallel()
-			have := program.Program{&opcodes.MergeAbort{}}
-			other := program.Program{}
-			have.AddProgram(other)
-			must.Eq(t, []shared.Opcode{&opcodes.MergeAbort{}}, have)
 		})
 	})
 
@@ -92,6 +92,17 @@ func TestProgram(t *testing.T) {
   }
 ]`[1:]
 		must.EqOp(t, want, string(have))
+	})
+
+	t.Run("OpcodeTypes", func(t *testing.T) {
+		t.Parallel()
+		prog := program.Program{
+			&opcodes.MergeAbort{},
+			&opcodes.CheckoutIfNeeded{Branch: "branch"},
+		}
+		have := prog.OpcodeTypes()
+		want := []string{"*opcodes.MergeAbort", "*opcodes.CheckoutIfNeeded"}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Peek", func(t *testing.T) {
@@ -268,17 +279,6 @@ Program:
 2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
 `[1:]
 		must.EqOp(t, want, have)
-	})
-
-	t.Run("OpcodeTypes", func(t *testing.T) {
-		t.Parallel()
-		prog := program.Program{
-			&opcodes.MergeAbort{},
-			&opcodes.CheckoutIfNeeded{Branch: "branch"},
-		}
-		have := prog.OpcodeTypes()
-		want := []string{"*opcodes.MergeAbort", "*opcodes.CheckoutIfNeeded"}
-		must.Eq(t, want, have)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
