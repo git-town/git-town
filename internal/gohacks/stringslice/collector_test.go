@@ -19,17 +19,17 @@ func TestCollector(t *testing.T) {
 		must.Eq(t, []string{"one", "two"}, collector.Result())
 	})
 
-	t.Run("works with pass by value", func(t *testing.T) {
-		t.Parallel()
-		collector := stringslice.NewCollector()
-		passByValue(collector)
-		must.Eq(t, []string{"external"}, collector.Result())
-	})
-
 	t.Run("works with pass by reference", func(t *testing.T) {
 		t.Parallel()
 		collector := stringslice.NewCollector()
 		passByReference(&collector)
+		must.Eq(t, []string{"external"}, collector.Result())
+	})
+
+	t.Run("works with pass by value", func(t *testing.T) {
+		t.Parallel()
+		collector := stringslice.NewCollector()
+		passByValue(collector)
 		must.Eq(t, []string{"external"}, collector.Result())
 	})
 }

@@ -25,6 +25,16 @@ func TestLinesWithPrefix(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("no matching line", func(t *testing.T) {
+		t.Parallel()
+		lines := []string{
+			"one",
+			"two",
+		}
+		have := stringslice.LinesWithPrefix(lines, "zonk")
+		must.Len(t, 0, have)
+	})
+
 	t.Run("one matching line", func(t *testing.T) {
 		t.Parallel()
 		lines := []string{
@@ -37,15 +47,5 @@ func TestLinesWithPrefix(t *testing.T) {
 			"* (no branch, rebasing feature)",
 		}
 		must.Eq(t, want, have)
-	})
-
-	t.Run("no matching line", func(t *testing.T) {
-		t.Parallel()
-		lines := []string{
-			"one",
-			"two",
-		}
-		have := stringslice.LinesWithPrefix(lines, "zonk")
-		must.Len(t, 0, have)
 	})
 }

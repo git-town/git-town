@@ -12,18 +12,6 @@ import (
 func TestBranchName(t *testing.T) {
 	t.Parallel()
 
-	t.Run("NewBranchName and String", func(t *testing.T) {
-		t.Parallel()
-		t.Run("normal branch name", func(t *testing.T) {
-			branchName := gitdomain.NewBranchName("branch-1")
-			must.EqOp(t, "branch-1", branchName.String())
-		})
-		t.Run("does not allow empty branch names", func(t *testing.T) {
-			defer asserts.Paniced(t)
-			gitdomain.NewBranchName("")
-		})
-	})
-
 	t.Run("IsLocal", func(t *testing.T) {
 		t.Parallel()
 		t.Run("local branch", func(t *testing.T) {
@@ -60,6 +48,18 @@ func TestBranchName(t *testing.T) {
 		must.NoError(t, err)
 		want := `"branch-1"`
 		must.EqOp(t, want, string(have))
+	})
+
+	t.Run("NewBranchName and String", func(t *testing.T) {
+		t.Parallel()
+		t.Run("normal branch name", func(t *testing.T) {
+			branchName := gitdomain.NewBranchName("branch-1")
+			must.EqOp(t, "branch-1", branchName.String())
+		})
+		t.Run("does not allow empty branch names", func(t *testing.T) {
+			defer asserts.Paniced(t)
+			gitdomain.NewBranchName("")
+		})
 	})
 
 	t.Run("RemoteName", func(t *testing.T) {

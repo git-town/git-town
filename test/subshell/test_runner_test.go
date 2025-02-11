@@ -40,9 +40,7 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    dir,
 			BinDir:     filepath.Join(dir, "bin"),
 		}
-
 		runner.MockCommitMessage("test commit message")
-
 		// Simulate Git calling the mock editor configured by MockCommitMessage and
 		// verify its effect.
 		// MockCommitMessage creates a custom editor that the runner makes available
@@ -54,18 +52,6 @@ func TestMockingRunner(t *testing.T) {
 		data, err := os.ReadFile(filepath.Join(dir, "output"))
 		must.NoError(t, err)
 		must.Eq(t, "test commit message\n", string(data))
-	})
-
-	t.Run("Run", func(t *testing.T) {
-		t.Parallel()
-		runner := subshell.TestRunner{
-			WorkingDir: t.TempDir(),
-			HomeDir:    t.TempDir(),
-			BinDir:     "",
-		}
-		res, err := runner.Query("echo", "hello", "world")
-		must.NoError(t, err)
-		must.EqOp(t, "hello world", res)
 	})
 
 	t.Run("QueryString", func(t *testing.T) {
@@ -128,5 +114,17 @@ func TestMockingRunner(t *testing.T) {
 			must.EqOp(t, 1, exitCode)
 			must.NoError(t, err)
 		})
+	})
+
+	t.Run("Run", func(t *testing.T) {
+		t.Parallel()
+		runner := subshell.TestRunner{
+			WorkingDir: t.TempDir(),
+			HomeDir:    t.TempDir(),
+			BinDir:     "",
+		}
+		res, err := runner.Query("echo", "hello", "world")
+		must.NoError(t, err)
+		must.EqOp(t, "hello world", res)
 	})
 }

@@ -11,7 +11,7 @@ import (
 func TestOption(t *testing.T) {
 	t.Parallel()
 
-	t.Run("comparison", func(t *testing.T) {
+	t.Run("Equal", func(t *testing.T) {
 		t.Parallel()
 		t.Run("int", func(t *testing.T) {
 			t.Parallel()
@@ -114,25 +114,6 @@ func TestOption(t *testing.T) {
 		})
 	})
 
-	t.Run("UnmarshalJSON", func(t *testing.T) {
-		t.Run("Some", func(t *testing.T) {
-			t.Parallel()
-			json := "12"
-			value := None[int]()
-			err := value.UnmarshalJSON([]byte(json))
-			must.NoError(t, err)
-			must.Eq(t, Some(12), value)
-		})
-		t.Run("None", func(t *testing.T) {
-			t.Parallel()
-			json := "null"
-			value := None[int]()
-			err := value.UnmarshalJSON([]byte(json))
-			must.NoError(t, err)
-			must.Eq(t, None[int](), value)
-		})
-	})
-
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Some(struct that implements fmt.Stringer)", func(t *testing.T) {
@@ -172,6 +153,25 @@ func TestOption(t *testing.T) {
 			option := None[configdomain.VerifiedRegex]()
 			have := option.String()
 			must.EqOp(t, "", have)
+		})
+	})
+
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Run("Some", func(t *testing.T) {
+			t.Parallel()
+			json := "12"
+			value := None[int]()
+			err := value.UnmarshalJSON([]byte(json))
+			must.NoError(t, err)
+			must.Eq(t, Some(12), value)
+		})
+		t.Run("None", func(t *testing.T) {
+			t.Parallel()
+			json := "null"
+			value := None[int]()
+			err := value.UnmarshalJSON([]byte(json))
+			must.NoError(t, err)
+			must.Eq(t, None[int](), value)
 		})
 	})
 }

@@ -547,18 +547,6 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
-	t.Run("lastBranchInRef", func(t *testing.T) {
-		t.Parallel()
-		tests := map[string]string{
-			"refs/remotes/origin/main": "main",
-			"":                         "",
-		}
-		for give, want := range tests {
-			have := git.LastBranchInRef(give)
-			must.EqOp(t, want, have)
-		}
-	})
-
 	t.Run("MergeFastForward", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")
@@ -635,170 +623,6 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
-	})
-
-	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
-		t.Parallel()
-		t.Run("branch name is one word", func(t *testing.T) {
-			t.Parallel()
-			give := "* (no branch, rebasing feature)"
-			have := git.ParseActiveBranchDuringRebase(give)
-			want := gitdomain.NewLocalBranchName("feature")
-			must.Eq(t, want, have)
-		})
-		t.Run("branch name is two words", func(t *testing.T) {
-			t.Parallel()
-			give := "* (no branch, rebasing feature branch)"
-			have := git.ParseActiveBranchDuringRebase(give)
-			want := gitdomain.NewLocalBranchName("feature branch")
-			must.Eq(t, want, have)
-		})
-		t.Run("branch name is three words", func(t *testing.T) {
-			t.Parallel()
-			give := "* (no branch, rebasing the feature branch)"
-			have := git.ParseActiveBranchDuringRebase(give)
-			want := gitdomain.NewLocalBranchName("the feature branch")
-			must.Eq(t, want, have)
-		})
-	})
-
-	t.Run("RepoStatus", func(t *testing.T) {
-		t.Run("OpenChanges", func(t *testing.T) {
-			t.Parallel()
-			t.Run("no open changes", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				have, err := runtime.Commands.RepoStatus(runtime)
-				must.NoError(t, err)
-				must.False(t, have.OpenChanges)
-			})
-			t.Run("has open changes", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				runtime.CreateFile("foo", "bar")
-				have, err := runtime.Commands.RepoStatus(runtime)
-				must.NoError(t, err)
-				must.True(t, have.OpenChanges)
-			})
-			t.Run("during rebase", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				branch1 := gitdomain.NewLocalBranchName("branch1")
-				runtime.CreateBranch(branch1, initial.BranchName())
-				runtime.CheckoutBranch(branch1)
-				runtime.CreateCommit(testgit.Commit{
-					Branch:      branch1,
-					FileContent: "content on branch1",
-					FileName:    "file",
-					Message:     "Create file",
-				})
-				runtime.CheckoutBranch(initial)
-				runtime.CreateCommit(testgit.Commit{
-					Branch:      initial,
-					FileContent: "content on initial",
-					FileName:    "file",
-					Message:     "Create file1",
-				})
-				_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
-				have, err := runtime.Commands.RepoStatus(runtime)
-				must.NoError(t, err)
-				must.False(t, have.OpenChanges)
-			})
-			t.Run("during merge conflict", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				branch1 := gitdomain.NewLocalBranchName("branch1")
-				runtime.CreateBranch(branch1, initial.BranchName())
-				runtime.CheckoutBranch(branch1)
-				runtime.CreateCommit(testgit.Commit{
-					Branch:      branch1,
-					FileContent: "content on branch1",
-					FileName:    "file",
-					Message:     "Create file",
-				})
-				runtime.CheckoutBranch(initial)
-				runtime.CreateCommit(testgit.Commit{
-					Branch:      initial,
-					FileContent: "content on initial",
-					FileName:    "file",
-					Message:     "Create file1",
-				})
-				_ = runtime.MergeBranch(branch1) // this is expected to fail
-				have, err := runtime.Commands.RepoStatus(runtime)
-				must.NoError(t, err)
-				must.False(t, have.OpenChanges)
-			})
-			t.Run("unstashed conflicting changes", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				runtime.CreateFile("file", "stashed content")
-				runtime.StashOpenFiles()
-				runtime.CreateCommit(testgit.Commit{
-					Branch:      initial,
-					FileContent: "committed content",
-					FileName:    "file",
-					Message:     "Create file",
-				})
-				_ = runtime.UnstashOpenFiles() // this is expected to fail
-				have, err := runtime.Commands.RepoStatus(runtime)
-				must.NoError(t, err)
-				must.True(t, have.OpenChanges)
-			})
-
-			t.Run("status.short enabled", func(t *testing.T) {
-				t.Parallel()
-				t.Run("no open changes", func(t *testing.T) {
-					t.Parallel()
-					runtime := testruntime.Create(t)
-					err := runtime.Run("git", "config", "status.short", "true")
-					must.NoError(t, err)
-					have, err := runtime.Commands.RepoStatus(runtime)
-					must.NoError(t, err)
-					must.False(t, have.OpenChanges)
-				})
-				t.Run("open changes", func(t *testing.T) {
-					t.Parallel()
-					runtime := testruntime.Create(t)
-					runtime.CreateFile("file", "stashed content")
-					err := runtime.Run("git", "config", "status.short", "true")
-					must.NoError(t, err)
-					have, err := runtime.Commands.RepoStatus(runtime)
-					must.NoError(t, err)
-					must.True(t, have.OpenChanges)
-				})
-			})
-
-			t.Run("status.branch enabled", func(t *testing.T) {
-				t.Parallel()
-				t.Run("no open changes", func(t *testing.T) {
-					t.Parallel()
-					runtime := testruntime.Create(t)
-					err := runtime.Run("git", "config", "status.branch", "true")
-					must.NoError(t, err)
-					have, err := runtime.Commands.RepoStatus(runtime)
-					must.NoError(t, err)
-					must.False(t, have.OpenChanges)
-				})
-				t.Run("open changes", func(t *testing.T) {
-					t.Parallel()
-					runtime := testruntime.Create(t)
-					runtime.CreateFile("file", "stashed content")
-					err := runtime.Run("git", "config", "status.branch", "true")
-					must.NoError(t, err)
-					have, err := runtime.Commands.RepoStatus(runtime)
-					must.NoError(t, err)
-					must.True(t, have.OpenChanges)
-				})
-			})
-		})
-
-		t.Run("RebaseInProgress", func(t *testing.T) {
-			t.Parallel()
-			runtime := testruntime.Create(t)
-			have, err := runtime.Commands.RepoStatus(runtime)
-			must.NoError(t, err)
-			must.False(t, have.RebaseInProgress)
-		})
 	})
 
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
@@ -1126,6 +950,145 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, gitdomain.Remotes{gitdomain.RemoteOrigin}, remotes)
 	})
 
+	t.Run("RepoStatus", func(t *testing.T) {
+		t.Run("OpenChanges", func(t *testing.T) {
+			t.Parallel()
+			t.Run("no open changes", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				have, err := runtime.Commands.RepoStatus(runtime)
+				must.NoError(t, err)
+				must.False(t, have.OpenChanges)
+			})
+			t.Run("has open changes", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateFile("foo", "bar")
+				have, err := runtime.Commands.RepoStatus(runtime)
+				must.NoError(t, err)
+				must.True(t, have.OpenChanges)
+			})
+			t.Run("during rebase", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				branch1 := gitdomain.NewLocalBranchName("branch1")
+				runtime.CreateBranch(branch1, initial.BranchName())
+				runtime.CheckoutBranch(branch1)
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      branch1,
+					FileContent: "content on branch1",
+					FileName:    "file",
+					Message:     "Create file",
+				})
+				runtime.CheckoutBranch(initial)
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content on initial",
+					FileName:    "file",
+					Message:     "Create file1",
+				})
+				_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
+				have, err := runtime.Commands.RepoStatus(runtime)
+				must.NoError(t, err)
+				must.False(t, have.OpenChanges)
+			})
+			t.Run("during merge conflict", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				branch1 := gitdomain.NewLocalBranchName("branch1")
+				runtime.CreateBranch(branch1, initial.BranchName())
+				runtime.CheckoutBranch(branch1)
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      branch1,
+					FileContent: "content on branch1",
+					FileName:    "file",
+					Message:     "Create file",
+				})
+				runtime.CheckoutBranch(initial)
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content on initial",
+					FileName:    "file",
+					Message:     "Create file1",
+				})
+				_ = runtime.MergeBranch(branch1) // this is expected to fail
+				have, err := runtime.Commands.RepoStatus(runtime)
+				must.NoError(t, err)
+				must.False(t, have.OpenChanges)
+			})
+			t.Run("unstashed conflicting changes", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateFile("file", "stashed content")
+				runtime.StashOpenFiles()
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "committed content",
+					FileName:    "file",
+					Message:     "Create file",
+				})
+				_ = runtime.UnstashOpenFiles() // this is expected to fail
+				have, err := runtime.Commands.RepoStatus(runtime)
+				must.NoError(t, err)
+				must.True(t, have.OpenChanges)
+			})
+
+			t.Run("status.short enabled", func(t *testing.T) {
+				t.Parallel()
+				t.Run("no open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					err := runtime.Run("git", "config", "status.short", "true")
+					must.NoError(t, err)
+					have, err := runtime.Commands.RepoStatus(runtime)
+					must.NoError(t, err)
+					must.False(t, have.OpenChanges)
+				})
+				t.Run("open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					runtime.CreateFile("file", "stashed content")
+					err := runtime.Run("git", "config", "status.short", "true")
+					must.NoError(t, err)
+					have, err := runtime.Commands.RepoStatus(runtime)
+					must.NoError(t, err)
+					must.True(t, have.OpenChanges)
+				})
+			})
+
+			t.Run("status.branch enabled", func(t *testing.T) {
+				t.Parallel()
+				t.Run("no open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					err := runtime.Run("git", "config", "status.branch", "true")
+					must.NoError(t, err)
+					have, err := runtime.Commands.RepoStatus(runtime)
+					must.NoError(t, err)
+					must.False(t, have.OpenChanges)
+				})
+				t.Run("open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					runtime.CreateFile("file", "stashed content")
+					err := runtime.Run("git", "config", "status.branch", "true")
+					must.NoError(t, err)
+					have, err := runtime.Commands.RepoStatus(runtime)
+					must.NoError(t, err)
+					must.True(t, have.OpenChanges)
+				})
+			})
+		})
+
+		t.Run("RebaseInProgress", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			have, err := runtime.Commands.RepoStatus(runtime)
+			must.NoError(t, err)
+			must.False(t, have.RebaseInProgress)
+		})
+	})
+
 	t.Run("RootDirectory", func(t *testing.T) {
 		t.Parallel()
 		t.Run("inside a Git repo", func(t *testing.T) {
@@ -1250,6 +1213,43 @@ func TestBackendCommands(t *testing.T) {
 			want := gitdomain.StashSize(0)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
+		})
+	})
+
+	t.Run("lastBranchInRef", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]string{
+			"refs/remotes/origin/main": "main",
+			"":                         "",
+		}
+		for give, want := range tests {
+			have := git.LastBranchInRef(give)
+			must.EqOp(t, want, have)
+		}
+	})
+
+	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch name is one word", func(t *testing.T) {
+			t.Parallel()
+			give := "* (no branch, rebasing feature)"
+			have := git.ParseActiveBranchDuringRebase(give)
+			want := gitdomain.NewLocalBranchName("feature")
+			must.Eq(t, want, have)
+		})
+		t.Run("branch name is two words", func(t *testing.T) {
+			t.Parallel()
+			give := "* (no branch, rebasing feature branch)"
+			have := git.ParseActiveBranchDuringRebase(give)
+			want := gitdomain.NewLocalBranchName("feature branch")
+			must.Eq(t, want, have)
+		})
+		t.Run("branch name is three words", func(t *testing.T) {
+			t.Parallel()
+			give := "* (no branch, rebasing the feature branch)"
+			have := git.ParseActiveBranchDuringRebase(give)
+			want := gitdomain.NewLocalBranchName("the feature branch")
+			must.Eq(t, want, have)
 		})
 	})
 }

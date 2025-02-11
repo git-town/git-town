@@ -11,7 +11,7 @@ import (
 func TestNewHostingPlatform(t *testing.T) {
 	t.Parallel()
 
-	t.Run("valid content", func(t *testing.T) {
+	t.Run("acceptable content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[configdomain.HostingPlatform]{
 			"":                     None[configdomain.HostingPlatform](),
