@@ -12,7 +12,6 @@ import (
 
 // file paths to ignore
 var ignorePaths = []string{ //nolint:gochecknoglobals
-	// Not owned.
 	"vendor/",
 }
 
