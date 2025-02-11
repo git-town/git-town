@@ -13,6 +13,15 @@ import (
 func TestRunner(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Clone", func(t *testing.T) {
+		t.Parallel()
+		origin := testruntime.Create(t)
+		clonedPath := filepath.Join(origin.WorkingDir, "cloned")
+		cloned := testruntime.Clone(origin.TestRunner, clonedPath)
+		must.EqOp(t, clonedPath, cloned.WorkingDir)
+		asserts.IsGitRepo(t, clonedPath)
+	})
+
 	t.Run("New", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
@@ -25,14 +34,5 @@ func TestRunner(t *testing.T) {
 		must.EqOp(t, workingDir, runtime.WorkingDir)
 		must.EqOp(t, homeDir, runtime.HomeDir)
 		must.EqOp(t, binDir, runtime.BinDir)
-	})
-
-	t.Run("Clone", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		clonedPath := filepath.Join(origin.WorkingDir, "cloned")
-		cloned := testruntime.Clone(origin.TestRunner, clonedPath)
-		must.EqOp(t, clonedPath, cloned.WorkingDir)
-		asserts.IsGitRepo(t, clonedPath)
 	})
 }
