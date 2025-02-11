@@ -109,7 +109,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
-			pushBranches:       false,
+			pushBranches:       configdomain.PushBranches(branchInfo.HasTrackingBranch()),
 			trackingBranchName: branchInfo.RemoteName,
 		})
 	}

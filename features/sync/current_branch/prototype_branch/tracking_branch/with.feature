@@ -17,20 +17,21 @@ Feature: sync the current prototype branch that has a tracking branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                      |
-      | prototype | git fetch --prune --tags                     |
-      |           | git checkout main                            |
-      | main      | git rebase origin/main --no-update-refs      |
-      |           | git push                                     |
-      |           | git checkout prototype                       |
-      | prototype | git rebase main --no-update-refs             |
-      |           | git rebase origin/prototype --no-update-refs |
-      |           | git push                                     |
+      | BRANCH    | COMMAND                                         |
+      | prototype | git fetch --prune --tags                        |
+      |           | git checkout main                               |
+      | main      | git rebase origin/main --no-update-refs         |
+      |           | git push                                        |
+      |           | git checkout prototype                          |
+      | prototype | git rebase main --no-update-refs                |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git rebase origin/prototype --no-update-refs    |
+      |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE       |
       | main      | local, origin | main commit   |
       | prototype | local, origin | origin commit |
-      |           | local         | main commit   |
+      |           |               | main commit   |
       |           |               | local commit  |
     And all branches are now synchronized
     And the current branch is still "prototype"
