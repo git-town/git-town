@@ -70,6 +70,11 @@ const (
 var ErrNotFound = errors.New("404 Not Found")
 
 // A Client manages communication with the GitLab API.
+//
+// Deprecated: use gitlab.com/gitlab-org/api/client-go instead.
+// See https://gitlab.com/gitlab-org/api/client-go
+//
+// This package is completely frozen, nothing will be added, removed or changed.
 type Client struct {
 	// HTTP client used to communicate with the API.
 	client *retryablehttp.Client
@@ -122,6 +127,7 @@ type Client struct {
 	Commits                      *CommitsService
 	ContainerRegistry            *ContainerRegistryService
 	CustomAttribute              *CustomAttributesService
+	DependencyListExport         *DependencyListExportService
 	DeployKeys                   *DeployKeysService
 	DeployTokens                 *DeployTokensService
 	DeploymentMergeRequests      *DeploymentMergeRequestsService
@@ -195,6 +201,7 @@ type Client struct {
 	ProjectFeatureFlags          *ProjectFeatureFlagService
 	ProjectImportExport          *ProjectImportExportService
 	ProjectIterations            *ProjectIterationsService
+	ProjectMarkdownUploads       *ProjectMarkdownUploadsService
 	ProjectMembers               *ProjectMembersService
 	ProjectMirrors               *ProjectMirrorService
 	ProjectRepositoryStorageMove *ProjectRepositoryStorageMoveService
@@ -258,6 +265,11 @@ type RateLimiter interface {
 
 // NewClient returns a new GitLab API client. To use API methods which require
 // authentication, provide a valid private or personal token.
+//
+// Deprecated: This module has been migrated to gitlab.com/gitlab-org/api/client-go.
+// See https://gitlab.com/gitlab-org/api/client-go
+//
+// This package is completely frozen, nothing will be added, removed or changed.
 func NewClient(token string, options ...ClientOptionFunc) (*Client, error) {
 	client, err := newClient(options...)
 	if err != nil {
@@ -270,6 +282,11 @@ func NewClient(token string, options ...ClientOptionFunc) (*Client, error) {
 
 // NewBasicAuthClient returns a new GitLab API client. To use API methods which
 // require authentication, provide a valid username and password.
+//
+// Deprecated: This module has been migrated to gitlab.com/gitlab-org/api/client-go.
+// See https://gitlab.com/gitlab-org/api/client-go
+//
+// This package is completely frozen, nothing will be added, removed or changed.
 func NewBasicAuthClient(username, password string, options ...ClientOptionFunc) (*Client, error) {
 	client, err := newClient(options...)
 	if err != nil {
@@ -285,6 +302,11 @@ func NewBasicAuthClient(username, password string, options ...ClientOptionFunc) 
 
 // NewJobClient returns a new GitLab API client. To use API methods which require
 // authentication, provide a valid job token.
+//
+// Deprecated: This module has been migrated to gitlab.com/gitlab-org/api/client-go.
+// See https://gitlab.com/gitlab-org/api/client-go
+//
+// This package is completely frozen, nothing will be added, removed or changed.
 func NewJobClient(token string, options ...ClientOptionFunc) (*Client, error) {
 	client, err := newClient(options...)
 	if err != nil {
@@ -297,6 +319,11 @@ func NewJobClient(token string, options ...ClientOptionFunc) (*Client, error) {
 
 // NewOAuthClient returns a new GitLab API client. To use API methods which
 // require authentication, provide a valid oauth token.
+//
+// Deprecated: This module has been migrated to gitlab.com/gitlab-org/api/client-go.
+// See https://gitlab.com/gitlab-org/api/client-go
+//
+// This package is completely frozen, nothing will be added, removed or changed.
 func NewOAuthClient(token string, options ...ClientOptionFunc) (*Client, error) {
 	client, err := newClient(options...)
 	if err != nil {
@@ -360,6 +387,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.Commits = &CommitsService{client: c}
 	c.ContainerRegistry = &ContainerRegistryService{client: c}
 	c.CustomAttribute = &CustomAttributesService{client: c}
+	c.DependencyListExport = &DependencyListExportService{client: c}
 	c.DeployKeys = &DeployKeysService{client: c}
 	c.DeployTokens = &DeployTokensService{client: c}
 	c.DeploymentMergeRequests = &DeploymentMergeRequestsService{client: c}
@@ -433,6 +461,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.ProjectFeatureFlags = &ProjectFeatureFlagService{client: c}
 	c.ProjectImportExport = &ProjectImportExportService{client: c}
 	c.ProjectIterations = &ProjectIterationsService{client: c}
+	c.ProjectMarkdownUploads = &ProjectMarkdownUploadsService{client: c}
 	c.ProjectMembers = &ProjectMembersService{client: c}
 	c.ProjectMirrors = &ProjectMirrorService{client: c}
 	c.ProjectRepositoryStorageMove = &ProjectRepositoryStorageMoveService{client: c}
