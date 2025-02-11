@@ -14,7 +14,6 @@ Feature: sync the current prototype branch that has a tracking branch
     And Git setting "git-town.sync-prototype-strategy" is "rebase"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
@@ -40,8 +39,13 @@ Feature: sync the current prototype branch that has a tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                              |
-      | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
+      | BRANCH    | COMMAND                                                                |
+      | prototype | git reset --hard {{ sha 'local commit' }}                              |
+      |           | git push --force-with-lease origin {{ sha 'origin commit' }}:prototype |
     And the current branch is still "prototype"
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE       | FILE NAME   |
+      | main      | local, origin | main commit   | main_file   |
+      | prototype | local         | local commit  | local_file  |
+      |           | origin        | origin commit | origin_file |
     And the initial branches and lineage exist now
