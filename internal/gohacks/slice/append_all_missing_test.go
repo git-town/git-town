@@ -43,5 +43,4 @@ func TestAppendAllMissing(t *testing.T) {
 		want := []string{"one", "two", "three"}
 		must.Eq(t, want, have)
 	})
-
 }
