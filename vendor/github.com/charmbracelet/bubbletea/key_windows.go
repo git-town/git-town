@@ -10,23 +10,26 @@ import (
 
 	"github.com/erikgeiser/coninput"
 	localereader "github.com/mattn/go-localereader"
-	"golang.org/x/sys/windows"
+	"github.com/muesli/cancelreader"
 )
 
 func readInputs(ctx context.Context, msgs chan<- Msg, input io.Reader) error {
 	if coninReader, ok := input.(*conInputReader); ok {
-		return readConInputs(ctx, msgs, coninReader.conin)
+		return readConInputs(ctx, msgs, coninReader)
 	}
 
 	return readAnsiInputs(ctx, msgs, localereader.NewReader(input))
 }
 
-func readConInputs(ctx context.Context, msgsch chan<- Msg, con windows.Handle) error {
+func readConInputs(ctx context.Context, msgsch chan<- Msg, con *conInputReader) error {
 	var ps coninput.ButtonState                 // keep track of previous mouse state
 	var ws coninput.WindowBufferSizeEventRecord // keep track of the last window size event
 	for {
-		events, err := coninput.ReadNConsoleInputs(con, 16)
+		events, err := coninput.ReadNConsoleInputs(con.conin, 16)
 		if err != nil {
+			if con.isCanceled() {
+				return cancelreader.ErrCanceled
+			}
 			return fmt.Errorf("read coninput events: %w", err)
 		}
 
@@ -274,7 +277,11 @@ func keyType(e coninput.KeyEventRecord) KeyType {
 	case coninput.VK_DELETE:
 		return KeyDelete
 	default:
-		if e.ControlKeyState&(coninput.LEFT_CTRL_PRESSED|coninput.RIGHT_CTRL_PRESSED) == 0 {
+		switch {
+		case e.ControlKeyState.Contains(coninput.LEFT_CTRL_PRESSED) && e.ControlKeyState.Contains(coninput.RIGHT_ALT_PRESSED):
+			// AltGr is pressed, then it's a rune.
+			fallthrough
+		case !e.ControlKeyState.Contains(coninput.LEFT_CTRL_PRESSED) && !e.ControlKeyState.Contains(coninput.RIGHT_CTRL_PRESSED):
 			return KeyRunes
 		}
 
@@ -334,7 +341,7 @@ func keyType(e coninput.KeyEventRecord) KeyType {
 		case '\x1a':
 			return KeyCtrlZ
 		case '\x1b':
-			return KeyCtrlCloseBracket
+			return KeyCtrlOpenBracket // KeyEscape
 		case '\x1c':
 			return KeyCtrlBackslash
 		case '\x1f':
@@ -344,6 +351,8 @@ func keyType(e coninput.KeyEventRecord) KeyType {
 		switch code {
 		case coninput.VK_OEM_4:
 			return KeyCtrlOpenBracket
+		case coninput.VK_OEM_6:
+			return KeyCtrlCloseBracket
 		}
 
 		return KeyRunes

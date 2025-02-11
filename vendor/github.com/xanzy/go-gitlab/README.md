@@ -1,4 +1,25 @@
-# go-gitlab
+# (deprecated) go-gitlab (migrated to https://gitlab.com/gitlab-org/api/client-go)
+
+🚧 **Project moved to https://gitlab.com/gitlab-org/api/client-go** 🚧
+
+This package, `github.com/xanzy/go-gitlab`, has been moved to
+[`gitlab.com/gitlab-org/api/client-go`](https://gitlab.com/gitlab-org/api/client-go).
+
+The project will continue to be a primarily community-maintained project,
+more about it [here](https://gitlab.com/gitlab-org/client.go/-/blob/main/README.md#maintenance).
+
+**References**:
+
+- [GitLab Project](https://gitlab.com/gitlab-org/api/client-go)
+- [Issue Tracker](https://gitlab.com/gitlab-org/api/client-go/-/issues)
+
+## Migration Steps
+
+- Replace `github.com/xanzy/go-gitlab` with `gitlab.com/gitlab-org/api/client-go` in your code base.
+- Profit 🎉
+- *(the code is fully backwards-compatible, no breaking changes are expected)*
+
+<details><summary>Former README contents</summary>
 
 A GitLab API client enabling Go programs to interact with GitLab in a simple and uniform way
 
@@ -26,6 +47,7 @@ to add new and/or missing endpoints. Currently, the following services are suppo
 - [x] Commits
 - [x] Container Registry
 - [x] Custom Attributes
+- [x] Dependency List Export
 - [x] Deploy Keys
 - [x] Deployments
 - [x] Discussions (threaded comments)
@@ -206,3 +228,5 @@ Contributions are always welcome. For more information, check out the [contribut
 ## License
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>
+
+</details>

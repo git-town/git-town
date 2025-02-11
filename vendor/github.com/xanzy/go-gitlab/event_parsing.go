@@ -91,7 +91,7 @@ func HookEventType(r *http.Request) EventType {
 // Example usage:
 //
 //	func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-//	    payload, err := ioutil.ReadAll(r.Body)
+//	    payload, err := io.ReadAll(r.Body)
 //	    if err != nil { ... }
 //	    event, err := gitlab.ParseHook(gitlab.HookEventType(r), payload)
 //	    if err != nil { ... }
@@ -119,7 +119,7 @@ func ParseHook(eventType EventType, payload []byte) (event interface{}, err erro
 // Example usage:
 //
 //	func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-//	    payload, err := ioutil.ReadAll(r.Body)
+//	    payload, err := io.ReadAll(r.Body)
 //	    if err != nil { ... }
 //	    event, err := gitlab.ParseSystemhook(payload)
 //	    if err != nil { ... }
@@ -203,7 +203,7 @@ func WebhookEventType(r *http.Request) EventType {
 // Example usage:
 //
 //	func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-//	    payload, err := ioutil.ReadAll(r.Body)
+//	    payload, err := io.ReadAll(r.Body)
 //	    if err != nil { ... }
 //	    event, err := gitlab.ParseWebhook(gitlab.HookEventType(r), payload)
 //	    if err != nil { ... }
