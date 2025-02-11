@@ -12,7 +12,6 @@ import (
 
 // file paths to ignore
 var ignorePaths = []string{ //nolint:gochecknoglobals
-	"test/output/git_town_output_parser_test.go",
 	"test/subshell/test_runner_test.go",
 	"test/testgit/locations_test.go",
 	"test/testruntime/testruntime_test.go",
