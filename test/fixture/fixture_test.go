@@ -15,19 +15,6 @@ import (
 func TestFixture(t *testing.T) {
 	t.Parallel()
 
-	t.Run("CloneFixture", func(t *testing.T) {
-		t.Parallel()
-		dir := t.TempDir()
-		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
-		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
-		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "origin"))
-		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
-		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
-		// check pushing
-		devRepo := cloned.DevRepo.GetOrPanic()
-		devRepo.PushBranchToRemote("main", gitdomain.RemoteOrigin)
-	})
-
 	t.Run("Branches", func(t *testing.T) {
 		t.Run("different branches in dev and origin repo", func(t *testing.T) {
 			t.Parallel()
@@ -65,6 +52,84 @@ func TestFixture(t *testing.T) {
 			// verify
 			expected := "| REPOSITORY    | BRANCHES     |\n| local, origin | main, b1, b2 |\n"
 			must.EqOp(t, expected, table.String())
+		})
+	})
+
+	t.Run("CloneFixture", func(t *testing.T) {
+		t.Parallel()
+		dir := t.TempDir()
+		memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+		cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
+		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "origin"))
+		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
+		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
+		// check pushing
+		devRepo := cloned.DevRepo.GetOrPanic()
+		devRepo.PushBranchToRemote("main", gitdomain.RemoteOrigin)
+	})
+
+	t.Run("CommitTable", func(t *testing.T) {
+		t.Run("without upstream repo", func(t *testing.T) {
+			t.Parallel()
+			// create Fixture instance
+			dir := t.TempDir()
+			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
+			clonedDevRepo := cloned.DevRepo.GetOrPanic()
+			// create a few commits
+			clonedDevRepo.CreateCommit(testgit.Commit{
+				Branch:      "main",
+				FileContent: "one",
+				FileName:    "local-origin.md",
+				Message:     "local-origin",
+			})
+			clonedDevRepo.PushBranchToRemote("main", gitdomain.RemoteOrigin)
+			cloned.OriginRepo.GetOrPanic().CreateCommit(testgit.Commit{
+				Branch:      "main",
+				FileContent: "two",
+				FileName:    "origin.md",
+				Message:     "2",
+			})
+			// get the CommitTable
+			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
+			must.Len(t, 3, table.Cells)
+			must.EqOp(t, table.Cells[1][0], "local, origin")
+			must.EqOp(t, table.Cells[1][1], "local-origin.md")
+			must.EqOp(t, table.Cells[1][2], "one")
+			must.EqOp(t, table.Cells[2][0], "origin")
+			must.EqOp(t, table.Cells[2][1], "origin.md")
+			must.EqOp(t, table.Cells[2][2], "two")
+		})
+
+		t.Run("with upstream repo", func(t *testing.T) {
+			t.Parallel()
+			// create Fixture instance
+			dir := t.TempDir()
+			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
+			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
+			cloned.AddUpstream()
+			// create a few commits
+			cloned.DevRepo.GetOrPanic().CreateCommit(testgit.Commit{
+				Branch:      "main",
+				FileContent: "one",
+				FileName:    "local.md",
+				Message:     "local",
+			})
+			cloned.UpstreamRepo.GetOrPanic().CreateCommit(testgit.Commit{
+				Branch:      "main",
+				FileContent: "two",
+				FileName:    "upstream.md",
+				Message:     "2",
+			})
+			// get the CommitTable
+			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
+			must.Len(t, 3, table.Cells)
+			must.EqOp(t, table.Cells[1][0], "local")
+			must.EqOp(t, table.Cells[1][1], "local.md")
+			must.EqOp(t, table.Cells[1][2], "one")
+			must.EqOp(t, table.Cells[2][0], "upstream")
+			must.EqOp(t, table.Cells[2][1], "upstream.md")
+			must.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
 
@@ -139,71 +204,6 @@ func TestFixture(t *testing.T) {
 		branches, err = cloned.DevRepo.GetOrPanic().LocalBranchesMainFirst("main")
 		must.NoError(t, err)
 		must.SliceNotContains(t, branches.Strings(), "b1")
-	})
-
-	t.Run("CommitTable", func(t *testing.T) {
-		t.Run("without upstream repo", func(t *testing.T) {
-			t.Parallel()
-			// create Fixture instance
-			dir := t.TempDir()
-			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
-			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
-			clonedDevRepo := cloned.DevRepo.GetOrPanic()
-			// create a few commits
-			clonedDevRepo.CreateCommit(testgit.Commit{
-				Branch:      "main",
-				FileContent: "one",
-				FileName:    "local-origin.md",
-				Message:     "local-origin",
-			})
-			clonedDevRepo.PushBranchToRemote("main", gitdomain.RemoteOrigin)
-			cloned.OriginRepo.GetOrPanic().CreateCommit(testgit.Commit{
-				Branch:      "main",
-				FileContent: "two",
-				FileName:    "origin.md",
-				Message:     "2",
-			})
-			// get the CommitTable
-			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			must.Len(t, 3, table.Cells)
-			must.EqOp(t, table.Cells[1][0], "local, origin")
-			must.EqOp(t, table.Cells[1][1], "local-origin.md")
-			must.EqOp(t, table.Cells[1][2], "one")
-			must.EqOp(t, table.Cells[2][0], "origin")
-			must.EqOp(t, table.Cells[2][1], "origin.md")
-			must.EqOp(t, table.Cells[2][2], "two")
-		})
-
-		t.Run("with upstream repo", func(t *testing.T) {
-			t.Parallel()
-			// create Fixture instance
-			dir := t.TempDir()
-			memoized := fixture.NewMemoized(filepath.Join(dir, "memoized"))
-			cloned := memoized.CloneInto(filepath.Join(dir, "cloned"))
-			cloned.AddUpstream()
-			// create a few commits
-			cloned.DevRepo.GetOrPanic().CreateCommit(testgit.Commit{
-				Branch:      "main",
-				FileContent: "one",
-				FileName:    "local.md",
-				Message:     "local",
-			})
-			cloned.UpstreamRepo.GetOrPanic().CreateCommit(testgit.Commit{
-				Branch:      "main",
-				FileContent: "two",
-				FileName:    "upstream.md",
-				Message:     "2",
-			})
-			// get the CommitTable
-			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			must.Len(t, 3, table.Cells)
-			must.EqOp(t, table.Cells[1][0], "local")
-			must.EqOp(t, table.Cells[1][1], "local.md")
-			must.EqOp(t, table.Cells[1][2], "one")
-			must.EqOp(t, table.Cells[2][0], "upstream")
-			must.EqOp(t, table.Cells[2][1], "upstream.md")
-			must.EqOp(t, table.Cells[2][2], "two")
-		})
 	})
 }
 
