@@ -4,7 +4,7 @@
 
 #### BREAKING CHANGES
 
-- If [prototype branches](https://www.git-town.com/branch-types#prototype-branches) have a tracking branch, they now push local changes to it. `git town sync` doesn't create this tracking branch, you have to create it manually if needed. The reasoning behind this change is that prototoype branches are used for active development, and hence if they have a tracking branch, their local and tracking branch should be in sync ((#4542)[https://github.com/git-town/git-town/issues/4542]).
+- `git town sync`: Local changes in a [prototype branch](https://www.git-town.com/branch-types#prototype-branches) now get pushed if that branch has a tracking branch. `git town sync` doesn't create this tracking branch, you have to create it manually if this behavior is needed. Prototoype branches are used for active development, hence their local and tracking branch should remain in sync ((#4542)[https://github.com/git-town/git-town/issues/4542]).
 
 #### Bug Fixes
 
