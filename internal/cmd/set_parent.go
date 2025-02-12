@@ -196,7 +196,10 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	} else {
 		defaultChoice = mainBranch
 	}
-	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
+	proposalOpt := None[hostingdomain.Proposal]()
+	if !repo.IsOffline {
+		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
+	}
 	return setParentData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,
