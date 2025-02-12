@@ -9,7 +9,7 @@
 #### Bug Fixes
 
 - `git town compress` now keeps the entire commit message ((#4536)[https://github.com/git-town/git-town/issues/4536]).
-- `git town prepend` only looks
+- No longer tries to look up proposals when [offline mode](https://www.git-town.com/preferences/offline.html) is enabled ((#4544)[https://github.com/git-town/git-town/issues/4544]).
 
 ## 17.3.0 (2025-01-27)
 
