@@ -51,7 +51,7 @@ func TestRemoveDuplicateCheckout(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("a mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
+	t.Run("mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
 			&opcodes.MergeAbort{},

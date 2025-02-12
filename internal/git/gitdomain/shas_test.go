@@ -10,13 +10,6 @@ import (
 func TestSHAs(t *testing.T) {
 	t.Parallel()
 
-	t.Run("NewSHAs", func(t *testing.T) {
-		t.Parallel()
-		have := gitdomain.NewSHAs("111111", "222222", "333333")
-		want := gitdomain.SHAs{"111111", "222222", "333333"}
-		must.Eq(t, want, have)
-	})
-
 	t.Run("First", func(t *testing.T) {
 		t.Parallel()
 		shas := gitdomain.NewSHAs("111111", "222222")
@@ -59,6 +52,13 @@ func TestSHAs(t *testing.T) {
 			want := shas[0]
 			must.Eq(t, want, have)
 		})
+	})
+
+	t.Run("NewSHAs", func(t *testing.T) {
+		t.Parallel()
+		have := gitdomain.NewSHAs("111111", "222222", "333333")
+		want := gitdomain.SHAs{"111111", "222222", "333333"}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Strings", func(t *testing.T) {

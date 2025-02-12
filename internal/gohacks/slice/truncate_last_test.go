@@ -11,6 +11,14 @@ import (
 func TestTruncateLast(t *testing.T) {
 	t.Parallel()
 
+	t.Run("list contains multiple elements", func(t *testing.T) {
+		t.Parallel()
+		list := []int{1, 2, 3}
+		have := slice.TruncateLast(list)
+		want := []int{1, 2}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("list contains no elements", func(t *testing.T) {
 		t.Parallel()
 		list := []int{}
@@ -23,14 +31,6 @@ func TestTruncateLast(t *testing.T) {
 		list := []int{1}
 		have := slice.TruncateLast(list)
 		must.Len(t, 0, have)
-	})
-
-	t.Run("list contains multiple elements", func(t *testing.T) {
-		t.Parallel()
-		list := []int{1, 2, 3}
-		have := slice.TruncateLast(list)
-		want := []int{1, 2}
-		must.Eq(t, want, have)
 	})
 
 	t.Run("slice alias type", func(t *testing.T) {

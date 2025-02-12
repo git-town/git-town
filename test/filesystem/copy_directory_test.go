@@ -12,6 +12,16 @@ import (
 func TestCopyDirectory(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Git repository", func(t *testing.T) {
+		t.Parallel()
+		origin := testruntime.Create(t)
+		filesystem.CreateFile(t, origin.WorkingDir, "one.txt")
+		dstDir := filepath.Join(t.TempDir(), "dest")
+		filesystem.CopyDirectory(origin.WorkingDir, dstDir)
+		asserts.FileExists(t, dstDir, "one.txt")
+		asserts.FileHasContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
+	})
+
 	t.Run("normal directory", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
@@ -24,15 +34,5 @@ func TestCopyDirectory(t *testing.T) {
 		asserts.FileExists(t, dstDir, "one.txt")
 		asserts.FileExists(t, dstDir, "f1/a.txt")
 		asserts.FileExists(t, dstDir, "f2/b.txt")
-	})
-
-	t.Run("Git repository", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		filesystem.CreateFile(t, origin.WorkingDir, "one.txt")
-		dstDir := filepath.Join(t.TempDir(), "dest")
-		filesystem.CopyDirectory(origin.WorkingDir, dstDir)
-		asserts.FileExists(t, dstDir, "one.txt")
-		asserts.FileHasContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
 	})
 }

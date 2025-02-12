@@ -236,7 +236,10 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
-	proposalOpt := ship.FindProposal(connectorOpt, initialBranch, parentOpt)
+	proposalOpt := None[hostingdomain.Proposal]()
+	if !repo.IsOffline {
+		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
+	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
 		ConnectorOpt:               connectorOpt,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,

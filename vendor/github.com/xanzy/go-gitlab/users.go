@@ -1553,12 +1553,21 @@ func (s *UsersService) CreateUserRunner(opts *CreateUserRunnerOptions, options .
 	return r, resp, nil
 }
 
+
+// CreateServiceAccountUserOptions represents the available CreateServiceAccountUser() options.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/user_service_accounts.html#create-a-service-account-user
+type CreateServiceAccountUserOptions struct {
+	Name     *string `url:"name,omitempty" json:"name,omitempty"`
+	Username *string `url:"username,omitempty" json:"username,omitempty"`
+}
+
 // CreateServiceAccountUser creates a new service account user.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/users.html#create-service-account-user
-func (s *UsersService) CreateServiceAccountUser(options ...RequestOptionFunc) (*User, *Response, error) {
-	req, err := s.client.NewRequest(http.MethodPost, "service_accounts", nil, options)
+func (s *UsersService) CreateServiceAccountUser(opts *CreateServiceAccountUserOptions, options ...RequestOptionFunc) (*User, *Response, error) {
+	req, err := s.client.NewRequest(http.MethodPost, "service_accounts", opts, options)
 	if err != nil {
 		return nil, nil, err
 	}

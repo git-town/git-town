@@ -1270,6 +1270,8 @@ type HookCustomHeader struct {
 type ProjectHook struct {
 	ID                        int                 `json:"id"`
 	URL                       string              `json:"url"`
+	Name                      string              `json:"name"`
+	Description               string              `json:"description"`
 	ConfidentialNoteEvents    bool                `json:"confidential_note_events"`
 	ProjectID                 int                 `json:"project_id"`
 	PushEvents                bool                `json:"push_events"`
@@ -1352,6 +1354,8 @@ func (s *ProjectsService) GetProjectHook(pid interface{}, hook int, options ...R
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/projects.html#add-project-hook
 type AddProjectHookOptions struct {
+	Name                      *string              `url:"name,omitempty" json:"name,omitempty"`
+	Description               *string              `url:"description,omitempty" json:"description,omitempty"`
 	ConfidentialIssuesEvents  *bool                `url:"confidential_issues_events,omitempty" json:"confidential_issues_events,omitempty"`
 	ConfidentialNoteEvents    *bool                `url:"confidential_note_events,omitempty" json:"confidential_note_events,omitempty"`
 	DeploymentEvents          *bool                `url:"deployment_events,omitempty" json:"deployment_events,omitempty"`
@@ -1403,6 +1407,8 @@ func (s *ProjectsService) AddProjectHook(pid interface{}, opt *AddProjectHookOpt
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/projects.html#edit-project-hook
 type EditProjectHookOptions struct {
+	Name                      *string              `url:"name,omitempty" json:"name,omitempty"`
+	Description               *string              `url:"description,omitempty" json:"description,omitempty"`
 	ConfidentialIssuesEvents  *bool                `url:"confidential_issues_events,omitempty" json:"confidential_issues_events,omitempty"`
 	ConfidentialNoteEvents    *bool                `url:"confidential_note_events,omitempty" json:"confidential_note_events,omitempty"`
 	DeploymentEvents          *bool                `url:"deployment_events,omitempty" json:"deployment_events,omitempty"`

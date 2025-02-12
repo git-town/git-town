@@ -82,9 +82,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			pushBranches:       args.PushBranches,
 			trackingBranchName: branchInfo.RemoteName,
 		})
-	case
-		configdomain.BranchTypePerennialBranch,
-		configdomain.BranchTypeMainBranch:
+	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
@@ -109,7 +107,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
-			pushBranches:       false,
+			pushBranches:       configdomain.PushBranches(branchInfo.HasTrackingBranch()),
 			trackingBranchName: branchInfo.RemoteName,
 		})
 	}

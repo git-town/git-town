@@ -154,27 +154,6 @@ func TestLineage(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	t.Run("BranchesWithParents", func(t *testing.T) {
-		t.Parallel()
-		t.Run("populated", func(t *testing.T) {
-			t.Parallel()
-			lineage := configdomain.NewLineageWith(configdomain.LineageData{
-				"branch-1": "branch-2",
-				"branch-3": "branch-4",
-			})
-			have := lineage.BranchesWithParents()
-			want := gitdomain.NewLocalBranchNames("branch-1", "branch-3")
-			must.Eq(t, want, have)
-		})
-		t.Run("empty", func(t *testing.T) {
-			t.Parallel()
-			lineage := configdomain.NewLineage()
-			have := lineage.BranchesWithParents()
-			want := gitdomain.LocalBranchNames(nil)
-			must.Eq(t, want, have)
-		})
-	})
-
 	t.Run("BranchesAndAncestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("deep lineage, multiple branches", func(t *testing.T) {
@@ -229,6 +208,27 @@ func TestLineage(t *testing.T) {
 			give := gitdomain.LocalBranchNames{main, first, one, second, third, three, two}
 			have := lineage.BranchesAndAncestors(give)
 			want := gitdomain.LocalBranchNames{main, first, second, third, one, two, three}
+			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("BranchesWithParents", func(t *testing.T) {
+		t.Parallel()
+		t.Run("populated", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineageWith(configdomain.LineageData{
+				"branch-1": "branch-2",
+				"branch-3": "branch-4",
+			})
+			have := lineage.BranchesWithParents()
+			want := gitdomain.NewLocalBranchNames("branch-1", "branch-3")
+			must.Eq(t, want, have)
+		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			lineage := configdomain.NewLineage()
+			have := lineage.BranchesWithParents()
+			want := gitdomain.LocalBranchNames(nil)
 			must.Eq(t, want, have)
 		})
 	})

@@ -82,8 +82,8 @@ it. Unpark a parked branch by running `git town hack` on it.
 ## Prototype branches
 
 A prototype branch is a local-only feature branch that incorporates updates from
-its parent branch but is not pushed to the remote repository. Prototype branches
-are useful when:
+its parent branch but is not pushed to the remote repository unless it has a
+tracking branch. Prototype branches are useful when:
 
 - the branch contains sensitive information, such as secrets, or potentially
   problematic code or data that could trigger alerts

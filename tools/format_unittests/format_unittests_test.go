@@ -10,18 +10,6 @@ import (
 func TestFormatUnittests(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsTopLevelRunLine", func(t *testing.T) {
-		t.Parallel()
-		tests := map[string]bool{
-			"\tt.Run(\"HasLocalBranch\", func(t *testing.T) {":   true,
-			"\t\tt.Run(\"HasLocalBranch\", func(t *testing.T) {": false,
-		}
-		for give, want := range tests {
-			have := formatUnittests.IsTopLevelRunLine(give)
-			must.EqOp(t, want, have)
-		}
-	})
-
 	t.Run("FormatFileContent", func(t *testing.T) {
 		t.Parallel()
 		t.Run("top-level subtests", func(t *testing.T) {
@@ -182,6 +170,18 @@ func TestNewGiteaConnector(t *testing.T) {
 		}
 		for give, want := range tests {
 			have := formatUnittests.IsGoTestFile(give)
+			must.EqOp(t, want, have)
+		}
+	})
+
+	t.Run("IsTopLevelRunLine", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]bool{
+			"\tt.Run(\"HasLocalBranch\", func(t *testing.T) {":   true,
+			"\t\tt.Run(\"HasLocalBranch\", func(t *testing.T) {": false,
+		}
+		for give, want := range tests {
+			have := formatUnittests.IsTopLevelRunLine(give)
 			must.EqOp(t, want, have)
 		}
 	})

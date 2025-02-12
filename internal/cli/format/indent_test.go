@@ -10,18 +10,6 @@ import (
 func TestIndent(t *testing.T) {
 	t.Parallel()
 
-	t.Run("no indent", func(t *testing.T) {
-		t.Parallel()
-		have := format.Indent("")
-		must.EqOp(t, "  ", have)
-	})
-
-	t.Run("single line of text", func(t *testing.T) {
-		t.Parallel()
-		have := format.Indent("hello")
-		must.EqOp(t, "  hello", have)
-	})
-
 	t.Run("multi-line text", func(t *testing.T) {
 		t.Parallel()
 		have := format.Indent("hello\nworld")
@@ -34,5 +22,17 @@ func TestIndent(t *testing.T) {
 		have := format.Indent(give)
 		want := "  hello\n\n  world"
 		must.EqOp(t, want, have)
+	})
+
+	t.Run("no indent", func(t *testing.T) {
+		t.Parallel()
+		have := format.Indent("")
+		must.EqOp(t, "  ", have)
+	})
+
+	t.Run("single line of text", func(t *testing.T) {
+		t.Parallel()
+		have := format.Indent("hello")
+		must.EqOp(t, "  hello", have)
 	})
 }
