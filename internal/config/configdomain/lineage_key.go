@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // a Key that contains a lineage entry

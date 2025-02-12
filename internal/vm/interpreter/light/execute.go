@@ -3,16 +3,16 @@ package light
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v17/internal/cli/colors"
-	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v17/internal/config"
-	"github.com/git-town/git-town/v17/internal/git"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v17/internal/vm/program"
-	"github.com/git-town/git-town/v17/internal/vm/shared"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/cli/colors"
+	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v18/internal/config"
+	"github.com/git-town/git-town/v18/internal/git"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/vm/program"
+	"github.com/git-town/git-town/v18/internal/vm/shared"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 func Execute(args ExecuteArgs) {

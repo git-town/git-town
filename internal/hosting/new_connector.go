@@ -1,17 +1,17 @@
 package hosting
 
 import (
-	"github.com/git-town/git-town/v17/internal/cli/print"
-	"github.com/git-town/git-town/v17/internal/config"
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/hosting/bitbucketcloud"
-	"github.com/git-town/git-town/v17/internal/hosting/bitbucketdatacenter"
-	"github.com/git-town/git-town/v17/internal/hosting/gitea"
-	"github.com/git-town/git-town/v17/internal/hosting/github"
-	"github.com/git-town/git-town/v17/internal/hosting/gitlab"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/cli/print"
+	"github.com/git-town/git-town/v18/internal/config"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/hosting/bitbucketcloud"
+	"github.com/git-town/git-town/v18/internal/hosting/bitbucketdatacenter"
+	"github.com/git-town/git-town/v18/internal/hosting/gitea"
+	"github.com/git-town/git-town/v18/internal/hosting/github"
+	"github.com/git-town/git-town/v18/internal/hosting/gitlab"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.

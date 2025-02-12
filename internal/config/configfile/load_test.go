@@ -3,8 +3,8 @@ package configfile_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/config/configfile"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/config/configfile"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

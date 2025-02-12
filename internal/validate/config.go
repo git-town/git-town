@@ -1,14 +1,14 @@
 package validate
 
 import (
-	"github.com/git-town/git-town/v17/internal/cli/dialog"
-	"github.com/git-town/git-town/v17/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v17/internal/config"
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/cli/dialog"
+	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v18/internal/config"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {

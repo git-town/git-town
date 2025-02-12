@@ -3,15 +3,15 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/gohacks"
-	"github.com/git-town/git-town/v17/internal/gohacks/cache"
-	"github.com/git-town/git-town/v17/internal/subshell"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
-	"github.com/git-town/git-town/v17/test/testgit"
-	"github.com/git-town/git-town/v17/test/testruntime"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/gohacks"
+	"github.com/git-town/git-town/v18/internal/gohacks/cache"
+	"github.com/git-town/git-town/v18/internal/subshell"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v18/test/testgit"
+	"github.com/git-town/git-town/v18/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

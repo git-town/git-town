@@ -3,9 +3,9 @@ package configdomain
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
-	"github.com/git-town/git-town/v17/pkg/set"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v18/pkg/set"
 )
 
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig

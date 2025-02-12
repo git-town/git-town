@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/git-town/git-town/v17/internal/cli/flags"
-	"github.com/git-town/git-town/v17/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v18/internal/cli/flags"
+	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/spf13/cobra"
 )
 

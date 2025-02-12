@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/git-town/git-town/v17/internal/config"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v17/internal/messages"
-	"github.com/git-town/git-town/v17/internal/undo/undodomain"
-	"github.com/git-town/git-town/v17/internal/vm/opcodes"
-	"github.com/git-town/git-town/v17/internal/vm/program"
+	"github.com/git-town/git-town/v18/internal/config"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v18/internal/messages"
+	"github.com/git-town/git-town/v18/internal/undo/undodomain"
+	"github.com/git-town/git-town/v18/internal/vm/opcodes"
+	"github.com/git-town/git-town/v18/internal/vm/program"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.
