@@ -10,7 +10,7 @@
 
 - `git town compress` no longer removes the commit message body ((#4536)[https://github.com/git-town/git-town/issues/4536]).
 - No longer tries to look up proposals when [offline mode](https://www.git-town.com/preferences/offline.html) is enabled ((#4544)[https://github.com/git-town/git-town/issues/4544]).
-- `git town switch` separates warning messages with an empty line from the branch tree ((#4543)[https://github.com/git-town/git-town/issues/4543]).
+- `git town switch` now separates warning messages with an empty line from the branch tree ((#4543)[https://github.com/git-town/git-town/issues/4543]).
 - The [setup assistant](https://www.git-town.com/commands/config-setup.html) now allows configuring the new [ff-only sync strategy](https://www.git-town.com/preferences/sync-perennial-strategy.html#ff-only) ((#4549)[https://github.com/git-town/git-town/pull/4549]).
 
 #### Contributors
