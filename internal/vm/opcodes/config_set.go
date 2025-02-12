@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/vm/shared"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
 type ConfigSet struct {

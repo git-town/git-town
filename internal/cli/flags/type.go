@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 

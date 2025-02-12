@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/config/envconfig"
-	"github.com/git-town/git-town/v17/internal/config/gitconfig"
-	"github.com/git-town/git-town/v17/internal/git"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/git/giturl"
-	"github.com/git-town/git-town/v17/internal/gohacks"
-	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v17/internal/messages"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/config/envconfig"
+	"github.com/git-town/git-town/v18/internal/config/gitconfig"
+	"github.com/git-town/git-town/v18/internal/git"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/git/giturl"
+	"github.com/git-town/git-town/v18/internal/gohacks"
+	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v18/internal/messages"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 type NormalConfig struct {

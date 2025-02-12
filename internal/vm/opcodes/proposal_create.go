@@ -3,11 +3,11 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v17/internal/browser"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v17/internal/messages"
-	"github.com/git-town/git-town/v17/internal/vm/shared"
+	"github.com/git-town/git-town/v18/internal/browser"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/messages"
+	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
 // ProposalCreate creates a new proposal for the current branch.

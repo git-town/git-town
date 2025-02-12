@@ -3,12 +3,12 @@ package fixture
 import (
 	"os"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
-	"github.com/git-town/git-town/v17/test/asserts"
-	"github.com/git-town/git-town/v17/test/commands"
-	"github.com/git-town/git-town/v17/test/filesystem"
-	"github.com/git-town/git-town/v17/test/testruntime"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v18/test/asserts"
+	"github.com/git-town/git-town/v18/test/commands"
+	"github.com/git-town/git-town/v18/test/filesystem"
+	"github.com/git-town/git-town/v18/test/testruntime"
 )
 
 // A fully populated Git repos template for testing.

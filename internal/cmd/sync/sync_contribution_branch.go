@@ -1,10 +1,10 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/vm/opcodes"
-	"github.com/git-town/git-town/v17/internal/vm/program"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/vm/opcodes"
+	"github.com/git-town/git-town/v18/internal/vm/program"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // ContributionBranchProgram adds the opcodes to sync the feature branch with the given name.

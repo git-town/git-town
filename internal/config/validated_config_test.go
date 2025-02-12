@@ -5,12 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/config"
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/git/giturl"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
-	"github.com/git-town/git-town/v17/test/testruntime"
+	"github.com/git-town/git-town/v18/internal/config"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/git/giturl"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v18/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
