@@ -1,5 +1,16 @@
 # Git Town Changelog
 
+## 18.0.0 (2025-01-27)
+
+#### BREAKING CHANGES
+
+- If [prototype branches](https://www.git-town.com/branch-types#prototype-branches) have a tracking branch, they now push local changes to it. `git town sync` doesn't create this tracking branch, you have to create it manually if needed. The reasoning behind this change is that prototoype branches are used for active development, and hence if they have a tracking branch, their local and tracking branch should be in sync ((#4542)[https://github.com/git-town/git-town/issues/4542]).
+
+#### Bug Fixes
+
+- `git town compress` now keeps the entire commit message ((#4536)[https://github.com/git-town/git-town/issues/4536]).
+- `git town prepend` only looks
+
 ## 17.3.0 (2025-01-27)
 
 #### New Features
