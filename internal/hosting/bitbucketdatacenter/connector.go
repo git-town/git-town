@@ -6,14 +6,14 @@ import (
 	"net/url"
 
 	"github.com/carlmjohnson/requests"
-	"github.com/git-town/git-town/v17/internal/cli/print"
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/git/giturl"
-	"github.com/git-town/git-town/v17/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v17/internal/messages"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/cli/print"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/git/giturl"
+	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/messages"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // Connector provides access to the API of Bitbucket installations.

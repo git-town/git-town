@@ -29,7 +29,7 @@ You can install Git Town on Windows using:
   `choco install git-town`
 - [Scoop](https://scoop.sh/#/apps?q=git+town): `scoop install git-town`
 - the
-  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v17.3.0/git-town_windows_intel_64.msi)
+  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v18.0.0/git-town_windows_intel_64.msi)
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
@@ -96,7 +96,7 @@ If you have the [Go compiler](https://go.dev) installed, you can compile the
 latest version of Git Town from source by running:
 
 ```
-go get github.com/git-town/git-town/v17
+go get github.com/git-town/git-town/v18
 ```
 
 ## New releases

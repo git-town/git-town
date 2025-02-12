@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v17/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v17/internal/gohacks/slice"
+	"github.com/git-town/git-town/v18/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v18/internal/gohacks/slice"
 )
 
 // lets the user select zero, one, or many of the given entries

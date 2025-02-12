@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v17/internal/cli/colors"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/messages"
+	"github.com/git-town/git-town/v18/internal/cli/colors"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/messages"
 )
 
 // BranchTypeOverrides contains all configured branch type overrides.

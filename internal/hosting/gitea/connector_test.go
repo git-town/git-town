@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	giteasdk "code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v17/internal/hosting/gitea"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/hosting/gitea"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 

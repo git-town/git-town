@@ -3,12 +3,12 @@ package gitlab_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/cli/print"
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/git/giturl"
-	"github.com/git-town/git-town/v17/internal/hosting/gitlab"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/cli/print"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/git/giturl"
+	"github.com/git-town/git-town/v18/internal/hosting/gitlab"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 

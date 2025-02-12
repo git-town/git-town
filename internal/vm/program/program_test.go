@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/vm/opcodes"
-	"github.com/git-town/git-town/v17/internal/vm/program"
-	"github.com/git-town/git-town/v17/internal/vm/shared"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/vm/opcodes"
+	"github.com/git-town/git-town/v18/internal/vm/program"
+	"github.com/git-town/git-town/v18/internal/vm/shared"
 	"github.com/shoenig/test/must"
 )
 

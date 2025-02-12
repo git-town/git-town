@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/hosting/hostingdomain"
-	"github.com/git-town/git-town/v17/internal/messages"
-	"github.com/git-town/git-town/v17/internal/vm/shared"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/messages"
+	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
 // ProposalUpdateSource updates the source branch of the proposal with the given number at the code hosting platform.

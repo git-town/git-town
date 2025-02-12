@@ -1,7 +1,7 @@
 package configdomain
 
 import (
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.

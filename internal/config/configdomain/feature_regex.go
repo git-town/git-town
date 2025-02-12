@@ -1,6 +1,6 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v17/pkg/prelude"
+import . "github.com/git-town/git-town/v18/pkg/prelude"
 
 type FeatureRegex struct {
 	VerifiedRegex

@@ -4,7 +4,7 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 )
 
 type BranchesAndTypes map[gitdomain.LocalBranchName]BranchType

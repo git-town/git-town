@@ -1,10 +1,10 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v17/internal/config/configdomain"
-	"github.com/git-town/git-town/v17/internal/git/gitdomain"
-	"github.com/git-town/git-town/v17/internal/vm/shared"
-	. "github.com/git-town/git-town/v17/pkg/prelude"
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v18/internal/vm/shared"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // deletes the given branch including all commits
