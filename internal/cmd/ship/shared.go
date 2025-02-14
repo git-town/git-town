@@ -10,10 +10,10 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forges"
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/slice"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/validate"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
@@ -124,7 +124,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToShip)
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forges.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

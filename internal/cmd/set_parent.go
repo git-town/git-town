@@ -14,9 +14,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forges"
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
@@ -162,7 +162,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forges.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

@@ -12,9 +12,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forges"
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v18/internal/vm/interpreter/full"
@@ -145,7 +145,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 			return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 		}
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connector, err := forges.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	return continueData{
 		branchesSnapshot: branchesSnapshot,
 		config:           validatedConfig,

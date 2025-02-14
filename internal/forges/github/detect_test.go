@@ -1,24 +1,24 @@
-package gitea_test
+package github_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v18/internal/forges/github"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
-	"github.com/git-town/git-town/v18/internal/hosting/gitea"
 	"github.com/shoenig/test/must"
 )
 
 func TestDetect(t *testing.T) {
 	t.Parallel()
 	tests := map[string]bool{
-		"git@gitea.com:git-town/docs.git":      true,  // SAAS URL
+		"git@github.com:git-town/docs.git":     true,  // SAAS URL
 		"git@custom-url.com:git-town/docs.git": false, // custom URL
-		"git@github.com:git-town/git-town.git": false, // other hosting service URL
+		"git@gitlab.com:git-town/git-town.git": false, // other hosting URL
 	}
 	for give, want := range tests {
 		url, has := giturl.Parse(give).Get()
 		must.True(t, has)
-		have := gitea.Detect(url)
+		have := github.Detect(url)
 		must.EqOp(t, want, have)
 	}
 }

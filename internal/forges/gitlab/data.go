@@ -5,8 +5,8 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 

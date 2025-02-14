@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )

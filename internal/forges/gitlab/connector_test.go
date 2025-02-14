@@ -5,10 +5,10 @@ import (
 
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forges/gitlab"
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
-	"github.com/git-town/git-town/v18/internal/hosting/gitlab"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 

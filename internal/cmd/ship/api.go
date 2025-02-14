@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/opcodes"
 	"github.com/git-town/git-town/v18/internal/vm/program"
