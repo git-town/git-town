@@ -9,6 +9,7 @@ import (
 )
 
 // HostingPlatform defines legal values for the "git-town.hosting-platform" config setting.
+// TODO: rename to ForgeType
 type HostingPlatform string
 
 func (self HostingPlatform) String() string { return string(self) }

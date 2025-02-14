@@ -160,7 +160,7 @@ main
 *   3-rename-bar
 ```
 
-If you ship feature branches via the code hosting API or web UI, run
+If you ship feature branches through the API or UI of your forge, run
 `git town sync --all`, or `git town sync` on the youngest child branch, to
 update the lineage.
 

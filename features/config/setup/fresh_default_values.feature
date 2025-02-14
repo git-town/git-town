@@ -13,7 +13,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | default branch type         | enter |
       | feature regex               | enter |
       | dev-remote                  | enter |
-      | hosting platform            | enter |
+      | forge type                  | enter |
       | origin hostname             | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |

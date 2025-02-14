@@ -30,8 +30,8 @@ determine the repository state.
 
 ## Configuration
 
-Git Town automatically identifies the hosting platform type through the URL of
-the development remote. You can override the type of hosting server with the
+Git Town automatically identifies the forge type through the URL of the
+development remote. You can override the type of hosting server with the
 [hosting-platform](../preferences/hosting-platform.md) setting.
 
 Set the [hosting-origin-hostname](../preferences/hosting-origin-hostname.md)

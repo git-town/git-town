@@ -1,5 +1,5 @@
 @messyoutput
-Feature: remove an existing code hosting override
+Feature: remove an existing forge type override
 
   Background:
     Given a Git repo with origin
@@ -14,7 +14,7 @@ Feature: remove an existing code hosting override
       | default branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
-      | hosting platform            | up up up up enter |                                             |
+      | forge type                  | up up up up enter |                                             |
       | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |

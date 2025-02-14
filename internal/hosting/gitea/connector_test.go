@@ -129,7 +129,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// WHICH MAKES IT SLOW AND FLAKY.
 	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
 	//
-	// t.Run("repo is hosted by another hosting platform --> no connector", func(t *testing.T) {
+	// t.Run("repo is hosted by another forge type --> no connector", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingNone,

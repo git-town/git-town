@@ -14,7 +14,7 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
+// NewConnector provides an instance of the forge connector to use based on the given gitConfig.
 func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[hostingdomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.NormalConfig.RemoteURL(remote).Get()
 	hostingPlatform := config.NormalConfig.HostingPlatform

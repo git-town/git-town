@@ -7,7 +7,7 @@ type Data struct {
 	// Hostname override
 	Hostname string
 
-	// the Organization within the hosting platform that owns the repo
+	// the Organization within the forge that owns the repo
 	Organization string
 
 	// repo name within the organization

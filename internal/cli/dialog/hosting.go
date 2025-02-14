@@ -11,12 +11,12 @@ import (
 )
 
 const (
-	hostingPlatformTitle = `Hosting platform`
+	hostingPlatformTitle = `Forge type`
 	HostingPlatformHelp  = `
-Knowing the type of code hosting platform allows Git Town
-to open browser URLs and talk to the code hosting API.
+Knowing the type of forge allows Git Town
+to open browser URLs and talk to the forge API.
 Most people can leave this on "auto-detect".
-Only change this if your code hosting server uses as custom URL.
+Only change this if your forge uses as custom URL.
 
 `
 )
@@ -52,6 +52,6 @@ func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs 
 		return optA.Equal(optB)
 	})
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
-	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
+	fmt.Printf(messages.Forge, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
 	return newValue, aborted, err
 }

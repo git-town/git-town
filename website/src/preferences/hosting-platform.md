@@ -1,12 +1,12 @@
 # Hosting platform
 
-To talk to the API of your code hosting platform, Git Town needs to know which
-platform (GitHub, Gitlab, Bitbucket, etc) you use.
+To talk to the API of your forge, Git Town needs to know which forge type
+(GitHub, Gitlab, Bitbucket, etc) you use.
 
-By default, Git Town determines the code hosting platform by looking at the URL
-of the [development remote](dev-remote.md). If that's not successful, for
-example when using private instances of code hosting platforms, you can tell Git
-Town through this configuration setting which code hosting platform you use.
+By default, Git Town determines the forge type by looking at the URL of the
+[development remote](dev-remote.md). If that's not successful, for example when
+using a private forge, you can tell Git Town through this configuration setting
+which forge type you use.
 
 ## values
 
