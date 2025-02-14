@@ -13,8 +13,8 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
-	"github.com/git-town/git-town/v18/internal/forges"
-	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge"
+	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v18/internal/messages"
@@ -190,7 +190,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if !hasOldBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	connectorOpt, err := forges.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

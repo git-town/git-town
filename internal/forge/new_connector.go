@@ -1,15 +1,15 @@
-package forges
+package forge
 
 import (
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forges/bitbucketcloud"
-	"github.com/git-town/git-town/v18/internal/forges/bitbucketdatacenter"
-	"github.com/git-town/git-town/v18/internal/forges/gitea"
-	"github.com/git-town/git-town/v18/internal/forges/github"
-	"github.com/git-town/git-town/v18/internal/forges/gitlab"
-	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v18/internal/forge/gitea"
+	"github.com/git-town/git-town/v18/internal/forge/github"
+	"github.com/git-town/git-town/v18/internal/forge/gitlab"
+	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )

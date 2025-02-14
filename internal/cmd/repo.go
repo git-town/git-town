@@ -9,8 +9,8 @@ import (
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
-	"github.com/git-town/git-town/v18/internal/forges"
-	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge"
+	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -74,7 +74,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	if !hasRemote {
 		return repoData{connector: nil}, nil
 	}
-	connectorOpt, err := forges.NewConnector(repo.UnvalidatedConfig, remote, print.Logger{})
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, remote, print.Logger{})
 	if err != nil {
 		return data, err
 	}

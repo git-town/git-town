@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
-	"github.com/git-town/git-town/v18/internal/forges"
+	"github.com/git-town/git-town/v18/internal/forge"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/slice"
 	"github.com/git-town/git-town/v18/internal/messages"
@@ -115,7 +115,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connector, err := forges.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}

@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forges/bitbucketdatacenter"
-	"github.com/git-town/git-town/v18/internal/forges/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/shoenig/test/must"

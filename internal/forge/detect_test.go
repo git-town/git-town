@@ -1,10 +1,10 @@
-package forges_test
+package forge_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forges"
+	"github.com/git-town/git-town/v18/internal/forge"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -17,7 +17,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@bitbucket.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, None[configdomain.HostingPlatform]())
+		have := forge.Detect(url, None[configdomain.HostingPlatform]())
 		want := Some(configdomain.HostingPlatformBitbucket)
 		must.Eq(t, want, have)
 	})
@@ -26,7 +26,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@github.com:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, None[configdomain.HostingPlatform]())
+		have := forge.Detect(url, None[configdomain.HostingPlatform]())
 		want := Some(configdomain.HostingPlatformGitHub)
 		must.Eq(t, want, have)
 	})
@@ -35,7 +35,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, err := giturl.Parse("username@gitlab.com:git-town/docs.git").Get()
 		must.True(t, err)
-		have := forges.Detect(url, None[configdomain.HostingPlatform]())
+		have := forge.Detect(url, None[configdomain.HostingPlatform]())
 		want := Some(configdomain.HostingPlatformGitLab)
 		must.Eq(t, want, have)
 	})
@@ -44,7 +44,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@gitea.com:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, None[configdomain.HostingPlatform]())
+		have := forge.Detect(url, None[configdomain.HostingPlatform]())
 		want := Some(configdomain.HostingPlatformGitea)
 		must.Eq(t, want, have)
 	})
@@ -53,7 +53,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, Some(configdomain.HostingPlatformBitbucket))
+		have := forge.Detect(url, Some(configdomain.HostingPlatformBitbucket))
 		want := Some(configdomain.HostingPlatformBitbucket)
 		must.Eq(t, want, have)
 	})
@@ -62,7 +62,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, Some(configdomain.HostingPlatformBitbucketDatacenter))
+		have := forge.Detect(url, Some(configdomain.HostingPlatformBitbucketDatacenter))
 		want := Some(configdomain.HostingPlatformBitbucketDatacenter)
 		must.Eq(t, want, have)
 	})
@@ -71,7 +71,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, Some(configdomain.HostingPlatformGitHub))
+		have := forge.Detect(url, Some(configdomain.HostingPlatformGitHub))
 		want := Some(configdomain.HostingPlatformGitHub)
 		must.Eq(t, want, have)
 	})
@@ -80,7 +80,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, err := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, err)
-		have := forges.Detect(url, Some(configdomain.HostingPlatformGitLab))
+		have := forge.Detect(url, Some(configdomain.HostingPlatformGitLab))
 		want := Some(configdomain.HostingPlatformGitLab)
 		must.Eq(t, want, have)
 	})
@@ -89,7 +89,7 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forges.Detect(url, Some(configdomain.HostingPlatformGitea))
+		have := forge.Detect(url, Some(configdomain.HostingPlatformGitea))
 		want := Some(configdomain.HostingPlatformGitea)
 		must.Eq(t, want, have)
 	})

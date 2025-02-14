@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configfile"
 	"github.com/git-town/git-town/v18/internal/config/gitconfig"
 	"github.com/git-town/git-town/v18/internal/execute"
-	"github.com/git-town/git-town/v18/internal/forges"
+	"github.com/git-town/git-town/v18/internal/forge"
 	"github.com/git-town/git-town/v18/internal/git"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	configInterpreter "github.com/git-town/git-town/v18/internal/vm/interpreter/config"
@@ -107,7 +107,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 		return userChoice
 	}
 	if devURL, hasDevURL := config.NormalConfig.DevURL().Get(); hasDevURL {
-		return forges.Detect(devURL, userChoice)
+		return forge.Detect(devURL, userChoice)
 	}
 	return None[configdomain.HostingPlatform]()
 }
