@@ -1,9 +1,9 @@
-package hostingdomain_test
+package forgedomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -12,7 +12,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 
 	t.Run("no port in hostname", func(t *testing.T) {
 		t.Parallel()
-		config := hostingdomain.Data{
+		config := forgedomain.Data{
 			Hostname:     "git.example.com",
 			Organization: "org",
 			Repository:   "repo",
@@ -24,7 +24,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 
 	t.Run("port in hostname", func(t *testing.T) {
 		t.Parallel()
-		config := hostingdomain.Data{
+		config := forgedomain.Data{
 			Hostname:     "git.example.com:4022",
 			Organization: "org",
 			Repository:   "repo",

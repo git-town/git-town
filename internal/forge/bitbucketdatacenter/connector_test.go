@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -25,7 +25,7 @@ func TestBitbucketConnector(t *testing.T) {
 				HostingPlatform: Some(configdomain.HostingPlatformBitbucketDatacenter),
 				RemoteURL:       url,
 			})
-			wantConfig := hostingdomain.Data{
+			wantConfig := forgedomain.Data{
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",

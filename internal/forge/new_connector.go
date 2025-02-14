@@ -6,23 +6,23 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/forge/gitea"
 	"github.com/git-town/git-town/v18/internal/forge/github"
 	"github.com/git-town/git-town/v18/internal/forge/gitlab"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
-func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[hostingdomain.Connector], error) {
+func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[forgedomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.NormalConfig.RemoteURL(remote).Get()
 	hostingPlatform := config.NormalConfig.HostingPlatform
 	platform, hasPlatform := Detect(remoteURL, hostingPlatform).Get()
 	if !hasRemoteURL || !hasPlatform {
-		return None[hostingdomain.Connector](), nil
+		return None[forgedomain.Connector](), nil
 	}
-	var connector hostingdomain.Connector
+	var connector forgedomain.Connector
 	switch platform {
 	case configdomain.HostingPlatformBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
@@ -66,5 +66,5 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), err
 	}
-	return None[hostingdomain.Connector](), nil
+	return None[forgedomain.Connector](), nil
 }

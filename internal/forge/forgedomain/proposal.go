@@ -1,4 +1,4 @@
-package hostingdomain
+package forgedomain
 
 import "github.com/git-town/git-town/v18/internal/git/gitdomain"
 

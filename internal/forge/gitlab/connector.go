@@ -8,7 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
@@ -25,19 +25,19 @@ type Connector struct {
 	log print.Logger
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	if len(hostingdomain.ReadProposalOverride()) > 0 {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return Some(self.findProposalViaOverride)
 	}
 	if self.Data.APIToken.IsSome() {
 		return Some(self.findProposalViaAPI)
 	}
-	return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if self.APIToken.IsNone() {
-		return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 	}
 	return Some(self.searchProposal)
 }
@@ -60,7 +60,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -70,29 +70,29 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	switch len(mergeRequests) {
 	case 0:
 		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(strconv.Itoa(proposal.Number))
 		return Some(proposal), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
 	}
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
-	if proposalURLOverride == hostingdomain.OverrideNoProposal {
-		return None[hostingdomain.Proposal](), nil
+	if proposalURLOverride == forgedomain.OverrideNoProposal {
+		return None[forgedomain.Proposal](), nil
 	}
-	return Some(hostingdomain.Proposal{
+	return Some(forgedomain.Proposal{
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -102,7 +102,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -111,18 +111,18 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[h
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	switch len(mergeRequests) {
 	case 0:
 		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(proposal.Target.String())
 		return Some(proposal), nil
 	default:
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
 }
 
@@ -164,7 +164,7 @@ func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBra
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	gitlabData := Data{
 		APIToken: args.APIToken,
-		Data: hostingdomain.Data{
+		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
@@ -190,8 +190,8 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {
-	return hostingdomain.Proposal{
+func parseMergeRequest(mergeRequest *gitlab.MergeRequest) forgedomain.Proposal {
+	return forgedomain.Proposal{
 		MergeWithAPI: true,
 		Number:       mergeRequest.IID,
 		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),

@@ -1,4 +1,4 @@
-package hostingdomain
+package forgedomain
 
 import "errors"
 

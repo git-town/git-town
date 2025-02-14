@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
 	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
@@ -124,13 +124,13 @@ func executeSetParent(verbose configdomain.Verbose) error {
 type setParentData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
-	connector        Option[hostingdomain.Connector]
+	connector        Option[forgedomain.Connector]
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	mainBranch       gitdomain.LocalBranchName
-	proposal         Option[hostingdomain.Proposal]
+	proposal         Option[forgedomain.Proposal]
 	stashSize        gitdomain.StashSize
 }
 
@@ -196,7 +196,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	} else {
 		defaultChoice = mainBranch
 	}
-	proposalOpt := None[hostingdomain.Proposal]()
+	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	}

@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
@@ -76,7 +76,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 type LineageArgs struct {
 	BranchesAndTypes  configdomain.BranchesAndTypes
 	BranchesToVerify  gitdomain.LocalBranchNames
-	Connector         Option[hostingdomain.Connector]
+	Connector         Option[forgedomain.Connector]
 	DefaultChoice     gitdomain.LocalBranchName
 	DialogTestInputs  components.TestInputs
 	Lineage           configdomain.Lineage

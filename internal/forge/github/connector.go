@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/colors"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
@@ -24,24 +24,24 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	hostingdomain.Data
+	forgedomain.Data
 	APIToken Option[configdomain.GitHubToken]
 	client   *github.Client
 	log      print.Logger
 }
 
-func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
+func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	if len(hostingdomain.ReadProposalOverride()) > 0 {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return Some(self.findProposalViaOverride)
 	}
 	if self.APIToken.IsSome() {
 		return Some(self.findProposalViaAPI)
 	}
-	return None[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
@@ -63,9 +63,9 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if self.APIToken.IsNone() {
-		return None[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)]()
+		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 	}
 	return Some(self.searchProposal)
 }
@@ -88,7 +88,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -97,28 +97,28 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	if len(pullRequests) == 0 {
 		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
 	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
 	return Some(proposal), nil
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
-	if proposalURLOverride == hostingdomain.OverrideNoProposal {
-		return None[hostingdomain.Proposal](), nil
+	if proposalURLOverride == forgedomain.OverrideNoProposal {
+		return None[forgedomain.Proposal](), nil
 	}
-	return Some(hostingdomain.Proposal{
+	return Some(forgedomain.Proposal{
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -128,7 +128,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -136,14 +136,14 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[h
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	if len(pullRequests) == 0 {
 		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	if len(pullRequests) > 1 {
-		return None[hostingdomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
 	proposal := parsePullRequest(pullRequests[0])
 	self.log.Success(proposal.Target.String())
@@ -214,7 +214,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	}
 	return Connector{
 		APIToken: args.APIToken,
-		Data: hostingdomain.Data{
+		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
@@ -231,8 +231,8 @@ type NewConnectorArgs struct {
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
-func parsePullRequest(pullRequest *github.PullRequest) hostingdomain.Proposal {
-	return hostingdomain.Proposal{
+func parsePullRequest(pullRequest *github.PullRequest) forgedomain.Proposal {
+	return forgedomain.Proposal{
 		Number:       pullRequest.GetNumber(),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),

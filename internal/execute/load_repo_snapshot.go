@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks"
@@ -20,7 +20,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
-			Connector:         None[hostingdomain.Connector](),
+			Connector:         None[forgedomain.Connector](),
 			DialogTestInputs:  args.DialogTestInputs,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,

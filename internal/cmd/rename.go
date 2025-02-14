@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
 	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v18/internal/messages"
@@ -132,7 +132,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 type renameData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
-	connector                Option[hostingdomain.Connector]
+	connector                Option[forgedomain.Connector]
 	dialogTestInputs         components.TestInputs
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
@@ -141,8 +141,8 @@ type renameData struct {
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	oldBranch                gitdomain.BranchInfo
 	previousBranch           Option[gitdomain.LocalBranchName]
-	proposal                 Option[hostingdomain.Proposal]
-	proposalsOfChildBranches []hostingdomain.Proposal
+	proposal                 Option[forgedomain.Proposal]
+	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
 }
 
@@ -236,7 +236,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
-	proposalOpt := None[hostingdomain.Proposal]()
+	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	}
@@ -325,7 +325,7 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func updateChildBranchProposalsToBranch(prog *program.Program, proposals []hostingdomain.Proposal, target gitdomain.LocalBranchName) {
+func updateChildBranchProposalsToBranch(prog *program.Program, proposals []forgedomain.Proposal, target gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch:      target,

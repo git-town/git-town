@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
 	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/slice"
 	"github.com/git-town/git-town/v18/internal/messages"
@@ -26,14 +26,14 @@ type sharedShipData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	childBranches            gitdomain.LocalBranchNames
 	config                   config.ValidatedConfig
-	connector                Option[hostingdomain.Connector]
+	connector                Option[forgedomain.Connector]
 	dialogTestInputs         components.TestInputs
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
-	proposalsOfChildBranches []hostingdomain.Proposal
+	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
 	targetBranch             gitdomain.BranchInfo
 	targetBranchName         gitdomain.LocalBranchName
@@ -155,23 +155,23 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	}, false, nil
 }
 
-func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hostingdomain.Proposal {
+func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forgedomain.Proposal {
 	connector, hasConnector := args.ConnectorOpt.Get()
 	if !hasConnector {
-		return []hostingdomain.Proposal{}
+		return []forgedomain.Proposal{}
 	}
 	findProposal, canFindProposal := connector.FindProposalFn().Get()
 	if !canFindProposal {
-		return []hostingdomain.Proposal{}
+		return []forgedomain.Proposal{}
 	}
 	if args.Offline.IsTrue() {
-		return []hostingdomain.Proposal{}
+		return []forgedomain.Proposal{}
 	}
 	if !args.OldBranchHasTrackingBranch {
-		return []hostingdomain.Proposal{}
+		return []forgedomain.Proposal{}
 	}
 	childBranches := args.Lineage.Children(args.OldBranch)
-	result := make([]hostingdomain.Proposal, 0, len(childBranches))
+	result := make([]forgedomain.Proposal, 0, len(childBranches))
 	for _, childBranch := range childBranches {
 		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
 		if err != nil {
@@ -188,30 +188,30 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []hosti
 }
 
 type LoadProposalsOfChildBranchesArgs struct {
-	ConnectorOpt               Option[hostingdomain.Connector]
+	ConnectorOpt               Option[forgedomain.Connector]
 	Lineage                    configdomain.Lineage
 	Offline                    configdomain.Offline
 	OldBranch                  gitdomain.LocalBranchName
 	OldBranchHasTrackingBranch bool
 }
 
-func FindProposal(connectorOpt Option[hostingdomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[hostingdomain.Proposal] {
+func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[forgedomain.Proposal] {
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return None[hostingdomain.Proposal]()
+		return None[forgedomain.Proposal]()
 	}
 	target, hasTarget := targetBranch.Get()
 	if !hasTarget {
-		return None[hostingdomain.Proposal]()
+		return None[forgedomain.Proposal]()
 	}
 	findProposal, canFindProposal := connector.FindProposalFn().Get()
 	if !canFindProposal {
-		return None[hostingdomain.Proposal]()
+		return None[forgedomain.Proposal]()
 	}
 	proposal, err := findProposal(sourceBranch, target)
 	if err != nil {
 		print.Error(err)
-		return None[hostingdomain.Proposal]()
+		return None[forgedomain.Proposal]()
 	}
 	return proposal
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
 	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -80,7 +80,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return data, hostingdomain.UnsupportedServiceError()
+		return data, forgedomain.UnsupportedServiceError()
 	}
 	return repoData{
 		connector: connector,
@@ -88,5 +88,5 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 }
 
 type repoData struct {
-	connector hostingdomain.Connector
+	connector forgedomain.Connector
 }

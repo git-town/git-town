@@ -5,8 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/forge/github"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	"github.com/shoenig/test/must"
@@ -18,7 +18,7 @@ func TestConnector(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		connector := github.Connector{}
-		give := hostingdomain.Proposal{
+		give := forgedomain.Proposal{
 			Number: 1,
 			Title:  "my title",
 		}
@@ -82,7 +82,7 @@ func TestConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := github.Connector{
-					Data: hostingdomain.Data{
+					Data: forgedomain.Data{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
@@ -99,7 +99,7 @@ func TestConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.Connector{
-			Data: hostingdomain.Data{
+			Data: forgedomain.Data{
 				Hostname:     "github.com",
 				Organization: "organization",
 				Repository:   "repo",
@@ -124,7 +124,7 @@ func TestNewConnector(t *testing.T) {
 			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
-		wantConfig := hostingdomain.Data{
+		wantConfig := forgedomain.Data{
 			Hostname:     "github.com",
 			Organization: "git-town",
 			Repository:   "docs",
@@ -142,7 +142,7 @@ func TestNewConnector(t *testing.T) {
 			RemoteURL: remoteURL,
 		})
 		must.NoError(t, err)
-		wantConfig := hostingdomain.Data{
+		wantConfig := forgedomain.Data{
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",

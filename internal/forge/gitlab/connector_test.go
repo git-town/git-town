@@ -5,8 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/forge/gitlab"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	"github.com/shoenig/test/must"
@@ -18,14 +18,14 @@ func TestGitlabConnector(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		config := gitlab.Data{
-			Data: hostingdomain.Data{
+			Data: forgedomain.Data{
 				Hostname:     "",
 				Organization: "",
 				Repository:   "",
 			},
 			APIToken: configdomain.ParseGitLabToken(""),
 		}
-		give := hostingdomain.Proposal{
+		give := forgedomain.Proposal{
 			Number:       1,
 			MergeWithAPI: true,
 			Target:       "",
@@ -64,7 +64,7 @@ func TestGitlabConnector(t *testing.T) {
 				connector := gitlab.Connector{
 					Data: gitlab.Data{
 						APIToken: configdomain.ParseGitLabToken("apiToken"),
-						Data: hostingdomain.Data{
+						Data: forgedomain.Data{
 							Hostname:     "gitlab.com",
 							Organization: "organization",
 							Repository:   "repo",
@@ -93,7 +93,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
-			Data: hostingdomain.Data{
+			Data: forgedomain.Data{
 				Hostname:     "gitlab.com",
 				Organization: "git-town",
 				Repository:   "docs",
@@ -114,7 +114,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
-			Data: hostingdomain.Data{
+			Data: forgedomain.Data{
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",
@@ -135,7 +135,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Data{
-			Data: hostingdomain.Data{
+			Data: forgedomain.Data{
 				Hostname:     "gitlab.domain",
 				Organization: "group",
 				Repository:   "project",

@@ -5,17 +5,17 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 type Data struct {
-	hostingdomain.Data
+	forgedomain.Data
 	APIToken Option[configdomain.GitLabToken]
 }
 
-func (self Data) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
+func (self Data) DefaultProposalMessage(proposal forgedomain.Proposal) string {
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 

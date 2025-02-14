@@ -3,7 +3,7 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
@@ -24,11 +24,11 @@ func (self *ProposalUpdateTarget) AutomaticUndoError() error {
 func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
-		return hostingdomain.UnsupportedServiceError()
+		return forgedomain.UnsupportedServiceError()
 	}
 	updateProposalTarget, canUpdateProposalTarget := connector.UpdateProposalTargetFn().Get()
 	if !canUpdateProposalTarget {
-		return hostingdomain.UnsupportedServiceError()
+		return forgedomain.UnsupportedServiceError()
 	}
 	return updateProposalTarget(self.ProposalNumber, self.NewBranch, args.FinalMessages)
 }

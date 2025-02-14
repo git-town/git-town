@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
 	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/slice"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
@@ -122,14 +122,14 @@ type deleteData struct {
 	branchWhenDone           gitdomain.LocalBranchName
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
-	connector                Option[hostingdomain.Connector]
+	connector                Option[forgedomain.Connector]
 	dialogTestInputs         components.TestInputs
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	previousBranch           Option[gitdomain.LocalBranchName]
-	proposalsOfChildBranches []hostingdomain.Proposal
+	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
 }
 

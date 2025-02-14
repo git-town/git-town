@@ -8,7 +8,7 @@ import (
 	"github.com/carlmjohnson/requests"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
@@ -18,7 +18,7 @@ import (
 
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
-	hostingdomain.Data
+	forgedomain.Data
 	log      print.Logger
 	token    string
 	username string
@@ -28,7 +28,7 @@ type Connector struct {
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) Connector {
 	return Connector{
-		Data: hostingdomain.Data{
+		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
@@ -47,12 +47,12 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
+func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+	proposalURLOverride := forgedomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
 		return Some(self.findProposalViaOverride)
 	}
@@ -71,7 +71,7 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/projects/%s/repos/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	return Some(self.searchProposal)
 }
 
@@ -96,7 +96,7 @@ func (self Connector) apiBaseURL() string {
 	)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 
 	ctx := context.TODO()
@@ -113,12 +113,12 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		Fetch(ctx)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 
 	if len(resp.Values) == 0 {
 		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 
 	var needle *PullRequest
@@ -132,7 +132,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 
 	if needle == nil {
 		self.log.Success("no PR found matching source and target branch")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
@@ -141,14 +141,14 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	return Some(proposal), nil
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	proposalURLOverride := hostingdomain.ReadProposalOverride()
+	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
-	if proposalURLOverride == hostingdomain.OverrideNoProposal {
-		return None[hostingdomain.Proposal](), nil
+	if proposalURLOverride == forgedomain.OverrideNoProposal {
+		return None[forgedomain.Proposal](), nil
 	}
-	return Some(hostingdomain.Proposal{
+	return Some(forgedomain.Proposal{
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -158,7 +158,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[hostingdomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 
 	ctx := context.TODO()
@@ -173,12 +173,12 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[h
 		Fetch(ctx)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[hostingdomain.Proposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 
 	if len(resp.Values) == 0 {
 		self.log.Success("none")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 
 	var needle *PullRequest
@@ -192,7 +192,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[h
 
 	if needle == nil {
 		self.log.Success("no PR found matching source branch")
-		return None[hostingdomain.Proposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
@@ -201,8 +201,8 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[h
 	return Some(proposal), nil
 }
 
-func parsePullRequest(pullRequest PullRequest, repoURL string) hostingdomain.Proposal {
-	return hostingdomain.Proposal{
+func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Proposal {
+	return forgedomain.Proposal{
 		MergeWithAPI: false,
 		Number:       pullRequest.ID,
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),

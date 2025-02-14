@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
 	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/forge/hostingdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks"
@@ -151,7 +151,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		Backend:                 args.backend,
 		CommandsCounter:         args.commandsCounter,
 		Config:                  args.appendData.config,
-		Connector:               None[hostingdomain.Connector](),
+		Connector:               None[forgedomain.Connector](),
 		DialogTestInputs:        args.appendData.dialogTestInputs,
 		FinalMessages:           args.finalMessages,
 		Frontend:                args.frontend,
