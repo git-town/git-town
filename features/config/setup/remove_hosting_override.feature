@@ -1,5 +1,5 @@
 @messyoutput
-Feature: remove an existing forge override
+Feature: remove an existing forge type override
 
   Background:
     Given a Git repo with origin
