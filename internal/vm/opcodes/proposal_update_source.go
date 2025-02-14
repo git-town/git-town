@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// ProposalUpdateSource updates the source branch of the proposal with the given number at the code hosting platform.
+// ProposalUpdateSource updates the source branch of the proposal with the given number at the forge.
 type ProposalUpdateSource struct {
 	NewBranch               gitdomain.LocalBranchName
 	OldBranch               gitdomain.LocalBranchName

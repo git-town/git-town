@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// ProposalUpdateTarget updates the target of the proposal with the given number at the code hosting platform.
+// ProposalUpdateTarget updates the target of the proposal with the given number at the forge.
 type ProposalUpdateTarget struct {
 	NewBranch               gitdomain.LocalBranchName
 	OldBranch               gitdomain.LocalBranchName

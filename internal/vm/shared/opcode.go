@@ -29,6 +29,6 @@ type Opcode interface {
 	// All Git changes are automatically undone by the snapshot-based undo engine
 	// and don't need to be undone here.
 	// The undo program returned here is only for external changes
-	// like updating proposals at the code hosting platform.
+	// like updating proposals at the forge.
 	UndoExternalChangesProgram() []Opcode
 }

@@ -786,12 +786,13 @@ func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.
 	return runner.Run("git", "config", configdomain.KeyGiteaToken.String(), value.String())
 }
 
-// SetHostingPlatform sets the given code hosting platform.
+// SetHostingPlatform sets the given forge.
 func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.HostingPlatform) error {
 	return runner.Run("git", "config", configdomain.KeyHostingPlatform.String(), platform.String())
 }
 
-// SetHostingPlatform sets the given code hosting platform.
+// SetHostingPlatform sets the given forge.
+// TODO: delete these useless comments
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
 }

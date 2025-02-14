@@ -13,10 +13,10 @@ import (
 const (
 	hostingPlatformTitle = `Hosting platform`
 	HostingPlatformHelp  = `
-Knowing the type of code hosting platform allows Git Town
-to open browser URLs and talk to the code hosting API.
+Knowing the type of forge allows Git Town
+to open browser URLs and talk to the forge API.
 Most people can leave this on "auto-detect".
-Only change this if your code hosting server uses as custom URL.
+Only change this if your forge uses as custom URL.
 
 `
 )

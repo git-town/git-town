@@ -1,6 +1,6 @@
 # Delete tracking branch
 
-Some code hosting platforms like
+Some forges like
 [GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
 and
 [GitLab](http://ncugw.phy.ncu.edu.tw/gitlab/help/user/project/merge_requests/getting_started.md#deleting-the-source-branch)

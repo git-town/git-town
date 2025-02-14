@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// Connector describes the activities that Git Town can perform on code hosting platforms.
+// Connector describes the activities that Git Town can perform on forges.
 // Individual implementations exist to talk to specific hosting platforms.
 // Functions that might or might not be supported by a connector are implemented as higher-level functions,
 // i.e. they return an option of the function to call.

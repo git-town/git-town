@@ -1,5 +1,5 @@
 @messyoutput
-Feature: remove an existing code hosting override
+Feature: remove an existing forge override
 
   Background:
     Given a Git repo with origin

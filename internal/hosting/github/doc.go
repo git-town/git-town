@@ -1,2 +1,2 @@
-// Package github provides the code hosting connector for GitHub.
+// Package github provides the forge connector for GitHub.
 package github

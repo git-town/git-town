@@ -8,8 +8,7 @@ feature branches into the main branch.
 ### api
 
 When using the "api" ship strategy, [git town ship](../commands/ship.md) presses
-the "merge" button for the proposal in the web UI of your code hosting platform
-via an API call.
+the "merge" button for the proposal in the web UI of your forge via an API call.
 
 You need to configure an API token in the
 [setup assistant](../commands/config-setup.md) for this to work.

@@ -1,2 +1,2 @@
-// Package gitea provides the code hosting connector for Gitea.
+// Package gitea provides the forge connector for Gitea.
 package gitea

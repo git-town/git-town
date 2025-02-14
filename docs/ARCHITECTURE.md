@@ -23,7 +23,7 @@ The Git Town codebase separates independent parts of the complex domain model
 into orthogonal, composable _subsystems_. Subsystems define their own domain
 model types, data structures, and business logic. Examples for subsystems are
 configuration data, the interpreter that executes programs, executing shell
-commands, interacting with code hosting APIs, determining undo operations, etc.
+commands, interacting with forge APIs, determining undo operations, etc.
 
 Subsystems define concepts and data types in dedicated `*domain` packages so
 that they can all use each other's data types without introducing cyclic

@@ -2,7 +2,7 @@ package hostingdomain
 
 import "errors"
 
-// UnsupportedServiceError communicates that the origin remote runs an unknown code hosting platform.
+// UnsupportedServiceError communicates that the origin remote runs an unknown forge.
 func UnsupportedServiceError() error {
 	return errors.New(`unsupported hosting platform
 
