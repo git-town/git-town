@@ -5,8 +5,8 @@ To talk to the API of your forge, Git Town needs to know which forge type
 
 By default, Git Town determines the forge type by looking at the URL of the
 [development remote](dev-remote.md). If that's not successful, for example when
-using private instances of forges, you can tell Git Town through this
-configuration setting which forge you use.
+using a private forge, you can tell Git Town through this configuration setting
+which forge type you use.
 
 ## values
 
