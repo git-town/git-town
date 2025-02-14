@@ -21,7 +21,7 @@ Feature: change existing information in Git metadata
       | default branch type                       | down enter             |
       | feature regex                             | u s e r enter          |
       | dev-remote                                | enter                  |
-      | set github as hosting service             | up up enter            |
+      | set forge type to "github"                | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
       | origin hostname                           | c o d e enter          |
       | sync-feature-strategy                     | down enter             |

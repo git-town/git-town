@@ -14,7 +14,7 @@ const (
 	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
 	ShipDeleteTrackingBranchHelp  = `
 Should "git town ship" delete the tracking branch?
-You want to disable this if your code hosting platform
+You want to disable this if your forge
 (GitHub, GitLab, etc) deletes head branches when
 merging pull requests through its UI.
 
@@ -29,7 +29,7 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 		},
 		{
 			Data: false,
-			Text: `no, my code hosting platform deletes tracking branches`,
+			Text: `no, my forge deletes branches after merging them`,
 		},
 	}
 	var defaultPos int

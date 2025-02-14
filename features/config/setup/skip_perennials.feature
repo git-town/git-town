@@ -14,7 +14,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | default branch type         | enter      |                                             |
       | feature regex               | enter      |                                             |
       | dev-remote                  | enter      |                                             |
-      | hosting platform            | enter      |                                             |
+      | forge type                  | enter      |                                             |
       | origin hostname             | enter      |                                             |
       | sync-feature-strategy       | enter      |                                             |
       | sync-perennial-strategy     | enter      |                                             |

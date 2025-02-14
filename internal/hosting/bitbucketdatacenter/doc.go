@@ -1,2 +1,2 @@
-// Package bitbucketdatacenter provides the code hosting connector for BitBucket.
+// Package bitbucketdatacenter provides the forge connector for BitBucket.
 package bitbucketdatacenter

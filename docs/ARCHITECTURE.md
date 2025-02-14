@@ -23,7 +23,7 @@ The Git Town codebase separates independent parts of the complex domain model
 into orthogonal, composable _subsystems_. Subsystems define their own domain
 model types, data structures, and business logic. Examples for subsystems are
 configuration data, the interpreter that executes programs, executing shell
-commands, interacting with code hosting APIs, determining undo operations, etc.
+commands, interacting with forge APIs, determining undo operations, etc.
 
 Subsystems define concepts and data types in dedicated `*domain` packages so
 that they can all use each other's data types without introducing cyclic
@@ -34,11 +34,11 @@ dependencies.
 Git Town addresses requirements 1 and 2 via an
 [interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing)) that
 executes self-modifying code consisting of Git-related _opcodes_. Most of these
-opcodes execute Git commands. Some open browser windows or talk to codehosting
-APIs. Others inspect the state at runtime and inject new opcodes into the
-running program. Making Git Town VM programs self-modifying has the advantage
-that the entire runstate of the program is encoded in the opcodes, and there are
-no variables or other state to persist when a program is interrupted, persisted,
+opcodes execute Git commands. Some open browser windows or talk to forge APIs.
+Others inspect the state at runtime and inject new opcodes into the running
+program. Making Git Town VM programs self-modifying has the advantage that the
+entire runstate of the program is encoded in the opcodes, and there are no
+variables or other state to persist when a program is interrupted, persisted,
 loaded from disk, and continued. This keeps the execution framework simple and
 deterministic.
 

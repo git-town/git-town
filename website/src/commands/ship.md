@@ -67,7 +67,7 @@ If you have configured the API tokens for
 [Gitea](../preferences/gitea-token.md) and the branch to be shipped has an open
 proposal, this command merges the proposal for the current branch.
 
-If your hosting platform automatically deletes shipped branches, for example
+If your forge automatically deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
 you can
 [disable deleting remote branches](../preferences/ship-delete-tracking-branch.md).

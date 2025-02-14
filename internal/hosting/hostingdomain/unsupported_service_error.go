@@ -2,9 +2,9 @@ package hostingdomain
 
 import "errors"
 
-// UnsupportedServiceError communicates that the origin remote runs an unknown code hosting platform.
+// UnsupportedServiceError communicates that the origin remote runs an unknown forge type.
 func UnsupportedServiceError() error {
-	return errors.New(`unsupported hosting platform
+	return errors.New(`unsupported forge type
 
 This command requires hosting on one of these services:
 * Bitbucket

@@ -5,10 +5,10 @@ git town propose [-b <text> | --body <text>] [-f <path> | --body-file <path>] [-
 ```
 
 The _propose_ command helps create a new pull request (also known as merge
-request) for the current feature branch. It opens your code hosting platform's
-website to create a new proposal in your browser and pre-populates information
-like branch and source/target repository. It also [syncs](sync.md) the branch to
-merge before opening the pull request.
+request) for the current feature branch. It opens your forge's website to create
+a new proposal in your browser and pre-populates information like branch and
+source/target repository. It also [syncs](sync.md) the branch to merge before
+opening the pull request.
 
 You can create pull requests for repositories hosted on:
 
@@ -56,7 +56,7 @@ determine the repository state.
 
 ## Configuration
 
-You can configure the hosting platform type with the
+You can configure the forge type with the
 [hosting-platform](../preferences/hosting-platform.md) setting.
 
 When using SSH identities, this command uses the hostname in the

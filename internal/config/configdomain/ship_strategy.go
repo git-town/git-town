@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ShipStrategyAPI         ShipStrategy = "api"          // shipping via the code hosting API
+	ShipStrategyAPI         ShipStrategy = "api"          // shipping via the forge API
 	ShipStrategyAlwaysMerge ShipStrategy = "always-merge" // shipping by doing a local merge commit (merge --no-ff)
 	ShipStrategyFastForward ShipStrategy = "fast-forward" // shipping by doing a local fast-forward
 	ShipStrategySquashMerge ShipStrategy = "squash-merge" // shipping by doing a local squash-merge
