@@ -2,7 +2,7 @@ package hostingdomain
 
 import "errors"
 
-// UnsupportedServiceError communicates that the origin remote runs an unknown forge.
+// UnsupportedServiceError communicates that the origin remote runs an unknown forge type.
 func UnsupportedServiceError() error {
 	return errors.New(`unsupported forge type
 
