@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	hostingPlatformTitle = `Hosting platform`
+	hostingPlatformTitle = `Forge type`
 	HostingPlatformHelp  = `
 Knowing the type of forge allows Git Town
 to open browser URLs and talk to the forge API.

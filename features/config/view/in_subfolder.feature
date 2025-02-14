@@ -34,7 +34,7 @@ Feature: show the configuration from a subfolder
 
       Hosting:
         development remote: origin
-        hosting platform: (not set)
+        forge type: (not set)
         origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)

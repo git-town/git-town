@@ -79,7 +79,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())
-	print.Entry("hosting platform", format.OptionalStringerSetting(config.NormalConfig.HostingPlatform))
+	print.Entry("forge type", format.OptionalStringerSetting(config.NormalConfig.HostingPlatform))
 	print.Entry("origin hostname", format.OptionalStringerSetting(config.NormalConfig.HostingOriginHostname))
 	print.Entry("Bitbucket username", format.OptionalStringerSetting(config.NormalConfig.BitbucketUsername))
 	print.Entry("Bitbucket app password", format.OptionalStringerSetting(config.NormalConfig.BitbucketAppPassword))

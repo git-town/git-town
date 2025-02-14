@@ -8,7 +8,7 @@ type Proposal struct {
 	// whether this proposal can be merged via the API
 	MergeWithAPI bool
 
-	// the number used to identify the proposal on the hosting platform
+	// the number used to identify the proposal on the forge
 	Number int
 
 	// name of the source branch ("head") of this proposal

@@ -19,7 +19,7 @@ Feature: Accepting all default values leads to a working setup
       | default branch type         | enter |
       | feature regex               | enter |
       | dev-remote                  | enter |
-      | hosting platform            | enter |
+      | forge type                  | enter |
       | origin hostname             | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |

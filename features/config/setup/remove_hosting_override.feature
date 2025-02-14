@@ -14,7 +14,7 @@ Feature: remove an existing forge override
       | default branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
-      | hosting platform            | up up up up enter |                                             |
+      | forge type                  | up up up up enter |                                             |
       | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |

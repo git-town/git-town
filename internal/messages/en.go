@@ -126,7 +126,7 @@ END OUTPUT FROM 'git branch -vva'
 	HostingGiteaNotImplemented          = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGiteaUpdatePRViaAPI          = "Gitea API: Updating base branch for PR #%d to #%s"
 	HostingGithubMergingViaAPI          = "GitHub API: merging PR %s ... "
-	HostingPlatformUnknown              = "unknown hosting platform: %q"
+	HostingPlatformUnknown              = "unknown forge type: %q"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
@@ -173,8 +173,8 @@ END OUTPUT FROM 'git branch -vva'
 	ProposalNoNumberGiven                 = "no proposal number given"
 	ProposalNoParent                      = "branch %q has no parent and can therefore not be proposed"
 	ProposalNotFoundForBranch             = "cannot determine proposal for branch %q: %w"
-	ProposalSourceCannotUpdate            = "cannot update the proposal source branch of your hosting platform"
-	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d via the API"
+	ProposalSourceCannotUpdate            = "cannot update the proposal source branch on your forge"
+	ProposalTargetBranchUpdateProblem     = "cannot update the target branch of proposal %d on your forge"
 	ProposalURLProblem                    = "cannot determine proposal URL from %q to %q: %w"
 	PrototypeBranchIsNowPrototype         = "branch %q is now a prototype branch\n"
 	PrototypeRemoved                      = "branch %q is no longer a prototype branch"
@@ -214,7 +214,7 @@ and will be removed in future versions of Git Town.`
 	ShipBranchIsInOtherWorktree             = "branch %q is checked out in another worktree, please ship from there"
 	ShipBranchNotInSync                     = "branch %q is not in sync"
 	ShipAbortedMergeError                   = "aborted because merge exited with error"
-	ShipAPIConnectorRequired                = "please configure API access to your hosting platform, more info at https://www.git-town.com/configuration#access-tokens"
+	ShipAPIConnectorRequired                = "please configure API access to your forge, more info at https://www.git-town.com/configuration#access-tokens"
 	ShipAPIConnectorUnsupported             = "the Git Town driver for your forge does not support shipping via the API"
 	ShipBranchOtherWorktree                 = "branch %q is active in another worktree"
 	ShipBranchHasNoParent                   = "branch %q has no parent to ship into"

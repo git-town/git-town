@@ -363,7 +363,7 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 	return gitdomain.Remote(output)
 }
 
-// DeleteHostingPlatform removes the hosting platform config entry.
+// DeleteHostingPlatform removes the forge type config entry.
 func (self *Commands) DeleteHostingPlatform(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyHostingPlatform.String())
 }

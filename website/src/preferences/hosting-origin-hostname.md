@@ -6,8 +6,8 @@ SSH config file.
 
 ## config file
 
-In the [config file](../configuration-file.md) the hosting platform is part of
-the `[hosting]` section:
+In the [config file](../configuration-file.md) the forge is part of the
+`[hosting]` section:
 
 ```toml
 [hosting]
