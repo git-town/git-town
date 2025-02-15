@@ -344,10 +344,14 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 	return gitdomain.Remote(output)
 }
 
-// DeleteForgeType removes the forge type config entry.
-// TODO: rename to DeleteConfigEntryForgeType
-func (self *Commands) DeleteForgeType(runner gitdomain.Runner) error {
+// DeleteConfigEntryForgeType removes the forge type config entry.
+func (self *Commands) DeleteConfigEntryForgeType(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
+}
+
+// DeleteConfigEntryOriginHostname removes the origin hostname override
+func (self *Commands) DeleteConfigEntryOriginHostname(runner gitdomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -357,12 +361,6 @@ func (self *Commands) DeleteLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) DeleteLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "-D", name.String())
-}
-
-// DeleteOriginHostname removes the origin hostname override
-// TODO: rename to DeleteConfigEntryOriginHostname
-func (self *Commands) DeleteOriginHostname(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
 }
 
 func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdomain.RemoteBranchName) error {
@@ -379,9 +377,7 @@ func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--hard")
 }
 
-// DropStash removes the most recent stash entry
-// TODO: rename to DropMostRecentStash
-func (self *Commands) DropStash(runner gitdomain.Runner) error {
+func (self *Commands) DropMostRecentStash(runner gitdomain.Runner) error {
 	return runner.Run("git", "stash", "drop")
 }
 
