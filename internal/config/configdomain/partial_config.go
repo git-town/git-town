@@ -24,7 +24,7 @@ type PartialConfig struct {
 	GitUserName              Option[GitUserName]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          Option[HostingPlatform]
+	HostingPlatform          Option[ForgeType]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[BranchType]
@@ -63,7 +63,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
-	hostingPlatform, err := ParseHostingPlatform(snapshot[KeyHostingPlatform])
+	hostingPlatform, err := ParseForgeType(snapshot[KeyHostingPlatform])
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)

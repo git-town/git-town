@@ -130,7 +130,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.HostingGitlabMergingViaAPI, number)
+	self.log.Start(messages.ForgeGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.Ptr(message.String()),
@@ -147,7 +147,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})

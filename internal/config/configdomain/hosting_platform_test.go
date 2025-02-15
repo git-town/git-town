@@ -13,23 +13,23 @@ func TestNewHostingPlatform(t *testing.T) {
 
 	t.Run("acceptable content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]Option[configdomain.HostingPlatform]{
-			"":                     None[configdomain.HostingPlatform](),
-			"bitbucket":            Some(configdomain.HostingPlatformBitbucket),
-			"BitBucket":            Some(configdomain.HostingPlatformBitbucket),
-			"BITBUCKET":            Some(configdomain.HostingPlatformBitbucket),
-			"bitbucket-datacenter": Some(configdomain.HostingPlatformBitbucketDatacenter),
-			"BitBucket-Datacenter": Some(configdomain.HostingPlatformBitbucketDatacenter),
-			"BITBUCKET-DATACENTER": Some(configdomain.HostingPlatformBitbucketDatacenter),
-			"github":               Some(configdomain.HostingPlatformGitHub),
-			"GitHub":               Some(configdomain.HostingPlatformGitHub),
-			"gitlab":               Some(configdomain.HostingPlatformGitLab),
-			"GitLab":               Some(configdomain.HostingPlatformGitLab),
-			"gitea":                Some(configdomain.HostingPlatformGitea),
-			"Gitea":                Some(configdomain.HostingPlatformGitea),
+		tests := map[string]Option[configdomain.ForgeType]{
+			"":                     None[configdomain.ForgeType](),
+			"bitbucket":            Some(configdomain.ForgeTypeBitbucket),
+			"BitBucket":            Some(configdomain.ForgeTypeBitbucket),
+			"BITBUCKET":            Some(configdomain.ForgeTypeBitbucket),
+			"bitbucket-datacenter": Some(configdomain.ForgeTypeBitbucketDatacenter),
+			"BitBucket-Datacenter": Some(configdomain.ForgeTypeBitbucketDatacenter),
+			"BITBUCKET-DATACENTER": Some(configdomain.ForgeTypeBitbucketDatacenter),
+			"github":               Some(configdomain.ForgeTypeGitHub),
+			"GitHub":               Some(configdomain.ForgeTypeGitHub),
+			"gitlab":               Some(configdomain.ForgeTypeGitLab),
+			"GitLab":               Some(configdomain.ForgeTypeGitLab),
+			"gitea":                Some(configdomain.ForgeTypeGitea),
+			"Gitea":                Some(configdomain.ForgeTypeGitea),
 		}
 		for give, want := range tests {
-			have, err := configdomain.ParseHostingPlatform(give)
+			have, err := configdomain.ParseForgeType(give)
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
@@ -37,7 +37,7 @@ func TestNewHostingPlatform(t *testing.T) {
 
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
-		_, err := configdomain.ParseHostingPlatform("zonk")
+		_, err := configdomain.ParseForgeType("zonk")
 		must.Error(t, err)
 	})
 }

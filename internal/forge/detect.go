@@ -11,21 +11,21 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-func Detect(remoteURL giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func Detect(remoteURL giturl.Parts, userOverride Option[configdomain.ForgeType]) Option[configdomain.ForgeType] {
 	if userOverride.IsSome() {
 		return userOverride
 	}
-	detectors := map[configdomain.HostingPlatform]func(giturl.Parts) bool{
-		configdomain.HostingPlatformBitbucket:           bitbucketcloud.Detect,
-		configdomain.HostingPlatformBitbucketDatacenter: bitbucketdatacenter.Detect,
-		configdomain.HostingPlatformGitea:               gitea.Detect,
-		configdomain.HostingPlatformGitHub:              github.Detect,
-		configdomain.HostingPlatformGitLab:              gitlab.Detect,
+	detectors := map[configdomain.ForgeType]func(giturl.Parts) bool{
+		configdomain.ForgeTypeBitbucket:           bitbucketcloud.Detect,
+		configdomain.ForgeTypeBitbucketDatacenter: bitbucketdatacenter.Detect,
+		configdomain.ForgeTypeGitea:               gitea.Detect,
+		configdomain.ForgeTypeGitHub:              github.Detect,
+		configdomain.ForgeTypeGitLab:              gitlab.Detect,
 	}
 	for platform, detector := range detectors {
 		if detector(remoteURL) {
 			return Some(platform)
 		}
 	}
-	return None[configdomain.HostingPlatform]()
+	return None[configdomain.ForgeType]()
 }

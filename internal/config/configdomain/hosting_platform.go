@@ -8,41 +8,40 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// HostingPlatform defines legal values for the "git-town.hosting-platform" config setting.
-// TODO: rename to ForgeType
-type HostingPlatform string
+// ForgeType defines legal values for the "git-town.hosting-platform" config setting.
+type ForgeType string
 
-func (self HostingPlatform) String() string { return string(self) }
+func (self ForgeType) String() string { return string(self) }
 
 const (
-	HostingPlatformBitbucket           = HostingPlatform("bitbucket")
-	HostingPlatformBitbucketDatacenter = HostingPlatform("bitbucket-datacenter")
-	HostingPlatformGitHub              = HostingPlatform("github")
-	HostingPlatformGitLab              = HostingPlatform("gitlab")
-	HostingPlatformGitea               = HostingPlatform("gitea")
+	ForgeTypeBitbucket           = ForgeType("bitbucket")
+	ForgeTypeBitbucketDatacenter = ForgeType("bitbucket-datacenter")
+	ForgeTypeGitHub              = ForgeType("github")
+	ForgeTypeGitLab              = ForgeType("gitlab")
+	ForgeTypeGitea               = ForgeType("gitea")
 )
 
-// ParseHostingPlatform provides the HostingPlatform enum matching the given text.
-func ParseHostingPlatform(platformName string) (Option[HostingPlatform], error) {
+// ParseForgeType provides the HostingPlatform enum matching the given text.
+func ParseForgeType(platformName string) (Option[ForgeType], error) {
 	if platformName == "" {
-		return None[HostingPlatform](), nil
+		return None[ForgeType](), nil
 	}
 	platformNameLower := strings.ToLower(platformName)
-	for _, hostingPlatform := range hostingPlatforms() {
-		if platformNameLower == hostingPlatform.String() {
-			return Some(hostingPlatform), nil
+	for _, forgeType := range forgeTypes() {
+		if platformNameLower == forgeType.String() {
+			return Some(forgeType), nil
 		}
 	}
-	return None[HostingPlatform](), fmt.Errorf(messages.HostingPlatformUnknown, platformName)
+	return None[ForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, platformName)
 }
 
-// hostingPlatforms provides all legal values for HostingPlatform.
-func hostingPlatforms() []HostingPlatform {
-	return []HostingPlatform{
-		HostingPlatformBitbucket,
-		HostingPlatformBitbucketDatacenter,
-		HostingPlatformGitHub,
-		HostingPlatformGitLab,
-		HostingPlatformGitea,
+// forgeTypes provides all legal values for HostingPlatform.
+func forgeTypes() []ForgeType {
+	return []ForgeType{
+		ForgeTypeBitbucket,
+		ForgeTypeBitbucketDatacenter,
+		ForgeTypeGitHub,
+		ForgeTypeGitLab,
+		ForgeTypeGitea,
 	}
 }

@@ -787,7 +787,7 @@ func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.
 }
 
 // SetHostingPlatform sets the given forge.
-func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.HostingPlatform) error {
+func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.ForgeType) error {
 	return runner.Run("git", "config", configdomain.KeyHostingPlatform.String(), platform.String())
 }
 

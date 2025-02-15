@@ -42,7 +42,7 @@ func NewConnector(args NewConnectorArgs) Connector {
 
 type NewConnectorArgs struct {
 	AppPassword     Option[configdomain.BitbucketAppPassword]
-	HostingPlatform Option[configdomain.HostingPlatform]
+	HostingPlatform Option[configdomain.ForgeType]
 	Log             print.Logger
 	RemoteURL       giturl.Parts
 	UserName        Option[configdomain.BitbucketUsername]
@@ -236,7 +236,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.HostingBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	self.log.Start(messages.ForgeBitbucketMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	_, err := self.client.Repositories.PullRequests.Merge(&bitbucket.PullRequestsOptions{
 		ID:       strconv.Itoa(number),
 		Owner:    self.Organization,
