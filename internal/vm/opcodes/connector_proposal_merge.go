@@ -54,7 +54,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		commitMessage, err = args.Git.LastCommitMessage(args.Backend)
+		commitMessage, err = args.Git.HeadCommitMessage(args.Backend)
 		if err != nil {
 			return err
 		}

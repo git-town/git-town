@@ -114,7 +114,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			return emptyOpenRepoResult(), err
 		}
 		if currentDirectory != rootDir.String() {
-			err = gitCommands.NavigateToDir(rootDir)
+			err = gitCommands.ChangeDir(rootDir)
 		}
 	}
 	return OpenRepoResult{

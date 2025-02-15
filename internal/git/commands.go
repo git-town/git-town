@@ -486,9 +486,8 @@ func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mai
 	return len(out) > 0, nil
 }
 
-// LastCommitMessage provides the commit message for the last commit.
-// TODO: rename to HeadCommitMessage
-func (self *Commands) LastCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
+// HeadCommitMessage provides the commit message for the last commit.
+func (self *Commands) HeadCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
 	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
@@ -525,8 +524,7 @@ func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage con
 	return runner.Run("git", gitArgs...)
 }
 
-// TODO: rename to ChangeDir
-func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
+func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
 	return os.Chdir(dir.String())
 }
 
