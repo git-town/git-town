@@ -98,14 +98,10 @@ func (self Connector) apiBaseURL() string {
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-
 	ctx := context.TODO()
-
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
 	toRefID := fmt.Sprintf("refs/heads/%v", target)
-
 	var resp PullRequestResponse
-
 	err := requests.URL(self.apiBaseURL()).
 		BasicAuth(self.username, self.token).
 		Param("at", toRefID).
@@ -115,28 +111,22 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		self.log.Failed(err.Error())
 		return None[forgedomain.Proposal](), err
 	}
-
 	if len(resp.Values) == 0 {
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
-
 	var needle *PullRequest
-
 	for _, pr := range resp.Values {
 		if pr.FromRef.ID == fromRefID && pr.ToRef.ID == toRefID {
 			needle = &pr
 			break
 		}
 	}
-
 	if needle == nil {
 		self.log.Success("no PR found matching source and target branch")
 		return None[forgedomain.Proposal](), nil
 	}
-
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
-
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(proposal), nil
 }
@@ -160,13 +150,9 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-
 	ctx := context.TODO()
-
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
-
 	var resp PullRequestResponse
-
 	err := requests.URL(self.apiBaseURL()).
 		BasicAuth(self.username, self.token).
 		ToJSON(&resp).
@@ -175,28 +161,22 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		self.log.Failed(err.Error())
 		return None[forgedomain.Proposal](), err
 	}
-
 	if len(resp.Values) == 0 {
 		self.log.Success("none")
 		return None[forgedomain.Proposal](), nil
 	}
-
 	var needle *PullRequest
-
 	for _, pr := range resp.Values {
 		if pr.FromRef.ID == fromRefID {
 			needle = &pr
 			break
 		}
 	}
-
 	if needle == nil {
 		self.log.Success("no PR found matching source branch")
 		return None[forgedomain.Proposal](), nil
 	}
-
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
-
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(proposal), nil
 }
