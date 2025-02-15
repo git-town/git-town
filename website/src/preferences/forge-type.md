@@ -26,7 +26,7 @@ the `[hosting]` section:
 
 ```toml
 [hosting]
-type = "<value>"
+platform = "<value>"
 ```
 
 ## Git metadata
