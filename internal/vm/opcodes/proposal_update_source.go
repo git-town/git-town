@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
@@ -25,7 +25,7 @@ func (self *ProposalUpdateSource) AutomaticUndoError() error {
 func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
-		return hostingdomain.UnsupportedServiceError()
+		return forgedomain.UnsupportedServiceError()
 	}
 	updateProposalSource, canUpdateProposalSource := connector.UpdateProposalSourceFn().Get()
 	if !canUpdateProposalSource {

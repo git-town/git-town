@@ -13,9 +13,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forge"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
@@ -120,20 +120,20 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 type mergeData struct {
 	branchesSnapshot                gitdomain.BranchesSnapshot
 	config                          config.ValidatedConfig
-	connector                       Option[hostingdomain.Connector]
+	connector                       Option[forgedomain.Connector]
 	dialogTestInputs                components.TestInputs
 	grandParentBranch               gitdomain.LocalBranchName
 	hasOpenChanges                  bool
 	initialBranch                   gitdomain.LocalBranchName
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
-	initialBranchProposal           Option[hostingdomain.Proposal]
+	initialBranchProposal           Option[forgedomain.Proposal]
 	initialBranchType               configdomain.BranchType
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	parentBranchInfo                gitdomain.BranchInfo
-	parentBranchProposal            Option[hostingdomain.Proposal]
+	parentBranchProposal            Option[forgedomain.Proposal]
 	parentBranchType                configdomain.BranchType
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
@@ -176,7 +176,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		return mergeData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return mergeData{}, false, err
 	}
@@ -229,8 +229,8 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
-	initialBranchProposal := None[hostingdomain.Proposal]()
-	parentBranchProposal := None[hostingdomain.Proposal]()
+	initialBranchProposal := None[forgedomain.Proposal]()
+	parentBranchProposal := None[forgedomain.Proposal]()
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
 		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
 			initialBranchProposal, err = findProposal(initialBranch, parentBranch)

@@ -18,8 +18,8 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/config/configfile"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/git-town/git-town/v18/test/asserts"
 	"github.com/git-town/git-town/v18/test/commands"
@@ -238,7 +238,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a proposal for this branch does not exist`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.TestRunner.ProposalOverride = Some(hostingdomain.OverrideNoProposal)
+		devRepo.TestRunner.ProposalOverride = Some(forgedomain.OverrideNoProposal)
 	})
 
 	sc.Step(`^a proposal for this branch exists at "([^"]+)"`, func(ctx context.Context, url string) {
