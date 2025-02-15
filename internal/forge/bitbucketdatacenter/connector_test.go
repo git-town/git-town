@@ -22,7 +22,7 @@ func TestBitbucketConnector(t *testing.T) {
 			url, has := giturl.Parse("ssh://git@custom-url.com:7999/git-town/docs.git").Get()
 			must.True(t, has)
 			have := bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-				HostingPlatform: Some(configdomain.HostingPlatformBitbucketDatacenter),
+				HostingPlatform: Some(configdomain.ForgeTypeBitbucketDatacenter),
 				RemoteURL:       url,
 			})
 			wantConfig := forgedomain.Data{
@@ -39,7 +39,7 @@ func TestBitbucketConnector(t *testing.T) {
 		url, has := giturl.Parse("ssh://git@custom-url.com:7999/git-town/docs.git").Get()
 		must.True(t, has)
 		connector := bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			HostingPlatform: None[configdomain.HostingPlatform](),
+			HostingPlatform: None[configdomain.ForgeType](),
 			RemoteURL:       url,
 		})
 		have, err := connector.NewProposalURL("branch", "parent-branch", "main", "", "")

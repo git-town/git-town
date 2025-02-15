@@ -41,7 +41,7 @@ func NewConnector(args NewConnectorArgs) Connector {
 
 type NewConnectorArgs struct {
 	AppPassword     Option[configdomain.BitbucketAppPassword]
-	HostingPlatform Option[configdomain.HostingPlatform]
+	HostingPlatform Option[configdomain.ForgeType]
 	Log             print.Logger
 	RemoteURL       giturl.Parts
 	UserName        Option[configdomain.BitbucketUsername]

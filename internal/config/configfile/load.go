@@ -48,7 +48,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
-	var hostingPlatform Option[configdomain.HostingPlatform]
+	var hostingPlatform Option[configdomain.ForgeType]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.BranchType]
 	var observedRegex Option[configdomain.ObservedRegex]
@@ -149,7 +149,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.Platform != nil {
-			hostingPlatform, err = configdomain.ParseHostingPlatform(*data.Hosting.Platform)
+			hostingPlatform, err = configdomain.ParseForgeType(*data.Hosting.Platform)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}

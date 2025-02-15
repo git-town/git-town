@@ -102,14 +102,14 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option[configdomain.ForgeType]) Option[configdomain.ForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
 	if devURL, hasDevURL := config.NormalConfig.DevURL().Get(); hasDevURL {
 		return forge.Detect(devURL, userChoice)
 	}
-	return None[configdomain.HostingPlatform]()
+	return None[configdomain.ForgeType]()
 }
 
 func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, err error) {
@@ -159,7 +159,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	}
 	if platform, has := determineHostingPlatform(config, data.userInput.config.NormalConfig.HostingPlatform).Get(); has {
 		switch platform {
-		case configdomain.HostingPlatformBitbucket, configdomain.HostingPlatformBitbucketDatacenter:
+		case configdomain.ForgeTypeBitbucket, configdomain.ForgeTypeBitbucketDatacenter:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
@@ -168,17 +168,17 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			if err != nil || aborted {
 				return aborted, err
 			}
-		case configdomain.HostingPlatformGitea:
+		case configdomain.ForgeTypeGitea:
 			data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
-		case configdomain.HostingPlatformGitHub:
+		case configdomain.ForgeTypeGitHub:
 			data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
 			}
-		case configdomain.HostingPlatformGitLab:
+		case configdomain.ForgeTypeGitLab:
 			data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, err
@@ -439,7 +439,7 @@ func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], gitCom
 	return gitCommands.RemoveGitLabToken(frontend)
 }
 
-func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdomain.HostingPlatform], gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
+func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
 	oldValue, oldHas := oldHostingPlatform.Get()
 	newValue, newHas := newHostingPlatform.Get()
 	if !oldHas && !newHas {

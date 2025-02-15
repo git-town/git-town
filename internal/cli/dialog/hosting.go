@@ -21,34 +21,34 @@ Only change this if your forge uses as custom URL.
 `
 )
 
-func HostingPlatform(existingValue Option[configdomain.HostingPlatform], inputs components.TestInput) (Option[configdomain.HostingPlatform], bool, error) {
-	entries := list.Entries[Option[configdomain.HostingPlatform]]{
+func HostingPlatform(existingValue Option[configdomain.ForgeType], inputs components.TestInput) (Option[configdomain.ForgeType], bool, error) {
+	entries := list.Entries[Option[configdomain.ForgeType]]{
 		{
-			Data: None[configdomain.HostingPlatform](),
+			Data: None[configdomain.ForgeType](),
 			Text: "auto-detect",
 		},
 		{
-			Data: Some(configdomain.HostingPlatformBitbucket),
+			Data: Some(configdomain.ForgeTypeBitbucket),
 			Text: "Bitbucket",
 		},
 		{
-			Data: Some(configdomain.HostingPlatformBitbucketDatacenter),
+			Data: Some(configdomain.ForgeTypeBitbucketDatacenter),
 			Text: "Bitbucket Data Center",
 		},
 		{
-			Data: Some(configdomain.HostingPlatformGitea),
+			Data: Some(configdomain.ForgeTypeGitea),
 			Text: "Gitea",
 		},
 		{
-			Data: Some(configdomain.HostingPlatformGitHub),
+			Data: Some(configdomain.ForgeTypeGitHub),
 			Text: "GitHub",
 		},
 		{
-			Data: Some(configdomain.HostingPlatformGitLab),
+			Data: Some(configdomain.ForgeTypeGitLab),
 			Text: "GitLab",
 		},
 	}
-	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[configdomain.HostingPlatform]) bool {
+	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[configdomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)

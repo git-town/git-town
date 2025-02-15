@@ -54,7 +54,7 @@ func TestSave(t *testing.T) {
 					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-					HostingPlatform:          None[configdomain.HostingPlatform](),
+					HostingPlatform:          None[configdomain.ForgeType](),
 					Lineage:                  configdomain.NewLineage(),
 					NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
 					ObservedBranches:         gitdomain.LocalBranchNames{},

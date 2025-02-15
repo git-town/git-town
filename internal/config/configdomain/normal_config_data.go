@@ -23,7 +23,7 @@ type NormalConfigData struct {
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          Option[HostingPlatform] // Some = override by user, None = auto-detect
+	HostingPlatform          Option[ForgeType] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
 	ObservedBranches         gitdomain.LocalBranchNames
@@ -138,7 +138,7 @@ func DefaultNormalConfig() NormalConfigData {
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
-		HostingPlatform:          None[HostingPlatform](),
+		HostingPlatform:          None[ForgeType](),
 		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),
 		ObservedBranches:         gitdomain.LocalBranchNames{},
