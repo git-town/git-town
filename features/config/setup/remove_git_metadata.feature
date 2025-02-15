@@ -20,7 +20,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
-    And local Git setting "git-town.hosting-platform" is "github"
+    And local Git setting "git-town.forge-type" is "github"
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.feature-regex" is "user.*"
@@ -76,7 +76,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent        |
       | git config --global --unset alias.ship              |
       | git config --global --unset alias.sync              |
-      | git config --unset git-town.hosting-platform        |
+      | git config --unset git-town.forge-type              |
       | git config --unset git-town.hosting-origin-hostname |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -93,7 +93,7 @@ Feature: remove existing configuration in Git metadata
     And the perennial branches are now "production"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "prototype"
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" is now "compress"
@@ -125,7 +125,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And local Git setting "git-town.dev-remote" is now "fork"
     And local Git setting "git-town.new-branch-type" is now "parked"
-    And local Git setting "git-town.hosting-platform" is now "github"
+    And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.feature-regex" is now "user.*"
     And local Git setting "git-town.default-branch-type" is now "observed"

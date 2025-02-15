@@ -33,7 +33,7 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.github-token 123456 |
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" is now "123456"
 
   Scenario: manually selected GitHub
@@ -62,10 +62,10 @@ Feature: enter the GitHub API token
       | ship-delete-tracking-branch | enter                     |                                             |
       | save config to Git metadata | down enter                |                                             |
     Then Git Town runs the commands
-      | COMMAND                                     |
-      | git config git-town.github-token 123456     |
-      | git config git-town.hosting-platform github |
-    And local Git setting "git-town.hosting-platform" is now "github"
+      | COMMAND                                 |
+      | git config git-town.github-token 123456 |
+      | git config git-town.forge-type github   |
+    And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
 
   Scenario: remove existing GitHub token
@@ -98,10 +98,10 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                  |
       | git config --unset git-town.github-token |
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist

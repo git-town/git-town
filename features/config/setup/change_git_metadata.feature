@@ -55,7 +55,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
       | git config git-town.github-token 123456                  |
-      | git config git-town.hosting-platform github              |
+      | git config git-town.forge-type github                    |
       | git config git-town.hosting-origin-hostname code         |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
@@ -72,7 +72,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.dev-remote" now doesn't exist
     And local Git setting "git-town.new-branch-type" is now "parked"
-    And local Git setting "git-town.hosting-platform" is now "github"
+    And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
@@ -104,7 +104,7 @@ Feature: change existing information in Git metadata
     And the main branch is now "main"
     And the perennial branches are now "qa"
     And local Git setting "git-town.new-branch-type" now doesn't exist
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
