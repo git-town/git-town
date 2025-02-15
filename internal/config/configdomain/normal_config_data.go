@@ -19,11 +19,11 @@ type NormalConfigData struct {
 	DefaultBranchType        BranchType
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
+	ForgeType                Option[ForgeType] // Some = override by user, None = auto-detect
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          Option[ForgeType] // Some = override by user, None = auto-detect
 	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
 	ObservedBranches         gitdomain.LocalBranchNames
@@ -134,11 +134,11 @@ func DefaultNormalConfig() NormalConfigData {
 		DefaultBranchType:        BranchTypeFeatureBranch,
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
+		ForgeType:                None[ForgeType](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
-		HostingPlatform:          None[ForgeType](),
 		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),
 		ObservedBranches:         gitdomain.LocalBranchNames{},

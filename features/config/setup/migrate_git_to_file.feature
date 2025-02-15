@@ -75,7 +75,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [hosting]
       dev-remote = "origin"
-      # platform = ""
+      # forge-type = ""
       # origin-hostname = ""
 
       [ship]

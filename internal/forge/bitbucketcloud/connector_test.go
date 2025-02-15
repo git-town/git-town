@@ -22,8 +22,8 @@ func TestBitbucketConnector(t *testing.T) {
 			url, has := giturl.Parse("username@bitbucket.org:git-town/docs.git").Get()
 			must.True(t, has)
 			have := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-				HostingPlatform: None[configdomain.ForgeType](),
-				RemoteURL:       url,
+				ForgeType: None[configdomain.ForgeType](),
+				RemoteURL: url,
 			})
 			wantConfig := forgedomain.Data{
 				Hostname:     "bitbucket.org",
@@ -38,8 +38,8 @@ func TestBitbucketConnector(t *testing.T) {
 			url, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
 			must.True(t, has)
 			have := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-				HostingPlatform: Some(configdomain.ForgeTypeBitbucket),
-				RemoteURL:       url,
+				ForgeType: Some(configdomain.ForgeTypeBitbucket),
+				RemoteURL: url,
 			})
 			wantConfig := forgedomain.Data{
 				Hostname:     "custom-url.com",
@@ -55,8 +55,8 @@ func TestBitbucketConnector(t *testing.T) {
 		url, has := giturl.Parse("username@bitbucket.org:org/repo.git").Get()
 		must.True(t, has)
 		connector := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			HostingPlatform: None[configdomain.ForgeType](),
-			RemoteURL:       url,
+			ForgeType: None[configdomain.ForgeType](),
+			RemoteURL: url,
 		})
 		have, err := connector.NewProposalURL("branch", "parent-branch", "main", "", "")
 		must.NoError(t, err)

@@ -26,7 +26,7 @@ the `[hosting]` section:
 
 ```toml
 [hosting]
-platform = "<value>"
+forge-type = "<value>"
 ```
 
 ## Git metadata

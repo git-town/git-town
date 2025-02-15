@@ -45,7 +45,7 @@ Feature: Configure a different development remote
 
       [hosting]
       dev-remote = "fork"
-      # platform = ""
+      # forge-type = ""
       # origin-hostname = ""
 
       [ship]

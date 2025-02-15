@@ -21,7 +21,7 @@ Only change this if your forge uses as custom URL.
 `
 )
 
-func HostingPlatform(existingValue Option[configdomain.ForgeType], inputs components.TestInput) (Option[configdomain.ForgeType], bool, error) {
+func ForgeType(existingValue Option[configdomain.ForgeType], inputs components.TestInput) (Option[configdomain.ForgeType], bool, error) {
 	entries := list.Entries[Option[configdomain.ForgeType]]{
 		{
 			Data: None[configdomain.ForgeType](),

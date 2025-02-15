@@ -153,11 +153,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, err
 	}
-	data.userInput.config.NormalConfig.HostingPlatform, aborted, err = dialog.HostingPlatform(config.NormalConfig.HostingPlatform, data.dialogInputs.Next())
+	data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(config.NormalConfig.ForgeType, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	if platform, has := determineHostingPlatform(config, data.userInput.config.NormalConfig.HostingPlatform).Get(); has {
+	if platform, has := determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType).Get(); has {
 		switch platform {
 		case configdomain.ForgeTypeBitbucket, configdomain.ForgeTypeBitbucketDatacenter:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
@@ -316,7 +316,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	fc := execute.FailureCollector{}
 	fc.Check(saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig))
-	fc.Check(saveHostingPlatform(oldConfig.NormalConfig.HostingPlatform, userInput.config.NormalConfig.HostingPlatform, gitCommands, frontend))
+	fc.Check(saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend))
 	fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
 	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
 	fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
@@ -409,6 +409,21 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	return nil
 }
 
+func saveForgeType(oldForgeType, newForgeType Option[configdomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
+	oldValue, oldHas := oldForgeType.Get()
+	newValue, newHas := newForgeType.Get()
+	if !oldHas && !newHas {
+		return nil
+	}
+	if oldValue == newValue {
+		return nil
+	}
+	if newHas {
+		return gitCommands.SetForgeType(frontend, newValue)
+	}
+	return gitCommands.DeleteForgeType(frontend)
+}
+
 func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newToken == oldToken {
 		return nil
@@ -437,21 +452,6 @@ func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], gitCom
 		return gitCommands.SetGitLabToken(frontend, value)
 	}
 	return gitCommands.RemoveGitLabToken(frontend)
-}
-
-func saveHostingPlatform(oldHostingPlatform, newHostingPlatform Option[configdomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
-	oldValue, oldHas := oldHostingPlatform.Get()
-	newValue, newHas := newHostingPlatform.Get()
-	if !oldHas && !newHas {
-		return nil
-	}
-	if oldValue == newValue {
-		return nil
-	}
-	if newHas {
-		return gitCommands.SetHostingPlatform(frontend, newValue)
-	}
-	return gitCommands.DeleteHostingPlatform(frontend)
 }
 
 func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {

@@ -38,7 +38,7 @@ new-branch-type = "prototype"
 push-new-branches = true
 
 [hosting]
-platform = "github"
+forge-type = "github"
 origin-hostname = "github.com"
 
 [ship]
@@ -75,7 +75,7 @@ prototype-branches = "compress"
 					PushNewbranches: Ptr(true),
 				},
 				Hosting: &configfile.Hosting{
-					Platform:       Ptr("github"),
+					ForgeType:      Ptr("github"),
 					OriginHostname: Ptr("github.com"),
 				},
 				Ship: &configfile.Ship{

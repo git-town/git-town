@@ -47,8 +47,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var defaultBranchType Option[configdomain.BranchType]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
+	var forgeType Option[configdomain.ForgeType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
-	var hostingPlatform Option[configdomain.ForgeType]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.BranchType]
 	var observedRegex Option[configdomain.ObservedRegex]
@@ -145,11 +145,17 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 	}
 	if data.Hosting != nil {
+		if data.Hosting.Platform != nil {
+			forgeType, err = configdomain.ParseForgeType(*data.Hosting.Platform)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+		}
 		if data.Hosting.DevRemote != nil {
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.Platform != nil {
-			hostingPlatform, err = configdomain.ParseForgeType(*data.Hosting.Platform)
+			forgeType, err = configdomain.ParseForgeType(*data.Hosting.Platform)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
@@ -225,13 +231,13 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		DefaultBranchType:        defaultBranchType,
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
+		ForgeType:                forgeType,
 		GitHubToken:              None[configdomain.GitHubToken](),
 		GitLabToken:              None[configdomain.GitLabToken](),
 		GitUserEmail:             None[configdomain.GitUserEmail](),
 		GitUserName:              None[configdomain.GitUserName](),
 		GiteaToken:               None[configdomain.GiteaToken](),
 		HostingOriginHostname:    hostingOriginHostname,
-		HostingPlatform:          hostingPlatform,
 		Lineage:                  configdomain.Lineage{},
 		MainBranch:               mainBranch,
 		NewBranchType:            newBranchType,
