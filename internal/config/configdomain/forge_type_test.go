@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestNewHostingPlatform(t *testing.T) {
+func TestParseForgeType(t *testing.T) {
 	t.Parallel()
 
 	t.Run("acceptable content", func(t *testing.T) {
