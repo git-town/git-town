@@ -115,7 +115,7 @@ test-go:  # smoke tests while working on the Go code
 	@make --no-print-directory lint
 
 todo:  # displays all TODO items
-	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile | grep -v internal/hosting/bitbucketdatacenter/connector.go
+	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile | grep -v internal/hosting/bitbucketdatacenter/connector.go | grep -v context.TODO()
 
 UNIT_TEST_DIRS = \
 	./internal/... \
