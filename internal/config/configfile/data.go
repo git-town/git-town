@@ -38,12 +38,13 @@ type Create struct {
 
 type Hosting struct {
 	DevRemote      *string `toml:"dev-remote"`
+	ForgeType      *string `toml:"forge-type"`
 	OriginHostname *string `toml:"origin-hostname"`
 	Platform       *string `toml:"platform"`
 }
 
 func (self Hosting) IsEmpty() bool {
-	return self.Platform == nil && self.OriginHostname == nil
+	return self.ForgeType == nil && self.OriginHostname == nil && self.Platform == nil
 }
 
 type Ship struct {

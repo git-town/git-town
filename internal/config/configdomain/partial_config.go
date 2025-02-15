@@ -18,13 +18,13 @@ type PartialConfig struct {
 	DefaultBranchType        Option[BranchType]
 	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
+	ForgeType                Option[ForgeType]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
 	GitUserName              Option[GitUserName]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
-	HostingPlatform          Option[ForgeType]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[BranchType]
@@ -63,7 +63,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
-	hostingPlatform, err := ParseForgeType(snapshot[KeyForgeType])
+	forgeType, err := ParseForgeType(snapshot[KeyForgeType])
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
@@ -103,13 +103,13 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		DefaultBranchType:        defaultBranchType,
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,
+		ForgeType:                forgeType,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
 		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
 		GiteaToken:               ParseGiteaToken(snapshot[KeyGiteaToken]),
 		HostingOriginHostname:    ParseHostingOriginHostname(snapshot[KeyHostingOriginHostname]),
-		HostingPlatform:          hostingPlatform,
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
 		NewBranchType:            newBranchType,
@@ -147,13 +147,13 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
+		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
 		GiteaToken:               other.GiteaToken.Or(self.GiteaToken),
 		HostingOriginHostname:    other.HostingOriginHostname.Or(self.HostingOriginHostname),
-		HostingPlatform:          other.HostingPlatform.Or(self.HostingPlatform),
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
@@ -188,11 +188,11 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
 		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
 		FeatureRegex:             self.FeatureRegex,
+		ForgeType:                self.ForgeType,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,
 		GiteaToken:               self.GiteaToken,
 		HostingOriginHostname:    self.HostingOriginHostname,
-		HostingPlatform:          self.HostingPlatform,
 		Lineage:                  self.Lineage,
 		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
 		ObservedBranches:         self.ObservedBranches,

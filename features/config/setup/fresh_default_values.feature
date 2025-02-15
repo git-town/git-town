@@ -61,7 +61,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
 
       [hosting]
       dev-remote = "origin"
-      # platform = ""
+      # forge-type = ""
       # origin-hostname = ""
 
       [ship]

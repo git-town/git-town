@@ -67,7 +67,7 @@ Feature: Accepting all default values leads to a working setup
 
       [hosting]
       dev-remote = "origin"
-      # platform = ""
+      # forge-type = ""
       # origin-hostname = ""
 
       [ship]
