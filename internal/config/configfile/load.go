@@ -154,8 +154,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		if data.Hosting.DevRemote != nil {
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
-		if data.Hosting.Platform != nil {
-			forgeType, err = configdomain.ParseForgeType(*data.Hosting.Platform)
+		if data.Hosting.ForgeType != nil {
+			forgeType, err = configdomain.ParseForgeType(*data.Hosting.ForgeType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
