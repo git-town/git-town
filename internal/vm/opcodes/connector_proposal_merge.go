@@ -46,7 +46,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		err = args.Git.CommentOutSquashCommitMessage(self.ProposalMessage + "\n\n")
+		err = args.Git.CommentOutSquashCommitMessage(Some(self.ProposalMessage + "\n\n"))
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}

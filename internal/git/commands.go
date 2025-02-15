@@ -104,6 +104,10 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	}, nil
 }
 
+func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
+	return os.Chdir(dir.String())
+}
+
 func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
 	err := self.CheckoutBranchUncached(runner, name, merge)
 	if err != nil {
@@ -143,15 +147,14 @@ func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) err
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // If the given prefix has content, adds it together with a newline.
-// TODO: make prefix an option
-func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
+func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error {
 	squashMessageFile := ".git/SQUASH_MSG"
 	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
 		return fmt.Errorf(messages.SquashCannotReadFile, squashMessageFile, err)
 	}
 	content := string(contentBytes)
-	if len(prefix) > 0 {
+	if prefix, hasPrefix := prefix.Get(); hasPrefix {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
@@ -546,10 +549,6 @@ func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage con
 	// Add branch name as the last argument.
 	gitArgs = append(gitArgs, "--", branch.String())
 	return runner.Run("git", gitArgs...)
-}
-
-func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
-	return os.Chdir(dir.String())
 }
 
 func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
