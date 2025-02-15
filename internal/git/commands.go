@@ -364,7 +364,7 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 }
 
 // DeleteHostingPlatform removes the forge type config entry.
-func (self *Commands) DeleteHostingPlatform(runner gitdomain.Runner) error {
+func (self *Commands) DeleteForgeType(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
 }
 
@@ -766,6 +766,11 @@ func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value config
 	return runner.Run("git", "config", configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
+// SetHostingPlatform sets the given forge.
+func (self *Commands) SetForgeType(runner gitdomain.Runner, platform configdomain.ForgeType) error {
+	return runner.Run("git", "config", configdomain.KeyForgeType.String(), platform.String())
+}
+
 // SetGitAlias sets the given Git alias.
 func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
@@ -784,11 +789,6 @@ func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain
 // SetGiteaToken sets the given API token for the Gitea API.
 func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken) error {
 	return runner.Run("git", "config", configdomain.KeyGiteaToken.String(), value.String())
-}
-
-// SetHostingPlatform sets the given forge.
-func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.ForgeType) error {
-	return runner.Run("git", "config", configdomain.KeyForgeType.String(), platform.String())
 }
 
 // SetHostingPlatform sets the given forge.

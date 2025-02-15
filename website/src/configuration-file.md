@@ -26,7 +26,7 @@ push-new-branches = false
 [hosting]
 dev-remote = "origin"
 origin-hostname = "" # use the hostname in the origin URL
-platform = "" # auto-detect
+forge-type = "" # auto-detect
 
 [ship]
 delete-tracking-branch = true

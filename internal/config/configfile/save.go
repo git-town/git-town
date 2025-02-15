@@ -28,10 +28,10 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("push-new-branches = %t\n", config.NormalConfig.PushNewBranches))
 	result.WriteString("\n[hosting]\n")
 	result.WriteString(fmt.Sprintf("dev-remote = %q\n", config.NormalConfig.DevRemote.String()))
-	if platform, has := config.NormalConfig.HostingPlatform.Get(); has {
-		result.WriteString(fmt.Sprintf("platform = %q\n", platform))
+	if forgeType, has := config.NormalConfig.ForgeType.Get(); has {
+		result.WriteString(fmt.Sprintf("forge-type = %q\n", forgeType))
 	} else {
-		result.WriteString("# platform = \"\"\n")
+		result.WriteString("# forge-type = \"\"\n")
 	}
 	if config.NormalConfig.HostingOriginHostname.IsNone() {
 		result.WriteString("# origin-hostname = \"\"\n")

@@ -77,7 +77,7 @@ Feature: show the configuration
       push-new-branches = true
 
       [hosting]
-      platform = "github"
+      forge-type = "github"
       origin-hostname = "github.com"
 
       [ship]
@@ -171,7 +171,7 @@ Feature: show the configuration
       push-new-branches = true
 
       [hosting]
-      platform = "github"
+      forge-type = "github"
       origin-hostname = "github.com"
 
       [ship]

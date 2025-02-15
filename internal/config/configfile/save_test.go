@@ -53,8 +53,8 @@ func TestSave(t *testing.T) {
 					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
 					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
+					ForgeType:                None[configdomain.ForgeType](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-					HostingPlatform:          None[configdomain.ForgeType](),
 					Lineage:                  configdomain.NewLineage(),
 					NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
 					ObservedBranches:         gitdomain.LocalBranchNames{},
@@ -88,7 +88,7 @@ push-new-branches = false
 
 [hosting]
 dev-remote = "fork"
-# platform = ""
+# forge-type = ""
 # origin-hostname = ""
 
 [ship]
@@ -131,7 +131,7 @@ push-new-branches = false
 
 [hosting]
 dev-remote = "origin"
-# platform = ""
+# forge-type = ""
 # origin-hostname = ""
 
 [ship]

@@ -41,11 +41,11 @@ func NewConnector(args NewConnectorArgs) Connector {
 }
 
 type NewConnectorArgs struct {
-	AppPassword     Option[configdomain.BitbucketAppPassword]
-	HostingPlatform Option[configdomain.ForgeType]
-	Log             print.Logger
-	RemoteURL       giturl.Parts
-	UserName        Option[configdomain.BitbucketUsername]
+	AppPassword Option[configdomain.BitbucketAppPassword]
+	ForgeType   Option[configdomain.ForgeType]
+	Log         print.Logger
+	RemoteURL   giturl.Parts
+	UserName    Option[configdomain.BitbucketUsername]
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {

@@ -17,8 +17,8 @@ import (
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
 func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[forgedomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.NormalConfig.RemoteURL(remote).Get()
-	hostingPlatform := config.NormalConfig.HostingPlatform
-	platform, hasPlatform := Detect(remoteURL, hostingPlatform).Get()
+	forgeType := config.NormalConfig.ForgeType
+	platform, hasPlatform := Detect(remoteURL, forgeType).Get()
 	if !hasRemoteURL || !hasPlatform {
 		return None[forgedomain.Connector](), nil
 	}
@@ -26,17 +26,17 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	switch platform {
 	case configdomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword:     config.NormalConfig.BitbucketAppPassword,
-			HostingPlatform: hostingPlatform,
-			Log:             log,
-			RemoteURL:       remoteURL,
-			UserName:        config.NormalConfig.BitbucketUsername,
+			AppPassword: config.NormalConfig.BitbucketAppPassword,
+			ForgeType:   forgeType,
+			Log:         log,
+			RemoteURL:   remoteURL,
+			UserName:    config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
 	case configdomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:     config.NormalConfig.BitbucketAppPassword,
-			HostingPlatform: hostingPlatform,
+			HostingPlatform: forgeType,
 			Log:             log,
 			RemoteURL:       remoteURL,
 			UserName:        config.NormalConfig.BitbucketUsername,

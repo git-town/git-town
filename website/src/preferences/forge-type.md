@@ -21,12 +21,12 @@ You can use one of these values for the forge type setting:
 
 ## config file
 
-In the [config file](../configuration-file.md) the hosting platform is part of
-the `[hosting]` section:
+In the [config file](../configuration-file.md) the forge type is part of the
+`[hosting]` section:
 
 ```toml
 [hosting]
-platform = "<value>"
+forge-type = "<value>"
 ```
 
 ## Git metadata
