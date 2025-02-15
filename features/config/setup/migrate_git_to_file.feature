@@ -46,7 +46,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     Then Git Town runs no commands
     And the main branch is now not set
     And there are now no perennial branches
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
     And local Git setting "git-town.sync-feature-strategy" now doesn't exist
     And local Git setting "git-town.sync-perennial-strategy" now doesn't exist

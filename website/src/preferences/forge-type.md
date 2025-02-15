@@ -1,4 +1,4 @@
-# Hosting platform
+# Forge Type
 
 To talk to the API of your forge, Git Town needs to know which forge type
 (GitHub, Gitlab, Bitbucket, etc) you use.
@@ -10,7 +10,7 @@ which forge type you use.
 
 ## values
 
-You can use one of these values for the hosting platform setting:
+You can use one of these values for the forge type setting:
 
 - remove the entry or leave it empty for auto-detection
 - `github`
@@ -31,10 +31,10 @@ platform = "<value>"
 
 ## Git metadata
 
-To configure the hosting platform in Git, run this command:
+To configure the forge type in Git, run this command:
 
 ```wrap
-git config [--global] git-town.hosting-platform <value>
+git config [--global] git-town.forge-type <value>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on

@@ -7,7 +7,7 @@ Feature: self hosted servie
   Scenario Outline:
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
-    And Git setting "git-town.hosting-platform" is "<DRIVER>"
+    And Git setting "git-town.forge-type" is "<DRIVER>"
     When I run "git-town repo"
     Then "open" launches a new proposal with this url in my browser:
       """
@@ -23,7 +23,7 @@ Feature: self hosted servie
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
-    And Git setting "git-town.hosting-platform" is "gitlab"
+    And Git setting "git-town.forge-type" is "gitlab"
     And tool "open" is installed
     When I run "git-town repo"
     Then "open" launches a new proposal with this url in my browser:

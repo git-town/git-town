@@ -3,7 +3,7 @@ Feature: remove an existing forge type override
 
   Background:
     Given a Git repo with origin
-    And local Git setting "git-town.hosting-platform" is "github"
+    And local Git setting "git-town.forge-type" is "github"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |
@@ -30,10 +30,10 @@ Feature: remove an existing forge type override
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                      |
-      | git config --unset git-town.hosting-platform |
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+      | COMMAND                                |
+      | git config --unset git-town.forge-type |
+    And local Git setting "git-town.forge-type" now doesn't exist
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git setting "git-town.hosting-platform" is now "github"
+    And local Git setting "git-town.forge-type" is now "github"

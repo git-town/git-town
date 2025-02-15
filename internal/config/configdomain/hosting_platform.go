@@ -8,7 +8,7 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// ForgeType defines legal values for the "git-town.hosting-platform" config setting.
+// ForgeType defines legal values for the "git-town.forge-type" config setting.
 type ForgeType string
 
 func (self ForgeType) String() string { return string(self) }
@@ -21,7 +21,7 @@ const (
 	ForgeTypeGitea               = ForgeType("gitea")
 )
 
-// ParseForgeType provides the HostingPlatform enum matching the given text.
+// ParseForgeType provides the ForgeType enum matching the given text.
 func ParseForgeType(platformName string) (Option[ForgeType], error) {
 	if platformName == "" {
 		return None[ForgeType](), nil
@@ -35,7 +35,7 @@ func ParseForgeType(platformName string) (Option[ForgeType], error) {
 	return None[ForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, platformName)
 }
 
-// forgeTypes provides all legal values for HostingPlatform.
+// forgeTypes provides all legal values for ForgeType
 func forgeTypes() []ForgeType {
 	return []ForgeType{
 		ForgeTypeBitbucket,

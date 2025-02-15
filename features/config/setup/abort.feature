@@ -17,7 +17,7 @@ Feature: aborting the setup assistant
     Then Git Town runs no commands
     And the main branch is still not set
     And there are still no perennial branches
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.push-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
