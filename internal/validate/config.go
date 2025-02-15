@@ -5,9 +5,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
@@ -91,7 +91,7 @@ type ConfigArgs struct {
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
-	Connector          Option[hostingdomain.Connector]
+	Connector          Option[forgedomain.Connector]
 	DialogTestInputs   components.TestInputs
 	Frontend           gitdomain.Runner
 	Git                git.Commands

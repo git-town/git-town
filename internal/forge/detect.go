@@ -1,0 +1,31 @@
+package forge
+
+import (
+	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v18/internal/forge/gitea"
+	"github.com/git-town/git-town/v18/internal/forge/github"
+	"github.com/git-town/git-town/v18/internal/forge/gitlab"
+	"github.com/git-town/git-town/v18/internal/git/giturl"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
+)
+
+func Detect(remoteURL giturl.Parts, userOverride Option[configdomain.HostingPlatform]) Option[configdomain.HostingPlatform] {
+	if userOverride.IsSome() {
+		return userOverride
+	}
+	detectors := map[configdomain.HostingPlatform]func(giturl.Parts) bool{
+		configdomain.HostingPlatformBitbucket:           bitbucketcloud.Detect,
+		configdomain.HostingPlatformBitbucketDatacenter: bitbucketdatacenter.Detect,
+		configdomain.HostingPlatformGitea:               gitea.Detect,
+		configdomain.HostingPlatformGitHub:              github.Detect,
+		configdomain.HostingPlatformGitLab:              gitlab.Detect,
+	}
+	for platform, detector := range detectors {
+		if detector(remoteURL) {
+			return Some(platform)
+		}
+	}
+	return None[configdomain.HostingPlatform]()
+}

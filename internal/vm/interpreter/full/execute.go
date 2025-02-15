@@ -4,11 +4,11 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/vm/runstate"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
@@ -59,7 +59,7 @@ type ExecuteArgs struct {
 	Backend                 gitdomain.RunnerQuerier
 	CommandsCounter         Mutable[gohacks.Counter]
 	Config                  config.ValidatedConfig
-	Connector               Option[hostingdomain.Connector]
+	Connector               Option[forgedomain.Connector]
 	DialogTestInputs        components.TestInputs
 	FinalMessages           stringslice.Collector
 	Frontend                gitdomain.Runner

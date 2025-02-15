@@ -16,10 +16,10 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forge"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
@@ -158,7 +158,7 @@ type prependData struct {
 	branchesToSync      configdomain.BranchesToSync
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
-	connector           Option[hostingdomain.Connector]
+	connector           Option[forgedomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
 	existingParent      gitdomain.LocalBranchName
@@ -168,7 +168,7 @@ type prependData struct {
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
-	proposal            Option[hostingdomain.Proposal]
+	proposal            Option[forgedomain.Proposal]
 	proposalBody        gitdomain.ProposalBody
 	proposalTitle       gitdomain.ProposalTitle
 	propose             configdomain.Propose
@@ -223,7 +223,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connector, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -272,7 +272,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}
 	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
-	proposalOpt := None[hostingdomain.Proposal]()
+	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
 	}

@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v18/internal/browser"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
@@ -26,7 +26,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	}
 	connector, hasConnector := args.Connector.Get()
 	if !hasConnector {
-		return hostingdomain.UnsupportedServiceError()
+		return forgedomain.UnsupportedServiceError()
 	}
 	prURL, err := connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch, self.ProposalTitle, self.ProposalBody)
 	if err != nil {

@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/opcodes"
 	"github.com/git-town/git-town/v18/internal/vm/program"
@@ -16,8 +16,8 @@ import (
 // data only needed for shipping via the API
 type shipDataAPI struct {
 	branchToShipRemoteName gitdomain.RemoteBranchName
-	connector              hostingdomain.Connector
-	proposal               hostingdomain.Proposal
+	connector              forgedomain.Connector
+	proposal               forgedomain.Proposal
 	proposalMessage        string
 }
 

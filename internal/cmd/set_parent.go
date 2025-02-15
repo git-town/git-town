@@ -14,9 +14,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forge"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
@@ -124,13 +124,13 @@ func executeSetParent(verbose configdomain.Verbose) error {
 type setParentData struct {
 	branchesSnapshot gitdomain.BranchesSnapshot
 	config           config.ValidatedConfig
-	connector        Option[hostingdomain.Connector]
+	connector        Option[forgedomain.Connector]
 	defaultChoice    gitdomain.LocalBranchName
 	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	mainBranch       gitdomain.LocalBranchName
-	proposal         Option[hostingdomain.Proposal]
+	proposal         Option[forgedomain.Proposal]
 	stashSize        gitdomain.StashSize
 }
 
@@ -162,7 +162,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -196,7 +196,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	} else {
 		defaultChoice = mainBranch
 	}
-	proposalOpt := None[hostingdomain.Proposal]()
+	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	}

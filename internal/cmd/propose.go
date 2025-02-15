@@ -15,9 +15,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forge"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/hosting"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
@@ -153,7 +153,7 @@ type proposeData struct {
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
-	connector           Option[hostingdomain.Connector]
+	connector           Option[forgedomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
 	existingProposalURL Option[string]
@@ -208,7 +208,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connectorOpt, err := hosting.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
 	}
@@ -241,7 +241,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return data, false, hostingdomain.UnsupportedServiceError()
+		return data, false, forgedomain.UnsupportedServiceError()
 	}
 	existingProposalURL := None[string]()
 	if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {

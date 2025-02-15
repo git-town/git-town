@@ -8,9 +8,9 @@ import (
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/hosting/hostingdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
@@ -168,7 +168,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	})
 }
 
-func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []hostingdomain.Proposal) {
+func UpdateChildBranchProposalsToGrandParent(prog *program.Program, proposals []forgedomain.Proposal) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.ProposalUpdateTargetToGrandParent{
 			Branch:         childProposal.Source,
