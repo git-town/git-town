@@ -468,6 +468,30 @@ func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook 
 	return runner.Run("git", args...)
 }
 
+func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
+	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
+	output, err := querier.QueryTrim("git", "version")
+	if err != nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
+	}
+	matches := versionRegexp.FindStringSubmatch(output)
+	if matches == nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
+	}
+	majorVersion, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
+	}
+	minorVersion, err := strconv.Atoi(matches[2])
+	if err != nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
+	}
+	return Version{
+		Major: majorVersion,
+		Minor: minorVersion,
+	}, nil
+}
+
 func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) bool {
 	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
@@ -787,31 +811,6 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
-}
-
-// TODO: rename to GitVersion
-func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
-	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
-	output, err := querier.QueryTrim("git", "version")
-	if err != nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
-	}
-	matches := versionRegexp.FindStringSubmatch(output)
-	if matches == nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
-	}
-	majorVersion, err := strconv.Atoi(matches[1])
-	if err != nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
-	}
-	minorVersion, err := strconv.Atoi(matches[2])
-	if err != nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
-	}
-	return Version{
-		Major: majorVersion,
-		Minor: minorVersion,
-	}, nil
 }
 
 func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
