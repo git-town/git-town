@@ -57,7 +57,7 @@ determine the repository state.
 ## Configuration
 
 You can configure the forge type with the
-[hosting-platform](../preferences/hosting-platform.md) setting.
+[hosting-platform](../preferences/forge-type.md) setting.
 
 When using SSH identities, this command uses the hostname in the
 [hosting-origin-hostname](../preferences/hosting-origin-hostname.md) setting.

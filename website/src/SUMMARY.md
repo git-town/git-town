@@ -64,7 +64,7 @@
     - [Push new branches](preferences/push-new-branches.md)
   - [Hosting]()
     - [Development remote](preferences/dev-remote.md)
-    - [Hosting platform](preferences/hosting-platform.md)
+    - [Forge Type](preferences/forge-type.md)
     - [Origin hostname](preferences/hosting-origin-hostname.md)
     - [Bitbucket access token](preferences/bitbucket-app-password.md)
     - [Bitbucket username](preferences/bitbucket-username.md)
