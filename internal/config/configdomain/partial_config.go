@@ -63,7 +63,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
-	hostingPlatform, err := ParseForgeType(snapshot[KeyHostingPlatform])
+	hostingPlatform, err := ParseForgeType(snapshot[KeyForgeType])
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)

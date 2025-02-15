@@ -6,7 +6,6 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// TODO: rename to ForgeOriginHostname
 type HostingOriginHostname string
 
 func (self HostingOriginHostname) String() string {
