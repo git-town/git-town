@@ -13,5 +13,5 @@ type BranchLocalRename struct {
 }
 
 func (self *BranchLocalRename) Run(args shared.RunArgs) error {
-	return args.Git.Rename(args.Frontend, self.OldName, self.NewName)
+	return args.Git.RenameBranch(args.Frontend, self.OldName, self.NewName)
 }

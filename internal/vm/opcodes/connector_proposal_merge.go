@@ -50,7 +50,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
-		err = args.Git.StartCommit(args.Frontend)
+		err = args.Git.CommitStart(args.Frontend)
 		if err != nil {
 			return err
 		}

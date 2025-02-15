@@ -182,6 +182,10 @@ func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA
 	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
 }
 
+func (self *Commands) CommitStart(runner gitdomain.Runner) error {
+	return runner.Run("git", "commit")
+}
+
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
 		return self.CommitsInFeatureBranch(querier, branch, parent)
@@ -275,16 +279,6 @@ func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner,
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	return runner.Run("git", "branch", name.String(), parent.String())
-}
-
-// TODO: rename to PushLocalBranch
-func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
-	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
-	return runner.Run("git", args...)
 }
 
 func (self *Commands) CreateTrackingBranch(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
@@ -585,6 +579,15 @@ func (self *Commands) PushCurrentBranch(runner gitdomain.Runner, noPushHook conf
 	return runner.Run("git", args...)
 }
 
+func (self *Commands) PushLocalBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
+	return runner.Run("git", args...)
+}
+
 // PushTags pushes new the Git tags to origin.
 func (self *Commands) PushTags(runner gitdomain.Runner) error {
 	return runner.Run("git", "push", "--tags")
@@ -659,8 +662,7 @@ func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
-// TODO: rename to RenameBranch
-func (self *Commands) Rename(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
+func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
 }
 
@@ -770,11 +772,6 @@ func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.Loca
 func (self *Commands) StageFiles(runner gitdomain.Runner, names ...string) error {
 	args := append([]string{"add"}, names...)
 	return runner.Run("git", args...)
-}
-
-// TODO: rename to Commit
-func (self *Commands) StartCommit(runner gitdomain.Runner) error {
-	return runner.Run("git", "commit")
 }
 
 func (self *Commands) Stash(runner gitdomain.Runner) error {
