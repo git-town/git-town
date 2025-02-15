@@ -46,7 +46,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
-	gitVersion, err := gitCommands.Version(backendRunner)
+	gitVersion, err := gitCommands.GitVersion(backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -114,7 +114,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			return emptyOpenRepoResult(), err
 		}
 		if currentDirectory != rootDir.String() {
-			err = gitCommands.NavigateToDir(rootDir)
+			err = gitCommands.ChangeDir(rootDir)
 		}
 	}
 	return OpenRepoResult{

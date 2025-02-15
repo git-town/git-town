@@ -46,15 +46,15 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		err = args.Git.CommentOutSquashCommitMessage(self.ProposalMessage + "\n\n")
+		err = args.Git.CommentOutSquashCommitMessage(Some(self.ProposalMessage + "\n\n"))
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
-		err = args.Git.StartCommit(args.Frontend)
+		err = args.Git.CommitStart(args.Frontend)
 		if err != nil {
 			return err
 		}
-		commitMessage, err = args.Git.LastCommitMessage(args.Backend)
+		commitMessage, err = args.Git.HeadCommitMessage(args.Backend)
 		if err != nil {
 			return err
 		}

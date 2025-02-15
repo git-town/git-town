@@ -104,6 +104,10 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	}, nil
 }
 
+func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
+	return os.Chdir(dir.String())
+}
+
 func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
 	err := self.CheckoutBranchUncached(runner, name, merge)
 	if err != nil {
@@ -143,15 +147,14 @@ func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) err
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // If the given prefix has content, adds it together with a newline.
-// TODO: make prefix an option
-func (self *Commands) CommentOutSquashCommitMessage(prefix string) error {
+func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error {
 	squashMessageFile := ".git/SQUASH_MSG"
 	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
 		return fmt.Errorf(messages.SquashCannotReadFile, squashMessageFile, err)
 	}
 	content := string(contentBytes)
-	if len(prefix) > 0 {
+	if prefix, hasPrefix := prefix.Get(); hasPrefix {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
@@ -180,6 +183,10 @@ func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.Us
 func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
 	output, err := querier.QueryTrim("git", "log", "--format=%B", "-n", "1", sha.String())
 	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
+}
+
+func (self *Commands) CommitStart(runner gitdomain.Runner) error {
+	return runner.Run("git", "commit")
 }
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
@@ -277,16 +284,6 @@ func (self *Commands) CreateBranch(runner gitdomain.Runner, name gitdomain.Local
 	return runner.Run("git", "branch", name.String(), parent.String())
 }
 
-// TODO: rename to PushLocalBranch
-func (self *Commands) CreateRemoteBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
-	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
-	return runner.Run("git", args...)
-}
-
 func (self *Commands) CreateTrackingBranch(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
@@ -350,10 +347,14 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 	return gitdomain.Remote(output)
 }
 
-// DeleteForgeType removes the forge type config entry.
-// TODO: rename to DeleteConfigEntryForgeType
-func (self *Commands) DeleteForgeType(runner gitdomain.Runner) error {
+// DeleteConfigEntryForgeType removes the forge type config entry.
+func (self *Commands) DeleteConfigEntryForgeType(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
+}
+
+// DeleteConfigEntryOriginHostname removes the origin hostname override
+func (self *Commands) DeleteConfigEntryOriginHostname(runner gitdomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -363,12 +364,6 @@ func (self *Commands) DeleteLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) DeleteLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "-D", name.String())
-}
-
-// DeleteOriginHostname removes the origin hostname override
-// TODO: rename to DeleteConfigEntryOriginHostname
-func (self *Commands) DeleteOriginHostname(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
 }
 
 func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdomain.RemoteBranchName) error {
@@ -385,9 +380,7 @@ func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
 	return runner.Run("git", "reset", "--hard")
 }
 
-// DropStash removes the most recent stash entry
-// TODO: rename to DropMostRecentStash
-func (self *Commands) DropStash(runner gitdomain.Runner) error {
+func (self *Commands) DropMostRecentStash(runner gitdomain.Runner) error {
 	return runner.Run("git", "stash", "drop")
 }
 
@@ -478,6 +471,30 @@ func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook 
 	return runner.Run("git", args...)
 }
 
+func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
+	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
+	output, err := querier.QueryTrim("git", "version")
+	if err != nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
+	}
+	matches := versionRegexp.FindStringSubmatch(output)
+	if matches == nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
+	}
+	majorVersion, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
+	}
+	minorVersion, err := strconv.Atoi(matches[2])
+	if err != nil {
+		return EmptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
+	}
+	return Version{
+		Major: majorVersion,
+		Minor: minorVersion,
+	}, nil
+}
+
 func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) bool {
 	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
@@ -496,9 +513,8 @@ func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mai
 	return len(out) > 0, nil
 }
 
-// LastCommitMessage provides the commit message for the last commit.
-// TODO: rename to HeadCommitMessage
-func (self *Commands) LastCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
+// HeadCommitMessage provides the commit message for the last commit.
+func (self *Commands) HeadCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
 	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
@@ -533,11 +549,6 @@ func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage con
 	// Add branch name as the last argument.
 	gitArgs = append(gitArgs, "--", branch.String())
 	return runner.Run("git", gitArgs...)
-}
-
-// TODO: rename to ChangeDir
-func (self *Commands) NavigateToDir(dir gitdomain.RepoRootDir) error {
-	return os.Chdir(dir.String())
 }
 
 func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
@@ -582,6 +593,15 @@ func (self *Commands) PushCurrentBranch(runner gitdomain.Runner, noPushHook conf
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
+	return runner.Run("git", args...)
+}
+
+func (self *Commands) PushLocalBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, remote.String(), localSHA.String()+":refs/heads/"+branch.String())
 	return runner.Run("git", args...)
 }
 
@@ -659,8 +679,7 @@ func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
-// TODO: rename to RenameBranch
-func (self *Commands) Rename(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
+func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
 }
 
@@ -772,11 +791,6 @@ func (self *Commands) StageFiles(runner gitdomain.Runner, names ...string) error
 	return runner.Run("git", args...)
 }
 
-// TODO: rename to Commit
-func (self *Commands) StartCommit(runner gitdomain.Runner) error {
-	return runner.Run("git", "commit")
-}
-
 func (self *Commands) Stash(runner gitdomain.Runner) error {
 	err := runner.Run("git", "add", "-A")
 	if err != nil {
@@ -796,31 +810,6 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
-}
-
-// TODO: rename to GitVersion
-func (self *Commands) Version(querier gitdomain.Querier) (Version, error) {
-	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\w+)`)
-	output, err := querier.QueryTrim("git", "version")
-	if err != nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionProblem, err)
-	}
-	matches := versionRegexp.FindStringSubmatch(output)
-	if matches == nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
-	}
-	majorVersion, err := strconv.Atoi(matches[1])
-	if err != nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
-	}
-	minorVersion, err := strconv.Atoi(matches[2])
-	if err != nil {
-		return EmptyVersion(), fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
-	}
-	return Version{
-		Major: majorVersion,
-		Minor: minorVersion,
-	}, nil
 }
 
 func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {

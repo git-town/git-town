@@ -421,7 +421,7 @@ func saveForgeType(oldForgeType, newForgeType Option[configdomain.ForgeType], gi
 	if newHas {
 		return gitCommands.SetForgeType(frontend, newValue)
 	}
-	return gitCommands.DeleteForgeType(frontend)
+	return gitCommands.DeleteConfigEntryForgeType(frontend)
 }
 
 func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
@@ -468,7 +468,7 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 	if value, has := newValue.Get(); has {
 		return gitCommands.SetOriginHostname(frontend, value)
 	}
-	return gitCommands.DeleteOriginHostname(frontend)
+	return gitCommands.DeleteConfigEntryOriginHostname(frontend)
 }
 
 func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig) error {

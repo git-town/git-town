@@ -10,6 +10,6 @@ type StashDrop struct {
 }
 
 func (self *StashDrop) Run(args shared.RunArgs) error {
-	_ = args.Git.DropStash(args.Frontend)
+	_ = args.Git.DropMostRecentStash(args.Frontend)
 	return nil
 }
