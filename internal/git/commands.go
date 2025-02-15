@@ -365,7 +365,7 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 
 // DeleteHostingPlatform removes the forge type config entry.
 func (self *Commands) DeleteHostingPlatform(runner gitdomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyHostingPlatform.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -787,8 +787,8 @@ func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.
 }
 
 // SetHostingPlatform sets the given forge.
-func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.HostingPlatform) error {
-	return runner.Run("git", "config", configdomain.KeyHostingPlatform.String(), platform.String())
+func (self *Commands) SetHostingPlatform(runner gitdomain.Runner, platform configdomain.ForgeType) error {
+	return runner.Run("git", "config", configdomain.KeyForgeType.String(), platform.String())
 }
 
 // SetHostingPlatform sets the given forge.

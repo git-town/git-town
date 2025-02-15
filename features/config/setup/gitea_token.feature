@@ -33,7 +33,7 @@ Feature: enter the Gitea API token
     Then Git Town runs the commands
       | COMMAND                                |
       | git config git-town.gitea-token 123456 |
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.gitea-token" is now "123456"
 
   Scenario: select Gitea manually
@@ -62,13 +62,13 @@ Feature: enter the Gitea API token
       | ship-delete-tracking-branch | enter                |                                             |
       | save config to Git metadata | down enter           |                                             |
     Then Git Town runs the commands
-      | COMMAND                                    |
-      | git config git-town.gitea-token 123456     |
-      | git config git-town.hosting-platform gitea |
-    And local Git setting "git-town.hosting-platform" is now "gitea"
+      | COMMAND                                |
+      | git config git-town.gitea-token 123456 |
+      | git config git-town.forge-type gitea   |
+    And local Git setting "git-town.forge-type" is now "gitea"
     And local Git setting "git-town.gitea-token" is now "123456"
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.gitea-token" now doesn't exist

@@ -29,7 +29,7 @@ func repoCommand() *cobra.Command {
 		Use:   "repo [remote]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: repoDesc,
-		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyHostingPlatform, configdomain.KeyHostingOriginHostname)),
+		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {

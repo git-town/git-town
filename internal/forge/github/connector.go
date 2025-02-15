@@ -154,7 +154,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.HostingGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	commitMessageParts := message.Parts()
 	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",

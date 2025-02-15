@@ -24,7 +24,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	}
 	var connector forgedomain.Connector
 	switch platform {
-	case configdomain.HostingPlatformBitbucket:
+	case configdomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword:     config.NormalConfig.BitbucketAppPassword,
 			HostingPlatform: hostingPlatform,
@@ -33,7 +33,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			UserName:        config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
-	case configdomain.HostingPlatformBitbucketDatacenter:
+	case configdomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:     config.NormalConfig.BitbucketAppPassword,
 			HostingPlatform: hostingPlatform,
@@ -42,14 +42,14 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			UserName:        config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
-	case configdomain.HostingPlatformGitea:
+	case configdomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GiteaToken,
 			Log:       log,
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), nil
-	case configdomain.HostingPlatformGitHub:
+	case configdomain.ForgeTypeGitHub:
 		var err error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  github.GetAPIToken(config.NormalConfig.GitHubToken),
@@ -57,7 +57,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
-	case configdomain.HostingPlatformGitLab:
+	case configdomain.ForgeTypeGitLab:
 		var err error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitLabToken,

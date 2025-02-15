@@ -65,6 +65,7 @@ const (
 	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
+	KeyDeprecatedHostingPlatform           = Key("git-town.hosting-platform")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag         = Key("git-town.new-branch-push-flag")
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
@@ -74,39 +75,36 @@ const (
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
 	KeyDevRemote                           = Key("git-town.dev-remote")
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
+	KeyForgeType                           = Key("git-town.forge-type")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
 	KeyGitlabToken                         = Key("git-town.gitlab-token")
-	// TODO: rename to KeyForgeHostname
-	KeyHostingOriginHostname = Key("git-town.hosting-origin-hostname")
-	// TODO: rename to KeyForgeType
-	KeyHostingPlatform          = Key("git-town.hosting-platform")
-	KeyMainBranch               = Key("git-town.main-branch")
-	KeyNewBranchType            = Key("git-town.new-branch-type")
-	KeyObservedBranches         = Key("git-town.observed-branches")
-	KeyObservedRegex            = Key("git-town.observed-regex")
-	KeyOffline                  = Key("git-town.offline")
-	KeyParkedBranches           = Key("git-town.parked-branches")
-	KeyPerennialBranches        = Key("git-town.perennial-branches")
-	KeyPerennialRegex           = Key("git-town.perennial-regex")
-	KeyPrototypeBranches        = Key("git-town.prototype-branches")
-	KeyPushHook                 = Key("git-town.push-hook")
-	KeyPushNewBranches          = Key("git-town.push-new-branches")
-	KeyShipDeleteTrackingBranch = Key("git-town.ship-delete-tracking-branch")
-	KeyShipStrategy             = Key("git-town.ship-strategy")
-	KeyObsoleteSyncBeforeShip   = Key("git-town.sync-before-ship")
-	KeySyncFeatureStrategy      = Key("git-town.sync-feature-strategy")
-	KeySyncPerennialStrategy    = Key("git-town.sync-perennial-strategy")
-	KeySyncPrototypeStrategy    = Key("git-town.sync-prototype-strategy")
-	KeySyncTags                 = Key("git-town.sync-tags")
-	KeySyncUpstream             = Key("git-town.sync-upstream")
-	KeyGitUserEmail             = Key("user.email")
-	KeyGitUserName              = Key("user.name")
+	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
+	KeyMainBranch                          = Key("git-town.main-branch")
+	KeyNewBranchType                       = Key("git-town.new-branch-type")
+	KeyObservedBranches                    = Key("git-town.observed-branches")
+	KeyObservedRegex                       = Key("git-town.observed-regex")
+	KeyOffline                             = Key("git-town.offline")
+	KeyParkedBranches                      = Key("git-town.parked-branches")
+	KeyPerennialBranches                   = Key("git-town.perennial-branches")
+	KeyPerennialRegex                      = Key("git-town.perennial-regex")
+	KeyPrototypeBranches                   = Key("git-town.prototype-branches")
+	KeyPushHook                            = Key("git-town.push-hook")
+	KeyPushNewBranches                     = Key("git-town.push-new-branches")
+	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
+	KeyShipStrategy                        = Key("git-town.ship-strategy")
+	KeyObsoleteSyncBeforeShip              = Key("git-town.sync-before-ship")
+	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
+	KeySyncPerennialStrategy               = Key("git-town.sync-perennial-strategy")
+	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
+	KeySyncTags                            = Key("git-town.sync-tags")
+	KeySyncUpstream                        = Key("git-town.sync-upstream")
+	KeyGitUserEmail                        = Key("user.email")
+	KeyGitUserName                         = Key("user.name")
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingOriginHostname,
-	KeyHostingPlatform,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyContributionBranches,
@@ -118,6 +116,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
 	KeyDeprecatedCreatePrototypeBranches,
+	KeyDeprecatedHostingPlatform,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
@@ -127,6 +126,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedSyncStrategy,
 	KeyDevRemote,
 	KeyFeatureRegex,
+	KeyForgeType,
 	KeyGiteaToken,
 	KeyGithubToken,
 	KeyGitlabToken,
@@ -174,9 +174,10 @@ func ParseKey(name string) Option[Key] {
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
 var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
-	KeyDeprecatedCodeHostingDriver:         KeyHostingPlatform,
+	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
-	KeyDeprecatedCodeHostingPlatform:       KeyHostingPlatform,
+	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,
+	KeyDeprecatedHostingPlatform:           KeyForgeType,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:         KeyPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:      KeyPerennialBranches,

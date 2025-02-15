@@ -37,7 +37,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.perennial-branches" still doesn't exist
     And local Git setting "git-town.default-branch-type" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.push-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
@@ -94,7 +94,7 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist

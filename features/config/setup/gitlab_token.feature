@@ -33,7 +33,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                 |
       | git config git-town.gitlab-token 123456 |
-    And local Git setting "git-town.hosting-platform" still doesn't exist
+    And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: select GitLab manually
@@ -62,13 +62,13 @@ Feature: enter the GitLab API token
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
-      | COMMAND                                     |
-      | git config git-town.gitlab-token 123456     |
-      | git config git-town.hosting-platform gitlab |
-    And local Git setting "git-town.hosting-platform" is now "gitlab"
+      | COMMAND                                 |
+      | git config git-town.gitlab-token 123456 |
+      | git config git-town.forge-type gitlab   |
+    And local Git setting "git-town.forge-type" is now "gitlab"
     And local Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: undo
     When I run "git-town undo"
-    And local Git setting "git-town.hosting-platform" now doesn't exist
+    And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.gitlab-token" now doesn't exist
