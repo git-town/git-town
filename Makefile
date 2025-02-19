@@ -100,7 +100,12 @@ smokewin: install  # runs the Windows smoke tests
 	@env smoke=1 go test . -v -count=1
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc
+	@find . -type f \
+	  | grep -v './tools/node_modules' \
+		| grep -v '\./vendor/' \
+		| grep -v '\./.git/' \
+		| grep -v './website/book' \
+		| xargs tools/rta scc
 
 stats-release:  # displays statistics about the changes since the last release
 	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
@@ -115,7 +120,10 @@ test-go:  # smoke tests while working on the Go code
 	@make --no-print-directory lint
 
 todo:  # displays all TODO items
-	@git grep --color=always --line-number TODO ':!vendor' | grep -v Makefile | grep -v internal/hosting/bitbucketdatacenter/connector.go | grep -v context.TODO()
+	@git grep --color=always --line-number TODO ':!vendor' \
+	  | grep -v Makefile \
+		| grep -v internal/hosting/bitbucketdatacenter/connector.go \
+		| grep -v context.TODO()
 
 UNIT_TEST_DIRS = \
 	./internal/... \
