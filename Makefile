@@ -101,7 +101,7 @@ smokewin: install  # runs the Windows smoke tests
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f \
-	  | grep -v './tools/node_modules' \
+		| grep -v './tools/node_modules' \
 		| grep -v '\./vendor/' \
 		| grep -v '\./.git/' \
 		| grep -v './website/book' \
