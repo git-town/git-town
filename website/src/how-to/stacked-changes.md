@@ -24,9 +24,9 @@ empty merge conflicts when syncing the stack later. On GitLab that's
 [straightforward](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
 GitHub does not provide a fast-forward merge option out of the box but you can
 achieve it with the
-[fast-forward ship strategy](preferences/ship-strategy.md#fast-forward) together
-with the [compress](preferences/sync-feature-strategy.md#compress) or
-[rebase](preferences/sync-feature-strategy.md#rebase) sync strategy. The
+[fast-forward ship strategy](../preferences/ship-strategy.md#fast-forward)
+together with the [compress](../preferences/sync-feature-strategy.md#compress)
+or [rebase](../preferences/sync-feature-strategy.md#rebase) sync strategy. The
 [Git Town GitHub Action](https://github.com/marketplace/actions/git-town-github-action)
 adds a visual description of which branch of the stack the pull request is for.
 
@@ -58,7 +58,7 @@ The first feature branch contains the refactor. We create a feature branch named
 git town hack 1-refactor
 ```
 
-[git town hack](commands/hack.md) creates a new feature branch off the main
+[git town hack](../commands/hack.md) creates a new feature branch off the main
 branch. We perform the refactor and commit it.
 
 ## Branch 2: rename foo
@@ -72,8 +72,9 @@ branch `1-refactor`:
 git town append 2-rename-foo
 ```
 
-[git town append](commands/append.md) creates a new feature branch on top of the
-currently checked out branch (which is `1-refactor`). We now have this lineage:
+[git town append](../commands/append.md) creates a new feature branch on top of
+the currently checked out branch (which is `1-refactor`). We now have this
+lineage:
 
 ```
 main
@@ -136,9 +137,9 @@ git town sync
 ```
 
 Because we created the branches with `git town append`, Git Town knows about the
-branch lineage and [git town sync](commands/sync.md) can update all branches in
-the right order. It updates the `main` branch, merges `main` into branch 1. Then
-it merges branch 1 into branch 2 and branch 2 into branch 3.
+branch lineage and [git town sync](../commands/sync.md) can update all branches
+in the right order. It updates the `main` branch, merges `main` into branch 1.
+Then it merges branch 1 into branch 2 and branch 2 into branch 3.
 
 ## Shipping the refactor
 
@@ -148,7 +149,7 @@ We got the approval for the refactor from step 1. Let's ship it!
 git town ship 1-refactor
 ```
 
-You have to use the [git town ship](commands/ship.md) command here because it
+You have to use the [git town ship](../commands/ship.md) command here because it
 updates the lineage that Git Town keeps track of. With branch `1-refactor`
 shipped, our lineage now looks like this:
 
@@ -237,9 +238,9 @@ and in any order, i.e. faster and with fewer merge conflicts.
 #### Organize branch chains in the order you want to ship
 
 You always have to ship the oldest branch first. You can use
-[git town prepend](commands/prepend.md) to insert a feature branch as a parent
-of the current feature branch or [set parent](commands/set-parent.md) to change
-the order of branches.
+[git town prepend](../commands/prepend.md) to insert a feature branch as a
+parent of the current feature branch or [set parent](../commands/set-parent.md)
+to change the order of branches.
 
 #### Avoid phantom merge conflicts
 
@@ -254,10 +255,10 @@ rebase operations.
 GitLab provides fast-forward merges
 [out of the box](https://docs.gitlab.com/ee/user/project/merge_requests/methods/#fast-forward-merge).
 GitHub doesn't provide this out-of-the-box, but allows a workaround that you can
-utilize by using [git town ship](commands/ship.md) with the
-[fast-forward shipping strategy](preferences/ship-strategy.md#fast-forward).
+utilize by using [git town ship](../commands/ship.md) with the
+[fast-forward shipping strategy](../preferences/ship-strategy.md#fast-forward).
 This problem is documented by
 [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch).
 
-You might want to [compress](commands/compress.md) the feature branch to have
+You might want to [compress](../commands/compress.md) the feature branch to have
 only one new commit on the main branch.

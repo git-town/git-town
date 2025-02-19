@@ -8,7 +8,7 @@ _Notice: Most people don't need to use this command. The recommended way to
 merge your feature branches is to use the web UI or merge queue of your code
 hosting service, as you would normally do. `git town ship` is for edge cases
 like developing in [offline mode](../preferences/offline.md) or when shipping
-[stacked changes](../stacked-changes.md)._
+[stacked changes](../how-to/stacked-changes.md)._
 
 The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch.
@@ -57,7 +57,7 @@ determine the repository state.
 
 The configured [ship-strategy](../preferences/ship-strategy.md) determines how
 the _ship_ command merges branches. When shipping
-[stacked changes](../stacked-changes.md), use the
+[stacked changes](../how-to/stacked-changes.md), use the
 [fast-forward ship strategy](../preferences/ship-strategy.md#fast-forward) to
 avoid empty merge conflicts.
 
