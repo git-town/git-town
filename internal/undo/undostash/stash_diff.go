@@ -14,6 +14,7 @@ type StashDiff struct {
 
 func NewStashDiff(before, after gitdomain.StashSize) StashDiff {
 	diff := int(after) - int(before)
+	// limit stashes to unpop to at most 1 because Git Town never creates more than 1 stash entry
 	if diff > 1 {
 		diff = 1
 	}
