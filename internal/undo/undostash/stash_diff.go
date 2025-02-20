@@ -13,8 +13,12 @@ type StashDiff struct {
 }
 
 func NewStashDiff(before, after gitdomain.StashSize) StashDiff {
+	diff := int(after) - int(before)
+	if diff > 2 {
+		diff = 2
+	}
 	return StashDiff{
-		EntriesAdded: int(after) - int(before),
+		EntriesAdded: diff,
 	}
 }
 
