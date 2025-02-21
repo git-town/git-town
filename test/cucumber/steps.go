@@ -514,6 +514,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^I add an unrelated stash entry$`, func(ctx context.Context) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile("additional_stash", "stash content")
+		devRepo.StashOpenFiles()
+	})
+
 	sc.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch$`, func(ctx context.Context, message, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
