@@ -1,6 +1,8 @@
 package undostash
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/vm/opcodes"
 	"github.com/git-town/git-town/v18/internal/vm/program"
@@ -15,6 +17,7 @@ type StashDiff struct {
 func NewStashDiff(before, after gitdomain.StashSize) StashDiff {
 	diff := int(after) - int(before)
 	// limit stashes to unpop to at most 1 because Git Town never creates more than 1 stash entry
+	fmt.Println("1111111111111111111111111111111", diff)
 	if diff > 1 {
 		diff = 1
 	}

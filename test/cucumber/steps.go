@@ -230,6 +230,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFile(name, content)
 	})
 
+	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)" exists$`, func(ctx context.Context, name, content string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.uncommittedFileName = Some(name)
+		state.uncommittedContent = Some(content)
+		devRepo.CreateFile(name, content)
+	})
+
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddUpstream()
@@ -514,10 +522,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^I add an unrelated stash entry$`, func(ctx context.Context) {
+	sc.Step(`^I add an unrelated stash entry with file "([^"]+)"$`, func(ctx context.Context, filename string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CreateFile("additional_stash", "stash content")
+		devRepo.CreateFile(filename, "stash content")
 		devRepo.StashOpenFiles()
 	})
 
@@ -869,6 +877,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 		files := devRepo.UncommittedFiles()
 		if len(files) > 0 {
 			return fmt.Errorf("unexpected uncommitted files: %s", files)
+		}
+		return nil
+	})
+
+	sc.Step(`^an uncommitted file with name "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		files := devRepo.UncommittedFiles()
+		if len(files) != 1 {
+			return fmt.Errorf("expected 1 uncommitted files but found %s", files)
 		}
 		return nil
 	})

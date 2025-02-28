@@ -27,32 +27,32 @@ Feature: do not pop stashes that were added while resolving conflicts
     And I resolve the conflict in "conflicting_file"
     And I run "git add ."
     And I run "git commit --no-edit"
-    And I add an unrelated stash entry
-    When I run "git-town continue"
+    And I add an unrelated stash entry with file "stashed_file"
 
-  Scenario: result
+  Scenario: continue
+    When I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND  |
-      | feature | git push |
+      | BRANCH  | COMMAND                |
+      | feature | git push               |
+      |         | git stash pop          |
+      |         | git restore --staged . |
     And no merge is in progress
+    And the uncommitted file still exists
     And all branches are now synchronized
 
   @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                                    |
-      | feature | git add -A                                                                                 |
-      |         | git stash -m "Git Town WIP"                                                                |
-      |         | git reset --hard {{ sha 'conflicting local commit' }}                                      |
-      |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
-      |         | git stash pop                                                                              |
-      |         | git restore --staged .                                                                     |
-      |         | git stash pop                                                                              |
-      |         | git restore --staged .                                                                     |
+      | BRANCH  | COMMAND                |
+      | feature | git merge --abort      |
+      |         | git stash pop          |
+      |         | git restore --staged . |
     And no merge is in progress
+    And an uncommitted file with name "stashed_file" exists now
     And the current branch is still "feature"
     And these commits exist now
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | feature | local    | conflicting local commit  | conflicting_file | local content  |
-      |         | origin   | conflicting origin commit | conflicting_file | origin content |
+      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        | FILE CONTENT     |
+      | feature | local         | conflicting local commit                                   | conflicting_file | local content    |
+      |         | local, origin | conflicting origin commit                                  | conflicting_file | origin content   |
+      |         | local         | Merge remote-tracking branch 'origin/feature' into feature | conflicting_file | resolved content |
