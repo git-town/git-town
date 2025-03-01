@@ -14,13 +14,7 @@ describe("tokenize", () => {
   });
 
   it("should not split tokens wrapped by various brackets", () => {
-    for (
-      const [left, right] of [
-        ["(", ")"],
-        ["<", ">"],
-        ["[", "]"],
-      ]
-    ) {
+    for (const [left, right] of [["(", ")"], ["<", ">"], ["[", "]"]]) {
       const have = `git town append ${left}-p | --prototype${right}`;
       const want = ["git", "town", "append", `${left}-p | --prototype${right}`];
       assert.deepEqual(tokenize(have), want);
