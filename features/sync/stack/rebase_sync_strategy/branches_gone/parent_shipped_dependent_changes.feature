@@ -1,4 +1,4 @@
-Feature: syncing a branch whose parent was shipped
+Feature: syncing a branch whose parent with dependent changes was shipped
 
   Background:
     Given a Git repo with origin
