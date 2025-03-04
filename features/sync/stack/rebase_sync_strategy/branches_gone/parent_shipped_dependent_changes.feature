@@ -1,16 +1,20 @@
-Feature: syncing a branch whose parent was shipped
+Feature: syncing a branch whose parent with dependent changes was shipped
 
   Background:
     Given a Git repo with origin
     And the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
-      | child  | feature | parent | local, origin |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE       |
-      | parent | local, origin | parent commit |
-      | child  | local, origin | child commit  |
+      | BRANCH | LOCATION      | MESSAGE       | FILE NAME | FILE CONTENT   |
+      | parent | local, origin | parent commit | file      | parent content |
+    And the branches
+      | NAME  | TYPE    | PARENT | LOCATIONS     |
+      | child | feature | parent | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
+      | child  | local, origin | child commit | file      | child content |
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "parent" branch using the "squash-merge" ship-strategy
     And the current branch is "child"
     When I run "git-town sync"
@@ -34,6 +38,10 @@ Feature: syncing a branch whose parent was shipped
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE       | FILE NAME | FILE CONTENT   |
+      | main   | local, origin | parent commit | file      | parent content |
+      | child  | local, origin | child commit  | file      | child content  |
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
