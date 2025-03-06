@@ -49,7 +49,6 @@ Feature: syncing a branch whose parent with dependent changes was shipped
       | BRANCH   | PARENT |
       | branch-2 | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
