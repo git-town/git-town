@@ -53,12 +53,12 @@ Feature: syncing a branch with multiple commits whose parent with dependent chan
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                |
-      | child  | git reset --hard {{ sha 'child commit' }}              |
-      |        | git push --force-with-lease --force-if-includes        |
-      |        | git checkout main                                      |
-      | main   | git reset --hard {{ sha 'initial commit' }}            |
-      |        | git branch parent {{ sha-before-run 'parent commit' }} |
-      |        | git checkout child                                     |
-    And the current branch is still "child"
+      | BRANCH   | COMMAND                                             |
+      | branch-2 | git reset --hard {{ sha-before-run 'commit 4' }}    |
+      |          | git push --force-with-lease --force-if-includes     |
+      |          | git checkout main                                   |
+      | main     | git reset --hard {{ sha 'initial commit' }}         |
+      |          | git branch branch-1 {{ sha-before-run 'commit 2' }} |
+      |          | git checkout branch-2                               |
+    And the current branch is still "branch-2"
     And the initial branches and lineage exist now
