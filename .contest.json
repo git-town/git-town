@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/contest-framework/server/refs/heads/main/documentation/schema.json",
   "actions": [
     {
       "type": "test-all",
@@ -21,6 +22,12 @@
       "type": "test-file",
       "files": "**/*_test.go",
       "run": "go test {{file}}"
+    },
+
+    {
+      "type": "test-file",
+      "files": "**/*.md",
+      "run": "text-runner {{file}}"
     }
   ],
   "options": {
