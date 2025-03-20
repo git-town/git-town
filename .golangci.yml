@@ -28,6 +28,7 @@ linters:
     - nonamedreturns # they are useful in too many situations
     - nlreturn # this forces unnecessary empty lines in function bodies
     - staticcheck # we run this separately
+    - tenv # deprecated
     - typecheck # seems buggy
     - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
