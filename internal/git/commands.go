@@ -930,7 +930,11 @@ func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gi
 			sha = Some(gitdomain.NewSHA(parts[4]))
 		} else {
 			branchName = parts[0]
-			sha = Some(gitdomain.NewSHA(parts[1]))
+			rawSHA := parts[1]
+			if rawSHA == "->" {
+				continue
+			}
+			sha = Some(gitdomain.NewSHA(rawSHA))
 		}
 		remoteText := parts[2]
 		if line[0] == '*' {
