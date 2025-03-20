@@ -606,8 +606,12 @@ func (self *Commands) PushLocalBranch(runner gitdomain.Runner, localSHA gitdomai
 }
 
 // PushTags pushes new the Git tags to origin.
-func (self *Commands) PushTags(runner gitdomain.Runner) error {
-	return runner.Run("git", "push", "--tags")
+func (self *Commands) PushTags(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push", "--tags"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	return runner.Run("git", args...)
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
