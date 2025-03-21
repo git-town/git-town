@@ -7,7 +7,7 @@ import (
 
 const proposeLong = "propose"
 
-// type-safe access to the CLI arguments of type gitdomain.Propose
+// type-safe access to the CLI arguments of type configdomain.Propose
 func Propose() (AddFunc, ReadProposeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(proposeLong, "", false, "propose the new branch")

@@ -7,7 +7,7 @@ import (
 
 const prototypeLong = "prototype"
 
-// type-safe access to the CLI arguments of type gitdomain.Prototype
+// type-safe access to the CLI arguments of type configdomain.Prototype
 func Prototype() (AddFunc, ReadPrototypeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(prototypeLong, "p", false, "create a prototype branch")
