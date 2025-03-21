@@ -12,6 +12,10 @@
 - Git Town now handles symbolic refs correctly ([#4588](https://github.com/git-town/git-town/issues/4588)).
 - [git town undo](https://www.git-town.com/commands/undo.html) now unstashes at most one Git stash ([#4577](https://github.com/git-town/git-town/issues/4577)).
 
+#### Contributors
+
+Shoutout to @andrei9669, @blarson-hearst, @caccavale, @kevgo, @lud-wj for contributing ideas, feedback, and code to 24 shipped PRs and 4 resolved issues!
+
 ## 18.0.0 (2025-01-27)
 
 #### BREAKING CHANGES
