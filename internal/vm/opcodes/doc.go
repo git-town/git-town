@@ -46,7 +46,7 @@ func All() []shared.Opcode {
 		&BranchCurrentResetToParent{},
 		&BranchCurrentResetToSHA{},
 		&BranchCurrentResetToSHAIfNeeded{},
-		&BranchDeleteIfEmptyAtRuntime{},
+		&BranchWitRemoteGoneDeleteIfEmptyAtRuntime{},
 		&BranchEnsureShippableChanges{},
 		&BranchLocalDelete{},
 		&BranchLocalDeleteContent{},

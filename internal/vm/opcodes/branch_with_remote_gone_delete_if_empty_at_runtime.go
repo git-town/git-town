@@ -8,13 +8,13 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// BranchDeleteIfEmptyAtRuntime deletes the given branch if it has no content at runtime.
-type BranchDeleteIfEmptyAtRuntime struct {
+// BranchWitRemoteGoneDeleteIfEmptyAtRuntime deletes the given branch if it has no content at runtime.
+type BranchWitRemoteGoneDeleteIfEmptyAtRuntime struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *BranchDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
+func (self *BranchWitRemoteGoneDeleteIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.Branch).Get()
 	if !hasParent {
 		return nil
