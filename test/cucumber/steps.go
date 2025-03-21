@@ -230,14 +230,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFile(name, content)
 	})
 
-	sc.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)" exists$`, func(ctx context.Context, name, content string) {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		state.uncommittedFileName = Some(name)
-		state.uncommittedContent = Some(content)
-		devRepo.CreateFile(name, content)
-	})
-
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddUpstream()
