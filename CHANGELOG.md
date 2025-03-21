@@ -8,7 +8,7 @@
 
 #### Bug Fixes
 
-- Pushing tags now also adheres to the [push-hook](https://www.git-town.com/preferences/push-hook.html) setting ([#4584](https://github.com/git-town/git-town/issues/4584)).
+- Pushing tags now also follows to the [push-hook](https://www.git-town.com/preferences/push-hook.html) setting ([#4584](https://github.com/git-town/git-town/issues/4584)).
 - Git Town now handles symbolic refs correctly ([#4588](https://github.com/git-town/git-town/issues/4588)).
 - [git town undo](https://www.git-town.com/commands/undo.html) now unstashes at most one Git stash ([#4577](https://github.com/git-town/git-town/issues/4577)).
 
