@@ -1,3 +1,4 @@
+@this
 Feature: do not pop stashes that were added while resolving conflicts
 
   Background:
@@ -37,10 +38,9 @@ Feature: do not pop stashes that were added while resolving conflicts
       |         | git stash pop          |
       |         | git restore --staged . |
     And no merge is in progress
-    And the uncommitted file still exists
+    And an uncommitted file with name "shashed_file" exists now
     And all branches are now synchronized
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
