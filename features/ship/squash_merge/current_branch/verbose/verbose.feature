@@ -10,9 +10,9 @@ Feature: display all executed Git commands
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    When I run "git-town ship -m done --verbose"
 
   Scenario: result
-    When I run "git-town ship -m done --verbose"
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
@@ -50,7 +50,6 @@ Feature: display all executed Git commands
     And the current branch is now "main"
 
   Scenario: undo
-    Given I ran "git-town ship -m done"
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                        |

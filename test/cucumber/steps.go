@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strings"
 	"time"
@@ -228,6 +229,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.uncommittedFileName = Some(name)
 		state.uncommittedContent = Some(content)
 		devRepo.CreateFile(name, content)
+	})
+
+	sc.Step(`^an uncommitted file with name "([^"]+)" exists now$`, func(ctx context.Context, filename string) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		files := devRepo.UncommittedFiles()
+		want := []string{filename}
+		if !reflect.DeepEqual(files, want) {
+			return fmt.Errorf("expected %s but found %s", want, files)
+		}
+		return nil
 	})
 
 	sc.Step(`^an upstream repo$`, func(ctx context.Context) {
@@ -512,6 +524,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 			return fmt.Errorf("unexpected value for %q: %q", name, have)
 		}
 		return nil
+	})
+
+	sc.Step(`^I add an unrelated stash entry with file "([^"]+)"$`, func(ctx context.Context, filename string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		devRepo.CreateFile(filename, "stash content")
+		devRepo.StashOpenFiles()
 	})
 
 	sc.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch$`, func(ctx context.Context, message, branch string) {
