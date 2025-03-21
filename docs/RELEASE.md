@@ -24,7 +24,7 @@ This guide is for maintainers who make releases of Git Town.
 - in a new branch:
   - update the changelog with links to the website
   - ship the branch
-- `git sync --all && git checkout main && git tag v18.0.0 && git push --tags`
+- `git sync --all && git checkout main && git tag v18.1.0 && git push --tags`
 - wait for CI to finish the release:
   https://github.com/git-town/git-town/actions
 - edit the new unpublished release:
