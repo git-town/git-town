@@ -57,6 +57,7 @@ type BranchProgramArgs struct {
 	InitialBranch       gitdomain.LocalBranchName
 	PrefetchBranchInfos gitdomain.BranchInfos // BranchInfos before "git fetch" ran
 	Program             Mutable[program.Program]
+	Prune               configdomain.Prune
 	PushBranches        configdomain.PushBranches
 	Remotes             gitdomain.Remotes
 }
@@ -79,6 +80,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
+			prune:              args.Prune,
 			pushBranches:       args.PushBranches,
 			trackingBranchName: branchInfo.RemoteName,
 		})
@@ -92,6 +94,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
+			prune:              args.Prune,
 			pushBranches:       args.PushBranches,
 			trackingBranchName: branchInfo.RemoteName,
 		})
@@ -107,6 +110,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
 			program:            args.Program,
+			prune:              args.Prune,
 			pushBranches:       configdomain.PushBranches(branchInfo.HasTrackingBranch()),
 			trackingBranchName: branchInfo.RemoteName,
 		})

@@ -53,6 +53,7 @@ func Cmd() *cobra.Command {
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addNoPushFlag, readNoPushFlag := flags.NoPush()
+	addPruneFlag, readPruneFlag := flags.Prune()
 	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -78,6 +79,10 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			prune, err := readPruneFlag(cmd)
+			if err != nil {
+				return err
+			}
 			stack, err := readStackFlag(cmd)
 			if err != nil {
 				return err
@@ -86,19 +91,20 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSync(allBranches, stack, detached, dryRun, verbose, noPush)
+			return executeSync(allBranches, stack, detached, dryRun, verbose, noPush, prune)
 		},
 	}
 	addAllFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addNoPushFlag(&cmd)
+	addPruneFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches) error {
+func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -128,6 +134,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             runProgram,
+		Prune:               prune,
 		PushBranches:        pushBranches,
 		Remotes:             data.remotes,
 	})

@@ -315,6 +315,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		PrefetchBranchInfos: data.preFetchBranchInfos,
 		Remotes:             data.remotes,
 		Program:             prog,
+		Prune:               false,
 		PushBranches:        true,
 	})
 	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {

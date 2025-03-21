@@ -139,6 +139,7 @@ type appendFeatureData struct {
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
 	prototype                 configdomain.Prototype
+	prune                     configdomain.Prune
 	remotes                   gitdomain.Remotes
 	stashSize                 gitdomain.StashSize
 	targetBranch              gitdomain.LocalBranchName
@@ -234,6 +235,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
+		prune:                     false,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
@@ -252,6 +254,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
+			Prune:               data.prune,
 			Remotes:             data.remotes,
 			PushBranches:        true,
 		})

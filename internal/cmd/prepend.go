@@ -315,6 +315,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
+			Prune:               false,
 			PushBranches:        true,
 			Remotes:             data.remotes,
 		})
