@@ -862,6 +862,28 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 
+		t.Run("symbolic reference", func(t *testing.T) {
+			t.Parallel()
+			give := `
+  main                                   4dc97db26 [origin/main] Commit 1
+  remotes/origin/HEAD                    -> origin/main
+  remotes/origin/main                    4dc97db26 Commit 1
+  remotes/origin/master                  -> origin/main
+`[1:]
+			want := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalSHA:   Some(gitdomain.NewSHA("4dc97db26")),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
+					RemoteSHA:  Some(gitdomain.NewSHA("4dc97db26")),
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			must.Eq(t, want, have)
+			must.Eq(t, None[gitdomain.LocalBranchName](), currentBranch)
+		})
+
 		t.Run("complex example", func(t *testing.T) {
 			give := `
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a

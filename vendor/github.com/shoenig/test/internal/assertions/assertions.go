@@ -164,7 +164,7 @@ func EqError(err error, msg string) (s string) {
 }
 
 func ErrorIs(err error, target error) (s string) {
-	if err == nil {
+	if err == nil && target != nil {
 		s = "expected non-nil error; got nil\n"
 		return
 	}

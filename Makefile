@@ -2,7 +2,7 @@ RTA_VERSION = 0.11.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "18.0.0"
+RELEASE_VERSION := "18.1.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
@@ -30,7 +30,7 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 	@tools/rta depth . | grep git-town
 
 docs: install tools/node_modules  # tests the documentation
-	@tools/rta node tools/node_modules/.bin/text-run --offline
+	@tools/rta node tools/node_modules/.bin/text-runner --offline
 
 fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	go run tools/format_unittests/format_unittests.go
