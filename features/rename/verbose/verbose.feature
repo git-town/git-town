@@ -10,9 +10,9 @@ Feature: display all executed Git commands
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
+    When I run "git-town rename new --verbose"
 
   Scenario: result
-    When I run "git-town rename new --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
@@ -47,7 +47,6 @@ Feature: display all executed Git commands
     And the current branch is now "new"
 
   Scenario: undo
-    Given I ran "git-town rename new"
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                       |

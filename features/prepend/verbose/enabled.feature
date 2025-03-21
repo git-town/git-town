@@ -9,9 +9,9 @@ Feature: display all executed Git commands
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    When I run "git-town prepend parent --verbose"
 
   Scenario: result
-    When I run "git-town prepend parent --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
@@ -48,7 +48,6 @@ Feature: display all executed Git commands
     And the current branch is now "parent"
 
   Scenario: undo
-    Given I ran "git-town prepend parent"
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                          |
