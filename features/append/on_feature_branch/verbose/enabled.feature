@@ -9,9 +9,9 @@ Feature: display all executed Git commands
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
     And the current branch is "existing"
+    When I run "git-town append new --verbose"
 
   Scenario: result
-    When I run "git-town append new --verbose"
     Then Git Town runs the commands
       | BRANCH   | TYPE     | COMMAND                                              |
       |          | backend  | git version                                          |
@@ -46,7 +46,6 @@ Feature: display all executed Git commands
     And the current branch is now "new"
 
   Scenario: undo
-    Given I ran "git-town append new"
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
       | BRANCH   | TYPE     | COMMAND                                       |

@@ -12,9 +12,9 @@ Feature: display all executed Git commands
       | branch-1 | local, origin | branch-1 commit |
     And origin deletes the "branch-2" branch
     And the current branch is "branch-2"
+    When I run "git-town sync --verbose"
 
   Scenario: result
-    When I run "git-town sync --verbose"
     Then Git Town runs the commands
       | BRANCH   | TYPE     | COMMAND                                            |
       |          | backend  | git version                                        |
@@ -53,7 +53,6 @@ Feature: display all executed Git commands
       | branch-1 | main   |
 
   Scenario: undo
-    Given I ran "git-town sync"
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                         |

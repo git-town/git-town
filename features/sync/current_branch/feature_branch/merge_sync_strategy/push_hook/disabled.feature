@@ -13,9 +13,9 @@ Feature: push-hook setting set to "false"
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
     And Git setting "git-town.push-hook" is "false"
+    When I run "git-town sync"
 
   Scenario: result
-    When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
@@ -39,8 +39,15 @@ Feature: push-hook setting set to "false"
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
-    And Git Town prints:
-      """
-      nothing to undo
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                                |
+      | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
+      |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
+    And the current branch is still "feature"
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, origin | origin main commit    |
+      |         |               | local main commit     |
+      | feature | local         | local feature commit  |
+      |         | origin        | origin feature commit |
+    And the initial branches and lineage exist now

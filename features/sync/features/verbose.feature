@@ -12,9 +12,9 @@ Feature: display all executed Git commands
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    When I run "git-town sync --verbose"
 
   Scenario: result
-    When I run "git-town sync --verbose"
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                            |
       |         | backend  | git version                                        |
