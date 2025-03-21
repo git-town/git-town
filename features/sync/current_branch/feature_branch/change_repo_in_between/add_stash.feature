@@ -1,4 +1,3 @@
-@this
 Feature: do not pop stashes that were added while resolving conflicts
 
   Background:
