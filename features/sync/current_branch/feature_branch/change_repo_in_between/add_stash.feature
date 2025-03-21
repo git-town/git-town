@@ -37,7 +37,7 @@ Feature: adding additional stash entries while resolving conflicts
       |         | git stash pop          |
       |         | git restore --staged . |
     And no merge is in progress
-    And an uncommitted file with name "shashed_file" exists now
+    And an uncommitted file with name "stashed_file" exists now
     And all branches are now synchronized
 
   Scenario: undo
