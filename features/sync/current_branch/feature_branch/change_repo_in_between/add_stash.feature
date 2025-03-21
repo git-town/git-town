@@ -1,4 +1,4 @@
-Feature: do not pop stashes that were added while resolving conflicts
+Feature: adding additional stash entries while resolving conflicts
 
   Background:
     Given a Git repo with origin
