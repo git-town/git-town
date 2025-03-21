@@ -1,5 +1,21 @@
 # Git Town Changelog
 
+## 18.1.0 (2025-03-20)
+
+#### New Features
+
+- This release replaces the term "hosting platform" with [forge](https://en.wikipedia.org/wiki/Forge_(software)) because the latter is more correct and only one word. The configuration setting `hosting.platform` is now `hosting.forge-type`. This isn't a breaking change since the old settings still work. ([#4565](https://github.com/git-town/git-town/pull/4565), [#4568](https://github.com/git-town/git-town/pull/4568), [#4570](https://github.com/git-town/git-town/pull/4570))
+
+#### Bug Fixes
+
+- Pushing tags now also follows the [push-hook](https://www.git-town.com/preferences/push-hook.html) setting ([#4584](https://github.com/git-town/git-town/issues/4584)).
+- Git Town now handles symbolic refs correctly ([#4588](https://github.com/git-town/git-town/issues/4588)).
+- [git town undo](https://www.git-town.com/commands/undo.html) now unstashes at most one Git stash ([#4577](https://github.com/git-town/git-town/issues/4577)).
+
+#### Contributors
+
+Shoutout to @andrei9669, @blarson-hearst, @caccavale, @kevgo, @lud-wj for contributing ideas, feedback, and code to 24 shipped PRs and 4 resolved issues!
+
 ## 18.0.0 (2025-01-27)
 
 #### BREAKING CHANGES
