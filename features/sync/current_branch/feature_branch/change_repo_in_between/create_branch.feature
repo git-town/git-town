@@ -1,4 +1,4 @@
-Feature: do not undo branches that were created while resolving conflicts
+Feature: adding additional branches while resolving conflicts
 
   Background:
     Given a Git repo with origin
