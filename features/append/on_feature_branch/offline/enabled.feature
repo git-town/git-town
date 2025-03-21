@@ -10,9 +10,9 @@ Feature: append in offline mode
       | existing | local, origin | existing commit |
     And the current branch is "existing"
     And offline mode is enabled
+    When I run "git-town append new"
 
   Scenario: result
-    When I run "git-town append new"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
       | existing | git merge --no-edit --ff main            |
@@ -22,7 +22,6 @@ Feature: append in offline mode
     And the initial commits exist now
 
   Scenario: undo
-    Given I ran "git-town append new"
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |

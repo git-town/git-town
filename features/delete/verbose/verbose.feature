@@ -12,9 +12,9 @@ Feature: display all executed Git commands
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And the current branch is "current" and the previous branch is "other"
+    When I run "git-town delete --verbose"
 
   Scenario: result
-    When I run "git-town delete --verbose"
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
