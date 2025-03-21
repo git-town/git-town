@@ -6,8 +6,9 @@ Feature: prune enabled via CLI
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-    When I run "git-town sync"
+    When I run "git-town sync --prune"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
