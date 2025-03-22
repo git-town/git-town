@@ -74,9 +74,9 @@ func TestGitea(t *testing.T) {
 	// t.Run("NewProposalURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingGitea,
-	// 		RemoteURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
-	// 		APIToken:       "",
-	// 		Log:            log.Silent{},
+	// 		RemoteURL:       giturl.Parse("git@gitea.com:git-town/docs.git"),
+	//    APIToken:        None[configdomain.GiteaToken](),
+	// 		Log:             log.Silent{},
 	// 	})
 	// 	must.NoError(t, err)
 	// 	have, err := connector.NewProposalURL("feature", "parent")
@@ -91,9 +91,9 @@ func TestGitea(t *testing.T) {
 	// t.Run("RepositoryURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingGitea,
-	// 		RemoteURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
-	// 		APIToken:       "",
-	// 		Log:            log.Silent{},
+	// 		RemoteURL:       giturl.Parse("git@gitea.com:git-town/docs.git"),
+	//    APIToken:        None[configdomain.GiteaToken](),
+	// 		Log:             log.Silent{},
 	// 	})
 	// 	must.NoError(t, err)
 	// 	have := connector.RepositoryURL()
@@ -113,7 +113,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingGitea,
 	// 		RemoteURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
-	// 		APIToken:       "apiToken",
+	//    APIToken:       None[configdomain.GiteaToken](),
 	// 		Log:            log.Silent{},
 	// 	})
 	// 	must.NoError(t, err)
@@ -133,9 +133,9 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingNone,
-	// 		RemoteURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
-	// 		APIToken:       "",
-	// 		Log:            log.Silent{},
+	// 		RemoteURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
+	//    APIToken:        None[configdomain.GiteaToken](),
+	// 		Log:             log.Silent{},
 	// 	})
 	// 	must.Nil(t, have)
 	// 	must.NoError(t, err)
@@ -150,9 +150,9 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	var remoteURL *giturl.Parts
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 	// 		HostingPlatform: configdomain.HostingNone,
-	// 		RemoteURL:      remoteURL,
-	// 		APIToken:       "",
-	// 		Log:            log.Silent{},
+	// 		RemoteURL:       remoteURL,
+	//    APIToken:        None[configdomain.GiteaToken](),
+	// 		Log:             log.Silent{},
 	// 	})
 	// 	must.Nil(t, have)
 	// 	must.NoError(t, err)

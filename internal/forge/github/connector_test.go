@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/forge/github"
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/git/giturl"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -87,7 +88,7 @@ func TestConnector(t *testing.T) {
 						Organization: "organization",
 						Repository:   "repo",
 					},
-					APIToken: configdomain.ParseGitHubToken("apiToken"),
+					APIToken: None[configdomain.GitHubToken](),
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent, "main", tt.title, tt.body)
 				must.NoError(t, err)
@@ -117,7 +118,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  configdomain.ParseGitHubToken("apiToken"),
+			APIToken:  None[configdomain.GitHubToken](),
 			Log:       print.Logger{},
 			RemoteURL: giturl.Parse("git@github.com:git-town/docs.git").GetOrPanic(),
 		})
@@ -133,7 +134,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  configdomain.ParseGitHubToken("apiToken"),
+			APIToken:  None[configdomain.GitHubToken](),
 			Log:       print.Logger{},
 			RemoteURL: giturl.Parse("git@custom-url.com:git-town/docs.git").GetOrPanic(),
 		})
