@@ -1,7 +1,6 @@
 package codeberg
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"net/url"
@@ -17,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v18/internal/messages"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"golang.org/x/oauth2"
 )
 
 // Connector provides standardized connectivity for the given repository (codeberg.org/owner/repo)
@@ -79,11 +77,11 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
-	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, codeberg.ListPullRequestsOptions{
-		ListOptions: codeberg.ListOptions{
+	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
+		ListOptions: forgejo.ListOptions{
 			PageSize: 50,
 		},
-		State: codeberg.StateOpen,
+		State: forgejo.StateOpen,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -122,11 +120,11 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
-	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, codeberg.ListPullRequestsOptions{
-		ListOptions: codeberg.ListOptions{
+	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
+		ListOptions: forgejo.ListOptions{
 			PageSize: 50,
 		},
-		State: codeberg.StateOpen,
+		State: forgejo.StateOpen,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -152,9 +150,9 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := message.Parts()
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
-	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), codeberg.MergePullRequestOption{
-		Style:   codeberg.MergeStyleSquash,
+	self.log.Start(messages.ForgeCodebergMergingViaAPI, colors.BoldGreen().Styled(strconv.Itoa(number)))
+	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), forgejo.MergePullRequestOption{
+		Style:   forgejo.MergeStyleSquash,
 		Title:   commitMessageParts.Subject,
 		Message: commitMessageParts.Text,
 	})
@@ -172,7 +170,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), codeberg.EditPullRequestOption{
+	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), forgejo.EditPullRequestOption{
 		Base: targetName,
 	})
 	if err != nil {
@@ -183,8 +181,8 @@ func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBra
 	return nil
 }
 
-func FilterPullRequests(pullRequests []*codeberg.PullRequest, branch, target gitdomain.LocalBranchName) []*codeberg.PullRequest {
-	result := []*codeberg.PullRequest{}
+func FilterPullRequests(pullRequests []*forgejo.PullRequest, branch, target gitdomain.LocalBranchName) []*forgejo.PullRequest {
+	result := []*forgejo.PullRequest{}
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() && pullRequest.Base.Name == target.String() {
 			result = append(result, pullRequest)
@@ -193,8 +191,8 @@ func FilterPullRequests(pullRequests []*codeberg.PullRequest, branch, target git
 	return result
 }
 
-func FilterPullRequests2(pullRequests []*codeberg.PullRequest, branch gitdomain.LocalBranchName) []*codeberg.PullRequest {
-	result := []*codeberg.PullRequest{}
+func FilterPullRequests2(pullRequests []*forgejo.PullRequest, branch gitdomain.LocalBranchName) []*forgejo.PullRequest {
+	result := []*forgejo.PullRequest{}
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch.String() {
 			result = append(result, pullRequest)
@@ -203,12 +201,9 @@ func FilterPullRequests2(pullRequests []*codeberg.PullRequest, branch gitdomain.
 	return result
 }
 
-// NewCodebergConfig provides Codeberg configuration data if the current repo is hosted on Codeberg,
-// otherwise nil.
-func NewConnector(args NewConnectorArgs) Connector {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	codebergClient := codeberg.NewClientWithHTTP("https://"+args.RemoteURL.Host, httpClient)
+// NewConnector provides a new connector instance.
+func NewConnector(args NewConnectorArgs) (Connector, error) {
+	codebergClient, err := forgejo.NewClient("https://"+args.RemoteURL.Host, forgejo.SetToken(args.APIToken.String()))
 	return Connector{
 		APIToken: args.APIToken,
 		Data: forgedomain.Data{
@@ -218,7 +213,7 @@ func NewConnector(args NewConnectorArgs) Connector {
 		},
 		client: codebergClient,
 		log:    args.Log,
-	}
+	}, err
 }
 
 type NewConnectorArgs struct {
@@ -227,7 +222,7 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parsePullRequest(pullRequest *codeberg.PullRequest) forgedomain.Proposal {
+func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
