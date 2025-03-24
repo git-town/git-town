@@ -8,7 +8,6 @@ Feature: prune enabled via CLI
     And the current branch is "feature"
     When I run "git-town sync --prune"
 
-  @debug
   @this
   Scenario: result
     Then Git Town runs the commands
