@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v18/internal/forge/codeberg"
 	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v18/internal/forge/gitea"
 	"github.com/git-town/git-town/v18/internal/forge/github"
@@ -42,6 +43,14 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			UserName:        config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
+	case configdomain.ForgeTypeCodeberg:
+		var err error
+		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
+			APIToken:  config.NormalConfig.CodebergToken,
+			Log:       log,
+			RemoteURL: remoteURL,
+		})
+		return Some(connector), err
 	case configdomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GiteaToken,

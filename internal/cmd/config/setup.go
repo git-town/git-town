@@ -168,6 +168,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			if err != nil || aborted {
 				return aborted, err
 			}
+		case configdomain.ForgeTypeCodeberg:
+			data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, err
+			}
 		case configdomain.ForgeTypeGitea:
 			data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
@@ -289,6 +294,10 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 		return err
 	}
 	err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, gitCommands, frontend)
+	if err != nil {
+		return err
+	}
+	err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
@@ -422,6 +431,16 @@ func saveForgeType(oldForgeType, newForgeType Option[configdomain.ForgeType], gi
 		return gitCommands.SetForgeType(frontend, newValue)
 	}
 	return gitCommands.DeleteConfigEntryForgeType(frontend)
+}
+
+func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
+	if newToken == oldToken {
+		return nil
+	}
+	if value, has := newToken.Get(); has {
+		return gitCommands.SetCodebergToken(frontend, value)
+	}
+	return gitCommands.RemoveCodebergToken(frontend)
 }
 
 func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], gitCommands git.Commands, frontend gitdomain.Runner) error {

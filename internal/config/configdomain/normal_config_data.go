@@ -14,6 +14,7 @@ type NormalConfigData struct {
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
+	CodebergToken            Option[CodebergToken]
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        BranchType
@@ -129,6 +130,7 @@ func DefaultNormalConfig() NormalConfigData {
 		BitbucketAppPassword:     None[BitbucketAppPassword](),
 		BitbucketUsername:        None[BitbucketUsername](),
 		BranchTypeOverrides:      BranchTypeOverrides{},
+		CodebergToken:            None[CodebergToken](),
 		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		DefaultBranchType:        BranchTypeFeatureBranch,

@@ -56,6 +56,7 @@ const (
 	KeyAliasSync                           = Key("alias.sync")
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
+	KeyCodebergToken                       = Key("git-town.codeberg-token")
 	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
@@ -107,6 +108,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingOriginHostname,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
+	KeyCodebergToken,
 	KeyContributionBranches,
 	KeyContributionRegex,
 	KeyDefaultBranchType,

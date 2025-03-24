@@ -16,6 +16,7 @@ func (self ForgeType) String() string { return string(self) }
 const (
 	ForgeTypeBitbucket           = ForgeType("bitbucket")
 	ForgeTypeBitbucketDatacenter = ForgeType("bitbucket-datacenter")
+	ForgeTypeCodeberg            = ForgeType("codeberg")
 	ForgeTypeGitHub              = ForgeType("github")
 	ForgeTypeGitLab              = ForgeType("gitlab")
 	ForgeTypeGitea               = ForgeType("gitea")
@@ -40,6 +41,7 @@ func forgeTypes() []ForgeType {
 	return []ForgeType{
 		ForgeTypeBitbucket,
 		ForgeTypeBitbucketDatacenter,
+		ForgeTypeCodeberg,
 		ForgeTypeGitHub,
 		ForgeTypeGitLab,
 		ForgeTypeGitea,

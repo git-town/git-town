@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"codeberg.org/mvdkleijn/forgejo-sdk"
+	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v18/internal/cli/colors"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
@@ -25,7 +25,7 @@ import (
 type Connector struct {
 	forgedomain.Data
 	APIToken Option[configdomain.CodebergToken]
-	client   *codeberg.Client
+	client   *forgejo.Client
 	log      print.Logger
 }
 
