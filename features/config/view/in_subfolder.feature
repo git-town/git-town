@@ -38,6 +38,7 @@ Feature: show the configuration from a subfolder
         origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
+        Codeberg token: (not set)
         Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
