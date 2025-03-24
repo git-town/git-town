@@ -52,7 +52,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
 				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: "111111"},
 				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: "222222", SetToSHA: "111111"},
-				&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.BranchEnsureShippableChanges{Branch: "branch", Parent: "parent"},
 				&opcodes.BranchLocalDelete{Branch: "branch"},
 				&opcodes.BranchLocalDeleteContent{BranchToDelete: "branch", BranchToRebaseOnto: "main"},
@@ -65,6 +64,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchTrackingDelete{Branch: "origin/branch"},
 				&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypeFeatureBranch},
 				&opcodes.BranchTypeOverrideRemove{Branch: "branch"},
+				&opcodes.BranchWithRemoteGoneDeleteIfEmptyAtRuntime{Branch: "branch"},
 				&opcodes.ChangesDiscard{},
 				&opcodes.ChangesStage{},
 				&opcodes.ChangesUnstageAll{},
@@ -201,12 +201,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
-      },
-      "type": "BranchDeleteIfEmptyAtRuntime"
-    },
-    {
-      "data": {
         "Branch": "branch",
         "Parent": "parent"
       },
@@ -284,6 +278,12 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "BranchTypeOverrideRemove"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "BranchWithRemoteGoneDeleteIfEmptyAtRuntime"
     },
     {
       "data": {},

@@ -37,6 +37,7 @@ Feature: show the configuration when using an alternative config file
         origin hostname: (not set)
         Bitbucket username: (not set)
         Bitbucket app password: (not set)
+        Codeberg token: (not set)
         Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)

@@ -36,6 +36,10 @@ func ForgeType(existingValue Option[configdomain.ForgeType], inputs components.T
 			Text: "Bitbucket Data Center",
 		},
 		{
+			Data: Some(configdomain.ForgeTypeCodeberg),
+			Text: "Codeberg",
+		},
+		{
 			Data: Some(configdomain.ForgeTypeGitea),
 			Text: "Gitea",
 		},

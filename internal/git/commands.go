@@ -663,6 +663,10 @@ func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
 }
 
+func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyCodebergToken.String())
+}
+
 func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
 	return runner.Run("git", "rm", fileName)
 }
@@ -750,6 +754,10 @@ func (self *Commands) SetBitbucketAppPassword(runner gitdomain.Runner, value con
 
 func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value configdomain.BitbucketUsername) error {
 	return runner.Run("git", "config", configdomain.KeyBitbucketUsername.String(), value.String())
+}
+
+func (self *Commands) SetCodebergToken(runner gitdomain.Runner, value configdomain.CodebergToken) error {
+	return runner.Run("git", "config", configdomain.KeyCodebergToken.String(), value.String())
 }
 
 func (self *Commands) SetForgeType(runner gitdomain.Runner, platform configdomain.ForgeType) error {

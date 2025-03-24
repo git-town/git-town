@@ -4,6 +4,7 @@ go 1.23.6
 
 require (
 	code.gitea.io/sdk/gitea v0.20.0
+	codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.0.0
 	github.com/BurntSushi/toml v1.5.0
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/carlmjohnson/requests v0.24.3

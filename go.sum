@@ -1,6 +1,8 @@
 cloud.google.com/go/compute/metadata v0.3.0/go.mod h1:zFmK7XCadkQkj6TtorcaGlCW1hT1fIilQDwofLpJ20k=
 code.gitea.io/sdk/gitea v0.20.0 h1:Zm/QDwwZK1awoM4AxdjeAQbxolzx2rIP8dDfmKu+KoU=
 code.gitea.io/sdk/gitea v0.20.0/go.mod h1:faouBHC/zyx5wLgjmRKR62ydyvMzwWf3QnU0bH7Cw6U=
+codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.0.0 h1:DMrDRx/7ke6+IReKtbZ1ZwfuaXQfG4P3yn9O/z9a08Y=
+codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.0.0/go.mod h1:9iyacQPbTwXp9klusoNOat2ZeFsWe+mmaDdZKywK220=
 github.com/42wim/httpsig v1.2.2 h1:ofAYoHUNs/MJOLqQ8hIxeyz2QxOz8qdSVvp3PX/oPgA=
 github.com/42wim/httpsig v1.2.2/go.mod h1:P/UYo7ytNBFwc+dg35IubuAUIs8zj5zzFIgUCEl55WY=
 github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=

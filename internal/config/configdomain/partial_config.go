@@ -13,6 +13,7 @@ type PartialConfig struct {
 	BitbucketAppPassword     Option[BitbucketAppPassword]
 	BitbucketUsername        Option[BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
+	CodebergToken            Option[CodebergToken]
 	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        Option[BranchType]
@@ -98,6 +99,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
+		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
 		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,
@@ -142,6 +144,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketAppPassword:     other.BitbucketAppPassword.Or(self.BitbucketAppPassword),
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
+		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
@@ -183,6 +186,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		BitbucketAppPassword:     self.BitbucketAppPassword,
 		BitbucketUsername:        self.BitbucketUsername,
 		BranchTypeOverrides:      self.BranchTypeOverrides,
+		CodebergToken:            self.CodebergToken,
 		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),

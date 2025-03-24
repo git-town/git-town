@@ -68,6 +68,7 @@
     - [Origin hostname](preferences/hosting-origin-hostname.md)
     - [Bitbucket access token](preferences/bitbucket-app-password.md)
     - [Bitbucket username](preferences/bitbucket-username.md)
+    - [Codeberg token](preferences/codeberg-token.md)
     - [Gitea token](preferences/gitea-token.md)
     - [GitHub token](preferences/github-token.md)
     - [GitLab token](preferences/gitlab-token.md)
