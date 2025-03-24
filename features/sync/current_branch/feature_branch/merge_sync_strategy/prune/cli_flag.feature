@@ -14,7 +14,6 @@ Feature: prune enabled via CLI
     And the current branch is "feature-1"
     When I run "git-town sync --prune"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
