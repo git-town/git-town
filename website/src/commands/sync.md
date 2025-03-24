@@ -1,7 +1,7 @@
 # git town sync
 
 ```command-summary
-git town sync [-a | --all] [--no-push] [-s | --stack] [-d | --detached] [--dry-run] [-v | --verbose]
+git town sync [-a | --all] [--no-push] [-s | --stack] [-d | --detached] [-p | --prune] [--dry-run] [-v | --verbose]
 ```
 
 The _sync_ command ("synchronize this branch") updates your local Git workspace
@@ -70,6 +70,11 @@ The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch at the root of your branch hierarchy. This allows you to keep your
 branches in sync with each other and decide when to pull in changes from other
 developers.
+
+#### `-p`<br>`--prune`
+
+The `--prune` aka `-p` flag removes (prunes) empty branches, i.e. branches that
+effectively don't make any changes.
 
 #### `--dry-run`
 

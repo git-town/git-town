@@ -10,7 +10,7 @@ const pruneLong = "prune"
 // type-safe access to the CLI arguments of type configdomain.Prune
 func Prune() (AddFunc, ReadPruneFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(pruneLong, "", false, "prune empty branches")
+		cmd.Flags().BoolP(pruneLong, "p", false, "prune empty branches")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Prune, error) {
 		value, err := cmd.Flags().GetBool(pruneLong)
