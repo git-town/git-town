@@ -46,7 +46,13 @@ Feature: prune enabled via CLI
     And these branches exist now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE                            |
+      | main      | local, origin | main commit                        |
+      | feature-3 | local, origin | feature-3 commit                   |
+      |           |               | Merge branch 'main' into feature-3 |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
