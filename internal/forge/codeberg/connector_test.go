@@ -16,6 +16,7 @@ import (
 
 func TestConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		give := forgedomain.Proposal{
