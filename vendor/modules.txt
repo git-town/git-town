@@ -2,6 +2,9 @@
 # code.gitea.io/sdk/gitea v0.20.0
 ## explicit; go 1.18
 code.gitea.io/sdk/gitea
+# codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2 v2.0.0
+## explicit; go 1.22
+codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2
 # github.com/42wim/httpsig v1.2.2
 ## explicit; go 1.18
 github.com/42wim/httpsig
