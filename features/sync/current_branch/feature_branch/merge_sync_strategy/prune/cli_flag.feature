@@ -17,7 +17,8 @@ Feature: prune enabled via CLI
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git checkout main                       |
-      | main    | git branch -D feature                   |
+      | main    | git push origin :feature                |
+      |         | git branch -D feature                   |
     And all branches are now synchronized
     And the current branch is now "main"
 
