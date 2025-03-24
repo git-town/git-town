@@ -8,7 +8,6 @@ Feature: prune enabled via CLI
     And the current branch is "feature"
     When I run "git-town sync --prune"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
@@ -20,11 +19,18 @@ Feature: prune enabled via CLI
       |         | git branch -D feature                   |
     And all branches are now synchronized
     And the current branch is now "main"
+    And these branches exist now
+      | REPOSITORY    | BRANCHES |
+      | local, origin | main     |
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
-    And Git Town prints:
-      """
-      nothing to undo
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                       |
+      | main   | git branch feature {{ sha 'initial commit' }} |
+      |        | git push -u origin feature                    |
+      |        | git checkout feature                          |
+    And the current branch is now "feature"
+    And these branches exist now
+      | REPOSITORY    | BRANCHES      |
+      | local, origin | main, feature |
