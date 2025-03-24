@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// GitHubToken is a bearer token to use with the GitHub API.
+// GitHubToken is a bearer token to use with the Codeberg API.
 type CodebergToken string
 
 func (self CodebergToken) String() string {
