@@ -11,7 +11,7 @@ Feature: prune enabled via CLI
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME  | FILE CONTENT  |
       | main      | local         | main commit      | file       | content       |
       | feature-1 | local         | feature-1 commit | file       | content       |
-      | feature-2 | local         | feature-2 commit | file       | content       |
+      | feature-2 | origin        | feature-2 commit | file       | content       |
       | feature-3 | local, origin | feature-3 commit | other_file | other content |
     And the current branch is "feature-1"
     When I run "git-town sync --all --prune"
@@ -55,20 +55,20 @@ Feature: prune enabled via CLI
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                         |
-      | main      | git checkout feature-3                                          |
-      | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                   |
-      |           | git push --force-with-lease --force-if-includes                 |
-      |           | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1 |
-      |           | git push origin {{ sha 'initial commit' }}:refs/heads/feature-2 |
-      |           | git branch feature-1 {{ sha 'feature-1 commit' }}               |
-      |           | git branch feature-2 {{ sha 'feature-2 commit' }}               |
-      |           | git checkout feature-1                                          |
+      | BRANCH    | COMMAND                                                                     |
+      | main      | git checkout feature-3                                                      |
+      | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                               |
+      |           | git push --force-with-lease --force-if-includes                             |
+      |           | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1             |
+      |           | git push origin {{ sha-in-origin 'feature-2 commit' }}:refs/heads/feature-2 |
+      |           | git branch feature-1 {{ sha 'feature-1 commit' }}                           |
+      |           | git branch feature-2 {{ sha 'initial commit' }}                             |
+      |           | git checkout feature-1                                                      |
     And the current branch is now "feature-1"
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | main commit      |
       | feature-1 | local         | feature-1 commit |
-      | feature-2 | local         | feature-2 commit |
+      | feature-2 | origin        | feature-2 commit |
       | feature-3 | local, origin | feature-3 commit |
