@@ -52,7 +52,6 @@ Feature: prune enabled via CLI
       | feature-3 | local, origin | feature-3 commit                   |
       |           |               | Merge branch 'main' into feature-3 |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
@@ -66,6 +65,10 @@ Feature: prune enabled via CLI
       |           | git branch feature-2 {{ sha 'feature-2 commit' }}               |
       |           | git checkout feature-1                                          |
     And the current branch is now "feature-1"
-    And these branches exist now
-      | REPOSITORY    | BRANCHES                              |
-      | local, origin | main, feature-1, feature-2, feature-3 |
+    And the initial branches and lineage exist now
+    And these commits exist now
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | main      | local, origin | main commit      |
+      | feature-1 | local         | feature-1 commit |
+      | feature-2 | local         | feature-2 commit |
+      | feature-3 | local, origin | feature-3 commit |
