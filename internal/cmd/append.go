@@ -136,6 +136,7 @@ type appendFeatureData struct {
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
 	commit                    configdomain.Commit
+	commitMessage             Option[gitdomain.CommitMessage]
 	config                    config.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
@@ -298,7 +299,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			&opcodes.Commit{
 				AuthorOverride:                 None[gitdomain.Author](),
 				FallbackToDefaultCommitMessage: false,
-				Message:                        None[gitdomain.CommitMessage](),
+				Message:                        data.commitMessage,
 			},
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)

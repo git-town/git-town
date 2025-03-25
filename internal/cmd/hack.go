@@ -42,6 +42,7 @@ func hackCmd() *cobra.Command {
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit messag")
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -63,6 +64,10 @@ func hackCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			commitMessage, err := readCommitMessageFlag(cmd)
+			if err != nil {
+				return err
+			}
 			prototype, err := readPrototypeFlag(cmd)
 			if err != nil {
 				return err
@@ -71,10 +76,11 @@ func hackCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeHack(args, commit, detached, dryRun, prototype, verbose)
+			return executeHack(args, commit, commitMessage, detached, dryRun, prototype, verbose)
 		},
 	}
 	addCommitFlag(&cmd)
+	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
@@ -82,7 +88,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeHack(args []string, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -94,7 +100,7 @@ func executeHack(args []string, commit configdomain.Commit, detached configdomai
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, commit, detached, dryRun, prototype, verbose)
+	data, exit, err := determineHackData(args, repo, commit, commitMessage, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -188,7 +194,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -295,6 +301,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, commit config
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
+		commitMessage:             commitMessage,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
