@@ -20,6 +20,9 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 			PushBranches:       args.pushBranches,
 		})
 	}
+	if args.prune {
+		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
+	}
 }
 
 type featureBranchArgs struct {
@@ -29,6 +32,7 @@ type featureBranchArgs struct {
 	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
 	program            Mutable[program.Program]          // the program to update
+	prune              configdomain.Prune
 	pushBranches       configdomain.PushBranches
 	trackingBranchName Option[gitdomain.RemoteBranchName]
 }

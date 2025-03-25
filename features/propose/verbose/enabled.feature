@@ -28,6 +28,7 @@ Feature: display all executed Git commands
       |         | backend  | git log main..feature --format=%s --reverse                        |
       | feature | frontend | git merge --no-edit --ff main                                      |
       |         | frontend | git merge --no-edit --ff origin/feature                            |
+      |         | backend  | git show-ref --verify --quiet refs/heads/feature                   |
       |         | backend  | git rev-list --left-right feature...origin/feature                 |
       |         | backend  | git rev-parse --abbrev-ref --symbolic-full-name @{u}               |
       |         | backend  | git show-ref --verify --quiet refs/heads/main                      |
@@ -44,7 +45,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And Git Town prints:
       """
-      Ran 28 shell commands.
+      Ran 29 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """

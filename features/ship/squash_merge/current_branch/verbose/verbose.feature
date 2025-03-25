@@ -33,6 +33,7 @@ Feature: display all executed Git commands
       | main    | frontend | git merge --squash --ff feature                   |
       |         | frontend | git commit -m done                                |
       |         | backend  | git rev-parse --short main                        |
+      |         | backend  | git show-ref --verify --quiet refs/heads/main     |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | backend  | git config --unset git-town-branch.feature.parent |
@@ -45,7 +46,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 28 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "main"
 
@@ -65,6 +66,7 @@ Feature: display all executed Git commands
       |        | backend  | git remote get-url origin                      |
       |        | backend  | git log --pretty=format:%H %s -10              |
       | main   | frontend | git revert {{ sha 'done' }}                    |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main  |
       |        | backend  | git rev-list --left-right main...origin/main   |
       | main   | frontend | git push                                       |
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
@@ -74,6 +76,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.feature.parent main |
     And Git Town prints:
       """
-      Ran 19 shell commands.
+      Ran 20 shell commands.
       """
     And the current branch is now "feature"

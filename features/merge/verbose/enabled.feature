@@ -36,7 +36,8 @@ Feature: merging a branch verbosely
       |        | git checkout beta                               |
       | beta   | git merge --no-edit --ff alpha                  |
       |        | git merge --no-edit --ff origin/beta            |
-      | <none> | git rev-list --left-right beta...origin/beta    |
+      | <none> | git show-ref --verify --quiet refs/heads/beta   |
+      |        | git rev-list --left-right beta...origin/beta    |
       | beta   | git push                                        |
       | <none> | git config git-town-branch.beta.parent main     |
       |        | git config --unset git-town-branch.alpha.parent |
@@ -51,7 +52,7 @@ Feature: merging a branch verbosely
       |        | git stash list                                  |
     And Git Town prints:
       """
-      Ran 32 shell commands.
+      Ran 33 shell commands.
       """
 
   Scenario: undo
