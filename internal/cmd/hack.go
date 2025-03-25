@@ -56,15 +56,15 @@ func hackCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			commitMessage, err := readCommitMessageFlag(cmd)
+			if err != nil {
+				return err
+			}
 			detached, err := readDetachedFlag(cmd)
 			if err != nil {
 				return err
 			}
 			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			commitMessage, err := readCommitMessageFlag(cmd)
 			if err != nil {
 				return err
 			}
