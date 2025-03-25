@@ -288,11 +288,14 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	if data.commit {
-		prog.Value.Add(&opcodes.Commit{
-			AuthorOverride:                 None[gitdomain.Author](),
-			FallbackToDefaultCommitMessage: false,
-			Message:                        None[gitdomain.CommitMessage](),
-		})
+		prog.Value.Add(
+			&opcodes.Commit{
+				AuthorOverride:                 None[gitdomain.Author](),
+				FallbackToDefaultCommitMessage: false,
+				Message:                        None[gitdomain.CommitMessage](),
+			},
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
 	} else {
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,

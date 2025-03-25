@@ -11,21 +11,21 @@ Feature: commit without message
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And an uncommitted file with name "new_file" and content "new content"
+    And I ran "git add new_file"
     When I run "git-town hack new --commit" and enter "unrelated idea" for the commit message
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git checkout -b new main |
       | new      | git commit               |
+      |          | git checkout existing    |
     And the current branch is still "existing"
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local         | existing commit |
-      | new      | local         | unrelated idea  |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | existing | local    | existing commit |
+      | new      | local    | unrelated idea  |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
