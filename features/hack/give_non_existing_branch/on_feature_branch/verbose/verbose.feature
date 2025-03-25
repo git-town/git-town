@@ -24,6 +24,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git remote get-url origin                     |
       | main   | frontend | git rebase origin/main --no-update-refs       |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | main   | frontend | git checkout -b new                           |
@@ -36,7 +37,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And Git Town prints:
       """
-      Ran 23 shell commands.
+      Ran 24 shell commands.
       """
     And the current branch is now "new"
 

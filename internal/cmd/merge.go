@@ -291,6 +291,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		InitialBranch:       data.initialBranch,
 		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
 		Program:             prog,
+		Prune:               false,
 		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
 		Remotes:             data.remotes,
 	})

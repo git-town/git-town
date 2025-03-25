@@ -252,6 +252,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			InitialBranch:       data.initialBranch,
 			PrefetchBranchInfos: data.preFetchBranchInfos,
 			Program:             prog,
+			Prune:               false,
 			Remotes:             data.remotes,
 			PushBranches:        true,
 		})

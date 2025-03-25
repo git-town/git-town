@@ -32,11 +32,13 @@ Feature: display all executed Git commands
       |         | backend  | git log main..feature --format=%s --reverse        |
       | feature | frontend | git checkout main                                  |
       | main    | frontend | git rebase origin/main --no-update-refs            |
+      |         | backend  | git show-ref --verify --quiet refs/heads/main      |
       |         | backend  | git rev-list --left-right main...origin/main       |
       | main    | frontend | git push                                           |
       |         | frontend | git checkout feature                               |
       | feature | frontend | git merge --no-edit --ff main                      |
       |         | frontend | git merge --no-edit --ff origin/feature            |
+      |         | backend  | git show-ref --verify --quiet refs/heads/feature   |
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
       |         | backend  | git show-ref --verify --quiet refs/heads/feature   |
@@ -47,6 +49,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                     |
     And Git Town prints:
       """
-      Ran 28 shell commands.
+      Ran 30 shell commands.
       """
     And all branches are now synchronized
