@@ -1,7 +1,7 @@
 # git town hack
 
 ```command-summary
-git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [--dry-run] [-v | --verbose]
+git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [-c | --commit] [--dry-run] [-v | --verbose]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
@@ -43,6 +43,13 @@ Adding the `--prototype` aka `-p` switch creates a
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch. This allows you to build out your branch stack and decide when to pull
 in changes from other developers.
+
+#### `-c`<br>`--commit`
+
+When given, commits the currently staged changes into the branch to create and
+remains on the current branch. This is intended to quickly commit changes
+unrelated to the current branch into another branch and keep hacking on the
+current branch.
 
 #### `--dry-run`
 

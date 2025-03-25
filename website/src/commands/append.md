@@ -1,7 +1,7 @@
 # git town append
 
 ```command-summary
-git town append <branch-name> [--prototype] [-d | --detached] [--dry-run] [-v | --verbose]
+git town append <branch-name> [--prototype] [-d | --detached] [-c | --commit] [--dry-run] [-v | --verbose]
 ```
 
 The _append_ command creates a new feature branch with the given name as a
@@ -50,6 +50,13 @@ Adding the `--prototype` aka `-p` switch creates a
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
 branch. This allows you to build out your branch stack and decide when to pull
 in changes from other developers.
+
+#### `-c`<br>`--commit`
+
+When given, commits the currently staged changes into the branch to create and
+remains on the current branch. This is intended to quickly commit changes
+unrelated to the current branch into another branch and keep hacking on the
+current branch.
 
 #### `--dry-run`
 

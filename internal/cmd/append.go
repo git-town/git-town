@@ -38,6 +38,7 @@ Syncs the current branch, forks a new feature branch with the given name off the
 See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
+	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
@@ -49,6 +50,10 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			commit, err := readCommitFlag(cmd)
+			if err != nil {
+				return err
+			}
 			detached, err := readDetachedFlag(cmd)
 			if err != nil {
 				return err
@@ -65,9 +70,10 @@ func appendCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeAppend(args[0], detached, dryRun, prototype, verbose)
+			return executeAppend(args[0], commit, detached, dryRun, prototype, verbose)
 		},
 	}
+	addCommitFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
@@ -75,7 +81,7 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeAppend(arg string, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeAppend(arg string, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -87,7 +93,7 @@ func executeAppend(arg string, detached configdomain.Detached, dryRun configdoma
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, detached, dryRun, prototype, verbose)
+	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, commit, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -129,6 +135,7 @@ type appendFeatureData struct {
 	branchInfos               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
+	commit                    configdomain.Commit
 	config                    config.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
@@ -144,7 +151,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -224,6 +231,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
+		commit:                    commit,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
@@ -285,12 +293,23 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			}
 		}
 	}
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
-	})
+	if data.commit {
+		prog.Value.Add(
+			&opcodes.Commit{
+				AuthorOverride:                 None[gitdomain.Author](),
+				FallbackToDefaultCommitMessage: false,
+				Message:                        None[gitdomain.CommitMessage](),
+			},
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
+	} else {
+		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
+		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+			DryRun:                   data.dryRun,
+			RunInGitRoot:             true,
+			StashOpenChanges:         data.hasOpenChanges,
+			PreviousBranchCandidates: previousBranchCandidates,
+		})
+	}
 	return optimizer.Optimize(prog.Immutable())
 }
