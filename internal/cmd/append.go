@@ -129,6 +129,7 @@ type appendFeatureData struct {
 	branchInfos               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
+	commit                    configdomain.Commit
 	config                    config.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
@@ -284,6 +285,9 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			case configdomain.BranchTypeMainBranch:
 			}
 		}
+	}
+	// handle commit
+	if data.commit {
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

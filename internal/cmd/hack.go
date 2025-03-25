@@ -94,7 +94,7 @@ func executeHack(args []string, commit configdomain.Commit, detached configdomai
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, detached, dryRun, prototype, verbose)
+	data, exit, err := determineHackData(args, repo, commit, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -107,7 +107,6 @@ func executeHack(args []string, commit configdomain.Commit, detached configdomai
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        createNewFeatureBranchData.stashSize,
 			commandsCounter:       repo.CommandsCounter,
-			commit:                commit,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
@@ -181,7 +180,6 @@ type createFeatureBranchArgs struct {
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       Mutable[gohacks.Counter]
-	commit                configdomain.Commit
 	dryRun                configdomain.DryRun
 	finalMessages         stringslice.Collector
 	frontend              gitdomain.Runner
@@ -190,7 +188,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -296,6 +294,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
+		commit:                    commit,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
