@@ -286,19 +286,20 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			}
 		}
 	}
+	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	if data.commit {
 		prog.Value.Add(&opcodes.Commit{
 			AuthorOverride:                 None[gitdomain.Author](),
 			FallbackToDefaultCommitMessage: false,
 			Message:                        None[gitdomain.CommitMessage](),
 		})
+	} else {
+		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+			DryRun:                   data.dryRun,
+			RunInGitRoot:             true,
+			StashOpenChanges:         data.hasOpenChanges,
+			PreviousBranchCandidates: previousBranchCandidates,
+		})
 	}
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
-	})
 	return optimizer.Optimize(prog.Immutable())
 }

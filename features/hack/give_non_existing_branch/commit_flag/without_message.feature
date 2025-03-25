@@ -17,13 +17,9 @@ Feature: commit without message
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | existing | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git checkout -b new                     |
-      | new      | git commit                              |
-      |          | git checkout existing                   |
+      | BRANCH   | COMMAND                  |
+      | existing | git checkout -b new main |
+      | new      | git commit               |
     And the current branch is still "existing"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |

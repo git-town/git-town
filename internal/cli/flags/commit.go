@@ -10,7 +10,7 @@ const commitLong = "commit"
 // type-safe access to the CLI arguments of type configdomain.Commit
 func Commit() (AddFunc, ReadCommitFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(commitLong, "d", false, "don't update the perennial root branch")
+		cmd.Flags().BoolP(commitLong, "", false, "don't update the perennial root branch")
 	}
 	readFlag := func(cmd *cobra.Command) (configdomain.Commit, error) {
 		value, err := cmd.Flags().GetBool(commitLong)
