@@ -29,6 +29,7 @@ Feature: display all executed Git commands
       |        | backend  | git log main..old --format=%s --reverse       |
       | old    | frontend | git merge --no-edit --ff main                 |
       |        | frontend | git merge --no-edit --ff origin/old           |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git rev-list --left-right old...origin/old    |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | old    | frontend | git checkout -b parent main                   |
@@ -43,7 +44,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And Git Town prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "parent"
 
