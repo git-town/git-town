@@ -1,4 +1,4 @@
 package configdomain
 
-// indicates whether a Git Town command should commit the currently staged changes
+// when creating a new branch, whether to commit the currently staged changes into that new branch
 type Commit bool
