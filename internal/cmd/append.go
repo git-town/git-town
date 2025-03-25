@@ -293,7 +293,6 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			}
 		}
 	}
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	if data.commit {
 		prog.Value.Add(
 			&opcodes.Commit{
@@ -304,6 +303,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	} else {
+		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
 			RunInGitRoot:             true,
