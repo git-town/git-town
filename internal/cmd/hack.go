@@ -254,7 +254,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
+		data = Right[appendFeatureData](convertToFeatureData{
 			config:         validatedConfig,
 			targetBranches: validatedConfig.BranchesAndTypes(branchesToValidate),
 		})
