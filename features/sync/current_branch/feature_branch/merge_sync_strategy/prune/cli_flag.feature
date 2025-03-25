@@ -10,7 +10,7 @@ Feature: prune enabled via CLI
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME  | FILE CONTENT  |
       | main      | local         | main commit      | file       | content       |
       | feature-1 | local         | feature-1 commit | file       | content       |
-      | feature-2 | local, origin | feature-3 commit | other_file | other content |
+      | feature-2 | local, origin | feature-2 commit | other_file | other content |
     And the current branch is "feature-1"
     When I run "git-town sync --prune"
 
@@ -38,7 +38,7 @@ Feature: prune enabled via CLI
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | main commit      |
-      | feature-2 | local, origin | feature-3 commit |
+      | feature-2 | local, origin | feature-2 commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -53,4 +53,4 @@ Feature: prune enabled via CLI
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, origin | main commit      |
       | feature-1 | local         | feature-1 commit |
-      | feature-2 | local, origin | feature-3 commit |
+      | feature-2 | local, origin | feature-2 commit |
