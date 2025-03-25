@@ -31,6 +31,7 @@ Feature: display all executed Git commands when using the always-merge strategy
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --no-ff --edit -- feature               |
+      |         | backend  | git show-ref --verify --quiet refs/heads/main     |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | backend  | git config --unset git-town-branch.feature.parent |
@@ -42,7 +43,7 @@ Feature: display all executed Git commands when using the always-merge strategy
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "main"
 
