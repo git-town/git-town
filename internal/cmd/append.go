@@ -286,8 +286,12 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			}
 		}
 	}
-	// handle commit
 	if data.commit {
+		prog.Value.Add(&opcodes.Commit{
+			AuthorOverride:                 None[gitdomain.Author](),
+			FallbackToDefaultCommitMessage: false,
+			Message:                        None[gitdomain.CommitMessage](),
+		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
