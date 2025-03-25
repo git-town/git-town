@@ -16,10 +16,10 @@ Feature: commit without message
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                  |
-      | existing | git checkout -b new main |
-      | new      | git commit               |
-      |          | git checkout existing    |
+      | BRANCH   | COMMAND               |
+      | existing | git checkout -b new   |
+      | new      | git commit            |
+      |          | git checkout existing |
     And the current branch is still "existing"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
@@ -27,9 +27,9 @@ Feature: commit without message
       | existing | local    | existing commit |
       | new      | local    | unrelated idea  |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
+      | BRANCH   | PARENT   |
+      | existing | main     |
+      | new      | existing |
 
   Scenario: undo
     When I run "git-town undo"
