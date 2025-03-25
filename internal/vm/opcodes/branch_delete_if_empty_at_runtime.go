@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// BranchWithRemoteGoneDeleteIfEmptyAtRuntime deletes the given branch if it has no content at runtime.
+// BranchDeleteIfEmptyAtRuntime deletes the given branch if it has no content at runtime.
 type BranchDeleteIfEmptyAtRuntime struct {
 	Branch                  gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
