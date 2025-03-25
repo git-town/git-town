@@ -298,7 +298,6 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
 		prototype:                 prototype,
-		prune:                     false,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
