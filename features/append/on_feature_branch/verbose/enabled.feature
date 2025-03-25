@@ -11,7 +11,6 @@ Feature: display all executed Git commands
     And the current branch is "existing"
     When I run "git-town append new --verbose"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | TYPE     | COMMAND                                              |
