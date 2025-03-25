@@ -39,6 +39,7 @@ Syncs the main branch, forks a new feature branch with the given name off the ma
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
+	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
@@ -50,6 +51,10 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			commit, err := readCommitFlag(cmd)
+			if err != nil {
+				return err
+			}
 			detached, err := readDetachedFlag(cmd)
 			if err != nil {
 				return err
@@ -66,9 +71,10 @@ func hackCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeHack(args, detached, dryRun, prototype, verbose)
+			return executeHack(args, commit, detached, dryRun, prototype, verbose)
 		},
 	}
+	addCommitFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
@@ -76,7 +82,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeHack(args []string, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -101,6 +107,7 @@ func executeHack(args []string, detached configdomain.Detached, dryRun configdom
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        createNewFeatureBranchData.stashSize,
 			commandsCounter:       repo.CommandsCounter,
+			commit:                commit,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
@@ -174,6 +181,7 @@ type createFeatureBranchArgs struct {
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
 	commandsCounter       Mutable[gohacks.Counter]
+	commit                configdomain.Commit
 	dryRun                configdomain.DryRun
 	finalMessages         stringslice.Collector
 	frontend              gitdomain.Runner
@@ -254,7 +262,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, detached conf
 		return data, exit, err
 	}
 	if !shouldCreateBranch {
-		data = Right[appendFeatureData, convertToFeatureData](convertToFeatureData{
+		data = Right[appendFeatureData](convertToFeatureData{
 			config:         validatedConfig,
 			targetBranches: validatedConfig.BranchesAndTypes(branchesToValidate),
 		})
