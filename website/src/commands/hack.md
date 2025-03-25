@@ -46,9 +46,10 @@ in changes from other developers.
 
 #### `-c`<br>`--commit`
 
-When given, commits the currently staged changes into the new branch and remains
-on the current branch. This is intended to quickly commit changes unrelated to
-the current branch into another branch and keep hacking on the current branch.
+When given, commits the currently staged changes into the branch to create and
+remains on the current branch. This is intended to quickly commit changes
+unrelated to the current branch into another branch and keep hacking on the
+current branch.
 
 #### `--dry-run`
 
