@@ -12,6 +12,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
     And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship --verbose"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
@@ -31,6 +32,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --ff-only feature                       |
+      |         | backend  | git show-ref --verify --quiet refs/heads/main     |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | backend  | git config --unset git-town-branch.feature.parent |
@@ -42,7 +44,7 @@ Feature: display all executed Git commands when using the fast-forward strategy
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "main"
 
