@@ -1,7 +1,7 @@
 # git town prepend
 
 ```command-summary
-git town prepend [<branch-name>...] [-b | --beam] [--body <string>] [--propose] [-p | --prototype] [-t <text> | --title <text>] [-d | --detached] [-c | --commit] [--dry-run] [-v | --verbose]
+git town prepend [<branch-name>...] [-b | --beam] [--body <string>] [--propose] [-p | --prototype] [-t <text> | --title <text>] [-d | --detached] [-c | --commit] [-m | --message <message>] [--dry-run] [-v | --verbose]
 ```
 
 The _prepend_ command creates a new feature branch as the parent of the current
@@ -75,6 +75,10 @@ When given, commits the currently staged changes into the branch to create and
 remains on the current branch. This is intended to quickly commit changes
 unrelated to the current branch into another branch and keep hacking on the
 current branch.
+
+#### `-m`<br>`--message`
+
+Commit message to use when `--commit` is given.
 
 #### `--dry-run`
 
