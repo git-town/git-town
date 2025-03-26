@@ -61,10 +61,6 @@ Feature: merge conflict
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/feature?expand=1
-      """
     And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
@@ -84,8 +80,4 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/feature?expand=1
-      """
     And the current branch is still "feature"
