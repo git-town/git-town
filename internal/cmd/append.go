@@ -42,6 +42,7 @@ func appendCmd() *cobra.Command {
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addProposeFlag, readProposeFlag := flags.Propose()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -67,6 +68,10 @@ func appendCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			propose, err := readProposeFlag(cmd)
+			if err != nil {
+				return err
+			}
 			prototype, err := readPrototypeFlag(cmd)
 			if err != nil {
 				return err
@@ -75,22 +80,23 @@ func appendCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if commitMessage.IsSome() {
+			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
-			return executeAppend(args[0], commit, commitMessage, detached, dryRun, prototype, verbose)
+			return executeAppend(args[0], commit, commitMessage, detached, dryRun, propose, prototype, verbose)
 		},
 	}
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addProposeFlag(&cmd)
 	addPrototypeFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -102,7 +108,7 @@ func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, commit, commitMessage, detached, dryRun, prototype, verbose)
+	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -124,7 +130,7 @@ func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[forgedomain.Connector](),
+		Connector:               data.connector,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -147,6 +153,7 @@ type appendFeatureData struct {
 	commit                    configdomain.Commit
 	commitMessage             Option[gitdomain.CommitMessage]
 	config                    config.ValidatedConfig
+	connector                 Option[forgedomain.Connector]
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
 	hasOpenChanges            bool
@@ -155,13 +162,14 @@ type appendFeatureData struct {
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
+	propose                   configdomain.Propose
 	prototype                 configdomain.Prototype
 	remotes                   gitdomain.Remotes
 	stashSize                 gitdomain.StashSize
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -244,6 +252,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		commit:                    commit,
 		commitMessage:             commitMessage,
 		config:                    validatedConfig,
+		connector:                 connector,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
@@ -252,6 +261,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
 		previousBranch:            previousBranch,
+		propose:                   propose,
 		prototype:                 prototype,
 		remotes:                   remotes,
 		stashSize:                 stashSize,
@@ -311,6 +321,21 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				FallbackToDefaultCommitMessage: false,
 				Message:                        data.commitMessage,
 			},
+		)
+		if data.propose.IsTrue() {
+			prog.Value.Add(
+				&opcodes.BranchTrackingCreate{
+					Branch: data.targetBranch,
+				},
+				&opcodes.ProposalCreate{
+					Branch:        data.targetBranch,
+					MainBranch:    data.config.ValidatedConfigData.MainBranch,
+					ProposalBody:  "",
+					ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
+				},
+			)
+		}
+		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	} else {

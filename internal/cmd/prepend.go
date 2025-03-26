@@ -101,6 +101,9 @@ func prependCommand() *cobra.Command {
 			if commitMessage.IsSome() {
 				commit = true
 			}
+			if propose.IsTrue() && beam.IsFalse() {
+				commit = true
+			}
 			return executePrepend(args, beam, bodyText, commit, commitMessage, detached, dryRun, propose, prototype, title, verbose)
 		},
 	}
@@ -384,6 +387,15 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		})
 	}
 	moveCommitsToNewBranch(prog, data)
+	if data.commit {
+		prog.Value.Add(
+			&opcodes.Commit{
+				AuthorOverride:                 None[gitdomain.Author](),
+				FallbackToDefaultCommitMessage: false,
+				Message:                        data.commitMessage,
+			},
+		)
+	}
 	if data.propose {
 		prog.Value.Add(
 			&opcodes.BranchTrackingCreate{
@@ -398,11 +410,6 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	}
 	if data.commit {
 		prog.Value.Add(
-			&opcodes.Commit{
-				AuthorOverride:                 None[gitdomain.Author](),
-				FallbackToDefaultCommitMessage: false,
-				Message:                        data.commitMessage,
-			},
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	} else {
