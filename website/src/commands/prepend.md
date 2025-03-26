@@ -78,7 +78,7 @@ current branch.
 
 #### `-m`<br>`--message`
 
-Commit message to use when `--commit` is given.
+Commit message to use together with `--commit`.
 
 #### `--dry-run`
 
