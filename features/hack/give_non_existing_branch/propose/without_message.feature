@@ -1,4 +1,4 @@
-Feature: proposing uncommitted changes via a separate top-level branch and enter message manually
+Feature: proposing uncommitted changes via a separate top-level branch, let Git ask for the commit message
 
   Background:
     Given a Git repo with origin
