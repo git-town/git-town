@@ -6,9 +6,9 @@ Feature: proposing uncommitted changes via a child branch and enter commit messa
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | existing | local    | existing commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | origin        | main commit     |
+      | existing | local, origin | existing commit |
     And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
@@ -22,15 +22,14 @@ Feature: proposing uncommitted changes via a child branch and enter commit messa
       | existing | git checkout -b new                                                       |
       | new      | git commit                                                                |
       |          | git push -u origin new                                                    |
-      | <none>   | open https://github.com/git-town/git-town/compare/existing...new?expand=1 |
+      | (none)   | open https://github.com/git-town/git-town/compare/existing...new?expand=1 |
       | new      | git checkout existing                                                     |
     And the current branch is still "existing"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |
-      | existing | local         | existing commit |
+      | existing | local, origin | existing commit |
       | new      | local, origin | unrelated idea  |
-      |          | origin        | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
