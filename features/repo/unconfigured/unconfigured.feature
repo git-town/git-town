@@ -7,7 +7,6 @@ Feature: ask for missing configuration
     And the origin is "https://github.com/git-town/git-town.git"
     And tool "open" is installed
     When I run "git-town repo"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                   |
+      |        | open https://github.com/git-town/git-town |

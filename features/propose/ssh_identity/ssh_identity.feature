@@ -12,10 +12,13 @@ Feature: use a SSH identity
     And a proposal for this branch does not exist
     And the current branch is "feature"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      <PROPOSAL_URL>
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      | (none)  | Looking for proposal online ... ok      |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
+      | (none)  | open <PROPOSAL_URL>                     |
 
     Examples:
       | ORIGIN_HOSTNAME | PROPOSAL_URL                                                                                                                             |

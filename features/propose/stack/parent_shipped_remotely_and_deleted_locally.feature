@@ -35,10 +35,16 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/child?expand=1
-      """
+    And Git Town runs the commands
+      | BRANCH | COMMAND                                                          |
+      | child  | git fetch --prune --tags                                         |
+      |        | git checkout main                                                |
+      | main   | git rebase origin/main --no-update-refs                          |
+      |        | git checkout child                                               |
+      | child  | git merge --no-edit --ff main                                    |
+      |        | git merge --no-edit --ff origin/child                            |
+      |        | git push                                                         |
+      | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
 
   Scenario: undo
     When I run "git-town undo"
