@@ -12,7 +12,7 @@ Feature: commit with message
       | existing | local    | existing commit |
     And an uncommitted file with name "new_file" and content "new content"
     And I ran "git add new_file"
-    When I run "git-town hack new --commit -m unrelated"
+    When I run "git-town prepend new --commit -m unrelated"
 
   Scenario: result
     Then Git Town runs the commands
@@ -28,7 +28,7 @@ Feature: commit with message
       | new      | local    | unrelated       |
     And this lineage exists now
       | BRANCH   | PARENT |
-      | existing | main   |
+      | existing | new    |
       | new      | main   |
 
   Scenario: undo

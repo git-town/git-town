@@ -1,4 +1,4 @@
-Feature: commit without message
+Feature: commit with message
 
   Background:
     Given a Git repo with origin
