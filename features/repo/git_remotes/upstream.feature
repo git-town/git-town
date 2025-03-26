@@ -5,7 +5,6 @@ Feature: display the repo at another remote
     And an additional "upstream" remote with URL "https://github.com/upstream/repo.git"
     And tool "open" is installed
     When I run "git-town repo upstream"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/upstream/repo
-      """
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                               |
+      | <none> | frontend | open https://github.com/upstream/repo |
