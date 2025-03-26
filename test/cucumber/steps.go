@@ -800,18 +800,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.Reload()
 	})
 
-	sc.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(ctx context.Context, tool string, url *godog.DocString) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
-		want = strings.ReplaceAll(want, "?", `\?`)
-		regex := regexp.MustCompile(want)
-		have := state.runOutput.GetOrPanic()
-		if !regex.MatchString(have) {
-			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
-		}
-		return nil
-	})
-
 	sc.Step(`^my repo's "([^"]*)" remote is "([^"]*)"$`, func(ctx context.Context, remoteName, remoteURL string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

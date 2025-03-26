@@ -13,7 +13,10 @@ Feature: Create proposals for parked branches
     When I run "git-town propose"
 
   Scenario: result
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/parked?expand=1
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                           |
+      | parked | git fetch --prune --tags                                          |
+      | (none) | Looking for proposal online ... ok                                |
+      | parked | git merge --no-edit --ff main                                     |
+      |        | git merge --no-edit --ff origin/parked                            |
+      | (none) | open https://github.com/git-town/git-town/compare/parked?expand=1 |

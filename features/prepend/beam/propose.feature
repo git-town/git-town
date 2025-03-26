@@ -39,10 +39,6 @@ Feature: propose a newly prepended branch
       |          | git checkout new                                                        |
       | new      | git push -u origin new                                                  |
       | (none)   | open https://github.com/git-town/git-town/compare/parent...new?expand=1 |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/parent...new?expand=1
-      """
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
