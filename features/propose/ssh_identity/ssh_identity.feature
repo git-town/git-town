@@ -20,7 +20,6 @@ Feature: use a SSH identity
       |         | git merge --no-edit --ff origin/feature |
       | <none>  | open <PROPOSAL_URL>                     |
 
-
     Examples:
       | ORIGIN_HOSTNAME | PROPOSAL_URL                                                                                                                             |
       | bitbucket.org   | https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain                                 |
