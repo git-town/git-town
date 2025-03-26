@@ -39,6 +39,7 @@ See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
 	addCommitFlag, readCommitFlag := flags.Commit()
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
@@ -51,6 +52,10 @@ func appendCmd() *cobra.Command {
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			commit, err := readCommitFlag(cmd)
+			if err != nil {
+				return err
+			}
+			commitMessage, err := readCommitMessageFlag(cmd)
 			if err != nil {
 				return err
 			}
@@ -70,10 +75,11 @@ func appendCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeAppend(args[0], commit, detached, dryRun, prototype, verbose)
+			return executeAppend(args[0], commit, commitMessage, detached, dryRun, prototype, verbose)
 		},
 	}
 	addCommitFlag(&cmd)
+	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addPrototypeFlag(&cmd)
@@ -81,7 +87,7 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeAppend(arg string, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -93,7 +99,7 @@ func executeAppend(arg string, commit configdomain.Commit, detached configdomain
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, commit, detached, dryRun, prototype, verbose)
+	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, commit, commitMessage, detached, dryRun, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -136,6 +142,7 @@ type appendFeatureData struct {
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
 	commit                    configdomain.Commit
+	commitMessage             Option[gitdomain.CommitMessage]
 	config                    config.ValidatedConfig
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
@@ -151,7 +158,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -232,6 +239,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
+		commitMessage:             commitMessage,
 		config:                    validatedConfig,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
@@ -298,7 +306,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			&opcodes.Commit{
 				AuthorOverride:                 None[gitdomain.Author](),
 				FallbackToDefaultCommitMessage: false,
-				Message:                        None[gitdomain.CommitMessage](),
+				Message:                        data.commitMessage,
 			},
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)

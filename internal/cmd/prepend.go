@@ -44,6 +44,7 @@ func prependCommand() *cobra.Command {
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addCommitFlag, readCommitFlag := flags.Commit()
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addProposeFlag, readProposeFlag := flags.Propose()
@@ -66,6 +67,10 @@ func prependCommand() *cobra.Command {
 				return err
 			}
 			commit, err := readCommitFlag(cmd)
+			if err != nil {
+				return err
+			}
+			commitMessage, err := readCommitMessageFlag(cmd)
 			if err != nil {
 				return err
 			}
@@ -93,12 +98,13 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePrepend(args, beam, bodyText, commit, detached, dryRun, propose, prototype, title, verbose)
+			return executePrepend(args, beam, bodyText, commit, commitMessage, detached, dryRun, propose, prototype, title, verbose)
 		},
 	}
 	addBeamFlag(&cmd)
 	addBodyFlag(&cmd)
 	addCommitFlag(&cmd)
+	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addProposeFlag(&cmd)
@@ -108,7 +114,7 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomain.ProposalBody, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, proposalTitle gitdomain.ProposalTitle, verbose configdomain.Verbose) error {
+func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomain.ProposalBody, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, proposalTitle gitdomain.ProposalTitle, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -120,7 +126,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomai
 	if err != nil {
 		return err
 	}
-	data, exit, err := determinePrependData(args, repo, beam, commit, detached, dryRun, proposalBody, proposalTitle, propose, prototype, verbose)
+	data, exit, err := determinePrependData(args, repo, beam, commit, commitMessage, detached, dryRun, proposalBody, proposalTitle, propose, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -163,6 +169,7 @@ type prependData struct {
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      configdomain.BranchesToSync
 	commit              configdomain.Commit
+	commitMessage       Option[gitdomain.CommitMessage]
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
@@ -185,7 +192,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, detached configdomain.Detached, dryRun configdomain.DryRun, propasalBody gitdomain.ProposalBody, proposalTitle gitdomain.ProposalTitle, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propasalBody gitdomain.ProposalBody, proposalTitle gitdomain.ProposalTitle, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -288,6 +295,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
 		commit:              commit,
+		commitMessage:       commitMessage,
 		commitsToBeam:       commitsToBeam,
 		config:              validatedConfig,
 		connector:           connector,
@@ -390,7 +398,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			&opcodes.Commit{
 				AuthorOverride:                 None[gitdomain.Author](),
 				FallbackToDefaultCommitMessage: false,
-				Message:                        None[gitdomain.CommitMessage](),
+				Message:                        data.commitMessage,
 			},
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
