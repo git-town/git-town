@@ -16,8 +16,6 @@ Feature: propose with message
     And I ran "git add new_file"
     When I run "git-town prepend new --propose -m unrelated"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |
@@ -40,8 +38,9 @@ Feature: propose with message
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND           |
-      | existing | git branch -D new |
+      | BRANCH   | COMMAND              |
+      | existing | git branch -D new    |
+      |          | git push origin :new |
     And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
