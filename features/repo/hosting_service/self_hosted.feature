@@ -9,24 +9,23 @@ Feature: self hosted servie
     And the origin is "git@self-hosted:git-town/git-town.git"
     And Git setting "git-town.forge-type" is "<DRIVER>"
     When I run "git-town repo"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      <REPO_URL>
-      """
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                                    |
+      | (none) | frontend | open https://self-hosted/git-town/git-town |
 
     Examples:
-      | DRIVER    | REPO_URL                              |
-      | bitbucket | https://self-hosted/git-town/git-town |
-      | github    | https://self-hosted/git-town/git-town |
-      | gitea     | https://self-hosted/git-town/git-town |
-      | gitlab    | https://self-hosted/git-town/git-town |
+      | DRIVER    |
+      | bitbucket |
+      | github    |
+      # uncomment to test (makes online connection)
+      # | gitea     |
+      | gitlab    |
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
     And Git setting "git-town.forge-type" is "gitlab"
     And tool "open" is installed
     When I run "git-town repo"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://git.example.com/a/b
-      """
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                          |
+      | (none) | frontend | open https://git.example.com/a/b |

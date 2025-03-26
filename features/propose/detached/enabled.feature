@@ -20,7 +20,3 @@ Feature: GitHub support
       | feature | git merge --no-edit --ff main                                      |
       |         | git merge --no-edit --ff origin/feature                            |
       | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/feature?expand=1
-      """

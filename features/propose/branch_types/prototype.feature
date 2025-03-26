@@ -28,10 +28,6 @@ Feature: Create proposals for prototype branches
       | prototype | git merge --no-edit --ff main                                        |
       |           | git push -u origin prototype                                         |
       | (none)    | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/prototype?expand=1
-      """
     And Git Town prints:
       """
       branch "prototype" is no longer a prototype branch

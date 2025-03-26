@@ -13,10 +13,13 @@ Feature: GitHub support
     And the current branch is "feature"
     And the origin is "<ORIGIN>"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/feature?expand=1
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                            |
+      | feature | git fetch --prune --tags                                           |
+      | (none)  | Looking for proposal online ... ok                                 |
+      | feature | git merge --no-edit --ff main                                      |
+      |         | git merge --no-edit --ff origin/feature                            |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
 
     Examples:
       | ORIGIN                                     |
@@ -36,10 +39,13 @@ Feature: GitHub support
     And the current branch is "feature"
     And the origin is "<ORIGIN>"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                       |
+      | feature | git fetch --prune --tags                                                      |
+      | (none)  | Looking for proposal online ... ok                                            |
+      | feature | git merge --no-edit --ff main                                                 |
+      |         | git merge --no-edit --ff origin/feature                                       |
+      | (none)  | open https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
 
     Examples:
       | ORIGIN                                              |
@@ -50,24 +56,35 @@ Feature: GitHub support
       | git@github.com:git-town/git-town.github.com.git     |
       | git@github.com:git-town/git-town.github.com         |
 
-  Scenario Outline: proper URL encoding
+  Scenario: URL-encodes hashtag
     Given the branches
-      | NAME          | TYPE    | PARENT | LOCATIONS     |
-      | <BRANCH_NAME> | feature | main   | local, origin |
-    And the current branch is "<BRANCH_NAME>"
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | fix-#2 | feature | main   | local, origin |
+    And the current branch is "fix-#2"
     And the origin is "https://github.com/git-town/git-town"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      <URL>
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                             |
+      | fix-#2 | git fetch --prune --tags                                            |
+      | (none) | Looking for proposal online ... ok                                  |
+      | fix-#2 | git merge --no-edit --ff main                                       |
+      |        | git merge --no-edit --ff origin/fix-#2                              |
+      | (none) | open https://github.com/git-town/git-town/compare/fix-%232?expand=1 |
 
-    Examples:
-      | BRANCH_NAME    | URL                                                                  |
-      | feature-branch | https://github.com/git-town/git-town/compare/feature-branch?expand=1 |
-      | feature_branch | https://github.com/git-town/git-town/compare/feature_branch?expand=1 |
-      | fix-#2         | https://github.com/git-town/git-town/compare/fix-%232?expand=1       |
-      | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
+  Scenario: URL-encodes forward slashes
+    Given the branches
+      | NAME         | TYPE    | PARENT | LOCATIONS     |
+      | test/feature | feature | main   | local, origin |
+    And the current branch is "test/feature"
+    And the origin is "https://github.com/git-town/git-town"
+    When I run "git-town propose"
+    Then Git Town runs the commands
+      | BRANCH       | COMMAND                                                                   |
+      | test/feature | git fetch --prune --tags                                                  |
+      | (none)       | Looking for proposal online ... ok                                        |
+      | test/feature | git merge --no-edit --ff main                                             |
+      |              | git merge --no-edit --ff origin/test/feature                              |
+      | (none)       | open https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
   Scenario: stacked change with known parent
     Given the branches
@@ -77,7 +94,14 @@ Feature: GitHub support
     And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/parent...child?expand=1
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                                   |
+      | child  | git fetch --prune --tags                                                  |
+      | (none) | Looking for proposal online ... ok                                        |
+      | child  | git checkout parent                                                       |
+      | parent | git merge --no-edit --ff main                                             |
+      |        | git merge --no-edit --ff origin/parent                                    |
+      |        | git checkout child                                                        |
+      | child  | git merge --no-edit --ff parent                                           |
+      |        | git merge --no-edit --ff origin/child                                     |
+      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |

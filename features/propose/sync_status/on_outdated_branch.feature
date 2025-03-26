@@ -38,10 +38,6 @@ Feature: sync before proposing
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
       | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/parent...child?expand=1
-      """
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
