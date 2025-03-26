@@ -86,7 +86,6 @@ Feature: Gitea support
       |              | git merge --no-edit --ff origin/test/feature                           |
       | <none>       | open https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
-  @this
   Scenario: stacked change with known parent
     Given the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
