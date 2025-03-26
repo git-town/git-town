@@ -44,7 +44,7 @@ func prependCommand() *cobra.Command {
 	addBeamFlag, readBeamFlag := flags.Beam()
 	addBodyFlag, readBodyFlag := flags.ProposalBody("")
 	addCommitFlag, readCommitFlag := flags.Commit()
-	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit messag")
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addProposeFlag, readProposeFlag := flags.Propose()

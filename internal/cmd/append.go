@@ -39,7 +39,7 @@ See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
 	addCommitFlag, readCommitFlag := flags.Commit()
-	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit messag")
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()

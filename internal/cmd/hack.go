@@ -42,7 +42,7 @@ func hackCmd() *cobra.Command {
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit messag")
+	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addPrototypeFlag, readPrototypeFlag := flags.Prototype()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
