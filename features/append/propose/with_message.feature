@@ -1,4 +1,4 @@
-Feature: proposing uncommitted changes via a child branch and enter message manually
+Feature: proposing uncommitted changes via a child branch and provide commit message
 
   Background:
     Given a Git repo with origin
@@ -14,29 +14,26 @@ Feature: proposing uncommitted changes via a child branch and enter message manu
     And tool "open" is installed
     And an uncommitted file with name "new_file" and content "new content"
     And I ran "git add new_file"
-    When I run "git-town append new --propose" and enter "unrelated idea" for the commit message
+    When I run "git-town append new --propose -m unrelated"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                   |
-      | existing | git checkout -b new                                                       |
-      | new      | git commit                                                                |
-      |          | git checkout existing                                                     |
-      | <none>   | open https://github.com/git-town/git-town/compare/existing...new?expand=1 |
+      | BRANCH   | COMMAND                                                                                   |
+      | existing | git checkout -b new                                                                       |
+      | new      | git commit -m unrelated                                                                   |
+      |          | git checkout existing                                                                     |
+      | <none>   | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=unrelated |
     And the current branch is still "existing"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-      | new      | local    | unrelated idea  |
+      | new      | local    | unrelated       |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/existing...new?expand=1
-      """
 
   Scenario: undo
     When I run "git-town undo"

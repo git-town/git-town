@@ -329,7 +329,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 					Branch:        data.targetBranch,
 					MainBranch:    data.config.ValidatedConfigData.MainBranch,
 					ProposalBody:  "",
-					ProposalTitle: "",
+					ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
 				},
 			)
 		}
