@@ -94,7 +94,14 @@ Feature: GitHub support
     And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/parent...child?expand=1
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                                   |
+      | child  | git fetch --prune --tags                                                  |
+      | <none> | Looking for proposal online ... ok                                        |
+      | child  | git checkout parent                                                       |
+      | parent | git merge --no-edit --ff main                                             |
+      |        | git merge --no-edit --ff origin/parent                                    |
+      |        | git checkout child                                                        |
+      | child  | git merge --no-edit --ff parent                                           |
+      |        | git merge --no-edit --ff origin/child                                     |
+      | <none> | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
