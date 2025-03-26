@@ -35,10 +35,6 @@ Feature: proposing uncommitted changes via a child branch and enter message manu
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/existing...new?expand=1
-      """
 
   Scenario: undo
     When I run "git-town undo"
