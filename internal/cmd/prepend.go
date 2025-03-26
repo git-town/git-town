@@ -98,6 +98,9 @@ func prependCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			if commitMessage.IsSome() {
+				commit = true
+			}
 			return executePrepend(args, beam, bodyText, commit, commitMessage, detached, dryRun, propose, prototype, title, verbose)
 		},
 	}

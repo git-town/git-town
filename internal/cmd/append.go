@@ -75,6 +75,9 @@ func appendCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			if commitMessage.IsSome() {
+				commit = true
+			}
 			return executeAppend(args[0], commit, commitMessage, detached, dryRun, prototype, verbose)
 		},
 	}

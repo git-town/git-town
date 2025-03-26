@@ -76,6 +76,9 @@ func hackCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			if commitMessage.IsSome() {
+				commit = true
+			}
 			return executeHack(args, commit, commitMessage, detached, dryRun, prototype, verbose)
 		},
 	}
