@@ -1,6 +1,6 @@
 # Codeberg token
 
-Git Town can interact with Gitea in your name, for example to update pull
+Git Town can interact with Codeberg in your name, for example to update pull
 requests as branches get created, shipped, or deleted. To do so, Git Town needs
 a personal access token for Codeberg.
 
