@@ -1,4 +1,3 @@
-@this
 Feature: proposing uncommitted changes via a separate top-level branch and enter message manually
 
   Background:
