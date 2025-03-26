@@ -1,4 +1,4 @@
-Feature: commit with message
+Feature: propose uncommitted changes via a separate parent branch, provide commit message via CLI flag
 
   Background:
     Given a Git repo with origin

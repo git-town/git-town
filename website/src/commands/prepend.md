@@ -51,7 +51,7 @@ Requires `--propose`.
 
 #### `--propose`
 
-When set, this command proposes the branch it creates.
+Propose the created branch.
 
 #### `-p`<br>`--prototype`
 

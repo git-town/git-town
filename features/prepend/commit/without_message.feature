@@ -1,4 +1,4 @@
-Feature: commit without message
+Feature: propose uncommitted changes via a separate parent branch, let Git ask for commit message
 
   Background:
     Given a Git repo with origin

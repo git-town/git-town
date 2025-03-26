@@ -1,7 +1,7 @@
 # git town append
 
 ```command-summary
-git town append <branch-name> [--prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--dry-run] [-v | --verbose]
+git town append <branch-name> [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]
 ```
 
 The _append_ command creates a new feature branch with the given name as a
@@ -61,6 +61,10 @@ current branch.
 #### `-m`<br>`--message`
 
 Commit message to use together with `--commit`. Implies `--commit`.
+
+#### `--propose`
+
+Propose the created branch.
 
 #### `--dry-run`
 
