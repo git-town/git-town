@@ -86,6 +86,7 @@ Feature: Gitea support
       |              | git merge --no-edit --ff origin/test/feature                           |
       | <none>       | open https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
+  @this
   Scenario: stacked change with known parent
     Given the branches
       | NAME   | TYPE    | PARENT | LOCATIONS     |
@@ -94,7 +95,14 @@ Feature: Gitea support
     And the origin is "git@gitea.com:git-town/git-town.git"
     And the current branch is "child"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://gitea.com/git-town/git-town/compare/parent...child
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                         |
+      | child  | git fetch --prune --tags                                        |
+      | <none> | Looking for proposal online ... ok                              |
+      | child  | git checkout parent                                             |
+      | parent | git merge --no-edit --ff main                                   |
+      |        | git merge --no-edit --ff origin/parent                          |
+      |        | git checkout child                                              |
+      | child  | git merge --no-edit --ff parent                                 |
+      |        | git merge --no-edit --ff origin/child                           |
+      | <none> | open https://gitea.com/git-town/git-town/compare/parent...child |
