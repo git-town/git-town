@@ -13,10 +13,13 @@ Feature: GitLab support
     And the current branch is "feature"
     And the origin is "<REPO ORIGIN>"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      <BROWSER URL>
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      | <none>  | Looking for proposal online ... ok      |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
+      | <none>  | open <BROWSER URL>                      |
 
     Examples:
       | REPO ORIGIN                                  | BROWSER URL                                                                                                                                      |
@@ -32,7 +35,14 @@ Feature: GitLab support
     And the origin is "git@gitlab.com:kadu/kadu.git"
     And the current branch is "child"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                                                                                               |
+      | child  | git fetch --prune --tags                                                                                                              |
+      | <none> | Looking for proposal online ... ok                                                                                                    |
+      | child  | git checkout parent                                                                                                                   |
+      | parent | git merge --no-edit --ff main                                                                                                         |
+      |        | git merge --no-edit --ff origin/parent                                                                                                |
+      |        | git checkout child                                                                                                                    |
+      | child  | git merge --no-edit --ff parent                                                                                                       |
+      |        | git merge --no-edit --ff origin/child                                                                                                 |
+      | <none> | open https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent |
