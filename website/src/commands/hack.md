@@ -1,7 +1,7 @@
 # git town hack
 
 ```command-summary
-git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--dry-run] [-v | --verbose]
+git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]
 ```
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
@@ -54,6 +54,10 @@ current branch.
 #### `-m`<br>`--message`
 
 Commit message to use together with `--commit`. Implies `--commit`.
+
+#### `--propose`
+
+Propose the created branch.
 
 #### `--dry-run`
 
