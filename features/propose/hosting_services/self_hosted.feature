@@ -14,16 +14,20 @@ Feature: self-hosted service
     And the origin is "git@self-hosted:git-town/git-town.git"
     And Git setting "git-town.forge-type" is "<PLATFORM>"
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      <PROPOSAL_URL>
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                 |
+      | feature | git fetch --prune --tags                |
+      | <none>  | Looking for proposal online ... ok      |
+      | feature | git merge --no-edit --ff main           |
+      |         | git merge --no-edit --ff origin/feature |
+      | <none>  | open <PROPOSAL_URL>                     |
 
     Examples:
       | PLATFORM  | PROPOSAL_URL                                                                                                                              |
       | bitbucket | https://self-hosted/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain                                    |
       | github    | https://self-hosted/git-town/git-town/compare/feature?expand=1                                                                            |
-      | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
+      # uncomment to test (creates online connection)
+      # | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
       | gitlab    | https://self-hosted/git-town/git-town/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
 
   Scenario: GitLab with custom port
@@ -31,7 +35,10 @@ Feature: self-hosted service
     And Git setting "git-town.forge-type" is "gitlab"
     And tool "open" is installed
     When I run "git-town propose"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://git.example.com/a/b
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                                                                                                              |
+      | feature | git fetch --prune --tags                                                                                                             |
+      | <none>  | Looking for proposal online ... ok                                                                                                   |
+      | feature | git merge --no-edit --ff main                                                                                                        |
+      |         | git merge --no-edit --ff origin/feature                                                                                              |
+      | <none>  | open https://git.example.com/a/b/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
