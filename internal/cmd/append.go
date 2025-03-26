@@ -321,10 +321,12 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				FallbackToDefaultCommitMessage: false,
 				Message:                        data.commitMessage,
 			},
-			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 		if data.propose.IsTrue() {
 			prog.Value.Add(
+				&opcodes.BranchTrackingCreate{
+					Branch: data.targetBranch,
+				},
 				&opcodes.ProposalCreate{
 					Branch:        data.targetBranch,
 					MainBranch:    data.config.ValidatedConfigData.MainBranch,
@@ -333,6 +335,9 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				},
 			)
 		}
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
 	} else {
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
