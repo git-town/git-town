@@ -389,8 +389,8 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	moveCommitsToNewBranch(prog, data)
 	if data.propose {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchIfLocal{
-				CurrentBranch: data.targetBranch,
+			&opcodes.BranchTrackingCreate{
+				Branch: data.targetBranch,
 			},
 			&opcodes.ProposalCreate{
 				Branch:        data.targetBranch,
