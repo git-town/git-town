@@ -10,7 +10,7 @@ Feature: multi-platform support
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                     |
-      | <none> | frontend | <TOOL> https://github.com/git-town/git-town |
+      | (none) | frontend | <TOOL> https://github.com/git-town/git-town |
 
     Examples:
       | TOOL     |

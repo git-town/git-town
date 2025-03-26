@@ -9,7 +9,7 @@ Feature: use an SSH identity
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND         |
-      | <none> | frontend | open <REPO_URL> |
+      | (none) | frontend | open <REPO_URL> |
 
     Examples:
       | ORIGIN_HOSTNAME | REPO_URL                                |

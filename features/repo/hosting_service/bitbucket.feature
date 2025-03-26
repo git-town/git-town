@@ -8,7 +8,7 @@ Feature: Bitbucket
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                      |
-      | <none> | frontend | open https://bitbucket.org/git-town/git-town |
+      | (none) | frontend | open https://bitbucket.org/git-town/git-town |
 
     Examples:
       | ORIGIN                                               |

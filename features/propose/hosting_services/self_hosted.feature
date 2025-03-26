@@ -17,10 +17,10 @@ Feature: self-hosted service
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      | <none>  | Looking for proposal online ... ok      |
+      | (none)  | Looking for proposal online ... ok      |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-      | <none>  | open <PROPOSAL_URL>                     |
+      | (none)  | open <PROPOSAL_URL>                     |
 
     Examples:
       | PLATFORM  | PROPOSAL_URL                                                                                                                              |
@@ -38,7 +38,7 @@ Feature: self-hosted service
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                                              |
       | feature | git fetch --prune --tags                                                                                                             |
-      | <none>  | Looking for proposal online ... ok                                                                                                   |
+      | (none)  | Looking for proposal online ... ok                                                                                                   |
       | feature | git merge --no-edit --ff main                                                                                                        |
       |         | git merge --no-edit --ff origin/feature                                                                                              |
-      | <none>  | open https://git.example.com/a/b/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
+      | (none)  | open https://git.example.com/a/b/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |

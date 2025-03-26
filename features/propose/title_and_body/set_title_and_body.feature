@@ -16,30 +16,30 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                        |
       | feature | git fetch --prune --tags                                                                       |
-      | <none>  | Looking for proposal online ... ok                                                             |
+      | (none)  | Looking for proposal online ... ok                                                             |
       | feature | git merge --no-edit --ff main                                                                  |
       |         | git merge --no-edit --ff origin/feature                                                        |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title&body=my_body |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title&body=my_body |
 
   Scenario: provide title via CLI
     When I run "git-town propose --title=my_title"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                           |
       | feature | git fetch --prune --tags                                                          |
-      | <none>  | Looking for proposal online ... ok                                                |
+      | (none)  | Looking for proposal online ... ok                                                |
       | feature | git merge --no-edit --ff main                                                     |
       |         | git merge --no-edit --ff origin/feature                                           |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1&title=my_title |
 
   Scenario: provide body via CLI
     When I run "git-town propose --body=my_body"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                         |
       | feature | git fetch --prune --tags                                                        |
-      | <none>  | Looking for proposal online ... ok                                              |
+      | (none)  | Looking for proposal online ... ok                                              |
       | feature | git merge --no-edit --ff main                                                   |
       |         | git merge --no-edit --ff origin/feature                                         |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1&body=my_body |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1&body=my_body |
 
   Scenario: provide title via CLI and body via file
     And file "body.txt" with content
@@ -52,14 +52,14 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                           |
       | feature | git fetch --prune --tags                                                                          |
-      | <none>  | Looking for proposal online ... ok                                                                |
+      | (none)  | Looking for proposal online ... ok                                                                |
       | feature | git add -A                                                                                        |
       |         | git stash -m "Git Town WIP"                                                                       |
       |         | git merge --no-edit --ff main                                                                     |
       |         | git merge --no-edit --ff origin/feature                                                           |
       |         | git stash pop                                                                                     |
       |         | git restore --staged .                                                                            |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext%21 |
 
   Scenario: non-existing body file
     When I run "git-town propose --body-file zonk.txt"
@@ -78,7 +78,7 @@ Feature: Prepopulate title and body
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                        |
       | feature | git fetch --prune --tags                                                                       |
-      | <none>  | Looking for proposal online ... ok                                                             |
+      | (none)  | Looking for proposal online ... ok                                                             |
       | feature | git merge --no-edit --ff main                                                                  |
       |         | git merge --no-edit --ff origin/feature                                                        |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1&body=Proposal%0Abody%0Atext |

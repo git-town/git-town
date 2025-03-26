@@ -11,7 +11,7 @@ Feature: self hosted servie
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                    |
-      | <none> | frontend | open https://self-hosted/git-town/git-town |
+      | (none) | frontend | open https://self-hosted/git-town/git-town |
 
     Examples:
       | DRIVER    |
@@ -28,4 +28,4 @@ Feature: self hosted servie
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                          |
-      | <none> | frontend | open https://git.example.com/a/b |
+      | (none) | frontend | open https://git.example.com/a/b |

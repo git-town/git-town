@@ -16,10 +16,10 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git fetch --prune --tags                                           |
-      | <none>  | Looking for proposal online ... ok                                 |
+      | (none)  | Looking for proposal online ... ok                                 |
       | feature | git merge --no-edit --ff main                                      |
       |         | git merge --no-edit --ff origin/feature                            |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
 
     Examples:
       | ORIGIN                                     |
@@ -42,10 +42,10 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                       |
       | feature | git fetch --prune --tags                                                      |
-      | <none>  | Looking for proposal online ... ok                                            |
+      | (none)  | Looking for proposal online ... ok                                            |
       | feature | git merge --no-edit --ff main                                                 |
       |         | git merge --no-edit --ff origin/feature                                       |
-      | <none>  | open https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
+      | (none)  | open https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
 
     Examples:
       | ORIGIN                                              |
@@ -66,10 +66,10 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                             |
       | fix-#2 | git fetch --prune --tags                                            |
-      | <none> | Looking for proposal online ... ok                                  |
+      | (none) | Looking for proposal online ... ok                                  |
       | fix-#2 | git merge --no-edit --ff main                                       |
       |        | git merge --no-edit --ff origin/fix-#2                              |
-      | <none> | open https://github.com/git-town/git-town/compare/fix-%232?expand=1 |
+      | (none) | open https://github.com/git-town/git-town/compare/fix-%232?expand=1 |
 
   Scenario: URL-encodes forward slashes
     Given the branches
@@ -81,10 +81,10 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                   |
       | test/feature | git fetch --prune --tags                                                  |
-      | <none>       | Looking for proposal online ... ok                                        |
+      | (none)       | Looking for proposal online ... ok                                        |
       | test/feature | git merge --no-edit --ff main                                             |
       |              | git merge --no-edit --ff origin/test/feature                              |
-      | <none>       | open https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
+      | (none)       | open https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
   Scenario: stacked change with known parent
     Given the branches
@@ -97,11 +97,11 @@ Feature: GitHub support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      | <none> | Looking for proposal online ... ok                                        |
+      | (none) | Looking for proposal online ... ok                                        |
       | child  | git checkout parent                                                       |
       | parent | git merge --no-edit --ff main                                             |
       |        | git merge --no-edit --ff origin/parent                                    |
       |        | git checkout child                                                        |
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
-      | <none> | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |

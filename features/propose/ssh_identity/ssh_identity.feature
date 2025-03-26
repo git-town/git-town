@@ -15,10 +15,10 @@ Feature: use a SSH identity
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      | <none>  | Looking for proposal online ... ok      |
+      | (none)  | Looking for proposal online ... ok      |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-      | <none>  | open <PROPOSAL_URL>                     |
+      | (none)  | open <PROPOSAL_URL>                     |
 
     Examples:
       | ORIGIN_HOSTNAME | PROPOSAL_URL                                                                                                                             |

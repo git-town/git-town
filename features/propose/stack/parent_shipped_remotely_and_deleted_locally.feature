@@ -44,7 +44,7 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
       | child  | git merge --no-edit --ff main                                    |
       |        | git merge --no-edit --ff origin/child                            |
       |        | git push                                                         |
-      | <none> | open https://github.com/git-town/git-town/compare/child?expand=1 |
+      | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
 
   Scenario: undo
     When I run "git-town undo"
