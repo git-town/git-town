@@ -6,9 +6,9 @@ Feature: propose uncommitted changes via a separate parent branch with message
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
-      | existing | local    | existing commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | origin        | main commit     |
+      | existing | local, origin | existing commit |
     And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
@@ -28,7 +28,7 @@ Feature: propose uncommitted changes via a separate parent branch with message
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |
-      | existing | local         | existing commit |
+      | existing | local, origin | existing commit |
       | new      | local, origin | unrelated       |
     And this lineage exists now
       | BRANCH   | PARENT |
