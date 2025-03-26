@@ -1,4 +1,4 @@
-Feature: propose with message
+Feature: propose uncommitted changes via a separate parent branch with message
 
   Background:
     Given a Git repo with origin
