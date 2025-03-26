@@ -4,5 +4,9 @@ package configdomain
 type Beam bool
 
 func (self Beam) IsFalse() bool {
-	return !bool(self)
+	return !self.IsTrue()
+}
+
+func (self Beam) IsTrue() bool {
+	return bool(self)
 }
