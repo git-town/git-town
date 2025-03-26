@@ -25,7 +25,7 @@ Feature: sync before proposing
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      | <none> | Looking for proposal online ... ok                                        |
+      | (none) | Looking for proposal online ... ok                                        |
       | child  | git checkout main                                                         |
       | main   | git rebase origin/main --no-update-refs                                   |
       |        | git push                                                                  |
@@ -37,7 +37,7 @@ Feature: sync before proposing
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
-      | <none> | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |

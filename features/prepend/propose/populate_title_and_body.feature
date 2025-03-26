@@ -23,7 +23,7 @@ Feature: propose a newly prepended branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                |
       | existing | git fetch --prune --tags                                                                               |
-      | <none>   | Looking for proposal online ... ok                                                                     |
+      | (none)   | Looking for proposal online ... ok                                                                     |
       | existing | git rebase main --no-update-refs                                                                       |
       |          | git push --force-with-lease --force-if-includes                                                        |
       |          | git checkout -b new main                                                                               |
@@ -33,7 +33,7 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes                                                        |
       |          | git checkout new                                                                                       |
       | new      | git push -u origin new                                                                                 |
-      | <none>   | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body |
+      | (none)   | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body |
     And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |

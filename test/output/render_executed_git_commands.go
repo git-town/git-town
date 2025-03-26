@@ -41,7 +41,7 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *godog.Table
 func branchForTableWithTypes(cmd ExecutedGitCommand, lastBranch string) string {
 	switch {
 	case cmd.Branch == "" && cmd.CommandType == CommandTypeFrontend:
-		return "<none>"
+		return "(none)"
 	case cmd.Branch == lastBranch:
 		return ""
 	case cmd.Branch == "":
@@ -56,7 +56,7 @@ func branchForTableWithoutTypes(cmd ExecutedGitCommand, lastBranch string) strin
 	case cmd.Branch == lastBranch:
 		return ""
 	case cmd.Branch == "":
-		return "<none>"
+		return "(none)"
 	default:
 		return cmd.Branch
 	}

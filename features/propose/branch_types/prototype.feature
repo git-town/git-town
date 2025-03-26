@@ -20,14 +20,14 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
-      | <none>    | Looking for proposal online ... ok                                   |
+      | (none)    | Looking for proposal online ... ok                                   |
       | prototype | git checkout main                                                    |
       | main      | git rebase origin/main --no-update-refs                              |
       |           | git push                                                             |
       |           | git checkout prototype                                               |
       | prototype | git merge --no-edit --ff main                                        |
       |           | git push -u origin prototype                                         |
-      | <none>    | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
+      | (none)    | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And Git Town prints:
       """
       branch "prototype" is no longer a prototype branch
