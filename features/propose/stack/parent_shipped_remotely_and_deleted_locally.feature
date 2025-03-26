@@ -35,7 +35,7 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
-    Then Git Town runs the commands
+    And Git Town runs the commands
       | BRANCH | COMMAND                                                          |
       | child  | git fetch --prune --tags                                         |
       |        | git checkout main                                                |
