@@ -1,7 +1,6 @@
 @skipWindows
 Feature: Bitbucket
 
-  @this
   Scenario Outline:
     Given a Git repo with origin
     And the origin is "<ORIGIN>"
