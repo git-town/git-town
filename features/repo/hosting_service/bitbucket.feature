@@ -1,15 +1,15 @@
 @skipWindows
 Feature: Bitbucket
 
+  @this
   Scenario Outline:
     Given a Git repo with origin
     And the origin is "<ORIGIN>"
     And tool "open" is installed
     When I run "git-town repo"
-    Then "open" launches a new proposal with this url in my browser:
-      """
-      https://bitbucket.org/git-town/git-town
-      """
+    Then Git Town runs the commands
+      | BRANCH | TYPE     | COMMAND                                      |
+      | <none> | frontend | open https://bitbucket.org/git-town/git-town |
 
     Examples:
       | ORIGIN                                               |
