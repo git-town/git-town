@@ -25,7 +25,7 @@ Feature: merging a branch verbosely
       |        | git status --long --ignore-submodules           |
       |        | git remote                                      |
       | beta   | git fetch --prune --tags                        |
-      | <none> | git stash list                                  |
+      | (none) | git stash list                                  |
       |        | git branch -vva --sort=refname                  |
       |        | git remote get-url origin                       |
       |        | git rev-parse --verify --abbrev-ref @{-1}       |
@@ -36,14 +36,14 @@ Feature: merging a branch verbosely
       |        | git checkout beta                               |
       | beta   | git merge --no-edit --ff alpha                  |
       |        | git merge --no-edit --ff origin/beta            |
-      | <none> | git show-ref --verify --quiet refs/heads/beta   |
+      | (none) | git show-ref --verify --quiet refs/heads/beta   |
       |        | git rev-list --left-right beta...origin/beta    |
       | beta   | git push                                        |
-      | <none> | git config git-town-branch.beta.parent main     |
+      | (none) | git config git-town-branch.beta.parent main     |
       |        | git config --unset git-town-branch.alpha.parent |
       | beta   | git branch -D alpha                             |
       |        | git push origin :alpha                          |
-      | <none> | git show-ref --verify --quiet refs/heads/main   |
+      | (none) | git show-ref --verify --quiet refs/heads/main   |
       |        | git checkout main                               |
       |        | git checkout beta                               |
       |        | git branch -vva --sort=refname                  |
@@ -71,11 +71,11 @@ Feature: merging a branch verbosely
       |        | git remote get-url origin                       |
       |        | git rev-parse --short HEAD                      |
       | beta   | git reset --hard {{ sha 'beta commit' }}        |
-      | <none> | git rev-list --left-right beta...origin/beta    |
+      | (none) | git rev-list --left-right beta...origin/beta    |
       | beta   | git push --force-with-lease --force-if-includes |
       |        | git branch alpha {{ sha 'alpha commit' }}       |
       |        | git push -u origin alpha                        |
-      | <none> | git config git-town-branch.alpha.parent main    |
+      | (none) | git config git-town-branch.alpha.parent main    |
       |        | git config git-town-branch.beta.parent alpha    |
     And the current branch is still "beta"
     And the initial commits exist now
