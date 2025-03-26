@@ -1,4 +1,4 @@
-Feature: proposing uncommitted changes via a child branch and enter message manually
+Feature: proposing uncommitted changes via a child branch and enter commit message manually
 
   Background:
     Given a Git repo with origin
