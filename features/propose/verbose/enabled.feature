@@ -24,7 +24,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
-      | <none>  | frontend | Looking for proposal online ... ok                                 |
+      | (none)  | frontend | Looking for proposal online ... ok                                 |
       |         | backend  | git log main..feature --format=%s --reverse                        |
       | feature | frontend | git merge --no-edit --ff main                                      |
       |         | frontend | git merge --no-edit --ff origin/feature                            |
@@ -38,7 +38,7 @@ Feature: display all executed Git commands
       |         | backend  | which garcon-url-handler                                           |
       |         | backend  | which xdg-open                                                     |
       |         | backend  | which open                                                         |
-      | <none>  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+      | (none)  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
       |         | backend  | git branch -vva --sort=refname                                     |
       |         | backend  | git config -lz --includes --global                                 |
       |         | backend  | git config -lz --includes --local                                  |

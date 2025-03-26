@@ -18,9 +18,9 @@ Feature: prepend with the previous branch checked out in another worktree
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       | current | frontend | git fetch --prune --tags                                           |
-      | <none>  | frontend | Looking for proposal online ... ok                                 |
+      | (none)  | frontend | Looking for proposal online ... ok                                 |
       | current | frontend | git merge --no-edit --ff main                                      |
       |         | frontend | git push -u origin current                                         |
-      | <none>  | frontend | open https://github.com/git-town/git-town/compare/current?expand=1 |
+      | (none)  | frontend | open https://github.com/git-town/git-town/compare/current?expand=1 |
     And the current branch is still "current"
     And the previous Git branch is now "current"

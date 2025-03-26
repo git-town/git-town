@@ -20,7 +20,7 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | <none>  | Looking for proposal online ... ok |
+      | (none)  | Looking for proposal online ... ok |
       | feature | git merge --no-edit --ff main      |
     And Git Town prints the error:
       """
@@ -60,7 +60,7 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
@@ -83,7 +83,7 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
-      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+      | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
