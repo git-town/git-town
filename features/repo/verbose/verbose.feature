@@ -17,7 +17,7 @@ Feature: display all executed Git commands
       |        | backend  | which xdg-open                            |
       |        | backend  | which open                                |
       |        | backend  | git branch --show-current                 |
-      | <none> | frontend | open https://github.com/git-town/git-town |
+      | (none) | frontend | open https://github.com/git-town/git-town |
     And Git Town prints:
       """
       Ran 10 shell commands.

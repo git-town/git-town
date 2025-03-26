@@ -25,16 +25,16 @@ Feature: compress the commits on a feature branch verbosely
       |         | git remote                                               |
       |         | git branch --show-current                                |
       | feature | git fetch --prune --tags                                 |
-      | <none>  | git stash list                                           |
+      | (none)  | git stash list                                           |
       |         | git branch -vva --sort=refname                           |
       |         | git remote get-url origin                                |
       |         | git cherry -v main feature                               |
       |         | git log --format=%B -n 1 {{ sha-before-run 'commit 1' }} |
       | feature | git reset --soft main                                    |
       |         | git commit -m "commit 1"                                 |
-      | <none>  | git rev-list --left-right feature...origin/feature       |
+      | (none)  | git rev-list --left-right feature...origin/feature       |
       | feature | git push --force-with-lease --force-if-includes          |
-      | <none>  | git branch -vva --sort=refname                           |
+      | (none)  | git branch -vva --sort=refname                           |
       |         | git config -lz --includes --global                       |
       |         | git config -lz --includes --local                        |
       |         | git stash list                                           |
@@ -67,7 +67,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git remote get-url origin                          |
       |         | git rev-parse --short HEAD                         |
       | feature | git reset --hard {{ sha 'commit 3' }}              |
-      | <none>  | git rev-list --left-right feature...origin/feature |
+      | (none)  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
     And the current branch is still "feature"
     And the initial commits exist now
