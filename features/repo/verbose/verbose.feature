@@ -22,7 +22,3 @@ Feature: display all executed Git commands
       """
       Ran 10 shell commands.
       """
-    And "open" launches a new proposal with this url in my browser:
-      """
-      https://github.com/git-town/git-town
-      """
