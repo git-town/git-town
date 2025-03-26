@@ -12,7 +12,7 @@ Feature: propose with message
       | existing | local    | existing commit |
     And an uncommitted file with name "new_file" and content "new content"
     And I ran "git add new_file"
-    When I run "git-town prepend new -m unrelated --propose"
+    When I run "git-town prepend new --propose -m unrelated"
 
   @this
   Scenario: result
@@ -20,6 +20,7 @@ Feature: propose with message
       | BRANCH   | COMMAND                  |
       | existing | git checkout -b new main |
       | new      | git commit -m unrelated  |
+      |          | git push -u origin new   |
       |          | git checkout existing    |
     And the current branch is still "existing"
     And these commits exist now

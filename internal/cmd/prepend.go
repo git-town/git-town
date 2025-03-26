@@ -387,6 +387,15 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		})
 	}
 	moveCommitsToNewBranch(prog, data)
+	if data.commit {
+		prog.Value.Add(
+			&opcodes.Commit{
+				AuthorOverride:                 None[gitdomain.Author](),
+				FallbackToDefaultCommitMessage: false,
+				Message:                        data.commitMessage,
+			},
+		)
+	}
 	if data.propose {
 		prog.Value.Add(
 			&opcodes.BranchTrackingCreate{
@@ -400,26 +409,6 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			})
 	}
 	if data.commit {
-		prog.Value.Add(
-			&opcodes.Commit{
-				AuthorOverride:                 None[gitdomain.Author](),
-				FallbackToDefaultCommitMessage: false,
-				Message:                        data.commitMessage,
-			},
-		)
-		if data.propose.IsTrue() {
-			prog.Value.Add(
-				&opcodes.BranchTrackingCreate{
-					Branch: data.targetBranch,
-				},
-				&opcodes.ProposalCreate{
-					Branch:        data.targetBranch,
-					MainBranch:    data.config.ValidatedConfigData.MainBranch,
-					ProposalBody:  "",
-					ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
-				},
-			)
-		}
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
