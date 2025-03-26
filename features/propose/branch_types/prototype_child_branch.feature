@@ -17,14 +17,14 @@ Feature: Create proposals for prototype branches
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                       |
       | prototype | git fetch --prune --tags                                                      |
-      | <none>    | Looking for proposal online ... ok                                            |
+      | (none)    | Looking for proposal online ... ok                                            |
       | prototype | git checkout parent                                                           |
       | parent    | git merge --no-edit --ff main                                                 |
       |           | git push -u origin parent                                                     |
       |           | git checkout prototype                                                        |
       | prototype | git merge --no-edit --ff parent                                               |
       |           | git push -u origin prototype                                                  |
-      | <none>    | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |
+      | (none)    | open https://github.com/git-town/git-town/compare/parent...prototype?expand=1 |
     And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/parent...prototype?expand=1
