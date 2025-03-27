@@ -237,10 +237,10 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) (runProgr
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	undoProg := NewMutable(&program.Program{})
-	if isOmni, _, _ := data.branchToHoistInfo.IsOmniBranch(); isOmni {
-		hoistFeatureBranch(prog, undoProg, data)
-	} else if data.branchToHoistInfo.HasOnlyLocalBranch() {
-		hoistLocalBranch(prog, undoProg, data)
+	if isOmni, branchName, _ := data.branchToHoistInfo.IsOmniBranch(); isOmni {
+		hoistFeatureBranch(prog, undoProg, branchName, data)
+	} else if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
+		hoistLocalBranch(prog, branchName, undoProg, data)
 	} else {
 		// cannot hoist this branch
 	}
@@ -262,47 +262,36 @@ func hoistFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data ho
 	// hoistLocalBranch(prog, finalUndoProgram, data)
 }
 
-func hoistLocalBranch(prog, finalUndoProgram Mutable[program.Program], data hoistData) {
-	if localBranchToHoist, hasLocalBranchToHoist := data.branchToHoistInfo.LocalName.Get(); hasLocalBranchToHoist {
-		if data.initialBranch == localBranchToHoist {
-			if data.hasOpenChanges {
-				prog.Value.Add(&opcodes.ChangesStage{})
-				prog.Value.Add(&opcodes.CommitWithMessage{
-					AuthorOverride: None[gitdomain.Author](),
-					Message:        gitdomain.CommitMessage("Committing open changes on hoistd branch"),
-				})
-				// update the registered initial SHA for this branch so that undo restores the just committed changes
-				prog.Value.Add(&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: data.initialBranch})
-				// when undoing, manually undo the just committed changes so that they are uncommitted again
-				finalUndoProgram.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localBranchToHoist})
-				finalUndoProgram.Value.Add(&opcodes.UndoLastCommit{})
-			}
-		}
-		// hoist the commits of this branch from all descendents
-		if data.config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase {
-			descendents := data.config.NormalConfig.Lineage.Descendants(localBranchToHoist)
-			for _, descendent := range descendents {
-				if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
-					sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-						Ancestor:          localBranchToHoist.BranchName(),
-						Branch:            descendent,
-						HasTrackingBranch: branchInfo.HasTrackingBranch(),
-						Program:           prog,
-						RebaseOnto:        data.config.ValidatedConfigData.MainBranch,
-					})
-				}
-			}
-		}
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchWhenDone})
-		prog.Value.Add(&opcodes.BranchLocalHoist{
-			Branch: localBranchToHoist,
-		})
-		if data.dryRun.IsFalse() {
-			sync.RemoveBranchConfiguration(sync.RemoveBranchConfigurationArgs{
-				Branch:  localBranchToHoist,
-				Lineage: data.config.NormalConfig.Lineage,
-				Program: prog,
+func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, finalUndoProgram Mutable[program.Program], data hoistData) {
+	// make this branch a child of the main branch
+	prog.Value.Add(
+		&opcodes.RebaseOnto{
+			BranchToRebaseAgainst: data.parentBranchName,
+			BranchToRebaseOnto:    data.config.ValidatedConfigData.MainBranch,
+			Upstream:              None[gitdomain.LocalBranchName](),
+		},
+	)
+	// hoist the commits of this branch from all descendents
+	lastParent := data.parentBranchName
+	descendents := data.config.NormalConfig.Lineage.Descendants(branchName)
+	for _, descendent := range descendents {
+		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
+			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+				Ancestor:          branchName.BranchName(),
+				Branch:            descendent,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           prog,
+				RebaseOnto:        lastParent,
 			})
+			lastParent = descendent
+		}
+	}
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	if data.dryRun.IsFalse() {
+		// update lineage
+		data.config.NormalConfig.SetParent(branchName, data.config.ValidatedConfigData.MainBranch)
+		for _, child := range data.config.NormalConfig.Lineage.Children(branchName) {
+			data.config.NormalConfig.SetParent(child, branchName)
 		}
 	}
 }

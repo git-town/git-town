@@ -275,6 +275,21 @@ func TestBranchInfo(t *testing.T) {
 		})
 	})
 
+	t.Run("IsLocalOnlyBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is indeed a local branch", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  Some(),
+				LocalSHA:   Option[gitdomain.SHA]{},
+				RemoteName: Option[gitdomain.RemoteBranchName]{},
+				RemoteSHA:  Option[gitdomain.SHA]{},
+				SyncStatus: "",
+			}
+			have := branchInfo.IsLocalOnlyBranch()
+		})
+	})
+
 	t.Run("IsOmniBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
