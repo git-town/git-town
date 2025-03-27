@@ -54,6 +54,7 @@ Feature: hoisting a branch out of a stack
     # And I run "git config git-town-branch.branch-3.parent branch-1"
     When I run "git-town hoist"
 
+  @debug
   @this
   Scenario: result
     Then Git Town runs the commands

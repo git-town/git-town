@@ -166,11 +166,11 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		return data, exit, err
 	}
 	branchNameToHoist := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
-	branchToHoist, hasBranchToHoist := branchesSnapshot.Branches.FindByLocalName(branchNameToHoist).Get()
-	if !hasBranchToHoist {
+	branchToHoistInfo, hasBranchToHoistInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToHoist).Get()
+	if !hasBranchToHoistInfo {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToHoist)
 	}
-	if branchToHoist.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+	if branchToHoistInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToHoist)
 	}
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
@@ -202,6 +202,10 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
+	parentBranch, hasParentBranch := data.config.NormalConfig.Lineage.Parent(branchNameToHoist).Get()
+	if !hasParentBranch {
+		return data, false, errors.New("cannot hoist branch without parent")
+	}
 	childBranches := data.config.NormalConfig.Lineage.Children(initialBranch)
 	children := make([]hoistChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
@@ -222,27 +226,35 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return hoistData{
-		branchToHoistType:   branchTypeToHoist,
-		branchesSnapshot:    branchesSnapshot,
-		children:            children,
-		config:              validatedConfig,
-		connector:           connector,
-		dialogTestInputs:    dialogTestInputs,
-		dryRun:              dryRun,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		initialBranch:       initialBranch,
-		nonExistingBranches: nonExistingBranches,
-		previousBranch:      previousBranchOpt,
-		stashSize:           stashSize,
+		branchToHoistType:           branchTypeToHoist,
+		branchesSnapshot:            branchesSnapshot,
+		children:                    children,
+		config:                      validatedConfig,
+		connector:                   connector,
+		dialogTestInputs:            dialogTestInputs,
+		dryRun:                      dryRun,
+		hasOpenChanges:              repoStatus.OpenChanges,
+		initialBranch:               initialBranch,
+		nonExistingBranches:         nonExistingBranches,
+		previousBranch:              previousBranchOpt,
+		stashSize:                   stashSize,
+		branchToHoistInfo:           *branchToHoistInfo,
+		initialBranchContainsMerges: false, // TODO: determine the correct data
+		parentBranch:                parentBranch,
 	}, false, nil
 }
 
 func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.Program {
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	if isOmni, branchName, _ := data.branchToHoistInfo.IsOmniBranch(); isOmni {
+		fmt.Println("1111111111111111111111111111111")
 		hoistFeatureBranch(prog, branchName, data)
-	} else if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
+	}
+	fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", data.branchToHoistInfo)
+	if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
+		fmt.Println("222222222222222222222222222")
 		hoistLocalBranch(prog, branchName, data)
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
@@ -302,7 +314,7 @@ func validateHoistData(data hoistData) error {
 	if data.initialBranchContainsMerges {
 		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
 	}
-	switch data.initialBranchType {
+	switch data.branchToHoistType {
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeParkedBranch,
@@ -312,7 +324,7 @@ func validateHoistData(data hoistData) error {
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypePerennialBranch:
-		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.initialBranchType)
+		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.branchToHoistType)
 	}
 	return nil
 }
