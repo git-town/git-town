@@ -116,6 +116,7 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 }
 
 type hoistData struct {
+	branchToHoistContainsMerges bool
 	branchToHoistInfo           gitdomain.BranchInfo
 	branchToHoistType           configdomain.BranchType
 	branchesSnapshot            gitdomain.BranchesSnapshot
@@ -126,7 +127,6 @@ type hoistData struct {
 	dryRun                      configdomain.DryRun
 	hasOpenChanges              bool
 	initialBranch               gitdomain.LocalBranchName
-	initialBranchContainsMerges bool
 	nonExistingBranches         gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch                gitdomain.LocalBranchName
 	previousBranch              Option[gitdomain.LocalBranchName]
@@ -225,6 +225,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return hoistData{
+		branchToHoistContainsMerges: false, // TODO: determine the actual data
 		branchToHoistInfo:           *branchToHoistInfo,
 		branchToHoistType:           branchTypeToHoist,
 		branchesSnapshot:            branchesSnapshot,
@@ -235,7 +236,6 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		dryRun:                      dryRun,
 		hasOpenChanges:              repoStatus.OpenChanges,
 		initialBranch:               initialBranch,
-		initialBranchContainsMerges: false, // TODO: determine the correct data
 		nonExistingBranches:         nonExistingBranches,
 		parentBranch:                parentBranch,
 		previousBranch:              previousBranchOpt,
@@ -310,7 +310,7 @@ func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalB
 
 func validateHoistData(data hoistData) error {
 	// TODO: ensure all branches are in sync or local only
-	if data.initialBranchContainsMerges {
+	if data.branchToHoistContainsMerges {
 		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
 	}
 	switch data.branchToHoistType {
