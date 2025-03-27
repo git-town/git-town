@@ -6,32 +6,37 @@ Feature: hoisting a branch out of a stack
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | branch-1 | feature | main   | local     |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  |
-      | branch-1 | local    | commit 1 |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-1 | local    | commit 1a |
+      | branch-1 | local    | commit 1b |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-2 | feature | branch-1 | local     |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  |
-      | branch-2 | local    | commit 2 |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-2 | local    | commit 2a |
+      | branch-2 | local    | commit 2b |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-3 | feature | branch-2 | local     |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  |
-      | branch-3 | local    | commit 3 |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-3 | local    | commit 3a |
+      | branch-3 | local    | commit 3b |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-4 | feature | branch-3 | local     |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  |
-      | branch-4 | local    | commit 4 |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-4 | local    | commit 4a |
+      | branch-4 | local    | commit 4b |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-5 | feature | branch-4 | local     |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  |
-      | branch-5 | local    | commit 5 |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-5 | local    | commit 5a |
+      | branch-5 | local    | commit 5b |
     # make branch-2 a child of main
     And the current branch is "branch-2"
     When I run "git rebase --onto main branch-1"
@@ -44,6 +49,7 @@ Feature: hoisting a branch out of a stack
     # remove commits of branch-2 from branch-5
     And I run "git checkout branch-5"
     And I run "git rebase --onto branch-4 branch-2"
+    And I run "git config git-town-branch.branch-3.parent branch-1"
   # When I run "git-town hoist"
 
   @this
@@ -59,13 +65,17 @@ Feature: hoisting a branch out of a stack
     # |          | git checkout -b parent main             |
     # And the current branch is still "branch-2"
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE  |
-      | branch-1 | local    | commit 1 |
-      | branch-2 | local    | commit 2 |
-      | branch-3 | local    | commit 1 |
-      |          |          | commit 3 |
-      | branch-4 | local    | commit 4 |
-      | branch-5 | local    | commit 5 |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-1 | local    | commit 1a |
+      |          |          | commit 1b |
+      | branch-2 | local    | commit 2a |
+      |          |          | commit 2b |
+      | branch-3 | local    | commit 3a |
+      |          |          | commit 3b |
+      | branch-4 | local    | commit 4a |
+      |          |          | commit 4b |
+      | branch-5 | local    | commit 5a |
+      |          |          | commit 5b |
   # And inspect the repo
   # And this lineage exists now
   #   | BRANCH | PARENT |
