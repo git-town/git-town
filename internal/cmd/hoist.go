@@ -118,6 +118,7 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 type hoistData struct {
 	branchToHoistContainsMerges bool
 	branchToHoistInfo           gitdomain.BranchInfo
+	branchToHoistName           gitdomain.LocalBranchName
 	branchToHoistType           configdomain.BranchType
 	branchesSnapshot            gitdomain.BranchesSnapshot
 	children                    []hoistChildBranch
@@ -227,6 +228,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	return hoistData{
 		branchToHoistContainsMerges: false, // TODO: determine the actual data
 		branchToHoistInfo:           *branchToHoistInfo,
+		branchToHoistName:           branchNameToHoist,
 		branchToHoistType:           branchTypeToHoist,
 		branchesSnapshot:            branchesSnapshot,
 		children:                    children,
@@ -246,11 +248,43 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
-	if isOmni, branchName, _ := data.branchToHoistInfo.IsOmniBranch(); isOmni {
-		hoistFeatureBranch(prog, branchName, data)
+	prog.Value.Add(
+		&opcodes.RebaseOnto{
+			BranchToRebaseAgainst: data.parentBranch.BranchName(),
+			BranchToRebaseOnto:    data.config.ValidatedConfigData.MainBranch,
+			Upstream:              None[gitdomain.LocalBranchName](),
+		},
+	)
+	if data.branchToHoistInfo.HasTrackingBranch() {
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+		)
 	}
-	if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
-		hoistLocalBranch(prog, branchName, data)
+	lastParent := data.parentBranch
+	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToHoistName)
+	for _, descendent := range descendents {
+		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
+			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+				Ancestor:          data.branchToHoistName.BranchName(),
+				Branch:            descendent,
+				HasTrackingBranch: branchInfo.HasTrackingBranch(),
+				Program:           prog,
+				RebaseOnto:        lastParent,
+			})
+			if branchInfo.HasTrackingBranch() {
+				prog.Value.Add(
+					&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				)
+			}
+			lastParent = descendent
+		}
+	}
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	if data.dryRun.IsFalse() {
+		data.config.NormalConfig.SetParent(data.branchToHoistName, data.config.ValidatedConfigData.MainBranch)
+		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToHoistName) {
+			data.config.NormalConfig.SetParent(child, data.parentBranch)
+		}
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
@@ -259,46 +293,6 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.P
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return prog.Immutable()
-}
-
-func hoistFeatureBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, data hoistData) {
-	// trackingBranchToHoist, hasTrackingBranchToHoist := data.branchToHoistInfo.RemoteName.Get()
-	// if data.branchToHoistInfo.SyncStatus != gitdomain.SyncStatusHoistdAtRemote && hasTrackingBranchToHoist && data.config.NormalConfig.IsOnline() {
-	// 	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
-	// 	prog.Value.Add(&opcodes.BranchTrackingHoist{Branch: trackingBranchToHoist})
-	// }
-	// hoistLocalBranch(prog, finalUndoProgram, data)
-}
-
-func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, data hoistData) {
-	prog.Value.Add(
-		&opcodes.RebaseOnto{
-			BranchToRebaseAgainst: data.parentBranch.BranchName(),
-			BranchToRebaseOnto:    data.config.ValidatedConfigData.MainBranch,
-			Upstream:              None[gitdomain.LocalBranchName](),
-		},
-	)
-	lastParent := data.parentBranch
-	descendents := data.config.NormalConfig.Lineage.Descendants(branchName)
-	for _, descendent := range descendents {
-		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
-			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-				Ancestor:          branchName.BranchName(),
-				Branch:            descendent,
-				HasTrackingBranch: branchInfo.HasTrackingBranch(),
-				Program:           prog,
-				RebaseOnto:        lastParent,
-			})
-			lastParent = descendent
-		}
-	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
-	if data.dryRun.IsFalse() {
-		data.config.NormalConfig.SetParent(branchName, data.config.ValidatedConfigData.MainBranch)
-		for _, child := range data.config.NormalConfig.Lineage.Children(branchName) {
-			data.config.NormalConfig.SetParent(child, data.parentBranch)
-		}
-	}
 }
 
 func validateHoistData(data hoistData) error {
