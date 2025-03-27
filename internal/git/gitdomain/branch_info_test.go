@@ -279,14 +279,17 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("is indeed a local branch", func(t *testing.T) {
 			t.Parallel()
+			branchName := gitdomain.NewLocalBranchName("foo")
 			branchInfo := gitdomain.BranchInfo{
-				LocalName:  Some(),
+				LocalName:  Some(branchName),
 				LocalSHA:   Option[gitdomain.SHA]{},
 				RemoteName: Option[gitdomain.RemoteBranchName]{},
 				RemoteSHA:  Option[gitdomain.SHA]{},
 				SyncStatus: "",
 			}
-			have := branchInfo.IsLocalOnlyBranch()
+			isLocal, haveBranchName := branchInfo.IsLocalOnlyBranch()
+			must.True(t, isLocal)
+			must.Eq(t, branchName, haveBranchName)
 		})
 	})
 

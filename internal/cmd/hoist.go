@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/flags"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/cmd/ship"
 	"github.com/git-town/git-town/v18/internal/cmd/sync"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
@@ -107,7 +106,7 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 		Frontend:                repo.Frontend,
 		Git:                     repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
-		InitialBranch:           data.initialBranch.name,
+		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
@@ -118,29 +117,28 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 }
 
 type hoistData struct {
-	initialBranch struct {
-		containsMerges bool
-		name           gitdomain.LocalBranchName
-		info           gitdomain.BranchInfo
-		branchType     configdomain.BranchType
-	}
-	branchesSnapshot gitdomain.BranchesSnapshot
-	children         []struct {
-		name     gitdomain.LocalBranchName
-		proposal Option[forgedomain.Proposal]
-	}
-	config           config.ValidatedConfig
-	connector        Option[forgedomain.Connector]
-	dialogTestInputs components.TestInputs
-	dryRun           configdomain.DryRun
-	hasOpenChanges   bool
-	// nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch struct {
-		name     gitdomain.LocalBranchName
-		proposal Option[forgedomain.Proposal]
-	}
-	previousBranch Option[gitdomain.LocalBranchName]
-	stashSize      gitdomain.StashSize
+	branchToHoistInfo           gitdomain.BranchInfo
+	branchToHoistType           configdomain.BranchType
+	branchesSnapshot            gitdomain.BranchesSnapshot
+	children                    []hoistChild
+	config                      config.ValidatedConfig
+	connector                   Option[forgedomain.Connector]
+	dialogTestInputs            components.TestInputs
+	dryRun                      configdomain.DryRun
+	hasOpenChanges              bool
+	initialBranch               gitdomain.LocalBranchName
+	initialBranchContainsMerges bool
+	initialBranchType           configdomain.BranchType
+	nonExistingBranches         gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch                gitdomain.LocalBranchName
+	previousBranch              Option[gitdomain.LocalBranchName]
+	// proposalsOfChildBranches []hostingdomain.Proposal
+	stashSize gitdomain.StashSize
+}
+
+type hoistChild struct {
+	name     gitdomain.LocalBranchName
+	proposal Option[forgedomain.Proposal]
 }
 
 func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data hoistData, exit bool, err error) {
@@ -207,30 +205,37 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	childBranches := data.config.NormalConfig.Lineage.Children(initialBranch)
-	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
-		ConnectorOpt:               connector,
-		Lineage:                    validatedConfig.NormalConfig.Lineage,
-		Offline:                    repo.IsOffline,
-		OldBranch:                  branchNameToHoist,
-		OldBranchHasTrackingBranch: branchToHoist.HasTrackingBranch(),
-	})
+	children := make([]hoistChild, len(childBranches))
+	for c, childBranch := range childBranches {
+		proposal := None[forgedomain.Proposal]()
+		if connector, hasConnector := connector.Get(); hasConnector {
+			if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
+				proposal, err = findProposal(childBranch, initialBranch)
+				if err != nil {
+					return data, false, err
+				}
+			}
+		}
+		children[c] = hoistChild{
+			name:     childBranch,
+			proposal: proposal,
+		}
+	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return hoistData{
-		branchToHoistInfo:        *branchToHoist,
-		branchToHoistType:        branchTypeToHoist,
-		branchesSnapshot:         branchesSnapshot,
-		childBranches:            childBranches,
-		config:                   validatedConfig,
-		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
-		hasOpenChanges:           repoStatus.OpenChanges,
-		initialBranch:            initialBranch,
-		nonExistingBranches:      nonExistingBranches,
-		previousBranch:           previousBranchOpt,
-		proposalsOfChildBranches: proposalsOfChildBranches,
-		stashSize:                stashSize,
+		branchToHoistType:   branchTypeToHoist,
+		branchesSnapshot:    branchesSnapshot,
+		children:            children,
+		config:              validatedConfig,
+		connector:           connector,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		nonExistingBranches: nonExistingBranches,
+		previousBranch:      previousBranchOpt,
+		stashSize:           stashSize,
 	}, false, nil
 }
 
