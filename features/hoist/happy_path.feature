@@ -52,6 +52,8 @@ Feature: hoisting a branch out of a stack
       | branch-2 | local    | commit 2 |
       | branch-3 | local    | commit 1 |
       |          |          | commit 3 |
+      | branch-4 | local    | commit 4 |
+  # And inspect the repo
   # And this lineage exists now
   #   | BRANCH | PARENT |
   #   | old    | parent |
