@@ -296,10 +296,9 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.P
 }
 
 func validateHoistData(data hoistData) error {
-	// TODO: ensure all branches are in sync or local only
 	switch data.branchToHoistInfo.SyncStatus {
-	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusLocalOnly:
-	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync:
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly:
+	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
 		return fmt.Errorf("please sync your branches before hoisting")
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf("this branch cannot be hoisted because it is checked out in another worktree")

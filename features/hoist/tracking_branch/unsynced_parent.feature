@@ -1,4 +1,4 @@
-Feature: hoisting a parked branch
+Feature: hoisting a branch whose parent is unsynced
 
   Background:
     Given a Git repo with origin
@@ -6,9 +6,9 @@ Feature: hoisting a parked branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE   |
-      | branch-1 | local, origin | commit 1a |
-      | branch-1 | local, origin | commit 1b |
+      | BRANCH   | LOCATION | MESSAGE   |
+      | branch-1 | local    | commit 1a |
+      | branch-1 | origin   | commit 1b |
     And the branches
       | NAME     | TYPE   | PARENT   | LOCATIONS     |
       | branch-2 | parked | branch-1 | local, origin |
@@ -28,29 +28,12 @@ Feature: hoisting a parked branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git fetch --prune --tags                        |
-      |          | git rebase --onto main branch-1                 |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git pull                                        |
-      |          | git rebase --onto branch-1 branch-2             |
-      |          | git push --force-with-lease                     |
-      |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE   |
-      | branch-1 | local, origin | commit 1a |
-      |          |               | commit 1b |
-      | branch-2 | local, origin | commit 2a |
-      |          |               | commit 2b |
-      | branch-3 | local, origin | commit 3a |
-      |          |               | commit 3b |
-    And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | main     |
-      | branch-2 | main     |
-      | branch-3 | branch-1 |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+    And Git Town prints the error:
+      """
+      please sync your branches before hoisting
+      """
 
   Scenario: undo
     When I run "git-town undo"
