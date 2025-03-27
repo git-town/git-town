@@ -119,7 +119,7 @@ type hoistData struct {
 	branchToHoistInfo           gitdomain.BranchInfo
 	branchToHoistType           configdomain.BranchType
 	branchesSnapshot            gitdomain.BranchesSnapshot
-	children                    []hoistChild
+	children                    []hoistChildBranch
 	config                      config.ValidatedConfig
 	connector                   Option[forgedomain.Connector]
 	dialogTestInputs            components.TestInputs
@@ -131,11 +131,10 @@ type hoistData struct {
 	nonExistingBranches         gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch                gitdomain.LocalBranchName
 	previousBranch              Option[gitdomain.LocalBranchName]
-	// proposalsOfChildBranches []hostingdomain.Proposal
-	stashSize gitdomain.StashSize
+	stashSize                   gitdomain.StashSize
 }
 
-type hoistChild struct {
+type hoistChildBranch struct {
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
 }
@@ -204,7 +203,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	childBranches := data.config.NormalConfig.Lineage.Children(initialBranch)
-	children := make([]hoistChild, len(childBranches))
+	children := make([]hoistChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
@@ -215,7 +214,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 				}
 			}
 		}
-		children[c] = hoistChild{
+		children[c] = hoistChildBranch{
 			name:     childBranch,
 			proposal: proposal,
 		}
@@ -245,8 +244,6 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.P
 		hoistFeatureBranch(prog, branchName, data)
 	} else if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
 		hoistLocalBranch(prog, branchName, data)
-	} else {
-		// cannot hoist this branch
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,

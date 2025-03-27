@@ -37,35 +37,35 @@ Feature: hoisting a branch out of a stack
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-5 | local    | commit 5a |
       | branch-5 | local    | commit 5b |
-    # make branch-2 a child of main and remove commits of branch-1 from it
-    And the current branch is "branch-2"
-    When I run "git rebase --onto main branch-1"
-    # remove commits of branch-2 from branch-3
-    And I run "git checkout branch-3"
-    And I run "git rebase --onto branch-1 branch-2"
-    # remove commits of branch-2 from branch-4
-    And I run "git checkout branch-4"
-    And I run "git rebase --onto branch-3 branch-2"
-    # remove commits of branch-2 from branch-5
-    And I run "git checkout branch-5"
-    And I run "git rebase --onto branch-4 branch-2"
-    # manually update the lineage
-    And I run "git config git-town-branch.branch-2.parent main"
-    And I run "git config git-town-branch.branch-3.parent branch-1"
-  # When I run "git-town hoist"
+    # # make branch-2 a child of main and remove commits of branch-1 from it
+    # And the current branch is "branch-2"
+    # When I run "git rebase --onto main branch-1"
+    # # remove commits of branch-2 from branch-3
+    # And I run "git checkout branch-3"
+    # And I run "git rebase --onto branch-1 branch-2"
+    # # remove commits of branch-2 from branch-4
+    # And I run "git checkout branch-4"
+    # And I run "git rebase --onto branch-3 branch-2"
+    # # remove commits of branch-2 from branch-5
+    # And I run "git checkout branch-5"
+    # And I run "git rebase --onto branch-4 branch-2"
+    # # manually update the lineage
+    # And I run "git config git-town-branch.branch-2.parent main"
+    # And I run "git config git-town-branch.branch-3.parent branch-1"
+    When I run "git-town hoist"
 
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
-    # | branch-2 | git fetch --prune --tags                |
-    # |          | git checkout main                       |
-    # | main     | git rebase origin/main --no-update-refs |
-    # |          | git checkout old                        |
-    # | old      | git merge --no-edit --ff main           |
-    # |          | git merge --no-edit --ff origin/old     |
-    # |          | git checkout -b parent main             |
-    # And the current branch is still "branch-2"
+      | BRANCH   | COMMAND                                 |
+      | branch-2 | git fetch --prune --tags                |
+      |          | git checkout main                       |
+      | main     | git rebase origin/main --no-update-refs |
+      |          | git checkout old                        |
+      | old      | git merge --no-edit --ff main           |
+      |          | git merge --no-edit --ff origin/old     |
+      |          | git checkout -b parent main             |
+    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-1 | local    | commit 1a |
