@@ -37,7 +37,7 @@ Feature: hoisting a branch out of a stack
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-5 | local    | commit 5a |
       | branch-5 | local    | commit 5b |
-    # make branch-2 a child of main
+    # make branch-2 a child of main and remove commits of branch-1 from it
     And the current branch is "branch-2"
     When I run "git rebase --onto main branch-1"
     # remove commits of branch-2 from branch-3
