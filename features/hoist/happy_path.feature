@@ -26,12 +26,24 @@ Feature: hoisting a branch out of a stack
     And the commits
       | BRANCH   | LOCATION | MESSAGE  |
       | branch-4 | local    | commit 4 |
+    And the branches
+      | NAME     | TYPE    | PARENT   | LOCATIONS |
+      | branch-5 | feature | branch-4 | local     |
+    And the commits
+      | BRANCH   | LOCATION | MESSAGE  |
+      | branch-5 | local    | commit 5 |
+    # make branch-2 a child of main
     And the current branch is "branch-2"
     When I run "git rebase --onto main branch-1"
+    # remove commits of branch-2 from branch-3
     And I run "git checkout branch-3"
     And I run "git rebase --onto branch-1 branch-2"
+    # remove commits from branch-2 from branch-4
     And I run "git checkout branch-4"
     And I run "git rebase --onto branch-3 branch-2"
+    # remove commits from branch-2 from branch-5
+    And I run "git checkout branch-5"
+    And I run "git rebase --onto branch-4 branch-2"
   # When I run "git-town hoist"
 
   @this
@@ -53,6 +65,7 @@ Feature: hoisting a branch out of a stack
       | branch-3 | local    | commit 1 |
       |          |          | commit 3 |
       | branch-4 | local    | commit 4 |
+      | branch-5 | local    | commit 5 |
   # And inspect the repo
   # And this lineage exists now
   #   | BRANCH | PARENT |
