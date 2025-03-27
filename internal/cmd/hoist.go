@@ -292,7 +292,7 @@ func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalB
 		// update lineage
 		data.config.NormalConfig.SetParent(branchName, data.config.ValidatedConfigData.MainBranch)
 		for _, child := range data.config.NormalConfig.Lineage.Children(branchName) {
-			data.config.NormalConfig.SetParent(child, branchName)
+			data.config.NormalConfig.SetParent(child, data.parentBranch)
 		}
 	}
 }
