@@ -81,7 +81,7 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 	if err != nil {
 		return err
 	}
-	runProgram, finalUndoProgram := hoistProgram(data, repo.FinalMessages)
+	runProgram := hoistProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -91,7 +91,6 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		FinalUndoProgram:      finalUndoProgram,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
@@ -239,14 +238,13 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	}, false, nil
 }
 
-func hoistProgram(data hoistData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
+func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
-	undoProg := NewMutable(&program.Program{})
 	if isOmni, branchName, _ := data.branchToHoistInfo.IsOmniBranch(); isOmni {
-		hoistFeatureBranch(prog, branchName, undoProg, data)
+		hoistFeatureBranch(prog, branchName, data)
 	} else if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
-		hoistLocalBranch(prog, branchName, undoProg, data)
+		hoistLocalBranch(prog, branchName, data)
 	} else {
 		// cannot hoist this branch
 	}
@@ -256,10 +254,10 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) (runProgr
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
-	return prog.Immutable(), undoProg.Immutable()
+	return prog.Immutable()
 }
 
-func hoistFeatureBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, finalUndoProgram Mutable[program.Program], data hoistData) {
+func hoistFeatureBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, data hoistData) {
 	// trackingBranchToHoist, hasTrackingBranchToHoist := data.branchToHoistInfo.RemoteName.Get()
 	// if data.branchToHoistInfo.SyncStatus != gitdomain.SyncStatusHoistdAtRemote && hasTrackingBranchToHoist && data.config.NormalConfig.IsOnline() {
 	// 	ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
@@ -268,7 +266,7 @@ func hoistFeatureBranch(prog Mutable[program.Program], branchName gitdomain.Loca
 	// hoistLocalBranch(prog, finalUndoProgram, data)
 }
 
-func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, finalUndoProgram Mutable[program.Program], data hoistData) {
+func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, data hoistData) {
 	// make this branch a child of the main branch
 	prog.Value.Add(
 		&opcodes.RebaseOnto{
