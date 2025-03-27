@@ -40,7 +40,6 @@ Feature: hoisting a branch out of a stack
     And the current branch is "branch-2"
     When I run "git-town hoist"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                             |
@@ -77,9 +76,15 @@ Feature: hoisting a branch out of a stack
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
-    And the current branch is now "old"
+      | BRANCH   | COMMAND                                |
+      | branch-2 | git reset --hard {{ sha 'commit 2b' }} |
+      |          | git checkout branch-3                  |
+      | branch-3 | git reset --hard {{ sha 'commit 3b' }} |
+      |          | git checkout branch-4                  |
+      | branch-4 | git reset --hard {{ sha 'commit 4b' }} |
+      |          | git checkout branch-5                  |
+      | branch-5 | git reset --hard {{ sha 'commit 5b' }} |
+      |          | git checkout branch-2                  |
+    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now
