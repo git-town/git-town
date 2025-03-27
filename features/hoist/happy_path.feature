@@ -55,18 +55,19 @@ Feature: hoisting a branch out of a stack
     And the current branch is "branch-2"
     When I run "git-town hoist"
 
-  @debug
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | branch-2 | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git checkout old                        |
-      | old      | git merge --no-edit --ff main           |
-      |          | git merge --no-edit --ff origin/old     |
-      |          | git checkout -b parent main             |
+      | BRANCH   | COMMAND                             |
+      | branch-2 | git fetch --prune --tags            |
+      |          | git rebase --onto main branch-1     |
+      |          | git checkout branch-3               |
+      | branch-3 | git rebase --onto branch-1 branch-2 |
+      |          | git checkout branch-4               |
+      | branch-4 | git rebase --onto branch-3 branch-2 |
+      |          | git checkout branch-5               |
+      | branch-5 | git rebase --onto branch-4 branch-2 |
+      |          | git checkout branch-2               |
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE   |
@@ -80,11 +81,10 @@ Feature: hoisting a branch out of a stack
       |          |          | commit 4b |
       | branch-5 | local    | commit 5a |
       |          |          | commit 5b |
-  # And inspect the repo
-  # And this lineage exists now
-  #   | BRANCH | PARENT |
-  #   | old    | parent |
-  #   | parent | main   |
+    And this lineage exists now
+      | BRANCH | PARENT |
+      | old    | parent |
+      | parent | main   |
 
   Scenario: undo
     When I run "git-town undo"
