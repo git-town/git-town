@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const hoistDesc = "Extract a branch from a stack, making it a top-level branch"
+const hoistDesc = "Move a branch out of a stack"
 
 const hoistHelp = `
 Assume one of the branches in a stack makes changes that don't require the changes made by branches. This branch could  The "hoist" command removes this branch from the stack and makes it a stand-alone top-level branch that ships directly into your main branch. This allows you to get your changes reviewed and shipped concurrently rather than sequentially.`
@@ -40,10 +40,11 @@ func hoistCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   hoistCommandName,
-		Args:  cobra.NoArgs,
-		Short: hoistDesc,
-		Long:  cmdhelpers.Long(hoistDesc, hoistHelp),
+		Use:     hoistCommandName,
+		Args:    cobra.NoArgs,
+		Short:   hoistDesc,
+		GroupID: "stack",
+		Long:    cmdhelpers.Long(hoistDesc, hoistHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, err := readDryRunFlag(cmd)
 			if err != nil {
