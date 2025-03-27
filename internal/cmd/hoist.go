@@ -271,7 +271,6 @@ func hoistFeatureBranch(prog Mutable[program.Program], branchName gitdomain.Loca
 }
 
 func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalBranchName, data hoistData) {
-	// make this branch a child of the main branch
 	prog.Value.Add(
 		&opcodes.RebaseOnto{
 			BranchToRebaseAgainst: data.parentBranch.BranchName(),
@@ -279,7 +278,6 @@ func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalB
 			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
-	// hoist the commits of this branch from all descendents
 	lastParent := data.parentBranch
 	descendents := data.config.NormalConfig.Lineage.Descendants(branchName)
 	for _, descendent := range descendents {
@@ -296,7 +294,6 @@ func hoistLocalBranch(prog Mutable[program.Program], branchName gitdomain.LocalB
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if data.dryRun.IsFalse() {
-		// update lineage
 		data.config.NormalConfig.SetParent(branchName, data.config.ValidatedConfigData.MainBranch)
 		for _, child := range data.config.NormalConfig.Lineage.Children(branchName) {
 			data.config.NormalConfig.SetParent(child, data.parentBranch)
