@@ -37,21 +37,6 @@ Feature: hoisting a branch out of a stack
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-5 | local    | commit 5a |
       | branch-5 | local    | commit 5b |
-    # # make branch-2 a child of main and remove commits of branch-1 from it
-    # And the current branch is "branch-2"
-    # When I run "git rebase --onto main branch-1"
-    # # remove commits of branch-2 from branch-3
-    # And I run "git checkout branch-3"
-    # And I run "git rebase --onto branch-1 branch-2"
-    # # remove commits of branch-2 from branch-4
-    # And I run "git checkout branch-4"
-    # And I run "git rebase --onto branch-3 branch-2"
-    # # remove commits of branch-2 from branch-5
-    # And I run "git checkout branch-5"
-    # And I run "git rebase --onto branch-4 branch-2"
-    # # manually update the lineage
-    # And I run "git config git-town-branch.branch-2.parent main"
-    # And I run "git config git-town-branch.branch-3.parent branch-1"
     And the current branch is "branch-2"
     When I run "git-town hoist"
 
@@ -82,9 +67,12 @@ Feature: hoisting a branch out of a stack
       | branch-5 | local    | commit 5a |
       |          |          | commit 5b |
     And this lineage exists now
-      | BRANCH | PARENT |
-      | old    | parent |
-      | parent | main   |
+      | BRANCH   | PARENT   |
+      | branch-1 | main     |
+      | branch-2 | main     |
+      | branch-3 | branch-1 |
+      | branch-4 | branch-3 |
+      | branch-5 | branch-4 |
 
   Scenario: undo
     When I run "git-town undo"
