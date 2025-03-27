@@ -87,17 +87,6 @@ func (self BranchInfo) HasTrackingBranch() bool {
 	return hasLocalBranch && hasRemoteBranch
 }
 
-// Indicates whether the branch described by this BranchInfo is omni
-// and provides all relevant data around this scenario.
-// An omni branch has the same SHA locally and remotely.
-func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha SHA) {
-	localSHA, hasLocalSHA := self.LocalSHA.Get()
-	branchName, hasBranch := self.LocalName.Get()
-	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
-	isOmni = hasLocalSHA && hasRemoteSHA && hasBranch && localSHA == remoteSHA
-	return isOmni, branchName, localSHA
-}
-
 func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 	branchName, hasLocalBranch := self.LocalName.Get()
 	if !hasLocalBranch {
@@ -108,6 +97,17 @@ func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 		return false, branchName
 	}
 	return true, branchName
+}
+
+// Indicates whether the branch described by this BranchInfo is omni
+// and provides all relevant data around this scenario.
+// An omni branch has the same SHA locally and remotely.
+func (self BranchInfo) IsOmniBranch() (isOmni bool, branch LocalBranchName, sha SHA) {
+	localSHA, hasLocalSHA := self.LocalSHA.Get()
+	branchName, hasBranch := self.LocalName.Get()
+	remoteSHA, hasRemoteSHA := self.RemoteSHA.Get()
+	isOmni = hasLocalSHA && hasRemoteSHA && hasBranch && localSHA == remoteSHA
+	return isOmni, branchName, localSHA
 }
 
 // provides the name of this branch as a local branch, independent of whether this branch is local or not

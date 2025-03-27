@@ -127,7 +127,6 @@ type hoistData struct {
 	hasOpenChanges              bool
 	initialBranch               gitdomain.LocalBranchName
 	initialBranchContainsMerges bool
-	initialBranchType           configdomain.BranchType
 	nonExistingBranches         gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch                gitdomain.LocalBranchName
 	previousBranch              Option[gitdomain.LocalBranchName]
@@ -226,6 +225,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return hoistData{
+		branchToHoistInfo:           *branchToHoistInfo,
 		branchToHoistType:           branchTypeToHoist,
 		branchesSnapshot:            branchesSnapshot,
 		children:                    children,
@@ -235,12 +235,11 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		dryRun:                      dryRun,
 		hasOpenChanges:              repoStatus.OpenChanges,
 		initialBranch:               initialBranch,
+		initialBranchContainsMerges: false, // TODO: determine the correct data
 		nonExistingBranches:         nonExistingBranches,
+		parentBranch:                parentBranch,
 		previousBranch:              previousBranchOpt,
 		stashSize:                   stashSize,
-		branchToHoistInfo:           *branchToHoistInfo,
-		initialBranchContainsMerges: false, // TODO: determine the correct data
-		parentBranch:                parentBranch,
 	}, false, nil
 }
 
