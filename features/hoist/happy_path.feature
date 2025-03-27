@@ -49,6 +49,8 @@ Feature: hoisting a branch out of a stack
     # remove commits of branch-2 from branch-5
     And I run "git checkout branch-5"
     And I run "git rebase --onto branch-4 branch-2"
+    # manually update the lineage
+    And I run "git config git-town-branch.branch-2.parent main"
     And I run "git config git-town-branch.branch-3.parent branch-1"
   # When I run "git-town hoist"
 
