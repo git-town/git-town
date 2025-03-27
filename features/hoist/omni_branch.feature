@@ -1,45 +1,46 @@
-Feature: hoisting a branch out of a stack
+Feature: hoisting an omni-branch
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS |
-      | branch-1 | feature | main   | local     |
+      | NAME     | TYPE    | PARENT | LOCATIONS     |
+      | branch-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-1 | local    | commit 1a |
-      | branch-1 | local    | commit 1b |
+      | BRANCH   | LOCATION      | MESSAGE   |
+      | branch-1 | local, origin | commit 1a |
+      | branch-1 | local, origin | commit 1b |
     And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
-      | branch-2 | feature | branch-1 | local     |
+      | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-2 | feature | branch-1 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-2 | local    | commit 2a |
-      | branch-2 | local    | commit 2b |
+      | BRANCH   | LOCATION      | MESSAGE   |
+      | branch-2 | local, origin | commit 2a |
+      | branch-2 | local, origin | commit 2b |
     And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
-      | branch-3 | feature | branch-2 | local     |
+      | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-3 | feature | branch-2 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-3 | local    | commit 3a |
-      | branch-3 | local    | commit 3b |
+      | BRANCH   | LOCATION      | MESSAGE   |
+      | branch-3 | local, origin | commit 3a |
+      | branch-3 | local, origin | commit 3b |
     And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
-      | branch-4 | feature | branch-3 | local     |
+      | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-4 | feature | branch-3 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-4 | local    | commit 4a |
-      | branch-4 | local    | commit 4b |
+      | BRANCH   | LOCATION      | MESSAGE   |
+      | branch-4 | local, origin | commit 4a |
+      | branch-4 | local, origin | commit 4b |
     And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
-      | branch-5 | feature | branch-4 | local     |
+      | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-5 | feature | branch-4 | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-5 | local    | commit 5a |
-      | branch-5 | local    | commit 5b |
+      | BRANCH   | LOCATION      | MESSAGE   |
+      | branch-5 | local, origin | commit 5a |
+      | branch-5 | local, origin | commit 5b |
     And the current branch is "branch-2"
     When I run "git-town hoist"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                             |
