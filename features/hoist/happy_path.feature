@@ -20,10 +20,18 @@ Feature: hoisting a branch out of a stack
     And the commits
       | BRANCH   | LOCATION | MESSAGE  |
       | branch-3 | local    | commit 3 |
+    And the branches
+      | NAME     | TYPE    | PARENT   | LOCATIONS |
+      | branch-4 | feature | branch-3 | local     |
+    And the commits
+      | BRANCH   | LOCATION | MESSAGE  |
+      | branch-4 | local    | commit 4 |
     And the current branch is "branch-2"
-    When I run "git rebase --onto main branch-1 branch-2"
+    When I run "git rebase --onto main branch-1"
     And I run "git checkout branch-3"
-    When I run "git rebase --onto branch-1 branch-2 branch-3"
+    And I run "git rebase --onto branch-1 branch-2"
+    And I run "git checkout branch-4"
+    And I run "git rebase --onto branch-3 branch-2"
   # When I run "git-town hoist"
 
   @this
@@ -44,11 +52,10 @@ Feature: hoisting a branch out of a stack
       | branch-2 | local    | commit 2 |
       | branch-3 | local    | commit 1 |
       |          |          | commit 3 |
-
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | old    | parent |
-      | parent | main   |
+  # And this lineage exists now
+  #   | BRANCH | PARENT |
+  #   | old    | parent |
+  #   | parent | main   |
 
   Scenario: undo
     When I run "git-town undo"
