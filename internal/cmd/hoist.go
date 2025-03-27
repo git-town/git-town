@@ -201,7 +201,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	parentBranch, hasParentBranch := data.config.NormalConfig.Lineage.Parent(branchNameToHoist).Get()
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToHoist).Get()
 	if !hasParentBranch {
 		return data, false, errors.New("cannot hoist branch without parent")
 	}
@@ -244,16 +244,12 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 }
 
 func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.Program {
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	if isOmni, branchName, _ := data.branchToHoistInfo.IsOmniBranch(); isOmni {
-		fmt.Println("1111111111111111111111111111111")
 		hoistFeatureBranch(prog, branchName, data)
 	}
-	fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", data.branchToHoistInfo)
 	if isLocalOnly, branchName := data.branchToHoistInfo.IsLocalOnlyBranch(); isLocalOnly {
-		fmt.Println("222222222222222222222222222")
 		hoistLocalBranch(prog, branchName, data)
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{

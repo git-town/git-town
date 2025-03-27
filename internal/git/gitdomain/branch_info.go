@@ -92,7 +92,6 @@ func (self BranchInfo) IsLocalOnlyBranch() (bool, LocalBranchName) {
 	if !hasLocalBranch {
 		return false, branchName
 	}
-	fmt.Println("BBBBBBBBBBBBBBB", self.RemoteName)
 	if self.RemoteName.IsSome() {
 		return false, branchName
 	}

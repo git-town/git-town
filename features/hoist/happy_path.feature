@@ -52,6 +52,7 @@ Feature: hoisting a branch out of a stack
     # # manually update the lineage
     # And I run "git config git-town-branch.branch-2.parent main"
     # And I run "git config git-town-branch.branch-3.parent branch-1"
+    And the current branch is "branch-2"
     When I run "git-town hoist"
 
   @debug
