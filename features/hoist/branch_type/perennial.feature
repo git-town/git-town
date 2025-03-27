@@ -2,16 +2,19 @@ Feature: hoisting an empty branch
 
   Background:
     Given a Git repo with origin
+    And the branches
+      | NAME    | TYPE      | PARENT | LOCATIONS     |
+      | staging | perennial | main   | local, origin |
+    And the current branch is "staging"
     When I run "git-town hoist"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
+      | BRANCH  | COMMAND                  |
+      | staging | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot hoist branch without parent
+      cannot hoist perennial branches
       """
 
   Scenario: undo
