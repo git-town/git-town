@@ -38,10 +38,10 @@ Feature: hoisting a branch out of a stack
     # remove commits of branch-2 from branch-3
     And I run "git checkout branch-3"
     And I run "git rebase --onto branch-1 branch-2"
-    # remove commits from branch-2 from branch-4
+    # remove commits of branch-2 from branch-4
     And I run "git checkout branch-4"
     And I run "git rebase --onto branch-3 branch-2"
-    # remove commits from branch-2 from branch-5
+    # remove commits of branch-2 from branch-5
     And I run "git checkout branch-5"
     And I run "git rebase --onto branch-4 branch-2"
   # When I run "git-town hoist"
