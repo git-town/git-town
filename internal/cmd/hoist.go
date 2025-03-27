@@ -300,7 +300,7 @@ func validateHoistData(data hoistData) error {
 	switch data.branchToHoistInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly:
 	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
-		return fmt.Errorf("please sync your branches before hoisting")
+		return fmt.Errorf(messages.HoistNeedsSync)
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf("this branch cannot be hoisted because it is checked out in another worktree")
 	case gitdomain.SyncStatusRemoteOnly:
@@ -320,6 +320,12 @@ func validateHoistData(data hoistData) error {
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypePerennialBranch:
 		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.branchToHoistType)
+	}
+	parentInfo, hasParentInfo := data.branchesSnapshot.Branches.FindByLocalName(data.parentBranch).Get()
+	if !hasParentInfo {
+		return new Error("branch has no parent")
+	}
+	switch parentInfo {
 	}
 	return nil
 }
