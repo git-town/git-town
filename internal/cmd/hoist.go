@@ -136,6 +136,7 @@ type hoistData struct {
 }
 
 type hoistChildBranch struct {
+	info     gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
 }
@@ -219,7 +220,12 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 				}
 			}
 		}
+		childInfo, has := branchesSnapshot.Branches.FindByLocalName(childBranch).Get()
+		if !has {
+			return data, false, fmt.Errorf("cannot find branch info for %q", childBranch)
+		}
 		children[c] = hoistChildBranch{
+			info:     *childInfo,
 			name:     childBranch,
 			proposal: proposal,
 		}
@@ -300,11 +306,11 @@ func validateHoistData(data hoistData) error {
 	switch data.branchToHoistInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly:
 	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
-		return fmt.Errorf(messages.HoistNeedsSync)
+		return errors.New(messages.HoistNeedsSync)
 	case gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf(messages.HoistOtherWorkTree)
+		return fmt.Errorf(messages.HoistOtherWorkTree, data.branchToHoistName)
 	case gitdomain.SyncStatusRemoteOnly:
-		return fmt.Errorf(messages.HoistRemoteBranch)
+		return errors.New(messages.HoistRemoteBranch)
 	}
 	if data.branchToHoistContainsMerges {
 		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
@@ -321,22 +327,23 @@ func validateHoistData(data hoistData) error {
 		configdomain.BranchTypePerennialBranch:
 		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.branchToHoistType)
 	}
-	parentInfo, hasParentInfo := data.branchesSnapshot.Branches.FindByLocalName(data.parentBranch).Get()
-	if !hasParentInfo {
-		return fmt.Errorf(messages.HoistNoParent)
-	}
-	switch parentInfo.SyncStatus {
-	case
-		gitdomain.SyncStatusAhead,
-		gitdomain.SyncStatusLocalOnly,
-		gitdomain.SyncStatusUpToDate:
-	case gitdomain.SyncStatusBehind:
-	case gitdomain.SyncStatusDeletedAtRemote:
-	case gitdomain.SyncStatusNotInSync:
-	case gitdomain.SyncStatusOtherWorktree:
-	case gitdomain.SyncStatusRemoteOnly:
-	default:
-		panic(fmt.Sprintf("unexpected gitdomain.SyncStatus: %#v", parentInfo.SyncStatus))
+	fmt.Println("1111111111111111111111111111")
+	for _, child := range data.children {
+		fmt.Println("22222222222222222", child, child.info.SyncStatus)
+		switch child.info.SyncStatus {
+		case
+			gitdomain.SyncStatusAhead,
+			gitdomain.SyncStatusLocalOnly,
+			gitdomain.SyncStatusUpToDate:
+		case
+			gitdomain.SyncStatusBehind,
+			gitdomain.SyncStatusDeletedAtRemote,
+			gitdomain.SyncStatusNotInSync,
+			gitdomain.SyncStatusRemoteOnly:
+			return errors.New(messages.HoistNeedsSync)
+		case gitdomain.SyncStatusOtherWorktree:
+			return fmt.Errorf(messages.HoistOtherWorkTree, child.name)
+		}
 	}
 	return nil
 }

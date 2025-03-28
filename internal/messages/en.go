@@ -132,7 +132,7 @@ END OUTPUT FROM 'git branch -vva'
 	HackCannotFeaturePerennialBranch    = "branch %q is a perennial branch and cannot be a feature branch"
 	HoistNeedsSync                      = "please sync your branches before hoisting"
 	HoistNoParent                       = "cannot hoist branch without parent"
-	HoistOtherWorkTree                  = "this branch cannot be hoisted because it is checked out in another worktree"
+	HoistOtherWorkTree                  = "cannot hoist because branch %q it is active in another worktree"
 	HoistRemoteBranch                   = "cannot hoist a remote branch"
 	HoistUnsupportedBranchType          = "cannot hoist %s branches"
 	HostingBitbucketNotImplemented      = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
