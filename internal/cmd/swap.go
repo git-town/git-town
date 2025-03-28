@@ -32,7 +32,7 @@ import (
 const swapDesc = "Swap this branch with the one ahead of it in the stack"
 
 const swapHelp = `
-The "swap" command moves this branch one position forward in the stack.`
+The "swap" command moves the current branch one position forward in the stack.`
 
 const swapCommandName = "swap"
 
@@ -82,12 +82,12 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 	if err != nil {
 		return err
 	}
-	runProgram := detachProgram(data, repo.FinalMessages)
+	runProgram := swapProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
-		Command:               detachCommandName,
+		Command:               swapCommandName,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
@@ -116,13 +116,13 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 	})
 }
 
-type detachData struct {
+type swapData struct {
 	branchToSwapContainsMerges bool
 	branchToSwapInfo           gitdomain.BranchInfo
 	branchToSwapName           gitdomain.LocalBranchName
 	branchToSwapType           configdomain.BranchType
 	branchesSnapshot           gitdomain.BranchesSnapshot
-	children                   []detachChildBranch
+	children                   []swapChildBranch
 	config                     config.ValidatedConfig
 	connector                  Option[forgedomain.Connector]
 	dialogTestInputs           components.TestInputs
@@ -135,13 +135,13 @@ type detachData struct {
 	stashSize                  gitdomain.StashSize
 }
 
-type detachChildBranch struct {
+type swapChildBranch struct {
 	info     gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data detachData, exit bool, err error) {
+func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data swapData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -167,13 +167,13 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchNameToDetach := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
-	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
-	if !hasBranchToDetachInfo {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
+	branchNameToSwap := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	branchToSwapInfo, hasBranchToSwapInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToSwap).Get()
+	if !hasBranchToSwapInfo {
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToSwap)
 	}
-	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
+	if branchToSwapInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToSwap)
 	}
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
@@ -198,18 +198,18 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToDetach := validatedConfig.BranchType(branchNameToDetach)
+	branchTypeToSwap := validatedConfig.BranchType(branchNameToSwap)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToSwap).Get()
 	if !hasParentBranch {
-		return data, false, errors.New(messages.DetachNoParent)
+		return data, false, errors.New(messages.SwapNoParent)
 	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
-	children := make([]detachChildBranch, len(childBranches))
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToSwap)
+	children := make([]swapChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
@@ -224,7 +224,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		if !has {
 			return data, false, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
-		children[c] = detachChildBranch{
+		children[c] = swapChildBranch{
 			info:     *childInfo,
 			name:     childBranch,
 			proposal: proposal,
@@ -232,27 +232,27 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
-	return detachData{
-		branchToDetachContainsMerges: false, // TODO: determine the actual data
-		branchToDetachInfo:           *branchToDetachInfo,
-		branchToDetachName:           branchNameToDetach,
-		branchToDetachType:           branchTypeToDetach,
-		branchesSnapshot:             branchesSnapshot,
-		children:                     children,
-		config:                       validatedConfig,
-		connector:                    connector,
-		dialogTestInputs:             dialogTestInputs,
-		dryRun:                       dryRun,
-		hasOpenChanges:               repoStatus.OpenChanges,
-		initialBranch:                initialBranch,
-		nonExistingBranches:          nonExistingBranches,
-		parentBranch:                 parentBranch,
-		previousBranch:               previousBranchOpt,
-		stashSize:                    stashSize,
+	return swapData{
+		branchToSwapContainsMerges: false, // TODO: determine the actual data
+		branchToSwapInfo:           *branchToSwapInfo,
+		branchToSwapName:           branchNameToSwap,
+		branchToSwapType:           branchTypeToSwap,
+		branchesSnapshot:           branchesSnapshot,
+		children:                   children,
+		config:                     validatedConfig,
+		connector:                  connector,
+		dialogTestInputs:           dialogTestInputs,
+		dryRun:                     dryRun,
+		hasOpenChanges:             repoStatus.OpenChanges,
+		initialBranch:              initialBranch,
+		nonExistingBranches:        nonExistingBranches,
+		parentBranch:               parentBranch,
+		previousBranch:             previousBranchOpt,
+		stashSize:                  stashSize,
 	}, false, nil
 }
 
-func detachProgram(data detachData, finalMessages stringslice.Collector) program.Program {
+func swapProgram(data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
@@ -262,17 +262,17 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
-	if data.branchToDetachInfo.HasTrackingBranch() {
+	if data.branchToSwapInfo.HasTrackingBranch() {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 		)
 	}
 	lastParent := data.parentBranch
-	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToDetachName)
+	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToSwapName)
 	for _, descendent := range descendents {
 		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
 			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-				Ancestor:          data.branchToDetachName.BranchName(),
+				Ancestor:          data.branchToSwapName.BranchName(),
 				Branch:            descendent,
 				HasTrackingBranch: branchInfo.HasTrackingBranch(),
 				Program:           prog,
@@ -290,11 +290,11 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 	if data.dryRun.IsFalse() {
 		prog.Value.Add(
 			&opcodes.LineageParentSet{
-				Branch: data.branchToDetachName,
+				Branch: data.branchToSwapName,
 				Parent: data.config.ValidatedConfigData.MainBranch,
 			},
 		)
-		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName) {
+		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToSwapName) {
 			prog.Value.Add(
 				&opcodes.LineageParentSet{
 					Branch: child,
@@ -312,20 +312,20 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 	return prog.Immutable()
 }
 
-func validateDetachData(data detachData) error {
-	switch data.branchToDetachInfo.SyncStatus {
+func validateSwapData(data swapData) error {
+	switch data.branchToSwapInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly:
 	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
-		return errors.New(messages.DetachNeedsSync)
+		return errors.New(messages.SwapNeedsSync)
 	case gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf(messages.DetachOtherWorkTree, data.branchToDetachName)
+		return fmt.Errorf(messages.SwapOtherWorkTree, data.branchToSwapName)
 	case gitdomain.SyncStatusRemoteOnly:
-		return errors.New(messages.DetachRemoteBranch)
+		return errors.New(messages.SwapRemoteBranch)
 	}
-	if data.branchToDetachContainsMerges {
+	if data.branchToSwapContainsMerges {
 		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
 	}
-	switch data.branchToDetachType {
+	switch data.branchToSwapType {
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeParkedBranch,
@@ -335,7 +335,7 @@ func validateDetachData(data detachData) error {
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypePerennialBranch:
-		return fmt.Errorf(messages.DetachUnsupportedBranchType, data.branchToDetachType)
+		return fmt.Errorf(messages.SwapUnsupportedBranchType, data.branchToSwapType)
 	}
 	for _, child := range data.children {
 		switch child.info.SyncStatus {
@@ -348,9 +348,9 @@ func validateDetachData(data detachData) error {
 			gitdomain.SyncStatusDeletedAtRemote,
 			gitdomain.SyncStatusNotInSync,
 			gitdomain.SyncStatusRemoteOnly:
-			return errors.New(messages.DetachNeedsSync)
+			return errors.New(messages.SwapNeedsSync)
 		case gitdomain.SyncStatusOtherWorktree:
-			return fmt.Errorf(messages.DetachOtherWorkTree, child.name)
+			return fmt.Errorf(messages.SwapOtherWorkTree, child.name)
 		}
 	}
 	return nil
