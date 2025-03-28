@@ -133,7 +133,6 @@ func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
 func (self Lineage) Children(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for child, parent := range self.data {
-		fmt.Printf("%s -> %s\n", child, parent)
 		if parent == branch {
 			result = append(result, child)
 		}
