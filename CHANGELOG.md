@@ -10,8 +10,7 @@
 
 #### Contributors
 
-Shoutout to @WhosNickDoglio, @andrew-rosca, @avaz, @caccavale, @charlierudolph, @kevgo, @lud-wj, @ruudk, @stefanfrede, @stephenwade for contributing ideas, feedback, and code to 25 shipped PRs
-and 5 resolved issues!
+Shoutout to @WhosNickDoglio, @andrew-rosca, @avaz, @caccavale, @charlierudolph, @kevgo, @lud-wj, @ruudk, @stefanfrede, @stephenwade for contributing ideas, feedback, and code to 25 shipped PRs and 5 resolved issues!
 
 ## 18.1.0 (2025-03-20)
 
