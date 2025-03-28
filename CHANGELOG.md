@@ -5,7 +5,7 @@
 #### New Features
 
 - Git Town now lets you submit staged changes into a new branch using a single command. The [hack](https://www.git-town.com/commands/hack.html), [append](https://www.git-town.com/commands/append.html), and [prepend](https://www.git-town.com/commands/prepend.html) commands now have a `-c`/`--commit` flag to commit the staged changes into the new branch. Use `-m`/`--message` to specify a commit message. The new `--propose` flag goes one step further and immediately proposes the new branch. Both `--message` and `--propose` imply `--commit`, so you can now run `git hack bugfix --propose` to commit your staged changes into a new `bugfix` branch and create a pull request for it in one step ([#4376](https://github.com/git-town/git-town/issues/4376)).
-- [git town sync](https://www.git-town.com/commands/sync.html) now has a [--prune]() flag that removes branches with no changes.
+- [git town sync](https://www.git-town.com/commands/sync.html) now has a [--prune](https://www.git-town.com/commands/sync.html#-p--prune) flag that removes branches with no changes.
 - Git Town now works with repositories hosted on [Codeberg](https://codeberg.org).
 
 #### Contributors
