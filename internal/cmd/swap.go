@@ -208,6 +208,14 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	if !hasParentBranch {
 		return data, false, errors.New(messages.SwapNoParent)
 	}
+	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
+	if !hasParentBranchInfo {
+		return data, false, errors.New(messages.SwapNoParent)
+	}
+	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
+	if !hasGrandParentBranch {
+		return data, false, errors.New(messages.SwapNoGrandParent)
+	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToSwap)
 	children := make([]swapChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
@@ -242,10 +250,12 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
+		grandParentBranch:   grandParentBranch,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,
 		parentBranch:        parentBranch,
+		parentBranchInfo:    *parentBranchInfo,
 		previousBranch:      previousBranchOpt,
 		stashSize:           stashSize,
 	}, false, nil
