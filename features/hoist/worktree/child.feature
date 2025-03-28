@@ -10,8 +10,8 @@ Feature: hoisting a branch whose parent is checked out in another workspace
       | branch-1 | local, origin | commit 1a |
       | branch-1 | local, origin | commit 1b |
     And the branches
-      | NAME     | TYPE   | PARENT   | LOCATIONS     |
-      | branch-2 | parked | branch-1 | local, origin |
+      | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-2 | feature | branch-1 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-2 | local, origin | commit 2a |
@@ -27,29 +27,19 @@ Feature: hoisting a branch whose parent is checked out in another workspace
     And the current branch is "branch-2"
     When I run "git-town hoist"
 
-  @debug @this
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git fetch --prune --tags                        |
-      |          | git rebase --onto main branch-1                 |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
+      | BRANCH   | COMMAND                  |
+      | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot hoist branch without parent
+      cannot hoist because branch "branch-3" it is active in another worktree
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git reset --hard {{ sha 'commit 2b' }}          |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git reset --hard {{ sha 'commit 3b' }}          |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+    Then Git Town runs no commands
     And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

@@ -131,13 +131,17 @@ func (self Lineage) BranchesWithParents() gitdomain.LocalBranchNames {
 
 // Children provides the names of all branches that have the given branch as their parent.
 func (self Lineage) Children(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
+	fmt.Println("finding children for:", branch)
 	result := gitdomain.LocalBranchNames{}
 	for child, parent := range self.data {
+		fmt.Printf("%s -> %s\n", child, parent)
 		if parent == branch {
+			fmt.Println("found child:", child)
 			result = append(result, child)
 		}
 	}
 	result.Sort()
+	fmt.Println("resulting children:", result)
 	return result
 }
 
