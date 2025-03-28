@@ -4,7 +4,7 @@
 
 #### New Features
 
-- Git Town 18.2 provides full support for committing unrelated changes in a separate branch via a single Git Town command. `git town hack/append/prepend` now have a `-c`/`--commit` flag that commits the staged changes into the new branch, and a `--propose` flag that proposes the newly created branch. You can provide the commit message via the new `-m`/`--message` flag ([#4376](https://github.com/git-town/git-town/issues/4376)).
+- Git Town now lets you submit staged changes into a new branch using a single command. The [hack](https://www.git-town.com/commands/hack.html), [append](https://www.git-town.com/commands/append.html), and [prepend](https://www.git-town.com/commands/prepend.html) commands now have a `-c`/`--commit` flag to commit the staged changes into the new branch. Use `-m`/`--message` to specify a commit message. The new `--propose` flag takes goes one step further and immediately proposes the new branch. Both `--message` and `--propose` imply `--commit`, so you can now run `git hack bugfix --propose` to commit your staged changes into a new `bugfix` branch and create a pull request for it in one step ([#4376](https://github.com/git-town/git-town/issues/4376)).
 - The new `git town sync --prune` flag removes branches that contain no changes.
 - Git Town now supports repositories hosted at [Codeberg](https://codeberg.org).
 
