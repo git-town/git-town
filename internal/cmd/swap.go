@@ -352,7 +352,7 @@ func validateSwapData(data swapData) error {
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypePerennialBranch:
-		return fmt.Errorf(messages.SwapUnsupportedBranchType, data.branchToSwapType)
+		return fmt.Errorf(messages.SwapUnsupportedBranchType, data.branchToSwapName, data.branchToSwapType)
 	}
 	for _, child := range data.children {
 		switch child.info.SyncStatus {
