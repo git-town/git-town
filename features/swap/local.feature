@@ -27,22 +27,20 @@ Feature: detaching an omni-branch
       | branch-3 | local    | commit 3a |
       | branch-3 | local    | commit 3b |
     And the current branch is "branch-2"
-    # branch-2 goes on top of main, removing the branch-1 commits
-    When I run "git branch old-branch-2 branch-2"
-    When I run "git rebase --onto main branch-1"
-    # branch-1 goes on top of the new branch-2, removing main commits
-    And I run "git checkout branch-1"
-    And I run "git rebase --onto branch-2 main"
-    # branch-3 goes on top of the new branch-1, removing the old branch-2 commits
-    And I run "git checkout branch-3"
-    And I run "git rebase --onto branch-1 old-branch-2"
-    And I run "git checkout branch-2"
-    And I run "git branch -D old-branch-2"
-    And I run "git config git-town-branch.branch-2.parent main"
-    And I run "git config git-town-branch.branch-1.parent branch-2"
-    And I run "git config git-town-branch.branch-3.parent branch-1"
-  # And inspect the repo
-  # When I run "git-town detach"
+    # # branch-2 goes on top of main, removing the branch-1 commits
+    # When I run "git rebase --onto main branch-1"
+    # # branch-1 goes on top of the new branch-2, removing main commits
+    # And I run "git checkout branch-1"
+    # And I run "git rebase --onto branch-2 main"
+    # # branch-3 goes on top of the new branch-1, removing the old branch-2 commits
+    # And I run "git checkout branch-3"
+    # And I run "git rebase --onto branch-1 branch-2"
+    # And I run "git checkout branch-2"
+    # # update lineage
+    # And I run "git config git-town-branch.branch-2.parent main"
+    # And I run "git config git-town-branch.branch-1.parent branch-2"
+    # And I run "git config git-town-branch.branch-3.parent branch-1"
+    When I run "git-town swap"
 
   @this
   Scenario: result
