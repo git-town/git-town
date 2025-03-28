@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/flags"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/cmd/sync"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
@@ -130,6 +129,8 @@ type swapData struct {
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
+	parentBranchInfo    gitdomain.BranchInfo
+	grandParentBranch   gitdomain.LocalBranchName
 	previousBranch      Option[gitdomain.LocalBranchName]
 	stashSize           gitdomain.StashSize
 }
@@ -232,22 +233,21 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return swapData{
-		branchToSwapContainsMerges: false, // TODO: determine the actual data
-		branchToSwapInfo:           *branchToSwapInfo,
-		branchToSwapName:           branchNameToSwap,
-		branchToSwapType:           branchTypeToSwap,
-		branchesSnapshot:           branchesSnapshot,
-		children:                   children,
-		config:                     validatedConfig,
-		connector:                  connector,
-		dialogTestInputs:           dialogTestInputs,
-		dryRun:                     dryRun,
-		hasOpenChanges:             repoStatus.OpenChanges,
-		initialBranch:              initialBranch,
-		nonExistingBranches:        nonExistingBranches,
-		parentBranch:               parentBranch,
-		previousBranch:             previousBranchOpt,
-		stashSize:                  stashSize,
+		branchToSwapInfo:    *branchToSwapInfo,
+		branchToSwapName:    branchNameToSwap,
+		branchToSwapType:    branchTypeToSwap,
+		branchesSnapshot:    branchesSnapshot,
+		children:            children,
+		config:              validatedConfig,
+		connector:           connector,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		nonExistingBranches: nonExistingBranches,
+		parentBranch:        parentBranch,
+		previousBranch:      previousBranchOpt,
+		stashSize:           stashSize,
 	}, false, nil
 }
 
@@ -257,7 +257,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	prog.Value.Add(
 		&opcodes.RebaseOnto{
 			BranchToRebaseAgainst: data.parentBranch.BranchName(),
-			BranchToRebaseOnto:    data.config.ValidatedConfigData.MainBranch,
+			BranchToRebaseOnto:    data.grandParentBranch,
 			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
@@ -266,37 +266,49 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 		)
 	}
-	lastParent := data.parentBranch
-	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToSwapName)
-	for _, descendent := range descendents {
-		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
-			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-				Ancestor:          data.branchToSwapName.BranchName(),
-				Branch:            descendent,
-				HasTrackingBranch: branchInfo.HasTrackingBranch(),
-				Program:           prog,
-				RebaseOnto:        lastParent,
-			})
-			if branchInfo.HasTrackingBranch() {
-				prog.Value.Add(
-					&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
-				)
-			}
-			lastParent = descendent
-		}
+	prog.Value.Add(
+		&opcodes.Checkout{
+			Branch: data.parentBranch,
+		},
+		&opcodes.RebaseOnto{
+			BranchToRebaseAgainst: data.grandParentBranch.BranchName(),
+			BranchToRebaseOnto:    data.branchToSwapName,
+			Upstream:              None[gitdomain.LocalBranchName](),
+		},
+	)
+	if data.parentBranchInfo.HasTrackingBranch() {
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+		)
 	}
-	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
+	for _, child := range data.children {
+		prog.Value.Add(
+			&opcodes.Checkout{
+				Branch: child.name,
+			},
+			&opcodes.RebaseOnto{
+				BranchToRebaseAgainst: data.branchToSwapName.BranchName(),
+				BranchToRebaseOnto:    data.parentBranch,
+				Upstream:              None[gitdomain.LocalBranchName](),
+			},
+		)
+	}
+	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchToSwapName})
 	if data.dryRun.IsFalse() {
 		prog.Value.Add(
 			&opcodes.LineageParentSet{
 				Branch: data.branchToSwapName,
-				Parent: data.config.ValidatedConfigData.MainBranch,
+				Parent: data.grandParentBranch,
+			},
+			&opcodes.LineageParentSet{
+				Branch: data.parentBranch,
+				Parent: data.branchToSwapName,
 			},
 		)
-		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToSwapName) {
+		for _, child := range data.children {
 			prog.Value.Add(
 				&opcodes.LineageParentSet{
-					Branch: child,
+					Branch: child.name,
 					Parent: data.parentBranch,
 				},
 			)
