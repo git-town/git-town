@@ -208,6 +208,14 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if !hasParentBranch {
 		return data, false, errors.New(messages.DetachNoParent)
 	}
+	branchHasMergeCommits, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToDetach, parentBranch)
+	fmt.Println("111111111111111111111111", branchHasMergeCommits, err)
+	if err != nil {
+		return data, false, err
+	}
+	if branchHasMergeCommits {
+		return data, false, fmt.Errorf(messages.DetachNeedsCompress, branchNameToDetach)
+	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
 	children := make([]detachChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
