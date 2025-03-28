@@ -1,4 +1,4 @@
-Feature: hoisting an observed branch
+Feature: detaching an observed branch
 
   Background:
     Given a Git repo with origin
@@ -6,7 +6,7 @@ Feature: hoisting an observed branch
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed | main   | local, origin |
     And the current branch is "observed"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -14,7 +14,7 @@ Feature: hoisting an observed branch
       | observed | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot hoist observed branches
+      cannot detach observed branches
       """
 
   Scenario: undo

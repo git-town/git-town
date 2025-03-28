@@ -29,22 +29,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const hoistDesc = "Move a branch out of a stack"
+const detachDesc = "Move a branch out of a stack"
 
-const hoistHelp = `
-Assume one of the branches in a stack makes changes that don't require the changes made by branches. This branch could  The "hoist" command removes this branch from the stack and makes it a stand-alone top-level branch that ships directly into your main branch. This allows you to get your changes reviewed and shipped concurrently rather than sequentially.`
+const detachHelp = `
+Assume one of the branches in a stack makes changes that don't require the changes made by branches. This branch could  The "detach" command removes this branch from the stack and makes it a stand-alone top-level branch that ships directly into your main branch. This allows you to get your changes reviewed and shipped concurrently rather than sequentially.`
 
-const hoistCommandName = "hoist"
+const detachCommandName = "detach"
 
-func hoistCommand() *cobra.Command {
+func detachCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     hoistCommandName,
+		Use:     detachCommandName,
 		Args:    cobra.NoArgs,
-		Short:   hoistDesc,
+		Short:   detachDesc,
 		GroupID: "stack",
-		Long:    cmdhelpers.Long(hoistDesc, hoistHelp),
+		Long:    cmdhelpers.Long(detachDesc, detachHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, err := readDryRunFlag(cmd)
 			if err != nil {
@@ -54,7 +54,7 @@ func hoistCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeHoist(args, dryRun, verbose)
+			return executeDetach(args, dryRun, verbose)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -62,7 +62,7 @@ func hoistCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -74,20 +74,20 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHoistData(args, repo, dryRun, verbose)
+	data, exit, err := determineDetachData(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	err = validateHoistData(data)
+	err = validateDetachData(data)
 	if err != nil {
 		return err
 	}
-	runProgram := hoistProgram(data, repo.FinalMessages)
+	runProgram := detachProgram(data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
-		Command:               hoistCommandName,
+		Command:               detachCommandName,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
@@ -116,32 +116,32 @@ func executeHoist(args []string, dryRun configdomain.DryRun, verbose configdomai
 	})
 }
 
-type hoistData struct {
-	branchToHoistContainsMerges bool
-	branchToHoistInfo           gitdomain.BranchInfo
-	branchToHoistName           gitdomain.LocalBranchName
-	branchToHoistType           configdomain.BranchType
-	branchesSnapshot            gitdomain.BranchesSnapshot
-	children                    []hoistChildBranch
-	config                      config.ValidatedConfig
-	connector                   Option[forgedomain.Connector]
-	dialogTestInputs            components.TestInputs
-	dryRun                      configdomain.DryRun
-	hasOpenChanges              bool
-	initialBranch               gitdomain.LocalBranchName
-	nonExistingBranches         gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch                gitdomain.LocalBranchName
-	previousBranch              Option[gitdomain.LocalBranchName]
-	stashSize                   gitdomain.StashSize
+type detachData struct {
+	branchToDetachContainsMerges bool
+	branchToDetachInfo           gitdomain.BranchInfo
+	branchToDetachName           gitdomain.LocalBranchName
+	branchToDetachType           configdomain.BranchType
+	branchesSnapshot             gitdomain.BranchesSnapshot
+	children                     []detachChildBranch
+	config                       config.ValidatedConfig
+	connector                    Option[forgedomain.Connector]
+	dialogTestInputs             components.TestInputs
+	dryRun                       configdomain.DryRun
+	hasOpenChanges               bool
+	initialBranch                gitdomain.LocalBranchName
+	nonExistingBranches          gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch                 gitdomain.LocalBranchName
+	previousBranch               Option[gitdomain.LocalBranchName]
+	stashSize                    gitdomain.StashSize
 }
 
-type hoistChildBranch struct {
+type detachChildBranch struct {
 	info     gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data hoistData, exit bool, err error) {
+func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data detachData, exit bool, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -167,13 +167,13 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchNameToHoist := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
-	branchToHoistInfo, hasBranchToHoistInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToHoist).Get()
-	if !hasBranchToHoistInfo {
-		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToHoist)
+	branchNameToDetach := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	branchToDetachInfo, hasBranchToDetachInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToDetach).Get()
+	if !hasBranchToDetachInfo {
+		return data, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToDetach)
 	}
-	if branchToHoistInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToHoist)
+	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
 	}
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
@@ -198,18 +198,18 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToHoist := validatedConfig.BranchType(branchNameToHoist)
+	branchTypeToDetach := validatedConfig.BranchType(branchNameToDetach)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToHoist).Get()
+	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToDetach).Get()
 	if !hasParentBranch {
-		return data, false, errors.New(messages.HoistNoParent)
+		return data, false, errors.New(messages.DetachNoParent)
 	}
-	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToHoist)
-	children := make([]hoistChildBranch, len(childBranches))
+	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
+	children := make([]detachChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
@@ -224,7 +224,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		if !has {
 			return data, false, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
-		children[c] = hoistChildBranch{
+		children[c] = detachChildBranch{
 			info:     *childInfo,
 			name:     childBranch,
 			proposal: proposal,
@@ -232,27 +232,27 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
-	return hoistData{
-		branchToHoistContainsMerges: false, // TODO: determine the actual data
-		branchToHoistInfo:           *branchToHoistInfo,
-		branchToHoistName:           branchNameToHoist,
-		branchToHoistType:           branchTypeToHoist,
-		branchesSnapshot:            branchesSnapshot,
-		children:                    children,
-		config:                      validatedConfig,
-		connector:                   connector,
-		dialogTestInputs:            dialogTestInputs,
-		dryRun:                      dryRun,
-		hasOpenChanges:              repoStatus.OpenChanges,
-		initialBranch:               initialBranch,
-		nonExistingBranches:         nonExistingBranches,
-		parentBranch:                parentBranch,
-		previousBranch:              previousBranchOpt,
-		stashSize:                   stashSize,
+	return detachData{
+		branchToDetachContainsMerges: false, // TODO: determine the actual data
+		branchToDetachInfo:           *branchToDetachInfo,
+		branchToDetachName:           branchNameToDetach,
+		branchToDetachType:           branchTypeToDetach,
+		branchesSnapshot:             branchesSnapshot,
+		children:                     children,
+		config:                       validatedConfig,
+		connector:                    connector,
+		dialogTestInputs:             dialogTestInputs,
+		dryRun:                       dryRun,
+		hasOpenChanges:               repoStatus.OpenChanges,
+		initialBranch:                initialBranch,
+		nonExistingBranches:          nonExistingBranches,
+		parentBranch:                 parentBranch,
+		previousBranch:               previousBranchOpt,
+		stashSize:                    stashSize,
 	}, false, nil
 }
 
-func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.Program {
+func detachProgram(data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
@@ -262,17 +262,17 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.P
 			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
-	if data.branchToHoistInfo.HasTrackingBranch() {
+	if data.branchToDetachInfo.HasTrackingBranch() {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
 		)
 	}
 	lastParent := data.parentBranch
-	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToHoistName)
+	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToDetachName)
 	for _, descendent := range descendents {
 		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
 			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-				Ancestor:          data.branchToHoistName.BranchName(),
+				Ancestor:          data.branchToDetachName.BranchName(),
 				Branch:            descendent,
 				HasTrackingBranch: branchInfo.HasTrackingBranch(),
 				Program:           prog,
@@ -288,9 +288,19 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.P
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if data.dryRun.IsFalse() {
-		data.config.NormalConfig.SetParent(data.branchToHoistName, data.config.ValidatedConfigData.MainBranch)
-		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToHoistName) {
-			data.config.NormalConfig.SetParent(child, data.parentBranch)
+		prog.Value.Add(
+			&opcodes.LineageParentSet{
+				Branch: data.branchToDetachName,
+				Parent: data.config.ValidatedConfigData.MainBranch,
+			},
+		)
+		for _, child := range data.config.NormalConfig.Lineage.Children(data.branchToDetachName) {
+			prog.Value.Add(
+				&opcodes.LineageParentSet{
+					Branch: child,
+					Parent: data.parentBranch,
+				},
+			)
 		}
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
@@ -302,20 +312,20 @@ func hoistProgram(data hoistData, finalMessages stringslice.Collector) program.P
 	return prog.Immutable()
 }
 
-func validateHoistData(data hoistData) error {
-	switch data.branchToHoistInfo.SyncStatus {
+func validateDetachData(data detachData) error {
+	switch data.branchToDetachInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly:
 	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
-		return errors.New(messages.HoistNeedsSync)
+		return errors.New(messages.DetachNeedsSync)
 	case gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf(messages.HoistOtherWorkTree, data.branchToHoistName)
+		return fmt.Errorf(messages.DetachOtherWorkTree, data.branchToDetachName)
 	case gitdomain.SyncStatusRemoteOnly:
-		return errors.New(messages.HoistRemoteBranch)
+		return errors.New(messages.DetachRemoteBranch)
 	}
-	if data.branchToHoistContainsMerges {
+	if data.branchToDetachContainsMerges {
 		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
 	}
-	switch data.branchToHoistType {
+	switch data.branchToDetachType {
 	case
 		configdomain.BranchTypeFeatureBranch,
 		configdomain.BranchTypeParkedBranch,
@@ -325,7 +335,7 @@ func validateHoistData(data hoistData) error {
 		configdomain.BranchTypeObservedBranch,
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypePerennialBranch:
-		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.branchToHoistType)
+		return fmt.Errorf(messages.DetachUnsupportedBranchType, data.branchToDetachType)
 	}
 	for _, child := range data.children {
 		switch child.info.SyncStatus {
@@ -338,9 +348,9 @@ func validateHoistData(data hoistData) error {
 			gitdomain.SyncStatusDeletedAtRemote,
 			gitdomain.SyncStatusNotInSync,
 			gitdomain.SyncStatusRemoteOnly:
-			return errors.New(messages.HoistNeedsSync)
+			return errors.New(messages.DetachNeedsSync)
 		case gitdomain.SyncStatusOtherWorktree:
-			return fmt.Errorf(messages.HoistOtherWorkTree, child.name)
+			return fmt.Errorf(messages.DetachOtherWorkTree, child.name)
 		}
 	}
 	return nil

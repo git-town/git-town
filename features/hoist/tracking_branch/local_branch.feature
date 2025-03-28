@@ -1,4 +1,4 @@
-Feature: hoisting a local branch
+Feature: detaching a local branch
 
   Background:
     Given a Git repo with origin
@@ -38,7 +38,7 @@ Feature: hoisting a local branch
       | branch-5 | local    | commit 5a |
       | branch-5 | local    | commit 5b |
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands

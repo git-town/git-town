@@ -1,4 +1,4 @@
-Feature: hoisting a branch that is behind its tracking branch
+Feature: detaching a branch that is behind its tracking branch
 
   Background:
     Given a Git repo with origin
@@ -38,7 +38,7 @@ Feature: hoisting a branch that is behind its tracking branch
       | branch-5 | local, origin | commit 5a |
       | branch-5 | local, origin | commit 5b |
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -46,7 +46,7 @@ Feature: hoisting a branch that is behind its tracking branch
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please sync your branches before hoisting
+      please sync your branches before detaching
       """
 
   Scenario: undo

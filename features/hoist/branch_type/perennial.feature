@@ -1,4 +1,4 @@
-Feature: hoisting an empty branch
+Feature: detaching an empty branch
 
   Background:
     Given a Git repo with origin
@@ -6,7 +6,7 @@ Feature: hoisting an empty branch
       | NAME    | TYPE      | PARENT | LOCATIONS     |
       | staging | perennial | main   | local, origin |
     And the current branch is "staging"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -14,7 +14,7 @@ Feature: hoisting an empty branch
       | staging | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot hoist perennial branches
+      cannot detach perennial branches
       """
 
   Scenario: undo

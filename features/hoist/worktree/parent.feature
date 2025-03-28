@@ -1,4 +1,4 @@
-Feature: hoisting a branch whose parent is checked out in another workspace
+Feature: detaching a branch whose parent is checked out in another workspace
 
   Background:
     Given a Git repo with origin
@@ -25,7 +25,7 @@ Feature: hoisting a branch whose parent is checked out in another workspace
       | branch-3 | local, origin | commit 3b |
     And branch "branch-1" is active in another worktree
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands

@@ -1,4 +1,4 @@
-Feature: hoisting an empty branch
+Feature: detaching an empty branch
 
   Background:
     Given a Git repo with origin
@@ -20,7 +20,7 @@ Feature: hoisting an empty branch
       | branch-3 | local    | commit 3a |
       | branch-3 | local    | commit 3b |
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands

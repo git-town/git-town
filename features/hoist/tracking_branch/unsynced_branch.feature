@@ -1,4 +1,4 @@
-Feature: hoisting an unsynced branch
+Feature: detaching an unsynced branch
 
   Background:
     Given a Git repo with origin
@@ -17,7 +17,7 @@ Feature: hoisting an unsynced branch
       | branch-2 | local    | commit 2a |
       | branch-2 | origin   | commit 2b |
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -25,7 +25,7 @@ Feature: hoisting an unsynced branch
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please sync your branches before hoisting
+      please sync your branches before detaching
       """
 
   Scenario: undo

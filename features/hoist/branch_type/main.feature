@@ -1,8 +1,8 @@
-Feature: hoisting an empty branch
+Feature: detaching an empty branch
 
   Background:
     Given a Git repo with origin
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -10,7 +10,7 @@ Feature: hoisting an empty branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot hoist branch without parent
+      cannot detach branch without parent
       """
 
   Scenario: undo

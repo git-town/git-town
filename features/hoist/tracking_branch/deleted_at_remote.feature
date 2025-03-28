@@ -1,4 +1,4 @@
-Feature: hoisting a branch that was deleted at the remote
+Feature: detaching a branch that was deleted at the remote
 
   Background:
     Given a Git repo with origin
@@ -14,7 +14,7 @@ Feature: hoisting a branch that was deleted at the remote
       | branch-2 | feature | branch-1 | local, origin |
     And origin deletes the "branch-2" branch
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -22,7 +22,7 @@ Feature: hoisting a branch that was deleted at the remote
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please sync your branches before hoisting
+      please sync your branches before detaching
       """
 
   Scenario: undo

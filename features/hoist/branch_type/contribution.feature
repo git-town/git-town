@@ -1,4 +1,4 @@
-Feature: hoisting a contribution branch
+Feature: detaching a contribution branch
 
   Background:
     Given a Git repo with origin
@@ -6,7 +6,7 @@ Feature: hoisting a contribution branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
     And the current branch is "contribution"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
@@ -14,7 +14,7 @@ Feature: hoisting a contribution branch
       | contribution | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot hoist contribution branches
+      cannot detach contribution branches
       """
 
   Scenario: undo

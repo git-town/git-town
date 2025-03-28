@@ -1,4 +1,4 @@
-Feature: hoisting an omni-branch
+Feature: detaching an omni-branch
 
   Background:
     Given a Git repo with origin
@@ -38,7 +38,7 @@ Feature: hoisting an omni-branch
       | branch-5 | local, origin | commit 5a |
       | branch-5 | local, origin | commit 5b |
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands

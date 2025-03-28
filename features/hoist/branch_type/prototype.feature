@@ -1,4 +1,4 @@
-Feature: hoisting a prototoype branch
+Feature: detaching a prototoype branch
 
   Background:
     Given a Git repo with origin
@@ -24,7 +24,7 @@ Feature: hoisting a prototoype branch
       | branch-3 | local, origin | commit 3a |
       | branch-3 | local, origin | commit 3b |
     And the current branch is "branch-2"
-    When I run "git-town hoist"
+    When I run "git-town detach"
 
   Scenario: result
     Then Git Town runs the commands
