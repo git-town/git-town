@@ -209,7 +209,6 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 		return data, false, errors.New(messages.HoistNoParent)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToHoist)
-	fmt.Printf("hoist-childred for %s: %q\n", branchNameToHoist, childBranches)
 	children := make([]hoistChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
 		proposal := None[forgedomain.Proposal]()
@@ -233,7 +232,6 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
-	fmt.Println("end of determine data:", children)
 	return hoistData{
 		branchToHoistContainsMerges: false, // TODO: determine the actual data
 		branchToHoistInfo:           *branchToHoistInfo,
@@ -329,9 +327,7 @@ func validateHoistData(data hoistData) error {
 		configdomain.BranchTypePerennialBranch:
 		return fmt.Errorf(messages.HoistUnsupportedBranchType, data.branchToHoistType)
 	}
-	fmt.Println("1111111111111111111111111111", data.children)
 	for _, child := range data.children {
-		fmt.Println("22222222222222222", child, child.info.SyncStatus)
 		switch child.info.SyncStatus {
 		case
 			gitdomain.SyncStatusAhead,

@@ -27,7 +27,6 @@ Feature: hoisting a branch whose parent is checked out in another workspace
     And the current branch is "branch-2"
     When I run "git-town hoist"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
