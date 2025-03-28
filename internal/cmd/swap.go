@@ -125,12 +125,12 @@ type swapData struct {
 	connector           Option[forgedomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
+	grandParentBranch   gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
 	parentBranchInfo    gitdomain.BranchInfo
-	grandParentBranch   gitdomain.LocalBranchName
 	previousBranch      Option[gitdomain.LocalBranchName]
 	stashSize           gitdomain.StashSize
 }
