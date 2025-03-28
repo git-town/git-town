@@ -333,8 +333,14 @@ func validateSwapData(data swapData) error {
 	case gitdomain.SyncStatusRemoteOnly:
 		return errors.New(messages.SwapRemoteBranch)
 	}
-	if data.branchToSwapContainsMerges {
-		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
+	switch data.parentBranchInfo.SyncStatus {
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly:
+	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
+		return errors.New(messages.SwapNeedsSync)
+	case gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.SwapOtherWorkTree, data.parentBranch)
+	case gitdomain.SyncStatusRemoteOnly:
+		return fmt.Errorf(messages.SwapRemoteBranch, data.parentBranch)
 	}
 	switch data.branchToSwapType {
 	case

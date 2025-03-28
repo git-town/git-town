@@ -244,6 +244,7 @@ and will be removed in future versions of Git Town.`
 	SwapNoParent                            = "cannot swap branch without parent"
 	SwapNeedsSync                           = "please sync your branches before swapping"
 	SwapOtherWorkTree                       = "cannot swap because branch %q it is active in another worktree"
+	SwapRemoteBranch                        = "cannot swap: branch %q is remote"
 	SwitchNoBranches                        = "no branches to switch to"
 	SwitchUncommittedChanges                = "uncommitted changes"
 	SyncFeatureBranches                     = "Sync feature branches: %s\n"
