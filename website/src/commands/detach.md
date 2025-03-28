@@ -4,14 +4,12 @@
 git town detach [--dry-run] [-v | --verbose]
 ```
 
-The _detach_ command merges the current branch with its parent branch. Both
-branches must be [feature branches](../branch-types.md#feature-branches).
-
-When using the
-[compress sync strategy](../preferences/sync-feature-strategy.md#compress), the
-merged branch will contain two separate commits: one per merged branch. This
-makes it easy to verify that both branches were merged as expected. To
-consolidate these commits, run [git town sync](sync.md).
+The _detach_ command removes the current branch from the stack it is in and
+makes it a stand-alone top-level branch that ships directly into your main
+branch. This is useful when a branch in a stack makes changes that don't overlap
+with the changes made by other branches in this stack. Detaching such
+independent branches reduces your stack to changes that belong together, and
+gets more of your changes reviewed and shipped concurrently.`
 
 ## Options
 
