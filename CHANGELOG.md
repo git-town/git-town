@@ -10,6 +10,11 @@ The new `git town sync --prune` flag removes branches that contain no changes.
 
 Git Town now supports repositories hosted at [Codeberg](https://codeberg.org).
 
+#### Contributors
+
+Shoutout to @WhosNickDoglio, @andrew-rosca, @avaz, @caccavale, @charlierudolph, @kevgo, @lud-wj, @ruudk, @stefanfrede, @stephenwade for contributing ideas, feedback, and code to 25 shipped PRs
+and 5 resolved issues!
+
 ## 18.1.0 (2025-03-20)
 
 #### New Features
