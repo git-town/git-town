@@ -32,7 +32,7 @@ import (
 const detachDesc = "Move a branch out of a stack"
 
 const detachHelp = `
-Assume one of the branches in a stack makes changes that don't require the changes made by branches. This branch could  The "detach" command removes this branch from the stack and makes it a stand-alone top-level branch that ships directly into your main branch. This allows you to get your changes reviewed and shipped concurrently rather than sequentially.`
+The "detach" command removes this branch from the stack and makes it a stand-alone top-level branch that ships directly into your main branch. This is useful when a branch in a stack makes changes that don't require the changes made by other branches in this stack. This reduces your stack to changes that belong together and gets more of your changes reviewed and shipped concurrently.`
 
 const detachCommandName = "detach"
 
