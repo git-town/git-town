@@ -242,6 +242,7 @@ and will be removed in future versions of Git Town.`
 	SquashMessageProblem                    = "cannot comment out the squash commit message: %w"
 	StatusFileNotFound                      = "No status file found for this repository."
 	SwapNoParent                            = "cannot swap branch without parent"
+	SwapNeedsSync                           = "please sync your branches before swapping"
 	SwitchNoBranches                        = "no branches to switch to"
 	SwitchUncommittedChanges                = "uncommitted changes"
 	SyncFeatureBranches                     = "Sync feature branches: %s\n"
