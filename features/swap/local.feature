@@ -1,4 +1,4 @@
-Feature: detaching an omni-branch
+Feature: detaching a local branch
 
   Background:
     Given a Git repo with origin

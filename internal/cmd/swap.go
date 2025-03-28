@@ -302,6 +302,13 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 				Upstream:              None[gitdomain.LocalBranchName](),
 			},
 		)
+		if child.info.HasTrackingBranch() {
+			prog.Value.Add(
+				&opcodes.PushCurrentBranchForceIfNeeded{
+					ForceIfIncludes: true,
+				},
+			)
+		}
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchToSwapName})
 	if data.dryRun.IsFalse() {
