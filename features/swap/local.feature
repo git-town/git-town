@@ -45,16 +45,14 @@ Feature: detaching an omni-branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                   |
-      | branch-2 | git fetch --prune --tags                  |
-      |          | git rebase --onto "" branch-1             |
-      |          | git -c core.editor=true rebase --continue |
-      |          | git checkout branch-1                     |
-      | branch-1 | git rebase --onto branch-2 ""             |
-      |          | git -c core.editor=true rebase --continue |
-      |          | git checkout branch-3                     |
-      | branch-3 | git rebase --onto branch-1 branch-2       |
-      |          | git checkout branch-2                     |
+      | BRANCH   | COMMAND                             |
+      | branch-2 | git fetch --prune --tags            |
+      |          | git rebase --onto main branch-1     |
+      |          | git checkout branch-1               |
+      | branch-1 | git rebase --onto branch-2 main     |
+      |          | git checkout branch-3               |
+      | branch-3 | git rebase --onto branch-1 branch-2 |
+      |          | git checkout branch-2               |
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE     |
