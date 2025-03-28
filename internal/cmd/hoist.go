@@ -205,7 +205,7 @@ func determineHoistData(args []string, repo execute.OpenRepoResult, dryRun confi
 	previousBranchOpt := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchNameToHoist).Get()
 	if !hasParentBranch {
-		return data, false, errors.New("cannot hoist branch without parent")
+		return data, false, errors.New(messages.HoistNoParent)
 	}
 	childBranches := data.config.NormalConfig.Lineage.Children(initialBranch)
 	children := make([]hoistChildBranch, len(childBranches))
@@ -302,9 +302,9 @@ func validateHoistData(data hoistData) error {
 	case gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusBehind:
 		return fmt.Errorf(messages.HoistNeedsSync)
 	case gitdomain.SyncStatusOtherWorktree:
-		return fmt.Errorf("this branch cannot be hoisted because it is checked out in another worktree")
+		return fmt.Errorf(messages.HoistOtherWorkTree)
 	case gitdomain.SyncStatusRemoteOnly:
-		return fmt.Errorf("cannot hoist a remote branch")
+		return fmt.Errorf(messages.HoistRemoteBranch)
 	}
 	if data.branchToHoistContainsMerges {
 		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
@@ -323,9 +323,20 @@ func validateHoistData(data hoistData) error {
 	}
 	parentInfo, hasParentInfo := data.branchesSnapshot.Branches.FindByLocalName(data.parentBranch).Get()
 	if !hasParentInfo {
-		return new Error("branch has no parent")
+		return fmt.Errorf(messages.HoistNoParent)
 	}
-	switch parentInfo {
+	switch parentInfo.SyncStatus {
+	case
+		gitdomain.SyncStatusAhead,
+		gitdomain.SyncStatusLocalOnly,
+		gitdomain.SyncStatusUpToDate:
+	case gitdomain.SyncStatusBehind:
+	case gitdomain.SyncStatusDeletedAtRemote:
+	case gitdomain.SyncStatusNotInSync:
+	case gitdomain.SyncStatusOtherWorktree:
+	case gitdomain.SyncStatusRemoteOnly:
+	default:
+		panic(fmt.Sprintf("unexpected gitdomain.SyncStatus: %#v", parentInfo.SyncStatus))
 	}
 	return nil
 }
