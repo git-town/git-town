@@ -64,6 +64,18 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("branch has no merge commits", func(t *testing.T) {
 			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			runtime.CreateAndCheckoutBranch(runtime, branch1)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileContent: "content",
+				FileName:    "file1",
+				Message:     "commit 1",
+			})
+			have, err := runtime.BranchContainsMerges(runtime, branch1, initial)
+			must.NoError(t, err)
+			must.False(t, have)
 		})
 	})
 

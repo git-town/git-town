@@ -59,8 +59,7 @@ func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdo
 }
 
 func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	arg := fmt.Sprintf("%s..%s", parent, branch)
-	output, err := runner.QueryTrim("git", "log", arg)
+	output, err := runner.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
 	if err != nil {
 		return false, err
 	}
