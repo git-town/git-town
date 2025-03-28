@@ -55,6 +55,7 @@ Feature: detaching an omni-branch verbosely
       |          | git branch -vva --sort=refname                       |
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
+      |          | git log --merges branch-1..branch-2                  |
       | branch-2 | git rebase --onto main branch-1                      |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
       | branch-2 | git push --force-with-lease --force-if-includes      |
@@ -85,7 +86,7 @@ Feature: detaching an omni-branch verbosely
       |          | git stash list                                       |
     And Git Town prints:
       """
-      Ran 40 shell commands.
+      Ran 41 shell commands.
       """
     And the current branch is still "branch-2"
     And these commits exist now

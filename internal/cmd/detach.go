@@ -117,22 +117,21 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 }
 
 type detachData struct {
-	branchToDetachContainsMerges bool
-	branchToDetachInfo           gitdomain.BranchInfo
-	branchToDetachName           gitdomain.LocalBranchName
-	branchToDetachType           configdomain.BranchType
-	branchesSnapshot             gitdomain.BranchesSnapshot
-	children                     []detachChildBranch
-	config                       config.ValidatedConfig
-	connector                    Option[forgedomain.Connector]
-	dialogTestInputs             components.TestInputs
-	dryRun                       configdomain.DryRun
-	hasOpenChanges               bool
-	initialBranch                gitdomain.LocalBranchName
-	nonExistingBranches          gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch                 gitdomain.LocalBranchName
-	previousBranch               Option[gitdomain.LocalBranchName]
-	stashSize                    gitdomain.StashSize
+	branchToDetachInfo  gitdomain.BranchInfo
+	branchToDetachName  gitdomain.LocalBranchName
+	branchToDetachType  configdomain.BranchType
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	children            []detachChildBranch
+	config              config.ValidatedConfig
+	connector           Option[forgedomain.Connector]
+	dialogTestInputs    components.TestInputs
+	dryRun              configdomain.DryRun
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch        gitdomain.LocalBranchName
+	previousBranch      Option[gitdomain.LocalBranchName]
+	stashSize           gitdomain.StashSize
 }
 
 type detachChildBranch struct {
@@ -209,9 +208,11 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		return data, false, errors.New(messages.DetachNoParent)
 	}
 	branchHasMergeCommits, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToDetach, parentBranch)
-	fmt.Println("111111111111111111111111", branchHasMergeCommits, err)
 	if err != nil {
 		return data, false, err
+	}
+	if branchHasMergeCommits {
+		return data, false, fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
 	}
 	if branchHasMergeCommits {
 		return data, false, fmt.Errorf(messages.DetachNeedsCompress, branchNameToDetach)
@@ -241,22 +242,21 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return detachData{
-		branchToDetachContainsMerges: false, // TODO: determine the actual data
-		branchToDetachInfo:           *branchToDetachInfo,
-		branchToDetachName:           branchNameToDetach,
-		branchToDetachType:           branchTypeToDetach,
-		branchesSnapshot:             branchesSnapshot,
-		children:                     children,
-		config:                       validatedConfig,
-		connector:                    connector,
-		dialogTestInputs:             dialogTestInputs,
-		dryRun:                       dryRun,
-		hasOpenChanges:               repoStatus.OpenChanges,
-		initialBranch:                initialBranch,
-		nonExistingBranches:          nonExistingBranches,
-		parentBranch:                 parentBranch,
-		previousBranch:               previousBranchOpt,
-		stashSize:                    stashSize,
+		branchToDetachInfo:  *branchToDetachInfo,
+		branchToDetachName:  branchNameToDetach,
+		branchToDetachType:  branchTypeToDetach,
+		branchesSnapshot:    branchesSnapshot,
+		children:            children,
+		config:              validatedConfig,
+		connector:           connector,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		nonExistingBranches: nonExistingBranches,
+		parentBranch:        parentBranch,
+		previousBranch:      previousBranchOpt,
+		stashSize:           stashSize,
 	}, false, nil
 }
 
@@ -329,9 +329,6 @@ func validateDetachData(data detachData) error {
 		return fmt.Errorf(messages.DetachOtherWorkTree, data.branchToDetachName)
 	case gitdomain.SyncStatusRemoteOnly:
 		return errors.New(messages.DetachRemoteBranch)
-	}
-	if data.branchToDetachContainsMerges {
-		return fmt.Errorf(messages.BranchContainsMergeCommits, data.initialBranch)
 	}
 	switch data.branchToDetachType {
 	case
