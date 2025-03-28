@@ -58,6 +58,15 @@ func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdo
 	return err == nil
 }
 
+func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	arg := fmt.Sprintf("%s..%s", parent, branch)
+	output, err := runner.QueryTrim("git", "log", arg)
+	if err != nil {
+		return false, err
+	}
+	return len(output) > 0, nil
+}
+
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
 func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
