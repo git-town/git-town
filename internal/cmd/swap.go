@@ -117,22 +117,21 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 }
 
 type swapData struct {
-	branchToSwapContainsMerges bool
-	branchToSwapInfo           gitdomain.BranchInfo
-	branchToSwapName           gitdomain.LocalBranchName
-	branchToSwapType           configdomain.BranchType
-	branchesSnapshot           gitdomain.BranchesSnapshot
-	children                   []swapChildBranch
-	config                     config.ValidatedConfig
-	connector                  Option[forgedomain.Connector]
-	dialogTestInputs           components.TestInputs
-	dryRun                     configdomain.DryRun
-	hasOpenChanges             bool
-	initialBranch              gitdomain.LocalBranchName
-	nonExistingBranches        gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch               gitdomain.LocalBranchName
-	previousBranch             Option[gitdomain.LocalBranchName]
-	stashSize                  gitdomain.StashSize
+	branchToSwapInfo    gitdomain.BranchInfo
+	branchToSwapName    gitdomain.LocalBranchName
+	branchToSwapType    configdomain.BranchType
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	children            []swapChildBranch
+	config              config.ValidatedConfig
+	connector           Option[forgedomain.Connector]
+	dialogTestInputs    components.TestInputs
+	dryRun              configdomain.DryRun
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch        gitdomain.LocalBranchName
+	previousBranch      Option[gitdomain.LocalBranchName]
+	stashSize           gitdomain.StashSize
 }
 
 type swapChildBranch struct {
