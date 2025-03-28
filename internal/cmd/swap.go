@@ -78,7 +78,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 	if err != nil || exit {
 		return err
 	}
-	err = validateDetachData(data)
+	err = validateSwapData(data)
 	if err != nil {
 		return err
 	}
@@ -117,22 +117,22 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 }
 
 type detachData struct {
-	branchToDetachContainsMerges bool
-	branchToDetachInfo           gitdomain.BranchInfo
-	branchToDetachName           gitdomain.LocalBranchName
-	branchToDetachType           configdomain.BranchType
-	branchesSnapshot             gitdomain.BranchesSnapshot
-	children                     []detachChildBranch
-	config                       config.ValidatedConfig
-	connector                    Option[forgedomain.Connector]
-	dialogTestInputs             components.TestInputs
-	dryRun                       configdomain.DryRun
-	hasOpenChanges               bool
-	initialBranch                gitdomain.LocalBranchName
-	nonExistingBranches          gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch                 gitdomain.LocalBranchName
-	previousBranch               Option[gitdomain.LocalBranchName]
-	stashSize                    gitdomain.StashSize
+	branchToSwapContainsMerges bool
+	branchToSwapInfo           gitdomain.BranchInfo
+	branchToSwapName           gitdomain.LocalBranchName
+	branchToSwapType           configdomain.BranchType
+	branchesSnapshot           gitdomain.BranchesSnapshot
+	children                   []detachChildBranch
+	config                     config.ValidatedConfig
+	connector                  Option[forgedomain.Connector]
+	dialogTestInputs           components.TestInputs
+	dryRun                     configdomain.DryRun
+	hasOpenChanges             bool
+	initialBranch              gitdomain.LocalBranchName
+	nonExistingBranches        gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch               gitdomain.LocalBranchName
+	previousBranch             Option[gitdomain.LocalBranchName]
+	stashSize                  gitdomain.StashSize
 }
 
 type detachChildBranch struct {
