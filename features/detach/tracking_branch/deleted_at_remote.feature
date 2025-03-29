@@ -22,7 +22,7 @@ Feature: detaching a branch that was deleted at the remote
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      please sync your branches before detaching
+      please sync this stack before detaching branches from it
       """
 
   Scenario: undo
