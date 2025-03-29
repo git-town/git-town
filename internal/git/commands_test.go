@@ -41,6 +41,47 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, []gitdomain.Author{"user <email@example.com>"}, authors)
 	})
 
+	t.Run("BranchContainsMerges", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch has a merge commit", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			branch2 := gitdomain.NewLocalBranchName("branch-2")
+			err := runtime.CreateAndCheckoutBranch(runtime, branch1)
+			must.NoError(t, err)
+			runtime.CreateBranch(branch2, branch1.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileContent: "content",
+				FileName:    "file1",
+				Message:     "commit 1",
+			})
+			runtime.CheckoutBranch(branch2)
+			err = runtime.MergeNoFastForward(runtime, configdomain.UseDefaultMessage(), branch1)
+			must.NoError(t, err)
+			have, err := runtime.BranchContainsMerges(runtime, branch2, branch1)
+			must.NoError(t, err)
+			must.True(t, have)
+		})
+		t.Run("branch has no merge commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := gitdomain.NewLocalBranchName("branch-1")
+			err := runtime.CreateAndCheckoutBranch(runtime, branch1)
+			must.NoError(t, err)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileContent: "content",
+				FileName:    "file1",
+				Message:     "commit 1",
+			})
+			have, err := runtime.BranchContainsMerges(runtime, branch1, initial)
+			must.NoError(t, err)
+			must.False(t, have)
+		})
+	})
+
 	t.Run("BranchHasUnmergedChanges", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch without commits", func(t *testing.T) {

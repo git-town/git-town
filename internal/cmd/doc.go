@@ -22,6 +22,7 @@ func Execute() error {
 	rootCmd.AddCommand(debug.RootCmd())
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())
+	rootCmd.AddCommand(detachCommand())
 	rootCmd.AddCommand(deleteCommand())
 	rootCmd.AddCommand(killCommand())
 	rootCmd.AddCommand(mergeCommand())

@@ -20,6 +20,7 @@
     - [undo](commands/undo.md)
   - [Stacked changes](stacked-changes.md)
     - [append](commands/append.md)
+    - [detach](commands/detach.md)
     - [merge](commands/merge.md)
     - [prepend](commands/prepend.md)
     - [set-parent](commands/set-parent.md)

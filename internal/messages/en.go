@@ -14,6 +14,7 @@ const (
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple               = "\nMultiple people authored the %q branch.\n\n"
 	BranchCheckoutProblem              = "cannot check out branch %q: %w"
+	BranchContainsMergeCommits         = "branch %q contains merge commits, please compress and try again"
 	BranchCurrentProblem               = "cannot determine current branch: %w"
 	BranchDeleted                      = "deleted branch %q"
 	BranchDeletedAtRemote              = "branch %q was deleted at the remote"
@@ -71,6 +72,11 @@ const (
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
 Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DefaultBranchType               = "Default branch type: %s\n"
+	DetachNeedsSync                 = "please sync this stack before detaching branches from it"
+	DetachNoParent                  = "cannot detach branches without parent"
+	DetachOtherWorkTree             = "cannot detach because branch %q it is active in another worktree"
+	DetachRemoteBranch              = "cannot detach a remote branch"
+	DetachUnsupportedBranchType     = "cannot detach %s branches since you don't own them"
 	DevRemote                       = "Development remote: %s\n"
 	DiffConflictWithMain            = "conflicts between your uncommmitted changes and the main branch"
 	DryRun                          = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
