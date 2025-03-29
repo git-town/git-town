@@ -1,4 +1,4 @@
-Feature: swapping a feature branch
+Feature: swapping a parked branch
 
   Background:
     Given a Git repo with origin
@@ -13,8 +13,8 @@ Feature: swapping a feature branch
       | branch-1 | local, origin | commit 1a |
       | branch-1 | local, origin | commit 1b |
     And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS     |
-      | branch-2 | feature | branch-1 | local, origin |
+      | NAME     | TYPE   | PARENT   | LOCATIONS     |
+      | branch-2 | parked | branch-1 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-2 | local, origin | commit 2a |
