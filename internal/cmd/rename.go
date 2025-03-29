@@ -32,7 +32,9 @@ import (
 const (
 	renameDesc = "Rename a branch both locally and remotely"
 	renameHelp = `
-Renames the given branch in the local and origin repository. Aborts if the new branch name already exists or the tracking branch is out of sync.
+Renames the given branch in the local and origin repository.
+Aborts if the new branch name already exists
+or the tracking branch is out of sync.
 
 - creates a branch with the new name
 - deletes the old branch
@@ -46,7 +48,8 @@ When there is a tracking branch:
 
 When run on a perennial branch:
 - confirm with the "--force"/"-f" option
-- registers the new perennial branch name in the local Git Town configuration`
+- registers the new perennial branch name
+  in the local Git Town configuration`
 )
 
 func renameCommand() *cobra.Command {
