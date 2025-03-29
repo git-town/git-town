@@ -23,20 +23,6 @@ Feature: detaching a branch that is behind its tracking branch
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-3 | local, origin | commit 3a |
       | branch-3 | local, origin | commit 3b |
-    And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS     |
-      | branch-4 | feature | branch-3 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE   |
-      | branch-4 | local, origin | commit 4a |
-      | branch-4 | local, origin | commit 4b |
-    And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS     |
-      | branch-5 | feature | branch-4 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE   |
-      | branch-5 | local, origin | commit 5a |
-      | branch-5 | local, origin | commit 5b |
     And the current branch is "branch-2"
     When I run "git-town detach"
 
