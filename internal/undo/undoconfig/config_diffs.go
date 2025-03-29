@@ -28,18 +28,18 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 			Scope: configdomain.ConfigScopeGlobal,
 		})
 	}
-	for _, removed := range mapstools.SortedKeyValues(self.Global.Removed) {
+	for key, value := range mapstools.SortedKeyValues(self.Global.Removed) {
 		result.Add(&opcodes.ConfigSet{
-			Key:   removed.Key,
+			Key:   key,
 			Scope: configdomain.ConfigScopeGlobal,
-			Value: removed.Value,
+			Value: value,
 		})
 	}
-	for _, changed := range mapstools.SortedKeyValues(self.Global.Changed) {
+	for key, value := range mapstools.SortedKeyValues(self.Global.Changed) {
 		result.Add(&opcodes.ConfigSet{
-			Key:   changed.Key,
+			Key:   key,
 			Scope: configdomain.ConfigScopeGlobal,
-			Value: changed.Value.Before,
+			Value: value.Before,
 		})
 	}
 	for _, key := range self.Local.Added {
@@ -48,18 +48,18 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 			Scope: configdomain.ConfigScopeLocal,
 		})
 	}
-	for _, removed := range mapstools.SortedKeyValues(self.Local.Removed) {
+	for key, value := range mapstools.SortedKeyValues(self.Local.Removed) {
 		result.Add(&opcodes.ConfigSet{
-			Key:   removed.Key,
+			Key:   key,
 			Scope: configdomain.ConfigScopeLocal,
-			Value: removed.Value,
+			Value: value,
 		})
 	}
-	for _, changed := range mapstools.SortedKeyValues(self.Local.Changed) {
+	for key, value := range mapstools.SortedKeyValues(self.Local.Changed) {
 		result.Add(&opcodes.ConfigSet{
-			Key:   changed.Key,
+			Key:   key,
 			Scope: configdomain.ConfigScopeLocal,
-			Value: changed.Value.Before,
+			Value: value.Before,
 		})
 	}
 	return result

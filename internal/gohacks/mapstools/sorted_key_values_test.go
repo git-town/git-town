@@ -18,22 +18,23 @@ func TestSortedKeyValues(t *testing.T) {
 			"three": 3,
 			"four":  4,
 		}
-		have := mapstools.SortedKeyValues(data)
-		must.Len(t, 4, have)
-		must.EqOp(t, "four", have[0].Key)
-		must.EqOp(t, 4, have[0].Value)
-		must.EqOp(t, "one", have[1].Key)
-		must.EqOp(t, 1, have[1].Value)
-		must.EqOp(t, "three", have[2].Key)
-		must.EqOp(t, 3, have[2].Value)
-		must.EqOp(t, "two", have[3].Key)
-		must.EqOp(t, 2, have[3].Value)
+		keys := []string{}
+		values := []int{}
+		for key, value := range mapstools.SortedKeyValues(data) {
+			keys = append(keys, key)
+			values = append(values, value)
+		}
+		must.Eq(t, []string{"four", "one", "three", "two"}, keys)
+		must.Eq(t, []int{4, 1, 3, 2}, values)
 	})
 
 	t.Run("zero content", func(t *testing.T) {
 		t.Parallel()
 		data := map[string]int{}
-		have := mapstools.SortedKeyValues(data)
-		must.Len(t, 0, have)
+		keys := []string{}
+		for key := range mapstools.SortedKeyValues(data) {
+			keys = append(keys, key)
+		}
+		must.Len(t, 0, keys)
 	})
 }
