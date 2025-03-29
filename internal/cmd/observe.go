@@ -15,9 +15,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const observeDesc = "Stop your contributions to some feature branches"
-
-const observeHelp = `
+const (
+	observeDesc = "Stop your contributions to some feature branches"
+	observeHelp = `
 Marks the given local branches as observed.
 If no branch is provided, observes the current branch.
 
@@ -30,6 +30,7 @@ On an observed branch, "git town sync"
 - does not push your local commits to the tracking branch
 - does not pull updates from the parent branch
 `
+)
 
 func observeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

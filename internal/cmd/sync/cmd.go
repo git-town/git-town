@@ -29,11 +29,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const syncCommand = "sync"
-
-const syncDesc = "Update the current branch with all relevant changes"
-
-const syncHelp = `
+const (
+	syncCommand = "sync"
+	syncDesc    = "Update the current branch with all relevant changes"
+	syncHelp    = `
 Synchronizes the current branch with the rest of the world.
 
 When run on a feature branch:
@@ -47,6 +46,7 @@ When run on the main branch or a perennial branch:
 - pushes tags
 
 If the repository contains an "upstream" remote, syncs the main branch with its upstream counterpart. You can disable this by running "git config %s false".`
+)
 
 func Cmd() *cobra.Command {
 	addAllFlag, readAllFlag := flags.All("sync all local branches")

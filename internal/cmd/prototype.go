@@ -15,13 +15,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const prototypeDesc = "Make an existing branch a prototype branch"
-
-const prototypeHelp = `
+const (
+	prototypeDesc = "Make an existing branch a prototype branch"
+	prototypeHelp = `
 A prototype branch is for local-only development. It incorporates updates from its parent branch and is not pushed to the remote repository until you run "git town propose" on it.
 
 You can create new prototype branches using git town hack, append, or prepend with the --prototype option.
 `
+)
 
 func prototypeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

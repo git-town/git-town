@@ -23,11 +23,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const shipCommand = "ship"
-
-const shipDesc = "Deliver a completed feature branch"
-
-const shipHelp = `
+const (
+	shipCommand = "ship"
+	shipDesc    = "Deliver a completed feature branch"
+	shipHelp    = `
 Merges the given or current feature branch into its parent.
 How exactly this happen depends on the configured ship-strategy.
 
@@ -40,6 +39,7 @@ and run "git config %s <token>" (optionally add the "--global" flag).
 
 If your origin server deletes shipped branches,
 disable the ship-delete-tracking-branch configuration setting.`
+)
 
 func Cmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

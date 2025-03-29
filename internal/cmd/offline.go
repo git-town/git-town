@@ -17,10 +17,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const offlineDesc = "Display or set offline mode"
-
-const offlineHelp = `
+const (
+	offlineDesc = "Display or set offline mode"
+	offlineHelp = `
 Git Town avoids network operations in offline mode.`
+)
 
 func offlineCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
