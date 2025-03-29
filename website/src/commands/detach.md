@@ -16,6 +16,33 @@ your changes reviewed and shipped concurrently.
 Please ensure all affected branches are in sync before running this command, and
 optionally remove merge commits by [compressing](compress.md).
 
+## Example
+
+Consider this branch stack:
+
+```
+main
+ \
+  branch-1
+   \
+*   branch-2
+     \
+      branch-3
+```
+
+We are on the `branch-2` branch. After running `git town detach`, we end up with
+with branch stack:
+
+```
+main
+ \
+  branch-1
+   \
+    branch-3
+ \
+* branch-2
+```
+
 ## Options
 
 #### `--dry-run`

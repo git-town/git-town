@@ -17,7 +17,9 @@ commit your open changes.
 If the branch you call this command from has a proposal, this command updates
 it. To do so, it pushes the new branch.
 
-Consider this branch setup:
+## Example
+
+Consider this branch stack:
 
 ```
 main

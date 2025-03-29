@@ -36,6 +36,30 @@ const mergeDesc = "Merges the current branch with its parent"
 const mergeHelp = `
 Merges the current branch with its parent branch.
 Both branches must be feature branches.
+
+Consider this branch stack:
+
+main
+ \
+  branch-1
+   \
+    branch-2
+     \
+*     branch-3
+       \
+        branch-4
+
+We are on the "branch-3" branch. After running "git town merge",
+the new "branch-3" branch contains the changes
+from the old "branch-2" and "branch-3" branches.
+
+main
+ \
+  branch-1
+   \
+*   branch-3
+     \
+      branch-4
 `
 
 func mergeCommand() *cobra.Command {
