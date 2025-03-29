@@ -275,6 +275,38 @@ func TestBranchInfo(t *testing.T) {
 		})
 	})
 
+	t.Run("IsLocalOnlyBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is indeed a local branch", func(t *testing.T) {
+			t.Parallel()
+			branchName := gitdomain.NewLocalBranchName("foo")
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  Some(branchName),
+				LocalSHA:   Some(gitdomain.NewSHA("111111")),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+			}
+			isLocal, haveBranchName := branchInfo.IsLocalOnlyBranch()
+			must.True(t, isLocal)
+			must.Eq(t, branchName, haveBranchName)
+		})
+		t.Run("has a tracking branch", func(t *testing.T) {
+			t.Parallel()
+			branchName := gitdomain.NewLocalBranchName("foo")
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  Some(branchName),
+				LocalSHA:   Some(gitdomain.NewSHA("111111")),
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/foo")),
+				RemoteSHA:  Some(gitdomain.SHA("111111")),
+				SyncStatus: gitdomain.SyncStatusUpToDate,
+			}
+			isLocal, haveBranchName := branchInfo.IsLocalOnlyBranch()
+			must.False(t, isLocal)
+			must.Eq(t, branchName, haveBranchName)
+		})
+	})
+
 	t.Run("IsOmniBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
