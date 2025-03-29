@@ -19,13 +19,16 @@ import (
 const (
 	repoDesc = "Open the repository homepage in the browser"
 	repoHelp = `
-Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
+Supported for repositories hosted on
+GitHub, GitLab, Gitea, Bitbucket, and Codeberg.
 Derives the Git provider from the "origin" remote.
 You can override this detection with
 "git config %s <DRIVER>"
 where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
-When using SSH identities, run "git config %s <HOSTNAME>" where HOSTNAME matches what is in your ssh config file.`
+When using SSH identities, run
+"git config %s <HOSTNAME>"
+where HOSTNAME matches what is in your ssh config file.`
 )
 
 func repoCommand() *cobra.Command {

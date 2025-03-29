@@ -20,7 +20,6 @@ If you leave this empty, Git Town will not use the Bitbucket API.
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
 func BitbucketUsername(oldValue Option[configdomain.BitbucketUsername], inputs components.TestInput) (Option[configdomain.BitbucketUsername], bool, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
@@ -29,6 +28,6 @@ func BitbucketUsername(oldValue Option[configdomain.BitbucketUsername], inputs c
 		TestInput:     inputs,
 		Title:         bitbucketUsernameTitle,
 	})
-	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
+	fmt.Printf(messages.BitbucketUsername, components.FormattedSecret(text, aborted))
 	return configdomain.ParseBitbucketUsername(text), aborted, err
 }

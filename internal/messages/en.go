@@ -10,6 +10,8 @@ const (
 	APIUnexpectedResultDataStructure   = "unexpected result data structure"
 	APIUpdateProposalSource            = "Updating source branch of proposal %s to %s ... "
 	APIUpdateProposalTarget            = "Updating target branch of proposal %s to %s ... "
+	BitbucketAppPassword               = "Bitbucket app password: %s"
+	BitbucketUsername                  = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple               = "\nMultiple people authored the %q branch.\n\n"

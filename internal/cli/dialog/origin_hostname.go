@@ -19,7 +19,6 @@ if the auto-detection does not work for you.
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
 func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs components.TestInput) (Option[configdomain.HostingOriginHostname], bool, error) {
 	token, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),

@@ -1,7 +1,7 @@
 # Forge Type
 
 To talk to the API of your forge, Git Town needs to know which forge type
-(GitHub, Gitlab, Bitbucket, etc) you use.
+(GitHub, Gitlab, Bitbucket, gitea, Codeberg, etc) you use.
 
 By default, Git Town determines the forge type by looking at the URL of the
 [development remote](dev-remote.md). If that's not successful, for example when
@@ -18,6 +18,7 @@ You can use one of these values for the forge type setting:
 - `gitea`
 - `bitbucket`
 - `bitbucket-datacenter`
+- `codeberg`
 
 ## config file
 
