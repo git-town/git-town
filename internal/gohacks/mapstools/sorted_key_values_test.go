@@ -29,4 +29,11 @@ func TestSortedKeyValues(t *testing.T) {
 		must.EqOp(t, "two", have[3].Key)
 		must.EqOp(t, 2, have[3].Value)
 	})
+
+	t.Run("empty", func(t *testing.T) {
+		t.Parallel()
+		data := map[string]int{}
+		have := mapstools.SortedKeyValues(data)
+		must.Len(t, 0, have)
+	})
 }
