@@ -1,4 +1,4 @@
-Feature: detaching a branch whole child contains merge commits
+Feature: detaching a branch whose child contains merge commits
 
   Background:
     Given a Git repo with origin
