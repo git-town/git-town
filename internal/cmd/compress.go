@@ -27,11 +27,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const compressCommand = "compress"
-
-const compressDesc = "Squash all commits on feature branches down to a single commit"
-
-const compressHelp = `
+const (
+	compressCommand = "compress"
+	compressDesc    = "Squash all commits on feature branches down to a single commit"
+	compressHelp    = `
 Compress is a more convenient way of running "git rebase --interactive"
 and choosing to fixup all commits.
 Branches must be synced before you compress them.
@@ -42,6 +41,7 @@ With the --stack switch it compresses all branches in the current stack.
 The compressed commit uses the commit message of the first commit in the branch.
 You can provide a custom commit message with the -m switch.
 `
+)
 
 func compressCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()

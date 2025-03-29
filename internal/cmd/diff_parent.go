@@ -20,12 +20,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const diffParentDesc = "Show the changes committed to a feature branch"
-
-const diffParentHelp = `
+const (
+	diffParentDesc = "Show the changes committed to a feature branch"
+	diffParentHelp = `
 Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`
+)
 
 func diffParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

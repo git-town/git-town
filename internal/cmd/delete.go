@@ -31,10 +31,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const deleteDesc = "Remove an obsolete feature branch"
-
-const deleteHelp = `
+const (
+	deleteDesc = "Remove an obsolete feature branch"
+	deleteHelp = `
 Deletes the current or provided branch from the local and origin repositories. Does not delete perennial branches nor the main branch.`
+)
 
 func deleteCommand() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()

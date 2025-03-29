@@ -15,15 +15,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const parkDesc = "Suspend syncing of some feature branches"
-
-const parkHelp = `
+const (
+	parkDesc = "Suspend syncing of some feature branches"
+	parkHelp = `
 Parks the given local feature branches.
 If no branch is provided, parks the current branch.
 
 Git Town does not sync parked branches.
 The currently checked out branch gets synced even if parked.
 `
+)
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

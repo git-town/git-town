@@ -29,11 +29,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const mergeCmd = "merge"
-
-const mergeDesc = "Merges the current branch with its parent"
-
-const mergeHelp = `
+const (
+	mergeCmd  = "merge"
+	mergeDesc = "Merges the current branch with its parent"
+	mergeHelp = `
 Merges the current branch with its parent branch.
 Both branches must be feature branches.
 
@@ -61,6 +60,7 @@ main
      \
       branch-4
 `
+)
 
 func mergeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

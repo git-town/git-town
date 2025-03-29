@@ -31,16 +31,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const proposeCmd = "propose"
-
-const proposeDesc = "Create a proposal to merge a feature branch"
-
-const proposeHelp = `
+const (
+	proposeCmd  = "propose"
+	proposeDesc = "Create a proposal to merge a feature branch"
+	proposeHelp = `
 Syncs the current branch and opens a browser window to the new proposal page of your repository.
 
 The form is pre-populated for the current branch so that the proposal only shows the changes made against the immediate parent branch.
 
 Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket. When using self-hosted versions this command needs to be configured with "git config %s <driver>" where driver is "github", "gitlab", "gitea", or "bitbucket". When using SSH identities, this command needs to be configured with "git config %s <hostname>" where hostname matches what is in your ssh config file.`
+)
 
 func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
