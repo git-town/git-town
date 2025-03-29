@@ -36,7 +36,7 @@ func observeCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "observe [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: cmdhelpers.GROUP_ID_TYPES,
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   observeDesc,
 		Long:    cmdhelpers.Long(observeDesc, observeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -30,7 +30,7 @@ func switchCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "switch",
-		GroupID: cmdhelpers.GROUP_ID_BASIC,
+		GroupID: cmdhelpers.GroupIDBasic,
 		Args:    cobra.ArbitraryArgs,
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),

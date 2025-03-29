@@ -44,7 +44,7 @@ func mergeCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     mergeCmd,
 		Args:    cobra.NoArgs,
-		GroupID: cmdhelpers.GROUP_ID_STACK,
+		GroupID: cmdhelpers.GroupIDStack,
 		Short:   mergeDesc,
 		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {

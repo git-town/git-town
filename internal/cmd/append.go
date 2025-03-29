@@ -47,7 +47,7 @@ func appendCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
-		GroupID: cmdhelpers.GROUP_ID_STACK,
+		GroupID: cmdhelpers.GroupIDStack,
 		Args:    cobra.ExactArgs(1),
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),

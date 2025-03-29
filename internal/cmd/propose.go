@@ -51,7 +51,7 @@ func proposeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     proposeCmd,
-		GroupID: cmdhelpers.GROUP_ID_BASIC,
+		GroupID: cmdhelpers.GroupIDBasic,
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),

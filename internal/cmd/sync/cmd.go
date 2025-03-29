@@ -58,7 +58,7 @@ func Cmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     syncCommand,
-		GroupID: cmdhelpers.GROUP_ID_BASIC,
+		GroupID: cmdhelpers.GroupIDBasic,
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),

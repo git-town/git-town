@@ -37,7 +37,7 @@ func contributeCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "contribute [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: cmdhelpers.GROUP_ID_TYPES,
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   contributeDesc,
 		Long:    cmdhelpers.Long(contributeDesc, contributeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
