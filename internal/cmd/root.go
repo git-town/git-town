@@ -9,10 +9,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const rootDesc = "Branching and workflow support for Git"
-
-const rootHelp = `
+const (
+	rootDesc = "Branching and workflow support for Git"
+	rootHelp = `
 Git Town helps create, sync, and ship changes efficiently and with minimal merge conflicts.`
+)
 
 func rootCmd() cobra.Command {
 	addVersionFlag, readVersionFlag := flags.Version()

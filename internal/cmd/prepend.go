@@ -33,9 +33,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const prependDesc = "Create a new feature branch as the parent of the current branch"
-
-const prependHelp = `
+const (
+	prependDesc = "Create a new feature branch as the parent of the current branch"
+	prependHelp = `
 Syncs the parent branch, cuts a new feature branch with the given name off the parent branch, makes the new branch the parent of the current branch, pushes the new feature branch to the origin repository (if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
@@ -56,6 +56,7 @@ main
    \
     feature-2
 `
+)
 
 func prependCommand() *cobra.Command {
 	addBeamFlag, readBeamFlag := flags.Beam()

@@ -15,9 +15,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const contributeDesc = "Stop syncing some feature branches with their parents"
-
-const contributeHelp = `
+const (
+	contributeDesc = "Stop syncing some feature branches with their parents"
+	contributeHelp = `
 Marks the given local branches as contribution.
 If no branch is provided, marks the current branch.
 
@@ -31,6 +31,7 @@ On a contribution branch, "git town sync"
 - pushes your local commits to the tracking branch
 - does not pull updates from the parent branch
 `
+)
 
 func contributeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
