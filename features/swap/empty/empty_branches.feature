@@ -1,4 +1,4 @@
-Feature: swapping a feature branch
+Feature: swapping an empty branch
 
   Background:
     Given a Git repo with origin
