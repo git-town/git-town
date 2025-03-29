@@ -7,7 +7,8 @@ git town repo [<remote-name>] [-v | --verbose]
 The _repo_ command ("show me the repository") opens the homepage of the current
 repository in your browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
-[Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
+[Gitea](https://gitea.com), [Bitbucket](https://bitbucket.org), and
+[Codeberg](https://codeberg.org).
 
 On non-Windows systems, Git Town will first read the `BROWSER` environment
 variable to determine the browser command. If it isn't set, Git Town will try

@@ -63,9 +63,11 @@ avoid empty merge conflicts.
 
 If you have configured the API tokens for
 [GitHub](../preferences/github-token.md),
-[GitLab](../preferences/gitlab-token.md), or
-[Gitea](../preferences/gitea-token.md) and the branch to be shipped has an open
-proposal, this command merges the proposal for the current branch.
+[GitLab](../preferences/gitlab-token.md),
+[Gitea](../preferences/gitea-token.md),
+[Bitbucket](../preferences/bitbucket-app-password.md), or
+[Codeberg](../preferences/codeberg-token.md) and the branch to be shipped has an
+open proposal, this command merges the proposal for the current branch.
 
 If your forge automatically deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
