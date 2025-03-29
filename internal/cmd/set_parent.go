@@ -29,10 +29,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const setParentCmd = "set-parent"
-
-const setParentDesc = "Set the parent branch for the current branch"
-const setParentHelp = `
+const (
+	setParentCmd  = "set-parent"
+	setParentDesc = "Set the parent branch for the current branch"
+	setParentHelp = `
 Consider this branch stack:
 
 main
@@ -55,6 +55,7 @@ main
    \
 *   feature-B
 `
+)
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
