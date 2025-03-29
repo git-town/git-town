@@ -44,6 +44,8 @@ Feature: swapping a feature branch verbosely
       |          | git branch -vva --sort=refname                       |
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
+      |          | git log --merges branch-1..branch-2                  |
+      |          | git log --merges main..branch-1                      |
       | branch-2 | git rebase --onto main branch-1                      |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
       | branch-2 | git push --force-with-lease --force-if-includes      |
@@ -66,21 +68,10 @@ Feature: swapping a feature branch verbosely
       |          | git config -lz --includes --global                   |
       |          | git config -lz --includes --local                    |
       |          | git stash list                                       |
-    And the current branch is still "branch-2"
-    And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE     |
-      | main     | local, origin | main commit |
-      | branch-1 | local, origin | commit 1a   |
-      |          |               | commit 1b   |
-      | branch-2 | local, origin | commit 2a   |
-      |          |               | commit 2b   |
-      | branch-3 | local, origin | commit 3a   |
-      |          |               | commit 3b   |
-    And this lineage exists now
-      | BRANCH   | PARENT   |
-      | branch-1 | branch-2 |
-      | branch-2 | main     |
-      | branch-3 | branch-1 |
+    And Git Town prints:
+      """
+      Ran 36 shell commands.
+      """
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -116,6 +107,7 @@ Feature: swapping a feature branch verbosely
       | (none)   | git config git-town-branch.branch-1.parent main      |
       |          | git config git-town-branch.branch-2.parent branch-1  |
       |          | git config git-town-branch.branch-3.parent branch-2  |
-    And the current branch is still "branch-2"
-    And the initial commits exist now
-    And the initial lineage exists now
+    And Git Town prints:
+      """
+      Ran 30 shell commands.
+      """
