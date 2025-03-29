@@ -12,7 +12,8 @@ import (
 const (
 	rootDesc = "Branching and workflow support for Git"
 	rootHelp = `
-Git Town helps create, sync, and ship changes efficiently and with minimal merge conflicts.`
+Git Town helps create, sync, and ship changes
+efficiently and with minimal merge conflicts.`
 )
 
 func rootCmd() cobra.Command {

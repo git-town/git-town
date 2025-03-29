@@ -34,7 +34,8 @@ import (
 const (
 	deleteDesc = "Remove an obsolete feature branch"
 	deleteHelp = `
-Deletes the current or provided branch from the local and origin repositories. Does not delete perennial branches nor the main branch.`
+Deletes the current or provided branch and its tracking branch.
+Does not delete perennial branches nor the main branch.`
 )
 
 func deleteCommand() *cobra.Command {
