@@ -20,7 +20,6 @@ If you leave this empty, Git Town will not use the Bitbucket API.
 `
 )
 
-// BitbucketUsername lets the user enter the Bitbucket username.
 func BitbucketUsername(oldValue Option[configdomain.BitbucketUsername], inputs components.TestInput) (Option[configdomain.BitbucketUsername], bool, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
