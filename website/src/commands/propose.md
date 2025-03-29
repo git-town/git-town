@@ -13,6 +13,7 @@ opening the pull request.
 You can create pull requests for repositories hosted on:
 
 - [Bitbucket](https://bitbucket.org)
+- [Codeberg](https://codeberg.org)
 - [Gitea](https://gitea.com)
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)

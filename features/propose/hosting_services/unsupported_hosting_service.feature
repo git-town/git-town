@@ -16,6 +16,7 @@ Feature: unsupported forge type
       This command requires hosting on one of these services:
       * Bitbucket
       * Bitbucket Data Center
+      * Codeberg
       * GitHub
       * GitLab
       * Gitea

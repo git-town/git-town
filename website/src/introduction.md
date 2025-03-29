@@ -11,9 +11,9 @@ and don't handle errors and edge cases well.
 
 Git Town is a reusable implementation of Git workflows for common usage
 scenarios like contributing to a centralized code repository on platforms like
-GitHub, GitLab, or Gitea. Think of Git Town as your Bash scripts for Git, but
-fully engineered with rock-solid support for many use cases, edge cases, and
-error conditions.
+GitHub, GitLab, Bitbucket, Gitea, or Codeberg. Think of Git Town as your Bash
+scripts for Git, but fully engineered with rock-solid support for many use
+cases, edge cases, and error conditions.
 
 With Git Town you can keep using Git the way you do now, but with extra commands
 to create various branch types, keep them in sync, compress, review, and ship

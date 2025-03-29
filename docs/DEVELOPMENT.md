@@ -116,8 +116,8 @@ make cukethis
 ```
 
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
-GitLab or Bitbucket address. This causes `git push` operations in this test to
-also go to GitHub. To prevent this, set an environment variable
+GitLab, Bitbucket, or Codeberg address. This causes `git push` operations in
+this test to also go to GitHub. To prevent this, set an environment variable
 `GIT_TOWN_REMOTE` with the desired value of the
 [development remote](../website/src/preferences/dev-remote.md), and Git Town
 will use that value instead of what is configured in the repo.

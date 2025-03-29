@@ -29,3 +29,4 @@ Configuring API access takes only one minute. Here is how you do it:
 - Bitbucket: [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
 - Gitea: [access token](preferences/gitea-token.md)
+- Codeberg: [access token](preferences/codeberg-token.md)
