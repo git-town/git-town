@@ -23,11 +23,14 @@ Feature: swapping a feature branch in a stack full of conflicting branches
     And the current branch is "branch-2"
     When I run "git-town swap"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-2 | git fetch --prune --tags                        |
       |          | git rebase --onto main branch-1                 |
+      # TODO: it should not delete the file here.
+      # Rather, it should keep the correct version.
       |          | git rm file                                     |
       |          | git -c core.editor=true rebase --continue       |
       |          | git push --force-with-lease --force-if-includes |
