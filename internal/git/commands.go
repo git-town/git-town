@@ -50,10 +50,7 @@ func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gi
 
 func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
 	output, err := runner.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
-	if err != nil {
-		return false, err
-	}
-	return len(output) > 0, nil
+	return len(output) > 0, err
 }
 
 func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
