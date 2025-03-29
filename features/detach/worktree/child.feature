@@ -1,4 +1,4 @@
-Feature: detaching a branch whose parent is checked out in another workspace
+Feature: detaching a branch whose child is checked out in another workspace
 
   Background:
     Given a Git repo with origin
