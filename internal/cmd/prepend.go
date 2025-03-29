@@ -46,7 +46,8 @@ main
  \
 * feature-2
 
-We are on the "feature-2" branch. After running "git town prepend feature-1",
+We are on the "feature-2" branch.
+After running "git town prepend feature-1",
 our repository has this branch setup:
 
 main
