@@ -48,6 +48,14 @@ func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gi
 	return result, nil
 }
 
+func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	output, err := runner.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
+	if err != nil {
+		return false, err
+	}
+	return len(output) > 0, nil
+}
+
 func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
 	err := runner.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
 	return err == nil
@@ -56,14 +64,6 @@ func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.Loc
 func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
 	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
-}
-
-func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	output, err := runner.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
-	if err != nil {
-		return false, err
-	}
-	return len(output) > 0, nil
 }
 
 // BranchHasUnmergedChanges indicates whether the branch with the given name

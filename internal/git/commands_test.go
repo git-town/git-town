@@ -48,7 +48,8 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
-			runtime.CreateAndCheckoutBranch(runtime, branch1)
+			err := runtime.CreateAndCheckoutBranch(runtime, branch1)
+			must.NoError(t, err)
 			runtime.CreateBranch(branch2, branch1.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch1,
@@ -57,7 +58,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "commit 1",
 			})
 			runtime.CheckoutBranch(branch2)
-			runtime.MergeNoFastForward(runtime, configdomain.UseDefaultMessage(), branch1)
+			err = runtime.MergeNoFastForward(runtime, configdomain.UseDefaultMessage(), branch1)
+			must.NoError(t, err)
 			have, err := runtime.BranchContainsMerges(runtime, branch2, branch1)
 			must.NoError(t, err)
 			must.True(t, have)
@@ -66,7 +68,8 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
-			runtime.CreateAndCheckoutBranch(runtime, branch1)
+			err := runtime.CreateAndCheckoutBranch(runtime, branch1)
+			must.NoError(t, err)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch1,
 				FileContent: "content",

@@ -72,7 +72,6 @@ const (
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
 Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DefaultBranchType               = "Default branch type: %s\n"
-	DetachNeedsCompress             = "branch %q contains merge commits - please compress and try again"
 	DetachNeedsSync                 = "please sync your branches before detaching"
 	DetachNoParent                  = "cannot detach branch without parent"
 	DetachOtherWorkTree             = "cannot detach because branch %q it is active in another worktree"
