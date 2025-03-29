@@ -40,7 +40,6 @@ Feature: detaching a branch that conflicts with the main branch
       | branch-1 | main   |
       | branch-2 | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
