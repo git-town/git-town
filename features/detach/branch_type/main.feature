@@ -1,4 +1,4 @@
-Feature: detaching an empty branch
+Feature: detaching the main branch
 
   Background:
     Given a Git repo with origin
