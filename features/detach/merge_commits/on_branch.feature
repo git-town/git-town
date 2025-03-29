@@ -21,14 +21,13 @@ Feature: detaching a branch that contains merge commits
     And the current branch is "branch-2"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "branch-2" contains merge commits - please compress and try again
+      branch "branch-2" contains merge commits, please compress and try again
       """
     And the current branch is still "branch-2"
 

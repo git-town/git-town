@@ -14,7 +14,7 @@ const (
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
 	BranchAuthorMultiple               = "\nMultiple people authored the %q branch.\n\n"
 	BranchCheckoutProblem              = "cannot check out branch %q: %w"
-	BranchContainsMergeCommits         = "branch %q contains merge commits, please compress before running this command"
+	BranchContainsMergeCommits         = "branch %q contains merge commits, please compress and try again"
 	BranchCurrentProblem               = "cannot determine current branch: %w"
 	BranchDeleted                      = "deleted branch %q"
 	BranchDeletedAtRemote              = "branch %q was deleted at the remote"
