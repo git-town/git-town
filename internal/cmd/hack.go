@@ -33,7 +33,11 @@ import (
 const (
 	hackDesc = "Create a new feature branch off the main branch"
 	hackHelp = `
-Syncs the main branch, forks a new feature branch with the given name off the main branch, pushes the new feature branch to origin (if and only if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
+Syncs the main branch,
+forks a new feature branch with the given name off the main branch,
+pushes the new feature branch to origin
+(if and only if "push-new-branches" is true),
+and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`
 )

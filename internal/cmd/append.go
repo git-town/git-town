@@ -33,7 +33,13 @@ import (
 const (
 	appendDesc = "Create a new feature branch as a child of the current branch"
 	appendHelp = `
-Syncs the current branch, forks a new feature branch with the given name off the current branch, makes the new branch a child of the current branch, pushes the new feature branch to the origin repository (if and only if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
+Syncs the current branch,
+forks a new feature branch with the given name
+off the current branch,
+makes the new branch a child of the current branch,
+pushes the new feature branch to the origin repository
+(if and only if "push-new-branches" is true),
+and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`
 )

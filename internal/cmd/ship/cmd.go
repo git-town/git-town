@@ -34,7 +34,8 @@ Ships only direct children of the main branch.
 To ship a child branch, ship or delete all ancestor branches first
 or ship with the "--to-parent" flag.
 
-To use the online functionality, configure a personal access token with the "repo" scope
+To use the online functionality,
+configure a personal access token with the "repo" scope
 and run "git config %s <token>" (optionally add the "--global" flag).
 
 If your origin server deletes shipped branches,
