@@ -41,7 +41,7 @@ func detachCommand() *cobra.Command {
 		Use:     detachCommandName,
 		Args:    cobra.NoArgs,
 		Short:   detachDesc,
-		GroupID: "stack",
+		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(detachDesc, detachHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, err := readDryRunFlag(cmd)
