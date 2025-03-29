@@ -94,19 +94,39 @@ Feature: detaching an omni-branch verbosely
       | branch-3 | branch-1 |
       | branch-4 | branch-3 |
 
+  @this
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo --verbose"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git reset --hard {{ sha 'commit 2b' }}          |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git reset --hard {{ sha 'commit 3b' }}          |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-4                           |
-      | branch-4 | git reset --hard {{ sha 'commit 4b' }}          |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      | BRANCH   | COMMAND                                              |
+      |          | git version                                          |
+      |          | git rev-parse --show-toplevel                        |
+      |          | git config -lz --includes --global                   |
+      |          | git config -lz --includes --local                    |
+      |          | git status --long --ignore-submodules                |
+      |          | git stash list                                       |
+      |          | git branch -vva --sort=refname                       |
+      |          | git remote get-url origin                            |
+      |          | git rev-parse --verify --abbrev-ref @{-1}            |
+      |          | git remote get-url origin                            |
+      |          | git rev-parse --short HEAD                           |
+      | branch-2 | git reset --hard {{ sha 'commit 2b' }}               |
+      | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
+      | branch-2 | git push --force-with-lease --force-if-includes      |
+      |          | git checkout branch-3                                |
+      | (none)   | git rev-parse --short HEAD                           |
+      | branch-3 | git reset --hard {{ sha 'commit 3b' }}               |
+      | (none)   | git rev-list --left-right branch-3...origin/branch-3 |
+      | branch-3 | git push --force-with-lease --force-if-includes      |
+      |          | git checkout branch-4                                |
+      | (none)   | git rev-parse --short HEAD                           |
+      | branch-4 | git reset --hard {{ sha 'commit 4b' }}               |
+      | (none)   | git rev-list --left-right branch-4...origin/branch-4 |
+      | branch-4 | git push --force-with-lease --force-if-includes      |
+      | (none)   | git show-ref --quiet refs/heads/branch-2             |
+      | branch-4 | git checkout branch-2                                |
+      | (none)   | git config git-town-branch.branch-2.parent branch-1  |
+      |          | git config git-town-branch.branch-3.parent branch-2  |
     And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now
