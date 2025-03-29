@@ -14,7 +14,7 @@ Feature: detaching a contribution branch
       | contribution | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach contribution branches
+      cannot detach contribution branches since you don't own them
       """
 
   Scenario: undo

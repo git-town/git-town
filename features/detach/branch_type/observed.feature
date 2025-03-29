@@ -14,7 +14,7 @@ Feature: detaching an observed branch
       | observed | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach observed branches
+      cannot detach observed branches since you don't own them
       """
 
   Scenario: undo

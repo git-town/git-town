@@ -14,7 +14,7 @@ Feature: detaching an empty branch
       | staging | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach perennial branches
+      cannot detach perennial branches since you don't own them
       """
 
   Scenario: undo
