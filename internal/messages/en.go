@@ -249,6 +249,7 @@ and will be removed in future versions of Git Town.`
 	StatusFileNotFound                      = "No status file found for this repository."
 	SwapNoGrandParent                       = "cannot swap a branch without grand-parent"
 	SwapNoParent                            = "cannot swap a branch without parent"
+	SwapNeedsCompress                       = "cannot swap because branch %q contains merge commits - please compress and try again"
 	SwapNeedsSync                           = "please sync your branches before swapping"
 	SwapOtherWorkTree                       = "cannot swap because branch %q it is active in another worktree"
 	SwapRemoteBranch                        = "cannot swap: branch %q is remote"

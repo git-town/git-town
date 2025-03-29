@@ -238,6 +238,20 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 			proposal: proposal,
 		}
 	}
+	branchContainsMerges, err := repo.Git.BranchContainsMerges(repo.Backend, branchNameToSwap, parentBranch)
+	if err != nil {
+		return data, false, err
+	}
+	if branchContainsMerges {
+		return data, false, fmt.Errorf(messages.SwapNeedsCompress, branchNameToSwap)
+	}
+	parentContainsMerges, err := repo.Git.BranchContainsMerges(repo.Backend, parentBranch, grandParentBranch)
+	if err != nil {
+		return data, false, err
+	}
+	if parentContainsMerges {
+		return data, false, fmt.Errorf(messages.SwapNeedsCompress, parentBranch)
+	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return swapData{
