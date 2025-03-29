@@ -1,4 +1,4 @@
-Feature: swapping a feature branch that conflicts with its parent
+Feature: swapping a feature branch in a stack full of conflicting branches
 
   Background:
     Given a Git repo with origin
