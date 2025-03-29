@@ -10,7 +10,7 @@ Feature: detaching the main branch
       | main   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot detach branch without parent
+      cannot detach branches without parent
       """
 
   Scenario: undo

@@ -73,7 +73,7 @@ const (
 Please upgrade to the new format: create.new-branch-type = "prototype"`
 	DefaultBranchType               = "Default branch type: %s\n"
 	DetachNeedsSync                 = "please sync your branches before detaching"
-	DetachNoParent                  = "cannot detach branch without parent"
+	DetachNoParent                  = "cannot detach branches without parent"
 	DetachOtherWorkTree             = "cannot detach because branch %q it is active in another worktree"
 	DetachRemoteBranch              = "cannot detach a remote branch"
 	DetachUnsupportedBranchType     = "cannot detach %s branches"
