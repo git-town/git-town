@@ -2,6 +2,7 @@ package undoconfig
 
 import (
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v18/internal/gohacks/mapstools"
 	"github.com/git-town/git-town/v18/internal/vm/opcodes"
 	"github.com/git-town/git-town/v18/internal/vm/program"
 )
@@ -27,18 +28,18 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 			Scope: configdomain.ConfigScopeGlobal,
 		})
 	}
-	for key, value := range self.Global.Removed {
+	for key, value := range mapstools.SortedKeyValues(self.Global.Removed) {
 		result.Add(&opcodes.ConfigSet{
 			Key:   key,
 			Scope: configdomain.ConfigScopeGlobal,
 			Value: value,
 		})
 	}
-	for key, change := range self.Global.Changed {
+	for key, value := range mapstools.SortedKeyValues(self.Global.Changed) {
 		result.Add(&opcodes.ConfigSet{
 			Key:   key,
 			Scope: configdomain.ConfigScopeGlobal,
-			Value: change.Before,
+			Value: value.Before,
 		})
 	}
 	for _, key := range self.Local.Added {
@@ -47,18 +48,18 @@ func (self ConfigDiffs) UndoProgram() program.Program {
 			Scope: configdomain.ConfigScopeLocal,
 		})
 	}
-	for key, value := range self.Local.Removed {
+	for key, value := range mapstools.SortedKeyValues(self.Local.Removed) {
 		result.Add(&opcodes.ConfigSet{
 			Key:   key,
 			Scope: configdomain.ConfigScopeLocal,
 			Value: value,
 		})
 	}
-	for key, change := range self.Local.Changed {
+	for key, value := range mapstools.SortedKeyValues(self.Local.Changed) {
 		result.Add(&opcodes.ConfigSet{
 			Key:   key,
 			Scope: configdomain.ConfigScopeLocal,
-			Value: change.Before,
+			Value: value.Before,
 		})
 	}
 	return result
