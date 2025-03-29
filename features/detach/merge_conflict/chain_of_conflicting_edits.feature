@@ -32,7 +32,6 @@ Feature: detaching a branch from a chain that edits the same file
     And the current branch is "branch-2"
     When I run "git-town detach"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
@@ -79,6 +78,10 @@ Feature: detaching a branch from a chain that edits the same file
       | BRANCH   | COMMAND                                         |
       | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
       |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-4                           |
+      | branch-4 | git reset --hard {{ sha 'commit 4' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
     And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now
