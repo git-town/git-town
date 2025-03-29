@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const completionsDesc = "Generate auto-completion for bash, zsh, fish, or PowerShell"
-
-const completionsHelp = `
+const (
+	completionsDesc = "Generate auto-completion for bash, zsh, fish, or PowerShell"
+	completionsHelp = `
 When set up, "git town <TAB>" will auto-complete Git Town subcommands.
 
 To load autocompletion for Bash, run this command:
@@ -42,6 +42,7 @@ To load autocompletions for Powershell, run this command:
 
 To load completions for each session, add the above line to your PowerShell profile.
 `
+)
 
 func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 	completionsNoDescFlag := false
