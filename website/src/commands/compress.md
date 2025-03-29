@@ -16,6 +16,8 @@ branches.
 Branches must be in sync to compress them, so run `git town sync` and resolve
 merge conflicts before running this command.
 
+## Example
+
 Assuming you have a feature branch with these commits:
 
 ```bash
