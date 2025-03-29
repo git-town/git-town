@@ -40,6 +40,7 @@ func Execute() error {
 	rootCmd.AddCommand(setParentCommand())
 	rootCmd.AddCommand(ship.Cmd())
 	rootCmd.AddCommand(skipCmd())
+	rootCmd.AddCommand(swapCommand())
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(sync.Cmd())
 	rootCmd.AddCommand(undoCmd())

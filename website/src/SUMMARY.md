@@ -25,6 +25,7 @@
     - [merge](commands/merge.md)
     - [prepend](commands/prepend.md)
     - [set-parent](commands/set-parent.md)
+    - [swap](commands/swap.md)
   - [Branch types](branch-types.md)
     - [contribute](commands/contribute.md)
     - [observe](commands/observe.md)
