@@ -1,4 +1,4 @@
-Feature: detaching a local branch
+Feature: swap a local branch
 
   Background:
     Given a Git repo with origin
