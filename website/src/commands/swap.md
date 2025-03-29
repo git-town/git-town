@@ -6,8 +6,33 @@ git town swap [--dry-run] [-v | --verbose]
 
 The _swap_ command moves the current branch one position forward in the stack.
 
-This helps you organize related branches together, for example to review and
-ship them together or [merge](merge.md) them.
+Consider this branch stack:
+
+```
+main
+ \
+  branch-1
+   \
+*   branch-2
+     \
+      branch-3
+```
+
+After running `git town swap` you end up with this branch stack:
+
+```
+main
+ \
+  branch-2
+   \
+*   branch-1
+     \
+      branch-3
+```
+
+Moving branches up and down the stack helps you organize related branches
+together, for example to review and ship them together, or [merge](merge.md)
+them.
 
 Please ensure all affected branches are in sync before running this command, and
 optionally remove merge commits by [compressing](compress.md).
