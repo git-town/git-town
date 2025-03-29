@@ -19,6 +19,8 @@ commit your open changes first and then sync manually.
 When given a non-existing branch name, `git town append` creates a new feature
 branch with the main branch as its parent.
 
+## Example
+
 Consider this branch setup:
 
 ```
