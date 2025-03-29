@@ -18,6 +18,32 @@ you are on, including all uncommitted changes.
 
 When called with a branch name, it deletes the given branch.
 
+## Example
+
+Consider this branch stack:
+
+```
+main
+ \
+  branch-1
+   \
+*   branch-2
+     \
+      branch-3
+```
+
+We are on the `branch-2` branch. After running `git town delete` we end up with
+this branch stack, on the branch that was active before we switched to
+`branch-2`:
+
+```
+main
+ \
+  branch-1
+   \
+    branch-3
+```
+
 ## Options
 
 #### `--dry-run`

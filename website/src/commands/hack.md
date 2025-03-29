@@ -31,6 +31,31 @@ When given an existing contribution, observed, parked, or prototype branch,
 When given no arguments, `git town hack` converts the current contribution,
 observed, parked, or prototype branch into a feature branch.
 
+## Example
+
+Consider this branch stack:
+
+```
+main
+ \
+  branch-1
+   \
+*   branch-2
+```
+
+We are on the `branch-2` branch. After running `git hack branch-3`, our
+workspace contains these branches:
+
+```
+main
+ \
+  branch-1
+   \
+    branch-2
+ \
+* branch-3
+```
+
 ## Options
 
 #### `-p`<br>`--prototype`

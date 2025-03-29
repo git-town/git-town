@@ -13,6 +13,36 @@ merged branch will contain two separate commits: one per merged branch. This
 makes it easy to verify that both branches were merged as expected. To
 consolidate these commits, run [git town sync](sync.md).
 
+## Example
+
+Consider this branch stack:
+
+```
+main
+ \
+  branch-1
+   \
+    branch-2
+     \
+*     branch-3
+       \
+        branch-4
+```
+
+We are on the `branch-3` branch. After running `git town merge`, the stack looks
+like below, and the new `branch-3` branch contains the changes from the old
+`branch-2` and `branch-3` branches.
+
+```
+main
+ \
+  branch-1
+   \
+*   branch-3
+     \
+      branch-4
+```
+
 ## Options
 
 #### `--dry-run`

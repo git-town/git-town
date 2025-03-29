@@ -16,28 +16,31 @@ their old parents. However, they don't see the changes made by their new parent
 branches yet. Please run [git town sync](sync.md) to pull in changes from the
 new parents.
 
-To demonstrate how `git town set-parent` works, let's say we have this branch
-hierarchy:
+## Example
+
+Consider this branch stack:
 
 ```
 main
  \
   feature-1
    \
-*   feature-2
+*   feature-B
+ \
+  feature-A
 ```
 
-`feature-1` is a child branch of `main`, and `feature-2` is a child branch of
-`feature-1`. Assuming we are on `feature-2`, we can make `feature-2` a child of
-`main` by running `git town set-parent` and selecting `main` in the dialog. We
-end up with this branch hierarchy:
+After running `git town set-parent` and selecting `feature-A` in the dialog, we
+end up with this branch stack:
 
 ```
 main
  \
   feature-1
  \
-* feature-2
+  feature-A
+   \
+*   feature-B
 ```
 
 ## Options
