@@ -47,7 +47,7 @@ func hackCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
-		GroupID: "basic",
+		GroupID: cmdhelpers.GroupIDBasic,
 		Args:    cobra.ArbitraryArgs,
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),

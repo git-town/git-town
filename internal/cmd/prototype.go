@@ -28,7 +28,7 @@ func prototypeCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "prototype [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: "types",
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   prototypeDesc,
 		Long:    cmdhelpers.Long(prototypeDesc, prototypeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {

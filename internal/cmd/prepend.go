@@ -53,7 +53,7 @@ func prependCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
-		GroupID: "stack",
+		GroupID: cmdhelpers.GroupIDStack,
 		Args:    cobra.ExactArgs(1),
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),

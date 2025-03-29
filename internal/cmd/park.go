@@ -30,7 +30,7 @@ func parkCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "park [branches]",
 		Args:    cobra.ArbitraryArgs,
-		GroupID: "types",
+		GroupID: cmdhelpers.GroupIDTypes,
 		Short:   parkDesc,
 		Long:    cmdhelpers.Long(parkDesc, parkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
