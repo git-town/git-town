@@ -9,7 +9,10 @@ makes it a stand-alone top-level branch that ships directly into your main
 branch. This is useful when a branch in a stack makes changes that don't overlap
 with the changes made by other branches in this stack. Detaching such
 independent branches reduces your stack to changes that belong together, and
-gets more of your changes reviewed and shipped concurrently.`
+gets more of your changes reviewed and shipped concurrently.
+
+Please ensure all affected branches are in sync before running this command, and
+optionally remove merge commits by [compressing](compress.md).
 
 ## Options
 
