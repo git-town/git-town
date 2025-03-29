@@ -24,7 +24,7 @@ func RootCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "status",
-		GroupID: "errors",
+		GroupID: cmdhelpers.GroupIDErrors,
 		Args:    cobra.NoArgs,
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
