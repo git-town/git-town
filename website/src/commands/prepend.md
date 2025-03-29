@@ -19,7 +19,7 @@ it. To do so, it pushes the new branch.
 
 ## Example
 
-Consider this branch setup:
+Consider this branch stack:
 
 ```
 main

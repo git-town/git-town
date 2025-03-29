@@ -32,6 +32,29 @@ import (
 const setParentCmd = "set-parent"
 
 const setParentDesc = "Set the parent branch for the current branch"
+const setParentHelp = `
+Consider this branch stack:
+
+main
+ \
+  feature-1
+   \
+*   feature-B
+ \
+  feature-A
+
+After running "git town set-parent"
+and selecting "feature-A" in the dialog,
+we end up with this branch stack:
+
+main
+ \
+  feature-1
+ \
+  feature-A
+   \
+*   feature-B
+`
 
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

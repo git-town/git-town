@@ -29,8 +29,8 @@ main
         branch-4
 ```
 
-We are on the `branch-2` branch. After running `git town merge`, the stack looks
-like below and the new `branch-3` branch contains the changes from the old
+We are on the `branch-3` branch. After running `git town merge`, the stack looks
+like below, and the new `branch-3` branch contains the changes from the old
 `branch-2` and `branch-3` branches.
 
 ```
