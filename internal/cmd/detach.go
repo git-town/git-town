@@ -53,7 +53,8 @@ main
       branch-3
 
 We are on the "branch-2" branch.
-After running "git town detach", we end up with this branch stack:
+After running "git town detach",
+we end up with this branch stack:
 
 main
  \
