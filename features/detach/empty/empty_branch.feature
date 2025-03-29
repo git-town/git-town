@@ -12,8 +12,6 @@ Feature: detaching an empty branch
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-2 | feature | branch-1 | local     |
-    And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-3 | feature | branch-2 | local     |
     And the commits
       | BRANCH   | LOCATION | MESSAGE   |
