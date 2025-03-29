@@ -27,7 +27,7 @@ func offlineCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "offline [(yes | no)]",
 		Args:    cobra.MaximumNArgs(1),
-		GroupID: "setup",
+		GroupID: cmdhelpers.GROUP_ID_SETUP,
 		Short:   offlineDesc,
 		Long:    cmdhelpers.Long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -20,7 +20,7 @@ func newPullRequestCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
-		GroupID: "basic",
+		GroupID: cmdhelpers.GROUP_ID_BASIC,
 		Hidden:  true,
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,

@@ -26,7 +26,7 @@ func skipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "skip",
-		GroupID: "errors",
+		GroupID: cmdhelpers.GROUP_ID_ERRORS,
 		Args:    cobra.NoArgs,
 		Short:   skipDesc,
 		Long:    cmdhelpers.Long(skipDesc),

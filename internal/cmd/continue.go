@@ -31,7 +31,7 @@ func continueCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "continue",
-		GroupID: "errors",
+		GroupID: cmdhelpers.GROUP_ID_ERRORS,
 		Args:    cobra.NoArgs,
 		Short:   continueDesc,
 		Long:    cmdhelpers.Long(continueDesc),

@@ -28,7 +28,7 @@ func undoCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "undo",
-		GroupID: "errors",
+		GroupID: cmdhelpers.GROUP_ID_ERRORS,
 		Args:    cobra.NoArgs,
 		Short:   undoDesc,
 		Long:    cmdhelpers.Long(undoDesc),

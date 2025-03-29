@@ -20,7 +20,7 @@ func RootCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
-		GroupID: "setup",
+		GroupID: cmdhelpers.GROUP_ID_SETUP,
 		Args:    cobra.NoArgs,
 		Short:   configDesc,
 		Long:    cmdhelpers.Long(configDesc),
