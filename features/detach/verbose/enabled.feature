@@ -94,7 +94,6 @@ Feature: detaching an omni-branch verbosely
       | branch-3 | branch-1 |
       | branch-4 | branch-3 |
 
-  @this
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
