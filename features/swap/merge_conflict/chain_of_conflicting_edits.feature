@@ -29,7 +29,7 @@ Feature: swapping a feature branch in a stack full of conflicting branches
       | BRANCH   | COMMAND                                         |
       | branch-2 | git fetch --prune --tags                        |
       |          | git rebase --onto main branch-1                 |
-      # TODO: it should not delete the file here.
+      # TODO: it should not delete file here.
       # Rather, it should keep the correct version.
       |          | git rm file                                     |
       |          | git -c core.editor=true rebase --continue       |
