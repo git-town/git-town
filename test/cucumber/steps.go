@@ -560,6 +560,20 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CommitStagedChanges(commit.Message)
 	})
 
+	sc.Step(`^I amend this commit$`, func(ctx context.Context, table *godog.Table) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		commits := testgit.FromGherkinTable(table)
+		if len(commits) != 1 {
+			return errors.New("expected exactly one commit")
+		}
+		commit := commits[0]
+		devRepo.CheckoutBranch(commit.Branch)
+		devRepo.CreateFile(commit.FileName, commit.FileContent)
+		asserts.NoError(devRepo.Run("git", "add", commit.FileName))
+		return devRepo.Run("git", "commit", "--amend", "--message", commit.Message.String())
+	})
+
 	sc.Step(`^I am not prompted for any parent branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		notExpected := "Please specify the parent branch of"
