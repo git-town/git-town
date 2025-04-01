@@ -23,26 +23,29 @@ Feature: swapping a feature branch in a stack full of conflicting branches
     And the current branch is "branch-2"
     When I run "git-town swap"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-2 | git fetch --prune --tags                        |
       |          | git rebase --onto main branch-1                 |
-      # TODO: it should not delete file here.
-      # Rather, it should keep the correct version.
-      |          | git rm file                                     |
+      |          | git add file                                    |
       |          | git -c core.editor=true rebase --continue       |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-1                           |
       | branch-1 | git rebase --onto branch-2 main                 |
+      |          | git checkout --theirs file                      |
+      |          | git add file                                    |
+      |          | git -c core.editor=true rebase --continue       |
+      |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-3                           |
       | branch-3 | git rebase --onto branch-1 branch-2             |
+      |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
+      | branch-2 | local, origin | commit 2 |
       | branch-3 | local, origin | commit 2 |
       |          |               | commit 3 |
     And this lineage exists now
@@ -55,8 +58,16 @@ Feature: swapping a feature branch in a stack full of conflicting branches
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                         |
+      | branch-2 | git checkout branch-1                           |
+      | branch-1 | git reset --hard {{ sha 'commit 1' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
       | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
       |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-3                           |
+      | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git checkout branch-2                           |
     And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

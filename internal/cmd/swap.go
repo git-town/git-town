@@ -279,10 +279,9 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
-		&opcodes.RebaseOnto{
+		&opcodes.RebaseOntoSwap{
 			BranchToRebaseAgainst: data.parentBranch.BranchName(),
 			BranchToRebaseOnto:    data.grandParentBranch,
-			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.branchToSwapInfo.HasTrackingBranch() {
@@ -294,10 +293,9 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		&opcodes.Checkout{
 			Branch: data.parentBranch,
 		},
-		&opcodes.RebaseOnto{
+		&opcodes.RebaseOntoSwap{
 			BranchToRebaseAgainst: data.grandParentBranch.BranchName(),
 			BranchToRebaseOnto:    data.branchToSwapName,
-			Upstream:              None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.parentBranchInfo.HasTrackingBranch() {
@@ -310,10 +308,9 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 			&opcodes.Checkout{
 				Branch: child.name,
 			},
-			&opcodes.RebaseOnto{
+			&opcodes.RebaseOntoSwap{
 				BranchToRebaseAgainst: data.branchToSwapName.BranchName(),
 				BranchToRebaseOnto:    data.parentBranch,
-				Upstream:              None[gitdomain.LocalBranchName](),
 			},
 		)
 		if child.info.HasTrackingBranch() {
