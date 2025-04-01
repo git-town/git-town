@@ -25,29 +25,31 @@ Feature: swapping a feature branch in a stack full of conflicting branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git fetch --prune --tags                        |
-      |          | git rebase --onto main branch-1                 |
-      |          | git add file                                    |
-      |          | git -c core.editor=true rebase --continue       |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-1                           |
-      | branch-1 | git rebase --onto branch-2 main                 |
-      |          | git checkout --theirs file                      |
-      |          | git add file                                    |
-      |          | git -c core.editor=true rebase --continue       |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-3                           |
-      | branch-3 | git rebase --onto branch-1 branch-2             |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git checkout branch-2                           |
+      | BRANCH   | COMMAND                                                    |
+      | branch-2 | git fetch --prune --tags                                   |
+      |          | git rebase --onto main branch-1                            |
+      |          | git add file                                               |
+      |          | git -c core.editor=true rebase --continue                  |
+      |          | git push --force-with-lease --force-if-includes            |
+      |          | git checkout branch-1                                      |
+      | branch-1 | git rebase --onto branch-2 main                            |
+      |          | git checkout --theirs file                                 |
+      |          | git add file                                               |
+      |          | git -c core.editor=true rebase --continue                  |
+      |          | git push --force-with-lease --force-if-includes            |
+      |          | git checkout branch-3                                      |
+      | branch-3 | git rebase --onto branch-1 {{ sha-before-run 'commit 2' }} |
+      |          | git checkout --theirs file                                 |
+      |          | git add file                                               |
+      |          | git -c core.editor=true rebase --continue                  |
+      |          | git push --force-with-lease --force-if-includes            |
+      |          | git checkout branch-2                                      |
     And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 2 |
-      | branch-3 | local, origin | commit 2 |
-      |          |               | commit 3 |
+      | branch-3 | local, origin | commit 3 |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | branch-2 |

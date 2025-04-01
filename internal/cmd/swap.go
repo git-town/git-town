@@ -308,8 +308,14 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 			&opcodes.Checkout{
 				Branch: child.name,
 			},
+		)
+		oldBranchSHA, hasOldBranchSHA := data.branchToSwapInfo.LocalSHA.Get()
+		if !hasOldBranchSHA {
+			oldBranchSHA = data.branchToSwapInfo.RemoteSHA.GetOrDefault()
+		}
+		prog.Value.Add(
 			&opcodes.RebaseOntoSwap{
-				BranchToRebaseAgainst: data.branchToSwapName.BranchName(),
+				BranchToRebaseAgainst: gitdomain.BranchName(oldBranchSHA),
 				BranchToRebaseOnto:    data.parentBranch,
 			},
 		)
