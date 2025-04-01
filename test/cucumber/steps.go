@@ -563,7 +563,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^I amend this commit$`, func(ctx context.Context, table *godog.Table) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		// create the commits
 		commits := testgit.FromGherkinTable(table)
 		if len(commits) != 1 {
 			return errors.New("expected exactly one commit")
