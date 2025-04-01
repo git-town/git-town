@@ -571,9 +571,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		commit := commits[0]
 		devRepo.CheckoutBranch(commit.Branch)
 		devRepo.CreateFile(commit.FileName, commit.FileContent)
-		devRepo.Run("git", "add", commit.FileName)
-		devRepo.Run("git", "commit", "--amend", "--message", commit.Message.String())
-		return nil
+		asserts.NoError(devRepo.Run("git", "add", commit.FileName))
+		return devRepo.Run("git", "commit", "--amend", "--message", commit.Message.String())
 	})
 
 	sc.Step(`^I am not prompted for any parent branches$`, func(ctx context.Context) error {
