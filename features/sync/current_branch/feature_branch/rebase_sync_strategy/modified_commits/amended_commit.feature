@@ -2,61 +2,66 @@ Feature: rebase a branch that contains amended commits
 
   Background:
     Given a Git repo with origin
-    And the branch
-      | NAME      | TYPE    | PARENT | LOCATIONS |
-      | feature-1 | feature | main   | local     |
+    And I ran "git-town hack feature-1"
     And the commits
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1a | file_1    | one          |
-    And the branch
-      | NAME      | TYPE    | PARENT    | LOCATIONS |
-      | feature-2 | feature | feature-1 | local     |
+    And the current branch is "feature-1"
+    And I ran "git-town append feature-2"
     And the commits
       | BRANCH    | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature-2 | local    | commit 2 | file_2    | two          |
-    And the current branch is "feature-1"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And the current branch is "feature-2"
     And I ran "git town sync"
     And I amend this commit
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1b | file_1    | another one  |
+    And the current branch is "feature-2"
+    # And inspect the repo
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git rebase origin/main --no-update-refs         |
-      |         | git push                                        |
-      |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
-      |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
-    And the current branch is still "feature"
+      | BRANCH    | COMMAND                                         |
+      | feature-2 | git fetch --prune --tags                        |
+      |           | git checkout feature-1                          |
+      | feature-1 | git rebase main --no-update-refs                |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git checkout feature-2                          |
+      | feature-2 | git rebase feature-1 --no-update-refs           |
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file_1
+      """
+    And a rebase is now in progress
+
+  Scenario: resolve and continue
+    When I resolve the conflict in "file_1" with "another one"
+    And I run "git-town continue" and close the editor
+    Then Git Town runs the commands
+      | BRANCH    | COMMAND                                         |
+      | feature-2 | git -c core.editor=true rebase --continue       |
+      |           | git push --force-with-lease --force-if-includes |
+    And the current branch is still "feature-2"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, origin | origin main commit    |
-      |         |               | local main commit     |
-      | feature | local, origin | origin feature commit |
-      |         |               | origin main commit    |
-      |         |               | local main commit     |
-      |         |               | local feature commit  |
+      | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | feature-1 | local, origin | commit 1b | file_1    | another one  |
+      | feature-2 | local, origin | commit 2  | file_2    | two          |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                                           |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                                      |
-      |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |
-    And the current branch is still "feature"
+      | BRANCH    | COMMAND                                                            |
+      | feature-2 | git rebase --abort                                                 |
+      |           | git push --force-with-lease origin {{ sha 'commit 1a' }}:feature-1 |
+    And the current branch is still "feature-2"
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, origin | origin main commit    |
-      |         |               | local main commit     |
-      | feature | local         | local feature commit  |
-      |         | origin        | origin feature commit |
-    And the initial branches and lineage exist now
+      | BRANCH    | LOCATION      | MESSAGE   |
+      | feature-1 | local         | commit 1b |
+      |           | origin        | commit 1a |
+      | feature-2 | local         | commit 1a |
+      |           | local, origin | commit 2  |
+    And these branches exist now
+      | REPOSITORY    | BRANCHES                   |
+      | local, origin | main, feature-1, feature-2 |

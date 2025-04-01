@@ -573,10 +573,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CreateFile(commit.FileName, commit.FileContent)
 		devRepo.Run("git", "add", commit.FileName)
 		devRepo.Run("git", "commit", "--amend", "--message", commit.Message.String())
-		initialBranch := state.initialCurrentBranch.GetOrPanic()
-		if devRepo.CurrentBranchCache.Value() != initialBranch {
-			devRepo.CheckoutBranch(initialBranch)
-		}
 		return nil
 	})
 
