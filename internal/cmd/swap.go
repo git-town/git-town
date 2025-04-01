@@ -42,7 +42,7 @@ func swapCommand() *cobra.Command {
 		Use:     swapCommandName,
 		Args:    cobra.NoArgs,
 		Short:   swapDesc,
-		GroupID: "stack",
+		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(swapDesc, swapHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dryRun, err := readDryRunFlag(cmd)
