@@ -8,7 +8,7 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
+// rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
 type RebaseOntoSwap struct {
 	BranchToRebaseAgainst   gitdomain.BranchName
 	BranchToRebaseOnto      gitdomain.LocalBranchName
