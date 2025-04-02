@@ -73,6 +73,16 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 	return len(out) > 0, nil
 }
 
+// BranchInSyncWithTracking returns whether the local branch with the given name
+// contains commits that have not been pushed to its tracking branch.
+func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
+	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch(devRemote).String())
+	if err != nil {
+		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
+	}
+	return len(out) == 0, nil
+}
+
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
 	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
 	if err != nil {
@@ -787,16 +797,6 @@ func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.
 
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
-}
-
-// ShouldPushBranch returns whether the local branch with the given name
-// contains commits that have not been pushed to its tracking branch.
-func (self *Commands) ShouldPushBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, devRemote gitdomain.Remote) (bool, error) {
-	out, err := querier.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+branch.TrackingBranch(devRemote).String())
-	if err != nil {
-		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
-	}
-	return len(out) > 0, nil
 }
 
 func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {

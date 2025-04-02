@@ -19,11 +19,11 @@ func (self *PushCurrentBranchIfNeeded) Run(args shared.RunArgs) error {
 	if !branchExists {
 		return nil
 	}
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
 		return err
 	}
-	if !shouldPush {
+	if inSync {
 		return nil
 	}
 	args.PrependOpcodes(&PushCurrentBranch{})
