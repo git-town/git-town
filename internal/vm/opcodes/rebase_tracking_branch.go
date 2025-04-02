@@ -15,19 +15,20 @@ type RebaseTrackingBranch struct {
 }
 
 func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
-	shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
-		shouldPush = true
+		return err
 	}
-	err := args.Git.Rebase(args.Frontend, self.RemoteBranch.BranchName(), args.Config.Value.NormalConfig.GitVersion)
+	if inSync {
+		return nil
+	}
+	err = args.Git.Rebase(args.Frontend, self.RemoteBranch.BranchName(), args.Config.Value.NormalConfig.GitVersion)
 	if err != nil {
 		return err
 	}
 	if self.PushBranches {
-		if shouldPush {
-			// ignoring push errors here - pushes can fail if the branch is in the merge queue
-			_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
-		}
+		// ignoring push errors here - pushes can fail if the branch is in the merge queue
+		_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
 	}
 	return nil
 }
