@@ -1,4 +1,3 @@
-@this
 Feature: swapping a feature branch verbosely
 
   Background:
