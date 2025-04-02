@@ -2,28 +2,18 @@ Feature: swapping a branch that is ahead of its tracking branch
 
   Background:
     Given a Git repo with origin
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
-    And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | branch-1 | feature | main   | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE   |
-      | branch-2 | local, origin | commit 2a |
-      | branch-2 | local         | commit 2b |
-    And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-3 | feature | branch-2 | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-3 | local, origin | commit 3 |
+      | BRANCH   | LOCATION      | MESSAGE     |
+      | main     | local, origin | main commit |
+      | branch-1 | local, origin | commit 1    |
+      | branch-2 | local, origin | commit 2a   |
+      | branch-2 | local         | commit 2b   |
+      | branch-3 | local, origin | commit 3    |
     And the current branch is "branch-2"
     When I run "git-town swap"
 

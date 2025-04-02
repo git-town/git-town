@@ -2,30 +2,20 @@ Feature: swap a local branch
 
   Background:
     Given a Git repo with origin
-    And the commits
-      | BRANCH | LOCATION | MESSAGE     |
-      | main   | local    | main commit |
-    And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS |
-      | branch-1 | feature | main   | local     |
-    And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-1 | local    | commit 1a |
-      | branch-1 | local    | commit 1b |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
+      | branch-1 | feature | main     | local     |
       | branch-2 | feature | branch-1 | local     |
-    And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-2 | local    | commit 2a |
-      | branch-2 | local    | commit 2b |
-    And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
       | branch-3 | feature | branch-2 | local     |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE   |
-      | branch-3 | local    | commit 3a |
-      | branch-3 | local    | commit 3b |
+      | BRANCH   | LOCATION | MESSAGE     |
+      | main     | local    | main commit |
+      | branch-1 | local    | commit 1a   |
+      | branch-1 | local    | commit 1b   |
+      | branch-2 | local    | commit 2a   |
+      | branch-2 | local    | commit 2b   |
+      | branch-3 | local    | commit 3a   |
+      | branch-3 | local    | commit 3b   |
     And the current branch is "branch-2"
     When I run "git-town swap"
 
