@@ -28,7 +28,7 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.CommitsToRemove, self.BranchToRebaseOnto, None[gitdomain.LocalBranchName]())
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto, self.CommitsToRemove, None[gitdomain.LocalBranchName]())
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {

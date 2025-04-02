@@ -30,7 +30,7 @@ func (self *RebaseOntoRemoveDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.CommitsToRemove, self.BranchToRebaseOnto, self.Upstream)
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto, self.CommitsToRemove, self.Upstream)
 	if err != nil {
 		// Here the rebase-onto has failed.
 		// The branch that gets rebased onto will be deleted.
