@@ -3,24 +3,24 @@ Feature: swapping a contribution branch
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME         | TYPE         | PARENT   | LOCATIONS     |
-      | branch-1     | feature      | main     | local, origin |
-      | contribution | contribution | branch-1 | local, origin |
-    And the current branch is "contribution"
+      | NAME    | TYPE         | PARENT | LOCATIONS     |
+      | parent  | feature      | main   | local, origin |
+      | current | contribution | parent | local, origin |
+    And the current branch is "current"
     When I run "git-town swap"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                  |
-      | contribution | git fetch --prune --tags |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap: branch "contribution" is a contribution branch
+      cannot swap: branch "current" is a contribution branch
       """
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "contribution"
+    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now

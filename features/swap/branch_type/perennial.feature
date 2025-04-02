@@ -1,26 +1,26 @@
+@this
 Feature: swapping a perennial branch
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME      | TYPE      | PARENT   | LOCATIONS     |
-      | branch-1  | feature   | main     | local, origin |
-      | perennial | perennial | branch-1 | local, origin |
-    And the current branch is "perennial"
+      | NAME    | TYPE      | LOCATIONS     |
+      | current | perennial | local, origin |
+    And the current branch is "current"
     When I run "git-town swap"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                  |
-      | perennial | git fetch --prune --tags |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap: branch "perennial" is a perennial branch
+      cannot swap a branch without parent
       """
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "perennial"
+    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now
