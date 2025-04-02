@@ -10,7 +10,7 @@ import (
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
 type RebaseOntoKeepDeleted struct {
-	BranchToRebaseAgainst   gitdomain.BranchName
+	BranchToRebaseAgainst   gitdomain.BranchName // TODO: rename to CommitsToRemove
 	BranchToRebaseOnto      gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
