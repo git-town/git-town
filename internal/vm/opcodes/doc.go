@@ -102,7 +102,7 @@ func All() []shared.Opcode {
 		&RebaseBranch{},
 		&RebaseContinue{},
 		&RebaseContinueIfNeeded{},
-		&RebaseOnto{},
+		&RebaseOntoRemoveDeleted{},
 		&RebaseParentIfNeeded{},
 		&RebaseTrackingBranch{},
 		&ProposalCreate{},

@@ -9,25 +9,25 @@ import (
 )
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
-type RebaseOntoSwap struct {
+type RebaseOntoKeepDeleted struct {
 	BranchToRebaseAgainst   gitdomain.BranchName
 	BranchToRebaseOnto      gitdomain.LocalBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseOntoSwap) AbortProgram() []shared.Opcode {
+func (self *RebaseOntoKeepDeleted) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *RebaseOntoSwap) ContinueProgram() []shared.Opcode {
+func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}
 }
 
-func (self *RebaseOntoSwap) Run(args shared.RunArgs) error {
+func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto, None[gitdomain.LocalBranchName]())
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)

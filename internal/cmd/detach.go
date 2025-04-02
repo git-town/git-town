@@ -291,7 +291,7 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
-		&opcodes.RebaseOnto{
+		&opcodes.RebaseOntoRemoveDeleted{
 			BranchToRebaseAgainst: data.parentBranch.BranchName(),
 			BranchToRebaseOnto:    data.config.ValidatedConfigData.MainBranch,
 			Upstream:              None[gitdomain.LocalBranchName](),
