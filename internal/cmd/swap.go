@@ -283,8 +283,8 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
 		&opcodes.RebaseOntoKeepDeleted{
-			BranchToRebaseAgainst: data.parentBranch.BranchName(),
-			BranchToRebaseOnto:    data.grandParentBranch,
+			BranchToRebaseOnto: data.grandParentBranch,
+			CommitsToRemove:    data.parentBranch.BranchName(),
 		},
 	)
 	if data.branchToSwapInfo.HasTrackingBranch() {
@@ -297,8 +297,8 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 			Branch: data.parentBranch,
 		},
 		&opcodes.RebaseOntoKeepDeleted{
-			BranchToRebaseAgainst: data.grandParentBranch.BranchName(),
-			BranchToRebaseOnto:    data.branchToSwapName,
+			BranchToRebaseOnto: data.branchToSwapName,
+			CommitsToRemove:    data.grandParentBranch.BranchName(),
 		},
 	)
 	if data.parentBranchInfo.HasTrackingBranch() {
@@ -318,8 +318,8 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		}
 		prog.Value.Add(
 			&opcodes.RebaseOntoKeepDeleted{
-				BranchToRebaseAgainst: gitdomain.BranchName(oldBranchSHA),
-				BranchToRebaseOnto:    data.parentBranch,
+				BranchToRebaseOnto: data.parentBranch,
+				CommitsToRemove:    gitdomain.BranchName(oldBranchSHA),
 			},
 		)
 		if child.info.HasTrackingBranch() {
