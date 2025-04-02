@@ -1,4 +1,3 @@
-@this
 Feature: swapping a branch with its contribution parent
 
   Background:
