@@ -242,8 +242,12 @@ func (p *PullRequests) buildPullRequestBody(po *PullRequestsOptions) (string, er
 		body["message"] = po.Message
 	}
 
-	if po.CloseSourceBranch == true || po.CloseSourceBranch == false {
+	if po.CloseSourceBranch || !po.CloseSourceBranch {
 		body["close_source_branch"] = po.CloseSourceBranch
+	}
+
+	if po.Draft {
+		body["draft"] = true
 	}
 
 	data, err := json.Marshal(body)
