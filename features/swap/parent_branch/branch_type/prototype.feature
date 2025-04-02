@@ -3,43 +3,43 @@ Feature: swapping a branch with its prototype parent
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME      | TYPE      | PARENT    | LOCATIONS     |
-      | prototype | prototype | main      | local, origin |
-      | feature   | feature   | prototype | local, origin |
+      | NAME    | TYPE      | PARENT | LOCATIONS     |
+      | parent  | prototype | main   | local, origin |
+      | current | feature   | parent | local, origin |
     And the commits
-      | BRANCH    | LOCATION      | MESSAGE          |
-      | prototype | local, origin | prototype commit |
-      | feature   | local, origin | feature commit   |
-    And the current branch is "feature"
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | parent  | local, origin | parent commit  |
+      | current | local, origin | current commit |
+    And the current branch is "current"
     When I run "git-town swap"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | feature   | git fetch --prune --tags                        |
-      |           | git rebase --onto main prototype                |
-      |           | git checkout prototype                          |
-      | prototype | git rebase --onto feature main                  |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout feature                            |
-    And the current branch is still "feature"
+      | BRANCH  | COMMAND                                         |
+      | current | git fetch --prune --tags                        |
+      |         | git rebase --onto main parent                   |
+      |         | git checkout parent                             |
+      | parent  | git rebase --onto current main                  |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git checkout current                            |
+    And the current branch is still "current"
     And these commits exist now
-      | BRANCH    | LOCATION      | MESSAGE          |
-      | feature   | local, origin | feature commit   |
-      | prototype | local, origin | prototype commit |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | current | local, origin | current commit |
+      | parent  | local, origin | parent commit  |
     And this lineage exists now
-      | BRANCH    | PARENT  |
-      | feature   | main    |
-      | prototype | feature |
+      | BRANCH  | PARENT  |
+      | current | main    |
+      | parent  | current |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | feature   | git checkout prototype                          |
-      | prototype | git reset --hard {{ sha 'prototype commit' }}   |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout feature                            |
-    And the current branch is still "feature"
+      | BRANCH  | COMMAND                                         |
+      | current | git checkout parent                             |
+      | parent  | git reset --hard {{ sha 'parent commit' }}      |
+      |         | git push --force-with-lease --force-if-includes |
+      |         | git checkout current                            |
+    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now
