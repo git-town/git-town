@@ -220,7 +220,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if validatedConfig.ValidatedConfigData.IsMainBranch(oldBranchName) {
 		return data, false, errors.New(messages.RenameMainBranch)
 	}
-	if force.IsFalse() {
+	if !force {
 		if validatedConfig.BranchType(oldBranchName) == configdomain.BranchTypePerennialBranch {
 			return data, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
