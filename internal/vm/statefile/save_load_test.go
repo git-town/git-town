@@ -601,7 +601,8 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "BranchToRebaseOnto": "branch-2",
-        "CommitsToRemove": "branch-1"
+        "CommitsToRemove": "branch-1",
+        "Upstream": null
       },
       "type": "RebaseOntoKeepDeleted"
     },

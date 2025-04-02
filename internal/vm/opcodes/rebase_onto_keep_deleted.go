@@ -12,6 +12,7 @@ import (
 type RebaseOntoKeepDeleted struct {
 	BranchToRebaseOnto      gitdomain.LocalBranchName
 	CommitsToRemove         gitdomain.BranchName
+	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -28,7 +29,7 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto, self.CommitsToRemove, None[gitdomain.LocalBranchName]())
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto, self.CommitsToRemove, self.Upstream)
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {
