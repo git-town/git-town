@@ -285,6 +285,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		&opcodes.RebaseOntoKeepDeleted{
 			BranchToRebaseOnto: data.grandParentBranch,
 			CommitsToRemove:    data.parentBranch.BranchName(),
+			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.branchToSwapInfo.HasTrackingBranch() {
@@ -299,6 +300,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		&opcodes.RebaseOntoKeepDeleted{
 			BranchToRebaseOnto: data.branchToSwapName,
 			CommitsToRemove:    data.grandParentBranch.BranchName(),
+			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.parentBranchInfo.HasTrackingBranch() {
@@ -320,6 +322,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 			&opcodes.RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: data.parentBranch,
 				CommitsToRemove:    gitdomain.BranchName(oldBranchSHA),
+				Upstream:           None[gitdomain.LocalBranchName](),
 			},
 		)
 		if child.info.HasTrackingBranch() {
