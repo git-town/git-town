@@ -14,26 +14,13 @@ type RebaseTrackingBranch struct {
 }
 
 func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
-	// Try to force-push the local branch with lease and includes to the remote branch.
+	err := args.Git.Rebase(args.Frontend, self.RemoteBranch.BranchName(), args.Config.Value.NormalConfig.GitVersion)
+	if err != nil {
+		return err
+	}
 	if self.PushBranches {
-		err := args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
-		if err == nil {
-			// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
-			return nil
-		}
-		// Here the force-push failed --> the remote branch contains new commits.
-		// We need to integrate them into the local branch.
-		args.PrependOpcodes(
-			// Rebase the local commits against the remote commits.
-			&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
-			// Now try force-pushing again.
-			&RebaseTrackingBranch{
-				PushBranches: self.PushBranches,
-				RemoteBranch: self.RemoteBranch,
-			},
-		)
-	} else {
-		args.PrependOpcodes(&RebaseBranch{Branch: self.RemoteBranch.BranchName()})
+		// ignoring push errors here - pushes can fail if the branch is in the merge queue
+		_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
 	}
 	return nil
 }
