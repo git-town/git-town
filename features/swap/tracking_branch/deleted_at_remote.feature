@@ -2,27 +2,11 @@ Feature: swapping a branch that is deleted at the remote
 
   Background:
     Given a Git repo with origin
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
-    And the branches
-      | NAME     | TYPE    | PARENT | LOCATIONS     |
-      | branch-1 | feature | main   | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-1 | local, origin | commit 1 |
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
+      | branch-1 | feature | main     | local, origin |
       | branch-2 | feature | branch-1 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-2 | local, origin | commit 2 |
-    And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-3 | feature | branch-2 | local, origin |
-    And the commits
-      | BRANCH   | LOCATION      | MESSAGE  |
-      | branch-3 | local, origin | commit 3 |
     And the current branch is "branch-2"
     And origin deletes the "branch-2" branch
     When I run "git-town swap"
