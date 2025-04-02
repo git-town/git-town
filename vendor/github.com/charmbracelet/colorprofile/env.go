@@ -12,6 +12,8 @@ import (
 	"github.com/xo/terminfo"
 )
 
+const dumbTerm = "dumb"
+
 // Detect returns the color profile based on the terminal output, and
 // environment variables. This respects NO_COLOR, CLICOLOR, and CLICOLOR_FORCE
 // environment variables.
@@ -29,10 +31,10 @@ import (
 // See https://no-color.org/ and https://bixense.com/clicolors/ for more information.
 func Detect(output io.Writer, env []string) Profile {
 	out, ok := output.(term.File)
-	isatty := ok && term.IsTerminal(out.Fd())
 	environ := newEnviron(env)
+	isatty := isTTYForced(environ) || (ok && term.IsTerminal(out.Fd()))
 	term := environ.get("TERM")
-	isDumb := term == "dumb"
+	isDumb := term == dumbTerm
 	envp := colorProfile(isatty, environ)
 	if envp == TrueColor || envNoColor(environ) {
 		// We already know we have TrueColor, or NO_COLOR is set.
@@ -69,7 +71,7 @@ func Env(env []string) (p Profile) {
 }
 
 func colorProfile(isatty bool, env environ) (p Profile) {
-	isDumb := env.get("TERM") == "dumb"
+	isDumb := env.get("TERM") == dumbTerm
 	envp := envColorProfile(env)
 	if !isatty || isDumb {
 		// Check if the output is a terminal.
@@ -83,7 +85,7 @@ func colorProfile(isatty bool, env environ) (p Profile) {
 		if p > Ascii {
 			p = Ascii
 		}
-		return
+		return //nolint:nakedret
 	}
 
 	if cliColorForced(env) {
@@ -94,7 +96,7 @@ func colorProfile(isatty bool, env environ) (p Profile) {
 			p = envp
 		}
 
-		return
+		return //nolint:nakedret
 	}
 
 	if cliColor(env) {
@@ -123,6 +125,11 @@ func cliColorForced(env environ) bool {
 	return cliColorForce
 }
 
+func isTTYForced(env environ) bool {
+	skip, _ := strconv.ParseBool(env.get("TTY_FORCE"))
+	return skip
+}
+
 func colorTerm(env environ) bool {
 	colorTerm := strings.ToLower(env.get("COLORTERM"))
 	return colorTerm == "truecolor" || colorTerm == "24bit" ||
@@ -132,7 +139,7 @@ func colorTerm(env environ) bool {
 // envColorProfile returns infers the color profile from the environment.
 func envColorProfile(env environ) (p Profile) {
 	term, ok := env.lookup("TERM")
-	if !ok || len(term) == 0 || term == "dumb" {
+	if !ok || len(term) == 0 || term == dumbTerm {
 		p = NoTTY
 		if runtime.GOOS == "windows" {
 			// Use Windows API to detect color profile. Windows Terminal and
@@ -184,7 +191,7 @@ func envColorProfile(env environ) (p Profile) {
 		p = ANSI256
 	}
 
-	return
+	return //nolint:nakedret
 }
 
 // Terminfo returns the color profile based on the terminal's terminfo
@@ -277,11 +284,4 @@ func (e environ) lookup(key string) (string, bool) {
 func (e environ) get(key string) string {
 	v, _ := e.lookup(key)
 	return v
-}
-
-func max[T ~byte | ~int](a, b T) T {
-	if a > b {
-		return a
-	}
-	return b
 }

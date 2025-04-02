@@ -314,6 +314,7 @@ type PullRequestsOptions struct {
 	States            []string `json:"states"`
 	Query             string   `json:"query"`
 	Sort              string   `json:"sort"`
+	Draft             bool     `json:"draft"`
 	ctx               context.Context
 }
 
@@ -665,8 +666,8 @@ func (dk *DeployKeyOptions) WithContext(ctx context.Context) *DeployKeyOptions {
 }
 
 type SSHKeyOptions struct {
-	Owner    string `json:"owner"`
-	Uuid     string `json:"uuid"`
-	Label    string `json:"label"`
-	Key      string `json:"key"`
+	Owner string `json:"owner"`
+	Uuid  string `json:"uuid"`
+	Label string `json:"label"`
+	Key   string `json:"key"`
 }

@@ -35,8 +35,8 @@ github.com/charmbracelet/bubbles/textinput
 # github.com/charmbracelet/bubbletea v1.3.4
 ## explicit; go 1.18
 github.com/charmbracelet/bubbletea
-# github.com/charmbracelet/colorprofile v0.2.3-0.20250311203215-f60798e515dc
-## explicit; go 1.18
+# github.com/charmbracelet/colorprofile v0.3.0
+## explicit; go 1.23.0
 github.com/charmbracelet/colorprofile
 # github.com/charmbracelet/lipgloss v1.1.0
 ## explicit; go 1.18
@@ -132,7 +132,7 @@ github.com/kr/pretty
 # github.com/kr/text v0.2.0
 ## explicit
 github.com/kr/text
-# github.com/ktrysmt/go-bitbucket v0.9.81
+# github.com/ktrysmt/go-bitbucket v0.9.82
 ## explicit; go 1.14
 github.com/ktrysmt/go-bitbucket
 # github.com/lucasb-eyer/go-colorful v1.2.0
@@ -204,7 +204,7 @@ golang.org/x/crypto/sha3
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/agent
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/net v0.37.0
+# golang.org/x/net v0.38.0
 ## explicit; go 1.23.0
 golang.org/x/net/context
 golang.org/x/net/html
