@@ -4,42 +4,42 @@ Feature: swapping a branch with its parked parent
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
-      | parked  | parked  | main   | local, origin |
-      | feature | feature | parked | local, origin |
+      | parent  | parked  | main   | local, origin |
+      | current | feature | parent | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | parked  | local, origin | parked commit  |
-      | feature | local, origin | feature commit |
-    And the current branch is "feature"
+      | parent  | local, origin | parent commit  |
+      | current | local, origin | current commit |
+    And the current branch is "current"
     When I run "git-town swap"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase --onto main parked                   |
-      |         | git checkout parked                             |
-      | parked  | git rebase --onto feature main                  |
+      | current | git fetch --prune --tags                        |
+      |         | git rebase --onto main parent                   |
+      |         | git checkout parent                             |
+      | parent  | git rebase --onto current main                  |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git checkout feature                            |
-    And the current branch is still "feature"
+      |         | git checkout current                            |
+    And the current branch is still "current"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, origin | feature commit |
-      | parked  | local, origin | parked commit  |
+      | current | local, origin | current commit |
+      | parent  | local, origin | parent commit  |
     And this lineage exists now
       | BRANCH  | PARENT  |
-      | feature | main    |
-      | parked  | feature |
+      | current | main    |
+      | parent  | current |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git checkout parked                             |
-      | parked  | git reset --hard {{ sha 'parked commit' }}      |
+      | current | git checkout parent                             |
+      | parent  | git reset --hard {{ sha 'parent commit' }}      |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git checkout feature                            |
-    And the current branch is still "feature"
+      |         | git checkout current                            |
+    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now
