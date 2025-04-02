@@ -39,7 +39,7 @@ Feature: remove a branch from a stack
       | BRANCH   | COMMAND                                         |
       | branch-3 | git pull                                        |
       |          | git rebase --onto main branch-2 branch-3        |
-      |          | git rm file_1                                   |
+      |          | git add file_1                                  |
       |          | git -c core.editor=true rebase --continue       |
       |          | git push --force-with-lease --force-if-includes |
     And the current branch is still "branch-3"
@@ -47,6 +47,7 @@ Feature: remove a branch from a stack
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1 | file_1    | content 1    |
       | branch-2 | local, origin | commit 2 | file_2    | content 2    |
+      | branch-3 | local, origin | commit 3 | file_1    | content 3    |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | branch-1 | main     |
