@@ -254,6 +254,7 @@ and will be removed in future versions of Git Town.`
 	SwapNeedsCompress                       = "cannot swap because branch %q contains merge commits - please compress and try again"
 	SwapNeedsSync                           = "please sync your branches before swapping"
 	SwapOtherWorkTree                       = "cannot swap because branch %q it is active in another worktree"
+	SwapParentNotLocal                      = "cannot swap: parent branch %q is not available locally"
 	SwapParentWrongBranchType               = "cannot swap: branch %q is a %s branch"
 	SwapRemoteBranch                        = "cannot swap: branch %q is remote"
 	SwapUnsupportedBranchType               = "cannot swap: branch %q is a %s branch"

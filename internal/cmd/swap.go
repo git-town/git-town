@@ -211,7 +211,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	}
 	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
 	if !hasParentBranchInfo {
-		return data, false, errors.New(messages.SwapNoParent)
+		return data, false, fmt.Errorf(messages.SwapParentNotLocal, parentBranch)
 	}
 	parentBranchType := validatedConfig.BranchType(parentBranch)
 	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()

@@ -25,7 +25,7 @@ Feature: swapping a branch with its remote parent
       | branch-2 | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      cannot swap a branch without parent
+      cannot swap: parent branch "branch-1" is not available locally
       """
 
   Scenario: undo
