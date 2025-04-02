@@ -8,6 +8,7 @@ import (
 
 // RebaseTrackingBranch rebases the current feature branch against its tracking branch.
 type RebaseTrackingBranch struct {
+	CurrentBranch           gitdomain.LocalBranchName
 	PushBranches            configdomain.PushBranches
 	RemoteBranch            gitdomain.RemoteBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
@@ -19,8 +20,14 @@ func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
 		return err
 	}
 	if self.PushBranches {
-		// ignoring push errors here - pushes can fail if the branch is in the merge queue
-		_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
+		shouldPush, err := args.Git.ShouldPushBranch(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
+		if err != nil {
+			shouldPush = true
+		}
+		if shouldPush {
+			// ignoring push errors here - pushes can fail if the branch is in the merge queue
+			_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
+		}
 	}
 	return nil
 }
