@@ -15,8 +15,8 @@ Feature: swapping a branch with its remote parent
       | branch-1 | local, origin | commit 1 |
       | branch-2 | local, origin | commit 2 |
       | branch-3 | local, origin | commit 3 |
-    And I ran "git branch -d branch-1"
     And the current branch is "branch-2"
+    And I ran "git branch -d branch-1"
     When I run "git-town swap"
 
   Scenario: result
