@@ -8,12 +8,9 @@ Feature: swapping a branch that is behind its tracking branch
       | branch-2 | feature | branch-1 | local, origin |
       | branch-3 | feature | branch-2 | local, origin |
     And the commits
-      | BRANCH   | LOCATION      | MESSAGE     |
-      | main     | local, origin | main commit |
-      | branch-1 | local, origin | commit 1    |
-      | branch-2 | local, origin | commit 2a   |
-      | branch-2 | origin        | commit 2b   |
-      | branch-3 | local, origin | commit 3    |
+      | BRANCH   | LOCATION      | MESSAGE   |
+      | branch-2 | local, origin | commit 2a |
+      | branch-2 | origin        | commit 2b |
     And the current branch is "branch-2"
     When I run "git-town swap"
 
