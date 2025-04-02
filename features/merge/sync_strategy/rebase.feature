@@ -14,6 +14,7 @@ Feature: merging branches using the "rebase" sync-strategy
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town merge"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
