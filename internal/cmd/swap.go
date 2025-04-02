@@ -331,7 +331,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		}
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.branchToSwapName})
-	if data.dryRun.IsFalse() {
+	if !data.dryRun {
 		prog.Value.Add(
 			&opcodes.LineageParentSet{
 				Branch: data.branchToSwapName,
