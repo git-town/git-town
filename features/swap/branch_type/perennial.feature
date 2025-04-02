@@ -1,4 +1,3 @@
-@this
 Feature: swapping a perennial branch
 
   Background:
