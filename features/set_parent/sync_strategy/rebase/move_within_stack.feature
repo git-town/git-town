@@ -1,5 +1,5 @@
 @messyoutput
-Feature: remove a branch from a stack
+Feature: move a branch within a stack
 
   Background:
     Given a Git repo with origin
