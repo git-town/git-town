@@ -15,13 +15,13 @@ Feature: does not compress already compressed branches
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-    And Git Town prints the error:
-      """
-      branch "feature" has already just one commit
-      """
+      |         | git reset --soft main    |
+      |         | git commit -m "commit 1" |
+    And all branches are now synchronized
     And the current branch is still "feature"
-    And the initial commits exist now
-    And the initial branches and lineage exist now
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | feature | local, origin | commit 1 | file_1    | content 1    |
 
   Scenario: undo
     When I run "git-town undo"
