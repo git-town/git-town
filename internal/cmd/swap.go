@@ -131,6 +131,7 @@ type swapData struct {
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	parentBranch        gitdomain.LocalBranchName
 	parentBranchInfo    gitdomain.BranchInfo
+	parentBranchType    configdomain.BranchType
 	previousBranch      Option[gitdomain.LocalBranchName]
 	stashSize           gitdomain.StashSize
 }
@@ -212,6 +213,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	if !hasParentBranchInfo {
 		return data, false, errors.New(messages.SwapNoParent)
 	}
+	parentBranchType := validatedConfig.BranchType(parentBranch)
 	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
 	if !hasGrandParentBranch {
 		return data, false, errors.New(messages.SwapNoGrandParent)
@@ -270,6 +272,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 		nonExistingBranches: nonExistingBranches,
 		parentBranch:        parentBranch,
 		parentBranchInfo:    *parentBranchInfo,
+		parentBranchType:    parentBranchType,
 		previousBranch:      previousBranchOpt,
 		stashSize:           stashSize,
 	}, false, nil
@@ -387,6 +390,13 @@ func validateSwapData(data swapData) error {
 		configdomain.BranchTypeMainBranch,
 		configdomain.BranchTypePerennialBranch:
 		return fmt.Errorf(messages.SwapUnsupportedBranchType, data.branchToSwapName, data.branchToSwapType)
+	}
+	switch data.parentBranchType {
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePerennialBranch:
+		return fmt.Errorf(messages.SwapParentWrongBranchType, data.parentBranch, data.parentBranchType)
+	default:
+		panic(fmt.Sprintf("unexpected configdomain.BranchType: %#v", data.parentBranchType))
 	}
 	for _, child := range data.children {
 		switch child.info.SyncStatus {
