@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/shoenig/test/must"
 )
 
 func TestDryRun(t *testing.T) {
@@ -13,14 +12,16 @@ func TestDryRun(t *testing.T) {
 	t.Run("IsFalse", func(t *testing.T) {
 		t.Parallel()
 		dryRun := configdomain.DryRun(false)
-		must.False(t, dryRun.IsTrue())
-		must.True(t, dryRun.IsFalse())
+		if dryRun {
+			t.Fail()
+		}
 	})
 
 	t.Run("IsTrue", func(t *testing.T) {
 		t.Parallel()
 		dryRun := configdomain.DryRun(true)
-		must.True(t, dryRun.IsTrue())
-		must.False(t, dryRun.IsFalse())
+		if !dryRun {
+			t.Fail()
+		}
 	})
 }

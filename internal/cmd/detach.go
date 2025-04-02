@@ -322,7 +322,7 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 		}
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
-	if data.dryRun.IsFalse() {
+	if !data.dryRun {
 		prog.Value.Add(
 			&opcodes.LineageParentSet{
 				Branch: data.branchToDetachName,
