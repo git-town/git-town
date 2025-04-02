@@ -263,9 +263,6 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	if len(branchesToCompress) == 0 {
 		return data, exit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
 	}
-	if len(branchesToCompress) == 1 && branchesToCompress[0].commitCount == 1 {
-		return data, exit, fmt.Errorf(messages.CompressAlreadyOneCommit, branchNamesToCompress[0])
-	}
 	return compressBranchesData{
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
