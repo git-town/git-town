@@ -8,27 +8,28 @@ import (
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
-// rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
-type RebaseOnto struct {
+// RebaseOntoRemoveDeleted rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
+// If there are merge conflicts,
+type RebaseOntoRemoveDeleted struct {
 	BranchToRebaseAgainst   gitdomain.BranchName
 	BranchToRebaseOnto      gitdomain.LocalBranchName
 	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseOnto) AbortProgram() []shared.Opcode {
+func (self *RebaseOntoRemoveDeleted) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *RebaseOnto) ContinueProgram() []shared.Opcode {
+func (self *RebaseOntoRemoveDeleted) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}
 }
 
-func (self *RebaseOnto) Run(args shared.RunArgs) error {
+func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
 	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto, self.Upstream)
 	if err != nil {
 		// Here the rebase-onto has failed.

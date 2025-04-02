@@ -278,7 +278,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
 			prog.Add(
-				&opcodes.RebaseOnto{
+				&opcodes.RebaseOntoRemoveDeleted{
 					BranchToRebaseAgainst: data.initialBranch.BranchName(),
 					BranchToRebaseOnto:    selectedBranch,
 					Upstream:              parentOpt,
@@ -304,7 +304,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 					)
 				}
 				prog.Add(
-					&opcodes.RebaseOnto{
+					&opcodes.RebaseOntoRemoveDeleted{
 						BranchToRebaseAgainst: descendent.BranchName(),
 						BranchToRebaseOnto:    data.initialBranch,
 						Upstream:              parentOpt,
