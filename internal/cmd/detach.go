@@ -292,9 +292,9 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
 		&opcodes.RebaseOntoRemoveDeleted{
-			BranchToRebaseAgainst: data.parentBranch.BranchName(),
-			BranchToRebaseOnto:    data.config.ValidatedConfigData.MainBranch,
-			Upstream:              None[gitdomain.LocalBranchName](),
+			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,
+			CommitsToRemove:    data.parentBranch.BranchName(),
+			Upstream:           None[gitdomain.LocalBranchName](),
 		},
 	)
 	if data.branchToDetachInfo.HasTrackingBranch() {

@@ -19,9 +19,9 @@ func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
 	case configdomain.SyncFeatureStrategyRebase:
 		args.PrependOpcodes(
 			&RebaseOntoRemoveDeleted{
-				BranchToRebaseAgainst: self.BranchToDelete.BranchName(),
-				BranchToRebaseOnto:    self.BranchToRebaseOnto,
-				Upstream:              None[gitdomain.LocalBranchName](),
+				BranchToRebaseOnto: self.BranchToRebaseOnto,
+				CommitsToRemove:    self.BranchToDelete.BranchName(),
+				Upstream:           None[gitdomain.LocalBranchName](),
 			},
 			&BranchLocalDelete{
 				Branch: self.BranchToDelete,

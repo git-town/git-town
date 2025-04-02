@@ -11,8 +11,8 @@ import (
 // RebaseOntoRemoveDeleted rebases the current branch against the target branch, while moving the target branch onto the Onto branch.
 // If there are merge conflicts,
 type RebaseOntoRemoveDeleted struct {
-	BranchToRebaseAgainst   gitdomain.BranchName
 	BranchToRebaseOnto      gitdomain.LocalBranchName
+	CommitsToRemove         gitdomain.BranchName
 	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -30,7 +30,7 @@ func (self *RebaseOntoRemoveDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseAgainst, self.BranchToRebaseOnto, self.Upstream)
+	err := args.Git.RebaseOnto(args.Frontend, self.CommitsToRemove, self.BranchToRebaseOnto, self.Upstream)
 	if err != nil {
 		// Here the rebase-onto has failed.
 		// The branch that gets rebased onto will be deleted.
