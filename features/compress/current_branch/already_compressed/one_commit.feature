@@ -9,14 +9,16 @@ Feature: does not compress already compressed branches
     And the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town compress"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
-      |         | git reset --soft main    |
-      |         | git commit -m "commit 1" |
+      | BRANCH  | COMMAND                                         |
+      | feature | git fetch --prune --tags                        |
+      |         | git reset --soft main                           |
+      |         | git commit -m "commit 1"                        |
+      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
     And these commits exist now
@@ -25,7 +27,10 @@ Feature: does not compress already compressed branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                         |
+      | feature | git reset --hard {{ sha 'commit 1' }}           |
+      |         | git push --force-with-lease --force-if-includes |
     And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
