@@ -20,9 +20,9 @@ Feature: merging branches using the "rebase" sync-strategy
       | BRANCH | COMMAND                                         |
       | beta   | git fetch --prune --tags                        |
       |        | git checkout alpha                              |
-      | alpha  | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
+      | alpha  | git checkout beta                               |
       | beta   | git rebase alpha --no-update-refs               |
+      |        | git rebase origin/beta --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D alpha                             |
       |        | git push origin :alpha                          |
@@ -32,8 +32,8 @@ Feature: merging branches using the "rebase" sync-strategy
       | beta   | main   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | beta   | local, origin | alpha commit | alpha-file | alpha content |
-      |        |               | beta commit  | beta-file  | beta content  |
+      | beta   | local, origin | beta commit  | beta-file  | beta content  |
+      |        |               | alpha commit | alpha-file | alpha content |
     And these committed files exist now
       | BRANCH | NAME       | CONTENT       |
       | beta   | alpha-file | alpha content |
