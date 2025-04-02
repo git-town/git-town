@@ -380,15 +380,8 @@ func validateSwapData(data swapData) error {
 		return fmt.Errorf(messages.SwapRemoteBranch, data.parentBranch)
 	}
 	switch data.branchToSwapType {
-	case
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeParkedBranch,
-		configdomain.BranchTypePrototypeBranch:
-	case
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypePerennialBranch:
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypePrototypeBranch:
+	case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		return fmt.Errorf(messages.SwapUnsupportedBranchType, data.branchToSwapName, data.branchToSwapType)
 	}
 	switch data.parentBranchType {
@@ -400,15 +393,8 @@ func validateSwapData(data swapData) error {
 	}
 	for _, child := range data.children {
 		switch child.info.SyncStatus {
-		case
-			gitdomain.SyncStatusAhead,
-			gitdomain.SyncStatusLocalOnly,
-			gitdomain.SyncStatusUpToDate:
-		case
-			gitdomain.SyncStatusBehind,
-			gitdomain.SyncStatusDeletedAtRemote,
-			gitdomain.SyncStatusNotInSync,
-			gitdomain.SyncStatusRemoteOnly:
+		case gitdomain.SyncStatusAhead, gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusUpToDate:
+		case gitdomain.SyncStatusBehind, gitdomain.SyncStatusDeletedAtRemote, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusRemoteOnly:
 			return errors.New(messages.SwapNeedsSync)
 		case gitdomain.SyncStatusOtherWorktree:
 			return fmt.Errorf(messages.SwapOtherWorkTree, child.name)
