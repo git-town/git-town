@@ -1,4 +1,4 @@
-Feature: swapping a branch that is behind its tracking branch
+Feature: swapping a branch whole parent is not in sync
 
   Background:
     Given a Git repo with origin
