@@ -5,18 +5,6 @@ git town compress [-m <text> | --message <text>] [-s | --stack] [--dry-run] [-v 
 ```
 
 The _compress_ command squashes all commits on a branch into a single commit.
-Git Town compresses feature branches and
-[parked branches](https://www.git-town.com/preferences/parked-branches) if they
-are currently checked out. It doesn't compress
-[perennial](https://www.git-town.com/preferences/perennial-branches),
-[observed](https://www.git-town.com/preferences/observed-branches), and
-[contribution](https://www.git-town.com/preferences/contribution-branches)
-branches.
-
-Branches must be in sync to compress them, so run `git town sync` and resolve
-merge conflicts before running this command.
-
-## Example
 
 Assuming you have a feature branch with these commits:
 
@@ -40,6 +28,17 @@ containing the changes of all three commits that existed on the branch before:
 $ git log --pretty=format:'%s'
 commit 1
 ```
+
+Git Town compresses feature branches and
+[parked branches](https://www.git-town.com/preferences/parked-branches) if they
+are currently checked out. It doesn't compress
+[perennial](https://www.git-town.com/preferences/perennial-branches),
+[observed](https://www.git-town.com/preferences/observed-branches), and
+[contribution](https://www.git-town.com/preferences/contribution-branches)
+branches.
+
+Branches must be in sync to compress them, so run `git town sync` and resolve
+merge conflicts before running this command.
 
 ## Options
 

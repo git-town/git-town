@@ -5,10 +5,11 @@ git town rename [<old-name>] <new-name> [-f | --force] [--dry-run] [-v | --verbo
 ```
 
 The _rename_ command changes the name of the current branch in the local and
-[remote](../preferences/dev-remote.md) repository. It requires the branch to be
-in sync with its tracking branch to avoid data loss. It also updates the
-proposals for the branch being renamed, as well as proposals of its child
-branches into the branch being renamed.
+[remote](../preferences/dev-remote.md) repository.
+
+It requires the branch to be in sync with its tracking branch to avoid data
+loss. It also updates the proposals for the branch being renamed, as well as
+proposals of its child branches into the branch being renamed.
 
 Please be aware that most forges are unable to update the head branch (aka
 source branch) of proposals. If you rename a branch that already has a proposal,

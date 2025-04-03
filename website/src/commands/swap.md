@@ -33,13 +33,17 @@ main
       branch-3
 ```
 
-Moving branches up and down the stack helps you organize related branches
-together, for example to review and ship them together, or to [merge](merge.md)
-them.
+Moving branches up and down the stack allows you to organize related branches
+together, for example to review and ship them as a series, or to
+[merge](merge.md) them.
 
-Please ensure all affected branches are in sync and don't contain merge commits
-before running this command, by running [git town sync](sync.md) and optionally
-[git town compress](compress.md).
+Please ensure that all affected branches are in sync and don't contain merge
+commits before running this command, by running [git town sync](sync.md) and
+optionally [git town compress](compress.md) before. All affected branches must
+be owned by you, i.e. you cannot swap
+[contribution](../branch-types.md#contribution-branches),
+[observed](../branch-types.md#observed-branches), or
+[perennial](../branch-types.md#perennial-branches) branches.
 
 ## Options
 
