@@ -9,7 +9,7 @@
     {
       "type": "test-file",
       "files": "**/*.feature",
-      "run": "go test -- {{file}}"
+      "run": "bash -c 'make install && go test -- {{file}}'"
     },
 
     {
