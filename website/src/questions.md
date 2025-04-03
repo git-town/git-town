@@ -1,5 +1,9 @@
 # Q & A
 
+- stacked changes
+- hotfixes
+- control when updates from the main branch get merged into your branches
+
 ### Does Git Town enforce any specific conventions for branches or commits?
 
 No, Git Town doesn't impose any rules for branch or commit naming. It works with
