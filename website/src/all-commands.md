@@ -35,27 +35,34 @@ Run `git town` for an overview of all Git Town commands and
 - [git town swap](commands/swap.md) - swap the position of this branch with its
   parent
 
-### Additional workflow commands
+### Limit branch syncing
 
-_Commands to deal with edge cases._
+- [git town contribute](commands/detach.md) - stop syncing some feature branches
+  with their parents
+- [git town observe](commands/observe.md) - stop syncing your contributions to
+  some feature branches
+- [git town park](commands/park.md) - suspend syncing some of your feature
+  branches altogether
+- [git town prototype](commands/prototype.md) - sync but don't push a local
+  feature branch
 
-- [git town delete](commands/delete.md) - delete a feature branch
-- [git town rename](commands/rename.md) - rename a branch
-- [git town repo](commands/repo.md) - view the Git repository in the browser
-- [git town ship](commands/ship.md) - deliver a completed feature branch
-
-### Git Town installation
-
-_Commands that help install Git Town on your computer._
+### Git Town setup
 
 - [git town completion](commands/completions.md) - generate completion scripts
   for Bash, zsh, fish & PowerShell.
-
-### Git Town configuration
-
-_Commands that help adapt Git Town's behavior to your preferences._
-
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
 - [git town config setup](commands/config-setup.md) - setup assistant
 - [git town offline](commands/offline.md) - enable/disable offline mode
+
+### Additional commands
+
+- [git town branch](commands/branch.md) - display the local branch hierarchy and
+  types
+- [git town compress](commands/compress.md) - squash all commits on a branch
+  branches down to a single commit
+- [git town delete](commands/delete.md) - delete a feature branch
+- [git town help](commands/help.md) - help about any command
+- [git town rename](commands/rename.md) - rename a branch
+- [git town repo](commands/repo.md) - view the Git repository in the browser
+- [git town ship](commands/ship.md) - deliver a completed feature branch
