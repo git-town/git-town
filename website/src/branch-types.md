@@ -1,9 +1,10 @@
 # Branch types
 
-Git Town supports many different types of Git branches. When properly
-configured, you can run `git town sync` or `git town sync --all` at any time and
-each of your local branches will get synced in the specific ways it's supposed
-to get synced or not synced.
+Git Town supports many different types of Git branches. Branch types affect how
+branches are getting synced. When properly configured, you can run
+`git town sync` or `git town sync --all` at any time and each of your local
+branches will get synced in the specific ways it's supposed to get synced or not
+synced.
 
 ## Feature branches
 
