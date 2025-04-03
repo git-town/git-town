@@ -77,9 +77,11 @@ Feature: sync all feature branches
       | main       | git rebase origin/main --no-update-refs         |
       |            | git checkout alpha                              |
       | alpha      | git rebase main --no-update-refs                |
+      |            | git rebase origin/alpha --no-update-refs        |
       |            | git push --force-with-lease --force-if-includes |
       |            | git checkout beta                               |
       | beta       | git rebase main --no-update-refs                |
+      |            | git rebase origin/beta --no-update-refs         |
       |            | git push --force-with-lease --force-if-includes |
       |            | git checkout observed                           |
       | observed   | git rebase origin/observed --no-update-refs     |
@@ -96,7 +98,9 @@ Feature: sync all feature branches
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | local, origin | main commit              |
       | alpha      | local, origin | alpha commit             |
+      |            |               | main commit              |
       | beta       | local, origin | beta commit              |
+      |            |               | main commit              |
       | observed   | local, origin | origin observed commit   |
       |            | local         | local observed commit    |
       | parked     | local         | local parked commit      |
