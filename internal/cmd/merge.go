@@ -349,28 +349,25 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 		return err
 	}
 	if !inSyncWithParent {
-		return fmt.Errorf(messages.MergeNotInSync, data.initialBranch, data.parentBranch)
+		return fmt.Errorf(messages.MergeNotInSyncWithParent, data.initialBranch)
 	}
-	// ensure parent isn't deleted at remote
-	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
-	if !hasParent {
-		return fmt.Errorf(messages.BranchInfoNotFound, data.parentBranch)
+	switch data.initialBranchInfo.SyncStatus {
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
+	case gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.MergeNotInSyncWithTracking, data.initialBranch)
+	case gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
+	case gitdomain.SyncStatusRemoteOnly:
+		// safe to ignore, this cannot happen
 	}
-	if parentInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		return fmt.Errorf(messages.BranchDeletedAtRemote, data.parentBranch)
-	}
-	if parentInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+	switch data.parentBranchInfo.SyncStatus {
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusRemoteOnly:
+	case gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.MergeNotInSyncWithParent, data.parentBranch)
+	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
-	// ensure branch isn't deleted at remote
-	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch, data.config.NormalConfig.DevRemote).Get()
-	if !hasBranchInfo {
-		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
-	}
-	if branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		return fmt.Errorf(messages.BranchDeletedAtRemote, data.initialBranch)
-	}
-	// ensure parent branch has only one child
+	// TODO: ensure parent branch has only one child
 	return nil
 }
 

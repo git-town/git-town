@@ -1,28 +1,27 @@
-Feature: merging a branch with a conflicting parent
+Feature: merging when the branch is not in sync with its tracking branch
 
   Background:
     Given a Git repo with origin
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
-      | beta  | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
-      | alpha  | local, origin | alpha commit       | alpha_file       | alpha content       |
-      | beta   | local         | local beta commit  | conflicting_file | local beta content  |
-      | beta   | origin        | remote beta commit | conflicting_file | remote beta content |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | alpha  | local, origin | alpha commit |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE            |
+      | beta   | local    | local beta commit  |
+      | beta   | origin   | remote beta commit |
     And the current branch is "beta"
     When I run "git-town merge"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff origin/alpha |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff alpha        |
-      |        | git merge --no-edit --ff origin/beta  |
+      | BRANCH | COMMAND                  |
+      | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
