@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	prototypeDesc = "Sync but don't push a local feature branch"
+	prototypeDesc = "Make an existing branch a prototype branch"
 	prototypeHelp = `
 A prototype branch is for local-only development.
 It incorporates updates from its parent branch
