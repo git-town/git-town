@@ -18,27 +18,15 @@ Feature: merging branches using the "rebase" sync-strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
-      |        | git branch -D alpha      |
-      |        | git push origin :alpha   |
-    And the current branch is still "beta"
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | beta   | main   |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | beta   | local, origin | alpha commit | alpha-file | alpha content |
-      |        |               | beta commit  | beta-file  | beta content  |
-    And these committed files exist now
-      | BRANCH | NAME       | CONTENT       |
-      | beta   | alpha-file | alpha content |
-      |        | beta-file  | beta content  |
+    And Git Town prints the error:
+      """
+      branches "beta" and "alpha" are not in sync, please run "git town sync" and try again
+      """
+
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git branch alpha {{ sha-before-run 'alpha commit' }} |
-      |        | git push -u origin alpha                             |
+    Then Git Town runs no commands
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
