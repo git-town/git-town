@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/flags"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/cmd/sync"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
@@ -25,7 +24,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/program"
 	"github.com/git-town/git-town/v18/internal/vm/runstate"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -104,7 +102,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil || exit {
 		return err
 	}
-	if err = validateMergeData(data); err != nil {
+	if err = validateMergeData(repo, data); err != nil {
 		return err
 	}
 	runProgram := mergeProgram(data, dryRun)
@@ -294,37 +292,6 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	if data.parentBranchInfo.HasTrackingBranch() {
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
-		sync.FeatureTrackingBranchProgram(
-			data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
-			data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
-			sync.FeatureTrackingArgs{
-				FirstCommitMessage: data.parentBranchFirstCommitMessage,
-				LocalName:          data.parentBranch,
-				Offline:            data.offline,
-				Program:            prog,
-				PushBranches:       true,
-			})
-	}
-	branchesToDelete := set.New[gitdomain.LocalBranchName]()
-	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
-		BranchInfos:         data.branchesSnapshot.Branches,
-		BranchesToDelete:    NewMutable(&branchesToDelete),
-		Config:              data.config,
-		InitialBranch:       data.initialBranch,
-		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
-		Program:             prog,
-		Prune:               false,
-		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
-		Remotes:             data.remotes,
-	})
-	for _, branchToDelete := range branchesToDelete.Values() {
-		prog.Value.Add(
-			&opcodes.BranchLocalDelete{Branch: branchToDelete},
-			&opcodes.LineageBranchRemove{Branch: branchToDelete},
-		)
-	}
 	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsFalse() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
 		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
@@ -369,33 +336,38 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func validateMergeData(data mergeData) error {
+func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 	if err := verifyBranchType(data.initialBranchType); err != nil {
 		return err
 	}
 	if err := verifyBranchType(data.parentBranchType); err != nil {
 		return err
 	}
-	// ensure parent isn't deleted at remote
-	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
-	if !hasParent {
-		return fmt.Errorf(messages.BranchInfoNotFound, data.parentBranch)
+	// ensure all commits on parent branch are contained in the initial branch
+	inSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, data.initialBranch, data.parentBranch)
+	if err != nil {
+		return err
 	}
-	if parentInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		return fmt.Errorf(messages.BranchDeletedAtRemote, data.parentBranch)
+	if !inSyncWithParent {
+		return fmt.Errorf(messages.MergeNotInSyncWithParent, data.initialBranch)
 	}
-	if parentInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+	switch data.initialBranchInfo.SyncStatus {
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
+	case gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.MergeNotInSyncWithTracking, data.initialBranch)
+	case gitdomain.SyncStatusOtherWorktree:
+		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
+	case gitdomain.SyncStatusRemoteOnly:
+		// safe to ignore, this cannot happen
+	}
+	switch data.parentBranchInfo.SyncStatus {
+	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusRemoteOnly:
+	case gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote:
+		return fmt.Errorf(messages.MergeNotInSyncWithParent, data.parentBranch)
+	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}
-	// ensure branch isn't deleted at remote
-	branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindLocalOrRemote(data.initialBranch, data.config.NormalConfig.DevRemote).Get()
-	if !hasBranchInfo {
-		return fmt.Errorf(messages.BranchInfoNotFound, data.initialBranch)
-	}
-	if branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		return fmt.Errorf(messages.BranchDeletedAtRemote, data.initialBranch)
-	}
-	// ensure parent branch has only one child
+	// TODO: ensure parent branch has only one child
 	return nil
 }
 

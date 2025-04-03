@@ -11,10 +11,9 @@ Feature: merging a feature branch with a prototype branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                         |
-      | current | git fetch --prune --tags        |
-      |         | git merge --no-edit --ff parent |
-      |         | git branch -D parent            |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git branch -D parent     |
     And the current branch is still "current"
     And this lineage exists now
       | BRANCH  | PARENT |

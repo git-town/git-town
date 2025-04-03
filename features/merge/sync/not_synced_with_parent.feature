@@ -1,4 +1,4 @@
-Feature: merging a branch that was deleted at the remote
+Feature: merging when the branch is not in sync with its parent
 
   Background:
     Given a Git repo with origin
@@ -11,7 +11,7 @@ Feature: merging a branch that was deleted at the remote
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
       | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
-    And origin deletes the "beta" branch
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town merge"
 
   Scenario: result
@@ -20,19 +20,12 @@ Feature: merging a branch that was deleted at the remote
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "beta" was deleted at the remote
+      branch "beta" is not in sync with its parent, please run "git town sync" and try again
       """
-    And the current branch is still "beta"
-    And the initial commits exist now
-    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And Git Town prints:
-      """
-      nothing to undo
-      """
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
