@@ -23,7 +23,6 @@ Feature: merging when the branch is not in sync with its parent
       branch "beta" is not in sync with its parent, please run "git town sync" and try again
       """
 
-
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
