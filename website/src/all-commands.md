@@ -26,10 +26,14 @@ Run `git town` for an overview of all Git Town commands and
 - [git town detach](commands/detach.md) - move a branch out of a stack
 - [git town diff-parent](commands/diff-parent.md) - show the changes committed
   to a branch
+- [git town merge](commands/merge.md) - merges the current branch with its
+  parent
 - [git town prepend](commands/prepend.md) - create a new feature branch between
   the current branch and its parent
 - [git town set-parent](commands/set-parent.md) - change the parent of a feature
   branch
+- [git town swap](commands/swap.md) - swap the position of this branch with its
+  parent
 
 ### Additional workflow commands
 
