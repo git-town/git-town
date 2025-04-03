@@ -1,5 +1,8 @@
 Feature: rebase a branch that contains amended commits
 
+  # This test demonstrates how Git Town currently does not sync branches that contain amended commits correctly.
+  # This will be fixed by implementing https://github.com/git-town/git-town/issues/4586.
+
   Background:
     Given a Git repo with origin
     And I ran "git-town hack feature-1"
@@ -22,13 +25,11 @@ Feature: rebase a branch that contains amended commits
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | feature-2 | git fetch --prune --tags                        |
-      |           | git checkout feature-1                          |
-      | feature-1 | git rebase main --no-update-refs                |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git checkout feature-2                          |
-      | feature-2 | git rebase feature-1 --no-update-refs           |
+      | BRANCH    | COMMAND                                      |
+      | feature-2 | git fetch --prune --tags                     |
+      |           | git checkout feature-1                       |
+      | feature-1 | git rebase main --no-update-refs             |
+      |           | git rebase origin/feature-1 --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file_1
@@ -40,20 +41,26 @@ Feature: rebase a branch that contains amended commits
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | feature-2 | git -c core.editor=true rebase --continue       |
+      | feature-1 | git -c core.editor=true rebase --continue       |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git checkout feature-2                          |
+      | feature-2 | git rebase feature-1 --no-update-refs           |
+      |           | git rebase origin/feature-2 --no-update-refs    |
       |           | git push --force-with-lease --force-if-includes |
     And the current branch is still "feature-2"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
-      | feature-1 | local, origin | commit 1b | file_1    | another one  |
+      | feature-1 | local, origin | commit 1a | file_1    | one          |
+      |           |               | commit 1b | file_1    | another one  |
       | feature-2 | local, origin | commit 2  | file_2    | two          |
+      |           |               | commit 1b | file_1    | another one  |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                            |
-      | feature-2 | git rebase --abort                                                 |
-      |           | git push --force-with-lease origin {{ sha 'commit 1a' }}:feature-1 |
+      | BRANCH    | COMMAND                |
+      | feature-1 | git rebase --abort     |
+      |           | git checkout feature-2 |
     And the current branch is still "feature-2"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   |
