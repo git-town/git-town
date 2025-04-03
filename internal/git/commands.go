@@ -48,9 +48,8 @@ func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gi
 	return result, nil
 }
 
-// TODO: rename runner to querier
-func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	output, err := runner.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
+func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	output, err := querier.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
 	return len(output) > 0, err
 }
 
