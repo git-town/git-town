@@ -33,8 +33,9 @@ main
       branch-3
 ```
 
-Moving branches up and down the stack organizes related branches together, for
-example to review and ship them as a series, or to [merge](merge.md) them.
+Moving branches up and down the stack allows you to organize related branches
+together, for example to review and ship them as a series, or to
+[merge](merge.md) them.
 
 Please ensure that all affected branches are in sync and don't contain merge
 commits before running this command, by running [git town sync](sync.md) and
