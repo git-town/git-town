@@ -39,8 +39,8 @@ branches removes "noise" from your stack, i.e. reduces it to changes that belong
 together, and allows you to get more of your changes reviewed and shipped
 concurrently.
 
-Please ensure all affected branches are in sync before running this command, and
-optionally remove merge commits by [compressing](compress.md).
+Please ensure all affected branches are in [sync](sync.md) before running this
+command, and optionally remove merge commits by [compressing](compress.md).
 
 ## Options
 
