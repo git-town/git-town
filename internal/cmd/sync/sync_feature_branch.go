@@ -40,19 +40,23 @@ type featureBranchArgs struct {
 func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyMerge:
-		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-			Branch:             args.localName,
-			OriginalParentName: args.originalParentName,
-			OriginalParentSHA:  args.originalParentSHA,
-		})
+		args.program.Value.Add(
+			&opcodes.MergeParentIfNeeded{
+				Branch:             args.localName,
+				OriginalParentName: args.originalParentName,
+				OriginalParentSHA:  args.originalParentSHA,
+			},
+		)
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{Branch: args.localName})
 	case configdomain.SyncStrategyCompress:
-		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
-			Branch:             args.localName,
-			OriginalParentName: args.originalParentName,
-			OriginalParentSHA:  args.originalParentSHA,
-		})
+		args.program.Value.Add(
+			&opcodes.MergeParentIfNeeded{
+				Branch:             args.localName,
+				OriginalParentName: args.originalParentName,
+				OriginalParentSHA:  args.originalParentSHA,
+			},
+		)
 	case configdomain.SyncStrategyFFOnly:
 		// The ff-only strategy does not sync with the parent branch.
 		// It is intended for perennial branches only.
