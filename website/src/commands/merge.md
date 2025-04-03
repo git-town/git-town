@@ -37,7 +37,7 @@ main
 
 Both branches must be [feature branches](../branch-types.md#feature-branches)
 and in sync, i.e. run [git town sync](sync.md) before running`git town merge`.
-All affected branches must be owned by you, i.e. no be
+All affected branches must be owned by you, i.e. not be
 [contribution](../branch-types.md#contribution-branches),
 [observed](../branch-types.md#observed-branches), or
 [perennial](../branch-types.md#perennial-branches) branches.
