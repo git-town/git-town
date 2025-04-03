@@ -16,11 +16,10 @@ Feature: handle conflicts between the current feature branch and its tracking br
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
+      | BRANCH  | COMMAND                                    |
+      | feature | git fetch --prune --tags                   |
+      |         | git rebase main --no-update-refs           |
+      |         | git rebase origin/feature --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
