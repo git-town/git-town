@@ -102,7 +102,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 	if err != nil || exit {
 		return err
 	}
-	if err = validateMergeData(data); err != nil {
+	if err = validateMergeData(repo, data); err != nil {
 		return err
 	}
 	runProgram := mergeProgram(data, dryRun)
@@ -336,7 +336,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func validateMergeData(data mergeData) error {
+func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 	if err := verifyBranchType(data.initialBranchType); err != nil {
 		return err
 	}
@@ -344,7 +344,13 @@ func validateMergeData(data mergeData) error {
 		return err
 	}
 	// ensure all commits on parent branch are contained in the initial branch
-
+	inSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, data.initialBranch, data.parentBranch)
+	if err != nil {
+		return err
+	}
+	if !inSyncWithParent {
+		return fmt.Errorf(messages.MergeNotInSync, data.initialBranch, data.parentBranch)
+	}
 	// ensure parent isn't deleted at remote
 	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
