@@ -4,8 +4,8 @@
 git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]
 ```
 
-The _hack_ command ("start hacking") creates a new feature branch with the given
-name off the [main branch](../preferences/main-branch.md) and brings all
+The _hack_ command ("let's start hacking") creates a new feature branch with the
+given name off the [main branch](../preferences/main-branch.md) and brings all
 uncommitted changes over to it.
 
 Consider this branch stack:
