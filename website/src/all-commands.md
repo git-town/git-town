@@ -5,14 +5,31 @@ Run `git town` for an overview of all Git Town commands and
 
 ### Basic workflow
 
-_Commands to create, work on, and ship features._
-
 - [git town hack](commands/hack.md) - create a new feature branch
 - [git town sync](commands/sync.md) - update the current branch with all ongoing
   changes
 - [git town switch](commands/switch.md) - switch between branches visually
 - [git town propose](commands/propose.md) - propose to ship a branch
-- [git town ship](commands/ship.md) - deliver a completed feature branch
+
+### Dealing with errors
+
+- [git town continue](commands/continue.md) - continue after you resolved the
+  merge conflict
+- [git town skip](commands/skip.md) - when syncing all branches, ignore the
+  current branch and continue with the next one
+- [git town status](commands/status.md) - display available commands
+- [git town undo](commands/undo.md) - undo the last completed Git Town command
+
+### Stacked changes
+
+- [git town append](commands/append.md) - create a new feature branch as a child
+- [git town detach](commands/detach.md) - move a branch out of a stack
+- [git town diff-parent](commands/diff-parent.md) - show the changes committed
+  to a branch
+- [git town prepend](commands/prepend.md) - create a new feature branch between
+  the current branch and its parent
+- [git town set-parent](commands/set-parent.md) - change the parent of a feature
+  branch
 
 ### Additional workflow commands
 
@@ -21,31 +38,7 @@ _Commands to deal with edge cases._
 - [git town delete](commands/delete.md) - delete a feature branch
 - [git town rename](commands/rename.md) - rename a branch
 - [git town repo](commands/repo.md) - view the Git repository in the browser
-
-### Stacked changes
-
-_Commands to develop, review, and ship parts of a larger feature as multiple
-connected branches._
-
-- [git town append](commands/append.md) - create a new feature branch as a child
-  of the current branch
-- [git town prepend](commands/prepend.md) - create a new feature branch between
-  the current branch and its parent
-- [git town set-parent](commands/set-parent.md) - change the parent of a feature
-  branch
-- [git town diff-parent](commands/diff-parent.md) - display the changes made in
-  a branch
-
-### Dealing with errors
-
-_Commands to deal with merge conflicts._
-
-- [git town continue](commands/continue.md) - continue after you resolved the
-  merge conflict
-- [git town skip](commands/skip.md) - when syncing all branches, ignore the
-  current branch and continue with the next one
-- [git town status](commands/status.md) - display available commands
-- [git town undo](commands/undo.md) - undo the last completed Git Town command
+- [git town ship](commands/ship.md) - deliver a completed feature branch
 
 ### Git Town installation
 
