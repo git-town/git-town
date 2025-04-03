@@ -4,9 +4,9 @@
 git town delete [<branch-name>...] [-v | --verbose]
 ```
 
-The _delete_ command deletes the given branch from the local and remote
-repository, removes commits of deleted branches from their descendents (unless
-when using the
+The _delete_ command deletes the given branch from the local and if possible the
+remote repository, removes commits of deleted branches from their descendents
+(unless when using the
 [merge sync strategy](../preferences/sync-feature-strategy.md#merge)), and
 updates proposals of its child branches to the parent of the deleted branch.
 
