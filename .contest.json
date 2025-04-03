@@ -27,7 +27,7 @@
     {
       "type": "test-file",
       "files": "**/*.md",
-      "run": "text-runner {{file}}"
+      "run": "bash -c 'cd tools && ./rta npm exec text-runner ../{{file}}'"
     }
   ],
   "options": {
