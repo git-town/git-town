@@ -125,6 +125,106 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchInSyncWithParent", func(t *testing.T) {
+		t.Parallel()
+		t.Run("child has the same commits as parent", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "parent")
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "content",
+				FileName:    "parent_file",
+				Message:     "add parent file",
+			})
+			err = local.CreateAndCheckoutBranch(local.TestRunner, "child")
+			must.NoError(t, err)
+			inSync, err := local.BranchInSyncWithParent(local.TestRunner, "child", "parent")
+			must.NoError(t, err)
+			must.True(t, inSync)
+		})
+		t.Run("parent has extra commit", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "parent")
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "content",
+				FileName:    "file",
+				Message:     "commit on both parent and child",
+			})
+			err = local.CreateAndCheckoutBranch(local.TestRunner, "child")
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "content 2",
+				FileName:    "file",
+				Message:     "commit only on parent",
+			})
+			inSync, err := local.BranchInSyncWithParent(local.TestRunner, "child", "parent")
+			must.NoError(t, err)
+			must.False(t, inSync)
+		})
+		t.Run("child has extra commit", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "parent")
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "content",
+				FileName:    "file",
+				Message:     "commit on both parent and child",
+			})
+			err = local.CreateAndCheckoutBranch(local.TestRunner, "child")
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "child",
+				FileContent: "content 2",
+				FileName:    "file",
+				Message:     "commit only on child",
+			})
+			inSync, err := local.BranchInSyncWithParent(local.TestRunner, "child", "parent")
+			must.NoError(t, err)
+			must.True(t, inSync)
+		})
+		t.Run("empty parent", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "parent")
+			must.NoError(t, err)
+			err = local.CreateAndCheckoutBranch(local.TestRunner, "child")
+			must.NoError(t, err)
+			local.CreateCommit(testgit.Commit{
+				Branch:      "child",
+				FileContent: "content 2",
+				FileName:    "file",
+				Message:     "commit only on child",
+			})
+			inSync, err := local.BranchInSyncWithParent(local.TestRunner, "child", "parent")
+			must.NoError(t, err)
+			must.True(t, inSync)
+		})
+		t.Run("both empty", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.CreateAndCheckoutBranch(local.TestRunner, "parent")
+			must.NoError(t, err)
+			err = local.CreateAndCheckoutBranch(local.TestRunner, "child")
+			must.NoError(t, err)
+			inSync, err := local.BranchInSyncWithParent(local.TestRunner, "child", "parent")
+			must.NoError(t, err)
+			must.True(t, inSync)
+		})
+	})
+
 	t.Run("BranchInSyncWithTracking", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch has no commits", func(t *testing.T) {

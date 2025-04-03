@@ -155,6 +155,8 @@ END OUTPUT FROM 'git branch -vva'
 	MergeOpenChanges                      = "please commit or remove the open changes first"
 	MergeNoGrandParent                    = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                         = "cannot merge branch %q because it has no parent"
+	MergeNotInSyncWithParent              = `branch %q is not in sync with its parent, please run "git town sync" and try again`
+	MergeNotInSyncWithTracking            = `branch %q is not in sync with its tracking branch, please run "git town sync" and try again`
 	MergeWrongBranchType                  = "cannot merge %s branches"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"

@@ -1,4 +1,4 @@
-Feature: merging a branch whose parent is active in another worktree
+Feature: merging a branch whose parent was deleted remotely
 
   Background:
     Given a Git repo with origin
@@ -15,7 +15,7 @@ Feature: merging a branch whose parent is active in another worktree
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
     And the current branch is "beta"
-    And branch "alpha" is active in another worktree
+    And origin deletes the "alpha" branch
     When I run "git-town merge"
 
   Scenario: result
@@ -24,15 +24,19 @@ Feature: merging a branch whose parent is active in another worktree
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branch "alpha" is active in another worktree
+      branch "alpha" is not in sync with its parent, please run "git town sync" and try again
       """
     And the current branch is still "beta"
-    And the initial lineage exists now
     And the initial commits exist now
+    And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
+    And Git Town prints:
+      """
+      nothing to undo
+      """
     And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now
