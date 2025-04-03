@@ -40,7 +40,7 @@ together, and allows you to get more of your changes reviewed and shipped
 concurrently.
 
 Please ensure all affected branches are in [sync](sync.md) before running this
-command, and optionally remove merge commits by [compressing](compress.md).
+command, and remove merge commits by [compressing](compress.md).
 
 ## Options
 
