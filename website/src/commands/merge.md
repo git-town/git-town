@@ -5,7 +5,10 @@ git town merge [--dry-run] [-v | --verbose]
 ```
 
 The _merge_ command merges the current branch with its parent branch. Both
-branches must be [feature branches](../branch-types.md#feature-branches).
+branches must be [feature branches](../branch-types.md#feature-branches) and be
+owned by you, i.e. no [Contribution](../branch-types.md#contribution-branches),
+[observed](../branch-types.md#observed-branches), or
+[perennial](../branch-types.md#perennial-branches) branches.
 
 When using the
 [compress sync strategy](../preferences/sync-feature-strategy.md#compress), the
