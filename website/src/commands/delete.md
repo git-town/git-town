@@ -5,20 +5,10 @@ git town delete [<branch-name>...] [-v | --verbose]
 ```
 
 The _delete_ command deletes the given branch from the local and remote
-repository and updates proposals of its child branches to the parent of the
-deleted branch. It does not remove perennial branches.
-
-Removes commits of deleted branches from their descendents, unless when using
-the [merge sync strategy](../preferences/sync-feature-strategy.md#merge).
-
-## Positional arguments
-
-When called without arguments, the _delete_ command deletes the feature branch
-you are on, including all uncommitted changes.
-
-When called with a branch name, it deletes the given branch.
-
-## Example
+repository, removes commits of deleted branches from their descendents (unless
+when using the
+[merge sync strategy](../preferences/sync-feature-strategy.md#merge)), and
+updates proposals of its child branches to the parent of the deleted branch.
 
 Consider this branch stack:
 
@@ -43,6 +33,25 @@ main
    \
     branch-3
 ```
+
+Git Town deletes only the parts of the branch that you own. If you delete
+[feature](../branch-types.md#feature-branches),
+[parked](../branch-types.md#parked-branches), or
+[prototype](../branch-types.md#prototype-branches), it deletes the local and
+tracking branch. When deleting
+[contribution](../branch-types.md#contribution-branches),
+[observed](../branch-types.md#observed-branches), or
+[perennial](../branch-types.md#perennial-branches), it deletes only the local
+branch because you don't own the tracking branch.
+
+## Positional arguments
+
+When called without arguments, the _delete_ command deletes the feature branch
+you are on, including all uncommitted changes.
+
+When called with a branch name, it deletes the given branch.
+
+## Example
 
 ## Options
 
