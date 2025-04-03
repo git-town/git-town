@@ -27,7 +27,7 @@ main
 *   feature-2
 ```
 
-When running without uncommitted changes in your workspace, it also
+If your Git workspace is clean (no uncommitted changes), it also
 [syncs](sync.md) the current branch to ensure your work in the new branch
 happens on top of the current state of the repository. If the workspace contains
 uncommitted changes, `git town append` does not perform this sync to let you

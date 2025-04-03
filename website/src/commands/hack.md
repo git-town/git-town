@@ -4,34 +4,9 @@
 git town hack [<branch-name>...] [-p | --prototype] [-d | --detached] [-c | --commit] [-m | --message <message>] [--propose] [--dry-run] [-v | --verbose]
 ```
 
-The _hack_ command ("let's start hacking") creates a new feature branch with the
-given name off the [main branch](../preferences/main-branch.md) and brings all
+The _hack_ command ("start hacking") creates a new feature branch with the given
+name off the [main branch](../preferences/main-branch.md) and brings all
 uncommitted changes over to it.
-
-If your Git workspace is clean (no uncommitted changes), it also
-[syncs](sync.md) the main branch to ensure you develop on top of the current
-state of the repository. If the workspace is not clean (contains uncommitted
-changes), `git town hack` does not perform this sync to let you commit your open
-changes.
-
-### Upstream remote
-
-If the repository contains a remote called `upstream`, it also syncs the main
-branch with its upstream counterpart. You can control this behavior with the
-[sync-upstream](../preferences/sync-upstream.md) flag.
-
-## Positional arguments
-
-When given a non-existing branch name, `git town hack` creates a new feature
-branch with the main branch as its parent.
-
-When given an existing contribution, observed, parked, or prototype branch,
-`git town hack` converts that branch to a feature branch.
-
-When given no arguments, `git town hack` converts the current contribution,
-observed, parked, or prototype branch into a feature branch.
-
-## Example
 
 Consider this branch stack:
 
@@ -55,6 +30,29 @@ main
  \
 * branch-3
 ```
+
+If your Git workspace is clean (no uncommitted changes), it also
+[syncs](sync.md) the main branch to ensure you develop on top of the current
+state of the repository. If the workspace is not clean (contains uncommitted
+changes), `git town hack` does not perform this sync to let you commit your open
+changes.
+
+### Upstream remote
+
+If the repository contains a remote called `upstream`, it also syncs the main
+branch with its upstream counterpart. You can control this behavior with the
+[sync-upstream](../preferences/sync-upstream.md) flag.
+
+## Positional arguments
+
+When given a non-existing branch name, `git town hack` creates a new feature
+branch with the main branch as its parent.
+
+When given an existing contribution, observed, parked, or prototype branch,
+`git town hack` converts that branch to a feature branch.
+
+When given no arguments, `git town hack` converts the current contribution,
+observed, parked, or prototype branch into a feature branch.
 
 ## Options
 
