@@ -20,7 +20,7 @@ Feature: merging branches using the "rebase" sync-strategy
       | beta   | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      branches "beta" and "alpha" are not in sync, please run "git town sync" and try again
+      branch "beta" is not in sync with its parent, please run "git town sync" and try again
       """
 
 
