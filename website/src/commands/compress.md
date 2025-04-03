@@ -30,15 +30,15 @@ commit 1
 ```
 
 Git Town compresses feature branches and
-[parked branches](https://www.git-town.com/preferences/parked-branches) if they
-are currently checked out. It doesn't compress
+[parked branches](https://www.git-town.com/preferences/parked-branches). It
+doesn't compress
 [perennial](https://www.git-town.com/preferences/perennial-branches),
 [observed](https://www.git-town.com/preferences/observed-branches), and
 [contribution](https://www.git-town.com/preferences/contribution-branches)
 branches.
 
-Branches must be in sync to compress them, so run `git town sync` and resolve
-merge conflicts before running this command.
+Branches must be in sync to compress them; run `git town sync` before running
+this command.
 
 ## Options
 
