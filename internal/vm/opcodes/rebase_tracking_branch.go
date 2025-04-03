@@ -22,13 +22,17 @@ func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
 	if inSync {
 		return nil
 	}
-	err = args.Git.Rebase(args.Frontend, self.RemoteBranch.BranchName(), args.Config.Value.NormalConfig.GitVersion)
-	if err != nil {
-		return err
+	opcodes := []shared.Opcode{
+		&RebaseBranch{
+			Branch:                  self.RemoteBranch.BranchName(),
+			undeclaredOpcodeMethods: undeclaredOpcodeMethods{},
+		},
 	}
 	if self.PushBranches {
-		// ignoring push errors here - pushes can fail if the branch is in the merge queue
-		_ = args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
+		opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{
+			ForceIfIncludes: true,
+		})
 	}
+	args.PrependOpcodes(opcodes...)
 	return nil
 }
