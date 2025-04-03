@@ -5,15 +5,11 @@ Feature: merging branches using the "rebase" sync-strategy
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
+      | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
-    And the branches
-      | NAME | TYPE    | PARENT | LOCATIONS     |
-      | beta | feature | alpha  | local, origin |
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
-      | beta   | local, origin | beta commit | beta-file | beta content |
+      | beta   | local, origin | beta commit  | beta-file  | beta content  |
     And the current branch is "beta"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town merge"

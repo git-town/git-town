@@ -343,6 +343,8 @@ func validateMergeData(data mergeData) error {
 	if err := verifyBranchType(data.parentBranchType); err != nil {
 		return err
 	}
+	// ensure all commits on parent branch are contained in the initial branch
+
 	// ensure parent isn't deleted at remote
 	parentInfo, hasParent := data.branchesSnapshot.Branches.FindLocalOrRemote(data.parentBranch, data.config.NormalConfig.DevRemote).Get()
 	if !hasParent {
