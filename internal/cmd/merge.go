@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/cli/flags"
 	"github.com/git-town/git-town/v18/internal/cli/print"
 	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/cmd/sync"
 	"github.com/git-town/git-town/v18/internal/config"
 	"github.com/git-town/git-town/v18/internal/config/configdomain"
 	"github.com/git-town/git-town/v18/internal/execute"
@@ -25,7 +24,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/program"
 	"github.com/git-town/git-town/v18/internal/vm/runstate"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -294,37 +292,6 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	if data.parentBranchInfo.HasTrackingBranch() {
-		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.parentBranch})
-		sync.FeatureTrackingBranchProgram(
-			data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
-			data.config.NormalConfig.SyncFeatureStrategy.SyncStrategy(),
-			sync.FeatureTrackingArgs{
-				FirstCommitMessage: data.parentBranchFirstCommitMessage,
-				LocalName:          data.parentBranch,
-				Offline:            data.offline,
-				Program:            prog,
-				PushBranches:       true,
-			})
-	}
-	branchesToDelete := set.New[gitdomain.LocalBranchName]()
-	sync.BranchProgram(data.initialBranch, data.initialBranchInfo, data.initialBranchFirstCommitMessage, sync.BranchProgramArgs{
-		BranchInfos:         data.branchesSnapshot.Branches,
-		BranchesToDelete:    NewMutable(&branchesToDelete),
-		Config:              data.config,
-		InitialBranch:       data.initialBranch,
-		PrefetchBranchInfos: data.prefetchBranchesSnapshot.Branches,
-		Program:             prog,
-		Prune:               false,
-		PushBranches:        configdomain.PushBranches(data.initialBranchInfo.HasTrackingBranch()),
-		Remotes:             data.remotes,
-	})
-	for _, branchToDelete := range branchesToDelete.Values() {
-		prog.Value.Add(
-			&opcodes.BranchLocalDelete{Branch: branchToDelete},
-			&opcodes.LineageBranchRemove{Branch: branchToDelete},
-		)
-	}
 	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsFalse() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
 		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
