@@ -1,4 +1,4 @@
-Feature: merging branches using the "rebase" sync-strategy
+Feature: merging when the branch is not in sync with its parent
 
   Background:
     Given a Git repo with origin
