@@ -13,7 +13,6 @@ Feature: merging when the branch is not in sync with its tracking branch
       | beta | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION | MESSAGE            |
-      | beta   | local    | local beta commit  |
       | beta   | origin   | remote beta commit |
     And the current branch is "beta"
     When I run "git-town merge"
