@@ -27,6 +27,6 @@ Feature: dry-run merging branches
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs no commands
-    And the current branch is still "beta"
+    And the current branch is still "beta_1"
     And the initial commits exist now
     And the initial branches exist now
