@@ -29,6 +29,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git rebase main --no-update-refs                |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
@@ -41,11 +42,10 @@ Feature: two people using rebase make conflicting changes to a branch
       | coworker first commit | file.txt  | coworker content |
     When the coworker runs "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
+      | BRANCH  | COMMAND                                    |
+      | feature | git fetch --prune --tags                   |
+      |         | git rebase main --no-update-refs           |
+      |         | git rebase origin/feature --no-update-refs |
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
@@ -68,11 +68,10 @@ Feature: two people using rebase make conflicting changes to a branch
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
+      | BRANCH  | COMMAND                                    |
+      | feature | git fetch --prune --tags                   |
+      |         | git rebase main --no-update-refs           |
+      |         | git rebase origin/feature --no-update-refs |
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".

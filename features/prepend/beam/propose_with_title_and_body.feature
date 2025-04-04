@@ -25,7 +25,6 @@ Feature: propose a newly prepended branch
       | existing | git fetch --prune --tags                                                                               |
       | (none)   | Looking for proposal online ... ok                                                                     |
       | existing | git rebase main --no-update-refs                                                                       |
-      |          | git push --force-with-lease --force-if-includes                                                        |
       |          | git checkout -b new main                                                                               |
       | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}                                                |
       |          | git checkout existing                                                                                  |

@@ -75,6 +75,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                                        |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
@@ -93,6 +94,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | git push                                        |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And the current branch is still "feature"
