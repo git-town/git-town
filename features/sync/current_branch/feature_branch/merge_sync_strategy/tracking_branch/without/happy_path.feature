@@ -5,12 +5,12 @@ Feature: sync the current feature branch without a tracking branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result

@@ -5,11 +5,11 @@ Feature: conflicts between the main branch and its tracking branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And the current branch is "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "existing"
     When I run "git-town hack new"
 
   Scenario: result

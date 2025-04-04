@@ -5,12 +5,12 @@ Feature: dry-run compressing the commits on a feature branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
       |         |               | commit 3 | file_3    | content 3    |
+    And the current branch is "feature"
     When I run "git-town compress --dry-run"
 
   Scenario: result

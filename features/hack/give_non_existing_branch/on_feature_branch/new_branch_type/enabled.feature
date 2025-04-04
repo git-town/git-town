@@ -6,11 +6,11 @@ Feature: create a new branch when prototype branches are configured via Git meta
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     And Git setting "git-town.new-branch-type" is "prototype"
     When I run "git-town hack new"
 

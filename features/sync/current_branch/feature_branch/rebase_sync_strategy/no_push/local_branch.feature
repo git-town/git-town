@@ -5,12 +5,12 @@ Feature: syncing a local feature branch using --no-push
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push"
 

@@ -5,11 +5,11 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | prototype | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "prototype"
     When I run "git-town sync"
 
   Scenario: result

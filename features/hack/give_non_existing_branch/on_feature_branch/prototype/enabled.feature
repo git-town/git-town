@@ -5,11 +5,11 @@ Feature: hack with --prototype flag
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     When I run "git-town hack new --prototype"
 
   Scenario: result

@@ -5,13 +5,13 @@ Feature: active parked branches get synced like normal feature branches
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
       |        | origin   | origin main commit   |
       | parked | local    | local parked commit  |
       |        | origin   | origin parked commit |
+    And the current branch is "parked"
     When I run "git-town sync"
 
   Scenario: result

@@ -7,7 +7,6 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And offline mode is enabled
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                |
       | main    | local    | local main commit      |
@@ -15,6 +14,7 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
       | feature | local    | local feature commit 1 |
       |         | local    | local feature commit 2 |
       |         | origin   | origin feature commit  |
+    And the current branch is "feature"
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 

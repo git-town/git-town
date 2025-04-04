@@ -5,11 +5,11 @@ Feature: offline mode
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And offline mode is enabled
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And the current branch is "feature"
+    And offline mode is enabled
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'feature done'"
 

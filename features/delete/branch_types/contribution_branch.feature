@@ -6,11 +6,11 @@ Feature: delete the current contribution branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
       | feature      | feature      | main   | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
       | feature      | local, origin | feature commit      |
+    And the current branch is "contribution"
     And the current branch is "contribution" and the previous branch is "feature"
     When I run "git-town delete"
 
