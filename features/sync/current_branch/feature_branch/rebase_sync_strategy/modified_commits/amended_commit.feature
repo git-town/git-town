@@ -5,18 +5,20 @@ Feature: rebase a branch that contains amended commits
 
   Background:
     Given a Git repo with origin
-    And I ran "git-town hack feature-1"
+    And the branches
+      | NAME      | TYPE    | PARENT | LOCATIONS     |
+      | feature-1 | feature | main   | local, origin |
     And the commits
-      | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
-      | feature-1 | local    | commit 1a | file_1    | one          |
-    And the current branch is "feature-1"
-    And I ran "git-town append feature-2"
+      | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
+      | feature-1 | local, origin | commit 1a | file_1    | one          |
+    And the branches
+      | NAME      | TYPE    | PARENT    | LOCATIONS     |
+      | feature-2 | feature | feature-1 | local, origin |
     And the commits
-      | BRANCH    | LOCATION | MESSAGE  | FILE NAME | FILE CONTENT |
-      | feature-2 | local    | commit 2 | file_2    | two          |
+      | BRANCH    | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | feature-2 | local, origin | commit 2 | file_2    | two          |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature-2"
-    And I ran "git town sync"
     And I amend this commit
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1b | file_1    | another one  |
