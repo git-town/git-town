@@ -5,11 +5,11 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
-    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | observed | local    | conflicting local commit  | conflicting_file | local content  |
       |          | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "observed"
     When I run "git-town sync"
 
   Scenario: result

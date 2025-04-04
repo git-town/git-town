@@ -5,11 +5,11 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  |
       | main   | local, origin | main commit  | main_file  |
       | parked | local         | local commit | local_file |
+    And the current branch is "parked"
     And origin deletes the "parked" branch
     When I run "git-town sync"
 

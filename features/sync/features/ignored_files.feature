@@ -5,10 +5,10 @@ Feature: ignore files
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |
+    And the current branch is "feature"
     And an uncommitted file with name "test/ignored/important" and content "changed ignored file"
     When I run "git-town sync"
 
