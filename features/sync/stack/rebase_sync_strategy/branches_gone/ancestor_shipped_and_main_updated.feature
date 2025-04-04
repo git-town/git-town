@@ -35,24 +35,26 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | branch-4 | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git push                                |
-      |          | git checkout branch-2                   |
-      | branch-2 | git rebase --onto main branch-1         |
-      |          | git checkout branch-3                   |
-      | branch-3 | git pull                                |
-      |          | git rebase --onto main branch-2         |
-      |          | git push --force-with-lease             |
-      |          | git checkout branch-4                   |
-      | branch-4 | git pull                                |
-      |          | git rebase --onto main branch-2         |
-      |          | git push --force-with-lease             |
-      |          | git rebase branch-3 --no-update-refs    |
-      |          | git branch -D branch-1                  |
-      |          | git branch -D branch-2                  |
+      | BRANCH   | COMMAND                                         |
+      | branch-4 | git fetch --prune --tags                        |
+      |          | git checkout main                               |
+      | main     | git rebase origin/main --no-update-refs         |
+      |          | git push                                        |
+      |          | git checkout branch-2                           |
+      | branch-2 | git rebase --onto main branch-1                 |
+      |          | git checkout branch-3                           |
+      | branch-3 | git pull                                        |
+      |          | git rebase --onto main branch-2                 |
+      |          | git push --force-with-lease                     |
+      |          | git checkout branch-4                           |
+      | branch-4 | git rebase branch-3 --no-update-refs            |
+      |          | git rebase origin/branch-4 --no-update-refs     |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git pull                                        |
+      |          | git rebase --onto main branch-2                 |
+      |          | git push --force-with-lease                     |
+      |          | git branch -D branch-1                          |
+      |          | git branch -D branch-2                          |
     And the current branch is now "branch-4"
     And all branches are now synchronized
     And these commits exist now
