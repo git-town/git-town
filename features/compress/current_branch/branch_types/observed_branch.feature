@@ -5,11 +5,11 @@ Feature: does not compress observed branches
     And the branches
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed |        | local, origin |
-    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | observed | local, origin | commit 1 | file_1    | content 1    |
       |          |               | commit 2 | file_2    | content 2    |
+    And the current branch is "observed"
     When I run "git-town compress"
 
   Scenario: result

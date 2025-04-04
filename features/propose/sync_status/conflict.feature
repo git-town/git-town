@@ -6,11 +6,11 @@ Feature: merge conflict
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
+    And the current branch is "feature"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     And a proposal for this branch does not exists

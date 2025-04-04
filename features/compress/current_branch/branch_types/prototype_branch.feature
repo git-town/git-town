@@ -5,12 +5,12 @@ Feature: compress the commits on a prototype branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | prototype | local, origin | commit 1 | file_1    | content 1    |
       |           |               | commit 2 | file_2    | content 2    |
       |           |               | commit 3 | file_3    | content 3    |
+    And the current branch is "prototype"
     When I run "git-town compress"
 
   Scenario: result

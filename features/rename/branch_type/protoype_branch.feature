@@ -5,10 +5,10 @@ Feature: rename a prototype branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE             |
       | prototype | local, origin | experimental commit |
+    And the current branch is "prototype"
     When I run "git-town rename prototype new"
 
   Scenario: result

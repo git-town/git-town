@@ -5,11 +5,11 @@ Feature: does not compress contribution branches
     And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | contribution | local, origin | commit 1 | file_1    | content 1    |
       |              |               | commit 2 | file_2    | content 2    |
+    And the current branch is "contribution"
     When I run "git-town compress"
 
   Scenario: result

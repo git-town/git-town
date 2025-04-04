@@ -5,10 +5,10 @@ Feature: display all executed Git commands
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    And the current branch is "old"
     When I run "git-town prepend parent --verbose"
 
   Scenario: result
