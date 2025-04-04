@@ -177,11 +177,11 @@ func RemoveAncestorCommits(args RemoveAncestorCommitsArgs) {
 	args.Program.Value.Add(
 		&opcodes.CheckoutIfNeeded{Branch: args.Branch},
 	)
-	// if args.HasTrackingBranch {
-	// 	args.Program.Value.Add(
-	// 		&opcodes.PullCurrentBranch{},
-	// 	)
-	// }
+	if args.HasTrackingBranch {
+		args.Program.Value.Add(
+			&opcodes.PullCurrentBranch{},
+		)
+	}
 	args.Program.Value.Add(
 		&opcodes.RebaseOntoRemoveDeleted{
 			BranchToRebaseOnto: args.RebaseOnto,
