@@ -18,9 +18,9 @@ Feature: delete the current branch
       | BRANCH  | COMMAND                  |
       | current | git fetch --prune --tags |
       |         | git push origin :current |
-      |         | git checkout main        |
-      | main    | git branch -D current    |
-    And the current branch is now "main"
+      |         | git checkout other       |
+      | other   | git branch -D current    |
+    And the current branch is now "other"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -36,7 +36,7 @@ Feature: delete the current branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | main   | git branch current {{ sha 'current commit' }} |
+      | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
     And the current branch is now "current"
