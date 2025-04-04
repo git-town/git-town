@@ -29,10 +29,8 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And origin ships the "branch-1" branch using the "squash-merge" ship-strategy
     And origin ships the "branch-2" branch using the "squash-merge" ship-strategy and resolves the merge conflict in "file" with "content 2" and commits as "commit 2"
-    And wait 1 second to ensure new Git timestamps
     And I add commit "additional commit" to the "main" branch
     And the current branch is "branch-4"
-    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
