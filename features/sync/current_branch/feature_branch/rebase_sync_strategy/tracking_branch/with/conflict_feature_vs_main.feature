@@ -7,12 +7,12 @@ Feature: handle conflicts between the current feature branch and the main branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local         | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result

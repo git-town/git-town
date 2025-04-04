@@ -29,11 +29,11 @@ Feature: destination branch exists
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | origin        |
-    And the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |
+    And the current branch is "alpha"
     When I run "git-town rename alpha beta"
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |

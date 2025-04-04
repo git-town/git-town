@@ -6,11 +6,11 @@ Feature: delete the current parked branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | parked  | parked  | main   | local, origin |
       | feature | feature | main   | local, origin |
-    And the current branch is "parked"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
       | parked  | local, origin | parked commit  |
+    And the current branch is "parked"
     And the current branch is "parked" and the previous branch is "feature"
     When I run "git-town delete"
 

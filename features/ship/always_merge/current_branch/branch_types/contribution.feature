@@ -5,10 +5,10 @@ Feature: cannot ship contribution branches
     And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
+    And the current branch is "contribution"
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship" and close the editor
 

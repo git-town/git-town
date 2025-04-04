@@ -6,11 +6,11 @@ Feature: do not ask for lineage of branches that don't need to get synced
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
       | feature-2 | (none)  | main   | local, origin |
-    And the current branch is "feature-1"
     And the commits
       | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature-1 | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "feature-1"
     When I run "git-town sync"
 
   Scenario: result

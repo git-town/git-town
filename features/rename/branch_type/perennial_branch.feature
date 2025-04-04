@@ -6,11 +6,11 @@ Feature: rename a perennial branch
       | NAME       | TYPE      | PARENT     | LOCATIONS     |
       | production | perennial |            | local, origin |
       | hotfix     | feature   | production | local, origin |
-    And the current branch is "production"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | hotfix     | local, origin | hotfix commit     |
       | production | local, origin | production commit |
+    And the current branch is "production"
 
   Scenario: normal rename fails
     When I run "git-town rename production new"

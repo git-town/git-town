@@ -5,11 +5,11 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE      | FILE NAME  |
       | main      | local, origin | main commit  | main_file  |
       | prototype | local         | local commit | local_file |
+    And the current branch is "prototype"
     And origin deletes the "prototype" branch
     When I run "git-town sync"
 

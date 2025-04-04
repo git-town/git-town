@@ -5,12 +5,12 @@ Feature: sync the current contribution branch
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE       | FILE NAME   |
       | main         | local, origin | main commit   | main_file   |
       | contribution | local         | local commit  | local_file  |
       |              | origin        | origin commit | origin_file |
+    And the current branch is "contribution"
     When I run "git-town sync"
 
   Scenario: result

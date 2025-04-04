@@ -5,10 +5,10 @@ Feature: rename a parked branch
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE             |
       | parked | local, origin | low-priority commit |
+    And the current branch is "parked"
     When I run "git-town rename parked new"
 
   Scenario: result

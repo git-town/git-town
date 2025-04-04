@@ -6,10 +6,10 @@ Feature: shipping a prototype branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | prototype | local, origin | prototype commit |
+    And the current branch is "prototype"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and enter "prototype done" for the commit message
 

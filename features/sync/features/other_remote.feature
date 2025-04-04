@@ -5,11 +5,11 @@ Feature: ignores other Git remotes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "feature"
     And a remote "other" pointing to "git@foo.com:bar/baz.git"
     When I run "git-town sync"
 
