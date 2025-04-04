@@ -21,9 +21,9 @@ Feature: delete the current branch that has an uncommitted file
       |         | git push origin :current                                  |
       |         | git add -A                                                |
       |         | git commit -m "Committing open changes on deleted branch" |
-      |         | git checkout main                                         |
-      | main    | git branch -D current                                     |
-    And the current branch is now "main"
+      |         | git checkout other                                        |
+      | other   | git branch -D current                                     |
+    And the current branch is now "other"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -39,7 +39,7 @@ Feature: delete the current branch that has an uncommitted file
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                  |
-      | main    | git push origin {{ sha 'current commit' }}:refs/heads/current            |
+      | other   | git push origin {{ sha 'current commit' }}:refs/heads/current            |
       |         | git branch current {{ sha 'Committing open changes on deleted branch' }} |
       |         | git checkout current                                                     |
       | current | git reset --soft HEAD~1                                                  |
