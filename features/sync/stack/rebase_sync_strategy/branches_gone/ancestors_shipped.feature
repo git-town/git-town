@@ -30,6 +30,7 @@ Feature: shipped parent branches in a stacked change
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy as "feature-2 commit"
     And the current branch is "feature-4"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
