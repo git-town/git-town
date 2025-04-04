@@ -27,10 +27,8 @@ Feature: propose a newly prepended branch
       | (none)   | Looking for proposal online ... ok                                      |
       | existing | git checkout parent                                                     |
       | parent   | git rebase main --no-update-refs                                        |
-      |          | git push --force-with-lease --force-if-includes                         |
       |          | git checkout existing                                                   |
       | existing | git rebase parent --no-update-refs                                      |
-      |          | git push --force-with-lease --force-if-includes                         |
       |          | git checkout -b new parent                                              |
       | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}                 |
       |          | git checkout existing                                                   |
