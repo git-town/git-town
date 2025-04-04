@@ -25,6 +25,7 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
 	if hasParentToRemove && rebaseSyncStrategy {
+		// TODO: remove the parent commits after pulling in changes from parent and tracking, not before
 		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
 			Ancestor:          parentToRemove.BranchName(),
 			Branch:            localName,
