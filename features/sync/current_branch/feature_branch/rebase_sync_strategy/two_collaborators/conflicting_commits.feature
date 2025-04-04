@@ -1,6 +1,5 @@
 Feature: two people using rebase make conflicting changes to a branch
 
-  @this
   Scenario: I and my coworker work together on a branch
     Given a Git repo with origin
     And the committed configuration file:
