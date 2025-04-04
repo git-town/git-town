@@ -7,7 +7,6 @@ Feature: syncing a stacked feature branch using --no-push
       | feature | (none)  |        | local, origin |
       | parent  | feature | main   | local, origin |
       | child   | feature | parent | local, origin |
-    And the current branch is "child"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -16,6 +15,7 @@ Feature: syncing a stacked feature branch using --no-push
       |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
+    And the current branch is "child"
     When I run "git-town sync --no-push"
 
   Scenario: result

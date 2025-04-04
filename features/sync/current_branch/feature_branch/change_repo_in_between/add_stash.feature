@@ -5,11 +5,11 @@ Feature: adding additional stash entries while resolving conflicts
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "feature"
     And an uncommitted file
     And I run "git-town sync"
     And Git Town runs the commands

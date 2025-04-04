@@ -6,13 +6,13 @@ Feature: undo offline sync after additional commits to the feature branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And offline mode is enabled
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "feature"
     When I run "git-town sync"
     And I add commit "additional commit" to the "feature" branch
 

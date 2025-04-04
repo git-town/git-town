@@ -6,10 +6,10 @@ Feature: shipping a parked branch
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parked | local, origin | parked commit |
+    And the current branch is "parked"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and enter "parked done" for the commit message
 

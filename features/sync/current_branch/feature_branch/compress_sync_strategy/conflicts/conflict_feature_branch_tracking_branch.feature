@@ -7,11 +7,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "compress"
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
