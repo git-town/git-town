@@ -5,10 +5,10 @@ Feature: rename a contribution branch
     And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE               |
       | contribution | local, origin | somebody elses commit |
+    And the current branch is "contribution"
     When I run "git-town rename contribution new"
 
   Scenario: result

@@ -5,12 +5,12 @@ Feature: sync the current observed branch
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
-    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE       | FILE NAME   |
       | main     | local, origin | main commit   | main_file   |
       | observed | local         | local commit  | local_file  |
       |          | origin        | origin commit | origin_file |
+    And the current branch is "observed"
     When I run "git-town sync"
 
   Scenario: result

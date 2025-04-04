@@ -5,10 +5,10 @@ Feature: cannot ship perennial branches
     And the branches
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |
-    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | perennial | local, origin | perennial commit |
+    And the current branch is "perennial"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship"
 

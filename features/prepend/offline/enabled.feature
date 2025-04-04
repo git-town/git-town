@@ -6,10 +6,10 @@ Feature: offline mode
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And offline mode is enabled
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    And the current branch is "old"
     When I run "git-town prepend new"
 
   Scenario: result

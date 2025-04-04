@@ -5,11 +5,11 @@ Feature: message without commit
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     And an uncommitted file with name "new_file" and content "new content"
     And I ran "git add new_file"
     When I run "git-town append new -m unrelated"

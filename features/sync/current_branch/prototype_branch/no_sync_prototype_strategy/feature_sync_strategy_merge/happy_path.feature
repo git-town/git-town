@@ -5,13 +5,13 @@ Feature: sync the current prototype branch with tracking branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION | MESSAGE            |
       | main      | local    | main local commit  |
       |           | local    | main origin commit |
       | prototype | local    | local commit       |
       |           | origin   | origin commit      |
+    And the current branch is "prototype"
     When I run "git-town sync"
 
   Scenario: result

@@ -5,10 +5,10 @@ Feature: rename an observed branch
     And the branches
       | NAME     | TYPE     | PARENT | LOCATIONS     |
       | observed | observed | main   | local, origin |
-    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE               |
       | observed | local, origin | somebody elses commit |
+    And the current branch is "observed"
     When I run "git-town rename observed new"
 
   Scenario: result

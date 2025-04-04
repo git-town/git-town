@@ -5,10 +5,10 @@ Feature: prepend a new branch when prototype branches are configured via config 
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    And the current branch is "old"
     And the committed configuration file:
       """
       [create]

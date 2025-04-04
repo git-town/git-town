@@ -5,11 +5,11 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE      | FILE NAME  |
       | main         | local, origin | main commit  | main_file  |
       | contribution | local         | local commit | local_file |
+    And the current branch is "contribution"
     And origin deletes the "contribution" branch
     When I run "git-town sync"
 

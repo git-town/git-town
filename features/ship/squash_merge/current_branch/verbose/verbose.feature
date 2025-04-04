@@ -5,10 +5,10 @@ Feature: display all executed Git commands
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m done --verbose"
 
@@ -39,14 +39,13 @@ Feature: display all executed Git commands
       |         | backend  | git config --unset git-town-branch.feature.parent |
       | main    | frontend | git push origin :feature                          |
       |         | frontend | git branch -D feature                             |
-      |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
       |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "main"
 

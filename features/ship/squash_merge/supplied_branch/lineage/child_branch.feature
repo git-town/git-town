@@ -7,12 +7,12 @@ Feature: does not ship a child branch
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
       | gamma | feature | beta   | local, origin |
-    And the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
+    And the current branch is "alpha"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship gamma -m 'gamma done'"
 

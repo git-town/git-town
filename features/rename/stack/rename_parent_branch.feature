@@ -6,11 +6,11 @@ Feature: rename a parent branch
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    And the current branch is "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | parent | local, origin | parent commit |
+    And the current branch is "parent"
     When I run "git-town rename parent new"
 
   Scenario: result

@@ -6,10 +6,10 @@ Feature: prepend a branch to a feature branch
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    And the current branch is "old"
     And an uncommitted file
     When I run "git-town prepend parent"
 

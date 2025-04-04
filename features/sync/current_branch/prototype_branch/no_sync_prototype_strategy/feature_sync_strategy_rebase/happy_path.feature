@@ -5,12 +5,12 @@ Feature: sync the current prototype branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS |
       | prototype | prototype | main   | local     |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION | MESSAGE            |
       | main      | local    | main local commit  |
       |           | local    | main origin commit |
       | prototype | local    | local commit       |
+    And the current branch is "prototype"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 

@@ -5,11 +5,11 @@ Feature: handle conflicts between the current contribution branch and its tracki
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | contribution | local    | conflicting local commit  | conflicting_file | local content  |
       |              | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "contribution"
     When I run "git-town sync"
 
   Scenario: result

@@ -5,10 +5,10 @@ Feature: local repo
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And the current branch is "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
+    And the current branch is "existing"
     When I run "git-town hack new"
 
   Scenario: result

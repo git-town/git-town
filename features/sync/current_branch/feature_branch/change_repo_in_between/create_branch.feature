@@ -5,11 +5,11 @@ Feature: adding additional branches while resolving conflicts
     And the branches
       | NAME      | TYPE    | PARENT | LOCATIONS     |
       | feature-1 | feature | main   | local, origin |
-    And the current branch is "feature-1"
     And the commits
       | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature-1 | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "feature-1"
     And I run "git-town sync"
     And Git Town runs the commands
       | BRANCH    | COMMAND                                   |

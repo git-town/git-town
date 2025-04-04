@@ -15,11 +15,11 @@ Feature: output the current Git Town command
     Given the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And the current branch is "feature"
     And I run "git-town sync"
     When I run "git-town status --pending"
     Then Git Town prints:

@@ -5,10 +5,10 @@ Feature: in a local repo
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     When I run "git-town append new"
 
   Scenario: result

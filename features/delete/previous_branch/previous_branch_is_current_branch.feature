@@ -6,11 +6,11 @@ Feature: deleting a branch without a useful previous branch setting
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | current | feature | main   | local     |
       | other   | feature | main   | local     |
-    And the current branch is "current"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | current | local    | current commit |
       | other   | local    | other commit   |
+    And the current branch is "current"
     And the current branch is "current" and the previous branch is "current"
     When I run "git-town delete"
 
