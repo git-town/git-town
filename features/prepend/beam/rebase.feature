@@ -23,6 +23,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | BRANCH | COMMAND                                         |
       | old    | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
+      |        | git rebase origin/old --no-update-refs          |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
       |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
