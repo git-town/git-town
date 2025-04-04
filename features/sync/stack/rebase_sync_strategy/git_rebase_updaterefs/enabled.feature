@@ -28,12 +28,10 @@ Feature: stacked changes
       |        | git push                                        |
       |        | git checkout parent                             |
       | parent | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
       | child  | git rebase parent --no-update-refs              |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/child --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
