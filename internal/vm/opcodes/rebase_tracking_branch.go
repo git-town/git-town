@@ -15,13 +15,10 @@ type RebaseTrackingBranch struct {
 }
 
 func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
-	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
-	if err != nil {
-		return err
-	}
-	if inSync {
-		return nil
-	}
+	// We could check whether the branch is in sync with its tracking branch here
+	// and then not sync with the tracking branch.
+	// But that leads to flaky tests where tests sometimes sync with the tracking branch and sometimes not.
+	// This is due to timestamps having only 1-second resolution.
 	opcodes := []shared.Opcode{
 		&RebaseBranch{
 			Branch:                  self.RemoteBranch.BranchName(),

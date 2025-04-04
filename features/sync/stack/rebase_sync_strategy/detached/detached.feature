@@ -38,6 +38,7 @@ Feature: sync the entire stack
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
+      |        | git rebase origin/alpha --no-update-refs        |
       |        | git checkout beta                               |
       | beta   | git rebase alpha --no-update-refs               |
       |        | git rebase origin/beta --no-update-refs         |
