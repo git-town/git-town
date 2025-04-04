@@ -12,27 +12,18 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
-	originalParentName := args.Config.NormalConfig.Lineage.Parent(localName)
-	originalParentSHA := None[gitdomain.SHA]()
-	parentName, hasParentName := originalParentName.Get()
+	parentNameOpt := args.Config.NormalConfig.Lineage.Parent(localName)
+	parentSHAOpt := None[gitdomain.SHA]()
+	parentName, hasParentName := parentNameOpt.Get()
 	if hasParentName {
 		if parentBranchInfo, hasParentBranchInfo := args.BranchInfos.FindLocalOrRemote(parentName, args.Config.NormalConfig.DevRemote).Get(); hasParentBranchInfo {
-			originalParentSHA = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
+			parentSHAOpt = parentBranchInfo.LocalSHA.Or(parentBranchInfo.RemoteSHA)
 		}
 	}
-	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	rebaseSyncStrategy := args.Config.NormalConfig.SyncFeatureStrategy == configdomain.SyncFeatureStrategyRebase
+	trackingBranchGone := branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote
 	hasDescendents := args.Config.NormalConfig.Lineage.HasDescendents(localName)
 	parentToRemove, hasParentToRemove := args.Config.NormalConfig.Lineage.LatestAncestor(localName, args.BranchesToDelete.Value.Values()).Get()
-	if hasParentToRemove && rebaseSyncStrategy {
-		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
-			Ancestor:          parentToRemove.BranchName(),
-			Branch:            localName,
-			HasTrackingBranch: branchInfo.HasTrackingBranch(),
-			Program:           args.Program,
-			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch,
-		})
-	}
 	switch {
 	case hasParentToRemove && parentToRemove == parentName && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
@@ -41,11 +32,20 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case rebaseSyncStrategy && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
-		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, args)
+		deletedBranchProgram(args.Program, localName, parentNameOpt, parentSHAOpt, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, firstCommitMessage, args)
+		LocalBranchProgram(localName, branchInfo, parentNameOpt, parentSHAOpt, firstCommitMessage, args)
+	}
+	if hasParentToRemove && rebaseSyncStrategy {
+		RemoveAncestorCommits(RemoveAncestorCommitsArgs{
+			Ancestor:          parentToRemove.BranchName(),
+			Branch:            localName,
+			HasTrackingBranch: branchInfo.HasTrackingBranch(),
+			Program:           args.Program,
+			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch,
+		})
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
