@@ -19,10 +19,12 @@ Feature: rebase a branch that contains amended commits
       | feature-2 | local, origin | commit 2 | file_2    | two          |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "feature-2"
+    And wait 1 second to ensure new Git timestamps
     And I amend this commit
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1b | file_1    | another one  |
     And the current branch is "feature-2"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
