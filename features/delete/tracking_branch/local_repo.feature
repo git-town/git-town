@@ -16,9 +16,9 @@ Feature: in a local repo
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND               |
-      | feature | git checkout main     |
-      | main    | git branch -D feature |
-    And the current branch is now "main"
+      | feature | git checkout other    |
+      | other   | git branch -D feature |
+    And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -33,7 +33,7 @@ Feature: in a local repo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
-      | main   | git branch feature {{ sha 'feature commit' }} |
+      | other  | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
     And the initial commits exist now

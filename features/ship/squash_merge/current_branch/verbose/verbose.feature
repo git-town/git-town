@@ -39,13 +39,14 @@ Feature: display all executed Git commands
       |         | backend  | git config --unset git-town-branch.feature.parent |
       | main    | frontend | git push origin :feature                          |
       |         | frontend | git branch -D feature                             |
+      |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
       |         | backend  | git branch -vva --sort=refname                    |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 28 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "main"
 

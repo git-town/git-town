@@ -19,9 +19,9 @@ Feature: delete a branch that has an overridden branch type
       | BRANCH       | COMMAND                       |
       | contribution | git fetch --prune --tags      |
       |              | git push origin :contribution |
-      |              | git checkout main             |
-      | main         | git branch -D contribution    |
-    And the current branch is now "main"
+      |              | git checkout other            |
+      | other        | git branch -D contribution    |
+    And the current branch is now "other"
     And Git setting "git-town-branch.contribution.branchtype" now doesn't exist
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -37,7 +37,7 @@ Feature: delete a branch that has an overridden branch type
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                 |
-      | main   | git branch contribution {{ sha 'contribution commit' }} |
+      | other  | git branch contribution {{ sha 'contribution commit' }} |
       |        | git push -u origin contribution                         |
       |        | git checkout contribution                               |
     And the current branch is now "contribution"

@@ -65,16 +65,14 @@ Feature: detaching an omni-branch verbosely
       | branch-4 | git checkout branch-2                                |
       | (none)   | git config git-town-branch.branch-2.parent main      |
       |          | git config git-town-branch.branch-3.parent branch-1  |
-      |          | git show-ref --verify --quiet refs/heads/main        |
-      |          | git checkout main                                    |
-      |          | git checkout branch-2                                |
+      |          | git show-ref --verify --quiet refs/heads/branch-4    |
       |          | git branch -vva --sort=refname                       |
       |          | git config -lz --includes --global                   |
       |          | git config -lz --includes --local                    |
       |          | git stash list                                       |
     And Git Town prints:
       """
-      Ran 36 shell commands.
+      Ran 34 shell commands.
       """
     And the current branch is still "branch-2"
     And these commits exist now

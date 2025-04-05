@@ -12,6 +12,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "main"
     And branch "feature" is active in another worktree
     When I run "git-town sync" in the other worktree
 

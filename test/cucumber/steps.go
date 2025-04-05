@@ -1036,21 +1036,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the commits$`, func(ctx context.Context, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		// create the commits
 		commits := testgit.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
-		// restore the initial branch
-		initialBranch, hasInitialBranch := state.initialCurrentBranch.Get()
-		if !hasInitialBranch {
-			devRepo.CheckoutBranch("main")
-			return
-		}
-		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
-		if devRepo.CurrentBranchCache.Value() != initialBranch {
-			devRepo.CheckoutBranch(initialBranch)
-			return
-		}
 	})
 
 	sc.Step(`^the committed configuration file:$`, func(ctx context.Context, content *godog.DocString) {
