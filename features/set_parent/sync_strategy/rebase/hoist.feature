@@ -35,7 +35,7 @@ Feature: remove a branch from a stack
     And Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-2 | git pull                                        |
-      |          | git rebase --onto main branch-1 branch-2        |
+      |          | git rebase --onto main branch-1                 |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-3                           |
       | branch-3 | git pull                                        |
