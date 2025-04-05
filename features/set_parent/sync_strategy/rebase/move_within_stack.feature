@@ -39,7 +39,7 @@ Feature: move a branch within a stack
     And Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-3 | git pull                                        |
-      |          | git rebase --onto branch-1 branch-2 branch-3    |
+      |          | git rebase --onto branch-1 branch-2             |
       |          | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
