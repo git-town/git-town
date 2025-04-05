@@ -8,7 +8,7 @@ The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
 the new branch.
 
-Consider this branch setup:
+Consider this stack:
 
 ```
 main
@@ -17,7 +17,7 @@ main
 ```
 
 We are on the `feature-1` branch. After running `git town append feature-2`, the
-repository will have this branch setup:
+repository will have this stack:
 
 ```
 main
@@ -48,8 +48,8 @@ Adding the `--prototype` aka `-p` switch creates a
 #### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to build out your branch stack and decide when to pull
-in changes from other developers.
+branch. This allows you to build out your stack and decide when to pull in
+changes from other developers.
 
 #### `-c`<br>`--commit`
 

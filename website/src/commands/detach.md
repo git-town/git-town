@@ -8,7 +8,7 @@ The _detach_ command removes the current branch from the stack it is in and
 makes it a stand-alone top-level branch that ships directly into your main
 branch.
 
-Consider this branch stack:
+Consider this stack:
 
 ```
 main
@@ -21,7 +21,7 @@ main
 ```
 
 We are on the `branch-2` branch. After running `git town detach`, we end up with
-with branch stack:
+with stack:
 
 ```
 main

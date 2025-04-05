@@ -34,7 +34,7 @@ const swapHelp = `
 The "swap" command moves the current branch
 one position forward in the stack.
 
-Consider this branch stack:
+Consider this stack:
 
 main
  \

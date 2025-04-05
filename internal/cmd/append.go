@@ -33,7 +33,7 @@ import (
 const (
 	appendDesc = "Create a new feature branch as a child of the current branch"
 	appendHelp = `
-Consider this branch setup:
+Consider this stack:
 
 main
  \

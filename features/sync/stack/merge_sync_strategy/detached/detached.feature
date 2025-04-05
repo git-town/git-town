@@ -1,4 +1,4 @@
-Feature: detached sync of the entire branch stack
+Feature: detached sync of the entire stack
 
   Background:
     Given a Git repo with origin
