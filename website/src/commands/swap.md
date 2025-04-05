@@ -4,7 +4,7 @@
 git town swap [--dry-run] [-v | --verbose]
 ```
 
-The _swap_ command swaps the position of the current branch with the branch
+The _swap_ command switches the position of the current branch with the branch
 ahead of it in the current stack, i.e. moves the current branch one position
 forward in the stack.
 
