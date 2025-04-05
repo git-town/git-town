@@ -1,5 +1,9 @@
 # Git Town Changelog
 
+## 18.3.0 (2025-04-05)
+
+#### New Features
+
 ## 18.2.0 (2025-03-28)
 
 #### New Features
