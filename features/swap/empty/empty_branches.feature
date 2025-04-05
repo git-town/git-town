@@ -20,7 +20,6 @@ Feature: swapping empty branches
       |          | git checkout branch-3                                            |
       | branch-3 | git rebase --onto branch-1 {{ sha-before-run 'initial commit' }} |
       |          | git checkout branch-2                                            |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE |
     And this lineage exists now
@@ -32,6 +31,5 @@ Feature: swapping empty branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

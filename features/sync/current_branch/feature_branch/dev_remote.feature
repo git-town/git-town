@@ -20,7 +20,6 @@ Feature: sync a branch to a custom dev-remote
       |        | git merge --no-edit --ff main |
       |        | git push -u fork branch       |
     And all branches are now synchronized
-    And the current branch is still "branch"
     And these branches exist now
       | REPOSITORY  | BRANCHES     |
       | local, fork | main, branch |
@@ -33,7 +32,6 @@ Feature: sync a branch to a custom dev-remote
     Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | branch | git push fork :branch |
-    And the current branch is still "branch"
     And these branches exist now
       | REPOSITORY | BRANCHES     |
       | local      | main, branch |

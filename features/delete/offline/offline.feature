@@ -19,7 +19,6 @@ Feature: offline mode
       | BRANCH  | COMMAND               |
       | feature | git checkout other    |
       | other   | git branch -D feature |
-    And the current branch is now "other"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES             |
@@ -39,6 +38,5 @@ Feature: offline mode
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

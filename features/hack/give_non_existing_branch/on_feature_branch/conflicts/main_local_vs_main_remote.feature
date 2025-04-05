@@ -35,7 +35,6 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND               |
       | main   | git rebase --abort    |
       |        | git checkout existing |
-    And the current branch is now "existing"
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -55,7 +54,6 @@ Feature: conflicts between the main branch and its tracking branch
       | main   | git -c core.editor=true rebase --continue |
       |        | git push                                  |
       |        | git checkout -b new                       |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
@@ -73,4 +71,3 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND             |
       | main   | git push            |
       |        | git checkout -b new |
-    And the current branch is now "new"

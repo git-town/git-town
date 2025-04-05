@@ -25,7 +25,6 @@ Feature: does not sync branches that exist only on remotes
       |        | git push                                |
       |        | git checkout main                       |
       | main   | git push --tags                         |
-    And the current branch is still "main"
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       |

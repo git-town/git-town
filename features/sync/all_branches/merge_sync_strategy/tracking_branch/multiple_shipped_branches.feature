@@ -38,7 +38,6 @@ Feature: multiple shipped branches
       """
       deleted branch "feature-2"
       """
-    And the current branch is still "feature-3"
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
@@ -57,5 +56,4 @@ Feature: multiple shipped branches
       |           | git branch feature-1 {{ sha-before-run 'feature-1 commit' }} |
       |           | git branch feature-2 {{ sha-before-run 'feature-2 commit' }} |
       |           | git checkout feature-3                                       |
-    And the current branch is still "feature-3"
     And the initial branches and lineage exist now

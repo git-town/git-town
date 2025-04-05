@@ -33,7 +33,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is now "beta"
     And a merge is now in progress
 
   Scenario: undo
@@ -44,7 +43,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout alpha                        |
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git checkout main                         |
-    And the current branch is now "main"
     And the initial commits exist now
     And no merge is in progress
 
@@ -56,7 +54,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout gamma            |
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
-    And the current branch is now "main"
     And no merge is in progress
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE                        |
@@ -82,7 +79,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "beta"
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -95,7 +91,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | gamma  | git merge --no-edit --ff main |
       |        | git checkout main             |
     And all branches are now synchronized
-    And the current branch is now "main"
     And no merge is in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |

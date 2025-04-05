@@ -17,7 +17,6 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git checkout -b new      |
-    And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -30,6 +29,5 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

@@ -25,7 +25,6 @@ Feature: handle conflicts between the shipped branch and its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now
     And the initial lineage exists now

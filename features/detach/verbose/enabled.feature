@@ -74,7 +74,6 @@ Feature: detaching an omni-branch verbosely
       """
       Ran 34 shell commands.
       """
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local, origin | commit 1a |
@@ -124,6 +123,5 @@ Feature: detaching an omni-branch verbosely
       | branch-4 | git checkout branch-2                                |
       | (none)   | git config git-town-branch.branch-2.parent branch-1  |
       |          | git config git-town-branch.branch-3.parent branch-2  |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

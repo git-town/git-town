@@ -19,7 +19,6 @@ Feature: sync the current branch that is observed via regex
       | BRANCH     | COMMAND                                       |
       | renovate/1 | git fetch --prune --tags                      |
       |            | git rebase origin/renovate/1 --no-update-refs |
-    And the current branch is still "renovate/1"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE       |
       | main       | local, origin | main commit   |
@@ -31,6 +30,5 @@ Feature: sync the current branch that is observed via regex
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                              |
       | renovate/1 | git reset --hard {{ sha-before-run 'local commit' }} |
-    And the current branch is still "renovate/1"
     And the initial commits exist now
     And the initial branches and lineage exist now

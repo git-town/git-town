@@ -42,7 +42,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
       |        | git checkout main  |
-    And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -54,7 +53,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                       |
       | main   | git rebase origin/main --no-update-refs |
       |        | git push --tags                         |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -83,7 +81,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git rebase origin/main --no-update-refs   |
       |        | git push --tags                           |
     And all branches are now synchronized
-    And the current branch is now "main"
     And no rebase is now in progress
 
   Scenario: resolve, finish the rebase, and continue

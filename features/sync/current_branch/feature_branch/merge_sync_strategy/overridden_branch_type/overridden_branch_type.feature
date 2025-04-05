@@ -22,7 +22,6 @@ Feature: sync the current branch which has a branch-type override
       |              | git merge --no-edit --ff main   |
       |              | git push -u origin contribution |
     And all branches are now synchronized
-    And the current branch is still "contribution"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                               |
       | main         | local, origin | main commit                           |
@@ -35,6 +34,5 @@ Feature: sync the current branch which has a branch-type override
       | BRANCH       | COMMAND                                          |
       | contribution | git reset --hard {{ sha 'contribution commit' }} |
       |              | git push origin :contribution                    |
-    And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

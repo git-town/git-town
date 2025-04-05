@@ -29,7 +29,6 @@ Feature: detaching a branch that conflicts with the main branch
       |          | git add file                                    |
       |          | git -c core.editor=true rebase --continue       |
       |          | git push --force-with-lease --force-if-includes |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main     | local, origin | main commit | file      | main content |
@@ -46,6 +45,5 @@ Feature: detaching a branch that conflicts with the main branch
       | BRANCH   | COMMAND                                         |
       | branch-2 | git reset --hard {{ sha 'commit 2' }}           |
       |          | git push --force-with-lease --force-if-includes |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

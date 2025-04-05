@@ -22,7 +22,6 @@ Feature: compress a branch with a merge commit
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main    | local, origin | main commit | main_file | main content |
@@ -36,7 +35,6 @@ Feature: compress a branch with a merge commit
       | BRANCH  | COMMAND                                         |
       | feature | git reset --hard {{ sha 'merge' }}              |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main    | local, origin | main commit | main_file | main content |

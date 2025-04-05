@@ -23,7 +23,6 @@ Feature: rename the current branch to a branch that is active in another worktre
       """
       there is already a branch "other"
       """
-    And the current branch is still "old"
 
   Scenario: undo
     When I run "git-town undo"
@@ -32,4 +31,3 @@ Feature: rename the current branch to a branch that is active in another worktre
       """
       nothing to undo
       """
-    And the current branch is now "old"

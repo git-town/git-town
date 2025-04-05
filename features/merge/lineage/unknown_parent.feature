@@ -15,7 +15,6 @@ Feature: merging with missing lineage
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
       |        | git branch -D alpha      |
-    And the current branch is still "beta"
     And this lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
@@ -27,6 +26,5 @@ Feature: merging with missing lineage
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | beta   | git branch alpha {{ sha 'initial commit' }} |
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

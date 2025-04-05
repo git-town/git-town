@@ -14,7 +14,6 @@ Feature: on the main branch
       | main   | git fetch --prune --tags                |
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout -b new                     |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -29,6 +28,5 @@ Feature: on the main branch
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
-    And the current branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

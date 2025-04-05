@@ -32,7 +32,6 @@ Feature: stack that changes the same file in multiple commits per branch
       |        | git rebase --onto main alpha            |
       |        | git push --force-with-lease             |
       |        | git branch -D alpha                     |
-    And the current branch is still "beta"
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
@@ -51,7 +50,6 @@ Feature: stack that changes the same file in multiple commits per branch
       | main   | git reset --hard {{ sha 'initial commit' }}            |
       |        | git branch alpha {{ sha-before-run 'alpha commit 2' }} |
       |        | git checkout beta                                      |
-    And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
       | main   | origin        | alpha commit 1 | favorite-fruit | peach        |

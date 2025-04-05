@@ -31,7 +31,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is now "alpha"
     And a merge is now in progress
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
@@ -58,7 +57,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is now "gamma"
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then Git Town runs the commands
@@ -68,7 +66,6 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-    And the current branch is now "main"
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now

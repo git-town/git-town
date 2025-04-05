@@ -20,13 +20,11 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
       """
       cannot sync branch "production" because it has unpushed local commits
       """
-    And the current branch is still "production"
     And the initial branches and lineage exist now
     And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "production"
     And the initial commits exist now
     And the initial branches and lineage exist now

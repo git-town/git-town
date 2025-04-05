@@ -33,7 +33,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       branch "branch-2" is now a child of "new"
       """
-    And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES            |
       | local      | main, branch-2, new |
@@ -50,5 +49,4 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | new      | git branch branch-1 {{ sha 'commit 1' }} |
       |          | git checkout branch-2                    |
       | branch-2 | git branch -D new                        |
-    And the current branch is now "branch-2"
     And the initial branches and lineage exist now

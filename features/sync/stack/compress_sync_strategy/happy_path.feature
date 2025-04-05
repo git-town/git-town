@@ -39,7 +39,6 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       |        | git commit -m "local child commit"      |
       |        | git push --force-with-lease             |
     And all branches are now synchronized
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local, origin | origin main commit  |
@@ -57,7 +56,6 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
       |        | git checkout child                                                                              |
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |

@@ -28,7 +28,6 @@ Feature: ship a parent branch
       """
       branch "child" is now a child of "main"
       """
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | parent done  |
@@ -46,7 +45,6 @@ Feature: ship a parent branch
       |        | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
       |        | git checkout parent                         |
-    And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | parent done          |

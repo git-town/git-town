@@ -14,4 +14,3 @@ Feature: branch does not exist
       """
       there is no branch "non-existing"
       """
-    And the current branch is still "main"

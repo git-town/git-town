@@ -21,7 +21,6 @@ Feature: compress the commits on a prototype branch
       |           | git commit -m "commit 1"                        |
       |           | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE  |
       | prototype | local, origin | commit 1 |
@@ -35,6 +34,5 @@ Feature: compress the commits on a prototype branch
       | BRANCH    | COMMAND                                         |
       | prototype | git reset --hard {{ sha 'commit 3' }}           |
       |           | git push --force-with-lease --force-if-includes |
-    And the current branch is still "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now

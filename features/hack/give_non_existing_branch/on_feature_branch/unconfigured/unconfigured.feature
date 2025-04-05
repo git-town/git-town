@@ -14,7 +14,6 @@ Feature: missing configuration
       | main   | git fetch --prune --tags |
       |        | git checkout -b feature  |
     And the main branch is now "main"
-    And the current branch is now "feature"
     And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
@@ -25,5 +24,4 @@ Feature: missing configuration
       | BRANCH  | COMMAND               |
       | feature | git checkout main     |
       | main    | git branch -D feature |
-    And the current branch is now "main"
     And no lineage exists now

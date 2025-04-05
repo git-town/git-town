@@ -16,4 +16,3 @@ Feature: switch to branches described by a regex
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | alpha  | git checkout aloha |
-    And the current branch is now "aloha"

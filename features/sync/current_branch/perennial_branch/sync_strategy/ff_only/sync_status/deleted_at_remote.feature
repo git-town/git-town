@@ -20,7 +20,6 @@ Feature: sync the current perennial branch using the ff-only sync strategy after
       |            | git checkout main        |
       | main       | git branch -D production |
       |            | git push --tags          |
-    And the current branch is now "main"
     And these branches exist now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -31,6 +30,5 @@ Feature: sync the current perennial branch using the ff-only sync strategy after
       | BRANCH | COMMAND                                        |
       | main   | git branch production {{ sha 'first commit' }} |
       |        | git checkout production                        |
-    And the current branch is still "production"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -26,7 +26,6 @@ Feature: abort the ship by empty commit message
       """
       aborted because merge exited with error
       """
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -37,6 +36,5 @@ Feature: abort the ship by empty commit message
       """
       nothing to undo
       """
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

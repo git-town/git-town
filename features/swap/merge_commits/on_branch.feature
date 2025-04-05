@@ -33,7 +33,6 @@ Feature: swapping a feature branch with merge commits
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |

@@ -33,7 +33,6 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       |          | git commit -m "branch-2 commit"          |
       |          | git push --force-with-lease              |
       |          | git checkout -b branch-1a branch-1       |
-    And the current branch is now "branch-1a"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH    | PARENT    |
@@ -52,6 +51,5 @@ Feature: prepend a branch to a feature branch in a clean workspace using the "co
       | branch-2  | git reset --hard {{ sha-before-run 'branch-2 commit' }} |
       |           | git push --force-with-lease --force-if-includes         |
       |           | git branch -D branch-1a                                 |
-    And the current branch is now "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

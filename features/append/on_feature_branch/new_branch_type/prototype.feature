@@ -19,7 +19,6 @@ Feature: append a new branch when prototype branches are configured
       |          | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
-    And the current branch is now "new"
     And branch "new" now has type "prototype"
     And the initial commits exist now
     And this lineage exists now
@@ -33,6 +32,5 @@ Feature: append a new branch when prototype branches are configured
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

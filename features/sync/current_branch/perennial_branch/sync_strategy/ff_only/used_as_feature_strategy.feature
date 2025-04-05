@@ -18,7 +18,6 @@ Feature: "ff-only" configured as sync-feature-strategy
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
       |         | git merge --ff-only origin/feature |
-    And the current branch is still "feature"
     And these branches exist now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
@@ -31,6 +30,5 @@ Feature: "ff-only" configured as sync-feature-strategy
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                     |
       | feature | git reset --hard {{ sha 'initial commit' }} |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

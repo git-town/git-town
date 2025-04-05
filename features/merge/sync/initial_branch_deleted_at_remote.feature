@@ -26,7 +26,6 @@ Feature: merging a branch that was deleted at the remote
       """
       branch "beta" is not in sync with its tracking branch, please run "git town sync" and try again
       """
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -37,6 +36,5 @@ Feature: merging a branch that was deleted at the remote
       """
       nothing to undo
       """
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

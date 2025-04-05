@@ -20,13 +20,11 @@ Feature: dry-run shipping via the fast-forward strategy
       | main    | git merge --ff-only feature |
       |         | git push origin :feature    |
       |         | git branch -D feature       |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

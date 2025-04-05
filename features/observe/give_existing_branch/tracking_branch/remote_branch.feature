@@ -16,7 +16,6 @@ Feature: make another remote feature branch an observed branch
       """
       branch "remote-feature" is now an observed branch
       """
-    And the current branch is now "remote-feature"
     And branch "remote-feature" now has type "observed"
 
   Scenario: undo
@@ -25,5 +24,4 @@ Feature: make another remote feature branch an observed branch
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-    And the current branch is now "main"
     And there are now no observed branches

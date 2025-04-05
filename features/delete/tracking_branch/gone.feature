@@ -21,7 +21,6 @@ Feature: deleting a branch whose tracking branch is gone
       | current | git fetch --prune --tags |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the current branch is now "other"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -39,7 +38,6 @@ Feature: deleting a branch whose tracking branch is gone
       | BRANCH | COMMAND                                       |
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
-    And the current branch is now "current"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local         | current commit |

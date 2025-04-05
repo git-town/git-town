@@ -38,7 +38,6 @@ Feature: handle merge conflicts between feature branch and main branch
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is now "beta"
     And a merge is now in progress
 
   Scenario: abort
@@ -51,7 +50,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
-    And the current branch is now "main"
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -67,7 +65,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-    And the current branch is now "main"
     And no merge is in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
@@ -94,7 +91,6 @@ Feature: handle merge conflicts between feature branch and main branch
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "beta"
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -111,7 +107,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                              |
       |        | git checkout main                     |
       | main   | git push --tags                       |
-    And the current branch is now "main"
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now

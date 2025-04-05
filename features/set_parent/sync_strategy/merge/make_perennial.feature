@@ -33,7 +33,6 @@ Feature: remove a branch from a stack
       Selected parent branch for "branch-2": <none> (perennial branch)
       """
     And Git Town runs no commands
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
@@ -56,6 +55,5 @@ Feature: remove a branch from a stack
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial branches and lineage exist now

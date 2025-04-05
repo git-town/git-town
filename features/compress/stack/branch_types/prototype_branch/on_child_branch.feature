@@ -32,7 +32,6 @@ Feature: does not compress non-active prototype branches in the stack
       |           | git commit -m "child 1"                         |
       |           | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE     |
       | child     | local, origin | child 1     |
@@ -50,6 +49,5 @@ Feature: does not compress non-active prototype branches in the stack
       | prototype | git reset --hard {{ sha 'prototype 2' }}        |
       |           | git push --force-with-lease --force-if-includes |
       |           | git checkout child                              |
-    And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

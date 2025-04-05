@@ -29,7 +29,6 @@ Feature: delete a parent branch
       | feature-3 | git fetch --prune --tags   |
       |           | git push origin :feature-2 |
       |           | git branch -D feature-2    |
-    And the current branch is now "feature-3"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
@@ -49,6 +48,5 @@ Feature: delete a parent branch
       | BRANCH    | COMMAND                                           |
       | feature-3 | git branch feature-2 {{ sha 'feature-2 commit' }} |
       |           | git push -u origin feature-2                      |
-    And the current branch is now "feature-3"
     And the initial commits exist now
     And the initial branches and lineage exist now

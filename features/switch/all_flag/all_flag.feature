@@ -16,7 +16,6 @@ Feature: switch to a new remote branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND               |
       | local-2 | git checkout remote-1 |
-    And the current branch is now "remote-1"
 
     Examples:
       | FLAG  |

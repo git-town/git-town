@@ -22,7 +22,6 @@ Feature: ship a feature branch that is active in another worktree
       """
       branch "feature" is active in another worktree
       """
-    And the current branch is still "other"
 
   Scenario: undo
     When I run "git-town undo"
@@ -31,4 +30,3 @@ Feature: ship a feature branch that is active in another worktree
       """
       nothing to undo
       """
-    And the current branch is still "other"

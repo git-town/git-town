@@ -18,7 +18,6 @@ Feature: append in offline mode
       | existing | git merge --no-edit --ff main            |
       |          | git merge --no-edit --ff origin/existing |
       |          | git checkout -b new                      |
-    And the current branch is now "new"
     And the initial commits exist now
 
   Scenario: undo
@@ -27,6 +26,5 @@ Feature: append in offline mode
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

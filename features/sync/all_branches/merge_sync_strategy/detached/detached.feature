@@ -45,7 +45,6 @@ Feature: sync all feature branches
       | observed     | git rebase origin/observed --no-update-refs     |
       |              | git checkout alpha                              |
       | alpha        | git push --tags                                 |
-    And the current branch is still "alpha"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                    |
       | main         | origin        | main commit                |
@@ -72,7 +71,6 @@ Feature: sync all feature branches
       |              | git checkout observed                                                                            |
       | observed     | git reset --hard {{ sha 'local observed commit' }}                                               |
       |              | git checkout alpha                                                                               |
-    And the current branch is still "alpha"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                    |
       | main         | origin        | main commit                |

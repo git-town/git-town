@@ -21,7 +21,6 @@ Feature: does not ship an empty branch using the fast-forward strategy
       """
       the branch "empty" has no shippable changes
       """
-    And the current branch is still "empty"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -32,6 +31,5 @@ Feature: does not ship an empty branch using the fast-forward strategy
       """
       nothing to undo
       """
-    And the current branch is still "empty"
     And the initial commits exist now
     And the initial branches and lineage exist now

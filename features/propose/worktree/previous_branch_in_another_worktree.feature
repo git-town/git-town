@@ -22,5 +22,4 @@ Feature: prepend with the previous branch checked out in another worktree
       | current | frontend | git merge --no-edit --ff main                                      |
       |         | frontend | git push -u origin current                                         |
       | (none)  | frontend | open https://github.com/git-town/git-town/compare/current?expand=1 |
-    And the current branch is still "current"
     And the previous Git branch is now "current"

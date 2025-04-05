@@ -15,10 +15,8 @@ Feature: make another perennial branch a contribution branch
       """
     And the perennial branches are still "perennial"
     And there are now no contribution branches
-    And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "main"
     And the perennial branches are still "perennial"

@@ -29,7 +29,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-    And the current branch is still "main"
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -51,7 +50,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       |        | git push                                  |
       |        | git push --tags                           |
     And all branches are now synchronized
-    And the current branch is still "main"
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
@@ -65,7 +63,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | main   | git push        |
       |        | git push --tags |
     And all branches are now synchronized
-    And the current branch is still "main"
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

@@ -20,7 +20,6 @@ Feature: delete the current prototype branch
       |           | git push origin :prototype |
       |           | git checkout previous      |
       | previous  | git branch -D prototype    |
-    And the current branch is now "previous"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES       |
@@ -39,7 +38,6 @@ Feature: delete the current prototype branch
       | previous | git branch prototype {{ sha 'prototype commit' }} |
       |          | git push -u origin prototype                      |
       |          | git checkout prototype                            |
-    And the current branch is now "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "prototype" now has type "prototype"

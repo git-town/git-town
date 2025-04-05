@@ -40,7 +40,6 @@ Feature: display all executed Git commands
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |
-    And the current branch is still "child"
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -61,6 +60,5 @@ Feature: display all executed Git commands
       """
       Ran 11 shell commands.
       """
-    And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

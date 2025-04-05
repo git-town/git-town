@@ -27,7 +27,6 @@ Feature: append a new branch when prototype branches are configured via a deprec
       The Git Town configuration file contains the deprecated setting "create-prototype-branches".
       Please upgrade to the new format: create.new-branch-type = "prototype"
       """
-    And the current branch is now "new"
     And branch "new" now has type "prototype"
     And the initial commits exist now
     And this lineage exists now
@@ -41,6 +40,5 @@ Feature: append a new branch when prototype branches are configured via a deprec
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

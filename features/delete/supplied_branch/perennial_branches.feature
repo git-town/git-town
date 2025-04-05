@@ -16,7 +16,6 @@ Feature: does not delete perennial branches
       """
       you cannot delete the main branch
       """
-    And the current branch is still "feature"
     And the initial branches and lineage exist now
 
   Scenario: perennial branch

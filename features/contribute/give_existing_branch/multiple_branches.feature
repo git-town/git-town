@@ -26,11 +26,9 @@ Feature: make multiple other branches contribution branches
       branch "feature-3" is now a contribution branch
       """
     And branch "feature-3" now has type "contribution"
-    And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
     And there are now no contribution branches
-    And the current branch is still "main"

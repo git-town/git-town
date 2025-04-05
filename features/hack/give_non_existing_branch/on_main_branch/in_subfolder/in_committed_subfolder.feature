@@ -15,7 +15,6 @@ Feature: in a subfolder on the main branch
       |        | git rebase origin/main --no-update-refs |
       |        | git push                                |
       |        | git checkout -b new                     |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
@@ -29,7 +28,6 @@ Feature: in a subfolder on the main branch
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |

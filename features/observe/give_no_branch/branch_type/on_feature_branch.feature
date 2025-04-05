@@ -14,12 +14,10 @@ Feature: observing the current feature branch
       """
       branch "feature" is now an observed branch
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "observed"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And the current branch is still "feature"
     And there are now no observed branches

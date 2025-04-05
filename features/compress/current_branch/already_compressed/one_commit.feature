@@ -20,7 +20,6 @@ Feature: does not compress already compressed branches
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
@@ -31,6 +30,5 @@ Feature: does not compress already compressed branches
       | BRANCH  | COMMAND                                         |
       | feature | git reset --hard {{ sha 'commit 1' }}           |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

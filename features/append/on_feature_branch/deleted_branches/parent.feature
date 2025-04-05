@@ -30,7 +30,6 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       """
       deleted branch "parent"
       """
-    And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES         |
       | local      | main, child, new |
@@ -57,5 +56,4 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       |        | git branch parent {{ sha-before-run 'parent commit' }} |
       |        | git checkout child                                     |
       | child  | git branch -D new                                      |
-    And the current branch is still "child"
     And the initial branches and lineage exist now

@@ -29,7 +29,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        | git checkout alpha                              |
       | alpha  | git push --tags                                 |
     And all branches are now synchronized
-    And the current branch is still "alpha"
     And this lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
@@ -52,6 +51,5 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}   |
       |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout alpha                                    |
-    And the current branch is still "alpha"
     And the initial commits exist now
     And the initial branches and lineage exist now

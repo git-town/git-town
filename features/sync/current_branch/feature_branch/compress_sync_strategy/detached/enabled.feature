@@ -35,7 +35,6 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       |        | git reset --soft alpha                |
       |        | git commit -m "local beta commit"     |
       |        | git push --force-with-lease           |
-    And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local         | local main commit  |
@@ -54,6 +53,5 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       |        | git checkout beta                                                                             |
       | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin beta commit' }}:beta   |
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now

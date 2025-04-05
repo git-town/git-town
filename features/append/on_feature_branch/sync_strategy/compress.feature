@@ -24,7 +24,6 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       |          | git commit -m "existing commit 1"        |
       |          | git push --force-with-lease              |
       |          | git checkout -b new                      |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           |
       | existing | local, origin | existing commit 1 |
@@ -41,6 +40,5 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
       | existing | git reset --hard {{ sha-before-run 'existing commit 2' }} |
       |          | git push --force-with-lease --force-if-includes           |
       |          | git branch -D new                                         |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

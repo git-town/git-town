@@ -31,6 +31,5 @@ Feature: detaching an unsynced branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

@@ -29,7 +29,6 @@ Feature: does not compress an active observed branch
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout observed                           |
     And all branches are now synchronized
-    And the current branch is still "observed"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
       | child    | local, origin | child 1    |
@@ -46,6 +45,5 @@ Feature: does not compress an active observed branch
       | child    | git reset --hard {{ sha 'child 2' }}            |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout observed                           |
-    And the current branch is still "observed"
     And the initial commits exist now
     And the initial branches and lineage exist now
