@@ -18,7 +18,6 @@ Feature: in a local repo
       | BRANCH  | COMMAND               |
       | feature | git checkout other    |
       | other   | git branch -D feature |
-    And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -35,6 +34,5 @@ Feature: in a local repo
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

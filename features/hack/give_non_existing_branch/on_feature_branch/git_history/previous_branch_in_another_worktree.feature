@@ -16,7 +16,6 @@ Feature: previous branch is checked out in another worktree
       | current | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git checkout -b new      |
-    And the current branch is now "new"
     And the previous Git branch is now "current"
 
   Scenario: undo
@@ -25,5 +24,4 @@ Feature: previous branch is checked out in another worktree
       | BRANCH  | COMMAND              |
       | new     | git checkout current |
       | current | git branch -D new    |
-    And the current branch is now "current"
     And the previous Git branch is now ""

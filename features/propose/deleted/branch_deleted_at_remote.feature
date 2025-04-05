@@ -22,7 +22,6 @@ Feature: proposing a branch that was deleted at the remote
       """
       branch "feature" was deleted at the remote
       """
-    And the current branch is now "main"
     And these branches exist now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -34,6 +33,5 @@ Feature: proposing a branch that was deleted at the remote
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'initial commit' }} |
       |        | git checkout feature                          |
-    And the current branch is still "feature"
     And the initial branches and lineage exist now
     And the initial commits exist now

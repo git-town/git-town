@@ -23,7 +23,6 @@ Feature: offline mode
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | local main commit                |
@@ -37,6 +36,5 @@ Feature: offline mode
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

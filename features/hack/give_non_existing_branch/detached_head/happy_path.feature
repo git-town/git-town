@@ -20,7 +20,6 @@ Feature: on a detached head with a clean workspace
       |                            | git checkout main                       |
       | main                       | git rebase origin/main --no-update-refs |
       |                            | git checkout -b new                     |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |

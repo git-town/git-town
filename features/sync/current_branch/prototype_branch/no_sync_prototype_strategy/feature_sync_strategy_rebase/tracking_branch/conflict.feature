@@ -36,7 +36,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND            |
       | prototype | git rebase --abort |
-    And the current branch is still "prototype"
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -61,7 +60,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
       |           |               | conflicting local commit  |
-    And the current branch is still "prototype"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
@@ -78,7 +76,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
       |           |               | conflicting local commit  |
-    And the current branch is still "prototype"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |

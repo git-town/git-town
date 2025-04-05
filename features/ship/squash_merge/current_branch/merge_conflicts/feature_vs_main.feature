@@ -29,7 +29,6 @@ Feature: handle conflicts between the shipped branch and the main branch
       """
       aborted because merge exited with error
       """
-    And the current branch is still "feature"
     And no merge is in progress
 
   Scenario: undo
@@ -39,7 +38,6 @@ Feature: handle conflicts between the shipped branch and the main branch
       """
       nothing to undo
       """
-    And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now

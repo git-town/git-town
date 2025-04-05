@@ -25,7 +25,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
-    And the current branch is still "shipped"
     And the initial branches and lineage exist now
 
   Scenario: undo
@@ -36,7 +35,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | main    | git reset --hard {{ sha 'initial commit' }}              |
       |         | git checkout shipped                                     |
       | shipped | git reset --hard {{ sha-before-run 'unshipped commit' }} |
-    And the current branch is now "shipped"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |

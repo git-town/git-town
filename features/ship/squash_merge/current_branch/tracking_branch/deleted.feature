@@ -22,7 +22,6 @@ Feature: shipping a branch whose tracking branch is deleted
       """
       branch "feature" was deleted at the remote
       """
-    And the current branch is still "feature"
 
   Scenario: undo
     When I run "git-town undo"

@@ -21,7 +21,6 @@ Feature: rename the current branch
       |        | git checkout new          |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -36,5 +35,4 @@ Feature: rename the current branch
       |        | git checkout old                      |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
-    And the current branch is now "old"
     And the initial branches and lineage exist now

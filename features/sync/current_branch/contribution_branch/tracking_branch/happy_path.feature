@@ -19,7 +19,6 @@ Feature: sync the current contribution branch
       | contribution | git fetch --prune --tags                        |
       |              | git rebase origin/contribution --no-update-refs |
       |              | git push                                        |
-    And the current branch is still "contribution"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE       |
       | main         | local, origin | main commit   |
@@ -32,6 +31,5 @@ Feature: sync the current contribution branch
       | BRANCH       | COMMAND                                                                             |
       | contribution | git reset --hard {{ sha-before-run 'local commit' }}                                |
       |              | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:contribution |
-    And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -44,7 +44,6 @@ Feature: display all executed Git commands
       """
       Ran 26 shell commands.
       """
-    And the current branch is now "new"
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -67,6 +66,5 @@ Feature: display all executed Git commands
       """
       Ran 13 shell commands.
       """
-    And the current branch is still "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

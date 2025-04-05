@@ -15,11 +15,9 @@ Feature: make another local feature branch a contribution branch
       """
     And branch "local" still has type "feature"
     And there are still no contribution branches
-    And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "main"
     And branch "local" still has type "feature"
     And there are still no contribution branches

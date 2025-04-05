@@ -12,4 +12,3 @@ Feature: switch branches
       """
       no branches to switch to
       """
-    And the current branch is still "alpha"

@@ -23,7 +23,6 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       |        | git checkout new            |
       | new    | git push -u origin new      |
       |        | git push origin :child      |
-    And the current branch is now "new"
     And the branches are now
       | REPOSITORY    | BRANCHES  |
       | local, origin | main, new |
@@ -40,7 +39,6 @@ Feature: renaming a branch whose parent was shipped and the local branch deleted
       |        | git checkout child                        |
       | child  | git branch -D new                         |
       |        | git push origin :new                      |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

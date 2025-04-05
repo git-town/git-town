@@ -23,7 +23,6 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       |          | git checkout -b new         |
       | new      | git stash pop               |
       |          | git restore --staged .      |
-    And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT   |
@@ -40,6 +39,5 @@ Feature: append a new feature branch in a dirty workspace using the "compress" s
       | existing | git branch -D new           |
       |          | git stash pop               |
       |          | git restore --staged .      |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

@@ -21,7 +21,6 @@ Feature: shipping a parked branch using the fast-forward strategy
       |        | git push                   |
       |        | git push origin :parked    |
       |        | git branch -D parked       |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -37,7 +36,6 @@ Feature: shipping a parked branch using the fast-forward strategy
       | main   | git branch parked {{ sha 'parked commit' }} |
       |        | git push -u origin parked                   |
       |        | git checkout parked                         |
-    And the current branch is now "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parked commit |

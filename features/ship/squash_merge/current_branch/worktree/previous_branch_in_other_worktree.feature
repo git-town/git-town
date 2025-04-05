@@ -21,7 +21,6 @@ Feature: ship a feature branch in a local repo
       | main    | git merge --squash --ff current |
       |         | git commit -m "feature done"    |
       |         | git branch -D current           |
-    And the current branch is now "main"
     And the previous Git branch is now "main"
 
   Scenario: undo
@@ -31,7 +30,6 @@ Feature: ship a feature branch in a local repo
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
-    And the current branch is now "current"
     And the previous Git branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

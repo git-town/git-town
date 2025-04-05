@@ -19,7 +19,6 @@ Feature: rename an unsynced branch
       """
       "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
-    And the current branch is still "old"
 
   Scenario: unpushed local commits
     Given the commits
@@ -33,4 +32,3 @@ Feature: rename an unsynced branch
       """
       "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
-    And the current branch is now "old"

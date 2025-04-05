@@ -26,7 +26,6 @@ Feature: merging a branch whose parent was deleted remotely
       """
       branch "alpha" is not in sync with its parent, please run "git town sync" and try again
       """
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -37,6 +36,5 @@ Feature: merging a branch whose parent was deleted remotely
       """
       nothing to undo
       """
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

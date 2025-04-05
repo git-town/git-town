@@ -24,7 +24,6 @@ Feature: sync the current prototype branch with tracking branch
       |           | git checkout prototype                    |
       | prototype | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/prototype |
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | main      | local, origin | main local commit                                              |
@@ -39,7 +38,6 @@ Feature: sync the current prototype branch with tracking branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | main local commit  |

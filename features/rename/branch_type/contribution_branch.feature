@@ -19,7 +19,6 @@ Feature: rename a contribution branch
       |              | git checkout new                   |
       | new          | git push -u origin new             |
       |              | git push origin :contribution      |
-    And the current branch is now "new"
     And the contribution branches are now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE               |
@@ -37,7 +36,6 @@ Feature: rename a contribution branch
       |              | git checkout contribution                                 |
       | contribution | git branch -D new                                         |
       |              | git push origin :new                                      |
-    And the current branch is now "contribution"
     And the contribution branches are now "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

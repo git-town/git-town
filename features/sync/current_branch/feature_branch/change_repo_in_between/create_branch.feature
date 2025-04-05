@@ -20,7 +20,6 @@ Feature: adding additional branches while resolving conflicts
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And the current branch is still "feature-1"
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
     And I run "git add ."
@@ -44,7 +43,6 @@ Feature: adding additional branches while resolving conflicts
       | feature-1 | git reset --hard {{ sha 'conflicting local commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature-1 |
     And no merge is in progress
-    And the current branch is still "feature-1"
     And these branches exist now
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-2 |

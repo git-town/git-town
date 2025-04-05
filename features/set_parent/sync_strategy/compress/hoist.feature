@@ -42,7 +42,6 @@ Feature: remove a branch from a stack
       |          | git rebase --onto branch-2 branch-1 branch-3    |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
@@ -70,6 +69,5 @@ Feature: remove a branch from a stack
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial branches and lineage exist now

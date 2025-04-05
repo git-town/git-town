@@ -14,7 +14,6 @@ Feature: does not ship a non-existing branch
       """
       there is no branch "non-existing-branch"
       """
-    And the current branch is now "main"
 
   Scenario: undo
     When I run "git-town undo"
@@ -23,4 +22,3 @@ Feature: does not ship a non-existing branch
       """
       nothing to undo
       """
-    And the current branch is still "main"

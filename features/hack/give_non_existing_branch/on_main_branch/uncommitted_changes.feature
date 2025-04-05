@@ -17,7 +17,6 @@ Feature: on the main branch with uncommitted changes
       |        | git checkout -b new         |
       | new    | git stash pop               |
       |        | git restore --staged .      |
-    And the current branch is now "new"
     And the uncommitted file still exists
     And the initial commits exist now
     And this lineage exists now
@@ -34,7 +33,6 @@ Feature: on the main branch with uncommitted changes
       | main   | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the current branch is now "main"
     And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now

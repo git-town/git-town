@@ -53,7 +53,6 @@ Feature: shipped branch with multiple descendents
       """
       branch "feature-1b" is now a child of "main"
       """
-    And the current branch is now "feature-1b"
     And the branches are now
       | REPOSITORY    | BRANCHES                     |
       | local, origin | main, feature-1a, feature-1b |
@@ -81,5 +80,4 @@ Feature: shipped branch with multiple descendents
       | main       | git reset --hard {{ sha 'initial commit' }}       |
       |            | git branch feature-1 {{ sha 'feature-1 commit' }} |
       |            | git checkout feature-1                            |
-    And the current branch is still "feature-1"
     And the initial branches and lineage exist now

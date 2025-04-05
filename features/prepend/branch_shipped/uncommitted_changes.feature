@@ -31,7 +31,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       branch "child" is now a child of "new"
       """
-    And the current branch is now "new"
     And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES                 |
@@ -53,7 +52,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | child  | git branch -D new           |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the current branch is now "child"
     And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES            |

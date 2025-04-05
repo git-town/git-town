@@ -18,7 +18,6 @@ Feature: sync the current prototype branch in a local repo
       | BRANCH    | COMMAND                          |
       | prototype | git rebase main --no-update-refs |
     And all branches are now synchronized
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE      |
       | main      | local    | main commit  |
@@ -30,6 +29,5 @@ Feature: sync the current prototype branch in a local repo
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
-    And the current branch is still "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now

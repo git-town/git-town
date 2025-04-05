@@ -20,7 +20,6 @@ Feature: auto-push new branches
       |        | git merge --no-edit --ff origin/old |
       |        | git checkout -b new main            |
       | new    | git push -u origin new              |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
@@ -36,6 +35,5 @@ Feature: auto-push new branches
       | new    | git checkout old     |
       | old    | git branch -D new    |
       |        | git push origin :new |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

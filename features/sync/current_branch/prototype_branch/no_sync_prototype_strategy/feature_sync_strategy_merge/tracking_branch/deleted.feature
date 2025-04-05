@@ -19,7 +19,6 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | prototype | git fetch --prune --tags |
       |           | git checkout main        |
       | main      | git branch -D prototype  |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -34,6 +33,5 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
       | BRANCH | COMMAND                                                  |
       | main   | git branch prototype {{ sha-before-run 'local commit' }} |
       |        | git checkout prototype                                   |
-    And the current branch is now "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now

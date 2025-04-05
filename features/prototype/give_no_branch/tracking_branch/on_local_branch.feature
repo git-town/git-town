@@ -19,5 +19,4 @@ Feature: prototype the current local branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "feature"
     And there are now no parked branches

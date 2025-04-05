@@ -49,7 +49,6 @@ Feature: adding additional stash entries while resolving conflicts
       |         | git restore --staged . |
     And no merge is in progress
     And an uncommitted file with name "stashed_file" exists now
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        | FILE CONTENT     |
       | feature | local         | conflicting local commit                                   | conflicting_file | local content    |

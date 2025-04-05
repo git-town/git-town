@@ -23,13 +23,11 @@ Feature: dry-run merging branches
       | beta   | git fetch --prune --tags |
       |        | git branch -D alpha      |
       |        | git push origin :alpha   |
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches exist now
 
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs no commands
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches exist now

@@ -27,7 +27,6 @@ Feature: with upstream repo
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
@@ -39,7 +38,6 @@ Feature: with upstream repo
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha-before-run 'local commit' }}                  |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |

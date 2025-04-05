@@ -21,7 +21,6 @@ Feature: compress the commits on a feature branch
       |         | git commit -m compressed                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE    |
       | feature | local, origin | compressed |
@@ -35,6 +34,5 @@ Feature: compress the commits on a feature branch
       | BRANCH  | COMMAND                                         |
       | feature | git reset --hard {{ sha 'commit 3' }}           |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

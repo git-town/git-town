@@ -29,7 +29,6 @@ Feature: a default branch type is set, the feature-regex matches
       |           | git merge --no-edit --ff origin/my-branch |
       |           | git push                                  |
     And all branches are now synchronized
-    And the current branch is still "my-branch"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
       | main      | local, origin | origin main commit                                             |
@@ -45,7 +44,6 @@ Feature: a default branch type is set, the feature-regex matches
       | BRANCH    | COMMAND                                                                                    |
       | my-branch | git reset --hard {{ sha 'local my-branch commit' }}                                        |
       |           | git push --force-with-lease origin {{ sha-in-origin 'origin my-branch commit' }}:my-branch |
-    And the current branch is still "my-branch"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                 |
       | main      | local, origin | origin main commit      |

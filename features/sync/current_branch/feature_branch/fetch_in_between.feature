@@ -23,7 +23,6 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And the current branch is still "feature"
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
     And the coworker pushes these commits to the "coworker-1" branch
@@ -50,7 +49,6 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
       | feature | git reset --hard {{ sha 'conflicting local commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'conflicting origin commit' }}:feature |
     And no merge is in progress
-    And the current branch is still "feature"
     And these branches exist now
       | REPOSITORY | BRANCHES                              |
       | local      | main, feature                         |

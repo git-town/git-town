@@ -19,7 +19,6 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | contribution | git fetch --prune --tags   |
       |              | git checkout main          |
       | main         | git branch -D contribution |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -34,6 +33,5 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | BRANCH | COMMAND                                                     |
       | main   | git branch contribution {{ sha-before-run 'local commit' }} |
       |        | git checkout contribution                                   |
-    And the current branch is now "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -18,7 +18,6 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
       | production | git fetch --prune --tags              |
       |            | git merge --ff-only origin/production |
       |            | git push --tags                       |
-    And the current branch is still "production"
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE      |
@@ -29,6 +28,5 @@ Feature: sync the current perennial branch using the ff-only sync strategy when 
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                     |
       | production | git reset --hard {{ sha 'initial commit' }} |
-    And the current branch is still "production"
     And the initial commits exist now
     And the initial branches and lineage exist now

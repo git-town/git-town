@@ -23,7 +23,6 @@ Feature: do not ask for lineage of branches that don't need to get synced
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And the current branch is still "feature-1"
     And a merge is now in progress
 
   Scenario: resolve and continue

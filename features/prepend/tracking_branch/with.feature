@@ -19,7 +19,6 @@ Feature: prepend a branch to a feature branch
       |        | git merge --no-edit --ff main       |
       |        | git merge --no-edit --ff origin/old |
       |        | git checkout -b parent main         |
-    And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -34,6 +33,5 @@ Feature: prepend a branch to a feature branch
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

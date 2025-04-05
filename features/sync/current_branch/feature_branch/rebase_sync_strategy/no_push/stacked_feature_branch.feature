@@ -30,7 +30,6 @@ Feature: syncing a stacked feature branch using --no-push
       |        | git checkout child                        |
       | child  | git rebase parent --no-update-refs        |
       |        | git rebase origin/child --no-update-refs  |
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -57,7 +56,5 @@ Feature: syncing a stacked feature branch using --no-push
       |        | git checkout parent                              |
       | parent | git reset --hard {{ sha 'local parent commit' }} |
       |        | git checkout child                               |
-
-    And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

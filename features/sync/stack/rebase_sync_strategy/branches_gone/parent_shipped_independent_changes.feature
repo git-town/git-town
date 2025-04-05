@@ -30,7 +30,6 @@ Feature: syncing a branch whose parent with independent changes was shipped
       """
       deleted branch "parent"
       """
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
@@ -48,5 +47,4 @@ Feature: syncing a branch whose parent with independent changes was shipped
       | main   | git reset --hard {{ sha 'initial commit' }}            |
       |        | git branch parent {{ sha-before-run 'parent commit' }} |
       |        | git checkout child                                     |
-    And the current branch is still "child"
     And the initial branches and lineage exist now

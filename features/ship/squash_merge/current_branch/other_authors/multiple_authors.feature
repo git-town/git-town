@@ -45,7 +45,6 @@ Feature: ship a coworker's feature branch
       |        | git branch feature {{ sha 'coworker commit' }} |
       |        | git push -u origin feature                     |
       |        | git checkout feature                           |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

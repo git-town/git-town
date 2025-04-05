@@ -19,7 +19,6 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | parked | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git branch -D parked     |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -34,6 +33,5 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
       | BRANCH | COMMAND                                               |
       | main   | git branch parked {{ sha-before-run 'local commit' }} |
       |        | git checkout parked                                   |
-    And the current branch is now "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now

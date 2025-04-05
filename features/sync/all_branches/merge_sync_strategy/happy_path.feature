@@ -50,7 +50,6 @@ Feature: sync all feature branches
       |            | git push                                      |
       |            | git checkout alpha                            |
       | alpha      | git push --tags                               |
-    And the current branch is still "alpha"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                        |
       | main       | local, origin | main commit                    |
@@ -93,7 +92,6 @@ Feature: sync all feature branches
       |            | git push                                        |
       |            | git checkout alpha                              |
       | alpha      | git push --tags                                 |
-    And the current branch is still "alpha"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | local, origin | main commit              |

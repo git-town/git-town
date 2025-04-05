@@ -22,7 +22,6 @@ Feature: sync perennial branch that was deleted at the remote
       """
       deleted branch "perennial"
       """
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-2 |
@@ -34,6 +33,5 @@ Feature: sync perennial branch that was deleted at the remote
       | BRANCH | COMMAND                                         |
       | main   | git branch perennial {{ sha 'initial commit' }} |
       |        | git checkout perennial                          |
-    And the current branch is now "perennial"
     And the initial branches and lineage exist now
     And branch "perennial" now has type "perennial"

@@ -16,4 +16,3 @@ Feature: switch to branches described by several regexes
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout main |
-    And the current branch is now "main"

@@ -20,12 +20,10 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And the current branch is still "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, origin | added submodule |

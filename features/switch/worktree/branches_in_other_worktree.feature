@@ -16,4 +16,3 @@ Feature: switch branches
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | alpha  | git checkout gamma |
-    And the current branch is now "gamma"

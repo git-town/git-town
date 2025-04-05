@@ -35,7 +35,6 @@ Feature: stacked changes
       |        | git rebase origin/child --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -61,7 +60,6 @@ Feature: stacked changes
       | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
       |        | git checkout child                                                                              |
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |

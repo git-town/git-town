@@ -28,7 +28,6 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | git checkout beta                        |
       | beta   | git rebase alpha --no-update-refs        |
       |        | git rebase origin/beta --no-update-refs  |
-    And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local         | local main commit   |
@@ -51,7 +50,5 @@ Feature: detached syncing a stacked feature branch using --no-push
       | alpha  | git reset --hard {{ sha 'local alpha commit' }} |
       |        | git checkout beta                               |
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
-
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now

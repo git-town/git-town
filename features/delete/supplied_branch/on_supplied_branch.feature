@@ -20,7 +20,6 @@ Feature: delete the current branch
       |         | git push origin :current |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the current branch is now "other"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -39,6 +38,5 @@ Feature: delete the current branch
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
-    And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now

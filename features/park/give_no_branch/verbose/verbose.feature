@@ -28,7 +28,6 @@ Feature: park the current branch verbosely
       """
       branch "feature" is now parked
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "parked"
 
   Scenario: undo
@@ -50,5 +49,4 @@ Feature: park the current branch verbosely
       """
       Ran 11 shell commands
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "feature"

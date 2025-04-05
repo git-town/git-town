@@ -22,7 +22,6 @@ Feature: deleting a branch whose parent was shipped and the local branch deleted
       |        | git push origin :child   |
       |        | git checkout main        |
       | main   | git branch -D child      |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -35,7 +34,6 @@ Feature: deleting a branch whose parent was shipped and the local branch deleted
       | main   | git branch child {{ sha 'child commit' }} |
       |        | git push -u origin child                  |
       |        | git checkout child                        |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

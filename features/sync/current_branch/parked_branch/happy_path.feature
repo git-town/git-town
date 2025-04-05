@@ -26,7 +26,6 @@ Feature: active parked branches get synced like normal feature branches
       |        | git merge --no-edit --ff origin/parked  |
       |        | git push                                |
     And all branches are now synchronized
-    And the current branch is still "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
@@ -42,7 +41,6 @@ Feature: active parked branches get synced like normal feature branches
       | BRANCH | COMMAND                                                                              |
       | parked | git reset --hard {{ sha 'local parked commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin 'origin parked commit' }}:parked |
-    And the current branch is still "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |

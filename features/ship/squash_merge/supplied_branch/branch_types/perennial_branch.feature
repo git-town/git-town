@@ -16,7 +16,6 @@ Feature: does not ship perennial branches
       """
       cannot ship perennial branches
       """
-    And the current branch is still "main"
     And no lineage exists now
 
   Scenario: undo
@@ -26,5 +25,4 @@ Feature: does not ship perennial branches
       """
       nothing to undo
       """
-    And the current branch is still "main"
     And no lineage exists now

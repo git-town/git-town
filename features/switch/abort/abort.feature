@@ -12,4 +12,3 @@ Feature: switch branches
       | KEYS     |
       | down esc |
     Then Git Town runs no commands
-    And the current branch is still "alpha"

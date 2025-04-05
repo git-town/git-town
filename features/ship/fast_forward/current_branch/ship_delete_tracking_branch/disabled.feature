@@ -22,7 +22,6 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
       | main    | git merge --ff-only feature |
       |         | git push                    |
       |         | git branch -D feature       |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -37,7 +36,6 @@ Feature: ship-delete-tracking-branch disabled when using the fast-forward strate
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |

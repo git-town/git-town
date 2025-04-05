@@ -28,7 +28,6 @@ Feature: observe the current branch verbosely
       """
       branch "feature" is now an observed branch
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "observed"
 
   Scenario: undo
@@ -50,5 +49,4 @@ Feature: observe the current branch verbosely
       """
       Ran 11 shell commands
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "feature"

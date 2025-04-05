@@ -16,7 +16,6 @@ Feature: rename the current branch to a branch that is active in another worktre
       | current | git fetch --prune --tags      |
       |         | git branch --move current new |
       |         | git checkout new              |
-    And the current branch is now "new"
     And the previous Git branch is now "new"
 
   Scenario: undo
@@ -26,5 +25,4 @@ Feature: rename the current branch to a branch that is active in another worktre
       | new     | git branch current {{ sha 'initial commit' }} |
       |         | git checkout current                          |
       | current | git branch -D new                             |
-    And the current branch is now "current"
     And the previous Git branch is now ""

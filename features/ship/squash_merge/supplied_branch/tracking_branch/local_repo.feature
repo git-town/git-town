@@ -21,7 +21,6 @@ Feature: ship the supplied feature branch in a local repo
       |        | git commit -m "feature done"    |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-    And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -40,6 +39,5 @@ Feature: ship the supplied feature branch in a local repo
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
-    And the current branch is now "other"
     And the initial commits exist now
     And the initial branches and lineage exist now

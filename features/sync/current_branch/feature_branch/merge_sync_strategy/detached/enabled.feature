@@ -30,7 +30,6 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
       |        | git push                              |
-    And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | local         | local main commit                                      |
@@ -55,6 +54,5 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |        | git checkout beta                                                                  |
       | beta   | git reset --hard {{ sha 'local beta commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin 'origin beta commit' }}:beta   |
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now

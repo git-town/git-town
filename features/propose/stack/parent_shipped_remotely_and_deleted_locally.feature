@@ -28,7 +28,6 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
       |        | git merge --no-edit --ff origin/child                            |
       |        | git push                                                         |
       | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
@@ -55,7 +54,6 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

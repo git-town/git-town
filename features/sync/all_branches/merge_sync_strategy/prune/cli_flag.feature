@@ -41,7 +41,6 @@ Feature: prune enabled via CLI
       |           | git push                                  |
       |           | git push --tags                           |
     And all branches are now synchronized
-    And the current branch is now "feature-3"
     And these branches exist now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
@@ -65,7 +64,6 @@ Feature: prune enabled via CLI
       |           | git branch feature-1 {{ sha 'feature-1 commit' }}                           |
       |           | git branch feature-2 {{ sha 'initial commit' }}                             |
       |           | git checkout feature-1                                                      |
-    And the current branch is now "feature-1"
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |

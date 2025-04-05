@@ -22,7 +22,6 @@ Feature: can undo a ship even after additional commits to the main branch
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE           |
       | main    | local, origin | done              |

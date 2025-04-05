@@ -30,7 +30,6 @@ Feature: "compress" sync with upstream repo
       |         | git commit -m "local commit"              |
       |         | git push --force-with-lease               |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         | FILE NAME     | FILE CONTENT     |
       | main    | local, origin, upstream | upstream commit | upstream_file | upstream content |
@@ -42,7 +41,6 @@ Feature: "compress" sync with upstream repo
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha-before-run 'local commit' }}                  |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |

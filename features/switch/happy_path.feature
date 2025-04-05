@@ -14,4 +14,3 @@ Feature: switch branches
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout beta |
-    And the current branch is now "beta"

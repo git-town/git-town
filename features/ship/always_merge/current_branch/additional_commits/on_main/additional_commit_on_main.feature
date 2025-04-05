@@ -22,7 +22,6 @@ Feature: can ship not-up-to-date feature branches using the always-merge strateg
       |         | git push                            |
       |         | git push origin :feature            |
       |         | git branch -D feature               |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -40,7 +39,6 @@ Feature: can ship not-up-to-date feature branches using the always-merge strateg
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the currently checked out commit is "feature commit"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |

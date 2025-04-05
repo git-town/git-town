@@ -23,7 +23,6 @@ Feature: ship the current feature branch with a tracking branch
       |         | git push                        |
       |         | git push origin :feature        |
       |         | git branch -D feature           |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -41,7 +40,6 @@ Feature: ship the current feature branch with a tracking branch
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

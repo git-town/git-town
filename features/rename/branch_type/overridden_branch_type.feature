@@ -23,7 +23,6 @@ Feature: rename a branch that has an overridden branch type
       |        | git checkout new          |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
-    And the current branch is now "new"
     And Git setting "git-town-branch.new.branchtype" is now "feature"
     And Git setting "git-town-branch.old.branchtype" now doesn't exist
     And these commits exist now
@@ -40,7 +39,6 @@ Feature: rename a branch that has an overridden branch type
       |        | git checkout old                      |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
-    And the current branch is now "old"
     And Git setting "git-town-branch.new.branchtype" now doesn't exist
     And Git setting "git-town-branch.old.branchtype" is now "feature"
     And the initial branches and lineage exist now

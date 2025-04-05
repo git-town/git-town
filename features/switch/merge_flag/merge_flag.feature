@@ -17,7 +17,6 @@ Feature: switch branches using the "merge" flag
     Then Git Town runs the commands
       | BRANCH  | COMMAND               |
       | current | git checkout other -m |
-    And the current branch is now "other"
 
     Examples:
       | FLAG    |

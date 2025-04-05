@@ -49,7 +49,6 @@ Feature: rebase a branch that contains amended commits
       | feature-2 | git rebase feature-1 --no-update-refs           |
       |           | git rebase origin/feature-2 --no-update-refs    |
       |           | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature-2"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local, origin | commit 1a | file_1    | one          |
@@ -63,7 +62,6 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | COMMAND                |
       | feature-1 | git rebase --abort     |
       |           | git checkout feature-2 |
-    And the current branch is still "feature-2"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   |
       | feature-1 | local         | commit 1b |

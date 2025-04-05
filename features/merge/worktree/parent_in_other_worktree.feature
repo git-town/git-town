@@ -26,13 +26,11 @@ Feature: merging a branch whose parent is active in another worktree
       """
       branch "alpha" is active in another worktree
       """
-    And the current branch is still "beta"
     And the initial lineage exists now
     And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

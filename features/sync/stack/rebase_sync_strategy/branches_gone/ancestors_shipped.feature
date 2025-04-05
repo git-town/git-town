@@ -60,7 +60,6 @@ Feature: shipped parent branches in a stacked change
       """
       deleted branch "feature-2"
       """
-    And the current branch is still "feature-4"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-3, feature-4 |
@@ -90,5 +89,4 @@ Feature: shipped parent branches in a stacked change
       |           | git branch feature-1 {{ sha-before-run 'feature-1 commit' }} |
       |           | git branch feature-2 {{ sha-before-run 'feature-2 commit' }} |
       |           | git checkout feature-4                                       |
-    And the current branch is still "feature-4"
     And the initial branches and lineage exist now

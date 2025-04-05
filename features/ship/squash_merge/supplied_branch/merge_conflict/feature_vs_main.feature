@@ -30,7 +30,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       """
       aborted because merge exited with error
       """
-    And the current branch is still "other"
     And no merge is in progress
 
   Scenario: undo
@@ -40,7 +39,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       """
       nothing to undo
       """
-    And the current branch is now "other"
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now

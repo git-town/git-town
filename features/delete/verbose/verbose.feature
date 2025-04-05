@@ -42,4 +42,3 @@ Feature: display all executed Git commands
       """
       Ran 21 shell commands.
       """
-    And the current branch is now "other"

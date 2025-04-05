@@ -29,7 +29,6 @@ Feature: sync a branch whose parent is active in another worktree
       | child  | git merge --no-edit --ff origin/parent  |
       |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
-    And the current branch is still "parent"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE                                                 |
       | main   | local, origin, worktree | origin main commit                                      |
@@ -46,7 +45,6 @@ Feature: sync a branch whose parent is active in another worktree
       | BRANCH | COMMAND                                                                            |
       | child  | git reset --hard {{ sha 'local child commit' }}                                    |
       |        | git push --force-with-lease origin {{ sha-in-origin 'origin child commit' }}:child |
-    And the current branch is still "parent"
     And the current branch in the other worktree is still "child"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE              |

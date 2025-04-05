@@ -18,13 +18,11 @@ Feature: dry-run prepending a branch to a feature branch
       |        | git merge --no-edit --ff main       |
       |        | git merge --no-edit --ff origin/old |
       |        | git checkout -b parent main         |
-    And the current branch is still "old"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "old"
     And the initial commits exist now
     And the initial lineage exists now

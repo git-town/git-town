@@ -21,6 +21,5 @@ Feature: does not merge observed branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now

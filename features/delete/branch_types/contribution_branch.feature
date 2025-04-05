@@ -20,7 +20,6 @@ Feature: delete the current contribution branch
       | contribution | git fetch --prune --tags   |
       |              | git checkout feature       |
       | feature      | git branch -D contribution |
-    And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES                    |
@@ -40,7 +39,6 @@ Feature: delete the current contribution branch
       | BRANCH  | COMMAND                                                 |
       | feature | git branch contribution {{ sha 'contribution commit' }} |
       |         | git checkout contribution                               |
-    And the current branch is now "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"

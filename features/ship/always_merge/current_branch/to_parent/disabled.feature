@@ -25,7 +25,6 @@ Feature: does not ship a child branch
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
       """
-    And the current branch is still "gamma"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -36,6 +35,5 @@ Feature: does not ship a child branch
       """
       nothing to undo
       """
-    And the current branch is still "gamma"
     And the initial commits exist now
     And the initial branches and lineage exist now

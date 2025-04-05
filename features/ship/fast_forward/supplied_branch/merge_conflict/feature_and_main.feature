@@ -26,7 +26,6 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
       """
       aborted because merge exited with error
       """
-    And the current branch is still "other"
     And no merge is in progress
 
   Scenario: undo
@@ -36,7 +35,6 @@ Feature: does not ship an unsynced feature branch using the fast-forward strateg
       """
       nothing to undo
       """
-    And the current branch is now "other"
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now

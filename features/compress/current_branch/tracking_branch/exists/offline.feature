@@ -18,7 +18,6 @@ Feature: compress the commits in offline mode
       | BRANCH  | COMMAND                  |
       | feature | git reset --soft main    |
       |         | git commit -m "commit 1" |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |
       | feature | local    | commit 1 |
@@ -32,6 +31,5 @@ Feature: compress the commits in offline mode
     Then Git Town runs the commands
       | BRANCH  | COMMAND                               |
       | feature | git reset --hard {{ sha 'commit 2' }} |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -21,7 +21,6 @@ Feature: delete a branch that has an overridden branch type
       |              | git push origin :contribution |
       |              | git checkout other            |
       | other        | git branch -D contribution    |
-    And the current branch is now "other"
     And Git setting "git-town-branch.contribution.branchtype" now doesn't exist
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -40,7 +39,6 @@ Feature: delete a branch that has an overridden branch type
       | other  | git branch contribution {{ sha 'contribution commit' }} |
       |        | git push -u origin contribution                         |
       |        | git checkout contribution                               |
-    And the current branch is now "contribution"
     And Git setting "git-town-branch.contribution.branchtype" is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

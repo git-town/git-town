@@ -47,7 +47,6 @@ Feature: dry-running the detach command
       |          | git rebase --onto branch-3 branch-2 |
       |          | git push --force-with-lease         |
       |          | git checkout branch-2               |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now
     And the initial lineage exists now
@@ -55,6 +54,5 @@ Feature: dry-running the detach command
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

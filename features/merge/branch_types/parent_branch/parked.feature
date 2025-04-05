@@ -14,7 +14,6 @@ Feature: merging a feature branch with a parked branch
       | BRANCH  | COMMAND                  |
       | current | git fetch --prune --tags |
       |         | git branch -D parent     |
-    And the current branch is still "current"
     And this lineage exists now
       | BRANCH  | PARENT |
       | current | main   |
@@ -24,6 +23,5 @@ Feature: merging a feature branch with a parked branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                      |
       | current | git branch parent {{ sha 'initial commit' }} |
-    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now

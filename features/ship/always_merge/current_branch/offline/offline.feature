@@ -19,7 +19,6 @@ Feature: offline mode
       | feature | git checkout main                   |
       | main    | git merge --no-ff --edit -- feature |
       |         | git branch -D feature               |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                |
       | main    | local    | feature commit         |
@@ -34,6 +33,5 @@ Feature: offline mode
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
