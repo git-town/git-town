@@ -16,7 +16,7 @@ main
 * feature-1
 ```
 
-We are on the `feature-1` branch. After running `git town append feature-2`, our
+We are on the `feature-1` branch. After running `git town append feature-2`, the
 repository will have this branch setup:
 
 ```

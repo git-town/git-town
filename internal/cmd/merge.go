@@ -46,7 +46,8 @@ main
        \
         branch-4
 
-We are on the "branch-3" branch. After running "git town merge",
+We are on the "branch-3" branch.
+After running "git town merge",
 the new "branch-3" branch contains the changes
 from the old "branch-2" and "branch-3" branches.
 

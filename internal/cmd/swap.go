@@ -31,7 +31,31 @@ import (
 const swapDesc = "Swap the position of this branch with its parent"
 
 const swapHelp = `
-The "swap" command moves the current branch one position forward in the stack.`
+The "swap" command moves the current branch
+one position forward in the stack.
+
+Consider this branch stack:
+
+main
+ \
+  branch-1
+   \
+*   branch-2
+     \
+      branch-3
+
+We are on the "branch-2" branch.
+After running "git town swap",
+you end up with this stack:
+
+main
+ \
+  branch-2
+   \
+*   branch-1
+     \
+      branch-3
+`
 
 const swapCommandName = "swap"
 
