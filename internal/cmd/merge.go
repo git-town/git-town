@@ -34,7 +34,7 @@ const (
 Merges the current branch with its parent branch.
 Both branches must be feature branches.
 
-Consider this branch stack:
+Consider this stack:
 
 main
  \

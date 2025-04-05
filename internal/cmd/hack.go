@@ -33,7 +33,7 @@ import (
 const (
 	hackDesc = "Create a new feature branch off the main branch"
 	hackHelp = `
-Consider this branch stack:
+Consider this stack:
 
 main
  \

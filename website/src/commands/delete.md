@@ -10,7 +10,7 @@ remote repository, removes commits of deleted branches from their descendents
 [merge sync strategy](../preferences/sync-feature-strategy.md#merge)), and
 updates proposals of child branches to the parent of the deleted branch.
 
-Consider this branch stack:
+Consider this stack:
 
 ```
 main
@@ -23,8 +23,7 @@ main
 ```
 
 We are on the `branch-2` branch. After running `git town delete` we end up with
-this branch stack, on the branch that was active before we switched to
-`branch-2`:
+this stack, on the branch that was active before we switched to `branch-2`:
 
 ```
 main

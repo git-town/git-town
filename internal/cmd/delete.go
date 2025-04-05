@@ -39,7 +39,7 @@ and its tracking branch.
 Does not delete perennial branches
 nor the main branch.
 
-Consider this branch stack:
+Consider this stack:
 
 main
  \
@@ -51,7 +51,7 @@ main
 
 We are on the "branch-2" branch.
 After running "git town delete"
-we end up with this branch stack,
+we end up with this stack,
 on the branch that was active
 before we switched to "branch-2":
 
