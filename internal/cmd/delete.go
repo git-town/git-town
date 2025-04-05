@@ -34,8 +34,33 @@ import (
 const (
 	deleteDesc = "Remove an obsolete feature branch"
 	deleteHelp = `
-Deletes the current or provided branch and its tracking branch.
-Does not delete perennial branches nor the main branch.`
+Deletes the current or provided branch
+and its tracking branch.
+Does not delete perennial branches
+nor the main branch.
+
+Consider this branch stack:
+
+main
+ \
+  branch-1
+   \
+*   branch-2
+     \
+      branch-3
+
+We are on the "branch-2" branch.
+After running "git town delete"
+we end up with this branch stack,
+on the branch that was active
+before we switched to "branch-2":
+
+main
+ \
+  branch-1
+   \
+    branch-3
+`
 )
 
 func deleteCommand() *cobra.Command {

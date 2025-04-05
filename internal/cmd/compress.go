@@ -29,17 +29,33 @@ import (
 
 const (
 	compressCommand = "compress"
-	compressDesc    = "Squash all commits on feature branches down to a single commit"
+	compressDesc    = "Squash all commits on the current branch down to a single commit"
 	compressHelp    = `
 Compress is a more convenient way of running "git rebase --interactive"
 and choosing to fixup all commits.
-Branches must be synced before you compress them.
+Branches must be fully synced before you compress them.
 
-By default, this command compresses only the branch you are on.
-With the --stack switch it compresses all branches in the current stack.
+Provide the --stack switch to compress all branches in the stack.
 
 The compressed commit uses the commit message of the first commit in the branch.
 You can provide a custom commit message with the -m switch.
+
+Assuming you have a feature branch with these commits:
+
+$ git log --pretty=format:'%s'
+commit 1
+commit 2
+commit 3
+
+Let's compress these three commits into a single commit:
+
+$ git town compress
+
+Now your branch has a single commit with the name of the first commit but
+containing the changes of all three commits that existed on the branch before:
+
+$ git log --pretty=format:'%s'
+commit 1
 `
 )
 
