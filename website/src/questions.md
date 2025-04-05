@@ -1,9 +1,5 @@
 # Q & A
 
-- stacked changes
-- hotfixes
-- control when updates from the main branch get merged into your branches
-
 ### Does Git Town enforce any specific conventions for branches or commits?
 
 No, Git Town doesn't impose any rules for branch or commit naming. It works with
@@ -39,3 +35,9 @@ compatibility issues, please
 
 No, you can get value from Git Town even if you're the only one using it. It
 simply automates the Git commands that you would (should) normally run.
+
+### How do I control when Git Town pulls in new changes from the main branch?
+
+- stacked changes
+- hotfixes
+- control when updates from the main branch get merged into your branches
