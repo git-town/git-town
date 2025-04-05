@@ -4,9 +4,9 @@
 
 #### New Features
 
-- The new [git town detach](https://www.git-town.com/commands/detach.md) command removes a branch from its stack and makes it an independent top-level branch. This allows you to review and ship more of your branches concurrently, and focuses stacks on changes that belong together ([#4620](https://github.com/git-town/git-town/pull/4620)).
-- The new [git town swap](https://www.git-town.com/commands/swap.md) command switches the position of the current branch with its parent, i.e. moves the current branch one position forward in the stack. This allows you to group related branches together, for example to ship them together or [merge](https://www.git-town.com/commands/swap.md) them.
-- [git town merge](https://www.git-town.com/commands/merge.md) no longer syncs branches on its own, and now requires all affected branches to be in sync. This separates merge conflicts arising from syncing from merge conflicts arising from merging. `git town merge` now effectively only deletes the parent branch ([#4655](https://github.com/git-town/git-town/pull/4655)).
+- The new [git town detach](https://www.git-town.com/commands/detach.html) command removes a branch from its stack and makes it an independent top-level branch. This allows you to review and ship more of your branches concurrently, and focuses stacks on changes that belong together ([#4620](https://github.com/git-town/git-town/pull/4620)).
+- The new [git town swap](https://www.git-town.com/commands/swap.html) command switches the position of the current branch with its parent, i.e. moves the current branch one position forward in the stack. This allows you to group related branches together, for example to ship them together or [merge](https://www.git-town.com/commands/swap.md) them.
+- [git town merge](https://www.git-town.com/commands/merge.html) no longer syncs branches on its own, and now requires all affected branches to be in sync. This separates merge conflicts arising from syncing from merge conflicts arising from merging. `git town merge` now effectively only deletes the parent branch ([#4655](https://github.com/git-town/git-town/pull/4655)).
 - The help screen printed by Git Town commands now gives a usage example ([#4672](https://github.com/git-town/git-town/pull/4672)).
 
 #### Bug Fixes
