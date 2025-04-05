@@ -38,7 +38,7 @@ Feature: remove a branch from a stack
     And Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-3 | git pull                                        |
-      |          | git rebase --onto main branch-2 branch-3        |
+      |          | git rebase --onto main branch-2                 |
       |          | git add file_1                                  |
       |          | git -c core.editor=true rebase --continue       |
       |          | git push --force-with-lease --force-if-includes |
