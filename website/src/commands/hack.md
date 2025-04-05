@@ -8,7 +8,7 @@ The _hack_ command ("let's start hacking") creates a new feature branch with the
 given name off the [main branch](../preferences/main-branch.md) and brings all
 uncommitted changes over to it.
 
-Consider this branch stack:
+Consider this stack:
 
 ```
 main
@@ -64,8 +64,8 @@ Adding the `--prototype` aka `-p` switch creates a
 #### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to build out your branch stack and decide when to pull
-in changes from other developers.
+branch. This allows you to build out your stack and decide when to pull in
+changes from other developers.
 
 #### `-c`<br>`--commit`
 

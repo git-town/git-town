@@ -7,7 +7,7 @@ git town merge [--dry-run] [-v | --verbose]
 The _merge_ command merges the current branch with the branch ahead of it in the
 current stack.
 
-Consider this branch stack:
+Consider this stack:
 
 ```
 main

@@ -8,7 +8,7 @@ The _prepend_ command creates a new feature branch as the parent of the current
 branch. It does that by inserting the new feature branch between the current
 feature branch and it's existing parent.
 
-Consider this branch stack:
+Consider this stack:
 
 ```
 main
@@ -17,7 +17,7 @@ main
 ```
 
 We are on the `feature-2` branch. After running `git town prepend feature-1`,
-our repository has this branch setup:
+our repository has this stack:
 
 ```
 main
@@ -66,8 +66,8 @@ Requires `--propose`.
 #### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to build out your branch stack and decide when to pull
-in changes from other developers.
+branch. This allows you to build out your stack and decide when to pull in
+changes from other developers.
 
 #### `-c`<br>`--commit`
 

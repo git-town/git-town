@@ -42,7 +42,7 @@ Detaching such independent branches
 reduces your stack to changes that belong together,
 and gets more of your changes reviewed and shipped concurrently.
 
-Consider this branch stack:
+Consider this stack:
 
 main
  \
@@ -54,7 +54,7 @@ main
 
 We are on the "branch-2" branch.
 After running "git town detach",
-we end up with this branch stack:
+we end up with this stack:
 
 main
  \

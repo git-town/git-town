@@ -220,7 +220,7 @@ later.
 
 #### Keep the stack in sync
 
-Branch stacks are more susceptible to phantom merge conflicts than regular
+Stacks are more susceptible to phantom merge conflicts than stand-alone
 branches. Don't forget to populate changes across all branches in your stack by
 running `git town sync --stack` or `git town sync --all`.
 
