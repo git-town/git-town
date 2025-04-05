@@ -59,7 +59,6 @@ Feature: detaching a branch that is ahead of its tracking branch
       |          | git rebase --onto branch-4 branch-2             |
       |          | git push --force-with-lease                     |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local, origin | commit 1a |
@@ -96,6 +95,5 @@ Feature: detaching a branch that is ahead of its tracking branch
       |          | git checkout branch-2                                                        |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }}                                       |
       |          | git push --force-with-lease origin {{ sha-before-run 'commit 2a' }}:branch-2 |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

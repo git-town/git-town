@@ -5,10 +5,10 @@ Feature: prepend a new branch when prototype branches are configured via Git met
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
+    And the current branch is "old"
     And Git setting "git-town.new-branch-type" is "prototype"
     When I run "git-town prepend parent"
 
@@ -19,7 +19,6 @@ Feature: prepend a new branch when prototype branches are configured via Git met
       |        | git merge --no-edit --ff main       |
       |        | git merge --no-edit --ff origin/old |
       |        | git checkout -b parent main         |
-    And the current branch is now "parent"
     And branch "parent" now has type "prototype"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
@@ -35,6 +34,5 @@ Feature: prepend a new branch when prototype branches are configured via Git met
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

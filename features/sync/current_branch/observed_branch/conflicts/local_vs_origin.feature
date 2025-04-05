@@ -5,11 +5,11 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And the branches
       | NAME     | TYPE     | LOCATIONS     |
       | observed | observed | local, origin |
-    And the current branch is "observed"
     And the commits
       | BRANCH   | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | observed | local    | conflicting local commit  | conflicting_file | local content  |
       |          | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "observed"
     When I run "git-town sync"
 
   Scenario: result
@@ -34,7 +34,6 @@ Feature: handle conflicts between the current observed branch and its tracking b
     Then Git Town runs the commands
       | BRANCH   | COMMAND            |
       | observed | git rebase --abort |
-    And the current branch is still "observed"
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -58,7 +57,6 @@ Feature: handle conflicts between the current observed branch and its tracking b
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
-    And the current branch is still "observed"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |
@@ -74,7 +72,6 @@ Feature: handle conflicts between the current observed branch and its tracking b
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |
       |          | local         | conflicting local commit  |
-    And the current branch is still "observed"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH   | NAME             | CONTENT          |

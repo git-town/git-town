@@ -36,7 +36,6 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       """
       deleted branch "hooks"
       """
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -49,7 +48,6 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch hooks {{ sha 'hooks commit' }}   |
       |        | git checkout hooks                          |
-    And the current branch is now "hooks"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, hooks |

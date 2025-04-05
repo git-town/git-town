@@ -277,13 +277,21 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				)
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			prog.Add(
-				&opcodes.RebaseOntoKeepDeleted{
-					BranchToRebaseOnto: selectedBranch,
-					CommitsToRemove:    data.initialBranch.BranchName(),
-					Upstream:           parentOpt,
-				},
-			)
+			if parent, hasParent := parentOpt.Get(); hasParent {
+				prog.Add(
+					&opcodes.RebaseOntoKeepDeleted{
+						BranchToRebaseOnto: selectedBranch,
+						CommitsToRemove:    parent.BranchName(),
+						Upstream:           None[gitdomain.LocalBranchName](),
+					},
+				)
+			} else {
+				prog.Add(
+					&opcodes.RebaseBranch{
+						Branch: selectedBranch.BranchName(),
+					},
+				)
+			}
 			if hasRemoteBranch {
 				prog.Add(
 					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},

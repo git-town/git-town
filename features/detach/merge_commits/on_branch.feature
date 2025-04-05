@@ -29,9 +29,7 @@ Feature: detaching a branch that contains merge commits
       """
       branch "branch-2" contains merge commits, please compress and try again
       """
-    And the current branch is still "branch-2"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"

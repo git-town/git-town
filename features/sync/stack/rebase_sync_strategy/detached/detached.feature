@@ -38,21 +38,24 @@ Feature: sync the entire stack
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
       | beta   | git rebase alpha --no-update-refs               |
+      |        | git rebase origin/beta --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout gamma                              |
       | gamma  | git rebase beta --no-update-refs                |
+      |        | git rebase origin/gamma --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
-    And the current branch is still "alpha"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | origin        | main commit              |
       | alpha      | local, origin | alpha commit             |
       | beta       | local, origin | beta commit              |
+      |            |               | alpha commit             |
       | gamma      | local, origin | gamma commit             |
+      |            |               | beta commit              |
+      |            |               | alpha commit             |
       | observed   | local         | local observed commit    |
       |            | origin        | origin observed commit   |
       | one        | local, origin | one commit               |
@@ -75,6 +78,5 @@ Feature: sync the entire stack
       | gamma  | git reset --hard {{ sha 'gamma commit' }}       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
-    And the current branch is still "alpha"
     And the initial commits exist now
     And the initial branches and lineage exist now

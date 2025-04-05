@@ -5,13 +5,13 @@ Feature: display all executed Git commands
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "feature"
     When I run "git-town sync --verbose"
 
   Scenario: result
@@ -42,13 +42,12 @@ Feature: display all executed Git commands
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
       |         | backend  | git show-ref --verify --quiet refs/heads/feature   |
-      |         | backend  | git show-ref --verify --quiet refs/heads/main      |
       |         | backend  | git branch -vva --sort=refname                     |
       |         | backend  | git config -lz --includes --global                 |
       |         | backend  | git config -lz --includes --local                  |
       |         | backend  | git stash list                                     |
     And Git Town prints:
       """
-      Ran 30 shell commands.
+      Ran 29 shell commands.
       """
     And all branches are now synchronized

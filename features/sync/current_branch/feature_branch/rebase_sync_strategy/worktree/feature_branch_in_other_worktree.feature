@@ -12,6 +12,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "main"
     And branch "feature" is active in another worktree
     When I run "git-town sync" in the other worktree
 
@@ -20,7 +21,6 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git rebase origin/main --no-update-refs         |
-      |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And the current branch in the other worktree is still "feature"

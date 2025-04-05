@@ -5,10 +5,10 @@ Feature: ignore files
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |
+    And the current branch is "feature"
     And an uncommitted file with name "test/ignored/important" and content "changed ignored file"
     When I run "git-town sync"
 
@@ -20,6 +20,5 @@ Feature: ignore files
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

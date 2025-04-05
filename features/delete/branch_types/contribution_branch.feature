@@ -6,11 +6,11 @@ Feature: delete the current contribution branch
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution |        | local, origin |
       | feature      | feature      | main   | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
       | feature      | local, origin | feature commit      |
+    And the current branch is "contribution"
     And the current branch is "contribution" and the previous branch is "feature"
     When I run "git-town delete"
 
@@ -20,7 +20,6 @@ Feature: delete the current contribution branch
       | contribution | git fetch --prune --tags   |
       |              | git checkout feature       |
       | feature      | git branch -D contribution |
-    And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES                    |
@@ -40,7 +39,6 @@ Feature: delete the current contribution branch
       | BRANCH  | COMMAND                                                 |
       | feature | git branch contribution {{ sha 'contribution commit' }} |
       |         | git checkout contribution                               |
-    And the current branch is now "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"

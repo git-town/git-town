@@ -5,11 +5,15 @@ Feature: merging a branch verbosely
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
-      | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
       | alpha  | local, origin | alpha commit | alpha-file | alpha content |
-      | beta   | local, origin | beta commit  | beta-file  | beta content  |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | beta   | local, origin | beta commit | beta-file | beta content |
     And the current branch is "beta"
     And Git setting "git-town.sync-feature-strategy" is "merge"
     When I run "git-town merge -v"
@@ -31,52 +35,37 @@ Feature: merging a branch verbosely
       |        | git rev-parse --verify --abbrev-ref @{-1}       |
       |        | git log alpha..beta --format=%s --reverse       |
       |        | git log main..alpha --format=%s --reverse       |
-      | beta   | git checkout alpha                              |
-      | alpha  | git merge --no-edit --ff origin/alpha           |
-      |        | git checkout beta                               |
-      | beta   | git merge --no-edit --ff alpha                  |
-      |        | git merge --no-edit --ff origin/beta            |
-      | (none) | git show-ref --verify --quiet refs/heads/beta   |
-      |        | git rev-list --left-right beta...origin/beta    |
-      | beta   | git push                                        |
-      | (none) | git config git-town-branch.beta.parent main     |
+      |        | git log --no-merges alpha ^beta                 |
+      |        | git config git-town-branch.beta.parent main     |
       |        | git config --unset git-town-branch.alpha.parent |
       | beta   | git branch -D alpha                             |
       |        | git push origin :alpha                          |
-      | (none) | git show-ref --verify --quiet refs/heads/main   |
-      |        | git checkout main                               |
-      |        | git checkout beta                               |
-      |        | git branch -vva --sort=refname                  |
+      | (none) | git branch -vva --sort=refname                  |
       |        | git config -lz --includes --global              |
       |        | git config -lz --includes --local               |
       |        | git stash list                                  |
     And Git Town prints:
       """
-      Ran 33 shell commands.
+      Ran 23 shell commands.
       """
 
   Scenario: undo
     When I run "git-town undo -v"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      |        | git version                                     |
-      |        | git rev-parse --show-toplevel                   |
-      |        | git config -lz --includes --global              |
-      |        | git config -lz --includes --local               |
-      |        | git status --long --ignore-submodules           |
-      |        | git stash list                                  |
-      |        | git branch -vva --sort=refname                  |
-      |        | git remote get-url origin                       |
-      |        | git rev-parse --verify --abbrev-ref @{-1}       |
-      |        | git remote get-url origin                       |
-      |        | git rev-parse --short HEAD                      |
-      | beta   | git reset --hard {{ sha 'beta commit' }}        |
-      | (none) | git rev-list --left-right beta...origin/beta    |
-      | beta   | git push --force-with-lease --force-if-includes |
-      |        | git branch alpha {{ sha 'alpha commit' }}       |
-      |        | git push -u origin alpha                        |
-      | (none) | git config git-town-branch.alpha.parent main    |
-      |        | git config git-town-branch.beta.parent alpha    |
-    And the current branch is still "beta"
+      | BRANCH | COMMAND                                      |
+      |        | git version                                  |
+      |        | git rev-parse --show-toplevel                |
+      |        | git config -lz --includes --global           |
+      |        | git config -lz --includes --local            |
+      |        | git status --long --ignore-submodules        |
+      |        | git stash list                               |
+      |        | git branch -vva --sort=refname               |
+      |        | git remote get-url origin                    |
+      |        | git rev-parse --verify --abbrev-ref @{-1}    |
+      |        | git remote get-url origin                    |
+      | beta   | git branch alpha {{ sha 'alpha commit' }}    |
+      |        | git push -u origin alpha                     |
+      | (none) | git config git-town-branch.alpha.parent main |
+      |        | git config git-town-branch.beta.parent alpha |
     And the initial commits exist now
     And the initial lineage exists now

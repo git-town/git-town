@@ -17,7 +17,6 @@ Feature: the parent of the branch to delete was deleted remotely
       |        | git push origin :beta    |
       |        | git checkout alpha       |
       | alpha  | git branch -D beta       |
-    And the current branch is now "alpha"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, alpha |
@@ -33,5 +32,4 @@ Feature: the parent of the branch to delete was deleted remotely
       | alpha  | git branch beta {{ sha 'initial commit' }} |
       |        | git push -u origin beta                    |
       |        | git checkout beta                          |
-    And the current branch is now "beta"
     And the initial branches and lineage exist now

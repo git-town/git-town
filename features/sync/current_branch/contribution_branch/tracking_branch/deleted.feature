@@ -5,11 +5,11 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE      | FILE NAME  |
       | main         | local, origin | main commit  | main_file  |
       | contribution | local         | local commit | local_file |
+    And the current branch is "contribution"
     And origin deletes the "contribution" branch
     When I run "git-town sync"
 
@@ -19,7 +19,6 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | contribution | git fetch --prune --tags   |
       |              | git checkout main          |
       | main         | git branch -D contribution |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -34,6 +33,5 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
       | BRANCH | COMMAND                                                     |
       | main   | git branch contribution {{ sha-before-run 'local commit' }} |
       |        | git checkout contribution                                   |
-    And the current branch is now "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

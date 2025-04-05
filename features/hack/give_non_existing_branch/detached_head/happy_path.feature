@@ -5,11 +5,11 @@ Feature: on a detached head with a clean workspace
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     And I ran "git checkout HEAD^"
     When I run "git-town hack new"
 
@@ -20,7 +20,6 @@ Feature: on a detached head with a clean workspace
       |                            | git checkout main                       |
       | main                       | git rebase origin/main --no-update-refs |
       |                            | git checkout -b new                     |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |

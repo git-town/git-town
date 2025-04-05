@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const swapDesc = "Swap this branch with the one ahead of it in the stack"
+const swapDesc = "Swap the position of this branch with its parent"
 
 const swapHelp = `
 The "swap" command moves the current branch one position forward in the stack.`

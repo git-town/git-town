@@ -23,7 +23,6 @@ Feature: sync the current prototype branch that has a tracking branch
       |           | git push                                        |
       |           | git checkout prototype                          |
       | prototype | git rebase main --no-update-refs                |
-      |           | git push --force-with-lease --force-if-includes |
       |           | git rebase origin/prototype --no-update-refs    |
       |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
@@ -33,7 +32,6 @@ Feature: sync the current prototype branch that has a tracking branch
       |           |               | main commit   |
       |           |               | local commit  |
     And all branches are now synchronized
-    And the current branch is still "prototype"
     And the initial branches and lineage exist now
 
   Scenario: undo
@@ -42,7 +40,6 @@ Feature: sync the current prototype branch that has a tracking branch
       | BRANCH    | COMMAND                                                                |
       | prototype | git reset --hard {{ sha 'local commit' }}                              |
       |           | git push --force-with-lease origin {{ sha 'origin commit' }}:prototype |
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE       | FILE NAME   |
       | main      | local, origin | main commit   | main_file   |

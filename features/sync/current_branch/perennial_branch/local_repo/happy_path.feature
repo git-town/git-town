@@ -17,14 +17,12 @@ Feature: sync the current perennial branch in a local repo
     Then Git Town runs the commands
       | BRANCH | COMMAND |
     And all branches are now synchronized
-    And the current branch is still "qa"
     And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And the current branch is still "qa"
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |

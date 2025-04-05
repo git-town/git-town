@@ -5,11 +5,11 @@ Feature: does not compress perennial branches
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | perennial | perennial |        | local, origin |
-    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | perennial | local, origin | commit 1 | file_1    | content 1    |
       |           |               | commit 2 | file_2    | content 2    |
+    And the current branch is "perennial"
     When I run "git-town compress"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
@@ -18,7 +18,6 @@ Feature: does not compress perennial branches
       """
       better not compress perennial branches
       """
-    And the current branch is still "perennial"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -36,6 +35,5 @@ Feature: does not compress perennial branches
       """
       better not compress perennial branches
       """
-    And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

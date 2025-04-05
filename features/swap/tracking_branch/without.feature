@@ -29,7 +29,6 @@ Feature: swap a local branch
       |          | git checkout branch-3                                       |
       | branch-3 | git rebase --onto branch-1 {{ sha-before-run 'commit 2b' }} |
       |          | git checkout branch-2                                       |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE     |
       | main     | local    | main commit |
@@ -56,6 +55,5 @@ Feature: swap a local branch
       |          | git checkout branch-3                  |
       | branch-3 | git reset --hard {{ sha 'commit 3b' }} |
       |          | git checkout branch-2                  |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

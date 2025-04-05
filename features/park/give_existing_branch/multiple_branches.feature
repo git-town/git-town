@@ -22,10 +22,8 @@ Feature: parking multiple other branches
     And branch "observed" now has type "parked"
     And there are now no observed branches
     And branch "prototype" now has type "parked"
-    And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And there are now no parked branches
-    And the current branch is still "main"

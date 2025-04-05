@@ -29,7 +29,6 @@ Feature: sync all feature branches in the presence of uncommitted changes
       | feature-1 | git push --tags                           |
       |           | git stash pop                             |
       |           | git restore --staged .                    |
-    And the current branch is still "feature-1"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, origin | feature 1 commit |
@@ -44,6 +43,5 @@ Feature: sync all feature branches in the presence of uncommitted changes
       |           | git stash -m "Git Town WIP" |
       |           | git stash pop               |
       |           | git restore --staged .      |
-    And the current branch is still "feature-1"
     And the initial commits exist now
     And the uncommitted file still exists

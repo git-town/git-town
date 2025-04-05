@@ -25,7 +25,6 @@ Feature: delete another than the current branch
       |        | git branch -D dead          |
       |        | git stash pop               |
       |        | git restore --staged .      |
-    And the current branch is still "good"
     And the uncommitted file has content:
       """
       conflicting content
@@ -51,7 +50,6 @@ Feature: delete another than the current branch
       |        | git push -u origin dead                     |
       |        | git stash pop                               |
       |        | git restore --staged .                      |
-    And the current branch is still "good"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |

@@ -28,16 +28,13 @@ Feature: stacked changes
       |        | git push                                        |
       |        | git checkout parent                             |
       | parent | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
       | child  | git rebase parent --no-update-refs              |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/child --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
@@ -63,7 +60,6 @@ Feature: stacked changes
       | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
       |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
       |        | git checkout child                                                                              |
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |

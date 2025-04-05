@@ -34,7 +34,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       """
       branch "new" is now a child of "parent"
       """
-    And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES          |
       | local      | main, new, parent |
@@ -56,7 +55,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git branch child {{ sha 'child commit' }}       |
       |        | git checkout child                              |
       | child  | git branch -D new                               |
-    And the current branch is now "child"
     And the branches are now
       | REPOSITORY | BRANCHES            |
       | local      | main, child, parent |

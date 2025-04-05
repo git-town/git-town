@@ -39,10 +39,8 @@ Feature: prune enabled via CLI
       | feature-3 | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/feature-3 |
       |           | git push                                  |
-      |           | git checkout main                         |
-      | main      | git push --tags                           |
+      |           | git push --tags                           |
     And all branches are now synchronized
-    And the current branch is now "main"
     And these branches exist now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-3 |
@@ -59,7 +57,6 @@ Feature: prune enabled via CLI
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                     |
-      | main      | git checkout feature-3                                                      |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}                               |
       |           | git push --force-with-lease --force-if-includes                             |
       |           | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1             |
@@ -67,7 +64,6 @@ Feature: prune enabled via CLI
       |           | git branch feature-1 {{ sha 'feature-1 commit' }}                           |
       |           | git branch feature-2 {{ sha 'initial commit' }}                             |
       |           | git checkout feature-1                                                      |
-    And the current branch is now "feature-1"
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |

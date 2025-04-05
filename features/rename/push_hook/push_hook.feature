@@ -5,11 +5,11 @@ Feature: rename the current branch without pre-push hook
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
+    And the current branch is "old"
 
   Scenario: set to "false"
     Given Git setting "git-town.push-hook" is "false"
@@ -21,7 +21,6 @@ Feature: rename the current branch without pre-push hook
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
       |        | git push origin :old               |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -37,7 +36,6 @@ Feature: rename the current branch without pre-push hook
       |        | git checkout new          |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

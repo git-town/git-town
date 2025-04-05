@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	diffParentDesc = "Show the changes committed to a feature branch"
+	diffParentDesc = "Show the changes committed to a branch"
 	diffParentHelp = `
 Works on either the current branch or the branch name provided.
 

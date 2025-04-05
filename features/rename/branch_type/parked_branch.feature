@@ -5,10 +5,10 @@ Feature: rename a parked branch
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
-    And the current branch is "parked"
     And the commits
       | BRANCH | LOCATION      | MESSAGE             |
       | parked | local, origin | low-priority commit |
+    And the current branch is "parked"
     When I run "git-town rename parked new"
 
   Scenario: result
@@ -19,7 +19,6 @@ Feature: rename a parked branch
       |        | git checkout new             |
       | new    | git push -u origin new       |
       |        | git push origin :parked      |
-    And the current branch is now "new"
     And the parked branches are now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
@@ -37,7 +36,6 @@ Feature: rename a parked branch
       |        | git checkout parked                               |
       | parked | git branch -D new                                 |
       |        | git push origin :new                              |
-    And the current branch is now "parked"
     And the parked branches are now "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now

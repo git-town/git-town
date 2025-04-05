@@ -11,7 +11,6 @@ Feature: cannot set parent of perennial branches
       """
     And Git Town runs no commands
     And the initial lineage exists now
-    And the current branch is still "main"
 
   Scenario: on perennial branch
     Given the branches
@@ -25,4 +24,3 @@ Feature: cannot set parent of perennial branches
       """
     And Git Town runs no commands
     And the initial lineage exists now
-    And the current branch is still "qa"

@@ -22,7 +22,6 @@ Feature: swapping a branch with its parked parent
       | parent  | git rebase --onto current main                  |
       |         | git push --force-with-lease --force-if-includes |
       |         | git checkout current                            |
-    And the current branch is still "current"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
@@ -40,6 +39,5 @@ Feature: swapping a branch with its parked parent
       | parent  | git reset --hard {{ sha 'parent commit' }}      |
       |         | git push --force-with-lease --force-if-includes |
       |         | git checkout current                            |
-    And the current branch is still "current"
     And the initial commits exist now
     And the initial lineage exists now

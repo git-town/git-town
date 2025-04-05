@@ -5,12 +5,12 @@ Feature: sync the current feature branch without a tracking branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -24,7 +24,6 @@ Feature: sync the current feature branch without a tracking branch
       | feature | git merge --no-edit --ff main           |
       |         | git push -u origin feature              |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | origin main commit               |
@@ -41,7 +40,6 @@ Feature: sync the current feature branch without a tracking branch
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
       |         | git push origin :feature                          |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |

@@ -21,6 +21,5 @@ Feature: observe the current contribution branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And the current branch is still "contribution"
     And branch "contribution" now has type "contribution"
     And there are now no observed branches

@@ -28,7 +28,6 @@ Feature: partially undo an offline ship using the fast-forward strategy after ad
       """
       it received additional commits in the meantime
       """
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE           |
       | main    | local    | feature commit    |

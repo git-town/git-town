@@ -17,7 +17,6 @@ Feature: on a forked repo
       |        | git rebase upstream/main --no-update-refs |
       |        | git push                                  |
       |        | git checkout -b new                       |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
@@ -28,7 +27,6 @@ Feature: on a forked repo
       | BRANCH | COMMAND           |
       | new    | git checkout main |
       | main   | git branch -D new |
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |

@@ -34,7 +34,6 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is now "grandchild"
     And a merge is now in progress
 
   Scenario: skip the grandchild merge conflict and delete the grandchild branch
@@ -43,7 +42,6 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | BRANCH     | COMMAND           |
       | grandchild | git merge --abort |
       |            | git push --tags   |
-    And the current branch is now "grandchild"
     When I run "git-town delete"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                     |

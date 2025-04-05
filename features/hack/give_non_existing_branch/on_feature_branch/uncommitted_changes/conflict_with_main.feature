@@ -5,10 +5,10 @@ Feature: conflicts between uncommitted changes and the main branch
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    And the current branch is "existing"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
+    And the current branch is "existing"
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town hack new"
 
@@ -45,7 +45,6 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash pop               |
       |          | git stash drop              |
       |          | git restore --staged .      |
-    And the current branch is now "existing"
     And file "conflicting_file" still has content:
       """
       <<<<<<< Updated upstream

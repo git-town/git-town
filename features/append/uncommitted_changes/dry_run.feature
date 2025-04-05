@@ -20,7 +20,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git checkout -b new         |
       | new      | git stash pop               |
       |          | git restore --staged .      |
-    And the current branch is still "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now
     And the uncommitted file still exists
@@ -28,7 +27,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "existing"
     And the initial commits exist now
     And the initial lineage exists now
     And the uncommitted file still exists

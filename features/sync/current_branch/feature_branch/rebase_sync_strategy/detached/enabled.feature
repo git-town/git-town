@@ -6,13 +6,13 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "feature"
     When I run "git-town sync --detached"
 
   Scenario: result
@@ -20,10 +20,8 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local         | local main commit     |
@@ -38,6 +36,5 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       | BRANCH  | COMMAND                                                                                           |
       | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

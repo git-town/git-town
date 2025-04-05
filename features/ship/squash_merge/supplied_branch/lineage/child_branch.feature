@@ -7,12 +7,12 @@ Feature: does not ship a child branch
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
       | gamma | feature | beta   | local, origin |
-    And the current branch is "alpha"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
+    And the current branch is "alpha"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship gamma -m 'gamma done'"
 
@@ -25,7 +25,6 @@ Feature: does not ship a child branch
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
       """
-    And the current branch is now "alpha"
     And the initial commits exist now
     And the initial lineage exists now
 
@@ -36,6 +35,5 @@ Feature: does not ship a child branch
       """
       nothing to undo
       """
-    And the current branch is still "alpha"
     And the initial commits exist now
     And the initial lineage exists now

@@ -35,9 +35,7 @@ Feature: deleting a branch that conflicts with the main branch
       |           | git rm file                               |
       |           | git -c core.editor=true rebase --continue |
       |           | git push --force-with-lease               |
-      |           | git checkout main                         |
-      | main      | git branch -D feature-2                   |
-    And the current branch is now "main"
+      |           | git branch -D feature-2                   |
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
@@ -50,13 +48,11 @@ Feature: deleting a branch that conflicts with the main branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                           |
-      | main      | git checkout feature-3                            |
       | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}     |
       |           | git push --force-with-lease --force-if-includes   |
       |           | git branch feature-2 {{ sha 'feature-2 commit' }} |
       |           | git push -u origin feature-2                      |
       |           | git checkout feature-2                            |
-    And the current branch is still "feature-2"
     And the branches are now
       | REPOSITORY    | BRANCHES                              |
       | local, origin | main, feature-1, feature-2, feature-3 |

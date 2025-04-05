@@ -16,4 +16,3 @@ Feature: switch branches while a manually deleted branch is still listed in the 
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | alpha  | git checkout gamma |
-    And the current branch is now "gamma"

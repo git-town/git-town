@@ -28,7 +28,6 @@ Feature: prototype the current branch verbosely
       """
       branch "feature" is now a prototype branch
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "prototype"
 
   Scenario: undo
@@ -50,5 +49,4 @@ Feature: prototype the current branch verbosely
       """
       Ran 11 shell commands
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "feature"

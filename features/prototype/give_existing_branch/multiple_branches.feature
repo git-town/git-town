@@ -32,7 +32,6 @@ Feature: prototype multiple other branches
       branch "parked" is now a prototype branch
       """
     And branch "parked" now has type "prototype"
-    And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,5 +40,4 @@ Feature: prototype multiple other branches
     And branch "contribution" now has type "contribution"
     And branch "observed" now has type "observed"
     And branch "parked" now has type "parked"
-    And the current branch is still "main"
     And the initial branches and lineage exist now

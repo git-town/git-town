@@ -5,10 +5,10 @@ Feature: ship a feature branch in a local repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m 'feature done'"
 
@@ -19,7 +19,6 @@ Feature: ship a feature branch in a local repo
       | main    | git merge --squash --ff feature |
       |         | git commit -m "feature done"    |
       |         | git branch -D feature           |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
@@ -35,6 +34,5 @@ Feature: ship a feature branch in a local repo
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

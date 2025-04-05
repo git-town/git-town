@@ -14,14 +14,12 @@ Feature: prototype the current contribution branch
       """
       branch "contribution" is now a prototype branch
       """
-    And the current branch is still "contribution"
     And branch "contribution" now has type "prototype"
     And there are now no contribution branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "contribution"
     And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"
     And there are now no prototype branches

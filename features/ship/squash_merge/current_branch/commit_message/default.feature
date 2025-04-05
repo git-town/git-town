@@ -5,10 +5,10 @@ Feature: must provide a commit message
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and close the editor
 
@@ -25,7 +25,6 @@ Feature: must provide a commit message
       """
       aborted because merge exited with error
       """
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial lineage exists now
 
@@ -36,6 +35,5 @@ Feature: must provide a commit message
       """
       nothing to undo
       """
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial lineage exists now

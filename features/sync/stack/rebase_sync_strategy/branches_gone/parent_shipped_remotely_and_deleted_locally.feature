@@ -24,8 +24,8 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       | main   | git rebase origin/main --no-update-refs         |
       |        | git checkout child                              |
       | child  | git rebase main --no-update-refs                |
+      |        | git rebase origin/child --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
@@ -42,7 +42,6 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       |        | git checkout main                               |
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

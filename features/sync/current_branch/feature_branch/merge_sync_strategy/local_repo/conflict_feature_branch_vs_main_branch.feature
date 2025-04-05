@@ -5,11 +5,11 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -26,7 +26,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is still "feature"
     And a merge is now in progress
 
   Scenario: undo
@@ -34,7 +33,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now
 
@@ -45,7 +43,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -55,7 +52,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no merge is in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

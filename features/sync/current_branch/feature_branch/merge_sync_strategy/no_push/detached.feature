@@ -7,7 +7,6 @@ Feature: detached syncing a stacked feature branch using --no-push
       | other | (none)  |        | local, origin |
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
-    And the current branch is "beta"
     And the commits
       | BRANCH | LOCATION | MESSAGE             |
       | main   | local    | local main commit   |
@@ -16,6 +15,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | origin   | origin alpha commit |
       | beta   | local    | local beta commit   |
       |        | origin   | origin beta commit  |
+    And the current branch is "beta"
     When I run "git-town sync --no-push --detached"
 
   Scenario: result
@@ -28,7 +28,6 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
-    And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | local         | local main commit                                      |
@@ -51,6 +50,5 @@ Feature: detached syncing a stacked feature branch using --no-push
       | alpha  | git reset --hard {{ sha 'local alpha commit' }} |
       |        | git checkout beta                               |
       | beta   | git reset --hard {{ sha 'local beta commit' }}  |
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now

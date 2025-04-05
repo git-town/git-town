@@ -12,7 +12,6 @@ Feature: does not prepend perennial branches
       """
       the branch "main" is not a feature branch. Only feature branches can have parent branches
       """
-    And the current branch is still "main"
 
   Scenario: on perennial branch
     Given the branches
@@ -27,4 +26,3 @@ Feature: does not prepend perennial branches
       """
       the branch "production" is not a feature branch. Only feature branches can have parent branches
       """
-    And the current branch is still "production"

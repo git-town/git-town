@@ -6,11 +6,11 @@ Feature: with upstream repo
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And an upstream repo
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -26,7 +26,6 @@ Feature: with upstream repo
       |         | git merge --no-edit --ff origin/feature   |
       |         | git push                                  |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |
@@ -39,7 +38,6 @@ Feature: with upstream repo
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha 'local commit' }}                             |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |

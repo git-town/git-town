@@ -7,11 +7,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -33,7 +33,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is still "feature"
     And a rebase is now in progress
 
   Scenario: undo
@@ -41,7 +40,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
-    And the current branch is still "feature"
     And no merge is in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -55,7 +53,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -64,9 +61,9 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
@@ -79,8 +76,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature"
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now
@@ -94,8 +91,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git push --force-with-lease --force-if-includes |
-    And the current branch is still "feature"
+      | feature | git rebase origin/feature --no-update-refs      |
+      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now

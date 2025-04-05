@@ -29,7 +29,6 @@ Feature: does not compress the active contribution branch
       |              | git push --force-with-lease --force-if-includes |
       |              | git checkout contribution                       |
     And all branches are now synchronized
-    And the current branch is still "contribution"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE        |
       | child        | local, origin | child 1        |
@@ -46,6 +45,5 @@ Feature: does not compress the active contribution branch
       | child        | git reset --hard {{ sha 'child 2' }}            |
       |              | git push --force-with-lease --force-if-includes |
       |              | git checkout contribution                       |
-    And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

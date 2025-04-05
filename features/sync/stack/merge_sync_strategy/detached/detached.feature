@@ -29,7 +29,6 @@ Feature: detached sync of the entire branch stack
       |        | git merge --no-edit --ff origin/beta  |
       |        | git push                              |
       |        | git checkout alpha                    |
-    And the current branch is still "alpha"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | local         | local main commit                                      |

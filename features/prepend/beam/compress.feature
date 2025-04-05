@@ -34,7 +34,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | git merge --no-edit --ff parent                 |
       |        | git push                                        |
       |        | git checkout parent                             |
-    And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
@@ -53,7 +52,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | parent | git fetch --prune --tags      |
       |        | git merge --no-edit --ff main |
       |        | git push -u origin parent     |
-    And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
@@ -69,6 +67,5 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | git reset --hard {{ sha 'commit 4' }}           |
       |        | git push --force-with-lease --force-if-includes |
       |        | git branch -D parent                            |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

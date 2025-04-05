@@ -40,8 +40,7 @@ Feature: shipped branch with multiple descendents
       | feature-1b | git merge --no-edit --ff main              |
       |            | git merge --no-edit --ff origin/feature-1b |
       |            | git push                                   |
-      |            | git checkout main                          |
-      | main       | git push --tags                            |
+      |            | git push --tags                            |
     And Git Town prints:
       """
       deleted branch "feature-1"
@@ -54,7 +53,6 @@ Feature: shipped branch with multiple descendents
       """
       branch "feature-1b" is now a child of "main"
       """
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES                     |
       | local, origin | main, feature-1a, feature-1b |
@@ -76,7 +74,7 @@ Feature: shipped branch with multiple descendents
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                           |
-      | main       | git checkout feature-1a                           |
+      | feature-1b | git checkout feature-1a                           |
       | feature-1a | git reset --hard {{ sha 'feature-1a commit' }}    |
       |            | git push --force-with-lease --force-if-includes   |
       |            | git checkout feature-1b                           |
@@ -86,5 +84,4 @@ Feature: shipped branch with multiple descendents
       | main       | git reset --hard {{ sha 'initial commit' }}       |
       |            | git branch feature-1 {{ sha 'feature-1 commit' }} |
       |            | git checkout feature-1                            |
-    And the current branch is still "feature-1"
     And the initial branches and lineage exist now

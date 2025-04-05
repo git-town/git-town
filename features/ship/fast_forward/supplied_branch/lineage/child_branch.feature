@@ -25,7 +25,6 @@ Feature: does not ship a child branch using the fast-forward strategy
       shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
       """
-    And the current branch is now "alpha"
     And the initial commits exist now
     And the initial lineage exists now
 
@@ -36,6 +35,5 @@ Feature: does not ship a child branch using the fast-forward strategy
       """
       nothing to undo
       """
-    And the current branch is still "alpha"
     And the initial commits exist now
     And the initial lineage exists now

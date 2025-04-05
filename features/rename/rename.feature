@@ -6,11 +6,11 @@ Feature: rename the current branch
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
+    And the current branch is "old"
     When I run "git-town rename new"
 
   Scenario: result
@@ -21,7 +21,6 @@ Feature: rename the current branch
       |        | git checkout new          |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -36,5 +35,4 @@ Feature: rename the current branch
       |        | git checkout old                      |
       | old    | git branch -D new                     |
       |        | git push origin :new                  |
-    And the current branch is now "old"
     And the initial branches and lineage exist now

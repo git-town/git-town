@@ -5,12 +5,12 @@ Feature: sync the current prototype branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS |
       | prototype | prototype | main   | local     |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION | MESSAGE            |
       | main      | local    | main local commit  |
       |           | local    | main origin commit |
       | prototype | local    | local commit       |
+    And the current branch is "prototype"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
@@ -23,7 +23,6 @@ Feature: sync the current prototype branch
       |           | git push                                |
       |           | git checkout prototype                  |
       | prototype | git rebase main --no-update-refs        |
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | main local commit  |
@@ -35,7 +34,6 @@ Feature: sync the current prototype branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
-    And the current branch is still "prototype"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE            |
       | main      | local, origin | main local commit  |

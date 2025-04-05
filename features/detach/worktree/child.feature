@@ -23,8 +23,8 @@ Feature: detaching a branch whose child is checked out in another worktree
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-3 | local, origin | commit 3a |
       | branch-3 | local, origin | commit 3b |
-    And branch "branch-3" is active in another worktree
     And the current branch is "branch-2"
+    And branch "branch-3" is active in another worktree
     When I run "git-town detach"
 
   Scenario: result
@@ -39,6 +39,5 @@ Feature: detaching a branch whose child is checked out in another worktree
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

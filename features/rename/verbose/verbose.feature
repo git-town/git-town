@@ -5,11 +5,11 @@ Feature: display all executed Git commands
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
+    And the current branch is "old"
     When I run "git-town rename new --verbose"
 
   Scenario: result
@@ -33,18 +33,15 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.old.parent |
       | new    | frontend | git push -u origin new                        |
       |        | frontend | git push origin :old                          |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      |        | backend  | git checkout main                             |
-      |        | backend  | git checkout new                              |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
       |        | backend  | git stash list                                |
     And Git Town prints:
       """
-      Ran 25 shell commands.
+      Ran 23 shell commands.
       """
-    And the current branch is now "new"
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -71,4 +68,3 @@ Feature: display all executed Git commands
       """
       Ran 17 shell commands.
       """
-    And the current branch is now "old"

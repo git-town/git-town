@@ -20,4 +20,3 @@ Feature: switch branches from detached head
     Then Git Town runs the commands
       | BRANCH               | COMMAND            |
       | {{ sha 'commit 1' }} | git checkout alpha |
-    And the current branch is now "alpha"

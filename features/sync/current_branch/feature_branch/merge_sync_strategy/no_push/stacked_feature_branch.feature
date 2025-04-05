@@ -7,7 +7,6 @@ Feature: syncing a stacked feature branch using --no-push
       | feature | (none)  |        | local, origin |
       | parent  | feature | main   | local, origin |
       | child   | feature | parent | local, origin |
-    And the current branch is "child"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -16,6 +15,7 @@ Feature: syncing a stacked feature branch using --no-push
       |        | origin   | origin child commit  |
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
+    And the current branch is "child"
     When I run "git-town sync --no-push"
 
   Scenario: result
@@ -30,7 +30,6 @@ Feature: syncing a stacked feature branch using --no-push
       |        | git checkout child                      |
       | child  | git merge --no-edit --ff parent         |
       |        | git merge --no-edit --ff origin/child   |
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
@@ -55,6 +54,5 @@ Feature: syncing a stacked feature branch using --no-push
       |        | git checkout parent                              |
       | parent | git reset --hard {{ sha 'local parent commit' }} |
       |        | git checkout child                               |
-    And the current branch is still "child"
     And the initial commits exist now
     And the initial branches and lineage exist now

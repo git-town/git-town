@@ -7,11 +7,11 @@ Feature: with upstream repo
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And an upstream repo
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -24,9 +24,9 @@ Feature: with upstream repo
       |         | git push                                        |
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
+      |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
@@ -38,7 +38,6 @@ Feature: with upstream repo
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha-before-run 'local commit' }}                  |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |

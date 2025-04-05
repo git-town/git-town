@@ -18,7 +18,6 @@ Feature: on a feature branch but without main branch
       | BRANCH   | COMMAND                                    |
       | existing | git fetch --prune --tags                   |
       |          | git checkout -b new origin/main --no-track |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
@@ -34,7 +33,6 @@ Feature: on a feature branch but without main branch
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And these branches exist now
       | REPOSITORY | BRANCHES       |

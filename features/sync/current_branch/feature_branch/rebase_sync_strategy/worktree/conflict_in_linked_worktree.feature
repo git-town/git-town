@@ -10,6 +10,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | origin   | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And the current branch is "main"
     And branch "feature" is active in another worktree
     When I run "git-town sync" in the other worktree
 
@@ -50,7 +51,8 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     And I run "git-town continue" in the other worktree
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git push --force-with-lease --force-if-includes |
+      | feature | git rebase origin/feature --no-update-refs      |
+      |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main    | origin           | conflicting main commit | conflicting_file | main content     |

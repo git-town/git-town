@@ -13,7 +13,6 @@ Feature: does not rename the main branch
       """
       the main branch cannot be renamed
       """
-    And the current branch is still "main"
 
   Scenario: try to force rename
     When I run "git-town rename main new --force"
@@ -24,4 +23,3 @@ Feature: does not rename the main branch
       """
       the main branch cannot be renamed
       """
-    And the current branch is still "main"

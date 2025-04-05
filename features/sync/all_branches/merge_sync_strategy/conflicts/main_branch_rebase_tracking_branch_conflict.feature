@@ -34,7 +34,6 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-    And the current branch is now "main"
     And the initial commits exist now
 
   Scenario: continue with unresolved conflict
@@ -60,7 +59,6 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git checkout main                         |
       | main    | git push --tags                           |
     And all branches are now synchronized
-    And the current branch is now "main"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

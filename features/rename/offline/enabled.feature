@@ -6,11 +6,11 @@ Feature: offline mode
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
+    And the current branch is "old"
     When I run "git-town rename new"
 
   Scenario: result
@@ -18,7 +18,6 @@ Feature: offline mode
       | BRANCH | COMMAND                   |
       | old    | git branch --move old new |
       |        | git checkout new          |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -35,6 +34,5 @@ Feature: offline mode
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -20,7 +20,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH  | COMMAND                       |
       | current | git fetch --prune --tags      |
       |         | git merge --no-edit --ff main |
-    And the current branch is still "current"
     And a merge is now in progress
     And Git Town prints the error:
       """
@@ -32,7 +31,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | current | git merge --abort |
-    And the current branch is still "current"
     And no merge is in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -44,7 +42,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "current"
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -62,7 +59,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git checkout current                    |
       | current | git push --tags                         |
     And all branches are now synchronized
-    And the current branch is still "current"
     And no merge is in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |

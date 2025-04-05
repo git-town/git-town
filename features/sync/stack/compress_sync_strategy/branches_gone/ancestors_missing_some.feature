@@ -39,7 +39,6 @@ Feature: stacked changes where an ancestor branch isn't local
       |        | git commit -m "local gamma commit"    |
       |        | git push --force-with-lease           |
     And all branches are now synchronized
-    And the current branch is still "gamma"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | origin        | origin main commit |

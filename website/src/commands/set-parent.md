@@ -34,7 +34,7 @@ main
 ```
 
 Since set-parent changes commits, your branches must be in sync when running
-this command.
+this command. Run [git town sync](sync.md) before running `git town set-parent`.
 
 After set-parent runs, the affected branches no longer contain changes made by
 their old parents. However, they don't see the changes made by their new parent

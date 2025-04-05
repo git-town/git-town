@@ -16,11 +16,9 @@ Feature: sync a branch when the previous branch is active in another worktree
       | current | git fetch --prune --tags                |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/current |
-    And the current branch is still "current"
     And no commits exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "current"
     And no commits exist now

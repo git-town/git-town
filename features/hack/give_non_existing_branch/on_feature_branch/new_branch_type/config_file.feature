@@ -5,11 +5,11 @@ Feature: create a new branch when prototype branches are configured via config f
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     And the committed configuration file:
       """
       [create]
@@ -24,7 +24,6 @@ Feature: create a new branch when prototype branches are configured via config f
       |          | git checkout main                       |
       | main     | git rebase origin/main --no-update-refs |
       |          | git checkout -b new                     |
-    And the current branch is now "new"
     And branch "new" now has type "prototype"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
@@ -43,6 +42,5 @@ Feature: create a new branch when prototype branches are configured via config f
       | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

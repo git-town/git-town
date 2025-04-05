@@ -6,10 +6,10 @@ Feature: abort the ship by empty commit message
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS |
       | feature | feature | main   | local     |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship" and enter an empty commit message
 
@@ -26,7 +26,6 @@ Feature: abort the ship by empty commit message
       """
       aborted because merge exited with error
       """
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -37,6 +36,5 @@ Feature: abort the ship by empty commit message
       """
       nothing to undo
       """
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

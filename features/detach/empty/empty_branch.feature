@@ -37,7 +37,6 @@ Feature: detaching an empty branch
       |          | git checkout branch-4               |
       | branch-4 | git rebase --onto branch-3 branch-2 |
       |          | git checkout branch-2               |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-1 | local    | commit 1a |
@@ -58,6 +57,5 @@ Feature: detaching an empty branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                |
       | branch-2 | git reset --hard {{ sha 'commit 1b' }} |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

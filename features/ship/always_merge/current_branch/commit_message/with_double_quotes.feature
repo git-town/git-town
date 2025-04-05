@@ -5,10 +5,10 @@ Feature: commit message with double-quotes
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship -m 'with "double quotes"'"
 
@@ -21,7 +21,6 @@ Feature: commit message with double-quotes
       |         | git push                                               |
       |         | git push origin :feature                               |
       |         | git branch -D feature                                  |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -39,7 +38,6 @@ Feature: commit message with double-quotes
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the currently checked out commit is "feature commit"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

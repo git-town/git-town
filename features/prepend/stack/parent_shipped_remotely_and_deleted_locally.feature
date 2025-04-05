@@ -26,7 +26,6 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
       |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
       |        | git checkout -b new main                |
-    And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES         |
       | local      | main, child, new |
@@ -47,7 +46,6 @@ Feature: prepending to a branch whose parent was shipped and the local branch de
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git checkout child                              |
       | child  | git branch -D new                               |
-    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

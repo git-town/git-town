@@ -7,17 +7,16 @@ Feature: switch branches using the "merge" flag
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | current | feature | main   | local, origin |
       | other   | feature | main   | local, origin |
-    And the current branch is "current"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
+    And the current branch is "current"
     When I run "git-town switch <FLAG>" and enter into the dialogs:
       | KEYS       |
       | down enter |
     Then Git Town runs the commands
       | BRANCH  | COMMAND               |
       | current | git checkout other -m |
-    And the current branch is now "other"
 
     Examples:
       | FLAG    |

@@ -30,28 +30,28 @@ Feature: shipped parent branches in a stacked change
     And origin ships the "feature-1" branch using the "squash-merge" ship-strategy
     And origin ships the "feature-2" branch using the "squash-merge" ship-strategy as "feature-2 commit"
     And the current branch is "feature-4"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | feature-4 | git fetch --prune --tags                        |
-      |           | git checkout main                               |
-      | main      | git rebase origin/main --no-update-refs         |
-      |           | git checkout feature-2                          |
-      | feature-2 | git rebase --onto main feature-1                |
-      |           | git checkout feature-3                          |
-      | feature-3 | git pull                                        |
-      |           | git rebase --onto main feature-2                |
-      |           | git push --force-with-lease                     |
-      |           | git checkout feature-4                          |
-      | feature-4 | git pull                                        |
-      |           | git rebase --onto main feature-2                |
-      |           | git push --force-with-lease                     |
-      |           | git rebase feature-3 --no-update-refs           |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git branch -D feature-1                         |
-      |           | git branch -D feature-2                         |
+      | BRANCH    | COMMAND                                 |
+      | feature-4 | git fetch --prune --tags                |
+      |           | git checkout main                       |
+      | main      | git rebase origin/main --no-update-refs |
+      |           | git checkout feature-2                  |
+      | feature-2 | git rebase --onto main feature-1        |
+      |           | git checkout feature-3                  |
+      | feature-3 | git pull                                |
+      |           | git rebase --onto main feature-2        |
+      |           | git push --force-with-lease             |
+      |           | git checkout feature-4                  |
+      | feature-4 | git pull                                |
+      |           | git rebase --onto main feature-2        |
+      |           | git push --force-with-lease             |
+      |           | git rebase feature-3 --no-update-refs   |
+      |           | git branch -D feature-1                 |
+      |           | git branch -D feature-2                 |
     And Git Town prints:
       """
       deleted branch "feature-1"
@@ -60,7 +60,6 @@ Feature: shipped parent branches in a stacked change
       """
       deleted branch "feature-2"
       """
-    And the current branch is still "feature-4"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-3, feature-4 |
@@ -90,5 +89,4 @@ Feature: shipped parent branches in a stacked change
       |           | git branch feature-1 {{ sha-before-run 'feature-1 commit' }} |
       |           | git branch feature-2 {{ sha-before-run 'feature-2 commit' }} |
       |           | git checkout feature-4                                       |
-    And the current branch is still "feature-4"
     And the initial branches and lineage exist now

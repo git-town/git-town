@@ -28,11 +28,9 @@ Feature: stacked changes where all ancestor branches aren't local
       |        | git rebase origin/beta --no-update-refs         |
       |        | git rebase origin/alpha --no-update-refs        |
       |        | git rebase origin/main --no-update-refs         |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/gamma --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "gamma"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | origin        | origin main commit  |

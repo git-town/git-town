@@ -18,7 +18,6 @@ Feature: append to a perennial branch
       | production | git fetch --prune --tags                      |
       |            | git rebase origin/production --no-update-refs |
       |            | git checkout -b new                           |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, origin | production commit |
@@ -33,6 +32,5 @@ Feature: append to a perennial branch
       | new        | git checkout production                     |
       | production | git reset --hard {{ sha 'initial commit' }} |
       |            | git branch -D new                           |
-    And the current branch is now "production"
     And the initial commits exist now
     And the initial lineage exists now

@@ -5,11 +5,11 @@ Feature: handle conflicts between the current contribution branch and its tracki
     And the branches
       | NAME         | TYPE         | LOCATIONS     |
       | contribution | contribution | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | contribution | local    | conflicting local commit  | conflicting_file | local content  |
       |              | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "contribution"
     When I run "git-town sync"
 
   Scenario: result
@@ -34,7 +34,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
     Then Git Town runs the commands
       | BRANCH       | COMMAND            |
       | contribution | git rebase --abort |
-    And the current branch is still "contribution"
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -59,7 +58,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
-    And the current branch is still "contribution"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |
@@ -76,7 +74,6 @@ Feature: handle conflicts between the current contribution branch and its tracki
       | BRANCH       | LOCATION      | MESSAGE                   |
       | contribution | local, origin | conflicting origin commit |
       |              |               | conflicting local commit  |
-    And the current branch is still "contribution"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH       | NAME             | CONTENT          |

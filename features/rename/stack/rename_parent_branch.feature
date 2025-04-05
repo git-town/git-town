@@ -6,11 +6,11 @@ Feature: rename a parent branch
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    And the current branch is "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | parent | local, origin | parent commit |
+    And the current branch is "parent"
     When I run "git-town rename parent new"
 
   Scenario: result
@@ -39,6 +39,5 @@ Feature: rename a parent branch
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
       |        | git push origin :new                        |
-    And the current branch is now "parent"
     And the initial commits exist now
     And the initial branches and lineage exist now

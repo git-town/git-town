@@ -5,13 +5,13 @@ Feature: push-hook setting set to "false"
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.push-hook" is "false"
     When I run "git-town sync"
 
@@ -27,7 +27,6 @@ Feature: push-hook setting set to "false"
       |         | git merge --no-edit --ff origin/feature |
       |         | git push --no-verify                    |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
@@ -43,7 +42,6 @@ Feature: push-hook setting set to "false"
       | BRANCH  | COMMAND                                                                                |
       | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |

@@ -5,10 +5,10 @@ Feature: in a local repo
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS |
       | existing | feature | main   | local     |
-    And the current branch is "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
+    And the current branch is "existing"
     When I run "git-town append new"
 
   Scenario: result
@@ -16,7 +16,6 @@ Feature: in a local repo
       | BRANCH   | COMMAND                       |
       | existing | git merge --no-edit --ff main |
       |          | git checkout -b new           |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
@@ -31,6 +30,5 @@ Feature: in a local repo
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

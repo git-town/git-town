@@ -17,7 +17,6 @@ Feature: does not ship the main branch using the fast-forward strategy
       """
       cannot ship the main branch
       """
-    And the current branch is still "feature"
 
   Scenario: undo
     When I run "git-town undo"
@@ -26,4 +25,3 @@ Feature: does not ship the main branch using the fast-forward strategy
       """
       nothing to undo
       """
-    And the current branch is still "feature"

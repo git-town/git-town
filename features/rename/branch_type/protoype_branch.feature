@@ -5,10 +5,10 @@ Feature: rename a prototype branch
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE             |
       | prototype | local, origin | experimental commit |
+    And the current branch is "prototype"
     When I run "git-town rename prototype new"
 
   Scenario: result
@@ -19,7 +19,6 @@ Feature: rename a prototype branch
       |           | git checkout new                |
       | new       | git push -u origin new          |
       |           | git push origin :prototype      |
-    And the current branch is now "new"
     And the prototype branches are now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
@@ -37,7 +36,6 @@ Feature: rename a prototype branch
       |           | git checkout prototype                               |
       | prototype | git branch -D new                                    |
       |           | git push origin :new                                 |
-    And the current branch is now "prototype"
     And the prototype branches are now "prototype"
     And the initial commits exist now
     And the initial branches and lineage exist now

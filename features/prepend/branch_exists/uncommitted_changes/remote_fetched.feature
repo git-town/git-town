@@ -17,7 +17,6 @@ Feature: already existing remote branch
       """
       there is already a branch "existing"
       """
-    And the current branch is still "old"
     And the uncommitted file still exists
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -25,7 +24,6 @@ Feature: already existing remote branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is now "old"
     And the uncommitted file still exists
     And the initial commits exist now
     And the initial lineage exists now

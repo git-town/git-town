@@ -7,20 +7,19 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
+      | BRANCH  | COMMAND                                    |
+      | feature | git fetch --prune --tags                   |
+      |         | git rebase main --no-update-refs           |
+      |         | git rebase origin/feature --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -31,7 +30,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is still "feature"
     And a rebase is now in progress
 
   Scenario: undo
@@ -39,7 +37,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
-    And the current branch is still "feature"
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -50,7 +47,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -61,7 +57,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

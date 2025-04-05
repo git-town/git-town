@@ -6,10 +6,10 @@ Feature: auto-push new branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And Git setting "git-town.push-new-branches" is "true"
-    And the current branch is "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
+    And the current branch is "old"
     When I run "git-town prepend new"
 
   Scenario: result
@@ -20,7 +20,6 @@ Feature: auto-push new branches
       |        | git merge --no-edit --ff origin/old |
       |        | git checkout -b new main            |
       | new    | git push -u origin new              |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
@@ -36,6 +35,5 @@ Feature: auto-push new branches
       | new    | git checkout old     |
       | old    | git branch -D new    |
       |        | git push origin :new |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial lineage exists now

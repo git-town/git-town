@@ -23,7 +23,6 @@ Feature: the branch was shipped manually on the local machine
       |        | git push                                |
       |        | git branch -D feature                   |
       |        | git push --tags                         |
-    And the current branch is still "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -34,7 +33,6 @@ Feature: the branch was shipped manually on the local machine
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git branch feature {{ sha 'feature commit' }} |
-    And the current branch is still "main"
     And the branches are now
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |

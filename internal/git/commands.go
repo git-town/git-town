@@ -48,8 +48,8 @@ func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gi
 	return result, nil
 }
 
-func (self *Commands) BranchContainsMerges(runner gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	output, err := runner.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
+func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	output, err := querier.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
 	return len(output) > 0, err
 }
 
@@ -71,6 +71,11 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
 	return len(out) > 0, nil
+}
+
+func (self *Commands) BranchInSyncWithParent(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+	output, err := querier.QueryTrim("git", "log", "--no-merges", parent.String(), "^"+branch.String())
+	return len(output) == 0, err
 }
 
 // BranchInSyncWithTracking returns whether the local branch with the given name

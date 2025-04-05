@@ -22,7 +22,6 @@ Feature: a default branch type is set, the feature-regex does not match
       | BRANCH    | COMMAND                                      |
       | my-branch | git fetch --prune --tags                     |
       |           | git rebase origin/my-branch --no-update-refs |
-    And the current branch is still "my-branch"
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                 |
       | main      | local         | local main commit       |
@@ -35,6 +34,5 @@ Feature: a default branch type is set, the feature-regex does not match
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                             |
       | my-branch | git reset --hard {{ sha 'local my-branch commit' }} |
-    And the current branch is still "my-branch"
     And the initial commits exist now
     And the initial branches and lineage exist now

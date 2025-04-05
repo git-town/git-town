@@ -5,10 +5,10 @@ Feature: can undo a ship even after additional commits to the main branch
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And the current branch is "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And the current branch is "feature"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship -m done"
     And I add commit "additional commit" to the "main" branch
@@ -22,7 +22,6 @@ Feature: can undo a ship even after additional commits to the main branch
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE           |
       | main    | local, origin | done              |

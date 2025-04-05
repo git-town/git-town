@@ -5,21 +5,20 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And the branches
       | NAME      | TYPE      | PARENT | LOCATIONS     |
       | prototype | prototype | main   | local, origin |
-    And the current branch is "prototype"
     And the commits
       | BRANCH    | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | prototype | local    | conflicting local commit  | conflicting_file | local content  |
       |           | origin   | conflicting origin commit | conflicting_file | origin content |
+    And the current branch is "prototype"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | prototype | git fetch --prune --tags                        |
-      |           | git rebase main --no-update-refs                |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git rebase origin/prototype --no-update-refs    |
+      | BRANCH    | COMMAND                                      |
+      | prototype | git fetch --prune --tags                     |
+      |           | git rebase main --no-update-refs             |
+      |           | git rebase origin/prototype --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -37,7 +36,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND            |
       | prototype | git rebase --abort |
-    And the current branch is still "prototype"
     And no rebase is now in progress
     And the initial commits exist now
     And the initial branches and lineage exist now
@@ -62,7 +60,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
       |           |               | conflicting local commit  |
-    And the current branch is still "prototype"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |
@@ -79,7 +76,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |
       |           |               | conflicting local commit  |
-    And the current branch is still "prototype"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH    | NAME             | CONTENT          |

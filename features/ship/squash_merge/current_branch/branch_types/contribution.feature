@@ -5,10 +5,10 @@ Feature: cannot ship contribution branches
     And the branches
       | NAME         | TYPE         | PARENT | LOCATIONS     |
       | contribution | contribution | main   | local, origin |
-    And the current branch is "contribution"
     And the commits
       | BRANCH       | LOCATION      | MESSAGE             |
       | contribution | local, origin | contribution commit |
+    And the current branch is "contribution"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship"
 
@@ -20,13 +20,11 @@ Feature: cannot ship contribution branches
       """
       cannot ship contribution branches
       """
-    And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "contribution"
     And the initial commits exist now
     And the initial branches and lineage exist now

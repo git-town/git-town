@@ -5,10 +5,10 @@ Feature: cannot ship perennial branches
     And the branches
       | NAME      | TYPE      | LOCATIONS     |
       | perennial | perennial | local, origin |
-    And the current branch is "perennial"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | perennial | local, origin | perennial commit |
+    And the current branch is "perennial"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     When I run "git-town ship"
 
@@ -20,13 +20,11 @@ Feature: cannot ship perennial branches
       """
       cannot ship perennial branches
       """
-    And the current branch is still "perennial"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "perennial"
     And the initial commits exist now
     And the initial branches and lineage exist now

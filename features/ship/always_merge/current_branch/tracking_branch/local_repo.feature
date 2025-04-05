@@ -18,7 +18,6 @@ Feature: ship a feature branch in a local repo using the always-merge strategy
       | feature | git checkout main                   |
       | main    | git merge --no-ff --edit -- feature |
       |         | git branch -D feature               |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
@@ -35,6 +34,5 @@ Feature: ship a feature branch in a local repo using the always-merge strategy
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -27,8 +27,8 @@ Feature: prune enabled via CLI
       |           | git checkout main                         |
       | main      | git push origin :feature-1                |
       |           | git branch -D feature-1                   |
+      |           | git checkout feature-2                    |
     And all branches are now synchronized
-    And the current branch is now "main"
     And these branches exist now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
@@ -43,11 +43,10 @@ Feature: prune enabled via CLI
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                         |
-      | main   | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1 |
-      |        | git branch feature-1 {{ sha 'feature-1 commit' }}               |
-      |        | git checkout feature-1                                          |
-    And the current branch is now "feature-1"
+      | BRANCH    | COMMAND                                                         |
+      | feature-2 | git push origin {{ sha 'initial commit' }}:refs/heads/feature-1 |
+      |           | git branch feature-1 {{ sha 'feature-1 commit' }}               |
+      |           | git checkout feature-1                                          |
     And the initial branches and lineage exist now
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |

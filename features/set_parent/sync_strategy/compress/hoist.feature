@@ -35,14 +35,13 @@ Feature: remove a branch from a stack
     And Git Town runs the commands
       | BRANCH   | COMMAND                                         |
       | branch-2 | git pull                                        |
-      |          | git rebase --onto main branch-1 branch-2        |
+      |          | git rebase --onto main branch-1                 |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-3                           |
       | branch-3 | git pull                                        |
       |          | git rebase --onto branch-2 branch-1 branch-3    |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
@@ -70,6 +69,5 @@ Feature: remove a branch from a stack
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial branches and lineage exist now

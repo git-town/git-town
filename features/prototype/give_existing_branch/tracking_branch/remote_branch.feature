@@ -16,7 +16,6 @@ Feature: prototype another remote branch
       """
       branch "remote-feature" is now a prototype branch
       """
-    And the current branch is now "remote-feature"
     And branch "remote-feature" now has type "prototype"
 
   Scenario: undo
@@ -25,6 +24,5 @@ Feature: prototype another remote branch
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-    And the current branch is now "main"
     And there are now no observed branches
     And the initial branches exist now
