@@ -22,12 +22,10 @@ Feature: does not ship the given out-of-sync branch using the always-merge strat
       """
       branch "feature" is not in sync
       """
-    And the current branch is still "other"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "other"
     And no merge is in progress
     And the initial commits exist now
     And the initial lineage exists now

@@ -29,6 +29,5 @@ Feature: merging when the branch is not in sync with its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

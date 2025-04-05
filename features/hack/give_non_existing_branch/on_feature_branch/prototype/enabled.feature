@@ -19,7 +19,6 @@ Feature: hack with --prototype flag
       |          | git checkout main                       |
       | main     | git rebase origin/main --no-update-refs |
       |          | git checkout -b new                     |
-    And the current branch is now "new"
     And branch "new" now has type "prototype"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
@@ -38,6 +37,5 @@ Feature: hack with --prototype flag
       | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

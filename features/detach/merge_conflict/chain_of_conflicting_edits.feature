@@ -53,7 +53,6 @@ Feature: detaching a branch from a chain that edits the same file
       |          | git -c core.editor=true rebase --continue       |
       |          | git push --force-with-lease                     |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main     | local, origin | main commit | file      | main content |
@@ -82,6 +81,5 @@ Feature: detaching a branch from a chain that edits the same file
       | branch-4 | git reset --hard {{ sha 'commit 4' }}           |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

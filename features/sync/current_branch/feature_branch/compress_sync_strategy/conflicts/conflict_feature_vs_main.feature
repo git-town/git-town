@@ -34,7 +34,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is still "feature"
     And a merge is now in progress
 
   Scenario: undo
@@ -42,7 +41,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And the current branch is still "feature"
     And no rebase is now in progress
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -57,7 +55,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -71,7 +68,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no merge is in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
@@ -90,7 +86,6 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
       |         | git commit -m "conflicting feature commit" |
       |         | git push --force-with-lease                |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no merge is in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

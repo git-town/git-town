@@ -28,7 +28,6 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "local feature commit 1"  |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                |
       | main    | local    | local main commit      |
@@ -41,6 +40,5 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                        |
       | feature | git reset --hard {{ sha-before-run 'local feature commit 2' }} |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

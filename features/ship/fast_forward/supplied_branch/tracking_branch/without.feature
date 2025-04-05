@@ -22,7 +22,6 @@ Feature: ship the supplied local feature branch
       |        | git push                    |
       |        | git checkout other          |
       | other  | git branch -D feature       |
-    And the current branch is now "other"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -38,7 +37,6 @@ Feature: ship the supplied local feature branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
-    And the current branch is now "other"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |

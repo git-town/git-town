@@ -57,7 +57,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git merge --no-edit --ff origin/beta |
       |        | git push                             |
     And all branches are now synchronized
-    And the current branch is now "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT          |
       | main   | local, origin | alpha commit                  | file      | alpha content         |
@@ -72,7 +71,6 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git checkout beta  |
-    And the current branch is still "beta"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT   |
       | main   | local         | independent commit on main | file      | main content 1 |

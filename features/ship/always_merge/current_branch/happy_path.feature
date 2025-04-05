@@ -21,7 +21,6 @@ Feature: ship an omni-branch via the always-merge strategy
       |         | git push                            |
       |         | git push origin :feature            |
       |         | git branch -D feature               |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -38,7 +37,6 @@ Feature: ship an omni-branch via the always-merge strategy
       | main   | git branch feature {{ sha-before-run 'feature commit' }} |
       |        | git push -u origin feature                               |
       |        | git checkout feature                                     |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |

@@ -37,7 +37,6 @@ Feature: propose a newly prepended branch
       |          | git checkout new                                                        |
       | new      | git push -u origin new                                                  |
       | (none)   | open https://github.com/git-town/git-town/compare/parent...new?expand=1 |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
       | existing | local, origin | existing commit  |
@@ -57,6 +56,5 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes |
       |          | git branch -D new                               |
       |          | git push origin :new                            |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

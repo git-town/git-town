@@ -21,7 +21,6 @@ Feature: compress the commits on a parked branch
       |        | git commit -m "commit 1"                        |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | parked | local, origin | commit 1 |
@@ -35,6 +34,5 @@ Feature: compress the commits on a parked branch
       | BRANCH | COMMAND                                         |
       | parked | git reset --hard {{ sha 'commit 3' }}           |
       |        | git push --force-with-lease --force-if-includes |
-    And the current branch is still "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now

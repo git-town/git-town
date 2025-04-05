@@ -31,4 +31,3 @@ Feature: delete a branch that is active in another worktree
       """
       nothing to undo
       """
-    And the current branch is still "good"

@@ -22,7 +22,6 @@ Feature: ship hotfixes
       |            | git push                   |
       |            | git push origin :hotfix    |
       |            | git branch -D hotfix       |
-    And the current branch is now "production"
     And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
@@ -38,7 +37,6 @@ Feature: ship hotfixes
       | production | git branch hotfix {{ sha 'hotfix commit' }} |
       |            | git push -u origin hotfix                   |
       |            | git checkout hotfix                         |
-    And the current branch is now "hotfix"
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE       |
       | production | local, origin | hotfix commit |

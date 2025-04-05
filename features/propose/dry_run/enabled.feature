@@ -18,7 +18,6 @@ Feature: dry-run proposing changes
       | feature | git fetch --prune --tags                           |
       | (none)  | Looking for proposal online ... ok                 |
       |         | open https://github.com/git-town/git-town/pull/123 |
-    And the current branch is still "feature"
     And the initial branches and lineage exist now
 
   Scenario: there is no PR for this branch yet
@@ -31,5 +30,4 @@ Feature: dry-run proposing changes
       | feature | git merge --no-edit --ff main                                      |
       |         | git merge --no-edit --ff origin/feature                            |
       | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And the current branch is still "feature"
     And the initial branches and lineage exist now

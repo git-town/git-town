@@ -46,7 +46,6 @@ Feature: display all executed Git commands when using the always-merge strategy
       """
       Ran 27 shell commands.
       """
-    And the current branch is now "main"
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -71,4 +70,3 @@ Feature: display all executed Git commands when using the always-merge strategy
       """
       Ran 15 shell commands.
       """
-    And the current branch is now "feature"

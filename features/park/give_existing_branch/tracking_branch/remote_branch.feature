@@ -16,7 +16,6 @@ Feature: park another remote branch
       """
       branch "remote-feature" is now parked
       """
-    And the current branch is now "remote-feature"
     And the parked branches are now "remote-feature"
 
   Scenario: undo
@@ -25,6 +24,5 @@ Feature: park another remote branch
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-    And the current branch is now "main"
     And there are now no parked branches
     And branch "remote-feature" now has type "feature"

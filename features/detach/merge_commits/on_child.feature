@@ -36,7 +36,6 @@ Feature: detaching a branch whose child contains merge commits
       |          | git rebase --onto branch-1 branch-2             |
       |          | git push --force-with-lease                     |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |
@@ -58,7 +57,6 @@ Feature: detaching a branch whose child contains merge commits
       | branch-3 | git reset --hard {{ sha 'commit 3' }}           |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |

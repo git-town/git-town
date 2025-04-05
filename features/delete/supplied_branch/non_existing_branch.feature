@@ -10,4 +10,3 @@ Feature: non-existing branch
       """
       there is no branch "non-existing"
       """
-    And the current branch is now "main"

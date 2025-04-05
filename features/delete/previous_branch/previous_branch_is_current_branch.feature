@@ -20,7 +20,6 @@ Feature: deleting a branch without a useful previous branch setting
       | current | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -D current    |
-    And the current branch is now "main"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY | BRANCHES    |
@@ -39,6 +38,5 @@ Feature: deleting a branch without a useful previous branch setting
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
-    And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now

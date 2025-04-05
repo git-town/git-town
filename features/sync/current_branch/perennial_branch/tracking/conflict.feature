@@ -35,7 +35,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
-    And the current branch is still "qa"
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -57,7 +56,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git push                                  |
       |        | git push --tags                           |
     And all branches are now synchronized
-    And the current branch is still "qa"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
@@ -72,7 +70,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git push        |
       |        | git push --tags |
     And all branches are now synchronized
-    And the current branch is still "qa"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |

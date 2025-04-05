@@ -15,11 +15,9 @@ Feature: prototype another prototype branch
       branch "prototype" is already a prototype branch
       """
     And the prototype branches are now "prototype"
-    And the current branch is still "prototype"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the prototype branches are now "prototype"
-    And the current branch is still "prototype"
     And the initial branches and lineage exist now

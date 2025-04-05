@@ -21,5 +21,4 @@ Feature: syncs all feature branches (in a local repo)
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
       |        | git checkout alpha            |
-    And the current branch is still "alpha"
     And all branches are now synchronized

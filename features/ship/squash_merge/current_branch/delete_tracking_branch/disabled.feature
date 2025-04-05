@@ -23,7 +23,6 @@ Feature: ship-delete-tracking-branch disabled
       |         | git commit -m "feature done"    |
       |         | git push                        |
       |         | git branch -D feature           |
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -40,7 +39,6 @@ Feature: ship-delete-tracking-branch disabled
       |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

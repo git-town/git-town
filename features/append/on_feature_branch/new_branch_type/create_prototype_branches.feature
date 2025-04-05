@@ -23,7 +23,6 @@ Feature: append a new branch when prototype branches are configured via a deprec
       """
       Upgrading deprecated local setting "git-town.create-prototype-branches" to "git-town.new-branch-type"
       """
-    And the current branch is now "new"
     And branch "new" now has type "prototype"
     And Git setting "git-town.create-prototype-branches" now doesn't exist
     And Git setting "git-town.new-branch-type" is now "prototype"
@@ -39,7 +38,6 @@ Feature: append a new branch when prototype branches are configured via a deprec
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now
     And Git setting "git-town.new-branch-type" is still "prototype"

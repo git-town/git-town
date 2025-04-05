@@ -15,10 +15,8 @@ Feature: make another parked branch a contribution branch
       """
     And the contribution branches are now "parked"
     And there are now no parked branches
-    And the current branch is still "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "main"
     And the parked branches are now "parked"

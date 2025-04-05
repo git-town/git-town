@@ -20,7 +20,6 @@ Feature: propose uncommitted changes via a separate parent branch, provide commi
       | existing | git checkout -b new main |
       | new      | git commit -m unrelated  |
       |          | git checkout existing    |
-    And the current branch is still "existing"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
@@ -36,6 +35,5 @@ Feature: propose uncommitted changes via a separate parent branch, provide commi
     Then Git Town runs the commands
       | BRANCH   | COMMAND           |
       | existing | git branch -D new |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

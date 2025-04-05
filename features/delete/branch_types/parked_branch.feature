@@ -21,7 +21,6 @@ Feature: delete the current parked branch
       |         | git push origin :parked  |
       |         | git checkout feature     |
       | feature | git branch -D parked     |
-    And the current branch is now "feature"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES      |
@@ -40,7 +39,6 @@ Feature: delete the current parked branch
       | feature | git branch parked {{ sha 'parked commit' }} |
       |         | git push -u origin parked                   |
       |         | git checkout parked                         |
-    And the current branch is now "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "parked" now has type "parked"

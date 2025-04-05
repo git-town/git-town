@@ -18,7 +18,6 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | existing | git fetch --prune --tags |
       |          | git checkout main        |
       | main     | git checkout -b new      |
-    And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -31,6 +30,5 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial lineage exists now

@@ -33,7 +33,6 @@ Feature: stacked changes
       |        | git merge --no-edit --ff origin/child   |
       |        | git push                                |
     And all branches are now synchronized
-    And the current branch is still "child"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

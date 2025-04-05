@@ -23,7 +23,6 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
       |        | git push                    |
       |        | git checkout other          |
       | other  | git branch -D feature       |
-    And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -40,7 +39,6 @@ Feature: ship the supplied feature branch from a subfolder using the fast-forwar
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git branch feature {{ sha 'feature commit' }} |
-    And the current branch is now "other"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | feature commit |

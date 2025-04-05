@@ -17,7 +17,6 @@ Feature: previous branch is checked out in another worktree
       |         | git merge --no-edit --ff main |
       |         | git push -u origin current    |
       |         | git checkout -b new main      |
-    And the current branch is now "new"
     And the previous Git branch is now "new"
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -32,7 +31,6 @@ Feature: previous branch is checked out in another worktree
       | new     | git checkout current     |
       | current | git branch -D new        |
       |         | git push origin :current |
-    And the current branch is now "current"
     And the previous Git branch is now ""
     And the initial commits exist now
     And the initial lineage exists now

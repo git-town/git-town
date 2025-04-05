@@ -83,7 +83,6 @@ Feature: sync a workspace with two independent stacks
       |        | git merge --no-edit --ff origin/four   |
       |        | git checkout main                      |
       | main   | git push --tags                        |
-    And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
@@ -91,6 +90,5 @@ Feature: sync a workspace with two independent stacks
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

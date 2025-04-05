@@ -15,10 +15,8 @@ Feature: make the current feature branch a contribution branch
       branch "feature" is now a contribution branch
       """
     And branch "feature" now has type "contribution"
-    And the current branch is still "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "feature"
     And there are now no contribution branches

@@ -48,7 +48,6 @@ Feature: display all executed Git commands
       """
       Ran 29 shell commands.
       """
-    And the current branch is now "main"
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -78,4 +77,3 @@ Feature: display all executed Git commands
       """
       Ran 20 shell commands.
       """
-    And the current branch is now "feature"

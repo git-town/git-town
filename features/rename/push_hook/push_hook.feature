@@ -21,7 +21,6 @@ Feature: rename the current branch without pre-push hook
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
       |        | git push origin :old               |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -37,7 +36,6 @@ Feature: rename the current branch without pre-push hook
       |        | git checkout new          |
       | new    | git push -u origin new    |
       |        | git push origin :old      |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

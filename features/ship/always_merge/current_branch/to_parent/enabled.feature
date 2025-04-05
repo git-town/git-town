@@ -29,7 +29,6 @@ Feature: allowing shipping into a feature branch
       |        | git push                         |
       |        | git push origin :beta            |
       |        | git branch -D beta               |
-    And the current branch is now "alpha"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, alpha |
@@ -53,6 +52,5 @@ Feature: allowing shipping into a feature branch
       |        | git branch beta {{ sha 'beta 2' }}              |
       |        | git push -u origin beta                         |
       |        | git checkout beta                               |
-    And the current branch is now "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now

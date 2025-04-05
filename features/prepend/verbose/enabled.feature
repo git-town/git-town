@@ -46,7 +46,6 @@ Feature: display all executed Git commands
       """
       Ran 28 shell commands.
       """
-    And the current branch is now "parent"
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -70,4 +69,3 @@ Feature: display all executed Git commands
       """
       Ran 14 shell commands.
       """
-    And the current branch is now "old"

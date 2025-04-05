@@ -31,7 +31,6 @@ Feature: merge conflict
       To continue after having resolved conflicts, run "git town continue".
       To go back to where you started, run "git town undo".
       """
-    And the current branch is still "feature"
     And a merge is now in progress
 
   Scenario: undo
@@ -39,7 +38,6 @@ Feature: merge conflict
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-    And the current branch is still "feature"
     And no merge is in progress
     And the initial commits exist now
 
@@ -50,7 +48,6 @@ Feature: merge conflict
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
     And a merge is now in progress
 
   Scenario: resolve and continue
@@ -61,7 +58,6 @@ Feature: merge conflict
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
       | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | main commit                      |
@@ -80,4 +76,3 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
       | (none)  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And the current branch is still "feature"

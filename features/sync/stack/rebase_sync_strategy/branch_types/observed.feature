@@ -20,7 +20,6 @@ Feature: syncing a stack that contains an observed branch
       | observed | git fetch --prune --tags                    |
       |          | git rebase origin/observed --no-update-refs |
     And all branches are now synchronized
-    And the current branch is still "observed"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |
       | observed | local, origin | new commit |
@@ -30,7 +29,6 @@ Feature: syncing a stack that contains an observed branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                     |
       | observed | git reset --hard {{ sha 'initial commit' }} |
-    And the current branch is still "observed"
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE    |
       | observed | origin   | new commit |

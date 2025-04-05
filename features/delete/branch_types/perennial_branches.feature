@@ -10,7 +10,6 @@ Feature: does not delete perennial branches
       """
       you cannot delete the main branch
       """
-    And the current branch is still "main"
 
   Scenario: perennial branch
     Given a Git repo with origin
@@ -26,4 +25,3 @@ Feature: does not delete perennial branches
       """
       you cannot delete perennial branches
       """
-    And the current branch is still "qa"

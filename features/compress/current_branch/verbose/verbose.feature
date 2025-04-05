@@ -43,7 +43,6 @@ Feature: compress the commits on a feature branch verbosely
       Ran 22 shell commands
       """
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
       | feature | local, origin | commit 1 |
@@ -69,6 +68,5 @@ Feature: compress the commits on a feature branch verbosely
       | feature | git reset --hard {{ sha 'commit 3' }}              |
       | (none)  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

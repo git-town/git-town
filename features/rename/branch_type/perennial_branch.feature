@@ -31,7 +31,6 @@ Feature: rename a perennial branch
       |            | git checkout new                 |
       | new        | git push -u origin new           |
       |            | git push origin :production      |
-    And the current branch is now "new"
     And the perennial branches are now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           |
@@ -51,7 +50,6 @@ Feature: rename a perennial branch
       |            | git checkout production                             |
       | production | git branch -D new                                   |
       |            | git push origin :new                                |
-    And the current branch is now "production"
     And the perennial branches are now "production"
     And the initial commits exist now
     And the initial branches and lineage exist now

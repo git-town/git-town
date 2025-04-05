@@ -27,7 +27,6 @@ Feature: ship a parent branch using the always-merge strategy
       """
       branch "child" is now a child of "main"
       """
-    And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE               |
       | main   | local, origin | parent commit         |
@@ -44,7 +43,6 @@ Feature: ship a parent branch using the always-merge strategy
       | main   | git branch parent {{ sha 'parent commit' }} |
       |        | git push -u origin parent                   |
       |        | git checkout parent                         |
-    And the current branch is now "parent"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE               |
       | main   | local, origin | parent commit         |

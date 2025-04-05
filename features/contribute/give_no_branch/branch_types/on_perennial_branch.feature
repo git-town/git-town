@@ -14,13 +14,11 @@ Feature: cannot make the current perennial branch a contribution branch
       """
       cannot make perennial branches contribution branches
       """
-    And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no contribution branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no contribution branches

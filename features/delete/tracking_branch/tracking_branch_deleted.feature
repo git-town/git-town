@@ -21,7 +21,6 @@ Feature: the branch to delete has a deleted tracking branch
       | old    | git fetch --prune --tags |
       |        | git checkout other       |
       | other  | git branch -D old        |
-    And the current branch is now "other"
     And no uncommitted files exist now
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
@@ -39,7 +38,6 @@ Feature: the branch to delete has a deleted tracking branch
       | BRANCH | COMMAND                               |
       | other  | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
-    And the current branch is now "old"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |

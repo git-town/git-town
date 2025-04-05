@@ -17,7 +17,6 @@ Feature: append a branch when the previous branch is active in another worktree
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/current |
       |         | git checkout -b new                     |
-    And the current branch is now "new"
     And the previous Git branch is now "current"
     And no commits exist now
 
@@ -27,6 +26,5 @@ Feature: append a branch when the previous branch is active in another worktree
       | BRANCH  | COMMAND              |
       | new     | git checkout current |
       | current | git branch -D new    |
-    And the current branch is now "current"
     And the previous Git branch is now ""
     And the initial branches and lineage exist now

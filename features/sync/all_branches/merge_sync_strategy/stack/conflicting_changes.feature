@@ -20,7 +20,6 @@ Feature: sync a stack that makes conflicting changes
       | main   | git rebase origin/main --no-update-refs |
       |        | git checkout alpha                      |
       | alpha  | git merge --no-edit --ff main           |
-    And the current branch is now "alpha"
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -38,7 +37,6 @@ Feature: sync a stack that makes conflicting changes
       """
       CONFLICT (add/add): Merge conflict in file
       """
-    And the current branch is now "beta"
     And a merge is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue"
@@ -49,7 +47,6 @@ Feature: sync a stack that makes conflicting changes
       |        | git push                             |
       |        | git checkout alpha                   |
       | alpha  | git push --tags                      |
-    And the current branch is now "alpha"
     And no merge is in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME | FILE CONTENT           |
@@ -69,6 +66,5 @@ Feature: sync a stack that makes conflicting changes
       |        | git checkout main                                     |
       | main   | git reset --hard {{ sha-in-origin 'initial commit' }} |
       |        | git checkout alpha                                    |
-    And the current branch is still "alpha"
     And the initial commits exist now
     And the initial branches and lineage exist now

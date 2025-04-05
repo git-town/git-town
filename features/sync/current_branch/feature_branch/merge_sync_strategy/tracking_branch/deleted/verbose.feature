@@ -43,7 +43,6 @@ Feature: display all executed Git commands
       """
       Ran 23 shell commands.
       """
-    And the current branch is now "active"
     And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
@@ -73,5 +72,4 @@ Feature: display all executed Git commands
       """
       Ran 14 shell commands.
       """
-    And the current branch is now "old"
     And the initial branches and lineage exist now

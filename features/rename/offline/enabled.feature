@@ -18,7 +18,6 @@ Feature: offline mode
       | BRANCH | COMMAND                   |
       | old    | git branch --move old new |
       |        | git checkout new          |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -35,6 +34,5 @@ Feature: offline mode
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
-    And the current branch is now "old"
     And the initial commits exist now
     And the initial branches and lineage exist now

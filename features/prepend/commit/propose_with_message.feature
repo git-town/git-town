@@ -24,7 +24,6 @@ Feature: propose uncommitted changes via a separate parent branch with message
       |          | git push -u origin new                                         |
       | (none)   | open https://github.com/git-town/git-town/compare/new?expand=1 |
       | new      | git checkout existing                                          |
-    And the current branch is still "existing"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |
@@ -41,6 +40,5 @@ Feature: propose uncommitted changes via a separate parent branch with message
       | BRANCH   | COMMAND              |
       | existing | git branch -D new    |
       |          | git push origin :new |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

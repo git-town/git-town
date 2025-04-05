@@ -27,7 +27,6 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
@@ -43,7 +42,6 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | BRANCH  | COMMAND                                                                                           |
       | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |

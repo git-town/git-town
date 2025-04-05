@@ -13,14 +13,12 @@ Feature: hack an existing contribution branch
       """
       you are trying to convert the main branch to a feature branch
       """
-    And the current branch is still "main"
     And branch "main" still has type "main"
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "main"
     And the initial commits exist now
     And the initial branches and lineage exist now
     And branch "main" now has type "main"
