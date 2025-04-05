@@ -4,9 +4,18 @@
 
 #### New Features
 
+- The new [git town detach](https://www.git-town.com/commands/detach.md) command removes a branch from its stack and makes it an independent top-level branch. This allows you to review and ship more of your branches concurrently, and focuses stacks on changes that belong together ([#4620](https://github.com/git-town/git-town/pull/4620)).
+- The new [git town swap](https://www.git-town.com/commands/swap.md) command swaps the position of the current branch with its parent, i.e. moves the current branch one position forward in the stack. This allows you to group related branches together, for example to ship them together or [merge](https://www.git-town.com/commands/swap.md) them.
+- [git town merge](https://www.git-town.com/commands/merge.md) no longer syncs branches on its own, and now requires all affected branches to be in sync. This separates merge conflicts arising from syncing from merge conflicts arising from merging. `git town merge` now effectively only deletes the parent branch ([#4655](https://github.com/git-town/git-town/pull/4655)).
+- The help screen printed by Git Town commands now gives a usage example ([#4672](https://github.com/git-town/git-town/pull/4672)).
+
 #### Bug Fixes
 
-- `set-parent` no longer deletes commits of the branch in edge cases ([#4669](https://github.com/git-town/git-town/issues/4669)).
+- `git town set-parent` no longer accidentally deletes commits of the branch in certain edge cases ([#4669](https://github.com/git-town/git-town/issues/4669)).
+- `git town set-parent` no longer deletes conflicting files ([#4638](https://github.com/git-town/git-town/issues/4638)).
+- `git town merge` now errors if the parent branch has more than one child ([#4658](https://github.com/git-town/git-town/pull/4658)).
+- `git town prepend --beam` now prints the correct branch name in the picker dialog ([#4642](https://github.com/git-town/git-town/issues/4642)).
+- `git town compress` now handles merge commits correctly ([#4563](https://github.com/git-town/git-town/issues/4563)).
 
 ## 18.2.0 (2025-03-28)
 
