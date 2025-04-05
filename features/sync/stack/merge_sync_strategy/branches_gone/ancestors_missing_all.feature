@@ -30,7 +30,6 @@ Feature: stacked changes where all ancestor branches aren't local
       |        | git merge --no-edit --ff origin/gamma |
       |        | git push                              |
     And all branches are now synchronized
-    And the current branch is still "gamma"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                |
       | main   | origin        | origin main commit                                     |

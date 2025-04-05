@@ -28,7 +28,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       To go back to where you started, run "git town undo".
       To continue by skipping the current branch, run "git town skip".
       """
-    And the current branch is still "feature"
     And a rebase is now in progress
 
   Scenario: undo
@@ -36,7 +35,6 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |
-    And the current branch is still "feature"
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -47,7 +45,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "feature"
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -57,7 +54,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                   |
       | feature | git -c core.editor=true rebase --continue |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

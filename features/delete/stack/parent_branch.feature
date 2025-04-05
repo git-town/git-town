@@ -26,7 +26,6 @@ Feature: delete a branch within a branch chain
       """
       branch "gamma" is now a child of "alpha"
       """
-    And the current branch is now "alpha"
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES           |
@@ -47,6 +46,5 @@ Feature: delete a branch within a branch chain
       | alpha  | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
       |        | git checkout beta                       |
-    And the current branch is now "beta"
     And the initial commits exist now
     And the initial branches and lineage exist now

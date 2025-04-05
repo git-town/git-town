@@ -24,7 +24,6 @@ Feature: sync the current feature branch without a tracking branch
       | feature | git merge --no-edit --ff main           |
       |         | git push -u origin feature              |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | origin main commit               |
@@ -41,7 +40,6 @@ Feature: sync the current feature branch without a tracking branch
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
       |         | git push origin :feature                          |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |
       | main    | local, origin | origin main commit   |

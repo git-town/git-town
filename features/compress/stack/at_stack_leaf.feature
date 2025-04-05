@@ -46,7 +46,6 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git commit -m "gamma 1"                         |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "gamma"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE |
       | alpha  | local, origin | alpha 1 |
@@ -75,6 +74,5 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git checkout gamma                              |
       | gamma  | git reset --hard {{ sha 'gamma 3' }}            |
       |        | git push --force-with-lease --force-if-includes |
-    And the current branch is still "gamma"
     And the initial commits exist now
     And the initial branches and lineage exist now

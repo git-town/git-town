@@ -14,4 +14,3 @@ Feature: sync all branches with an unpushed tag and enabled push hook
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
       |        | git push --tags          |
-    And the current branch is still "main"

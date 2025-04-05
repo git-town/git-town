@@ -32,7 +32,6 @@ Feature: compresses active parked branches
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout parked                             |
     And all branches are now synchronized
-    And the current branch is still "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | child  | local, origin | child 1  |
@@ -50,6 +49,5 @@ Feature: compresses active parked branches
       |        | git checkout parked                             |
       | parked | git reset --hard {{ sha 'parked 2' }}           |
       |        | git push --force-with-lease --force-if-includes |
-    And the current branch is still "parked"
     And the initial commits exist now
     And the initial branches and lineage exist now

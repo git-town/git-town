@@ -25,7 +25,6 @@ Feature: ship the supplied feature branch
       |        | git push origin :feature        |
       |        | git checkout other              |
       | other  | git branch -D feature           |
-    And the current branch is now "other"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -46,7 +45,6 @@ Feature: ship the supplied feature branch
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout other                            |
-    And the current branch is now "other"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

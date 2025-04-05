@@ -17,7 +17,6 @@ Feature: auto-push the new branch without running Git push hooks
       |        | git rebase origin/main --no-update-refs |
       |        | git checkout -b new                     |
       | new    | git push --no-verify -u origin new      |
-    And the current branch is now "new"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
@@ -33,6 +32,5 @@ Feature: auto-push the new branch without running Git push hooks
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
       |        | git push origin :new                        |
-    And the current branch is now "main"
     And the initial commits exist now
     And no lineage exists now

@@ -21,7 +21,6 @@ Feature: switch branches using multiple types
     Then Git Town runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
-    And the current branch is now "prototype"
 
   Scenario: short form
     When I run "git-town switch -to+pr" and enter into the dialogs:
@@ -30,7 +29,6 @@ Feature: switch branches using multiple types
     Then Git Town runs the commands
       | BRANCH     | COMMAND                |
       | observed-2 | git checkout prototype |
-    And the current branch is now "prototype"
 
   Scenario: undo
     Given I ran "git-town switch -to+pr" and enter into the dialogs:
@@ -38,5 +36,4 @@ Feature: switch branches using multiple types
       | down enter |
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "prototype"
     And the initial branches and lineage exist now

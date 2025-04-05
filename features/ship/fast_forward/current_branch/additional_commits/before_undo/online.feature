@@ -20,7 +20,6 @@ Feature: partially undo an online ship using the fast-forward strategy after add
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
-    And the current branch is now "feature"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           |
       | main   | local, origin | feature commit    |

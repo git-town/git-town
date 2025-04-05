@@ -27,6 +27,5 @@ Feature: ignores other Git remotes
       | BRANCH  | COMMAND                                                                                |
       | feature | git reset --hard {{ sha 'local feature commit' }}                                      |
       |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

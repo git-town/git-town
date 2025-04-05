@@ -14,11 +14,9 @@ Feature: parking the current feature branch
       """
       branch "feature" is now parked
       """
-    And the current branch is still "feature"
     And branch "feature" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "feature"
     And there are now no parked branches

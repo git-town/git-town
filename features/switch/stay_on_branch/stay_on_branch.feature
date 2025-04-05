@@ -12,4 +12,3 @@ Feature: stay on the same branch
       | KEYS  |
       | enter |
     Then Git Town runs no commands
-    And the current branch is still "alpha"

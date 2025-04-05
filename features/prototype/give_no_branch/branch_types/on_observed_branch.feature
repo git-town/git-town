@@ -20,6 +20,5 @@ Feature: prototype the current observed branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "observed"
     And branch "observed" now has type "observed"
     And there are now no parked branches

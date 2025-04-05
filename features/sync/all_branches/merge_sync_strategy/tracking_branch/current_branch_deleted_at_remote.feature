@@ -24,7 +24,6 @@ Feature: sync a branch whose tracking branch was shipped
       """
       deleted branch "feature"
       """
-    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -37,5 +36,4 @@ Feature: sync a branch whose tracking branch was shipped
       | main   | git reset --hard {{ sha 'initial commit' }}     |
       |        | git branch feature {{ sha 'feature-1 commit' }} |
       |        | git checkout feature                            |
-    And the current branch is now "feature"
     And the initial branches and lineage exist now

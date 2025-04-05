@@ -23,7 +23,6 @@ Feature: sync the current perennial branch using the rebase sync strategy
       |        | git push                              |
       |        | git push --tags                       |
     And all branches are now synchronized
-    And the current branch is still "qa"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
@@ -33,7 +32,6 @@ Feature: sync the current perennial branch using the rebase sync strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "qa"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |

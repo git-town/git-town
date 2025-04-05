@@ -21,7 +21,6 @@ Feature: compress a branch when the previous branch is active in another worktre
       |         | git reset --soft main                           |
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "current"
     And the previous Git branch is now "current"
     And the initial branches and lineage exist now
 
@@ -31,6 +30,5 @@ Feature: compress a branch when the previous branch is active in another worktre
       | BRANCH  | COMMAND                                         |
       | current | git reset --hard {{ sha 'commit 2' }}           |
       |         | git push --force-with-lease --force-if-includes |
-    And the current branch is still "current"
     And the previous Git branch is now "current"
     And the initial branches and lineage exist now

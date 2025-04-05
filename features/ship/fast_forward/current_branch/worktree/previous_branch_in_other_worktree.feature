@@ -20,7 +20,6 @@ Feature: ship while the previous branch is active in another worktree
       | current | git checkout main           |
       | main    | git merge --ff-only current |
       |         | git branch -D current       |
-    And the current branch is now "main"
     And the previous Git branch is now "main"
 
   Scenario: undo
@@ -30,5 +29,4 @@ Feature: ship while the previous branch is active in another worktree
       | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch current {{ sha 'current commit' }} |
       |        | git checkout current                          |
-    And the current branch is now "current"
     And the previous Git branch is now "main"

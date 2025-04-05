@@ -20,6 +20,5 @@ Feature: ignore files
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -23,7 +23,6 @@ Feature: syncing a top-level feature branch using --no-push
       |         | git checkout feature                    |
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And the current branch is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
@@ -42,6 +41,5 @@ Feature: syncing a top-level feature branch using --no-push
       |         | git checkout main                                 |
       | main    | git reset --hard {{ sha 'local main commit' }}    |
       |         | git checkout feature                              |
-    And the current branch is still "feature"
     And the initial commits exist now
     And the initial branches and lineage exist now

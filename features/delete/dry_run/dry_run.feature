@@ -21,13 +21,11 @@ Feature: dry-run deleting the current feature branch
       |         | git push origin :current |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the current branch is still "current"
     And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now

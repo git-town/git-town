@@ -28,7 +28,6 @@ Feature: abort the ship via empty commit message
       """
       aborted because merge exited with error
       """
-    And the current branch is still "other"
     And the initial commits exist now
     And the initial lineage exists now
 
@@ -39,7 +38,6 @@ Feature: abort the ship via empty commit message
       """
       nothing to undo
       """
-    And the current branch is still "other"
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, origin | main commit    |

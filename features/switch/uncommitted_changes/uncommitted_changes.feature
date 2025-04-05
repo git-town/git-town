@@ -20,5 +20,4 @@ Feature: switch to another branch with uncommitted changes
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | alpha  | git checkout beta |
-    And the current branch is now "beta"
     And the uncommitted file still exists

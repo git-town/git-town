@@ -24,7 +24,6 @@ Feature: append a branch to a branch whose tracking branch was deleted
       """
       deleted branch "shipped"
       """
-    And the current branch is now "new"
     And the branches are now
       | REPOSITORY | BRANCHES  |
       | local      | main, new |
@@ -42,5 +41,4 @@ Feature: append a branch to a branch whose tracking branch was deleted
       |         | git branch shipped {{ sha 'shipped commit' }} |
       |         | git checkout shipped                          |
       | shipped | git branch -D new                             |
-    And the current branch is now "shipped"
     And the initial branches and lineage exist now

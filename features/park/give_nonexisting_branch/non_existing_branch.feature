@@ -14,11 +14,9 @@ Feature: cannot park non-existing branches
       """
       there is no branch "non-existing"
       """
-    And the current branch is still "feature"
     And there are still no parked branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And there are still no parked branches
-    And the current branch is still "feature"

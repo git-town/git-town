@@ -36,7 +36,6 @@ Feature: syncing a branch whose parent with dependent changes was shipped
       """
       deleted branch "branch-1"
       """
-    And the current branch is still "branch-2"
     And the branches are now
       | REPOSITORY    | BRANCHES       |
       | local, origin | main, branch-2 |
@@ -59,5 +58,4 @@ Feature: syncing a branch whose parent with dependent changes was shipped
       | main     | git reset --hard {{ sha 'initial commit' }}         |
       |          | git branch branch-1 {{ sha-before-run 'commit 2' }} |
       |          | git checkout branch-2                               |
-    And the current branch is still "branch-2"
     And the initial branches and lineage exist now

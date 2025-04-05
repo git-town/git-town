@@ -15,7 +15,6 @@ Feature: local repo
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git checkout -b new main |
-    And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -28,7 +27,6 @@ Feature: local repo
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |

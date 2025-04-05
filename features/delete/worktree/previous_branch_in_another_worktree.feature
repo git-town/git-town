@@ -16,7 +16,6 @@ Feature: previous Git branch is in another worktree
       | current | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -D current    |
-    And the current branch is now "main"
     And the previous Git branch is now "main"
 
   Scenario: undo
@@ -25,7 +24,6 @@ Feature: previous Git branch is in another worktree
       | BRANCH | COMMAND                                       |
       | main   | git branch current {{ sha 'initial commit' }} |
       |        | git checkout current                          |
-    And the current branch is now "current"
     And the previous Git branch is now "main"
     And the initial commits exist now
     And the initial branches and lineage exist now

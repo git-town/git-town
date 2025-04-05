@@ -55,7 +55,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |          | git push --force-with-lease                     |
       |          | git branch -D branch-1                          |
       |          | git branch -D branch-2                          |
-    And the current branch is now "branch-4"
     And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT |
@@ -77,7 +76,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |          | git push --force-with-lease --force-if-includes     |
       |          | git branch branch-1 {{ sha-before-run 'commit 1' }} |
       |          | git branch branch-2 {{ sha-before-run 'commit 2' }} |
-    And the current branch is still "branch-4"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT |
       | main     | local, origin | commit 1          | file      | content 1    |

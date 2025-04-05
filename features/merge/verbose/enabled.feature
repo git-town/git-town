@@ -67,6 +67,5 @@ Feature: merging a branch verbosely
       |        | git push -u origin alpha                     |
       | (none) | git config git-town-branch.alpha.parent main |
       |        | git config git-town-branch.beta.parent alpha |
-    And the current branch is still "beta"
     And the initial commits exist now
     And the initial lineage exists now

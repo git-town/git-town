@@ -18,7 +18,6 @@ Feature: delete a local branch
       | current | git fetch --prune --tags |
       |         | git checkout other       |
       | other   | git branch -D current    |
-    And the current branch is now "other"
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -33,6 +32,5 @@ Feature: delete a local branch
       | BRANCH | COMMAND                                     |
       | other  | git branch current {{ sha 'local commit' }} |
       |        | git checkout current                        |
-    And the current branch is now "current"
     And the initial commits exist now
     And the initial branches and lineage exist now

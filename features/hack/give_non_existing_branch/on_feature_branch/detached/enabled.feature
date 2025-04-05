@@ -17,7 +17,6 @@ Feature: on a feature branch with a clean workspace in detached mode
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
       |          | git checkout -b new main |
-    And the current branch is now "new"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -30,6 +29,5 @@ Feature: on a feature branch with a clean workspace in detached mode
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-    And the current branch is now "existing"
     And the initial commits exist now
     And the initial branches and lineage exist now

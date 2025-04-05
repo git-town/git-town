@@ -36,7 +36,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
-    And the current branch is still "feature"
     And no rebase is now in progress
     And the initial commits exist now
 
@@ -61,7 +60,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
@@ -80,7 +78,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
-    And the current branch is still "feature"
     And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |

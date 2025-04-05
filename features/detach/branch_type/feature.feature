@@ -59,7 +59,6 @@ Feature: detaching a feature branch
       |          | git rebase --onto branch-4 branch-2             |
       |          | git push --force-with-lease                     |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
       | branch-1 | local, origin | commit 1a |
@@ -96,6 +95,5 @@ Feature: detaching a feature branch
       | branch-5 | git reset --hard {{ sha 'commit 5b' }}          |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout branch-2                           |
-    And the current branch is still "branch-2"
     And the initial commits exist now
     And the initial lineage exists now

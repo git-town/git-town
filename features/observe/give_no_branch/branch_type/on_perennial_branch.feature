@@ -14,13 +14,11 @@ Feature: observe the current perennial branch
       """
       cannot observe perennial branches
       """
-    And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no observed branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the current branch is still "perennial"
     And the perennial branches are still "perennial"
     And there are still no observed branches

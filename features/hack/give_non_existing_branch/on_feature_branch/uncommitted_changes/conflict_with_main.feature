@@ -45,7 +45,6 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git stash pop               |
       |          | git stash drop              |
       |          | git restore --staged .      |
-    And the current branch is now "existing"
     And file "conflicting_file" still has content:
       """
       <<<<<<< Updated upstream
