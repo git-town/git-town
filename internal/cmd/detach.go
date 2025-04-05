@@ -154,6 +154,7 @@ type detachData struct {
 	children            []detachChildBranch
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
+	descendents         []detachChildBranch
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
 	hasOpenChanges      bool
@@ -165,7 +166,7 @@ type detachData struct {
 }
 
 type detachChildBranch struct {
-	info     gitdomain.BranchInfo
+	info     *gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
 	proposal Option[forgedomain.Proposal]
 }
@@ -261,9 +262,22 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 			return data, false, fmt.Errorf("cannot find branch info for %q", childBranch)
 		}
 		children[c] = detachChildBranch{
-			info:     *childInfo,
+			info:     childInfo,
 			name:     childBranch,
 			proposal: proposal,
+		}
+	}
+	descendentNames := data.config.NormalConfig.Lineage.Descendants(data.branchToDetachName)
+	descendents := make([]detachChildBranch, len(descendentNames))
+	for d, descendentName := range descendentNames {
+		info, has := data.branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
+		if !has {
+			return data, false, fmt.Errorf("cannot find branch info for %q", descendentName)
+		}
+		descendents[d] = detachChildBranch{
+			info:     info,
+			name:     descendentName,
+			proposal: None[forgedomain.Proposal](),
 		}
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
@@ -276,6 +290,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		children:            children,
 		config:              validatedConfig,
 		connector:           connector,
+		descendents:         descendents,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
@@ -303,23 +318,20 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 		)
 	}
 	lastParent := data.parentBranch
-	descendents := data.config.NormalConfig.Lineage.Descendants(data.branchToDetachName)
-	for _, descendent := range descendents {
-		if branchInfo, hasBranchInfo := data.branchesSnapshot.Branches.FindByLocalName(descendent).Get(); hasBranchInfo {
-			sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
-				Ancestor:          data.branchToDetachName.BranchName(),
-				Branch:            descendent,
-				HasTrackingBranch: branchInfo.HasTrackingBranch(),
-				Program:           prog,
-				RebaseOnto:        lastParent,
-			})
-			if branchInfo.HasTrackingBranch() {
-				prog.Value.Add(
-					&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
-				)
-			}
-			lastParent = descendent
+	for _, descendent := range data.descendents {
+		sync.RemoveAncestorCommits(sync.RemoveAncestorCommitsArgs{
+			Ancestor:          data.branchToDetachName.BranchName(),
+			Branch:            descendent.name,
+			HasTrackingBranch: descendent.info.HasTrackingBranch(),
+			Program:           prog,
+			RebaseOnto:        lastParent,
+		})
+		if descendent.info.HasTrackingBranch() {
+			prog.Value.Add(
+				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+			)
 		}
+		lastParent = descendent.name
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	if !data.dryRun {
