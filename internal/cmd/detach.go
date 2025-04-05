@@ -267,10 +267,10 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 			proposal: proposal,
 		}
 	}
-	descendentNames := data.config.NormalConfig.Lineage.Descendants(data.branchToDetachName)
+	descendentNames := validatedConfig.NormalConfig.Lineage.Descendants(branchNameToDetach)
 	descendents := make([]detachChildBranch, len(descendentNames))
 	for d, descendentName := range descendentNames {
-		info, has := data.branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
+		info, has := branchesSnapshot.Branches.FindByLocalName(descendentName).Get()
 		if !has {
 			return data, false, fmt.Errorf("cannot find branch info for %q", descendentName)
 		}
