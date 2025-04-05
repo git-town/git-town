@@ -12,7 +12,6 @@ Feature: reproduce bug
       | DIALOG                | KEYS  |
       | parent branch of test | enter |
 
-  @this
   Scenario: result
     Then Git Town prints:
       """
@@ -31,9 +30,7 @@ Feature: reproduce bug
 
   Scenario: undo
     When I run "git-town undo"
-    And Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | test   | git reset --hard {{ sha 'commit 2' }} |
+    And Git Town runs no commands
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE  | FILE NAME |
       | test   | local    | commit 1 | file_1    |
