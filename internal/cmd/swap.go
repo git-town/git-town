@@ -32,7 +32,9 @@ const swapDesc = "Swap the position of this branch with its parent"
 
 const swapHelp = `
 The "swap" command moves the current branch
-one position forward in the stack.
+one position forward in the stack,
+i.e. switches the position of the current branch
+with its parent.
 
 Consider this stack:
 
