@@ -4,6 +4,10 @@
 
 #### New Features
 
+#### Bug Fixes
+
+- `set-parent` no longer deletes commits of the branch in edge cases ([#4669](https://github.com/git-town/git-town/issues/4669)).
+
 ## 18.2.0 (2025-03-28)
 
 #### New Features
