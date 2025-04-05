@@ -17,6 +17,10 @@
 - `git town prepend --beam` now prints the correct branch name in the picker dialog ([#4642](https://github.com/git-town/git-town/issues/4642)).
 - `git town compress` now handles merge commits correctly ([#4563](https://github.com/git-town/git-town/issues/4563)).
 
+#### Contributors
+
+Shoutout to @FirelightFlagboy, @avaz, @charlierudolph, @cjol, @davidolrik, @erik-rw, @ianjsikes, @kevgo, @leonhfr, @levrik, @ruudk, @stephenwade, @tranhl for contributing ideas, feedback, and code to 55 shipped PRs and 10 resolved issues!
+
 ## 18.2.0 (2025-03-28)
 
 #### New Features
