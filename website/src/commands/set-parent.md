@@ -8,7 +8,7 @@ The _set-parent_ command changes the parent branch for the current branch. You
 select the new parent through a visual dialog. Updates associated proposals and
 removes commits from former parent branches.
 
-Consider this branch stack:
+Consider this stack:
 
 ```
 main
@@ -21,7 +21,7 @@ main
 ```
 
 After running `git town set-parent` and selecting `feature-A` in the dialog, we
-end up with this branch stack:
+end up with this stack:
 
 ```
 main

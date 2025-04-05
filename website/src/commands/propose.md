@@ -42,8 +42,8 @@ pre-populate the title of the pull request to the given text.
 #### `-d`<br>`--detached`
 
 The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to build out your branch stack and decide when to pull
-in changes from other developers.
+branch. This allows you to build out your stack and decide when to pull in
+changes from other developers.
 
 #### `--dry-run`
 

@@ -7,9 +7,9 @@ This page describes how to integrate Git Town into other applications.
 The
 [Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
 appends a visual breadcrumb of the currently reviewed branch and its location in
-the branch stack to new PRs.
+the stack to new PRs.
 
-![example branch stack created by the Git Town GitHub action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
+![example stack created by the Git Town GitHub action](https://raw.githubusercontent.com/git-town/action/main/docs/example-visualization.png)
 
 ## Shell autocompletion
 
