@@ -24,11 +24,12 @@ Feature: sync a branch whose tracking branch was shipped
       | main      | git rebase origin/main --no-update-refs |
       |           | git rebase --onto main feature-1        |
       |           | git branch -D feature-1                 |
+      |           | git checkout feature-2                  |
     And Git Town prints:
       """
       deleted branch "feature-1"
       """
-    And the current branch is now "main"
+    And the current branch is now "feature-2"
     And the branches are now
       | REPOSITORY    | BRANCHES        |
       | local, origin | main, feature-2 |
@@ -39,9 +40,10 @@ Feature: sync a branch whose tracking branch was shipped
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                           |
-      | main   | git reset --hard {{ sha 'initial commit' }}       |
-      |        | git branch feature-1 {{ sha 'feature-1 commit' }} |
-      |        | git checkout feature-1                            |
+      | BRANCH    | COMMAND                                           |
+      | feature-2 | git checkout main                                 |
+      | main      | git reset --hard {{ sha 'initial commit' }}       |
+      |           | git branch feature-1 {{ sha 'feature-1 commit' }} |
+      |           | git checkout feature-1                            |
     And the current branch is now "feature-1"
     And the initial branches and lineage exist now
