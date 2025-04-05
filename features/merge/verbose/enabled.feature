@@ -40,16 +40,13 @@ Feature: merging a branch verbosely
       |        | git config --unset git-town-branch.alpha.parent |
       | beta   | git branch -D alpha                             |
       |        | git push origin :alpha                          |
-      | (none) | git show-ref --verify --quiet refs/heads/main   |
-      |        | git checkout main                               |
-      |        | git checkout beta                               |
-      |        | git branch -vva --sort=refname                  |
+      | (none) | git branch -vva --sort=refname                  |
       |        | git config -lz --includes --global              |
       |        | git config -lz --includes --local               |
       |        | git stash list                                  |
     And Git Town prints:
       """
-      Ran 26 shell commands.
+      Ran 23 shell commands.
       """
 
   Scenario: undo

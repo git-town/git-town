@@ -32,9 +32,9 @@ Feature: deleting a branch that conflicts with the main branch
       | BRANCH    | COMMAND                    |
       | feature-2 | git fetch --prune --tags   |
       |           | git push origin :feature-2 |
-      |           | git checkout main          |
-      | main      | git branch -D feature-2    |
-    And the current branch is now "main"
+      |           | git checkout feature-3     |
+      | feature-3 | git branch -D feature-2    |
+    And the current branch is now "feature-3"
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |
@@ -46,10 +46,10 @@ Feature: deleting a branch that conflicts with the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                           |
-      | main   | git branch feature-2 {{ sha 'feature-2 commit' }} |
-      |        | git push -u origin feature-2                      |
-      |        | git checkout feature-2                            |
+      | BRANCH    | COMMAND                                           |
+      | feature-3 | git branch feature-2 {{ sha 'feature-2 commit' }} |
+      |           | git push -u origin feature-2                      |
+      |           | git checkout feature-2                            |
     And the current branch is still "feature-2"
     And the branches are now
       | REPOSITORY    | BRANCHES                              |

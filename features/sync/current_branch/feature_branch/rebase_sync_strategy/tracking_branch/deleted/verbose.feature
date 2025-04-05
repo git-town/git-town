@@ -35,16 +35,17 @@ Feature: display all executed Git commands
       | main     | frontend | git rebase --onto main branch-2                    |
       |          | frontend | git branch -D branch-2                             |
       |          | backend  | git show-ref --verify --quiet refs/heads/branch-2  |
-      |          | backend  | git show-ref --verify --quiet refs/heads/main      |
+      |          | backend  | git show-ref --verify --quiet refs/heads/branch-1  |
+      | main     | frontend | git checkout branch-1                              |
       |          | backend  | git branch -vva --sort=refname                     |
       |          | backend  | git config -lz --includes --global                 |
       |          | backend  | git config -lz --includes --local                  |
       |          | backend  | git stash list                                     |
     And Git Town prints:
       """
-      Ran 23 shell commands.
+      Ran 24 shell commands.
       """
-    And the current branch is now "main"
+    And the current branch is now "branch-1"
     And the branches are now
       | REPOSITORY    | BRANCHES       |
       | local, origin | main, branch-1 |
@@ -55,21 +56,21 @@ Feature: display all executed Git commands
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
-      | BRANCH | TYPE     | COMMAND                                         |
-      |        | backend  | git version                                     |
-      |        | backend  | git rev-parse --show-toplevel                   |
-      |        | backend  | git config -lz --includes --global              |
-      |        | backend  | git config -lz --includes --local               |
-      |        | backend  | git status --long --ignore-submodules           |
-      |        | backend  | git stash list                                  |
-      |        | backend  | git branch -vva --sort=refname                  |
-      |        | backend  | git remote get-url origin                       |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
-      |        | backend  | git remote get-url origin                       |
-      | main   | frontend | git branch branch-2 {{ sha 'initial commit' }}  |
-      |        | backend  | git show-ref --quiet refs/heads/branch-2        |
-      | main   | frontend | git checkout branch-2                           |
-      |        | backend  | git config git-town-branch.branch-2.parent main |
+      | BRANCH   | TYPE     | COMMAND                                         |
+      |          | backend  | git version                                     |
+      |          | backend  | git rev-parse --show-toplevel                   |
+      |          | backend  | git config -lz --includes --global              |
+      |          | backend  | git config -lz --includes --local               |
+      |          | backend  | git status --long --ignore-submodules           |
+      |          | backend  | git stash list                                  |
+      |          | backend  | git branch -vva --sort=refname                  |
+      |          | backend  | git remote get-url origin                       |
+      |          | backend  | git rev-parse --verify --abbrev-ref @{-1}       |
+      |          | backend  | git remote get-url origin                       |
+      | branch-1 | frontend | git branch branch-2 {{ sha 'initial commit' }}  |
+      |          | backend  | git show-ref --quiet refs/heads/branch-2        |
+      | branch-1 | frontend | git checkout branch-2                           |
+      |          | backend  | git config git-town-branch.branch-2.parent main |
     And Git Town prints:
       """
       Ran 14 shell commands.

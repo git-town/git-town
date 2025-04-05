@@ -37,16 +37,14 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.parent.parent main |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git config git-town-branch.old.parent parent  |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      |        | backend  | git checkout main                             |
-      |        | backend  | git checkout parent                           |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git branch -vva --sort=refname                |
       |        | backend  | git config -lz --includes --global            |
       |        | backend  | git config -lz --includes --local             |
       |        | backend  | git stash list                                |
     And Git Town prints:
       """
-      Ran 30 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "parent"
 
