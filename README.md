@@ -34,6 +34,8 @@ development. Supports mono-repos and stacked changes. Check out
 
 - [append](https://www.git-town.com/commands/append.html) - insert a new branch
   as a child of the current branch
+- [detach](https://www.git-town.com/commands/detach.html) - remove a branch from
+  a stack
 - [diff-parent](https://www.git-town.com/commands/diff-parent.html) - show the
   changes committed to a feature branch
 - [merge](https://www.git-town.com/commands/merge.html) - merge two adjacent
@@ -42,6 +44,8 @@ development. Supports mono-repos and stacked changes. Check out
   branch between the current branch and its parent
 - [set-parent](https://www.git-town.com/commands/set-parent.html) - update the
   parent of a branch
+- [swap](https://www.git-town.com/commands/swap.html) - switch position with the
+  parent branch in a stack
 
 #### Limit branch syncing
 
