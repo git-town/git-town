@@ -12,21 +12,22 @@ Feature: reproduce bug
       | DIALOG                | KEYS  |
       | parent branch of test | enter |
 
+  @this
   Scenario: result
     Then Git Town prints:
       """
       Selected parent branch for "test": main
       """
     And Git Town runs the commands
-      | BRANCH | COMMAND                     |
-      | test   | git rebase --onto main test |
+      | BRANCH | COMMAND                          |
+      | test   | git rebase main --no-update-refs |
     And these commits exist now
-      | BRANCH | LOCATION | MESSAGE |
+      | BRANCH | LOCATION | MESSAGE  |
+      | test   | local    | commit 1 |
+      |        |          | commit 2 |
     And this lineage exists now
       | BRANCH | PARENT |
       | test   | main   |
-    And the branches contain these files:
-      | BRANCH | NAME |
 
   Scenario: undo
     When I run "git-town undo"
