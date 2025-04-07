@@ -649,7 +649,7 @@ func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto git
 	if upstream, hasUpstream := upstream.Get(); hasUpstream {
 		args = append(args, upstream.String())
 	}
-	args = append(args, commitsToRemove.String())
+	args = append(args, commitsToRemove.String(), "--no-update-refs")
 	return runner.Run("git", args...)
 }
 

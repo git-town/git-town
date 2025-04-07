@@ -33,13 +33,31 @@ import (
 const (
 	hackDesc = "Create a new feature branch off the main branch"
 	hackHelp = `
-Syncs the main branch,
-forks a new feature branch with the given name off the main branch,
-pushes the new feature branch to origin
-(if and only if "push-new-branches" is true),
-and brings over all uncommitted changes to the new feature branch.
+Consider this stack:
 
-See "sync" for information regarding upstream remotes.`
+main
+ \
+  branch-1
+   \
+*   branch-2
+
+We are on the "branch-2" branch. After running "git hack branch-3", our
+workspace contains these branches:
+
+main
+ \
+  branch-1
+   \
+    branch-2
+ \
+* branch-3
+
+The new branch "feature-2"
+is a child of the main branch.
+
+If there are no uncommitted changes,
+it also syncs all affected branches.
+`
 )
 
 func hackCmd() *cobra.Command {

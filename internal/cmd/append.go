@@ -33,15 +33,29 @@ import (
 const (
 	appendDesc = "Create a new feature branch as a child of the current branch"
 	appendHelp = `
-Syncs the current branch,
-forks a new feature branch with the given name
-off the current branch,
-makes the new branch a child of the current branch,
-pushes the new feature branch to the origin repository
-(if and only if "push-new-branches" is true),
-and brings over all uncommitted changes to the new feature branch.
+Consider this stack:
 
-See "sync" for information regarding upstream remotes.`
+main
+ \
+* feature-1
+
+We are on the "feature-1" branch,
+which is a child of branch "main".
+After running "git town append feature-2",
+the repository will have these branches:
+
+main
+ \
+  feature-1
+   \
+*   feature-2
+
+The new branch "feature-2"
+is a child of "feature-1".
+
+If there are no uncommitted changes,
+it also syncs all affected branches.
+`
 )
 
 func appendCmd() *cobra.Command {

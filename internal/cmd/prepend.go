@@ -45,7 +45,7 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
 
-Consider this branch stack:
+Consider this stack:
 
 main
  \
@@ -53,7 +53,7 @@ main
 
 We are on the "feature-2" branch.
 After running "git town prepend feature-1",
-our repository has this branch setup:
+our repository has this stack:
 
 main
  \

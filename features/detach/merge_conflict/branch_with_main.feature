@@ -22,13 +22,13 @@ Feature: detaching a branch that conflicts with the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | branch-2 | git fetch --prune --tags                        |
-      |          | git rebase --onto main branch-1                 |
-      |          | git checkout --theirs file                      |
-      |          | git add file                                    |
-      |          | git -c core.editor=true rebase --continue       |
-      |          | git push --force-with-lease --force-if-includes |
+      | BRANCH   | COMMAND                                          |
+      | branch-2 | git fetch --prune --tags                         |
+      |          | git rebase --onto main branch-1 --no-update-refs |
+      |          | git checkout --theirs file                       |
+      |          | git add file                                     |
+      |          | git -c core.editor=true rebase --continue        |
+      |          | git push --force-with-lease --force-if-includes  |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main     | local, origin | main commit | file      | main content |

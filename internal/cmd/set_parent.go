@@ -33,7 +33,7 @@ const (
 	setParentCmd  = "set-parent"
 	setParentDesc = "Set the parent branch for the current branch"
 	setParentHelp = `
-Consider this branch stack:
+Consider this stack:
 
 main
  \
@@ -45,7 +45,7 @@ main
 
 After running "git town set-parent"
 and selecting "feature-A" in the dialog,
-we end up with this branch stack:
+we end up with this stack:
 
 main
  \
@@ -277,13 +277,21 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				)
 			}
 			parentOpt := data.config.NormalConfig.Lineage.Parent(data.initialBranch)
-			prog.Add(
-				&opcodes.RebaseOntoKeepDeleted{
-					BranchToRebaseOnto: selectedBranch,
-					CommitsToRemove:    data.initialBranch.BranchName(),
-					Upstream:           parentOpt,
-				},
-			)
+			if parent, hasParent := parentOpt.Get(); hasParent {
+				prog.Add(
+					&opcodes.RebaseOntoKeepDeleted{
+						BranchToRebaseOnto: selectedBranch,
+						CommitsToRemove:    parent.BranchName(),
+						Upstream:           None[gitdomain.LocalBranchName](),
+					},
+				)
+			} else {
+				prog.Add(
+					&opcodes.RebaseBranch{
+						Branch: selectedBranch.BranchName(),
+					},
+				)
+			}
 			if hasRemoteBranch {
 				prog.Add(
 					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},

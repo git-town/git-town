@@ -76,7 +76,7 @@ The new `compressed commit` now contains the changes from the old `commit 1`,
 
 #### `-s`<br>`--stack`
 
-To compress all branches in a [branch stack](../stacked-changes.md) provide the
+To compress all branches in a [stack](../stacked-changes.md) provide the
 `--stack` aka `-s` switch.
 
 If you want to compress your commits every time you sync, choose the

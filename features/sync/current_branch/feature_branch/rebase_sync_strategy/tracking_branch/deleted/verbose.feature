@@ -32,7 +32,7 @@ Feature: display all executed Git commands
       |          | backend  | git log main..branch-2 --format=%s --reverse       |
       | branch-2 | frontend | git checkout main                                  |
       |          | backend  | git config --unset git-town-branch.branch-2.parent |
-      | main     | frontend | git rebase --onto main branch-2                    |
+      | main     | frontend | git rebase --onto main branch-2 --no-update-refs   |
       |          | frontend | git branch -D branch-2                             |
       |          | backend  | git show-ref --verify --quiet refs/heads/branch-2  |
       |          | backend  | git show-ref --verify --quiet refs/heads/branch-1  |

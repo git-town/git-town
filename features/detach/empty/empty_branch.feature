@@ -29,14 +29,14 @@ Feature: detaching an empty branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                             |
-      | branch-2 | git fetch --prune --tags            |
-      |          | git rebase --onto main branch-1     |
-      |          | git checkout branch-3               |
-      | branch-3 | git rebase --onto branch-1 branch-2 |
-      |          | git checkout branch-4               |
-      | branch-4 | git rebase --onto branch-3 branch-2 |
-      |          | git checkout branch-2               |
+      | BRANCH   | COMMAND                                              |
+      | branch-2 | git fetch --prune --tags                             |
+      |          | git rebase --onto main branch-1 --no-update-refs     |
+      |          | git checkout branch-3                                |
+      | branch-3 | git rebase --onto branch-1 branch-2 --no-update-refs |
+      |          | git checkout branch-4                                |
+      | branch-4 | git rebase --onto branch-3 branch-2 --no-update-refs |
+      |          | git checkout branch-2                                |
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE   |
       | branch-1 | local    | commit 1a |
