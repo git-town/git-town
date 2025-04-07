@@ -18,20 +18,20 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                                   |
-      | child      | git fetch --prune --tags                  |
-      |            | git checkout main                         |
-      | main       | git rebase origin/main --no-update-refs   |
-      |            | git push                                  |
-      |            | git checkout grandchild                   |
-      | grandchild | git pull                                  |
-      |            | git rebase --onto main child              |
-      |            | git checkout --theirs conflicting_file    |
-      |            | git add conflicting_file                  |
-      |            | git -c core.editor=true rebase --continue |
-      |            | git push --force-with-lease               |
-      |            | git branch -D child                       |
-      |            | git push --tags                           |
+      | BRANCH     | COMMAND                                       |
+      | child      | git fetch --prune --tags                      |
+      |            | git checkout main                             |
+      | main       | git rebase origin/main --no-update-refs       |
+      |            | git push                                      |
+      |            | git checkout grandchild                       |
+      | grandchild | git pull                                      |
+      |            | git rebase --onto main child --no-update-refs |
+      |            | git checkout --theirs conflicting_file        |
+      |            | git add conflicting_file                      |
+      |            | git -c core.editor=true rebase --continue     |
+      |            | git push --force-with-lease                   |
+      |            | git branch -D child                           |
+      |            | git push --tags                               |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now

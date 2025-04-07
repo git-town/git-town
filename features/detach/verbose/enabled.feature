@@ -49,17 +49,17 @@ Feature: detaching an omni-branch verbosely
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git log --merges branch-1..branch-2                  |
-      | branch-2 | git rebase --onto main branch-1                      |
+      | branch-2 | git rebase --onto main branch-1 --no-update-refs     |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
       | branch-2 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-3                                |
       | branch-3 | git pull                                             |
-      |          | git rebase --onto branch-1 branch-2                  |
+      |          | git rebase --onto branch-1 branch-2 --no-update-refs |
       |          | git push --force-with-lease                          |
       | (none)   | git rev-list --left-right branch-3...origin/branch-3 |
       | branch-3 | git checkout branch-4                                |
       | branch-4 | git pull                                             |
-      |          | git rebase --onto branch-3 branch-2                  |
+      |          | git rebase --onto branch-3 branch-2 --no-update-refs |
       |          | git push --force-with-lease                          |
       | (none)   | git rev-list --left-right branch-4...origin/branch-4 |
       | branch-4 | git checkout branch-2                                |
