@@ -1,5 +1,15 @@
 # Git Town Changelog
 
+## 18.3.1 (2025-04-07)
+
+#### Bug Fixes
+
+- All `git rebase` commands now consistently use the `--no-update-refs` flag ([#4678](https://github.com/git-town/git-town/issues/4678)).
+
+#### Contributors
+
+Shoutout to @kevgo, @ruudk for contributing feedback and code to 11 shipped PRs and 1 resolved issues!
+
 ## 18.3.0 (2025-04-05)
 
 #### New Features
