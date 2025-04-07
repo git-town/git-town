@@ -17,15 +17,15 @@ Feature: syncing a branch whose parent with independent changes was shipped
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | child  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout child                      |
-      | child  | git pull                                |
-      |        | git rebase --onto main parent           |
-      |        | git push --force-with-lease             |
-      |        | git branch -D parent                    |
+      | BRANCH | COMMAND                                        |
+      | child  | git fetch --prune --tags                       |
+      |        | git checkout main                              |
+      | main   | git rebase origin/main --no-update-refs        |
+      |        | git checkout child                             |
+      | child  | git pull                                       |
+      |        | git rebase --onto main parent --no-update-refs |
+      |        | git push --force-with-lease                    |
+      |        | git branch -D parent                           |
     And Git Town prints:
       """
       deleted branch "parent"

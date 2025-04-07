@@ -35,23 +35,23 @@ Feature: shipped parent branches in a stacked change
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                 |
-      | feature-4 | git fetch --prune --tags                |
-      |           | git checkout main                       |
-      | main      | git rebase origin/main --no-update-refs |
-      |           | git checkout feature-2                  |
-      | feature-2 | git rebase --onto main feature-1        |
-      |           | git checkout feature-3                  |
-      | feature-3 | git pull                                |
-      |           | git rebase --onto main feature-2        |
-      |           | git push --force-with-lease             |
-      |           | git checkout feature-4                  |
-      | feature-4 | git pull                                |
-      |           | git rebase --onto main feature-2        |
-      |           | git push --force-with-lease             |
-      |           | git rebase feature-3 --no-update-refs   |
-      |           | git branch -D feature-1                 |
-      |           | git branch -D feature-2                 |
+      | BRANCH    | COMMAND                                           |
+      | feature-4 | git fetch --prune --tags                          |
+      |           | git checkout main                                 |
+      | main      | git rebase origin/main --no-update-refs           |
+      |           | git checkout feature-2                            |
+      | feature-2 | git rebase --onto main feature-1 --no-update-refs |
+      |           | git checkout feature-3                            |
+      | feature-3 | git pull                                          |
+      |           | git rebase --onto main feature-2 --no-update-refs |
+      |           | git push --force-with-lease                       |
+      |           | git checkout feature-4                            |
+      | feature-4 | git pull                                          |
+      |           | git rebase --onto main feature-2 --no-update-refs |
+      |           | git push --force-with-lease                       |
+      |           | git rebase feature-3 --no-update-refs             |
+      |           | git branch -D feature-1                           |
+      |           | git branch -D feature-2                           |
     And Git Town prints:
       """
       deleted branch "feature-1"

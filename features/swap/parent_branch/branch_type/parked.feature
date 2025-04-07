@@ -17,9 +17,9 @@ Feature: swapping a branch with its parked parent
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | current | git fetch --prune --tags                        |
-      |         | git rebase --onto main parent                   |
+      |         | git rebase --onto main parent --no-update-refs  |
       |         | git checkout parent                             |
-      | parent  | git rebase --onto current main                  |
+      | parent  | git rebase --onto current main --no-update-refs |
       |         | git push --force-with-lease --force-if-includes |
       |         | git checkout current                            |
     And these commits exist now

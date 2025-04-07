@@ -16,11 +16,11 @@ Feature: remove a prototype branch as soon as its tracking branch is gone, even 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                          |
-      | prototype | git fetch --prune --tags         |
-      |           | git checkout main                |
-      | main      | git rebase --onto main prototype |
-      |           | git branch -D prototype          |
+      | BRANCH    | COMMAND                                           |
+      | prototype | git fetch --prune --tags                          |
+      |           | git checkout main                                 |
+      | main      | git rebase --onto main prototype --no-update-refs |
+      |           | git branch -D prototype                           |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
