@@ -5,13 +5,13 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | shipped | feature | main   | local, origin |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE          |
       | shipped | local, origin | shipped commit   |
       |         | local         | unshipped commit |
-    And origin ships the "shipped" branch using the "squash-merge" ship-strategy
     And the current branch is "shipped"
+    And origin ships the "shipped" branch using the "squash-merge" ship-strategy
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result

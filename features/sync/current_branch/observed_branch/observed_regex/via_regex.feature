@@ -5,13 +5,13 @@ Feature: sync the current branch that is observed via regex
     And the branches
       | NAME       | TYPE   | LOCATIONS     |
       | renovate/1 | (none) | local, origin |
-    And the current branch is "renovate/1"
-    And Git setting "git-town.observed-regex" is "^renovate"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE       | FILE NAME   |
       | main       | local, origin | main commit   | main_file   |
       | renovate/1 | local         | local commit  | local_file  |
       |            | origin        | origin commit | origin_file |
+    And the current branch is "renovate/1"
+    And Git setting "git-town.observed-regex" is "^renovate"
     When I run "git-town sync"
 
   Scenario: result

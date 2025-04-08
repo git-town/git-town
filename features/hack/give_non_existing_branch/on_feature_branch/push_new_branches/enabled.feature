@@ -2,11 +2,11 @@ Feature: auto-push the new branch
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.push-new-branches" is "true"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |
     And the current branch is "main"
+    And Git setting "git-town.push-new-branches" is "true"
     When I run "git-town hack new"
 
   Scenario: result

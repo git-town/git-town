@@ -6,7 +6,6 @@ Feature: sync a branch whose parent is active in another worktree
       | NAME   | TYPE    | PARENT | LOCATIONS     |
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -15,8 +14,9 @@ Feature: sync a branch whose parent is active in another worktree
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And branch "parent" is active in another worktree
     And the current branch is "child"
+    And branch "parent" is active in another worktree
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result
