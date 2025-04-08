@@ -280,6 +280,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.fixture.OriginRepo.GetOrPanic().CreateStandaloneTag(name)
 	})
 
+	sc.Step(`^branch "([^"]+)" does not accept pushes$`, func(ctx context.Context, branch string) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		origin := state.fixture.OriginRepo.GetOrPanic()
+		origin.CreateFolder()
+	})
 	sc.Step(`^branch "([^"]+)" is active in another worktree`, func(ctx context.Context, branch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		state.fixture.AddSecondWorktree(gitdomain.NewLocalBranchName(branch))

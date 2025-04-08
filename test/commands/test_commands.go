@@ -199,6 +199,10 @@ func (self *TestCommands) CreateFolder(name string) {
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 }
 
+func (self *TestCommands) CreateHook(name, content string) {
+
+}
+
 // CreateStandaloneTag creates a tag not on a branch.
 func (self *TestCommands) CreateStandaloneTag(name string) {
 	self.MustRun("git", "checkout", "-b", "temp")
