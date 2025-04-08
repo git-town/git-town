@@ -118,7 +118,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseOntoKeepDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: Some(gitdomain.NewLocalBranchName("upstream"))},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
-				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", CurrentBranch: "branch", PushBranches: true},
+				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch"},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
@@ -622,8 +622,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
-        "PushBranches": true,
+        "PushBranches": false,
         "RemoteBranch": "origin/branch"
       },
       "type": "RebaseTrackingBranch"

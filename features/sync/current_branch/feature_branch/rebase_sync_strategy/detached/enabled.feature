@@ -20,6 +20,7 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git rebase main --no-update-refs                |
+      |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
