@@ -11,8 +11,8 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main   | local, origin | main commit   | main_file        |
       | alpha  | local, origin | folder commit | new_folder/file1 |
       | beta   | local, origin | beta commit   | file2            |
-    And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the current branch is "alpha"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
