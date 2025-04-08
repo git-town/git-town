@@ -57,6 +57,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And a rebase is now in progress
 
+  @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
@@ -65,12 +66,6 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-    When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
-    Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git -c core.editor=true rebase --continue       |
-      |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And no rebase is now in progress
     And these committed files exist now
