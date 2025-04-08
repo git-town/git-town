@@ -5,12 +5,12 @@ Feature: auto-push new branches
     And the branches
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
-    And Git setting "git-town.push-new-branches" is "true"
-    And Git setting "git-town.push-hook" is "false"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
     And the current branch is "old"
+    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.push-hook" is "false"
     When I run "git-town prepend new"
 
   Scenario: result
