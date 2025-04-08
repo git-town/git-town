@@ -27,10 +27,7 @@ func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
 			// Rebase the local commits against the remote commits.
 			&RebaseBranch{Branch: self.RemoteBranch.BranchName()},
 			// Now try force-pushing again.
-			&RebaseTrackingBranch{
-				PushBranches: self.PushBranches,
-				RemoteBranch: self.RemoteBranch,
-			},
+			&PushCurrentBranchForceIgnoreError{},
 		)
 	} else {
 		args.PrependOpcodes(&RebaseBranch{Branch: self.RemoteBranch.BranchName()})
