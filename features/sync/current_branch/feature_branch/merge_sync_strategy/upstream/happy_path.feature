@@ -2,10 +2,10 @@ Feature: with upstream repo
 
   Background:
     Given a Git repo with origin
+    And an upstream repo
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    And an upstream repo
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
