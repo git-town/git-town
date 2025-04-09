@@ -8,22 +8,18 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local         | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
-      |         | origin        | feature commit             | feature_file     | feature content |
+      |         | local, origin | feature commit             | feature_file     | feature content |
     And the current branch is "feature"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git push                                |
-      |         | git checkout feature                    |
-      | feature | git rebase main --no-update-refs        |
+      | BRANCH  | COMMAND                          |
+      | feature | git fetch --prune --tags         |
+      |         | git rebase main --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -40,7 +36,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
-      |         | origin        | feature commit             | feature_file     | feature content |
+      |         |               | feature commit             | feature_file     | feature content |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -52,18 +48,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     And a rebase is now in progress
 
   Scenario: resolve and continue
-    When I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file" with "resolved content"
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
-    Then Git Town runs the commands
-      | BRANCH  | COMMAND                                    |
-      | feature | git -c core.editor=true rebase --continue  |
-      |         | git rebase origin/feature --no-update-refs |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
-    When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
@@ -81,14 +67,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git rebase --continue" and enter "resolved conflict between main and feature branch" for the commit message
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                    |
-      | feature | git rebase origin/feature --no-update-refs |
-    When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue" and enter "resolved conflict between feature and origin/feature branch" for the commit message
-    Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git -c core.editor=true rebase --continue       |
-      |         | git push --force-with-lease --force-if-includes |
+      | feature | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

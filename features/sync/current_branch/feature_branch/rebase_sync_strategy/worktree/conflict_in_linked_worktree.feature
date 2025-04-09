@@ -51,8 +51,7 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     And I run "git-town continue" in the other worktree
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git rebase origin/feature --no-update-refs      |
-      |         | git push --force-with-lease --force-if-includes |
+      | feature | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main    | origin           | conflicting main commit | conflicting_file | main content     |

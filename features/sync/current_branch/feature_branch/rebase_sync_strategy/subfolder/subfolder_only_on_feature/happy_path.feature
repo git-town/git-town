@@ -20,11 +20,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
-      |        | git rebase origin/alpha --no-update-refs        |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
       | beta   | git rebase main --no-update-refs                |
-      |        | git rebase origin/beta --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
       | alpha  | git push --tags                                 |
@@ -37,9 +35,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
       | alpha  | local, origin | folder commit |
-      |        |               | main commit   |
       | beta   | local, origin | beta commit   |
-      |        |               | main commit   |
 
   Scenario: undo
     When I run "git-town undo"
