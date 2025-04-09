@@ -41,7 +41,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
-      To continue after having resolved conflicts, run "git town continue".
+      CONFLICT (add/add): Merge conflict in file.txt
       """
     When the coworker resolves the conflict in "file.txt" with "my and coworker content"
     And the coworker runs "git town continue" and closes the editor
@@ -69,7 +69,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git rebase origin/feature --no-update-refs |
     And Git Town prints the error:
       """
-      To continue after having resolved conflicts, run "git town continue".
+      CONFLICT (content): Merge conflict in file.txt
       """
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
