@@ -1,4 +1,4 @@
-Feature: beama commits and uncommitted changes from a local branch onto a new feature branch and propose
+Feature: beam commits and uncommitted changes from a local branch onto a new feature branch and propose
 
   Background:
     Given a Git repo with origin
