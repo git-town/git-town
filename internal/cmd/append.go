@@ -273,6 +273,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
 		commitMessage:             commitMessage,
+		commitsToBeam:             gitdomain.Commits{},
 		config:                    validatedConfig,
 		connector:                 connector,
 		dialogTestInputs:          dialogTestInputs,
