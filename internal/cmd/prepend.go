@@ -409,7 +409,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 			ProposalNumber: proposal.Number,
 		})
 	}
-	moveCommitsToNewBranch(prog, data)
+	moveCommitsToPrependedBranch(prog, data)
 	if data.commit {
 		prog.Value.Add(
 			&opcodes.Commit{
@@ -481,7 +481,7 @@ func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdom
 	}
 }
 
-func moveCommitsToNewBranch(prog Mutable[program.Program], data prependData) {
+func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependData) {
 	if len(data.commitsToBeam) > 0 {
 		for _, commitToBeam := range data.commitsToBeam {
 			prog.Value.Add(

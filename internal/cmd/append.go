@@ -173,12 +173,14 @@ type appendFeatureData struct {
 	branchesToSync            configdomain.BranchesToSync
 	commit                    configdomain.Commit
 	commitMessage             Option[gitdomain.CommitMessage]
+	commitsToBeam             gitdomain.Commits
 	config                    config.ValidatedConfig
 	connector                 Option[forgedomain.Connector]
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
+	initialBranchInfo         *gitdomain.BranchInfo
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
@@ -231,6 +233,10 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
@@ -272,12 +278,14 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
 		commitMessage:             commitMessage,
+		commitsToBeam:             gitdomain.Commits{},
 		config:                    validatedConfig,
 		connector:                 connector,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
+		initialBranchInfo:         initialBranchInfo,
 		newBranchParentCandidates: initialAndAncestors,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
@@ -343,19 +351,22 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				Message:                        data.commitMessage,
 			},
 		)
-		if data.propose.IsTrue() {
-			prog.Value.Add(
-				&opcodes.BranchTrackingCreate{
-					Branch: data.targetBranch,
-				},
-				&opcodes.ProposalCreate{
-					Branch:        data.targetBranch,
-					MainBranch:    data.config.ValidatedConfigData.MainBranch,
-					ProposalBody:  "",
-					ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
-				},
-			)
-		}
+	}
+	moveCommitsToAppendedBranch(prog, data)
+	if data.propose {
+		prog.Value.Add(
+			&opcodes.BranchTrackingCreate{
+				Branch: data.targetBranch,
+			},
+			&opcodes.ProposalCreate{
+				Branch:        data.targetBranch,
+				MainBranch:    data.config.ValidatedConfigData.MainBranch,
+				ProposalBody:  "",
+				ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
+			},
+		)
+	}
+	if data.commit {
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
@@ -369,4 +380,38 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		})
 	}
 	return optimizer.Optimize(prog.Immutable())
+}
+
+func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData) {
+	if len(data.commitsToBeam) == 0 {
+		return
+	}
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
+		)
+	}
+	prog.Value.Add(
+		&opcodes.Checkout{
+			Branch: data.initialBranch,
+		},
+	)
+	for c := len(data.commitsToBeam) - 1; c >= 0; c-- {
+		commitToBeam := data.commitsToBeam[c]
+		prog.Value.Add(
+			&opcodes.CommitRemove{
+				SHA: commitToBeam.SHA,
+			},
+		)
+	}
+	if data.initialBranchInfo.HasTrackingBranch() {
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchForceIgnoreError{},
+		)
+	}
+	prog.Value.Add(
+		&opcodes.Checkout{
+			Branch: data.targetBranch,
+		},
+	)
 }
