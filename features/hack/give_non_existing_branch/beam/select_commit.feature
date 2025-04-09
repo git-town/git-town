@@ -10,8 +10,6 @@ Feature: on a feature branch
       | existing | local    | commit 1 |
       | existing | local    | commit 2 |
     And the current branch is "existing"
-    And inspect the commits
-    # And inspect the repo
     When I run "git-town hack new --beam" and enter into the dialog:
       | DIALOG          | KEYS             |
       | select commit 2 | down space enter |
