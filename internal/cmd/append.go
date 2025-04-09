@@ -390,9 +390,8 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 	)
 	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
-			&opcodes.RebaseOntoP{
-				BranchToRebaseOnto: commitToBeam.SHA.PreviousCommitRef(),
-				CommitsToRemove:    commitToBeam.SHA.Location(),
+			&opcodes.RemoveCommit{
+				Commit: commitToBeam.SHA,
 			},
 		)
 	}

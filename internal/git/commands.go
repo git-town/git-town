@@ -653,11 +653,6 @@ func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto git
 	return runner.Run("git", args...)
 }
 
-// Rebase initiates a Git rebase of the current branch onto the given branch.
-func (self *Commands) RebaseOntoP(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location) error {
-	return runner.Run("git", "rebase", "-p", "--onto", branchToRebaseOnto.String(), commitsToRemove.String(), "--no-update-refs")
-}
-
 func (self *Commands) Remotes(querier gitdomain.Querier) (gitdomain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
 		remotes, err := self.RemotesUncached(querier)
@@ -690,6 +685,11 @@ func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 
 func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyCodebergToken.String())
+}
+
+// RemoveCommit removes the given commit from the current branch
+func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA) error {
+	return runner.Run("git", "rebase", "--onto", commit.String()+"^", commit.String(), "--no-update-refs")
 }
 
 func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {

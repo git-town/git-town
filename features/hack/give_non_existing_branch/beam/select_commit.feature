@@ -6,11 +6,12 @@ Feature: on a feature branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE     |
-      | main     | origin   | main commit |
-      | existing | local    | commit 1    |
-      | existing | local    | commit 2    |
+      | BRANCH   | LOCATION | MESSAGE  |
+      | existing | local    | commit 1 |
+      | existing | local    | commit 2 |
     And the current branch is "existing"
+    And inspect the commits
+    # And inspect the repo
     When I run "git-town hack new --beam" and enter into the dialog:
       | DIALOG          | KEYS             |
       | select commit 2 | down space enter |
@@ -18,15 +19,18 @@ Feature: on a feature branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                          |
-      | existing | git fetch --prune --tags                                                         |
-      |          | git checkout main                                                                |
-      | main     | git rebase origin/main --no-update-refs                                          |
-      |          | git checkout -b new                                                              |
-      | new      | git cherry-pick {{ sha 'commit 2' }}                                             |
-      |          | git checkout existing                                                            |
-      | existing | git rebase -p --onto ^{{ sha 'commit 2' }} {{ sha 'commit 2' }} --no-update-refs |
-    # |          | git checkout new                                                                 |
+      | BRANCH   | COMMAND                                                                                             |
+      | existing | git fetch --prune --tags                                                                            |
+      |          | git checkout main                                                                                   |
+      | main     | git checkout -b new                                                                                 |
+      | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
+      |          | git checkout existing                                                                               |
+      | existing | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
+      |          | git checkout new                                                                                    |
+    And Git Town prints the error:
+      """
+      xx
+      """
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |

@@ -6,24 +6,23 @@ import (
 )
 
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
-type RebaseOntoP struct {
-	BranchToRebaseOnto      gitdomain.Location
-	CommitsToRemove         gitdomain.Location
+type RemoveCommit struct {
+	Commit                  gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseOntoP) AbortProgram() []shared.Opcode {
+func (self *RemoveCommit) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *RebaseOntoP) ContinueProgram() []shared.Opcode {
+func (self *RemoveCommit) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}
 }
 
-func (self *RebaseOntoP) Run(args shared.RunArgs) error {
-	return args.Git.RebaseOntoP(args.Frontend, self.BranchToRebaseOnto, self.CommitsToRemove)
+func (self *RemoveCommit) Run(args shared.RunArgs) error {
+	return args.Git.RemoveCommit(args.Frontend, self.Commit)
 }
