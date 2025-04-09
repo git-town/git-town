@@ -338,8 +338,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 	if err != nil {
 		return data, false, err
 	}
-	ancestorOpt := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage)
-	ancestor, hasAncestor := ancestorOpt.Get()
+	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
 	commitsToBeam := []gitdomain.Commit{}
 	if beam.IsTrue() && hasAncestor {
 		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor)
