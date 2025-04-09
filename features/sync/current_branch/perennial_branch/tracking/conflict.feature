@@ -55,8 +55,8 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git -c core.editor=true rebase --continue |
       |        | git push                                  |
       |        | git push --tags                           |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -69,8 +69,8 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | COMMAND         |
       | qa     | git push        |
       |        | git push --tags |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
