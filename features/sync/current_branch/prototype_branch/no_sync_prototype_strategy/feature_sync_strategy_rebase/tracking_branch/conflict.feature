@@ -15,10 +15,11 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                      |
-      | prototype | git fetch --prune --tags                     |
-      |           | git rebase main --no-update-refs             |
-      |           | git rebase origin/prototype --no-update-refs |
+      | BRANCH    | COMMAND                                         |
+      | prototype | git fetch --prune --tags                        |
+      |           | git rebase main --no-update-refs                |
+      |           | git push --force-with-lease --force-if-includes |
+      |           | git rebase origin/prototype --no-update-refs    |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

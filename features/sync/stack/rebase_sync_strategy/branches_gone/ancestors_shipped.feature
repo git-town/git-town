@@ -50,6 +50,7 @@ Feature: shipped parent branches in a stacked change
       |           | git rebase --onto main feature-2 --no-update-refs |
       |           | git push --force-with-lease                       |
       |           | git rebase feature-3 --no-update-refs             |
+      |           | git push --force-with-lease --force-if-includes   |
       |           | git branch -D feature-1                           |
       |           | git branch -D feature-2                           |
     And Git Town prints:

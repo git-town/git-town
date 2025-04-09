@@ -108,6 +108,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIgnoreError{},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
 				&opcodes.PushTags{},
@@ -118,7 +119,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseOntoKeepDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: Some(gitdomain.NewLocalBranchName("upstream"))},
 				&opcodes.RebaseParentIfNeeded{Branch: "branch"},
-				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", CurrentBranch: "branch", PushBranches: true},
+				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
@@ -134,6 +135,8 @@ func TestLoadSave(t *testing.T) {
 				EndTime:   time.Time{},
 			}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
+			FinalUndoProgram:         program.Program{},
+			UndoAPIProgram:           program.Program{},
 		}
 
 		wantJSON := `
@@ -565,6 +568,10 @@ func TestLoadSave(t *testing.T) {
       "type": "PushCurrentBranchForceIfNeeded"
     },
     {
+      "data": {},
+      "type": "PushCurrentBranchForceIgnoreError"
+    },
+    {
       "data": {
         "CurrentBranch": "branch"
       },
@@ -622,7 +629,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
         "PushBranches": true,
         "RemoteBranch": "origin/branch"
       },

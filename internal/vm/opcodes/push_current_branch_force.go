@@ -4,7 +4,6 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type PushCurrentBranchForce struct {
 	ForceIfIncludes         bool
 	undeclaredOpcodeMethods `exhaustruct:"optional"`

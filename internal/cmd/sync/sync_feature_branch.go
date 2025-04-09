@@ -84,9 +84,8 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 		if args.Offline.IsFalse() {
 			args.Program.Value.Add(
 				&opcodes.RebaseTrackingBranch{
-					RemoteBranch:  trackingBranch,
-					PushBranches:  args.PushBranches,
-					CurrentBranch: args.LocalName,
+					RemoteBranch: trackingBranch,
+					PushBranches: args.PushBranches,
 				},
 			)
 		}

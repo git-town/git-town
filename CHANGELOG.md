@@ -1,5 +1,15 @@
 # Git Town Changelog
 
+## 18.3.2 (2025-04-09)
+
+#### Bug Fixes
+
+- Restores the previous behavior of attempting an initial push when syncing tracking branches ([#4681](https://github.com/git-town/git-town/issues/4681)).
+
+#### Contributors
+
+Shoutout to @kevgo, @ruudk for contributing bug reports, ideas, and code to 12 shipped PRs and 2 resolved issues!
+
 ## 18.3.1 (2025-04-07)
 
 #### Bug Fixes
