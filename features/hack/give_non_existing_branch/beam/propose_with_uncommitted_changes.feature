@@ -2,7 +2,6 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
 
   Background:
     Given a Git repo with origin
-    And the origin is "git@github.com:git-town/git-town.git"
     And the branches
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
@@ -13,6 +12,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       | existing | local, origin | commit 2    |
       | existing | local, origin | commit 3    |
     And the current branch is "existing"
+    And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And an uncommitted file with name "uncommitted_file" and content "uncommitted content"
     And I ran "git add ."
