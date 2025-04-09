@@ -75,6 +75,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitAutoUndo{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitMessageCommentOut{},
+				&opcodes.CommitRemove{SHA: "123456"},
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
@@ -346,6 +347,12 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "CommitMessageCommentOut"
+    },
+    {
+      "data": {
+        "SHA": "123456"
+      },
+      "type": "CommitRemove"
     },
     {
       "data": {

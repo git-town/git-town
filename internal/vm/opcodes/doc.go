@@ -72,6 +72,7 @@ func All() []shared.Opcode {
 		&Commit{},
 		&CommitAutoUndo{},
 		&CommitMessageCommentOut{},
+		&CommitRemove{},
 		&CommitRevert{},
 		&CommitRevertIfNeeded{},
 		&CommitWithMessage{},

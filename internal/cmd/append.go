@@ -399,8 +399,8 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 	for c := len(data.commitsToBeam) - 1; c >= 0; c-- {
 		commitToBeam := data.commitsToBeam[c]
 		prog.Value.Add(
-			&opcodes.RemoveCommit{
-				Commit: commitToBeam.SHA,
+			&opcodes.CommitRemove{
+				SHA: commitToBeam.SHA,
 			},
 		)
 	}

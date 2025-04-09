@@ -6,23 +6,23 @@ import (
 )
 
 // removes the given commit from the given branch
-type RemoveCommit struct {
-	Commit                  gitdomain.SHA
+type CommitRemove struct {
+	SHA                     gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RemoveCommit) AbortProgram() []shared.Opcode {
+func (self *CommitRemove) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseAbort{},
 	}
 }
 
-func (self *RemoveCommit) ContinueProgram() []shared.Opcode {
+func (self *CommitRemove) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&RebaseContinueIfNeeded{},
 	}
 }
 
-func (self *RemoveCommit) Run(args shared.RunArgs) error {
-	return args.Git.RemoveCommit(args.Frontend, self.Commit)
+func (self *CommitRemove) Run(args shared.RunArgs) error {
+	return args.Git.RemoveCommit(args.Frontend, self.SHA)
 }
