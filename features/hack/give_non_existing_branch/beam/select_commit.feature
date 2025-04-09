@@ -26,11 +26,14 @@ Feature: on a feature branch
       | new      | git cherry-pick {{ sha 'commit 2' }}                                             |
       |          | git checkout existing                                                            |
       | existing | git rebase -p --onto ^{{ sha 'commit 2' }} {{ sha 'commit 2' }} --no-update-refs |
-      |          | git checkout new                                                                 |
+    # |          | git checkout new                                                                 |
+    And no rebase is now in progress
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local         | existing commit |
+      | BRANCH   | LOCATION      | MESSAGE     |
+      | main     | local, origin | main commit |
+      | existing | local         | commit 1    |
+      |          |               | commit 2    |
+      | new      | local         | commit 2    |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |

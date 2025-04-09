@@ -379,7 +379,6 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 		return
 	}
 	for _, commitToBeam := range data.commitsToBeam {
-		// add the commit to the new branch
 		prog.Value.Add(
 			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
@@ -392,8 +391,8 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
 			&opcodes.RebaseOntoP{
-				BranchToRebaseOnto: commitToBeam.SHA.Location(),
-				CommitsToRemove:    commitToBeam.SHA.PreviousCommitRef(),
+				BranchToRebaseOnto: commitToBeam.SHA.PreviousCommitRef(),
+				CommitsToRemove:    commitToBeam.SHA.Location(),
 			},
 		)
 	}
