@@ -375,6 +375,9 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 }
 
 func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData) {
+	if len(data.commitsToBeam) == 0 {
+		return
+	}
 	for _, commitToBeam := range data.commitsToBeam {
 		// add the commit to the new branch
 		prog.Value.Add(
@@ -388,16 +391,15 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 	)
 	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
-			&opcodes.RebaseOnto{
-				BranchToRebaseOnto: commitToBeam.SHA.PreviousCommitRef(),
-				CommitsToRemove:    gitdomain.NewLocation("^%s"),
+			&opcodes.RebaseOntoP{
+				BranchToRebaseOnto: commitToBeam.SHA.Location(),
+				CommitsToRemove:    commitToBeam.SHA.PreviousCommitRef(),
 			},
 		)
 	}
-
-	initialBranchType := data.config.BranchType(data.initialBranch)
-	syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
 	prog.Value.Add(
-		&opcodes.Checkout{Branch: data.targetBranch},
+		&opcodes.Checkout{
+			Branch: data.targetBranch,
+		},
 	)
 }

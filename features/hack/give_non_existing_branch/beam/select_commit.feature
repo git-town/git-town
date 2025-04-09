@@ -18,11 +18,15 @@ Feature: on a feature branch
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | existing | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git checkout -b new                     |
+      | BRANCH   | COMMAND                                                                          |
+      | existing | git fetch --prune --tags                                                         |
+      |          | git checkout main                                                                |
+      | main     | git rebase origin/main --no-update-refs                                          |
+      |          | git checkout -b new                                                              |
+      | new      | git cherry-pick {{ sha 'commit 2' }}                                             |
+      |          | git checkout existing                                                            |
+      | existing | git rebase -p --onto ^{{ sha 'commit 2' }} {{ sha 'commit 2' }} --no-update-refs |
+      |          | git checkout new                                                                 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
