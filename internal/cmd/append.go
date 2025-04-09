@@ -358,11 +358,13 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				},
 			)
 		}
+	}
+	moveCommitsToAppendedBranch(prog, data)
+	if data.commit {
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	}
-	moveCommitsToAppendedBranch(prog, data)
 	if !data.commit {
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
@@ -397,7 +399,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			},
 		)
 	}
-	if len(data.commitsToBeam) > 0 {
+	if len(data.commitsToBeam) > 0 && !data.commit {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIgnoreError{},
 		)
