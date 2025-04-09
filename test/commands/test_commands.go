@@ -200,7 +200,7 @@ func (self *TestCommands) CreateFolder(name string) {
 }
 
 func (self *TestCommands) CreateHook(name, content string) {
-
+	hookPath := filepath.Join(self.WorkingDir, ".git", "hooks", "")
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
