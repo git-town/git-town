@@ -644,7 +644,7 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
-func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.LocalBranchName, commitsToRemove gitdomain.BranchName, upstream Option[gitdomain.LocalBranchName]) error {
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
 	args := []string{"rebase", "--onto", branchToRebaseOnto.String()}
 	if upstream, hasUpstream := upstream.Get(); hasUpstream {
 		args = append(args, upstream.String())
@@ -685,6 +685,11 @@ func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
 
 func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyCodebergToken.String())
+}
+
+// RemoveCommit removes the given commit from the current branch
+func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA) error {
+	return runner.Run("git", "rebase", "--onto", commit.String()+"^", commit.String(), "--no-update-refs")
 }
 
 func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {

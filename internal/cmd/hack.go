@@ -6,6 +6,7 @@ import (
 	"os"
 	"slices"
 
+	"github.com/git-town/git-town/v18/internal/cli/dialog"
 	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v18/internal/cli/flags"
 	"github.com/git-town/git-town/v18/internal/cli/print"
@@ -61,6 +62,7 @@ it also syncs all affected branches.
 )
 
 func hackCmd() *cobra.Command {
+	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
@@ -75,6 +77,10 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			beam, err := readBeamFlag(cmd)
+			if err != nil {
+				return err
+			}
 			commit, err := readCommitFlag(cmd)
 			if err != nil {
 				return err
@@ -106,9 +112,10 @@ func hackCmd() *cobra.Command {
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
-			return executeHack(args, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+			return executeHack(args, beam, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
 		},
 	}
+	addBeamFlag(&cmd)
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
@@ -119,7 +126,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeHack(args []string, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -131,7 +138,7 @@ func executeHack(args []string, commit configdomain.Commit, commitMessage Option
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+	data, exit, err := determineHackData(args, repo, beam, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -225,7 +232,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -264,6 +271,10 @@ func determineHackData(args []string, repo execute.OpenRepoResult, commit config
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	if shouldCreateBranch {
 		branchesToValidate = gitdomain.LocalBranchNames{}
@@ -327,18 +338,32 @@ func determineHackData(args []string, repo execute.OpenRepoResult, commit config
 	if err != nil {
 		return data, false, err
 	}
+	commitsToBeam := []gitdomain.Commit{}
+	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
+	if beam.IsTrue() && hasAncestor {
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor)
+		if err != nil {
+			return data, false, err
+		}
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, dialogTestInputs.Next())
+		if err != nil || exit {
+			return data, exit, err
+		}
+	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
 		commitMessage:             commitMessage,
+		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
+		initialBranchInfo:         initialBranchInfo,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
