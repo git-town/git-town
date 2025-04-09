@@ -51,6 +51,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
       | existing | git reset --hard {{ sha-before-run 'commit 3' }} |
+      |          | git push --force-with-lease --force-if-includes  |
       |          | git branch -D new                                |
       |          | git push origin :new                             |
     And the initial commits exist now
