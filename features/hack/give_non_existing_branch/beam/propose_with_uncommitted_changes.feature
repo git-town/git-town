@@ -11,14 +11,15 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       | existing | local, origin | commit 1    |
       | existing | local, origin | commit 2    |
       | existing | local, origin | commit 3    |
+      | existing | local, origin | commit 4    |
     And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And an uncommitted file
     And I ran "git add ."
     When I run "git-town hack new --beam --commit --message uncommitted --propose" and enter into the dialog:
-      | DIALOG          | KEYS             |
-      | select commit 2 | down space enter |
+      | DIALOG          | KEYS                             |
+      | select commit 2 | down space down down space enter |
 
   Scenario: result
     Then Git Town runs the commands
@@ -26,8 +27,10 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       | existing | git checkout -b new main                                                                            |
       | new      | git commit -m uncommitted                                                                           |
       |          | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
+      |          | git cherry-pick {{ sha-before-run 'commit 4' }}                                                     |
       |          | git checkout existing                                                                               |
-      | existing | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
+      | existing | git rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} --no-update-refs |
+      |          | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
       |          | git push --force-with-lease --force-if-includes                                                     |
       |          | git checkout new                                                                                    |
       | new      | git push -u origin new                                                                              |
@@ -41,6 +44,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
       |          |               | commit 3    |
       | new      | local, origin | uncommitted |
       |          |               | commit 2    |
+      |          |               | commit 4    |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
@@ -50,7 +54,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                          |
-      | existing | git reset --hard {{ sha-before-run 'commit 3' }} |
+      | existing | git reset --hard {{ sha-before-run 'commit 4' }} |
       |          | git push --force-with-lease --force-if-includes  |
       |          | git branch -D new                                |
       |          | git push origin :new                             |
