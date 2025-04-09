@@ -202,7 +202,11 @@ func (self *TestCommands) CreateFolder(name string) {
 // CreateStandaloneTag creates a tag not on a branch.
 func (self *TestCommands) CreateStandaloneTag(name string) {
 	self.MustRun("git", "checkout", "-b", "temp")
-	self.MustRun("touch", "a.txt")
+	filePath := filepath.Join(self.WorkingDir, "a.txt")
+	file, err := os.Create(filePath)
+	asserts.NoError(err)
+	err = file.Close()
+	asserts.NoError(err)
 	self.MustRun("git", "add", "-A")
 	self.MustRun("git", "commit", "-m", "temp")
 	self.MustRun("git", "tag", "-a", name, "-m", name)
