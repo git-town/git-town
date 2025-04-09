@@ -1,6 +1,5 @@
 Feature: compatibility between different sync-feature-strategy settings
 
-  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -74,14 +73,10 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
-    # Then Git Town runs the commands
-    #   | BRANCH  | COMMAND                                         |
-    #   | feature | git -c core.editor=true rebase --continue       |
-    #   |         | git push --force-with-lease --force-if-includes |
-    And Git Town prints the error:
-      """
-      xxx
-      """
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                         |
+      | feature | git -c core.editor=true rebase --continue       |
+      |         | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
