@@ -70,8 +70,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git rebase main --no-update-refs                |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -88,8 +88,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git rebase main --no-update-refs                |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
