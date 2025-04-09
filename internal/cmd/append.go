@@ -345,21 +345,21 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				Message:                        data.commitMessage,
 			},
 		)
-		if data.propose.IsTrue() {
-			prog.Value.Add(
-				&opcodes.BranchTrackingCreate{
-					Branch: data.targetBranch,
-				},
-				&opcodes.ProposalCreate{
-					Branch:        data.targetBranch,
-					MainBranch:    data.config.ValidatedConfigData.MainBranch,
-					ProposalBody:  "",
-					ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
-				},
-			)
-		}
 	}
 	moveCommitsToAppendedBranch(prog, data)
+	if data.propose.IsTrue() {
+		prog.Value.Add(
+			&opcodes.BranchTrackingCreate{
+				Branch: data.targetBranch,
+			},
+			&opcodes.ProposalCreate{
+				Branch:        data.targetBranch,
+				MainBranch:    data.config.ValidatedConfigData.MainBranch,
+				ProposalBody:  "",
+				ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
+			},
+		)
+	}
 	if data.commit {
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
