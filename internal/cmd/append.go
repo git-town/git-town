@@ -173,6 +173,7 @@ type appendFeatureData struct {
 	branchesToSync            configdomain.BranchesToSync
 	commit                    configdomain.Commit
 	commitMessage             Option[gitdomain.CommitMessage]
+	commitsToBeam             gitdomain.Commits
 	config                    config.ValidatedConfig
 	connector                 Option[forgedomain.Connector]
 	dialogTestInputs          components.TestInputs
@@ -343,6 +344,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				Message:                        data.commitMessage,
 			},
 		)
+		moveCommitsToAppendedBranch(prog, data)
 		if data.propose.IsTrue() {
 			prog.Value.Add(
 				&opcodes.BranchTrackingCreate{
@@ -369,4 +371,9 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		})
 	}
 	return optimizer.Optimize(prog.Immutable())
+}
+
+func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData) {
+	// cherry-pick into the new branch
+	// remove the commit from the old branch
 }
