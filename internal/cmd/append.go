@@ -405,7 +405,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			},
 		)
 	}
-	if len(data.commitsToBeam) > 0 && data.initialBranchInfo.HasTrackingBranch() {
+	if data.initialBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIgnoreError{},
 		)
