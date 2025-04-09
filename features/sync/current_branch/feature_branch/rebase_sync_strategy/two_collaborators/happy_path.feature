@@ -1,4 +1,3 @@
-@this
 Feature: two people with rebase strategy sync changes made by them
 
   Scenario: I and my coworker sync changes we both made to the same branch
