@@ -12,7 +12,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
       | existing | local, origin | commit 2    |
       | existing | local, origin | commit 3    |
     And the current branch is "existing"
-    And an uncommitted file with name "uncommitted_file" and content "uncommitted content"
+    And an uncommitted file
     And I ran "git add ."
     When I run "git-town hack new --beam --commit --message uncommitted" and enter into the dialog:
       | DIALOG          | KEYS             |
