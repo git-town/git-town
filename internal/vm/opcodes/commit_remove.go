@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// removes the given commit from the given branch
+// removes the commit with the given SHA from the given branch
 type CommitRemove struct {
 	SHA                     gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
