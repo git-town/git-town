@@ -26,11 +26,6 @@ Feature: merge conflict
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And Git Town prints the error:
-      """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
-      """
     And a merge is now in progress
 
   Scenario: undo

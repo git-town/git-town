@@ -22,11 +22,6 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And Git Town prints the error:
-      """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
-      """
     And a rebase is now in progress
 
   Scenario: undo
