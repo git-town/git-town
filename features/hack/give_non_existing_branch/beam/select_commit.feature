@@ -16,7 +16,6 @@ Feature: on a feature branch
       | DIALOG          | KEYS             |
       | select commit 2 | down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                             |
@@ -27,17 +26,11 @@ Feature: on a feature branch
       |          | git checkout existing                                                                               |
       | existing | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
       |          | git checkout new                                                                                    |
-    And Git Town prints the error:
-      """
-      xx
-      """
     And no rebase is now in progress
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE     |
-      | main     | local, origin | main commit |
-      | existing | local         | commit 1    |
-      |          |               | commit 2    |
-      | new      | local         | commit 2    |
+      | BRANCH   | LOCATION | MESSAGE  |
+      | existing | local    | commit 1 |
+      | new      | local    | commit 2 |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
