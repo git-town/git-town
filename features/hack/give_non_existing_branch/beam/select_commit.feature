@@ -20,16 +20,18 @@ Feature: on a feature branch
       | BRANCH   | COMMAND                                                                                             |
       | existing | git fetch --prune --tags                                                                            |
       |          | git checkout main                                                                                   |
-      | main     | git checkout -b new                                                                                 |
+      | main     | git rebase origin/main --no-update-refs                                                             |
+      |          | git checkout -b new                                                                                 |
       | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
       |          | git checkout existing                                                                               |
       | existing | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
       |          | git checkout new                                                                                    |
     And no rebase is now in progress
     And these commits exist now
-      | BRANCH   | LOCATION | MESSAGE  |
-      | existing | local    | commit 1 |
-      | new      | local    | commit 2 |
+      | BRANCH   | LOCATION      | MESSAGE     |
+      | main     | local, origin | main commit |
+      | existing | local         | commit 1    |
+      | new      | local         | commit 2    |
     And this lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
