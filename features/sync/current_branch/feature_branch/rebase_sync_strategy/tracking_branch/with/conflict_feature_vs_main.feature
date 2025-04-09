@@ -17,13 +17,9 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git push                                |
-      |         | git checkout feature                    |
-      | feature | git rebase main --no-update-refs        |
+      | BRANCH  | COMMAND                          |
+      | feature | git fetch --prune --tags         |
+      |         | git rebase main --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -40,7 +36,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
-      |         | origin        | feature commit             | feature_file     | feature content |
+      |         |               | feature commit             | feature_file     | feature content |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
