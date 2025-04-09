@@ -1,4 +1,4 @@
-Feature: beam a commit and uncommitted changes onto a new feature branch
+Feature: beam a commit and uncommitted changes onto a new feature branch and propose
 
   Background:
     Given a Git repo with origin
