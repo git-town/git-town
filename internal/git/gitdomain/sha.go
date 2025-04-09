@@ -47,6 +47,10 @@ func (self SHA) Location() Location {
 	return Location(string(self))
 }
 
+func (self SHA) PreviousCommitRef() Location {
+	return NewLocation(fmt.Sprintf("^%s", self))
+}
+
 // Implementation of the fmt.Stringer interface.
 func (self SHA) String() string {
 	return string(self)

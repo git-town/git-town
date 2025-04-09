@@ -344,7 +344,6 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 				Message:                        data.commitMessage,
 			},
 		)
-		moveCommitsToAppendedBranch(prog, data)
 		if data.propose.IsTrue() {
 			prog.Value.Add(
 				&opcodes.BranchTrackingCreate{
@@ -361,7 +360,9 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
-	} else {
+	}
+	moveCommitsToAppendedBranch(prog, data)
+	if !data.commit {
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
@@ -374,6 +375,29 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 }
 
 func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData) {
-	// cherry-pick into the new branch
-	// remove the commit from the old branch
+	for _, commitToBeam := range data.commitsToBeam {
+		// add the commit to the new branch
+		prog.Value.Add(
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
+		)
+	}
+	prog.Value.Add(
+		&opcodes.Checkout{
+			Branch: data.initialBranch,
+		},
+	)
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.RebaseOnto{
+				BranchToRebaseOnto: commitToBeam.SHA.PreviousCommitRef(),
+				CommitsToRemove:    gitdomain.NewLocation("^%s"),
+			},
+		)
+	}
+
+	initialBranchType := data.config.BranchType(data.initialBranch)
+	syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.targetBranch},
+	)
 }
