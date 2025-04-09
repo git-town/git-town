@@ -6,9 +6,10 @@ Feature: on a feature branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE  |
-      | existing | local    | commit 1 |
-      | existing | local    | commit 2 |
+      | BRANCH   | LOCATION | MESSAGE     |
+      | main     | origin   | main commit |
+      | existing | local    | commit 1    |
+      | existing | local    | commit 2    |
     And the current branch is "existing"
     When I run "git-town hack new --beam" and enter into the dialog:
       | DIALOG          | KEYS             |
@@ -37,10 +38,12 @@ Feature: on a feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                     |
-      | new      | git checkout main                           |
-      | main     | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout existing                       |
-      | existing | git branch -D new                           |
+      | BRANCH   | COMMAND                                          |
+      | new      | git checkout existing                            |
+      | existing | git reset --hard {{ sha-before-run 'commit 2' }} |
+      |          | git checkout main                                |
+      | main     | git reset --hard {{ sha 'initial commit' }}      |
+      |          | git checkout existing                            |
+      | existing | git branch -D new                                |
     And the initial commits exist now
     And the initial branches and lineage exist now
