@@ -1,3 +1,4 @@
+@this
 Feature: two people with rebase strategy sync changes made by them
 
   Scenario: I and my coworker sync changes we both made to the same branch
@@ -58,6 +59,7 @@ Feature: two people with rebase strategy sync changes made by them
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
