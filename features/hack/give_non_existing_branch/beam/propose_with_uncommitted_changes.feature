@@ -7,11 +7,11 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE     |
-      | main     | origin   | main commit |
-      | existing | local    | commit 1    |
-      | existing | local    | commit 2    |
-      | existing | local    | commit 3    |
+      | BRANCH   | LOCATION      | MESSAGE     |
+      | main     | origin        | main commit |
+      | existing | local, origin | commit 1    |
+      | existing | local, origin | commit 2    |
+      | existing | local, origin | commit 3    |
     And the current branch is "existing"
     And tool "open" is installed
     And an uncommitted file with name "uncommitted_file" and content "uncommitted content"
@@ -28,6 +28,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
       |          | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
       |          | git checkout existing                                                                               |
       | existing | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
+      |          | git push --force-with-lease --force-if-includes                                                     |
       |          | git checkout new                                                                                    |
       | new      | git push -u origin new                                                                              |
       | (none)   | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                    |
@@ -36,7 +37,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
-      | existing | local         | commit 1    |
+      | existing | local, origin | commit 1    |
       |          |               | commit 3    |
       | new      | local, origin | uncommitted |
       |          |               | commit 2    |

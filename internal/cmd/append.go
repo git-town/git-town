@@ -399,7 +399,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			},
 		)
 	}
-	if len(data.commitsToBeam) > 0 && !data.commit {
+	if len(data.commitsToBeam) > 0 {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIgnoreError{},
 		)
