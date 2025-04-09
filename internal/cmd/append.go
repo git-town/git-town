@@ -353,7 +353,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 		)
 	}
 	moveCommitsToAppendedBranch(prog, data)
-	if data.propose.IsTrue() {
+	if data.propose {
 		prog.Value.Add(
 			&opcodes.BranchTrackingCreate{
 				Branch: data.targetBranch,
