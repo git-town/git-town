@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/vm/shared"
 )
 
-// rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
+// removes the given commit from the given branch
 type RemoveCommit struct {
 	Commit                  gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
