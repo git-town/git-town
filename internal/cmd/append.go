@@ -180,6 +180,7 @@ type appendFeatureData struct {
 	dryRun                    configdomain.DryRun
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
+	initialBranchInfo         *gitdomain.BranchInfo
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
@@ -232,6 +233,10 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
 		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
@@ -280,6 +285,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
+		initialBranchInfo:         initialBranchInfo,
 		newBranchParentCandidates: initialAndAncestors,
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
@@ -399,7 +405,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			},
 		)
 	}
-	if len(data.commitsToBeam) > 0 {
+	if len(data.commitsToBeam) > 0 && data.initialBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(
 			&opcodes.PushCurrentBranchForceIgnoreError{},
 		)

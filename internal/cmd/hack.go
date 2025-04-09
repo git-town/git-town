@@ -272,6 +272,10 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 	if !hasInitialBranch {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
+		return data, exit, errors.New(messages.CurrentBranchCannotDetermine)
+	}
 	if shouldCreateBranch {
 		branchesToValidate = gitdomain.LocalBranchNames{}
 	} else {
@@ -360,6 +364,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
+		initialBranchInfo:         initialBranchInfo,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{validatedConfig.ValidatedConfigData.MainBranch},
 		nonExistingBranches:       nonExistingBranches,
 		preFetchBranchInfos:       preFetchBranchSnapshot.Branches,
