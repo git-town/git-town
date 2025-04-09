@@ -14,7 +14,7 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
     And the current branch is "existing"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
-    And an uncommitted file with name "uncommitted_file" and content "uncommitted content"
+    And an uncommitted file
     And I ran "git add ."
     When I run "git-town hack new --beam --commit --message uncommitted --propose" and enter into the dialog:
       | DIALOG          | KEYS             |
