@@ -53,8 +53,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                   |
       | feature | git -c core.editor=true rebase --continue |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
