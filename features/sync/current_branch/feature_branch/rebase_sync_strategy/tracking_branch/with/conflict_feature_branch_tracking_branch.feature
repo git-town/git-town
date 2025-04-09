@@ -50,8 +50,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
       |         | git push --force-with-lease --force-if-includes |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

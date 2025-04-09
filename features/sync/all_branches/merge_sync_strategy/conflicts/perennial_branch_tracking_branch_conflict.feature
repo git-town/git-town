@@ -74,8 +74,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main                         |
       | main   | git rebase origin/main --no-update-refs   |
       |        | git push --tags                           |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

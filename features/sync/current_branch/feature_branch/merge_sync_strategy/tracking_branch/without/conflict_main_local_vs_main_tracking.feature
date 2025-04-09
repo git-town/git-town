@@ -74,8 +74,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit --ff main             |
       |         | git merge --no-edit --ff origin/feature   |
       |         | git push                                  |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -92,8 +92,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
-    And all branches are now synchronized
     And no rebase is now in progress
+    And all branches are now synchronized
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
