@@ -18,8 +18,8 @@ Feature: beam a commit and uncommitted changes onto a new feature branch and pro
     And an uncommitted file
     And I ran "git add ."
     When I run "git-town hack new --beam --commit --message uncommitted --propose" and enter into the dialog:
-      | DIALOG          | KEYS                             |
-      | select commit 2 | down space down down space enter |
+      | DIALOG                 | KEYS                             |
+      | select commits 2 and 4 | down space down down space enter |
 
   Scenario: result
     Then Git Town runs the commands
