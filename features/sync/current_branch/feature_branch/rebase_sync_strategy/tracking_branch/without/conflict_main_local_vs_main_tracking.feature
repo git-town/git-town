@@ -23,11 +23,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
-    And Git Town prints the error:
-      """
-      To continue after having resolved conflicts, run "git town continue".
-      To go back to where you started, run "git town undo".
-      """
     And a rebase is now in progress
 
   Scenario: undo
@@ -75,8 +70,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git rebase main --no-update-refs                |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
-    And no rebase is now in progress
     And all branches are now synchronized
+    And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -93,8 +88,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git rebase main --no-update-refs                |
       |         | git rebase origin/feature --no-update-refs      |
       |         | git push --force-with-lease --force-if-includes |
-    And no rebase is now in progress
     And all branches are now synchronized
+    And no rebase is now in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
