@@ -108,6 +108,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIgnoreError{},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
 				&opcodes.PushTags{},
@@ -134,6 +135,8 @@ func TestLoadSave(t *testing.T) {
 				EndTime:   time.Time{},
 			}),
 			UndoablePerennialCommits: []gitdomain.SHA{},
+			FinalUndoProgram:         program.Program{},
+			UndoAPIProgram:           program.Program{},
 		}
 
 		wantJSON := `
@@ -563,6 +566,10 @@ func TestLoadSave(t *testing.T) {
         "ForceIfIncludes": true
       },
       "type": "PushCurrentBranchForceIfNeeded"
+    },
+    {
+      "data": {},
+      "type": "PushCurrentBranchForceIgnoreError"
     },
     {
       "data": {

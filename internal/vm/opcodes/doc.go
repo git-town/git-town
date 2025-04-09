@@ -113,6 +113,7 @@ func All() []shared.Opcode {
 		&PullCurrentBranch{},
 		&PushCurrentBranch{},
 		&PushCurrentBranchForceIfNeeded{},
+		&PushCurrentBranchForceIgnoreError{},
 		&PushCurrentBranchIfLocal{},
 		&PushCurrentBranchIfNeeded{},
 		&PushTags{},
