@@ -13,9 +13,11 @@ comprehensive understanding of the architecture, refer to
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run all CI tests locally: <code type="make/command" dir="..">make test</code>
-4. faster smoke test during development: `make test-go`
-5. install Git Town locally into `~/go/bin`:
+3. Add `~/go/bin` (or wherever `go install` puts executables on your machine) to
+   your $PATH
+4. run all CI tests locally: <code type="make/command" dir="..">make test</code>
+5. faster smoke test during development: `make test-go`
+6. install Git Town locally into `~/go/bin`:
    <code type="make/command" dir="..">make install</code>
 
 ## Dependencies
