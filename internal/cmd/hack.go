@@ -351,6 +351,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		}
 	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
+		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,

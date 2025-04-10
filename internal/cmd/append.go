@@ -168,6 +168,7 @@ func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[
 }
 
 type appendFeatureData struct {
+	beam                      configdomain.Beam
 	branchInfos               gitdomain.BranchInfos
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
@@ -273,6 +274,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	initialAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
 	return appendFeatureData{
+		beam:                      false,
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
@@ -301,7 +303,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
-	if !data.hasOpenChanges && data.commit.IsFalse() {
+	if !data.hasOpenChanges && data.commit.IsFalse() && data.beam.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
