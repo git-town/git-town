@@ -40,12 +40,6 @@ branch with the main branch as its parent.
 
 ## Options
 
-#### `-b`<br>`--beam`
-
-Moves ("beams") one or more commits from the current branch to the new child
-branch that gets created. Lets you select the commits to beam via a visual
-dialog.
-
 #### `-p`<br>`--prototype`
 
 Adding the `--prototype` aka `-p` switch creates a
@@ -62,7 +56,15 @@ changes from other developers.
 When given, commits the currently staged changes into the branch to create and
 remains on the current branch. This is intended to quickly commit changes
 unrelated to the current branch into another branch and keep hacking on the
-current branch.
+current branch. Committing suppresses all branch updates to allow you to get
+your open changes committed.
+
+#### `-b`<br>`--beam`
+
+Moves ("beams") one or more commits from the current branch to the new child
+branch that gets created. Lets you select the commits to beam via a visual
+dialog. Beaming suppresses all branch updates. Any merge conflicts encountered
+while beaming arise from moving the beamed commits.
 
 #### `-m`<br>`--message`
 
