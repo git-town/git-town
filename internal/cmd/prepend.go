@@ -194,6 +194,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomai
 }
 
 type prependData struct {
+	beam                configdomain.Beam
 	branchInfos         gitdomain.BranchInfos
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      configdomain.BranchesToSync
@@ -320,6 +321,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
 	}
 	return prependData{
+		beam:                beam,
 		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
@@ -350,7 +352,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 
 func prependProgram(data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	if !data.hasOpenChanges {
+	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
