@@ -30,12 +30,10 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
       |          | git checkout existing                                                                               |
       | existing | git rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} --no-update-refs |
       |          | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
+      |          | git push --force-with-lease --force-if-includes                                                     |
       |          | git checkout new                                                                                    |
       | new      | git rebase existing --no-update-refs                                                                |
-      |          | git checkout existing                                                                               |
-      | existing | git push --force-with-lease --force-if-includes                                                     |
-      |          | git checkout new                                                                                    |
-      | new      | git push -u origin new                                                                              |
+      |          | git push -u origin new                                                                              |
       | (none)   | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted         |
       | new      | git checkout existing                                                                               |
     And no rebase is now in progress
