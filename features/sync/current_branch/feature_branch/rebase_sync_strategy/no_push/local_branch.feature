@@ -16,7 +16,6 @@ Feature: syncing a local feature branch using --no-push
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --no-push"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
