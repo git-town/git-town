@@ -28,10 +28,9 @@ Feature: beam a commit and uncommitted changes onto a new child branch
       |          | git checkout existing                                                                               |
       | existing | git rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} --no-update-refs |
       |          | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
+      |          | git push --force-with-lease --force-if-includes                                                     |
       |          | git checkout new                                                                                    |
       | new      | git rebase existing --no-update-refs                                                                |
-      |          | git checkout existing                                                                               |
-      | existing | git push --force-with-lease --force-if-includes                                                     |
       |          | git checkout existing                                                                               |
     And no rebase is now in progress
     And these commits exist now
