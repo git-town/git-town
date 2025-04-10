@@ -21,8 +21,7 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | old    | git fetch --prune --tags                        |
-      |        | git merge --no-edit --ff main                   |
+      | old    | git merge --no-edit --ff main                   |
       |        | git merge --no-edit --ff origin/old             |
       |        | git checkout -b parent main                     |
       | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |

@@ -209,7 +209,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 !repoStatus.OpenChanges,
+		Fetch:                 !repoStatus.OpenChanges && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,

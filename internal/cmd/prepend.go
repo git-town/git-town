@@ -237,7 +237,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 !repoStatus.OpenChanges,
+		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
