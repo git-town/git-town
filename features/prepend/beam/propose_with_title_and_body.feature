@@ -23,9 +23,7 @@ Feature: propose a newly prepended branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                |
       |          | Looking for proposal online ... ok                                                                     |
-      | existing | git rebase main --no-update-refs                                                                       |
-      |          | git push --force-with-lease --force-if-includes                                                        |
-      |          | git checkout -b new main                                                                               |
+      | existing | git checkout -b new main                                                                               |
       | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}                                                |
       |          | git checkout existing                                                                                  |
       | existing | git rebase new --no-update-refs                                                                        |
