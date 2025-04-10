@@ -322,7 +322,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
-	if !data.hasOpenChanges && data.beam.IsFalse() {
+	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
