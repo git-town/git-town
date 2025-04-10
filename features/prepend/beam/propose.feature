@@ -23,8 +23,7 @@ Feature: propose a newly prepended branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                 |
-      | existing | git fetch --prune --tags                                                |
-      | (none)   | Looking for proposal online ... ok                                      |
+      |          | Looking for proposal online ... ok                                      |
       | existing | git checkout parent                                                     |
       | parent   | git rebase main --no-update-refs                                        |
       |          | git push --force-with-lease --force-if-includes                         |

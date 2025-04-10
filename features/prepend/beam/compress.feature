@@ -21,8 +21,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
-      | old    | git fetch --prune --tags                        |
-      |        | git merge --no-edit --ff main                   |
+      | old    | git merge --no-edit --ff main                   |
       |        | git merge --no-edit --ff origin/old             |
       |        | git reset --soft main                           |
       |        | git commit -m "commit 1"                        |
