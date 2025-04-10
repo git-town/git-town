@@ -5,6 +5,7 @@ import (
 	"os"
 	"slices"
 
+	"github.com/git-town/git-town/v18/internal/cli/dialog"
 	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v18/internal/cli/flags"
 	"github.com/git-town/git-town/v18/internal/cli/print"
@@ -59,6 +60,7 @@ it also syncs all affected branches.
 )
 
 func appendCmd() *cobra.Command {
+	addBeamFlag, readBeamFlag := flags.Beam()
 	addCommitFlag, readCommitFlag := flags.Commit()
 	addCommitMessageFlag, readCommitMessageFlag := flags.CommitMessage("the commit message")
 	addDetachedFlag, readDetachedFlag := flags.Detached()
@@ -73,6 +75,10 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			beam, err := readBeamFlag(cmd)
+			if err != nil {
+				return err
+			}
 			commit, err := readCommitFlag(cmd)
 			if err != nil {
 				return err
@@ -104,9 +110,10 @@ func appendCmd() *cobra.Command {
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
-			return executeAppend(args[0], commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+			return executeAppend(args[0], beam, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
 		},
 	}
+	addBeamFlag(&cmd)
 	addCommitFlag(&cmd)
 	addCommitMessageFlag(&cmd)
 	addDetachedFlag(&cmd)
@@ -117,7 +124,7 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -129,11 +136,11 @@ func executeAppend(arg string, commit configdomain.Commit, commitMessage Option[
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), repo, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), beam, repo, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data, repo.FinalMessages)
+	runProgram := appendProgram(data, repo.FinalMessages, false)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -193,7 +200,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
 	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -209,7 +216,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 !repoStatus.OpenChanges && commit.IsFalse(),
+		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
@@ -273,14 +280,26 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}
 	initialAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
 	slices.Reverse(initialAndAncestors)
+	commitsToBeam := []gitdomain.Commit{}
+	ancestor, hasAncestor := latestExistingAncestor(initialBranch, branchesSnapshot.Branches, validatedConfig.NormalConfig.Lineage).Get()
+	if beam.IsTrue() && hasAncestor {
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor)
+		if err != nil {
+			return data, false, err
+		}
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, dialogTestInputs.Next())
+		if err != nil || exit {
+			return data, exit, err
+		}
+	}
 	return appendFeatureData{
-		beam:                      false,
+		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
 		commitMessage:             commitMessage,
-		commitsToBeam:             gitdomain.Commits{},
+		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
 		dialogTestInputs:          dialogTestInputs,
@@ -300,10 +319,10 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, repo execute.Op
 	}, false, fc.Err
 }
 
-func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) program.Program {
+func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
-	if !data.hasOpenChanges && data.commit.IsFalse() && data.beam.IsFalse() {
+	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
@@ -354,7 +373,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			},
 		)
 	}
-	moveCommitsToAppendedBranch(prog, data)
+	moveCommitsToAppendedBranch(prog, data, beamCherryPick)
 	if data.propose {
 		prog.Value.Add(
 			&opcodes.BranchTrackingCreate{
@@ -384,14 +403,16 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData) {
+func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData, performCherryPick bool) {
 	if len(data.commitsToBeam) == 0 {
 		return
 	}
-	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
-			&opcodes.CherryPick{SHA: commitToBeam.SHA},
-		)
+	if performCherryPick {
+		for _, commitToBeam := range data.commitsToBeam {
+			prog.Value.Add(
+				&opcodes.CherryPick{SHA: commitToBeam.SHA},
+			)
+		}
 	}
 	prog.Value.Add(
 		&opcodes.Checkout{
@@ -416,4 +437,11 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			Branch: data.targetBranch,
 		},
 	)
+	if !performCherryPick {
+		prog.Value.Add(
+			&opcodes.RebaseBranch{
+				Branch: data.initialBranch.BranchName(),
+			},
+		)
+	}
 }
