@@ -49,6 +49,7 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
-      | feature | local         | local feature commit  |
+      | feature | local, origin | local main commit     |
+      |         | local         | local feature commit  |
       |         | origin        | origin feature commit |
     And the initial branches and lineage exist now
