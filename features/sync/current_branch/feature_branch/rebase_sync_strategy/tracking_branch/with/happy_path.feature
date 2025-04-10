@@ -2,13 +2,15 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
 
   Background:
     Given a Git repo with origin
+    And the commits
+      | BRANCH | LOCATION | MESSAGE            |
+      | main   | local    | local main commit  |
+      |        | origin   | origin main commit |
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | local main commit     |
-      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
     And the current branch is "feature"
@@ -32,9 +34,9 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
-      | feature | local, origin | origin feature commit |
+      | feature | local, origin | local main commit     |
+      |         |               | origin feature commit |
       |         |               | origin main commit    |
-      |         |               | local main commit     |
       |         |               | local feature commit  |
 
   Scenario: undo
