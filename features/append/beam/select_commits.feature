@@ -50,7 +50,6 @@ Feature: beam multiple commits onto a new child branch
       | existing | main     |
       | new      | existing |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
