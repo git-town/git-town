@@ -32,7 +32,6 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       |          | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
       |          | git checkout new                                                                                    |
       | new      | git rebase existing --no-update-refs                                                                |
-      |          | git checkout new                                                                                    |
       |          | git push -u origin new                                                                              |
       | (none)   | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted         |
       | new      | git checkout existing                                                                               |

@@ -427,11 +427,11 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 	}
 	if !performCherryPick {
 		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.targetBranch},
+			&opcodes.CheckoutIfNeeded{Branch: data.targetBranch},
 			&opcodes.RebaseBranch{
 				Branch: data.initialBranch.BranchName(),
 			},
-			&opcodes.Checkout{Branch: data.initialBranch},
+			&opcodes.CheckoutIfNeeded{Branch: data.initialBranch},
 		)
 	}
 	if data.initialBranchInfo.HasTrackingBranch() {
@@ -440,7 +440,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 		)
 	}
 	prog.Value.Add(
-		&opcodes.Checkout{
+		&opcodes.CheckoutIfNeeded{
 			Branch: data.targetBranch,
 		},
 	)
