@@ -2,13 +2,15 @@ Feature: syncing a top-level feature branch using --no-push
 
   Background:
     Given a Git repo with origin
+    And the commits
+      | BRANCH | LOCATION | MESSAGE            |
+      | main   | local    | local main commit  |
+      |        | origin   | origin main commit |
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | local main commit     |
-      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
     And the current branch is "feature"
@@ -28,9 +30,9 @@ Feature: syncing a top-level feature branch using --no-push
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         | local         | local main commit     |
-      | feature | local, origin | origin feature commit |
+      | feature | local, origin | local main commit     |
+      |         |               | origin feature commit |
       |         | local         | origin main commit    |
-      |         |               | local main commit     |
       |         |               | local feature commit  |
     And the initial branches and lineage exist now
 
