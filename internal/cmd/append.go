@@ -433,7 +433,7 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 		)
 	}
 	prog.Value.Add(
-		&opcodes.CheckoutIfNeeded{
+		&opcodes.Checkout{
 			Branch: data.targetBranch,
 		},
 	)
