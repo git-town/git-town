@@ -21,9 +21,7 @@ Feature: beam multiple commits onto a new feature branch
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                             |
       | existing | git fetch --prune --tags                                                                            |
-      |          | git checkout main                                                                                   |
-      | main     | git rebase origin/main --no-update-refs                                                             |
-      |          | git checkout -b new                                                                                 |
+      |          | git checkout -b new main                                                                            |
       | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
       |          | git cherry-pick {{ sha-before-run 'commit 4' }}                                                     |
       |          | git checkout existing                                                                               |
@@ -34,7 +32,7 @@ Feature: beam multiple commits onto a new feature branch
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
-      | main     | local, origin | main commit |
+      | main     | origin        | main commit |
       | existing | local, origin | commit 1    |
       |          |               | commit 3    |
       | new      | local         | commit 2    |
@@ -51,9 +49,6 @@ Feature: beam multiple commits onto a new feature branch
       | new      | git checkout existing                                                  |
       | existing | git reset --hard {{ sha-before-run 'commit 4' }}                       |
       |          | git push --force-with-lease origin {{ sha 'initial commit' }}:existing |
-      |          | git checkout main                                                      |
-      | main     | git reset --hard {{ sha 'initial commit' }}                            |
-      |          | git checkout existing                                                  |
-      | existing | git branch -D new                                                      |
+      |          | git branch -D new                                                      |
     And the initial commits exist now
     And the initial branches and lineage exist now
