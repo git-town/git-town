@@ -20,8 +20,7 @@ Feature: beam multiple commits onto a new feature branch
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                             |
-      | existing | git checkout main                                                                                   |
-      | main     | git checkout -b new                                                                                 |
+      | existing | git checkout -b new main                                                                            |
       | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
       |          | git cherry-pick {{ sha-before-run 'commit 4' }}                                                     |
       |          | git checkout existing                                                                               |
