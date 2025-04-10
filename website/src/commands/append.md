@@ -40,6 +40,12 @@ branch with the main branch as its parent.
 
 ## Options
 
+#### `-b`<br>`--beam`
+
+Moves ("beams") one or more commits from the current branch to the new child
+branch that gets created. Lets you select the commits to beam via a visual
+dialog.
+
 #### `-p`<br>`--prototype`
 
 Adding the `--prototype` aka `-p` switch creates a
