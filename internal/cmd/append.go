@@ -140,7 +140,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data, repo.FinalMessages)
+	runProgram := appendProgram(data, repo.FinalMessages, false)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -317,7 +317,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 	}, false, fc.Err
 }
 
-func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) program.Program {
+func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
 	if !data.hasOpenChanges {
@@ -371,7 +371,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 			},
 		)
 	}
-	moveCommitsToAppendedBranch(prog, data)
+	moveCommitsToAppendedBranch(prog, data, beamCherryPick)
 	if data.propose {
 		prog.Value.Add(
 			&opcodes.BranchTrackingCreate{
@@ -401,14 +401,16 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector) 
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData) {
+func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatureData, performCherryPick bool) {
 	if len(data.commitsToBeam) == 0 {
 		return
 	}
-	for _, commitToBeam := range data.commitsToBeam {
-		prog.Value.Add(
-			&opcodes.CherryPick{SHA: commitToBeam.SHA},
-		)
+	if performCherryPick {
+		for _, commitToBeam := range data.commitsToBeam {
+			prog.Value.Add(
+				&opcodes.CherryPick{SHA: commitToBeam.SHA},
+			)
+		}
 	}
 	prog.Value.Add(
 		&opcodes.Checkout{
@@ -421,6 +423,15 @@ func moveCommitsToAppendedBranch(prog Mutable[program.Program], data appendFeatu
 			&opcodes.CommitRemove{
 				SHA: commitToBeam.SHA,
 			},
+		)
+	}
+	if !performCherryPick {
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.targetBranch},
+			&opcodes.RebaseBranch{
+				Branch: data.initialBranch.BranchName(),
+			},
+			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 	}
 	if data.initialBranchInfo.HasTrackingBranch() {

@@ -13,25 +13,28 @@ Feature: beam multiple commits onto a new child branch
       | existing | local    | commit 3    |
       | existing | local    | commit 4    |
     And the current branch is "existing"
+    And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town append new --beam" and enter into the dialog:
       | DIALOG                 | KEYS                             |
       | select commits 2 and 4 | down space down down space enter |
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                             |
       | existing | git fetch --prune --tags                                                                            |
       |          | git checkout main                                                                                   |
       | main     | git rebase origin/main --no-update-refs                                                             |
-      |          | git checkout -b new                                                                                 |
-      | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
-      |          | git cherry-pick {{ sha-before-run 'commit 4' }}                                                     |
       |          | git checkout existing                                                                               |
+      | existing | git rebase main --no-update-refs                                                                    |
+      |          | git push --force-with-lease --force-if-includes                                                     |
+      |          | git checkout -b new                                                                                 |
+      | new      | git checkout existing                                                                               |
       | existing | git rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} --no-update-refs |
       |          | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
-      |          | git push --force-with-lease --force-if-includes                                                     |
+      |          | git checkout new                                                                                    |
+      | new      | git rebase existing --no-update-refs                                                                |
+      |          | git checkout existing                                                                               |
+      | existing | git push --force-with-lease --force-if-includes                                                     |
       |          | git checkout new                                                                                    |
     And no rebase is now in progress
     And these commits exist now
@@ -39,13 +42,15 @@ Feature: beam multiple commits onto a new child branch
       | main     | local, origin | main commit |
       | existing | local, origin | commit 1    |
       |          |               | commit 3    |
+      |          |               | main commit |
       | new      | local         | commit 2    |
       |          |               | commit 4    |
     And this lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
-      | new      | main   |
+      | BRANCH   | PARENT   |
+      | existing | main     |
+      | new      | existing |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
