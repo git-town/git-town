@@ -250,7 +250,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges,
+		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges && beam.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,

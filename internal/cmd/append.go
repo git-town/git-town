@@ -215,7 +215,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 !repoStatus.OpenChanges,
+		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse(),
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
