@@ -29,7 +29,7 @@ Feature: remove a branch from a stack
       """
       branch "branch-2" is now a child of "main"
       """
-    Then Git Town runs the commands
+    And Git Town runs the commands
       | BRANCH   | COMMAND                                                       |
       | branch-2 | git pull                                                      |
       |          | git rebase --onto main branch-1 --no-update-refs              |
