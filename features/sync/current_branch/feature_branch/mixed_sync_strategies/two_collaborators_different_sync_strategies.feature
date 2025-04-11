@@ -62,7 +62,6 @@ Feature: compatibility between different sync-feature-strategy settings
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
-    # And inspect the repo
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -76,7 +75,7 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     And Git Town prints something like:
       """
-      Could not apply .* my second commit
+      Could not apply \S+ my second commit
       """
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
@@ -90,7 +89,7 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     And Git Town prints something like:
       """
-      Could not apply .* my first commit
+      Could not apply \S+ my first commit
       """
     And a rebase is now in progress
     When I resolve the conflict in "file.txt" with "my and coworker content"
