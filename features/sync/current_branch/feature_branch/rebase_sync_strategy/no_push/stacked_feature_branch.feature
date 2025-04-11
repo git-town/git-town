@@ -27,23 +27,21 @@ Feature: syncing a stacked feature branch using --no-push
       |        | git checkout parent                       |
       | parent | git rebase main --no-update-refs          |
       |        | git rebase origin/parent --no-update-refs |
+      |        | git rebase main --no-update-refs          |
       |        | git checkout child                        |
       | child  | git rebase parent --no-update-refs        |
       |        | git rebase origin/child --no-update-refs  |
+      |        | git rebase parent --no-update-refs        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        | local         | local main commit    |
-      | child  | local, origin | origin child commit  |
-      |        | local         | origin parent commit |
-      |        |               | origin main commit   |
-      |        |               | local main commit    |
-      |        |               | local parent commit  |
+      | child  | local         | origin child commit  |
       |        |               | local child commit   |
-      | parent | local, origin | origin parent commit |
-      |        | local         | origin main commit   |
-      |        |               | local main commit    |
+      |        | origin        | origin child commit  |
+      | parent | local         | origin parent commit |
       |        |               | local parent commit  |
+      |        | origin        | origin parent commit |
     And the initial branches and lineage exist now
 
   Scenario: undo

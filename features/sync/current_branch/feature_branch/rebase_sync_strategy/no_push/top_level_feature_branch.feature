@@ -26,14 +26,15 @@ Feature: syncing a top-level feature branch using --no-push
       |         | git checkout feature                       |
       | feature | git rebase main --no-update-refs           |
       |         | git rebase origin/feature --no-update-refs |
+      |         | git rebase main --no-update-refs           |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         | local         | local main commit     |
-      | feature | local, origin | local main commit     |
-      |         |               | origin feature commit |
-      |         | local         | origin main commit    |
+      | feature | local         | origin feature commit |
       |         |               | local feature commit  |
+      |         | origin        | local main commit     |
+      |         |               | origin feature commit |
     And the initial branches and lineage exist now
 
   Scenario: undo

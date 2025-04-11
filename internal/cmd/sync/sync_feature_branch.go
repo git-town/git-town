@@ -20,15 +20,6 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 			PushBranches:       args.pushBranches,
 		})
 	}
-	if syncStrategy == configdomain.SyncStrategyRebase {
-		if parent, hasParent := args.originalParentName.Get(); hasParent {
-			args.program.Value.Add(
-				&opcodes.RebaseBranch{
-					Branch: parent.BranchName(),
-				},
-			)
-		}
-	}
 	if args.prune {
 		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
 	}
@@ -97,6 +88,13 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					PushBranches: args.PushBranches,
 				},
 			)
+			if syncStrategy == configdomain.SyncStrategyRebase {
+				args.Program.Value.Add(
+					&opcodes.RebaseParentIfNeeded{
+						Branch: args.LocalName,
+					},
+				)
+			}
 		}
 	case configdomain.SyncStrategyFFOnly:
 		if args.Offline.IsFalse() {
@@ -108,7 +106,8 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 type FeatureTrackingArgs struct {
 	FirstCommitMessage Option[gitdomain.CommitMessage]
 	LocalName          gitdomain.LocalBranchName
-	Offline            configdomain.Offline     // whether offline mode is enabled
+	Offline            configdomain.Offline // whether offline mode is enabled
+	ParentName         Option[gitdomain.LocalBranchName]
 	Program            Mutable[program.Program] // the program to update
 	PushBranches       configdomain.PushBranches
 }

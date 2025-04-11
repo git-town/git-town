@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -23,9 +24,11 @@ Feature: compatibility between different sync-feature-strategy settings
       | feature | git fetch --prune --tags                        |
       |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
       | feature | local, origin | my first commit | file.txt  | my content   |
+    And no rebase is now in progress
     And all branches are now synchronized
 
     # coworker makes a conflicting local commit concurrently with me and then syncs
@@ -60,6 +63,7 @@ Feature: compatibility between different sync-feature-strategy settings
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
+    # And inspect the repo
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -71,6 +75,21 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       CONFLICT (content): Merge conflict in file.txt
       """
+    And Git Town prints something like:
+      """
+      error: could not apply .* my first commit
+      """
+    When I resolve the conflict in "file.txt" with "my and coworker content"
+    And I run "git town continue" and close the editor
+    Then Git Town runs the commands
+      | BRANCH  | COMMAND                                   |
+      | feature | git -c core.editor=true rebase --continue |
+      |         | git rebase main --no-update-refs          |
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file.txt
+      """
+    And a rebase is now in progress
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
@@ -82,6 +101,6 @@ Feature: compatibility between different sync-feature-strategy settings
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
-      |         |                         | my first commit                                            | file.txt  | my content                  |
+      |         | local, origin           | my first commit                                            | file.txt  | my new and coworker content |
+      |         | coworker                | my first commit                                            | file.txt  | my content                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
-      |         | local, origin           | my second commit                                           | file.txt  | my new and coworker content |

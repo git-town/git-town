@@ -25,21 +25,21 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | git checkout alpha                       |
       | alpha  | git rebase main --no-update-refs         |
       |        | git rebase origin/alpha --no-update-refs |
+      |        | git rebase main --no-update-refs         |
       |        | git checkout beta                        |
       | beta   | git rebase alpha --no-update-refs        |
       |        | git rebase origin/beta --no-update-refs  |
+      |        | git rebase alpha --no-update-refs        |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE             |
-      | main   | local         | local main commit   |
-      |        | origin        | origin main commit  |
-      | alpha  | local, origin | origin alpha commit |
-      |        | local         | local main commit   |
-      |        |               | local alpha commit  |
-      | beta   | local, origin | origin beta commit  |
-      |        | local         | origin alpha commit |
-      |        |               | local main commit   |
-      |        |               | local alpha commit  |
-      |        |               | local beta commit   |
+      | BRANCH | LOCATION | MESSAGE             |
+      | main   | local    | local main commit   |
+      |        | origin   | origin main commit  |
+      | alpha  | local    | origin alpha commit |
+      |        |          | local alpha commit  |
+      |        | origin   | origin alpha commit |
+      | beta   | local    | origin beta commit  |
+      |        |          | local beta commit   |
+      |        | origin   | origin beta commit  |
     And the initial branches and lineage exist now
 
   Scenario: undo
