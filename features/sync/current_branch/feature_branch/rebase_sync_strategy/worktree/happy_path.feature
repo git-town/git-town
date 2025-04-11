@@ -30,13 +30,14 @@ Feature: sync a branch whose parent is active in another worktree
       | child  | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/child --no-update-refs        |
+      |        | git rebase origin/parent --no-update-refs       |
       |        | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE              |
       | main   | local, origin, worktree | origin main commit   |
       |        |                         | local main commit    |
-      | child  | local, origin           | origin child commit  |
-      |        |                         | origin parent commit |
+      | child  | local                   | origin parent commit |
+      |        | local, origin           | origin child commit  |
       |        |                         | local child commit   |
       | parent | origin                  | origin parent commit |
       |        | worktree                | local parent commit  |

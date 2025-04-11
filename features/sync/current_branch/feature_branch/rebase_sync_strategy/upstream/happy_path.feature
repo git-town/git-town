@@ -25,6 +25,7 @@ Feature: with upstream repo
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |

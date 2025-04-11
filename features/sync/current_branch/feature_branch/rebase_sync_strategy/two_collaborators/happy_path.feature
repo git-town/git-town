@@ -28,6 +28,7 @@ Feature: two people with rebase strategy sync changes made by them
       | feature | git fetch --prune --tags                        |
       |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, origin | my commit       |
@@ -42,6 +43,7 @@ Feature: two people with rebase strategy sync changes made by them
       |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -57,7 +59,7 @@ Feature: two people with rebase strategy sync changes made by them
       |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
-      |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
