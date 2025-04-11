@@ -2,11 +2,8 @@
 
 This setting defines the default branch type for Git Town when the branch type
 is unknown. It applies to branches not listed in [main-branch](main-branch.md),
-[perennial-branches](perennial-branches.md),
-[contribution-branches](contribution-branches.md),
-[observed-branches](observed-branches.md),
-[parked-branches](parked-branches.md), or
-[prototype-branches](prototype-branches.md).
+[perennial-branches](perennial-branches.md), contribution-branches,
+observed-branches, parked-branches, or prototype-branches.
 
 Possible values are:
 
