@@ -20,6 +20,15 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 			PushBranches:       args.pushBranches,
 		})
 	}
+	if syncStrategy == configdomain.SyncStrategyRebase {
+		if parent, hasParent := args.originalParentName.Get(); hasParent {
+			args.program.Value.Add(
+				&opcodes.RebaseBranch{
+					Branch: parent.BranchName(),
+				},
+			)
+		}
+	}
 	if args.prune {
 		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
 	}
