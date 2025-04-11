@@ -175,7 +175,7 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 // SetObservedBranches marks the given branches as observed branches.
 func (self *NormalConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
 	self.ContributionBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyContributionBranches, branches.Join(" "))
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedContributionBranches, branches.Join(" "))
 }
 
 // SetDefaultBranchTypeLocally updates the locally configured default branch type.
@@ -205,7 +205,7 @@ func (self *NormalConfig) SetNewBranchType(value configdomain.BranchType) error 
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *NormalConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
 	self.ObservedBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyObservedBranches, branches.Join(" "))
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedObservedBranches, branches.Join(" "))
 }
 
 // SetOffline updates whether Git Town is in offline mode.
@@ -227,7 +227,7 @@ func (self *NormalConfig) SetParent(branch, parentBranch gitdomain.LocalBranchNa
 // SetObservedBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
 	self.ParkedBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyParkedBranches, branches.Join(" "))
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedParkedBranches, branches.Join(" "))
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
@@ -245,7 +245,7 @@ func (self *NormalConfig) SetPerennialRegexLocally(value configdomain.PerennialR
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *NormalConfig) SetPrototypeBranches(branches gitdomain.LocalBranchNames) error {
 	self.PrototypeBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPrototypeBranches, branches.Join(" "))
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedPrototypeBranches, branches.Join(" "))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.

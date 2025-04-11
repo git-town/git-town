@@ -165,6 +165,15 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					value = update.After.Value
 				}
 			}
+			for branchList, branchType := range configdomain.ObsoleteBranchLists {
+				if configKey == branchList {
+					for _, branch := range strings.Split(value, " ") {
+						snapshot[configdomain.Key(configdomain.BranchSpecificKeyPrefix+branch+configdomain.BranchTypeSuffix)] = branchType.String()
+					}
+					self.RemoveLocalConfigValue(configKey)
+					fmt.Printf(messages.SettingSunsetDeleted, configKey)
+				}
+			}
 		}
 		if hasConfigKey {
 			snapshot[configKey] = value

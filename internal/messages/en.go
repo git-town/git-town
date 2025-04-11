@@ -223,6 +223,7 @@ and will be removed in future versions of Git Town.`
 	SettingCannotWrite                      = "ERROR: cannot write %s Git setting %q: %v"
 	SettingIgnoreInvalid                    = "Notice: ignoring invalid dialog input setting %q\n"
 	SettingSunsetDeleted                    = "Deleting obsolete setting %q"
+	SettingSunsetBranchList                 = "Dissolving deprecated branch list %q"
 	ShipBranchIsInOtherWorktree             = "branch %q is checked out in another worktree, please ship from there"
 	ShipBranchNotInSync                     = "branch %q is not in sync"
 	ShipAbortedMergeError                   = "aborted because merge exited with error"
