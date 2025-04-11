@@ -9,6 +9,7 @@
   - [pull request breadcrumbs](how-to/github-actions-breadcrumb.md)
   - [LazyGit](how-to/lazygit.md)
   - [shell prompt](how-to/shell-prompt.md)
+  - [hotfixes](how-to/hotfixes.md)
 - [Commands](all-commands.md)
   - [Basic workflow](basic-commands.md)
     - [hack](commands/hack.md)

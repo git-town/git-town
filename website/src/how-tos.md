@@ -9,3 +9,7 @@
 - [integrate Git Town with LazyGit](how-to/lazygit.md)
 
 - [work with forked repositories](how-to/forked-repo.md)
+
+- [creating and proposing hotfixes](how-to/hotfixes.md)
+
+- working with [stacked changes](stacked-changes.md)
