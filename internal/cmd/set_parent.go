@@ -281,7 +281,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
 						BranchToRebaseOnto: selectedBranch,
-						CommitsToRemove:    parent.BranchName(),
+						CommitsToRemove:    parent.Location(),
 						Upstream:           None[gitdomain.LocalBranchName](),
 					},
 				)

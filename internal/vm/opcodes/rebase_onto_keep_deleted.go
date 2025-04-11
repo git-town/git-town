@@ -11,7 +11,7 @@ import (
 // rebases the current branch against the target branch while executing "git town swap", while moving the target branch onto the Onto branch.
 type RebaseOntoKeepDeleted struct {
 	BranchToRebaseOnto      gitdomain.LocalBranchName
-	CommitsToRemove         gitdomain.BranchName
+	CommitsToRemove         gitdomain.Location
 	Upstream                Option[gitdomain.LocalBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -29,7 +29,7 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream)
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream)
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {
