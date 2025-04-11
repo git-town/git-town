@@ -28,15 +28,14 @@ Feature: sync the current feature branch using the "rebase" feature sync strateg
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
-      | feature | local, origin | local main commit     |
-      |         |               | origin feature commit |
-      |         |               | origin main commit    |
+      | feature | local, origin | origin feature commit |
       |         |               | local feature commit  |
 
   Scenario: undo

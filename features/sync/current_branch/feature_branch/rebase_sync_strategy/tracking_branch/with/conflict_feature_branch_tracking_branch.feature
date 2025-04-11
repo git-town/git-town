@@ -50,8 +50,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
-      |         | git push --force-with-lease --force-if-includes |
       |         | git rebase main --no-update-refs                |
+      |         | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now
@@ -65,5 +65,5 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
-      |         | git push --force-with-lease --force-if-includes |
       |         | git rebase main --no-update-refs                |
+      |         | git push --force-with-lease --force-if-includes |
