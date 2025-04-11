@@ -30,7 +30,6 @@ import (
 )
 
 const (
-	setParentCmd  = "set-parent"
 	setParentDesc = "Set the parent branch for the current branch"
 	setParentHelp = `
 Consider this stack:
@@ -126,7 +125,7 @@ func executeSetParent(args []string, verbose configdomain.Verbose) error {
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
-		Command:               setParentCmd,
+		Command:               "set-parent",
 		DryRun:                false,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
