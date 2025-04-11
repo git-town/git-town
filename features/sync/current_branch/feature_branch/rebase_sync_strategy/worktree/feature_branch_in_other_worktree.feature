@@ -23,6 +23,7 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       |         | git rebase origin/main --no-update-refs         |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
+      |         | git rebase origin/main --no-update-refs         |
       |         | git push --force-with-lease --force-if-includes |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
@@ -30,8 +31,8 @@ Feature: Sync a feature branch that is in another worktree than the main branch
       | main    | local            | local main commit     |
       |         | origin           | origin main commit    |
       | feature | origin, worktree | origin feature commit |
-      |         |                  | origin main commit    |
       |         |                  | local feature commit  |
+      |         | worktree         | origin main commit    |
 
   Scenario: undo
     When I run "git-town undo" in the other worktree

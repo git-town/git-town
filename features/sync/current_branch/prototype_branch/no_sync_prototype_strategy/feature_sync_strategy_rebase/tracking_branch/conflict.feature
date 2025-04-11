@@ -56,6 +56,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git -c core.editor=true rebase --continue       |
+      |           | git rebase main --no-update-refs                |
       |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
@@ -72,7 +73,8 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | prototype | git push --force-with-lease --force-if-includes |
+      | prototype | git rebase main --no-update-refs                |
+      |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |

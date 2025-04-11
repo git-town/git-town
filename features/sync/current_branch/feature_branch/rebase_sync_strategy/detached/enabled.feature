@@ -22,14 +22,15 @@ Feature: detached sync the current feature branch using the "rebase" feature syn
       |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
       |         | git rebase origin/feature --no-update-refs      |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local         | local main commit     |
       |         | origin        | origin main commit    |
       | feature | local, origin | origin feature commit |
-      |         |               | local main commit     |
       |         |               | local feature commit  |
+      |         | origin        | local main commit     |
 
   Scenario: undo
     When I run "git-town undo"

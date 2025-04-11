@@ -69,6 +69,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now
@@ -86,6 +87,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature                            |
       | feature | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

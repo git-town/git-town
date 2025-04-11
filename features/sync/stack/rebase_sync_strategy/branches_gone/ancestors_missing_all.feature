@@ -30,6 +30,9 @@ Feature: stacked changes where all ancestor branches aren't local
       |        | git rebase origin/main --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/gamma --no-update-refs        |
+      |        | git rebase origin/beta --no-update-refs         |
+      |        | git rebase origin/alpha --no-update-refs        |
+      |        | git rebase origin/main --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -37,10 +40,10 @@ Feature: stacked changes where all ancestor branches aren't local
       | main   | origin        | origin main commit  |
       | alpha  | origin        | origin alpha commit |
       | beta   | origin        | origin beta commit  |
-      | gamma  | local, origin | origin gamma commit |
-      |        |               | origin main commit  |
+      | gamma  | local, origin | origin main commit  |
       |        |               | origin alpha commit |
       |        |               | origin beta commit  |
+      |        |               | origin gamma commit |
       |        |               | local gamma commit  |
 
   Scenario: undo

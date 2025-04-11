@@ -39,12 +39,15 @@ Feature: sync the entire stack
       | alpha  | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase main --no-update-refs                |
       |        | git checkout beta                               |
       | beta   | git rebase alpha --no-update-refs               |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase alpha --no-update-refs               |
       |        | git checkout gamma                              |
       | gamma  | git rebase beta --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase beta --no-update-refs                |
       |        | git checkout alpha                              |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |

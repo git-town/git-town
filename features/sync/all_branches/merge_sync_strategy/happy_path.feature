@@ -77,9 +77,11 @@ Feature: sync all feature branches
       |            | git checkout alpha                              |
       | alpha      | git rebase main --no-update-refs                |
       |            | git push --force-with-lease --force-if-includes |
+      |            | git rebase main --no-update-refs                |
       |            | git checkout beta                               |
       | beta       | git rebase main --no-update-refs                |
       |            | git push --force-with-lease --force-if-includes |
+      |            | git rebase main --no-update-refs                |
       |            | git checkout observed                           |
       | observed   | git rebase origin/observed --no-update-refs     |
       |            | git checkout production                         |
