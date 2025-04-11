@@ -10,6 +10,7 @@ Feature: Automatically remove obsolete branch lists setting
       """
     And local Git setting "git-town.<BRANCHTYPE>-branches" now doesn't exist
     And local Git setting "git-town-branch.one.branchtype" is now "<BRANCHTYPE>"
+    And local Git setting "git-town-branch.two.branchtype" is now "<BRANCHTYPE>"
 
     Examples:
       | BRANCHTYPE   |
