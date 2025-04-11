@@ -17,7 +17,8 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 	if !hasBranchInfos {
 		panic(messages.BranchInfosNotProvided)
 	}
-	for branch := self.Branch; ; {
+	branch := self.Branch
+	for {
 		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
 		if !hasParent {
 			break
