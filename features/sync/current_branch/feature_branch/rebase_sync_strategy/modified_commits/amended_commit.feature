@@ -23,6 +23,7 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1b | file_1    | another one  |
     And the current branch is "feature-2"
+    And inspect the commits
     When I run "git-town sync"
 
   @this
@@ -35,7 +36,7 @@ Feature: rebase a branch that contains amended commits
       |           | git push --force-with-lease --force-if-includes                                       |
       |           | git rebase --onto main {{ sha 'initial commit' }} --no-update-refs                    |
       |           | git checkout feature-2                                                                |
-      | feature-2 | git rebase --onto feature-1 {{ sha 'initial commit' }} --no-update-refs               |
+      | feature-2 | git rebase --onto feature-1 {{ sha-before-run 'commit 1b' }} --no-update-refs         |
       |           | git checkout --theirs file_1                                                          |
       |           | git add file_1                                                                        |
       |           | git -c core.editor=true rebase --continue                                             |

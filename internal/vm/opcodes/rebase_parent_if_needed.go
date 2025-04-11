@@ -9,6 +9,7 @@ import (
 
 type RebaseParentIfNeeded struct {
 	Branch                  gitdomain.LocalBranchName
+	PreviousSHA             Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
