@@ -1,5 +1,5 @@
 @messyoutput
-Feature: update the parent of a feature branch without argument
+Feature: select the new parent via a visual dialog
 
   Background:
     Given a Git repo with origin
