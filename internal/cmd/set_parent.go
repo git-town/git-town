@@ -60,9 +60,9 @@ main
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     setParentCmd,
+		Use:     "set-parent [branch]",
 		GroupID: cmdhelpers.GroupIDStack,
-		Args:    cobra.NoArgs,
+		Args:    cobra.MaximumNArgs(1),
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
