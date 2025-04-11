@@ -1,4 +1,3 @@
-@messyoutput
 Feature: remove a branch from a stack
 
   Background:
