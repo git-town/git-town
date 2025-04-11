@@ -1,4 +1,4 @@
-## Display a stack breadcrumb in pull request
+# Display a stack breadcrumb in pull request
 
 The
 [Git Town GitHub action](https://github.com/marketplace/actions/git-town-github-action)
