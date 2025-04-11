@@ -1,7 +1,7 @@
 Feature: rebase a branch that contains amended commits
 
-# This test demonstrates how Git Town currently does not sync branches that contain amended commits correctly.
-# This will be fixed by implementing https://github.com/git-town/git-town/issues/4586.
+  # This test demonstrates how Git Town currently does not sync branches that contain amended commits correctly.
+  # This will be fixed by implementing https://github.com/git-town/git-town/issues/4586.
 
   Background:
     Given a Git repo with origin
@@ -25,6 +25,7 @@ Feature: rebase a branch that contains amended commits
     And the current branch is "feature-2"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
