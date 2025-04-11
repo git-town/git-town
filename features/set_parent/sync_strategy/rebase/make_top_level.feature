@@ -8,14 +8,12 @@ Feature: reproduce bug
       | test   | local    | commit 1 | file_1    |
       | test   | local    | commit 2 | file_2    |
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
-    When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                | KEYS  |
-      | parent branch of test | enter |
+    When I run "git-town set-parent main"
 
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "test": main
+      branch "test" is now a child of "main"
       """
     And Git Town runs the commands
       | BRANCH | COMMAND                          |
