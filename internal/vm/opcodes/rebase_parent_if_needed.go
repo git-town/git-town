@@ -26,23 +26,21 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
-			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				program = append(program, &RebaseBranch{
-					Branch: parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName(),
-				})
+			parentInfos, hasParentInfos := args.BranchInfos.Get()
+			parentInfo, hasParentInfo := parentInfos.FindByLocalName(parent).Get()
+			var opcode shared.Opcode
+			if hasParentInfos && hasParentInfo && !branchInfos.BranchIsActiveInAnotherWorktree(parent) {
+				opcode = &RebaseOntoKeepDeleted{
+					BranchToRebaseOnto: parent,
+					CommitsToRemove:    parentInfo.GetSHA().Location(),
+					Upstream:           None[gitdomain.LocalBranchName](),
+				}
 			} else {
-				parentInfos, hasParentInfos := args.BranchInfos.Get()
-				if hasParentInfos {
-					parentInfo, hasParentInfo := parentInfos.FindByLocalName(parent).Get()
-					if hasParentInfo {
-						program = append(program, &RebaseOntoKeepDeleted{
-							BranchToRebaseOnto: parent,
-							CommitsToRemove:    parentInfo.GetSHA().Location(),
-							Upstream:           None[gitdomain.LocalBranchName](),
-						})
-					}
+				opcode = &RebaseBranch{
+					Branch: parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName(),
 				}
 			}
+			program = append(program, opcode)
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
