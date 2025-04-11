@@ -194,7 +194,7 @@ var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
 	KeyObsoleteSyncBeforeShip,
 }
 
-var ObsoleteBranchLists = map[Key]BranchType{
+var ObsoleteBranchLists = map[Key]BranchType{ //nolint:gochecknoglobals
 	KeyDeprecatedContributionBranches: BranchTypeContributionBranch,
 	KeyDeprecatedObservedBranches:     BranchTypeObservedBranch,
 	KeyDeprecatedParkedBranches:       BranchTypeParkedBranch,

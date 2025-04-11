@@ -170,9 +170,9 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					for _, branch := range strings.Split(value, " ") {
 						newKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
 						snapshot[newKey] = branchType.String()
-						self.SetConfigValue(configdomain.ConfigScopeLocal, newKey, branchType.String())
+						_ = self.SetConfigValue(configdomain.ConfigScopeLocal, newKey, branchType.String())
 					}
-					self.RemoveLocalConfigValue(configKey)
+					_ = self.RemoveLocalConfigValue(configKey)
 					fmt.Printf(messages.SettingSunsetBranchList, configKey)
 				}
 			}
