@@ -105,8 +105,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 type FeatureTrackingArgs struct {
 	FirstCommitMessage Option[gitdomain.CommitMessage]
 	LocalName          gitdomain.LocalBranchName
-	Offline            configdomain.Offline // whether offline mode is enabled
-	ParentName         Option[gitdomain.LocalBranchName]
+	Offline            configdomain.Offline     // whether offline mode is enabled
 	Program            Mutable[program.Program] // the program to update
 	PushBranches       configdomain.PushBranches
 }
