@@ -168,10 +168,12 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 			for branchList, branchType := range configdomain.ObsoleteBranchLists {
 				if configKey == branchList {
 					for _, branch := range strings.Split(value, " ") {
-						snapshot[configdomain.Key(configdomain.BranchSpecificKeyPrefix+branch+configdomain.BranchTypeSuffix)] = branchType.String()
+						newKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
+						snapshot[newKey] = branchType.String()
+						self.SetConfigValue(configdomain.ConfigScopeLocal, newKey, branchType.String())
 					}
 					self.RemoveLocalConfigValue(configKey)
-					fmt.Printf(messages.SettingSunsetDeleted, configKey)
+					fmt.Printf(messages.SettingSunsetBranchList, configKey)
 				}
 			}
 		}

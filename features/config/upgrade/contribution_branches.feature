@@ -9,7 +9,7 @@ Feature: Automatically remove the "contribution_branches" setting
   Scenario: result
     Then Git Town prints:
       """
-      Dissolving deprecated local setting "git-town.contribution-branches"
+      Dissolving deprecated branch list "git-town.contribution-branches"
       """
     And local Git setting "git-town.contribution-branches" now doesn't exist
     And local Git setting "git-town-branch.one.branchtype" is now "contribution"
