@@ -1,14 +1,15 @@
 # Display the currently pending Git Town command in your shell prompt
 
-You can display a reminder for running `git town continue` to finish a pending
-Git Town command in your shell prompt. Here is what this could look like:
+You can configure your shell prompt to display a reminder for when a Git Town
+command was interrupted in the middle and is waiting to be continued. This helps
+you remember to run `git town continue` before moving on.
 
 <img width="108" height="31" src="shell_prompt_example.gif">
 
 ### Bash
 
-To add the example status indicator to your shell prompt in Bash, add this to
-your `.bashrc` file:
+To add this status indicator to your Bash prompt, add the following to your
+`.bashrc`:
 
 ```bash
 function git_town_status {
@@ -23,8 +24,7 @@ PS1='$(git_town_status)> '
 
 ### Zsh
 
-To add the example status indicator to your shell prompt in Zsh, add this to
-your `~/.zshrc` file:
+For Zsh, add the following to your `~/.zshrc`:
 
 ```zsh
 git_town_status() {
@@ -41,9 +41,9 @@ PROMPT='$(git_town_status)> '
 
 ### Fish
 
-To add the example status indicator to your shell prompt in Fish, edit your
-`~/.config/fish/config.fish` file and overwrite the
-[`fish_prompt` function](https://fishshell.com/docs/current/cmds/fish_prompt.html):
+For Fish shell, update your `~/.config/fish/config.fish` and override the
+[`fish_prompt`](https://fishshell.com/docs/current/cmds/fish_prompt.html)
+function:
 
 ```zsh
 function fish_prompt
