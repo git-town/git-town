@@ -1,9 +1,20 @@
 # How To ...
 
-- [install shell autocompletion](commands/completions.md)
+This section covers practical tips and workflows for getting the most out of Git
+Town. Learn how to:
 
-- [display the currently interrupted Git Town command in your shell prompt](how-to/shell-prompt.md)
+- Set up [shell autocompletion](commands/completions.md)
 
-- [display a breadcrumb of your current stack in GitHub pull requests](how-to/github-actions-breadcrumb.md)
+- Show the currently interrupted Git Town command in your
+  [shell prompt](how-to/shell-prompt.md)
 
-- [integrate Git Town with LazyGit](how-to/lazygit.md)
+- Add a [breadcrumb of your current stack](how-to/github-actions-breadcrumb.md)
+  to GitHub pull requests
+
+- Use Git Town with [forked repositories](how-to/forked-repo.md)
+
+- Create and propose [hotfixes](how-to/hotfixes.md)
+
+- Work with [stacked changes](stacked-changes.md)
+
+- Integrate Git Town with [LazyGit](how-to/lazygit.md)
