@@ -77,9 +77,9 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     And Git Town prints something like:
       """
-      error: could not apply .* my first commit
+      Could not apply .* my second commit
       """
-    When I resolve the conflict in "file.txt" with "my and coworker content"
+    When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                   |
@@ -89,8 +89,12 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       CONFLICT (add/add): Merge conflict in file.txt
       """
+    And Git Town prints something like:
+      """
+      Could not apply .* my first commit
+      """
     And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with "my new and coworker content"
+    When I resolve the conflict in "file.txt" with "my and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -101,6 +105,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
-      |         | local, origin           | my first commit                                            | file.txt  | my new and coworker content |
+      |         | local, origin           | my first commit                                            | file.txt  | my and coworker content     |
+      |         |                         | my second commit                                           | file.txt  | my new and coworker content |
       |         | coworker                | my first commit                                            | file.txt  | my content                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
