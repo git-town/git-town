@@ -29,26 +29,28 @@ Feature: stacked changes where an ancestor branch isn't local
       | alpha  | git rebase origin/main --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/alpha --no-update-refs        |
+      |        | git rebase origin/main --no-update-refs         |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout gamma                              |
       | gamma  | git rebase origin/beta --no-update-refs         |
       |        | git rebase alpha --no-update-refs               |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/gamma --no-update-refs        |
+      |        | git rebase origin/beta --no-update-refs         |
+      |        | git rebase alpha --no-update-refs               |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | origin        | origin main commit  |
       | alpha  | local, origin | origin alpha commit |
-      |        |               | origin main commit  |
       |        |               | local alpha commit  |
       | beta   | origin        | origin beta commit  |
-      | gamma  | local, origin | origin gamma commit |
+      | gamma  | local, origin | origin main commit  |
       |        |               | origin alpha commit |
-      |        |               | origin main commit  |
       |        |               | local alpha commit  |
       |        |               | origin beta commit  |
+      |        |               | origin gamma commit |
       |        |               | local gamma commit  |
 
   Scenario: undo
