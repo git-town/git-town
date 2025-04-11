@@ -1,4 +1,3 @@
-@messyoutput
 Feature: remove a branch from a stack
 
   Background:
@@ -23,16 +22,14 @@ Feature: remove a branch from a stack
       | branch-3 | local, origin | commit 3 | file_3    |
     And the current branch is "branch-2"
     And local Git setting "git-town.sync-feature-strategy" is "compress"
-    When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS     |
-      | parent branch of child | up enter |
+    When I run "git-town set-parent main"
 
   Scenario: result
     Then Git Town prints:
       """
-      Selected parent branch for "branch-2": main
+      branch "branch-2" is now a child of "main"
       """
-    And Git Town runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                       |
       | branch-2 | git pull                                                      |
       |          | git rebase --onto main branch-1 --no-update-refs              |

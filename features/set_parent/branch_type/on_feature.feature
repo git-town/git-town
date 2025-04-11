@@ -1,4 +1,3 @@
-@messyoutput
 Feature: update the parent of a feature branch
 
   Background:
@@ -8,16 +7,10 @@ Feature: update the parent of a feature branch
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
     And the current branch is "child"
-    When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS     |
-      | parent branch of child | up enter |
+    When I run "git-town set-parent main"
 
   Scenario: result
-    Then Git Town prints:
-      """
-      Selected parent branch for "child": main
-      """
-    And Git Town runs no commands
+    Then Git Town runs no commands
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
