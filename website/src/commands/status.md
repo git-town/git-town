@@ -23,8 +23,7 @@ persisted runstate.
 The `--pending` aka `-p` argument causes this command to output only the name of
 the pending Git Town command if one exists. This allows displaying a reminder to
 run `git town continue` into your shell prompt when you encountered a merge
-conflict earlier. See [Integration](../integration.md#shell-prompt) on how to
-set this up.
+conflict earlier. See [here](../how-to/shell-prompt.md) on how to set this up
 
 #### `-v`<br>`--verbose`
 
