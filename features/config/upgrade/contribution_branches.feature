@@ -1,4 +1,4 @@
-Feature: Automatically remove the "contribution_branches" setting
+Feature: Automatically remove obsolete branch lists setting
 
   Scenario Outline:
     Given a local Git repo
