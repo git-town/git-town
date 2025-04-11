@@ -4,8 +4,7 @@
 - [Q & A](questions.md)
 - [Install](install.md)
 - [Configuration](configuration.md)
-- [How-to ...](how-tos.md
-  - [install shell autocomplete](commands/completions.md)
+- [How-to ...](how-tos.md)
   - [display pending command in shell prompt](how-to/shell-prompt.md)
   - [display breadcrumb on GitHub pull requests](how-to/github-actions-breadcrumb.md)
   - [integrate with LazyGit](how-to/lazygit.md)
