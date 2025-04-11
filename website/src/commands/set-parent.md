@@ -1,7 +1,7 @@
 # git town set-parent
 
 ```command-summary
-git town set-parent [<new-parent>] [-v | --verbose]
+git town set-parent [<branch>] [-v | --verbose]
 ```
 
 The _set-parent_ command changes the parent branch for the current branch.
