@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 type RebaseParentIfNeeded struct {
@@ -25,15 +26,23 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
-			var branchToRebase gitdomain.BranchName
 			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+				program = append(program, &RebaseBranch{
+					Branch: parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName(),
+				})
 			} else {
-				branchToRebase = parent.BranchName()
+				parentInfos, hasParentInfos := args.BranchInfos.Get()
+				if hasParentInfos {
+					parentInfo, hasParentInfo := parentInfos.FindByLocalName(parent).Get()
+					if hasParentInfo {
+						program = append(program, &RebaseOntoKeepDeleted{
+							BranchToRebaseOnto: parent,
+							CommitsToRemove:    parentInfo.GetSHA().Location(),
+							Upstream:           None[gitdomain.LocalBranchName](),
+						})
+					}
+				}
 			}
-			program = append(program, &RebaseBranch{
-				Branch: branchToRebase,
-			})
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
