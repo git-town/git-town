@@ -25,12 +25,13 @@ Feature: sync the current prototype branch that has a tracking branch
       | prototype | git rebase main --no-update-refs                |
       |           | git push --force-with-lease --force-if-includes |
       |           | git rebase origin/prototype --no-update-refs    |
+      |           | git rebase main --no-update-refs                |
       |           | git push --force-with-lease --force-if-includes |
+    And no rebase is now in progress
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE       |
       | main      | local, origin | main commit   |
       | prototype | local, origin | origin commit |
-      |           |               | main commit   |
       |           |               | local commit  |
     And all branches are now synchronized
     And the initial branches and lineage exist now
@@ -38,9 +39,9 @@ Feature: sync the current prototype branch that has a tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                                |
-      | prototype | git reset --hard {{ sha 'local commit' }}                              |
-      |           | git push --force-with-lease origin {{ sha 'origin commit' }}:prototype |
+      | BRANCH    | COMMAND                                                                                     |
+      | prototype | git reset --hard {{ sha 'local commit' }}                                                   |
+      |           | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin commit' }}:prototype |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE       | FILE NAME   |
       | main      | local, origin | main commit   | main_file   |
