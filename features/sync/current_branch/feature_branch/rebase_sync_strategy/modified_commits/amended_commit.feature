@@ -32,6 +32,7 @@ Feature: rebase a branch that contains amended commits
       |           | git checkout feature-1                          |
       | feature-1 | git rebase main --no-update-refs                |
       |           | git push --force-with-lease --force-if-includes |
+      |           | git rebase main --no-update-refs                |
       |           | git checkout feature-2                          |
       | feature-2 | git rebase feature-1 --no-update-refs           |
     And Git Town prints the error:
@@ -47,6 +48,7 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | COMMAND                                         |
       | feature-2 | git -c core.editor=true rebase --continue       |
       |           | git push --force-with-lease --force-if-includes |
+      |           | git rebase feature-1 --no-update-refs           |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local, origin | commit 1b | file_1    | another one  |

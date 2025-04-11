@@ -87,6 +87,12 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					RemoteBranch: trackingBranch,
 					PushBranches: args.PushBranches,
 				},
+				&opcodes.RebaseParentIfNeeded{
+					Branch: args.LocalName,
+				},
+				&opcodes.PushCurrentBranchForceIfNeeded{
+					ForceIfIncludes: true,
+				},
 			)
 		}
 	case configdomain.SyncStrategyFFOnly:

@@ -30,6 +30,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | feature | git fetch --prune --tags                        |
       |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
+      |         | git rebase main --no-update-refs                |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
       | feature | local, origin | my first commit | file.txt  | my content   |
@@ -55,6 +56,7 @@ Feature: two people using rebase make conflicting changes to a branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -82,6 +84,7 @@ Feature: two people using rebase make conflicting changes to a branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
+      |         | git rebase main --no-update-refs                |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

@@ -21,9 +21,11 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | alpha  | git fetch --prune --tags                        |
       |        | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase main --no-update-refs                |
       |        | git checkout beta                               |
       | beta   | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
+      |        | git rebase main --no-update-refs                |
       |        | git checkout alpha                              |
       | alpha  | git push --tags                                 |
     And all branches are now synchronized

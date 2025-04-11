@@ -29,11 +29,13 @@ Feature: stacked changes where each branch makes independent changes
       | parent | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/parent --no-update-refs       |
+      |        | git rebase main --no-update-refs                |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
       | child  | git rebase parent --no-update-refs              |
       |        | git push --force-with-lease --force-if-includes |
       |        | git rebase origin/child --no-update-refs        |
+      |        | git rebase parent --no-update-refs              |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
@@ -41,14 +43,8 @@ Feature: stacked changes where each branch makes independent changes
       | main   | local, origin | origin main commit   |
       |        |               | local main commit    |
       | child  | local, origin | origin child commit  |
-      |        |               | origin parent commit |
-      |        |               | origin main commit   |
-      |        |               | local main commit    |
-      |        |               | local parent commit  |
       |        |               | local child commit   |
       | parent | local, origin | origin parent commit |
-      |        |               | origin main commit   |
-      |        |               | local main commit    |
       |        |               | local parent commit  |
 
   Scenario: undo
