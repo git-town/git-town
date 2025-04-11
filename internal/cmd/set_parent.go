@@ -30,7 +30,6 @@ import (
 )
 
 const (
-	setParentCmd  = "set-parent"
 	setParentDesc = "Set the parent branch for the current branch"
 	setParentHelp = `
 Consider this stack:
@@ -60,24 +59,24 @@ main
 func setParentCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     setParentCmd,
+		Use:     "set-parent [branch]",
 		GroupID: cmdhelpers.GroupIDStack,
-		Args:    cobra.NoArgs,
+		Args:    cobra.MaximumNArgs(1),
 		Short:   setParentDesc,
 		Long:    cmdhelpers.Long(setParentDesc),
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
 				return err
 			}
-			return executeSetParent(verbose)
+			return executeSetParent(args, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSetParent(verbose configdomain.Verbose) error {
+func executeSetParent(args []string, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
@@ -97,16 +96,26 @@ func executeSetParent(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	outcome, selectedBranch, err := dialog.Parent(dialog.ParentArgs{
-		Branch:          data.initialBranch,
-		DefaultChoice:   data.defaultChoice,
-		DialogTestInput: data.dialogTestInputs.Next(),
-		Lineage:         data.config.NormalConfig.Lineage,
-		LocalBranches:   data.branchesSnapshot.Branches.LocalBranches().Names(),
-		MainBranch:      data.mainBranch,
-	})
-	if err != nil {
-		return err
+	var outcome dialog.ParentOutcome
+	var selectedBranch gitdomain.LocalBranchName
+	if len(args) == 1 {
+		outcome = dialog.ParentOutcomeSelectedParent
+		selectedBranch = gitdomain.NewLocalBranchName(args[0])
+		if !data.branchesSnapshot.Branches.HasLocalBranch(selectedBranch) {
+			return fmt.Errorf(messages.BranchDoesntExist, selectedBranch)
+		}
+	} else {
+		outcome, selectedBranch, err = dialog.Parent(dialog.ParentArgs{
+			Branch:          data.initialBranch,
+			DefaultChoice:   data.defaultChoice,
+			DialogTestInput: data.dialogTestInputs.Next(),
+			Lineage:         data.config.NormalConfig.Lineage,
+			LocalBranches:   data.branchesSnapshot.Branches.LocalBranches().Names(),
+			MainBranch:      data.mainBranch,
+		})
+		if err != nil {
+			return err
+		}
 	}
 	runProgram, aborted := setParentProgram(outcome, selectedBranch, data)
 	if aborted {
@@ -116,7 +125,7 @@ func executeSetParent(verbose configdomain.Verbose) error {
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
-		Command:               setParentCmd,
+		Command:               "set-parent",
 		DryRun:                false,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),

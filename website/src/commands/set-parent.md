@@ -1,13 +1,10 @@
 # git town set-parent
 
 ```command-summary
-git town set-parent [-v | --verbose]
+git town set-parent [<branch>] [-v | --verbose]
 ```
 
-The _set-parent_ command changes the parent branch for the current branch. You
-select the new parent through a visual dialog. Updates associated proposals and
-removes commits from former parent branches.
-
+The _set-parent_ command changes the parent branch for the current branch.
 Consider this stack:
 
 ```
@@ -40,6 +37,12 @@ After set-parent runs, the affected branches no longer contain changes made by
 their old parents. However, they don't see the changes made by their new parent
 branches yet. Please run [git town sync](sync.md) to pull in changes from the
 new parents.
+
+## Positional argument
+
+You can provide the name of the new parent for the current branch as an argument
+to this command. When called without arguments, queries the user for the new
+parent.
 
 ## Options
 

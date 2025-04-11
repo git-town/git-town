@@ -1,4 +1,3 @@
-@messyoutput
 Feature: display all executed Git commands
 
   Background:
@@ -8,15 +7,9 @@ Feature: display all executed Git commands
       | parent | feature | main   | local, origin |
       | child  | feature | parent | local, origin |
     And the current branch is "child"
-    When I run "git-town set-parent --verbose" and enter into the dialog:
-      | DIALOG                 | KEYS     |
-      | parent branch of child | up enter |
+    When I run "git-town set-parent main --verbose"
 
   Scenario: result
-    Then Git Town prints:
-      """
-      Selected parent branch for "child": main
-      """
     And Git Town runs the commands
       | BRANCH | TYPE    | COMMAND                                      |
       |        | backend | git version                                  |

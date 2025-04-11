@@ -1,4 +1,3 @@
-@messyoutput
 Feature: setting the parent to a branch whose parent is unknown
 
   Background:
@@ -9,15 +8,9 @@ Feature: setting the parent to a branch whose parent is unknown
       | branch-2  | (none) |        | local     |
       | unrelated | (none) |        | local     |
     And the current branch is "branch-2"
-    When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                    | KEYS       |
-      | parent branch of branch-2 | down enter |
+    When I run "git-town set-parent branch-1"
 
   Scenario: result
-    Then Git Town prints:
-      """
-      Selected parent branch for "branch-2": branch-1
-      """
     And Git Town runs no commands
     And this lineage exists now
       | BRANCH   | PARENT   |

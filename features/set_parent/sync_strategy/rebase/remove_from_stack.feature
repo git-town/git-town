@@ -22,15 +22,9 @@ Feature: remove a branch from a stack
       | branch-3 | local, origin | commit 3 | file_1    | content 3    |
     And the current branch is "branch-3"
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
-    When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                 | KEYS            |
-      | parent branch of child | down down enter |
+    When I run "git-town set-parent main"
 
   Scenario: result
-    Then Git Town prints:
-      """
-      Selected parent branch for "branch-3": main
-      """
     And Git Town prints:
       """
       branch "branch-3" is now a child of "main"
