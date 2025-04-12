@@ -58,10 +58,12 @@ func executeDisplayConfig(verbose configdomain.Verbose) error {
 func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Branches")
+	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
 	print.Entry("contribution regex", format.OptionalStringerSetting((config.NormalConfig.ContributionRegex)))
 	print.Entry("default branch type", config.NormalConfig.DefaultBranchType.String())
 	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
 	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
+	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
 	print.Entry("observed regex", format.OptionalStringerSetting((config.NormalConfig.ObservedRegex)))
 	print.Entry("parked branches", format.StringsSetting((config.NormalConfig.ParkedBranches.Join(", "))))
 	print.Entry("perennial branches", format.StringsSetting((config.NormalConfig.PerennialBranches.Join(", "))))

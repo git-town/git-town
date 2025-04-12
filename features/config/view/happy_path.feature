@@ -18,10 +18,12 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
+        contribution branches: (none)
         contribution regex: ^renovate/
         default branch type: observed
         feature regex: ^user-.*$
         main branch: main
+        observed branches: observed-1, observed-2
         observed regex: ^dependabot/
         parked branches: parked-1, parked-2
         perennial branches: qa, staging
@@ -93,10 +95,12 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
+        contribution branches: (none)
         contribution regex: ^renovate/
         default branch type: observed
         feature regex: ^user-.*$
         main branch: main
+        observed branches: (none)
         observed regex: ^dependabot/
         parked branches: (none)
         perennial branches: public, staging
@@ -185,10 +189,12 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
+        contribution branches: (none)
         contribution regex: ^git-contribution-regex
         default branch type: observed
         feature regex: git-feature-.*
         main branch: git-main
+        observed branches: observed-1, observed-2
         observed regex: ^git-observed-regex
         parked branches: parked-1, parked-2
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
@@ -239,10 +245,12 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
+        contribution branches: (none)
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)
         main branch: main
+        observed branches: (none)
         observed regex: (not set)
         parked branches: (none)
         perennial branches: qa
@@ -295,10 +303,12 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
+        contribution branches: (none)
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)
         main branch: (not set)
+        observed branches: (none)
         observed regex: (not set)
         parked branches: (none)
         perennial branches: (none)

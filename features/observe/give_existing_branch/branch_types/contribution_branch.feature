@@ -20,4 +20,4 @@ Feature: make another contribution branch an observed branch
     When I run "git-town undo"
     Then Git Town runs no commands
     And the contribution branches are now "contribution"
-    And there are now no observed branches
+    And branch "contribution" now has type "contribution"
