@@ -15,7 +15,6 @@ Feature: parking the current contribution branch
       branch "contribution" is now parked
       """
     And branch "contribution" now has type "parked"
-    And there are now no contribution branches
 
   Scenario: undo
     When I run "git-town undo"

@@ -29,6 +29,7 @@ Feature: make multiple other branches contribution branches
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND |
-    And there are now no contribution branches
+    Then Git Town runs no commands
+    And branch "feature-1" now has type "feature"
+    And branch "feature-2" now has type "feature"
+    And branch "feature-3" now has type "feature"

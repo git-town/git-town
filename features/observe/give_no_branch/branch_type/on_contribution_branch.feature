@@ -15,7 +15,6 @@ Feature: observe the current contribution branch
       branch "contribution" is now an observed branch
       """
     And branch "contribution" now has type "observed"
-    And there are now no contribution branches
 
   Scenario: undo
     When I run "git-town undo"

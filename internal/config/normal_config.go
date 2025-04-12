@@ -172,12 +172,6 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 	return result.Err
 }
 
-// SetObservedBranches marks the given branches as observed branches.
-func (self *NormalConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
-	self.ContributionBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedContributionBranches, branches.Join(" "))
-}
-
 // SetDefaultBranchTypeLocally updates the locally configured default branch type.
 func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
 	self.DefaultBranchType = value

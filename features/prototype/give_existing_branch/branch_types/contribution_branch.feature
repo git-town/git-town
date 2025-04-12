@@ -14,7 +14,6 @@ Feature: prototype another contribution branch
       branch "contribution" is now a prototype branch
       """
     And the prototype branches are now "contribution"
-    And there are now no contribution branches
 
   Scenario: undo
     When I run "git-town undo"

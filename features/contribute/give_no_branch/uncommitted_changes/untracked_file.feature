@@ -26,5 +26,5 @@ Feature: make the current feature branch a contribution branch with an untracked
       |         | git stash -m "Git Town WIP" |
       |         | git stash pop               |
       |         | git restore --staged .      |
-    And there are now no contribution branches
+    And branch "feature" now has type "feature"
     And the uncommitted file still exists

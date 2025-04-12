@@ -15,7 +15,6 @@ type NormalConfigData struct {
 	BitbucketUsername        Option[BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
-	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        BranchType
 	DevRemote                gitdomain.Remote
@@ -63,9 +62,6 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 		return branchTypeOverride
 	}
 	// check the configured branch lists
-	if slices.Contains(self.ContributionBranches, branch) {
-		return BranchTypeContributionBranch
-	}
 	if slices.Contains(self.ObservedBranches, branch) {
 		return BranchTypeObservedBranch
 	}
@@ -99,7 +95,6 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 	matching := set.New[gitdomain.LocalBranchName]()
 	switch branchType {
 	case BranchTypeContributionBranch:
-		matching.Add(self.ContributionBranches...)
 	case BranchTypeFeatureBranch:
 	case BranchTypeMainBranch:
 		// main branch is stored in ValidatedConfig
@@ -131,7 +126,6 @@ func DefaultNormalConfig() NormalConfigData {
 		BitbucketUsername:        None[BitbucketUsername](),
 		BranchTypeOverrides:      BranchTypeOverrides{},
 		CodebergToken:            None[CodebergToken](),
-		ContributionBranches:     gitdomain.LocalBranchNames{},
 		ContributionRegex:        None[ContributionRegex](),
 		DefaultBranchType:        BranchTypeFeatureBranch,
 		DevRemote:                gitdomain.RemoteOrigin,

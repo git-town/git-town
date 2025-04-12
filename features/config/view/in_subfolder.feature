@@ -13,7 +13,6 @@ Feature: show the configuration from a subfolder
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)

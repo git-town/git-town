@@ -1424,16 +1424,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^there are (?:now|still) no contribution branches$`, func(ctx context.Context) error {
-		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branches := devRepo.Config.NormalConfig.LocalGitConfig.ContributionBranches
-		if len(branches) > 0 {
-			return fmt.Errorf("expected no contribution branches, got %q", branches)
-		}
-		return nil
-	})
-
 	sc.Step(`^there are (?:now|still) no observed branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()

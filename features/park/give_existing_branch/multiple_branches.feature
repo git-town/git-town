@@ -18,7 +18,6 @@ Feature: parking multiple other branches
       """
     And branch "feature" now has type "parked"
     And branch "contribution" now has type "parked"
-    And there are now no contribution branches
     And branch "observed" now has type "parked"
     And there are now no observed branches
     And branch "prototype" now has type "parked"

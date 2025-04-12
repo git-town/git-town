@@ -10,7 +10,6 @@ Feature: show the configuration
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-branches" is "observed-1 observed-2"
     And Git setting "git-town.observed-regex" is "^dependabot/"
-    And Git setting "git-town.contribution-branches" is "contribution-1 contribution-2"
     And Git setting "git-town.parked-branches" is "parked-1 parked-2"
     And Git setting "git-town.default-branch-type" is "observed"
     And Git setting "git-town.feature-regex" is "^user-.*$"
@@ -19,7 +18,6 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
         default branch type: observed
         feature regex: ^user-.*$
@@ -96,7 +94,6 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
         contribution regex: ^renovate/
         default branch type: observed
         feature regex: ^user-.*$
@@ -143,7 +140,6 @@ Feature: show the configuration
     Given the main branch is "git-main"
     And Git setting "git-town.perennial-branches" is "git-perennial-1 git-perennial-2"
     And Git setting "git-town.observed-branches" is "observed-1 observed-2"
-    And Git setting "git-town.contribution-branches" is "contribution-1 contribution-2"
     And Git setting "git-town.contribution-regex" is "^git-contribution-regex"
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.parked-branches" is "parked-1 parked-2"
@@ -191,7 +187,6 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: contribution-1, contribution-2
         contribution regex: ^git-contribution-regex
         default branch type: observed
         feature regex: git-feature-.*
@@ -247,7 +242,6 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)
@@ -305,7 +299,6 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)

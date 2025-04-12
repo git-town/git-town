@@ -22,7 +22,6 @@ Feature: observing multiple other branches
       branch "contribution" is now an observed branch
       """
     And branch "contribution" now has type "observed"
-    And there are now no contribution branches
     And Git Town prints:
       """
       branch "parked" is now an observed branch

@@ -14,7 +14,6 @@ type PartialConfig struct {
 	BitbucketUsername        Option[BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
-	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        Option[BranchType]
 	DevRemote                Option[gitdomain.Remote]
@@ -100,7 +99,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
 		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
-		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyDeprecatedContributionBranches]),
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
@@ -145,7 +143,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
-		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
@@ -187,7 +184,6 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		BitbucketUsername:        self.BitbucketUsername,
 		BranchTypeOverrides:      self.BranchTypeOverrides,
 		CodebergToken:            self.CodebergToken,
-		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
 		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
