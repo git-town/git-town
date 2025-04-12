@@ -13,10 +13,10 @@ Feature: prototype another contribution branch
       """
       branch "contribution" is now a prototype branch
       """
-    And the prototype branches are now "contribution"
+    And branch "contribution" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the contribution branches are now "contribution"
+    And branch "contribution" now has type "contribution"
     And there are now no prototype branches
