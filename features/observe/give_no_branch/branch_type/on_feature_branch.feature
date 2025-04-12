@@ -20,4 +20,4 @@ Feature: observing the current feature branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-    And there are now no observed branches
+    And branch "feature" now has type "feature"

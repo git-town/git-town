@@ -13,11 +13,9 @@ Feature: prototype another perennial branch
       """
       cannot prototype perennial branches
       """
-    And the perennial branches are still "perennial"
-    And there are still no prototype branches
+    And branch "perennial" still has type "perennial"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the perennial branches are still "perennial"
-    And there are still no prototype branches
+    And branch "perennial" still has type "perennial"

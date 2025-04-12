@@ -14,11 +14,9 @@ Feature: observe the current prototype branch
       """
       branch "prototype" is now an observed branch
       """
-    And the observed branches are now "prototype"
-    And there are now no prototype branches
+    And branch "prototype" now has type "observed"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are now no observed branches
-    And the prototype branches are now "prototype"
+    And branch "prototype" now has type "prototype"

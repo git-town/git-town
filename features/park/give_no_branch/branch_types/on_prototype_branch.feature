@@ -19,5 +19,4 @@ Feature: park the current prototype branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are now no parked branches
-    And the prototype branches are still "prototype"
+    And branch "prototype" now has type "prototype"

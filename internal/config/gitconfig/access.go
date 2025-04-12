@@ -165,6 +165,17 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 					value = update.After.Value
 				}
 			}
+			for branchList, branchType := range configdomain.ObsoleteBranchLists {
+				if configKey == branchList {
+					for _, branch := range strings.Split(value, " ") {
+						branchTypeKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
+						snapshot[branchTypeKey] = branchType.String()
+						_ = self.SetConfigValue(configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
+					}
+					_ = self.RemoveLocalConfigValue(configKey)
+					fmt.Printf(messages.SettingSunsetBranchList, configKey)
+				}
+			}
 		}
 		if hasConfigKey {
 			snapshot[configKey] = value

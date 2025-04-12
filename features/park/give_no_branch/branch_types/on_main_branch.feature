@@ -10,10 +10,9 @@ Feature: park the current main branch
       """
       cannot park the main branch
       """
-    And the main branch is still "main"
+    And branch "main" still has type "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the main branch is still "main"
-    And there are now no parked branches
+    And branch "main" still has type "main"

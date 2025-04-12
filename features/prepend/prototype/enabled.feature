@@ -20,6 +20,7 @@ Feature: prepend a prototype branch to a feature branch
       |        | git merge --no-edit --ff origin/old |
       |        | git checkout -b parent main         |
     And branch "parent" now has type "prototype"
+    And branch "old" still has type "feature"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -34,6 +35,6 @@ Feature: prepend a prototype branch to a feature branch
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
       | old    | git branch -D parent |
-    And there are now no prototype branches
+    And branch "old" still has type "feature"
     And the initial commits exist now
     And the initial lineage exists now

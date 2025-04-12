@@ -16,7 +16,7 @@ Feature: park another remote branch
       """
       branch "remote-feature" is now parked
       """
-    And the parked branches are now "remote-feature"
+    And branch "remote-feature" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
@@ -24,5 +24,4 @@ Feature: park another remote branch
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-    And there are now no parked branches
     And branch "remote-feature" now has type "feature"

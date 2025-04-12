@@ -14,12 +14,10 @@ Feature: make another prototype branch an observed branch
       """
       branch "prototype" is now an observed branch
       """
-    And there are now no prototype branches
-    And the observed branches are now "prototype"
+    And branch "prototype" now has type "observed"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the prototype branches are now "prototype"
-    And there are now no observed branches
+    And branch "prototype" now has type "prototype"
     And the initial branches and lineage exist now

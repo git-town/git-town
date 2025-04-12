@@ -22,22 +22,22 @@ Feature: observing multiple other branches
       branch "contribution" is now an observed branch
       """
     And branch "contribution" now has type "observed"
-    And there are now no contribution branches
     And Git Town prints:
       """
       branch "parked" is now an observed branch
       """
     And branch "parked" now has type "observed"
-    And there are now no parked branches
     And Git Town prints:
       """
       branch "prototype" is now an observed branch
       """
     And branch "prototype" now has type "observed"
-    And there are now no prototype branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are now no observed branches
+    And branch "feature" now has type "feature"
+    And branch "contribution" now has type "contribution"
+    And branch "parked" now has type "parked"
+    And branch "prototype" now has type "prototype"
     And the initial branches exist now

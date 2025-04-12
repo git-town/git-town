@@ -11,10 +11,8 @@ Feature: cannot make the main branch a contribution branch
       cannot make the main branch a contribution branch
       """
     And the main branch is still "main"
-    And there are still no contribution branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the main branch is still "main"
-    And there are still no contribution branches
