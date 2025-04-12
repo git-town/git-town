@@ -21,4 +21,3 @@ Feature: observe the current contribution branch
     Then Git Town runs the commands
       | BRANCH | COMMAND |
     And branch "contribution" now has type "contribution"
-    And there are now no observed branches

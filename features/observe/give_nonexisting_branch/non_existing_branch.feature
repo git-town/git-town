@@ -10,9 +10,7 @@ Feature: cannot observe non-existing branches
       """
       there is no branch "non-existing"
       """
-    And there are still no observed branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are still no observed branches

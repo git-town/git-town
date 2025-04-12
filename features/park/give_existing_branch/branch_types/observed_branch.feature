@@ -13,11 +13,9 @@ Feature: park another observed branch
       """
       branch "observed" is now parked
       """
-    And the parked branches are now "observed"
-    And there are now no observed branches
+    And branch "observed" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the observed branches are now "observed"
-    And there are now no parked branches
+    And branch "observed" now has type "observed"

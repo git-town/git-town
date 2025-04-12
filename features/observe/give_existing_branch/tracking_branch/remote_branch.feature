@@ -24,4 +24,4 @@ Feature: make another remote feature branch an observed branch
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-    And there are now no observed branches
+    And branch "remote-feature" now has type "feature"

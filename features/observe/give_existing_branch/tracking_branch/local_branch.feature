@@ -14,10 +14,8 @@ Feature: make the current local feature branch an observed branch
       branch "feature" is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
       """
     And branch "feature" still has type "feature"
-    And there are still no observed branches
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And branch "feature" still has type "feature"
-    And there are still no observed branches
