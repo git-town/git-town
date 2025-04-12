@@ -19,4 +19,3 @@ Feature: prototype another contribution branch
     When I run "git-town undo"
     Then Git Town runs no commands
     And branch "contribution" now has type "contribution"
-    And there are now no prototype branches

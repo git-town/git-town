@@ -15,7 +15,6 @@ Feature: make the current prototype branch a contribution branch
       branch "prototype" is now a contribution branch
       """
     And branch "prototype" now has type "contribution"
-    And there are now no prototype branches
 
   Scenario: undo
     When I run "git-town undo"

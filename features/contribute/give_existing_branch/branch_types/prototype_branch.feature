@@ -13,7 +13,6 @@ Feature: make another prototype branch a contribution branch
       """
       branch "prototype" is now a contribution branch
       """
-    And there are now no prototype branches
     And branch "prototype" now has type "contribution"
 
   Scenario: undo

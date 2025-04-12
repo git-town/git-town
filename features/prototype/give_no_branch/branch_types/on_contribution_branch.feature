@@ -21,4 +21,3 @@ Feature: prototype the current contribution branch
     Then Git Town runs no commands
     And the initial branches and lineage exist now
     And branch "contribution" now has type "contribution"
-    And there are now no prototype branches

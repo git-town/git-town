@@ -32,7 +32,6 @@ Feature: observing multiple other branches
       branch "prototype" is now an observed branch
       """
     And branch "prototype" now has type "observed"
-    And there are now no prototype branches
 
   Scenario: undo
     When I run "git-town undo"
