@@ -13,9 +13,9 @@ Feature: make another contribution branch a contribution branch
       """
       branch "contribution" is already a contribution branch
       """
-    And the contribution branches are still "contribution"
+    And branch "contribution" still has type "contribution"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the contribution branches are still "contribution"
+    And branch "contribution" still has type "contribution"
