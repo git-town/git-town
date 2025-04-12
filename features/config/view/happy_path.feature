@@ -38,7 +38,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: qa, staging
         perennial regex: ^release-
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
 
       Configuration:
         offline: no
@@ -115,7 +115,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: public, staging
         perennial regex: ^release-
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
 
       Configuration:
         offline: no
@@ -207,7 +207,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: ^git-perennial-
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
 
       Configuration:
         offline: no
@@ -263,7 +263,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: qa
         perennial regex: (not set)
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
 
       Configuration:
         offline: no
@@ -325,7 +325,7 @@ Feature: show the configuration
         parked branches: parked-1, parked-2
         perennial branches: (none)
         perennial regex: (not set)
-        prototype branches: (none)
+        prototype branches: prototype-1, prototype-2
 
       Configuration:
         offline: no
