@@ -15,10 +15,10 @@ Feature: cannot make the current perennial branch a contribution branch
       cannot make perennial branches contribution branches
       """
     And the perennial branches are still "perennial"
-    And there are still no contribution branches
+    And branch "perennial" still has type "perennial"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And the perennial branches are still "perennial"
-    And there are still no contribution branches
+    And branch "perennial" still has type "perennial"
