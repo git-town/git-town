@@ -14,9 +14,9 @@ Feature: prototype another parked branch
       """
       branch "parked" is now a prototype branch
       """
-    And the prototype branches are now "parked"
+    And branch "parked" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the parked branches are still "parked"
+    And branch "parked" now has type "parked"
