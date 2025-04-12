@@ -107,14 +107,14 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
+        contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
         default branch type: observed
         feature regex: ^user-.*$
         main branch: main
-        observed branches: (none)
+        observed branches: observed-1, observed-2
         observed regex: ^dependabot/
-        parked branches: (none)
+        parked branches: parked-1, parked-2
         perennial branches: public, staging
         perennial regex: ^release-
         prototype branches: (none)
@@ -201,7 +201,7 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
+        contribution branches: contribution-1, contribution-2
         contribution regex: ^git-contribution-regex
         default branch type: observed
         feature regex: git-feature-.*
@@ -257,14 +257,14 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
+        contribution branches: contribution-1, contribution-2
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)
         main branch: main
-        observed branches: (none)
+        observed branches: observed-1, observed-2
         observed regex: (not set)
-        parked branches: (none)
+        parked branches: parked-1, parked-2
         perennial branches: qa
         perennial regex: (not set)
         prototype branches: (none)
@@ -304,6 +304,10 @@ Feature: show the configuration
           alpha
             child
           beta
+          parked-1
+          parked-2
+          prototype-1
+          prototype-2
 
         qa
           hotfix
@@ -315,14 +319,14 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
+        contribution branches: contribution-1, contribution-2
         contribution regex: (not set)
         default branch type: feature
         feature regex: (not set)
         main branch: (not set)
-        observed branches: (none)
+        observed branches: observed-1, observed-2
         observed regex: (not set)
-        parked branches: (none)
+        parked branches: parked-1, parked-2
         perennial branches: (none)
         perennial regex: (not set)
         prototype branches: (none)
