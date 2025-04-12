@@ -19,7 +19,7 @@ Feature: rename an observed branch
       |          | git checkout new               |
       | new      | git push -u origin new         |
       |          | git push origin :observed      |
-    And the observed branches are now "new"
+    And branch "new" now has type "observed"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE               |
       | new    | local, origin | somebody elses commit |
@@ -36,6 +36,6 @@ Feature: rename an observed branch
       |          | git checkout observed                                 |
       | observed | git branch -D new                                     |
       |          | git push origin :new                                  |
-    And the observed branches are now "observed"
+    And branch "observed" now has type "observed"
     And the initial commits exist now
     And the initial branches and lineage exist now
