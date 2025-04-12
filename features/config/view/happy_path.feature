@@ -3,7 +3,20 @@ Feature: show the configuration
 
   Background:
     Given a Git repo with origin
+    And the branches
+      | NAME           | TYPE         | PARENT | LOCATIONS |
+      | contribution-1 | contribution |        | local     |
+      | contribution-2 | contribution |        | local     |
+      | observed-1     | observed     |        | local     |
+      | observed-2     | observed     |        | local     |
+      | parked-1       | parked       | main   | local     |
+      | parked-2       | parked       | main   | local     |
+      | perennial-1    | perennial    |        | local     |
+      | perennial-2    | perennial    |        | local     |
+      | prototype-1    | prototype    | main   | local     |
+      | prototype-2    | prototype    | main   | local     |
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"
@@ -18,7 +31,7 @@ Feature: show the configuration
     Then Git Town prints:
       """
       Branches:
-        contribution branches: (none)
+        contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
         default branch type: observed
         feature regex: ^user-.*$
