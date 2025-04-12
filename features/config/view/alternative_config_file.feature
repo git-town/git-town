@@ -17,6 +17,7 @@ Feature: show the configuration when using an alternative config file
         default branch type: feature
         feature regex: (not set)
         main branch: main
+        observed branches: (none)
         observed regex: (not set)
         parked branches: (none)
         perennial branches: public, staging
