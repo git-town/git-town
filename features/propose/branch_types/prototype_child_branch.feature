@@ -29,4 +29,4 @@ Feature: Create proposals for prototype branches
       """
       branch "prototype" is no longer a prototype branch
       """
-    And there are now no prototype branches
+    And branch "prototype" now has type "feature"

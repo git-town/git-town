@@ -172,12 +172,6 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 	return result.Err
 }
 
-// SetObservedBranches marks the given branches as observed branches.
-func (self *NormalConfig) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
-	self.ContributionBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyContributionBranches, branches.Join(" "))
-}
-
 // SetDefaultBranchTypeLocally updates the locally configured default branch type.
 func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
 	self.DefaultBranchType = value
@@ -202,12 +196,6 @@ func (self *NormalConfig) SetNewBranchType(value configdomain.BranchType) error 
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
 }
 
-// SetContributionBranches marks the given branches as contribution branches.
-func (self *NormalConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
-	self.ObservedBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyObservedBranches, branches.Join(" "))
-}
-
 // SetOffline updates whether Git Town is in offline mode.
 func (self *NormalConfig) SetOffline(value configdomain.Offline) error {
 	self.Offline = value
@@ -224,12 +212,6 @@ func (self *NormalConfig) SetParent(branch, parentBranch gitdomain.LocalBranchNa
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch), parentBranch.String())
 }
 
-// SetObservedBranches marks the given branches as perennial branches.
-func (self *NormalConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
-	self.ParkedBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyParkedBranches, branches.Join(" "))
-}
-
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
@@ -240,12 +222,6 @@ func (self *NormalConfig) SetPerennialBranches(branches gitdomain.LocalBranchNam
 func (self *NormalConfig) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
 	self.PerennialRegex = Some(value)
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
-}
-
-// SetContributionBranches marks the given branches as contribution branches.
-func (self *NormalConfig) SetPrototypeBranches(branches gitdomain.LocalBranchNames) error {
-	self.PrototypeBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPrototypeBranches, branches.Join(" "))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.

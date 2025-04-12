@@ -14,9 +14,9 @@ Feature: parking the current parked branch
       """
       branch "parked" is already parked
       """
-    And the parked branches are still "parked"
+    And branch "parked" still has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the parked branches are still "parked"
+    And branch "parked" still has type "parked"

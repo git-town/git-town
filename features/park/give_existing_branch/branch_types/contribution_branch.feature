@@ -13,11 +13,9 @@ Feature: park another contribution branch
       """
       branch "contribution" is now parked
       """
-    And the parked branches are now "contribution"
-    And there are now no contribution branches
+    And branch "contribution" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the contribution branches are now "contribution"
-    And there are now no parked branches
+    And branch "contribution" now has type "contribution"

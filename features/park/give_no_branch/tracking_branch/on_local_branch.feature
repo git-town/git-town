@@ -14,9 +14,9 @@ Feature: park the current local branch
       """
       branch "feature" is now parked
       """
-    And the parked branches are now "feature"
+    And branch "feature" now has type "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are now no parked branches
+    And branch "feature" now has type "feature"

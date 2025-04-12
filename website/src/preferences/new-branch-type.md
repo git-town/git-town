@@ -7,16 +7,12 @@ or [prepend](../commands/prepend.md) commands.
 Before setting this, try to configure the branch type using one of these more
 broadly applicable configuration entries:
 
-- [contribution-branches](contribution-branches.md)
 - [contribution-regex](contribution-regex.md)
 - [default-branch-type](default-branch-type.md)
 - [feature-regex](feature-regex.md)
-- [observed-branches](observed-branches.md)
 - [observed-regex](observed-regex.md)
-- [parked-branches](parked-branches.md)
 - [perennial-branches](perennial-branches.md)
 - [perennial-regex](perennial-regex.md)
-- [prototype-branches](prototype-branches.md)
 
 ## values
 

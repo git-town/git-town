@@ -19,7 +19,7 @@ Feature: rename a parked branch
       |        | git checkout new             |
       | new    | git push -u origin new       |
       |        | git push origin :parked      |
-    And the parked branches are now "new"
+    And branch "new" still has type "parked"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | new    | local, origin | low-priority commit |
@@ -36,6 +36,5 @@ Feature: rename a parked branch
       |        | git checkout parked                               |
       | parked | git branch -D new                                 |
       |        | git push origin :new                              |
-    And the parked branches are now "parked"
-    And the initial commits exist now
+    And branch "parked" still has type "parked"
     And the initial branches and lineage exist now

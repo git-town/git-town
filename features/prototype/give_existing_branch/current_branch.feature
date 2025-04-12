@@ -14,10 +14,10 @@ Feature: prototype the current feature branch
       """
       branch "feature" is now a prototype branch
       """
-    And the prototype branches are now "feature"
+    And branch "feature" now has type "prototype"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are now no prototype branches
+    And branch "feature" now has type "feature"
     And the initial branches and lineage exist now

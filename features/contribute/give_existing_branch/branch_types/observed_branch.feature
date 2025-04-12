@@ -13,10 +13,9 @@ Feature: make another observed branch a contribution branch
       """
       branch "observed" is now a contribution branch
       """
-    And the contribution branches are now "observed"
-    And there are now no observed branches
+    And branch "observed" now has type "contribution"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the observed branches are now "observed"
+    And branch "observed" now has type "observed"

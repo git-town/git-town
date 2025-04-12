@@ -10,7 +10,6 @@ Feature: does not create prototyping branches this way
       """
       there is no branch "zonk"
       """
-    And there are still no prototype branches
 
   Scenario: undo
     When I run "git-town undo"

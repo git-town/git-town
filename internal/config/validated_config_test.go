@@ -25,11 +25,8 @@ func TestValidatedConfig(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
-					DefaultBranchType:    configdomain.BranchTypeFeatureBranch,
-					PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-					ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
-					ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
+					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
+					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 				},
 			},
 		}
@@ -107,10 +104,8 @@ func TestValidatedConfig(t *testing.T) {
 		feature2 := gitdomain.NewLocalBranchName("feature2")
 		main := gitdomain.NewLocalBranchName("main")
 		observed := gitdomain.NewLocalBranchName("observed")
-		parked := gitdomain.NewLocalBranchName("parked")
 		perennial1 := gitdomain.NewLocalBranchName("perennial-1")
 		perennial2 := gitdomain.NewLocalBranchName("perennial-2")
-		prototype := gitdomain.NewLocalBranchName("prototype")
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
@@ -119,13 +114,9 @@ func TestValidatedConfig(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					ContributionBranches: gitdomain.LocalBranchNames{contribution},
-					DefaultBranchType:    configdomain.BranchTypeFeatureBranch,
-					ObservedBranches:     gitdomain.LocalBranchNames{observed},
-					ParkedBranches:       gitdomain.LocalBranchNames{parked},
-					PerennialBranches:    gitdomain.LocalBranchNames{perennial1},
-					PerennialRegex:       perennialRegexOpt,
-					PrototypeBranches:    gitdomain.LocalBranchNames{prototype},
+					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
+					PerennialBranches: gitdomain.LocalBranchNames{perennial1},
+					PerennialRegex:    perennialRegexOpt,
 				},
 			},
 		}

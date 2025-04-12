@@ -14,7 +14,6 @@ type PartialConfig struct {
 	BitbucketUsername        Option[BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
-	ContributionBranches     gitdomain.LocalBranchNames
 	ContributionRegex        Option[ContributionRegex]
 	DefaultBranchType        Option[BranchType]
 	DevRemote                Option[gitdomain.Remote]
@@ -29,13 +28,10 @@ type PartialConfig struct {
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[BranchType]
-	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
-	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
-	PrototypeBranches        gitdomain.LocalBranchNames
 	PushHook                 Option[PushHook]
 	PushNewBranches          Option[PushNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
@@ -100,7 +96,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
 		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
-		ContributionBranches:     gitdomain.ParseLocalBranchNames(snapshot[KeyContributionBranches]),
 		ContributionRegex:        contributionRegex,
 		DefaultBranchType:        defaultBranchType,
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
@@ -115,13 +110,10 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
 		NewBranchType:            newBranchType,
-		ObservedBranches:         gitdomain.ParseLocalBranchNames(snapshot[KeyObservedBranches]),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
-		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyParkedBranches]),
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
-		PrototypeBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPrototypeBranches]),
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
@@ -145,7 +137,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BitbucketUsername:        other.BitbucketUsername.Or(self.BitbucketUsername),
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
-		ContributionBranches:     append(other.ContributionBranches, self.ContributionBranches...),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
@@ -160,13 +151,10 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
-		ObservedBranches:         append(other.ObservedBranches, self.ObservedBranches...),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
-		ParkedBranches:           append(other.ParkedBranches, self.ParkedBranches...),
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
-		PrototypeBranches:        append(other.PrototypeBranches, self.PrototypeBranches...),
 		PushHook:                 other.PushHook.Or(self.PushHook),
 		PushNewBranches:          other.PushNewBranches.Or(self.PushNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
@@ -187,7 +175,6 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		BitbucketUsername:        self.BitbucketUsername,
 		BranchTypeOverrides:      self.BranchTypeOverrides,
 		CodebergToken:            self.CodebergToken,
-		ContributionBranches:     self.ContributionBranches,
 		ContributionRegex:        self.ContributionRegex,
 		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
 		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
@@ -199,13 +186,10 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		HostingOriginHostname:    self.HostingOriginHostname,
 		Lineage:                  self.Lineage,
 		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
-		ObservedBranches:         self.ObservedBranches,
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),
-		ParkedBranches:           self.ParkedBranches,
 		PerennialBranches:        self.PerennialBranches,
 		PerennialRegex:           self.PerennialRegex,
-		PrototypeBranches:        self.PrototypeBranches,
 		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
 		PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
 		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),

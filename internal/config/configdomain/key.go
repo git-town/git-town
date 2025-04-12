@@ -57,19 +57,22 @@ const (
 	KeyBitbucketAppPassword                = Key("git-town.bitbucket-app-password")
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyCodebergToken                       = Key("git-town.codeberg-token")
-	KeyContributionBranches                = Key("git-town.contribution-branches")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
 	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
+	KeyDeprecatedContributionBranches      = Key("git-town.contribution-branches")
 	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedHostingPlatform           = Key("git-town.hosting-platform")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag         = Key("git-town.new-branch-push-flag")
+	KeyDeprecatedObservedBranches          = Key("git-town.observed-branches")
+	KeyDeprecatedParkedBranches            = Key("git-town.parked-branches")
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
+	KeyDeprecatedPrototypeBranches         = Key("git-town.prototype-branches")
 	KeyDeprecatedPullBranchStrategy        = Key("git-town.pull-branch-strategy")
 	KeyDeprecatedPushVerify                = Key("git-town.push-verify")
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
@@ -83,13 +86,10 @@ const (
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyNewBranchType                       = Key("git-town.new-branch-type")
-	KeyObservedBranches                    = Key("git-town.observed-branches")
 	KeyObservedRegex                       = Key("git-town.observed-regex")
 	KeyOffline                             = Key("git-town.offline")
-	KeyParkedBranches                      = Key("git-town.parked-branches")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
-	KeyPrototypeBranches                   = Key("git-town.prototype-branches")
 	KeyPushHook                            = Key("git-town.push-hook")
 	KeyPushNewBranches                     = Key("git-town.push-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
@@ -109,7 +109,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
 	KeyCodebergToken,
-	KeyContributionBranches,
 	KeyContributionRegex,
 	KeyDefaultBranchType,
 	KeyDeprecatedAliasKill,
@@ -117,11 +116,15 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform,
+	KeyDeprecatedContributionBranches,
 	KeyDeprecatedCreatePrototypeBranches,
 	KeyDeprecatedHostingPlatform,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
+	KeyDeprecatedObservedBranches,
+	KeyDeprecatedParkedBranches,
 	KeyDeprecatedPerennialBranchNames,
+	KeyDeprecatedPrototypeBranches,
 	KeyDeprecatedPullBranchStrategy,
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
@@ -136,13 +139,10 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyGitUserName,
 	KeyMainBranch,
 	KeyNewBranchType,
-	KeyObservedBranches,
 	KeyObservedRegex,
 	KeyOffline,
-	KeyParkedBranches,
 	KeyPerennialBranches,
 	KeyPerennialRegex,
-	KeyPrototypeBranches,
 	KeyPushHook,
 	KeyPushNewBranches,
 	KeyShipDeleteTrackingBranch,
@@ -192,6 +192,13 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 // ObsoleteKeys defines the keys that are sunset and should get deleted
 var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
 	KeyObsoleteSyncBeforeShip,
+}
+
+var ObsoleteBranchLists = map[Key]BranchType{ //nolint:gochecknoglobals
+	KeyDeprecatedContributionBranches: BranchTypeContributionBranch,
+	KeyDeprecatedObservedBranches:     BranchTypeObservedBranch,
+	KeyDeprecatedParkedBranches:       BranchTypeParkedBranch,
+	KeyDeprecatedPrototypeBranches:    BranchTypePrototypeBranch,
 }
 
 // ConfigUpdates defines the config that should have its keys and values to be updated

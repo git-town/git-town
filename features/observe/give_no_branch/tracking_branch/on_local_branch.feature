@@ -14,9 +14,9 @@ Feature: observe the current local feature branch
       """
       branch "feature" is local only - branches you want to observe must have a remote branch because they are per definition other people's branches
       """
-    And there are still no observed branches
+    And branch "feature" still has type "feature"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are still no observed branches
+    And branch "feature" still has type "feature"

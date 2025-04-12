@@ -6,7 +6,7 @@ Feature: making the current parked branch a feature branch
       | NAME   | TYPE   | PARENT | LOCATIONS |
       | parked | (none) | main   | local     |
     And the current branch is "parked"
-    And local Git setting "git-town.parked-branches" is "parked"
+    And local Git setting "git-town-branch.parked.branchtype" is "parked"
     When I run "git-town hack"
 
   Scenario: result
@@ -17,10 +17,9 @@ Feature: making the current parked branch a feature branch
       """
     And branch "parked" now has type "feature"
     And local Git setting "git-town-branch.parked.branchtype" is now "feature"
-    And local Git setting "git-town.parked-branches" is still "parked"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
     And branch "parked" now has type "parked"
-    And local Git setting "git-town-branch.parked.branchtype" now doesn't exist
+    And local Git setting "git-town-branch.parked.branchtype" is now "parked"

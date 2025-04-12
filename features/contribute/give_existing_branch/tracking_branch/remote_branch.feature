@@ -24,4 +24,4 @@ Feature: make another remote branch a contribution branch
       | BRANCH         | COMMAND                      |
       | remote-feature | git checkout main            |
       | main           | git branch -D remote-feature |
-    And there are now no contribution branches
+    And branch "remote-feature" now has type "feature"
