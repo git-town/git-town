@@ -28,7 +28,6 @@ type PartialConfig struct {
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
 	NewBranchType            Option[BranchType]
-	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
 	ParkedBranches           gitdomain.LocalBranchNames
@@ -113,7 +112,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
 		NewBranchType:            newBranchType,
-		ObservedBranches:         gitdomain.ParseLocalBranchNames(snapshot[KeyDeprecatedObservedBranches]),
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
 		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyDeprecatedParkedBranches]),
@@ -157,7 +155,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		Lineage:                  other.Lineage.Merge(self.Lineage),
 		MainBranch:               other.MainBranch.Or(self.MainBranch),
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
-		ObservedBranches:         append(other.ObservedBranches, self.ObservedBranches...),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
 		ParkedBranches:           append(other.ParkedBranches, self.ParkedBranches...),
@@ -195,7 +192,6 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		HostingOriginHostname:    self.HostingOriginHostname,
 		Lineage:                  self.Lineage,
 		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
-		ObservedBranches:         self.ObservedBranches,
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),
 		ParkedBranches:           self.ParkedBranches,

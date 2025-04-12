@@ -26,7 +26,6 @@ type NormalConfigData struct {
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
-	ObservedBranches         gitdomain.LocalBranchNames
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline
 	ParkedBranches           gitdomain.LocalBranchNames
@@ -62,9 +61,6 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 		return branchTypeOverride
 	}
 	// check the configured branch lists
-	if slices.Contains(self.ObservedBranches, branch) {
-		return BranchTypeObservedBranch
-	}
 	if slices.Contains(self.ParkedBranches, branch) {
 		return BranchTypeParkedBranch
 	}
@@ -99,7 +95,6 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 	case BranchTypeMainBranch:
 		// main branch is stored in ValidatedConfig
 	case BranchTypeObservedBranch:
-		matching.Add(self.ObservedBranches...)
 	case BranchTypeParkedBranch:
 		matching.Add(self.ParkedBranches...)
 	case BranchTypePerennialBranch:
@@ -137,7 +132,6 @@ func DefaultNormalConfig() NormalConfigData {
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),
-		ObservedBranches:         gitdomain.LocalBranchNames{},
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,
 		ParkedBranches:           gitdomain.LocalBranchNames{},

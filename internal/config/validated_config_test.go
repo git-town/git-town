@@ -27,7 +27,6 @@ func TestValidatedConfig(t *testing.T) {
 				NormalConfigData: configdomain.NormalConfigData{
 					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-					ObservedBranches:  gitdomain.NewLocalBranchNames("observed"),
 					ParkedBranches:    gitdomain.NewLocalBranchNames("parked"),
 				},
 			},
@@ -119,7 +118,6 @@ func TestValidatedConfig(t *testing.T) {
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
 					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
-					ObservedBranches:  gitdomain.LocalBranchNames{observed},
 					ParkedBranches:    gitdomain.LocalBranchNames{parked},
 					PerennialBranches: gitdomain.LocalBranchNames{perennial1},
 					PerennialRegex:    perennialRegexOpt,
