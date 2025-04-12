@@ -16,7 +16,6 @@ Feature: show the configuration
       | prototype-1    | prototype    | main   | local     |
       | prototype-2    | prototype    | main   | local     |
 
-  @this
   Scenario: all configured in Git, no stacked changes
     Given Git setting "git-town.perennial-branches" is "qa staging"
     And Git setting "git-town.perennial-regex" is "^release-"

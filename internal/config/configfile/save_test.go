@@ -58,7 +58,6 @@ func TestSave(t *testing.T) {
 					Lineage:                  configdomain.NewLineage(),
 					NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
 					Offline:                  false,
-					ParkedBranches:           gitdomain.LocalBranchNames{},
 					PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
 					PerennialRegex:           None[configdomain.PerennialRegex](),
 					PushHook:                 true,

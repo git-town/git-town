@@ -243,7 +243,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  None[configdomain.Offline](),
-		ParkedBranches:           gitdomain.LocalBranchNames{},
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		PrototypeBranches:        gitdomain.LocalBranchNames{},

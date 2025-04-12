@@ -212,12 +212,6 @@ func (self *NormalConfig) SetParent(branch, parentBranch gitdomain.LocalBranchNa
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch), parentBranch.String())
 }
 
-// SetObservedBranches marks the given branches as perennial branches.
-func (self *NormalConfig) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
-	self.ParkedBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedParkedBranches, branches.Join(" "))
-}
-
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches

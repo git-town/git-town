@@ -28,7 +28,6 @@ type NormalConfigData struct {
 	NewBranchType            Option[BranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Offline
-	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	PrototypeBranches        gitdomain.LocalBranchNames
@@ -61,9 +60,6 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 		return branchTypeOverride
 	}
 	// check the configured branch lists
-	if slices.Contains(self.ParkedBranches, branch) {
-		return BranchTypeParkedBranch
-	}
 	if slices.Contains(self.PerennialBranches, branch) {
 		return BranchTypePerennialBranch
 	}
@@ -96,7 +92,6 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 		// main branch is stored in ValidatedConfig
 	case BranchTypeObservedBranch:
 	case BranchTypeParkedBranch:
-		matching.Add(self.ParkedBranches...)
 	case BranchTypePerennialBranch:
 		matching.Add(self.PerennialBranches...)
 	case BranchTypePrototypeBranch:
@@ -134,7 +129,6 @@ func DefaultNormalConfig() NormalConfigData {
 		NewBranchType:            None[BranchType](),
 		ObservedRegex:            None[ObservedRegex](),
 		Offline:                  false,
-		ParkedBranches:           gitdomain.LocalBranchNames{},
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[PerennialRegex](),
 		PrototypeBranches:        gitdomain.LocalBranchNames{},

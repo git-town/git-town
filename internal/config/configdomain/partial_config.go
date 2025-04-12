@@ -30,7 +30,6 @@ type PartialConfig struct {
 	NewBranchType            Option[BranchType]
 	ObservedRegex            Option[ObservedRegex]
 	Offline                  Option[Offline]
-	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	PrototypeBranches        gitdomain.LocalBranchNames
@@ -114,7 +113,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
 		Offline:                  offline,
-		ParkedBranches:           gitdomain.ParseLocalBranchNames(snapshot[KeyDeprecatedParkedBranches]),
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
 		PrototypeBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyDeprecatedPrototypeBranches]),
@@ -157,7 +155,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		NewBranchType:            other.NewBranchType.Or(self.NewBranchType),
 		ObservedRegex:            other.ObservedRegex.Or(self.ObservedRegex),
 		Offline:                  other.Offline.Or(self.Offline),
-		ParkedBranches:           append(other.ParkedBranches, self.ParkedBranches...),
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		PrototypeBranches:        append(other.PrototypeBranches, self.PrototypeBranches...),
@@ -194,7 +191,6 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		NewBranchType:            self.NewBranchType.Or(defaults.NewBranchType),
 		ObservedRegex:            self.ObservedRegex,
 		Offline:                  self.Offline.GetOrElse(defaults.Offline),
-		ParkedBranches:           self.ParkedBranches,
 		PerennialBranches:        self.PerennialBranches,
 		PerennialRegex:           self.PerennialRegex,
 		PrototypeBranches:        self.PrototypeBranches,
