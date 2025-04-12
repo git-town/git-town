@@ -196,12 +196,6 @@ func (self *NormalConfig) SetNewBranchType(value configdomain.BranchType) error 
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
 }
 
-// SetContributionBranches marks the given branches as contribution branches.
-func (self *NormalConfig) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
-	self.ObservedBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedObservedBranches, branches.Join(" "))
-}
-
 // SetOffline updates whether Git Town is in offline mode.
 func (self *NormalConfig) SetOffline(value configdomain.Offline) error {
 	self.Offline = value
