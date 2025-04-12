@@ -224,12 +224,6 @@ func (self *NormalConfig) SetPerennialRegexLocally(value configdomain.PerennialR
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
 }
 
-// SetContributionBranches marks the given branches as contribution branches.
-func (self *NormalConfig) SetPrototypeBranches(branches gitdomain.LocalBranchNames) error {
-	self.PrototypeBranches = branches
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedPrototypeBranches, branches.Join(" "))
-}
-
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *NormalConfig) SetPushHookLocally(value configdomain.PushHook) error {
 	self.PushHook = value

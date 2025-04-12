@@ -106,7 +106,6 @@ func TestValidatedConfig(t *testing.T) {
 		observed := gitdomain.NewLocalBranchName("observed")
 		perennial1 := gitdomain.NewLocalBranchName("perennial-1")
 		perennial2 := gitdomain.NewLocalBranchName("perennial-2")
-		prototype := gitdomain.NewLocalBranchName("prototype")
 		perennialRegexOpt, err := configdomain.ParsePerennialRegex("peren*")
 		must.NoError(t, err)
 		config := config.ValidatedConfig{
@@ -118,7 +117,6 @@ func TestValidatedConfig(t *testing.T) {
 					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
 					PerennialBranches: gitdomain.LocalBranchNames{perennial1},
 					PerennialRegex:    perennialRegexOpt,
-					PrototypeBranches: gitdomain.LocalBranchNames{prototype},
 				},
 			},
 		}

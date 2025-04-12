@@ -245,7 +245,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		Offline:                  None[configdomain.Offline](),
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		PrototypeBranches:        gitdomain.LocalBranchNames{},
 		PushHook:                 pushHook,
 		PushNewBranches:          pushNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,

@@ -68,7 +68,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("parked branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeParkedBranch)))
 	print.Entry("perennial branches", format.StringsSetting((config.NormalConfig.PerennialBranches.Join(", "))))
 	print.Entry("perennial regex", format.OptionalStringerSetting(config.NormalConfig.PerennialRegex))
-	print.Entry("prototype branches", format.StringsSetting((config.NormalConfig.PrototypeBranches.Join(", "))))
+	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsTrue()))

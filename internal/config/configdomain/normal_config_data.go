@@ -30,7 +30,6 @@ type NormalConfigData struct {
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
-	PrototypeBranches        gitdomain.LocalBranchNames
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
@@ -63,9 +62,6 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	if slices.Contains(self.PerennialBranches, branch) {
 		return BranchTypePerennialBranch
 	}
-	if slices.Contains(self.PrototypeBranches, branch) {
-		return BranchTypePrototypeBranch
-	}
 	// check if a regex matches
 	if regex, has := self.ContributionRegex.Get(); has && regex.MatchesBranch(branch) {
 		return BranchTypeContributionBranch
@@ -95,7 +91,6 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 	case BranchTypePerennialBranch:
 		matching.Add(self.PerennialBranches...)
 	case BranchTypePrototypeBranch:
-		matching.Add(self.PrototypeBranches...)
 	}
 	for key, value := range self.BranchTypeOverrides {
 		if value == branchType {
@@ -131,7 +126,6 @@ func DefaultNormalConfig() NormalConfigData {
 		Offline:                  false,
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[PerennialRegex](),
-		PrototypeBranches:        gitdomain.LocalBranchNames{},
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,
