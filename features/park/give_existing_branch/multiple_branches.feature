@@ -24,4 +24,7 @@ Feature: parking multiple other branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And there are now no parked branches
+    And branch "feature" now has type "feature"
+    And branch "contribution" now has type "contribution"
+    And branch "observed" now has type "observed"
+    And branch "prototype" now has type "prototype"

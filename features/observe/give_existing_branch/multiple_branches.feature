@@ -27,7 +27,6 @@ Feature: observing multiple other branches
       branch "parked" is now an observed branch
       """
     And branch "parked" now has type "observed"
-    And there are now no parked branches
     And Git Town prints:
       """
       branch "prototype" is now an observed branch

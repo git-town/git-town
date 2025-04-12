@@ -14,7 +14,6 @@ Feature: make another parked branch a contribution branch
       branch "parked" is now a contribution branch
       """
     And the contribution branches are now "parked"
-    And there are now no parked branches
 
   Scenario: undo
     When I run "git-town undo"

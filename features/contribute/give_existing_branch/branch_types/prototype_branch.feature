@@ -20,5 +20,4 @@ Feature: make another prototype branch a contribution branch
     When I run "git-town undo"
     Then Git Town runs no commands
     And the prototype branches are now "prototype"
-    And there are now no parked branches
     And the initial branches and lineage exist now

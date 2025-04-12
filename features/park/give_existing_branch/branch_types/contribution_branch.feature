@@ -20,4 +20,3 @@ Feature: park another contribution branch
     When I run "git-town undo"
     Then Git Town runs no commands
     And the contribution branches are now "contribution"
-    And there are now no parked branches
