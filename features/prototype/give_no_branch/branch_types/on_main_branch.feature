@@ -10,11 +10,9 @@ Feature: prototype the current main branch
       """
       cannot prototype the main branch
       """
-    And the main branch is still "main"
-    And there are still no prototype branches
+    And branch "main" still has type "main"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs no commands
-    And the main branch is still "main"
-    And there are still no prototype branches
+    And branch "main" still has type "main"
