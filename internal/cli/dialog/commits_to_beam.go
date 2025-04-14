@@ -9,7 +9,10 @@ import (
 	"github.com/git-town/git-town/v18/internal/messages"
 )
 
-const commitsToBeamTitle = `Select the commits to beam into branch %q`
+const (
+	commitsToBeamTitle = `Select the commits to beam into branch %q`
+	shaLength          = 7
+)
 
 // lets the user select commits to beam to the target branch
 func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.Commits, bool, error) {
@@ -20,7 +23,7 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 	for c, commit := range commits {
 		entries[c] = list.Entry[gitdomain.Commit]{
 			Data: commit,
-			Text: commit.Message.String(),
+			Text: fmt.Sprintf("%s (%s)", commit.Message.String(), commit.SHA.TruncateTo(shaLength).String()),
 		}
 	}
 	selection, aborted, err := components.CheckList(entries, []int{}, fmt.Sprintf(commitsToBeamTitle, targetBranch), "", inputs)
