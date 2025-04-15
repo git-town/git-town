@@ -109,7 +109,7 @@ func proposeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, stack configdomain.FullStack) error {
+func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -129,7 +129,7 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 		browser.Open(existingProposalURL, repo.Frontend, repo.Backend)
 		return nil
 	}
-	runProgram := proposeProgram(repo, data)
+	runProgram := proposeProgram(repo, data, fullStack)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -320,7 +320,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	}, false, err
 }
 
-func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
+func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack configdomain.FullStack) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
