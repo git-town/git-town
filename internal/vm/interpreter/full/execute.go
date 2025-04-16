@@ -45,6 +45,7 @@ func Execute(args ExecuteArgs) error {
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
+			PreviousBranchInfos:             args.RunState.PreviousBranchInfos,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})

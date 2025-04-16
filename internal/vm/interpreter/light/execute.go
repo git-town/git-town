@@ -31,6 +31,7 @@ func Execute(args ExecuteArgs) {
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
 			PrependOpcodes:                  args.Prog.Prepend,
+			PreviousBranchInfos:             None[gitdomain.BranchInfos](),
 			RegisterUndoablePerennialCommit: nil,
 			UpdateInitialSnapshotLocalSHA:   nil,
 		})

@@ -21,13 +21,12 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
 	}
-	var previousBranchInfos = None[gitdomain.BranchInfos]()
+	previousBranchInfos := None[gitdomain.BranchInfos]()
 	if runstate, hasRunstate := runStateOpt.Get(); hasRunstate {
 		if endSnapshot, hasEndSnapshot := runstate.EndBranchesSnapshot.Get(); hasEndSnapshot {
-			previousBranchInfos = Some(endSnapshot.Branches)
-		} else {
-			previousBranchInfos = runstate.PreviousBranchInfos
+			runstate.PreviousBranchInfos = Some(endSnapshot.Branches)
 		}
+		previousBranchInfos = runstate.PreviousBranchInfos
 	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
