@@ -73,8 +73,9 @@ func (self *RunState) IsFinished() bool {
 }
 
 // MarkAsFinished updates the run state to be marked as finished.
-func (self *RunState) MarkAsFinished() {
+func (self *RunState) MarkAsFinished(endBranchesSnapshot gitdomain.BranchesSnapshot) {
 	self.UnfinishedDetails = MutableNone[UnfinishedRunStateDetails]()
+	self.EndBranchesSnapshot = Some(endBranchesSnapshot)
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.

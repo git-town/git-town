@@ -23,7 +23,6 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
 	if err != nil {
@@ -42,10 +41,7 @@ func finished(args finishedArgs) error {
 		return err
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
-	args.RunState.MarkAsFinished()
-	if args.RunState.DryRun {
-		return finishedDryRunCommand(args)
-	}
+	args.RunState.MarkAsFinished(endBranchesSnapshot)
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
@@ -62,14 +58,4 @@ type finishedArgs struct {
 	RootDir         gitdomain.RepoRootDir
 	RunState        runstate.RunState
 	Verbose         configdomain.Verbose
-}
-
-func finishedDryRunCommand(args finishedArgs) error {
-	args.RunState.MarkAsFinished()
-	err := statefile.Save(args.RunState, args.RootDir)
-	if err != nil {
-		return fmt.Errorf(messages.RunstateSaveProblem, err)
-	}
-	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return nil
 }
