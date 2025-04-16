@@ -24,11 +24,7 @@ import (
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
-	runStateOpt, err := statefile.Load(args.RootDir)
-	if err != nil {
-		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	runState, hasRunState := runStateOpt.Get()
+	runState, hasRunState := args.RunState.Get()
 	if !hasRunState || runState.IsFinished() {
 		return false, nil
 	}
@@ -51,13 +47,17 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	}
 	switch response {
 	case dialog.ResponseDiscard:
-		return discardRunstate(args.RootDir)
+		exit, err := discardRunstate(args.RootDir)
+		return exit, err
 	case dialog.ResponseContinue:
-		return continueRunstate(runState, args)
+		exit, err := continueRunstate(runState, args)
+		return exit, err
 	case dialog.ResponseUndo:
-		return undoRunState(args, runState)
+		exit, err := undoRunState(args, runState)
+		return exit, err
 	case dialog.ResponseSkip:
-		return skipRunstate(args, runState)
+		exit, err := skipRunstate(args, runState)
+		return exit, err
 	case dialog.ResponseQuit:
 		return true, nil
 	}
@@ -73,6 +73,7 @@ type UnfinishedStateArgs struct {
 	Frontend          gitdomain.Runner
 	Git               git.Commands
 	HasOpenChanges    bool
+	RunState          Option[runstate.RunState]
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
 	RootDir           gitdomain.RepoRootDir

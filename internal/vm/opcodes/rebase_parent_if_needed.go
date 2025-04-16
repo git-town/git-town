@@ -4,10 +4,12 @@ import (
 	"github.com/git-town/git-town/v18/internal/git/gitdomain"
 	"github.com/git-town/git-town/v18/internal/messages"
 	"github.com/git-town/git-town/v18/internal/vm/shared"
+	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 type RebaseParentIfNeeded struct {
 	Branch                  gitdomain.LocalBranchName
+	PreviousSHA             Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -25,15 +27,21 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
-			var branchToRebase gitdomain.BranchName
-			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+			var opcode shared.Opcode
+			previousBranchInfos, hasPreviousBranchInfos := args.PreviousBranchInfos.Get()
+			previousParentInfo, hasPreviousParentInfo := previousBranchInfos.FindByLocalName(parent).Get()
+			if hasPreviousBranchInfos && hasPreviousParentInfo && !branchInfos.BranchIsActiveInAnotherWorktree(parent) {
+				opcode = &RebaseOntoKeepDeleted{
+					BranchToRebaseOnto: parent,
+					CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
+					Upstream:           None[gitdomain.LocalBranchName](),
+				}
 			} else {
-				branchToRebase = parent.BranchName()
+				opcode = &RebaseBranch{
+					Branch: parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName(),
+				}
 			}
-			program = append(program, &RebaseBranch{
-				Branch: branchToRebase,
-			})
+			program = append(program, opcode)
 			break
 		}
 		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor

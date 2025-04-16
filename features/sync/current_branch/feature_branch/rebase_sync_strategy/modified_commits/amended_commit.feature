@@ -23,18 +23,25 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1b | file_1    | another one  |
     And the current branch is "feature-2"
+    And inspect the commits
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | feature-2 | git fetch --prune --tags                        |
-      |           | git checkout feature-1                          |
-      | feature-1 | git rebase main --no-update-refs                |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git rebase main --no-update-refs                |
-      |           | git checkout feature-2                          |
-      | feature-2 | git rebase feature-1 --no-update-refs           |
+      | BRANCH    | COMMAND                                                                               |
+      | feature-2 | git fetch --prune --tags                                                              |
+      |           | git checkout feature-1                                                                |
+      | feature-1 | git rebase --onto main {{ sha 'initial commit' }} --no-update-refs                    |
+      |           | git push --force-with-lease --force-if-includes                                       |
+      |           | git rebase --onto main {{ sha 'initial commit' }} --no-update-refs                    |
+      |           | git checkout feature-2                                                                |
+      | feature-2 | git rebase --onto feature-1 {{ sha-before-run 'commit 1b' }} --no-update-refs         |
+      |           | git checkout --theirs file_1                                                          |
+      |           | git add file_1                                                                        |
+      |           | git -c core.editor=true rebase --continue                                             |
+      |           | git push --force-with-lease --force-if-includes                                       |
+      |           | git rebase --onto feature-1 e02596fadb65206e48adacdf127cdc825f8911e8 --no-update-refs |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file_1
