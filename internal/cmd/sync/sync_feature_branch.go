@@ -26,15 +26,16 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 }
 
 type featureBranchArgs struct {
-	firstCommitMessage Option[gitdomain.CommitMessage]
-	localName          gitdomain.LocalBranchName
-	offline            configdomain.Offline              // whether offline mode is enabled
-	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
-	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
-	program            Mutable[program.Program]          // the program to update
-	prune              configdomain.Prune
-	pushBranches       configdomain.PushBranches
-	trackingBranchName Option[gitdomain.RemoteBranchName]
+	firstCommitMessage   Option[gitdomain.CommitMessage]
+	localName            gitdomain.LocalBranchName
+	offline              configdomain.Offline              // whether offline mode is enabled
+	originalParentName   Option[gitdomain.LocalBranchName] // the parent when Git Town started
+	originalParentSHA    Option[gitdomain.SHA]             // the parent when Git Town started
+	parentPreviousRunSHA Option[gitdomain.SHA]
+	program              Mutable[program.Program] // the program to update
+	prune                configdomain.Prune
+	pushBranches         configdomain.PushBranches
+	trackingBranchName   Option[gitdomain.RemoteBranchName]
 }
 
 func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
@@ -48,7 +49,12 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 			},
 		)
 	case configdomain.SyncStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{Branch: args.localName})
+		args.program.Value.Add(
+			&opcodes.RebaseParentIfNeeded{
+				Branch:      args.localName,
+				PreviousSHA: args,
+			},
+		)
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
 			&opcodes.MergeParentIfNeeded{
