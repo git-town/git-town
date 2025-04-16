@@ -47,17 +47,13 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
 	}
 	switch response {
 	case dialog.ResponseDiscard:
-		exit, err := discardRunstate(args.RootDir)
-		return exit, err
+		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:
-		exit, err := continueRunstate(runState, args)
-		return exit, err
+		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
-		exit, err := undoRunState(args, runState)
-		return exit, err
+		return undoRunState(args, runState)
 	case dialog.ResponseSkip:
-		exit, err := skipRunstate(args, runState)
-		return exit, err
+		return skipRunstate(args, runState)
 	case dialog.ResponseQuit:
 		return true, nil
 	}
