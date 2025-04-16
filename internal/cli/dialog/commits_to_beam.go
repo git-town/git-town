@@ -25,7 +25,7 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 		}
 		entries[c] = list.Entry[gitdomain.Commit]{
 			Data: commit,
-			Text: fmt.Sprintf("%s (%s)", commit.Message.String(), shortSHA),
+			Text: fmt.Sprintf("%s %s", shortSHA, commit.Message.String()),
 		}
 	}
 	selection, aborted, err := components.CheckList(entries, []int{}, fmt.Sprintf(commitsToBeamTitle, targetBranch), "", inputs)
