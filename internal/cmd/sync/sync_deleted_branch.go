@@ -52,6 +52,7 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 			branch:             branch,
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
+			previousParentSHA: ,
 			program:            prog,
 			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy,
 		})

@@ -143,7 +143,8 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 		})
 	case configdomain.SyncFeatureStrategyRebase:
 		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{
-			Branch: args.branch,
+			Branch:      args.branch,
+			PreviousSHA: args.previousParentSHA,
 		})
 	case configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
@@ -158,6 +159,7 @@ type pullParentBranchOfCurrentFeatureBranchOpcodeArgs struct {
 	branch             gitdomain.LocalBranchName
 	originalParentName Option[gitdomain.LocalBranchName]
 	originalParentSHA  Option[gitdomain.SHA]
+	previousParentSHA  Option[gitdomain.SHA]
 	program            Mutable[program.Program]
 	syncStrategy       configdomain.SyncFeatureStrategy
 }
