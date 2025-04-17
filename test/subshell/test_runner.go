@@ -174,16 +174,6 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (ou
 	return output, err
 }
 
-func (self *TestRunner) QueryWithEnv(env []string, cmd string, args ...string) (output string, err error) {
-	opts := Options{
-		Dir:          "",
-		Env:          env,
-		IgnoreOutput: false,
-		Input:        Option[string]{},
-	}
-	return self.QueryWith(&opts, cmd, args...)
-}
-
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
 func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (output string, exitCode int, err error) {
 	currentBranchText := ""
@@ -272,6 +262,16 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		return "", exitCode, err
 	}
 	return strings.TrimRight(outputBuf.String(), "\n"), exitCode, err
+}
+
+func (self *TestRunner) QueryWithEnv(env []string, cmd string, args ...string) (output string, err error) {
+	opts := Options{
+		Dir:          "",
+		Env:          env,
+		IgnoreOutput: false,
+		Input:        Option[string]{},
+	}
+	return self.QueryWith(&opts, cmd, args...)
 }
 
 // Run runs the given command with the given arguments.
