@@ -32,7 +32,7 @@ Feature: display all executed Git commands
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash --ff feature                   |
       |         | frontend | git commit -m done                                |
-      |         | backend  | git rev-parse --short main                        |
+      |         | backend  | git rev-parse main                                |
       |         | backend  | git show-ref --verify --quiet refs/heads/main     |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
