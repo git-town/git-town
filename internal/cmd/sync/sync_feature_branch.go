@@ -52,7 +52,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 		args.program.Value.Add(
 			&opcodes.RebaseParentIfNeeded{
 				Branch:      args.localName,
-				PreviousSHA: args,
+				PreviousSHA: args.parentPreviousRunSHA,
 			},
 		)
 	case configdomain.SyncStrategyCompress:
