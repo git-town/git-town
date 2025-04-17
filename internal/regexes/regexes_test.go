@@ -3,7 +3,7 @@ package regexes_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/regexes"
+	"github.com/git-town/git-town/v19/internal/regexes"
 	"github.com/shoenig/test/must"
 )
 

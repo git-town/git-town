@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/filesystem"
-	"github.com/git-town/git-town/v18/test/testruntime"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/filesystem"
+	"github.com/git-town/git-town/v19/test/testruntime"
 )
 
 func TestCopyDirectory(t *testing.T) {

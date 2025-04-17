@@ -1,8 +1,8 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/undo/undodomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/undo/undodomain"
 )
 
 type LocalBranchChange map[gitdomain.LocalBranchName]undodomain.Change[gitdomain.SHA]

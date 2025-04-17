@@ -3,11 +3,11 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/messages"
-	"github.com/git-town/git-town/v18/internal/vm/shared"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // MergeAlwaysProgram merges the feature branch into its parent by always creating a merge comment (merge --no-ff).

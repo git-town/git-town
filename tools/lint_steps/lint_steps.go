@@ -5,7 +5,7 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/git-town/git-town/v18/test/asserts"
+	"github.com/git-town/git-town/v19/test/asserts"
 )
 
 const (
