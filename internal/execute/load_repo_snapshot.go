@@ -11,11 +11,23 @@ import (
 	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v18/internal/validate"
+	"github.com/git-town/git-town/v18/internal/vm/statefile"
 	. "github.com/git-town/git-town/v18/pkg/prelude"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], bool, error) {
+	runStateOpt, err := statefile.Load(args.RootDir)
+	if err != nil {
+		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
+	}
+	previousBranchInfos := None[gitdomain.BranchInfos]()
+	if runstate, hasRunstate := runStateOpt.Get(); hasRunstate {
+		if endSnapshot, hasEndSnapshot := runstate.EndBranchesSnapshot.Get(); hasEndSnapshot {
+			runstate.PreviousBranchInfos = Some(endSnapshot.Branches)
+		}
+		previousBranchInfos = runstate.PreviousBranchInfos
+	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
@@ -29,39 +41,39 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			PushHook:          args.UnvalidatedConfig.NormalConfig.PushHook,
 			RepoStatus:        args.RepoStatus,
 			RootDir:           args.Repo.RootDir,
+			RunState:          runStateOpt,
 			UnvalidatedConfig: args.UnvalidatedConfig,
 			Verbose:           args.Verbose,
 		})
 		if err != nil || exit {
-			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, exit, err
 		}
 	}
-	var err error
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Git.Remotes(args.Repo.Backend)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 		}
 		if remotes.HasRemote(args.UnvalidatedConfig.NormalConfig.DevRemote) && args.Repo.IsOffline.IsFalse() {
 			err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags)
 			if err != nil {
-				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 			}
 		}
 	}
 	stashSize, err := args.Repo.Git.StashSize(args.Repo.Backend)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, previousBranchInfos, false, err
 	}
 	branchesSnapshot, err := args.Repo.Git.BranchesSnapshot(args.Repo.Backend)
-	return branchesSnapshot, stashSize, false, err
+	return branchesSnapshot, stashSize, previousBranchInfos, false, err
 }
 
 type LoadRepoSnapshotArgs struct {

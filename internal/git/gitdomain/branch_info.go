@@ -48,7 +48,7 @@ func (self BranchInfo) GetRemoteBranch() (bool, RemoteBranchName, SHA) {
 	return hasName && hasSHA, name, sha
 }
 
-func (self BranchInfo) GetSHA() SHA {
+func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
 	return self.LocalSHA.GetOrElse(self.RemoteSHA.GetOrPanic())
 }
 

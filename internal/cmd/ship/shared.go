@@ -33,6 +33,7 @@ type sharedShipData struct {
 	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
+	previousBranchInfos      Option[gitdomain.BranchInfos]
 	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
 	targetBranch             gitdomain.BranchInfo
@@ -45,7 +46,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, previousBranchInfos, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -148,6 +149,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		initialBranch:            initialBranch,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
+		previousBranchInfos:      previousBranchInfos,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		stashSize:                stashSize,
 		targetBranch:             *targetBranch,
