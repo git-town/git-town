@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/git-town/git-town/v18/test/envvars"
+	"github.com/git-town/git-town/v19/test/envvars"
 	"github.com/shoenig/test/must"
 )
 

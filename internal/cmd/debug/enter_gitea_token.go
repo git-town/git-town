@@ -3,10 +3,10 @@ package debug
 import (
 	"os"
 
-	"github.com/git-town/git-town/v18/internal/cli/dialog"
-	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/dialog"
+	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 

@@ -1,14 +1,14 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/undo/undobranches"
-	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v18/internal/undo/undostash"
-	"github.com/git-town/git-town/v18/internal/vm/opcodes"
-	"github.com/git-town/git-town/v18/internal/vm/program"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/undo/undobranches"
+	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v19/internal/undo/undostash"
+	"github.com/git-town/git-town/v19/internal/vm/opcodes"
+	"github.com/git-town/git-town/v19/internal/vm/program"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // creates the program for undoing a program that finished

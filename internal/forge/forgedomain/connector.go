@@ -1,9 +1,9 @@
 package forgedomain
 
 import (
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // Connector describes the activities that Git Town can perform on forges.

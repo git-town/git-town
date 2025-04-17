@@ -1,15 +1,15 @@
 package forge
 
 import (
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/bitbucketcloud"
-	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
-	"github.com/git-town/git-town/v18/internal/forge/codeberg"
-	"github.com/git-town/git-town/v18/internal/forge/gitea"
-	"github.com/git-town/git-town/v18/internal/forge/github"
-	"github.com/git-town/git-town/v18/internal/forge/gitlab"
-	"github.com/git-town/git-town/v18/internal/git/giturl"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v19/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v19/internal/forge/codeberg"
+	"github.com/git-town/git-town/v19/internal/forge/gitea"
+	"github.com/git-town/git-town/v19/internal/forge/github"
+	"github.com/git-town/git-town/v19/internal/forge/gitlab"
+	"github.com/git-town/git-town/v19/internal/git/giturl"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 func Detect(remoteURL giturl.Parts, userOverride Option[configdomain.ForgeType]) Option[configdomain.ForgeType] {

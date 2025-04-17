@@ -3,11 +3,11 @@ package status
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v18/internal/cli/flags"
-	"github.com/git-town/git-town/v18/internal/cli/print"
-	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v19/internal/cli/flags"
+	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/execute"
 	"github.com/spf13/cobra"
 )
 
