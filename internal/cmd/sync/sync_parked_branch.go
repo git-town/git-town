@@ -1,8 +1,8 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 )
 
 // ParkedBranchProgram adds the opcodes to sync the parked branch with the given name.

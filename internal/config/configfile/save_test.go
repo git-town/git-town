@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/config"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/config/configfile"
-	"github.com/git-town/git-town/v18/internal/config/gitconfig"
-	"github.com/git-town/git-town/v18/internal/git"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/configfile"
+	"github.com/git-town/git-town/v19/internal/config/gitconfig"
+	"github.com/git-town/git-town/v19/internal/git"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

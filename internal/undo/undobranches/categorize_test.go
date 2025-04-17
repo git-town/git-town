@@ -3,12 +3,12 @@ package undobranches_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/config"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/undo/undobranches"
-	"github.com/git-town/git-town/v18/internal/undo/undodomain"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/undo/undobranches"
+	"github.com/git-town/git-town/v19/internal/undo/undodomain"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
