@@ -64,7 +64,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git remote get-url origin                          |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |
-      |         | git rev-parse --short HEAD                         |
+      |         | git rev-parse HEAD                                 |
       | feature | git reset --hard {{ sha 'commit 3' }}              |
       | (none)  | git rev-list --left-right feature...origin/feature |
       | feature | git push --force-with-lease --force-if-includes    |
