@@ -9,7 +9,7 @@
 
 #### New Features
 
-- `git town append` and `git town hack` now have a `--beam` flag to move selected commits to the new branch. When enabled, they no longer fetch or sync. ([#3338](https://github.com/git-town/git-town/issues/3338)).
+- `git town append` and `git town hack` now also have a `--beam` flag to move selected commits to the new branch. When enabled, they no longer fetch or sync. ([#3338](https://github.com/git-town/git-town/issues/3338)).
 - The "select commits to beam" dialog now displays the SHA of commits in addition to the commit message ([#4519](https://github.com/git-town/git-town/issues/4519)).
 - The Git Town website now has a [how-to](https://www.git-town.com/how-tos.html) section.
 - `set-parent` now allows providing the new parent as a CLI argument ([documentation](https://www.git-town.com/commands/set-parent.html#positional-argument), [#4705](https://github.com/git-town/git-town/issues/4705)).
