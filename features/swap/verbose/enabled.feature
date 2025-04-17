@@ -73,17 +73,17 @@ Feature: swapping a feature branch verbosely
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git remote get-url origin                            |
       | branch-2 | git checkout branch-1                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-1 | git reset --hard {{ sha 'commit 1' }}                |
       | (none)   | git rev-list --left-right branch-1...origin/branch-1 |
       | branch-1 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-2                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-2 | git reset --hard {{ sha 'commit 2' }}                |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
       | branch-2 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-3                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-3 | git reset --hard {{ sha 'commit 3' }}                |
       | (none)   | git rev-list --left-right branch-3...origin/branch-3 |
       | branch-3 | git push --force-with-lease --force-if-includes      |
