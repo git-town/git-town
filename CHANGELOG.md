@@ -1,5 +1,23 @@
 # Git Town Changelog
 
+## 19.0.0 (2025-04-17)
+
+#### BREAKING CHANGES
+
+- The commands `new-pull-request` and `rename-branch` are being sunset after being deprecated for a long time. Their modern replacements are `propose` and `rename` ([#4714](https://github.com/git-town/git-town/pull/4714)).
+- The configuration entries `contribution-branches`, `observed-branches`, `parked-branches`, and `prototype-branches` are being sunset. Their functionality is taken over by setting the type for individual branches as well as `contribution-regex`, `observed-regex`, `default-branch-type`, and `new-branch-type` ([#4499](https://github.com/git-town/git-town/issues/4499)).
+
+#### New Features
+
+- `git town append` and `git town hack` now have a `--beam` flag to move selected commits to the new branch. When enabled, they no longer fetch or sync. ([#3338](https://github.com/git-town/git-town/issues/3338)).
+- The "select commits to beam" dialog now displays the SHA of commits in addition to the commit message ([#4519](https://github.com/git-town/git-town/issues/4519)).
+- The Git Town website now has a [how-to](https://www.git-town.com/how-tos.html) section.
+- `set-parent` now allows providing the new parent as a CLI argument ([documentation](https://www.git-town.com/commands/set-parent.html#positional-argument), [#4705](https://github.com/git-town/git-town/issues/4705)).
+
+#### Bug Fixes
+
+- `git town sync --no-push` no longer make the commit order appear out of order ([#4696](https://github.com/git-town/git-town/issues/4696)).
+
 ## 18.3.2 (2025-04-09)
 
 #### Bug Fixes
