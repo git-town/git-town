@@ -89,7 +89,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
+	output, err := querier.QueryWithEnv([]string{`GIT_CONFIG_PARAMETERS='core.abbrev=40'`}, "git", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
