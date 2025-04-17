@@ -18,6 +18,10 @@
 
 - `git town sync --no-push` no longer make the commit order appear out of order ([#4696](https://github.com/git-town/git-town/issues/4696)).
 
+#### Contributors
+
+Shoutout to @erik-rw, @kevgo, @legeana, @nekitk, @pradeepmurugesan, @ruudk, @stephenwade, @terheyden for contributing code, ideas, and feedback to 33 shipped PRs and 10 resolved issues!
+
 ## 18.3.2 (2025-04-09)
 
 #### Bug Fixes
