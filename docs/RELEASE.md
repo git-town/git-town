@@ -11,11 +11,11 @@ This guide is for maintainers who make releases of Git Town.
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `19.0.0`
-    - double-digits: `18.3`
+    - double-digits: `19.0`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
-    - update `github.com/git-town/git-town/v18/` everywhere in this repo
+    - update `github.com/git-town/git-town/v19/` everywhere in this repo
     - update `github.com/git-town/git-town/v18` (without trailing slash)
 - ship the branch
 - `git sync --all && git checkout public && git merge main && git push && git checkout main && git branch -d public`

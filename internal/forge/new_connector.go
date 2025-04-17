@@ -1,18 +1,18 @@
 package forge
 
 import (
-	"github.com/git-town/git-town/v18/internal/cli/print"
-	"github.com/git-town/git-town/v18/internal/config"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/bitbucketcloud"
-	"github.com/git-town/git-town/v18/internal/forge/bitbucketdatacenter"
-	"github.com/git-town/git-town/v18/internal/forge/codeberg"
-	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v18/internal/forge/gitea"
-	"github.com/git-town/git-town/v18/internal/forge/github"
-	"github.com/git-town/git-town/v18/internal/forge/gitlab"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v19/internal/forge/bitbucketdatacenter"
+	"github.com/git-town/git-town/v19/internal/forge/codeberg"
+	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v19/internal/forge/gitea"
+	"github.com/git-town/git-town/v19/internal/forge/github"
+	"github.com/git-town/git-town/v19/internal/forge/gitlab"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.

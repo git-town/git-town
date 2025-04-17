@@ -3,9 +3,9 @@ package shared_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/vm/opcodes"
-	"github.com/git-town/git-town/v18/internal/vm/shared"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/vm/opcodes"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
