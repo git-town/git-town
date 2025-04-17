@@ -79,6 +79,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 			offline:            args.Config.NormalConfig.Offline,
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
+			parentPreviousRunSHA: ,
 			program:            args.Program,
 			prune:              args.Prune,
 			pushBranches:       args.PushBranches,
