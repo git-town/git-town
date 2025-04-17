@@ -89,7 +89,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
+	output, err := querier.QueryWithEnv([]string{`GIT_CONFIG_PARAMETERS='core.abbrev=40'`}, "git", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
@@ -766,7 +766,7 @@ func (self *Commands) RootDirectory(querier gitdomain.Querier) Option[gitdomain.
 }
 
 func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
-	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
+	output, err := querier.QueryTrim("git", "rev-parse", name.String())
 	if err != nil {
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
