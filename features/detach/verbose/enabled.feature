@@ -105,17 +105,17 @@ Feature: detaching an omni-branch verbosely
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git remote get-url origin                            |
-      |          | git rev-parse --short HEAD                           |
+      |          | git rev-parse HEAD                                   |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }}               |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
       | branch-2 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-3                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-3 | git reset --hard {{ sha 'commit 3b' }}               |
       | (none)   | git rev-list --left-right branch-3...origin/branch-3 |
       | branch-3 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-4                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-4 | git reset --hard {{ sha 'commit 4b' }}               |
       | (none)   | git rev-list --left-right branch-4...origin/branch-4 |
       | branch-4 | git push --force-with-lease --force-if-includes      |

@@ -766,7 +766,7 @@ func (self *Commands) RootDirectory(querier gitdomain.Querier) Option[gitdomain.
 }
 
 func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
-	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
+	output, err := querier.QueryTrim("git", "rev-parse", name.String())
 	if err != nil {
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}

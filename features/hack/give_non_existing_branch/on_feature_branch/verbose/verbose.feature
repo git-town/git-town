@@ -55,7 +55,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git remote get-url origin                     |
       | new    | frontend | git checkout main                             |
-      |        | backend  | git rev-parse --short HEAD                    |
+      |        | backend  | git rev-parse HEAD                            |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
       |        | frontend | git branch -D new                             |
       |        | backend  | git config --unset git-town-branch.new.parent |
