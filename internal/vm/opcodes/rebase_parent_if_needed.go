@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/messages"
 	"github.com/git-town/git-town/v19/internal/vm/shared"
@@ -54,6 +56,7 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		})
 		branch = parent
 	}
+	fmt.Println("333333333333333333333333333333", program)
 	args.PrependOpcodes(program...)
 	return nil
 }
