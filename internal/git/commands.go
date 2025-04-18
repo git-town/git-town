@@ -809,6 +809,14 @@ func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname config
 	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
 }
 
+func (self *Commands) ShortenSHA(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.SHA, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--short", sha.String())
+	if err != nil {
+		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, sha, err)
+	}
+	return gitdomain.NewSHA(output), nil
+}
+
 func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "merge", "--squash", "--ff", branch.String())
 }
