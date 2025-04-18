@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/messages"
 	"github.com/git-town/git-town/v19/internal/vm/shared"
@@ -28,7 +26,6 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
-		fmt.Println("11111111111111111111111111111", branch, parent, parentIsLocal)
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
 			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
