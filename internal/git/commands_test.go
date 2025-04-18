@@ -1368,14 +1368,11 @@ func TestBackendCommands(t *testing.T) {
 		})
 		commits, err := runtime.Commands.CommitsInBranch(runtime.TestRunner, "branch", Some(gitdomain.NewLocalBranchName("initial")))
 		must.NoError(t, err)
-		cmds := git.Commands{
-			CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
-			RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
-		}
-		have, err := cmds.ShortenSHA(runtime, commits[0].SHA)
+		have, err := runtime.ShortenSHA(runtime, commits[0].SHA)
 		must.NoError(t, err)
 		must.True(t, len(commits[0].SHA.String()) == 40)
 		must.True(t, len(have.String()) == 7)
+		must.EqOp(t, have.String(), commits[0].SHA.String()[:7])
 	})
 
 	t.Run("StashEntries", func(t *testing.T) {
