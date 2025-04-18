@@ -292,7 +292,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			if parent, hasParent := parentOpt.Get(); hasParent {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
-						BranchToRebaseOnto: selectedBranch,
+						BranchToRebaseOnto: selectedBranch.BranchName(),
 						CommitsToRemove:    parent.Location(),
 						Upstream:           None[gitdomain.LocalBranchName](),
 					},
