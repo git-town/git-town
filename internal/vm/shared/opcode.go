@@ -49,5 +49,4 @@ func RenderOpcodes(opcodes []Opcode, indent string) string {
 		}
 	}
 	return sb.String()
-
 }
