@@ -150,6 +150,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
@@ -193,6 +194,7 @@ type appendFeatureData struct {
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
+	branchInfosLastRun        Option[gitdomain.BranchInfos]
 	propose                   configdomain.Propose
 	prototype                 configdomain.Prototype
 	remotes                   gitdomain.Remotes
@@ -211,7 +213,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -295,6 +297,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 	return appendFeatureData{
 		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,
+		branchInfosLastRun:        branchInfosLastRun,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
@@ -326,6 +329,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
+			BranchInfosLastRun:  data.branchInfosLastRun,
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,

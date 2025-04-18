@@ -13,11 +13,12 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	syncFeatureParentBranch(syncStrategy, args)
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
 		FeatureTrackingBranchProgram(trackingBranch, syncStrategy, FeatureTrackingArgs{
-			FirstCommitMessage: args.firstCommitMessage,
-			LocalName:          args.localName,
-			Offline:            args.offline,
-			Program:            args.program,
-			PushBranches:       args.pushBranches,
+			FirstCommitMessage:   args.firstCommitMessage,
+			LocalName:            args.localName,
+			Offline:              args.offline,
+			Program:              args.program,
+			PreviousRunParentSHA: args.parentPreviousRunSHA,
+			PushBranches:         args.pushBranches,
 		})
 	}
 	if args.prune {
@@ -94,7 +95,8 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					PushBranches: args.PushBranches,
 				},
 				&opcodes.RebaseParentIfNeeded{
-					Branch: args.LocalName,
+					Branch:      args.LocalName,
+					PreviousSHA: args.PreviousRunParentSHA,
 				},
 				&opcodes.PushCurrentBranchForceIfNeeded{
 					ForceIfIncludes: true,
@@ -109,9 +111,10 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 }
 
 type FeatureTrackingArgs struct {
-	FirstCommitMessage Option[gitdomain.CommitMessage]
-	LocalName          gitdomain.LocalBranchName
-	Offline            configdomain.Offline     // whether offline mode is enabled
-	Program            Mutable[program.Program] // the program to update
-	PushBranches       configdomain.PushBranches
+	FirstCommitMessage   Option[gitdomain.CommitMessage]
+	LocalName            gitdomain.LocalBranchName
+	Offline              configdomain.Offline     // whether offline mode is enabled
+	Program              Mutable[program.Program] // the program to update
+	PreviousRunParentSHA Option[gitdomain.SHA]
+	PushBranches         configdomain.PushBranches
 }

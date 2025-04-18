@@ -167,7 +167,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		PreviousBranchInfos:   data.previousBranchInfos,
+		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,
 		TouchedBranches:       optimizedProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
