@@ -28,15 +28,18 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if parentIsLocal {
 			var opcode shared.Opcode
-			previousBranchInfos, hasPreviousBranchInfos := args.PreviousBranchInfos.Get()
-			previousParentInfo, hasPreviousParentInfo := previousBranchInfos.FindByLocalName(parent).Get()
-			if hasPreviousBranchInfos && hasPreviousParentInfo && !branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				opcode = &RebaseOntoKeepDeleted{
-					BranchToRebaseOnto: parent,
-					CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
-					Upstream:           None[gitdomain.LocalBranchName](),
+			if previousBranchInfos, has := args.PreviousBranchInfos.Get(); has {
+				if previousParentInfo, has := previousBranchInfos.FindByLocalName(parent).Get(); has {
+					if !branchInfos.BranchIsActiveInAnotherWorktree(parent) {
+						opcode = &RebaseOntoKeepDeleted{
+							BranchToRebaseOnto: parent,
+							CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
+							Upstream:           None[gitdomain.LocalBranchName](),
+						}
+					}
 				}
-			} else {
+			}
+			if opcode == nil {
 				opcode = &RebaseBranch{
 					Branch: parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName(),
 				}
