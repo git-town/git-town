@@ -2,9 +2,7 @@ package program
 
 import (
 	"encoding/json"
-	"fmt"
 	"reflect"
-	"strings"
 
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/gohacks/slice"
@@ -93,16 +91,7 @@ func (self *Program) String() string {
 }
 
 func (self *Program) StringIndented(indent string) string {
-	sb := strings.Builder{}
-	if self.IsEmpty() {
-		sb.WriteString("(empty program)\n")
-	} else {
-		sb.WriteString("Program:\n")
-		for o, opcode := range *self {
-			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
-		}
-	}
-	return sb.String()
+	return shared.RenderOpcodes(*self, indent)
 }
 
 func (self *Program) TouchedBranches() []gitdomain.BranchName {
