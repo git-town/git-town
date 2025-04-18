@@ -178,6 +178,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 type appendFeatureData struct {
 	beam                      configdomain.Beam
 	branchInfos               gitdomain.BranchInfos
+	branchInfosLastRun        Option[gitdomain.BranchInfos]
 	branchesSnapshot          gitdomain.BranchesSnapshot
 	branchesToSync            configdomain.BranchesToSync
 	commit                    configdomain.Commit
@@ -194,7 +195,6 @@ type appendFeatureData struct {
 	nonExistingBranches       gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos       gitdomain.BranchInfos
 	previousBranch            Option[gitdomain.LocalBranchName]
-	branchInfosLastRun        Option[gitdomain.BranchInfos]
 	propose                   configdomain.Propose
 	prototype                 configdomain.Prototype
 	remotes                   gitdomain.Remotes

@@ -16,8 +16,8 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 			FirstCommitMessage:   args.firstCommitMessage,
 			LocalName:            args.localName,
 			Offline:              args.offline,
-			Program:              args.program,
 			PreviousRunParentSHA: args.parentPreviousRunSHA,
+			Program:              args.program,
 			PushBranches:         args.pushBranches,
 		})
 	}
@@ -113,8 +113,8 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 type FeatureTrackingArgs struct {
 	FirstCommitMessage   Option[gitdomain.CommitMessage]
 	LocalName            gitdomain.LocalBranchName
-	Offline              configdomain.Offline     // whether offline mode is enabled
-	Program              Mutable[program.Program] // the program to update
+	Offline              configdomain.Offline // whether offline mode is enabled
 	PreviousRunParentSHA Option[gitdomain.SHA]
+	Program              Mutable[program.Program] // the program to update
 	PushBranches         configdomain.PushBranches
 }
