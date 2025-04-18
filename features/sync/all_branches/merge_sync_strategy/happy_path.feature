@@ -66,6 +66,7 @@ Feature: sync all feature branches
       | qa         | local, origin | qa origin commit               |
       |            |               | qa local commit                |
 
+  # @this
   Scenario: with "rebase" feature sync strategy
     Given Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town sync --all"
