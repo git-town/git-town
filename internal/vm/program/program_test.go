@@ -265,4 +265,34 @@ func TestProgram(t *testing.T) {
 		})
 	})
 
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		give := `
+[
+	{
+		"data": {
+			"Hard": false,
+			"MustHaveSHA": "abcdef",
+			"SetToSHA": "123456"
+		},
+		"type": "BranchCurrentResetToSHAIfNeeded"
+	},
+	{
+		"data": {},
+		"type": "StashOpenChanges"
+	}
+]`[1:]
+		have := program.Program{}
+		err := json.Unmarshal([]byte(give), &have)
+		must.NoError(t, err)
+		want := program.Program{
+			&opcodes.BranchCurrentResetToSHAIfNeeded{
+				Hard:        false,
+				MustHaveSHA: "abcdef",
+				SetToSHA:    "123456",
+			},
+			&opcodes.StashOpenChanges{},
+		}
+		must.Eq(t, want, have)
+	})
 }

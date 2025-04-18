@@ -1,7 +1,6 @@
 package shared_test
 
 import (
-	"encoding/json"
 	"testing"
 
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
@@ -24,36 +23,5 @@ Program:
 2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
 `[1:]
 		must.EqOp(t, want, have)
-	})
-
-	t.Run("UnmarshalJSON", func(t *testing.T) {
-		t.Parallel()
-		give := `
-[
-	{
-		"data": {
-			"Hard": false,
-			"MustHaveSHA": "abcdef",
-			"SetToSHA": "123456"
-		},
-		"type": "BranchCurrentResetToSHAIfNeeded"
-	},
-	{
-		"data": {},
-		"type": "StashOpenChanges"
-	}
-]`[1:]
-		have := program.Program{}
-		err := json.Unmarshal([]byte(give), &have)
-		must.NoError(t, err)
-		want := program.Program{
-			&opcodes.BranchCurrentResetToSHAIfNeeded{
-				Hard:        false,
-				MustHaveSHA: "abcdef",
-				SetToSHA:    "123456",
-			},
-			&opcodes.StashOpenChanges{},
-		}
-		must.Eq(t, want, have)
 	})
 }
