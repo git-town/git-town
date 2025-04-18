@@ -56,9 +56,7 @@ func (self BackendRunner) execute(additionalEnv []string, executable string, arg
 	}
 	env := subProcess.Environ()
 	env = append(env, "LC_ALL=C")
-	for _, entry := range additionalEnv {
-		env = append(env, entry)
-	}
+	env = append(env, additionalEnv...)
 	subProcess.Env = env
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
