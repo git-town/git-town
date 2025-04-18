@@ -11,6 +11,7 @@ import (
 
 func TestOpcode(t *testing.T) {
 	t.Parallel()
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		give := []shared.Opcode{
