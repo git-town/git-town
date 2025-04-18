@@ -51,7 +51,8 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos                       // the initial BranchInfos, after "git fetch" ran
+	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
+	BranchInfosLastRun  Option[gitdomain.BranchInfos]
 	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
@@ -71,19 +72,27 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		return
 	}
 	args.Program.Value.Add(&opcodes.CheckoutIfNeeded{Branch: localName})
+	parentPreviousRunSHA := None[gitdomain.SHA]()
+	if parent, has := originalParentName.Get(); has {
+		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
+			if parentInfoPreviousRun, has := branchInfosLastRun.FindByLocalName(parent).Get(); has {
+				parentPreviousRunSHA = Some(parentInfoPreviousRun.GetLocalOrRemoteSHA())
+			}
+		}
+	}
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage: firstCommitMessage,
-			localName:          localName,
-			offline:            args.Config.NormalConfig.Offline,
-			originalParentName: originalParentName,
-			originalParentSHA:  originalParentSHA,
-			parentPreviousRunSHA: ,
-			program:            args.Program,
-			prune:              args.Prune,
-			pushBranches:       args.PushBranches,
-			trackingBranchName: branchInfo.RemoteName,
+			firstCommitMessage:   firstCommitMessage,
+			localName:            localName,
+			offline:              args.Config.NormalConfig.Offline,
+			originalParentName:   originalParentName,
+			originalParentSHA:    originalParentSHA,
+			parentPreviousRunSHA: parentPreviousRunSHA,
+			program:              args.Program,
+			prune:                args.Prune,
+			pushBranches:         args.PushBranches,
+			trackingBranchName:   branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branchInfo, args)
