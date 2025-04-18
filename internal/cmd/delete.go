@@ -119,7 +119,7 @@ func executeDelete(args []string, dryRun configdomain.DryRun, verbose configdoma
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
 		FinalUndoProgram:      finalUndoProgram,
-		BranchInfosLastRun:    data.branchInfosPreviousRun,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
@@ -145,7 +145,7 @@ func executeDelete(args []string, dryRun configdomain.DryRun, verbose configdoma
 }
 
 type deleteData struct {
-	branchInfosPreviousRun   Option[gitdomain.BranchInfos]
+	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchToDeleteInfo       gitdomain.BranchInfo
 	branchToDeleteType       configdomain.BranchType
 	branchWhenDone           gitdomain.LocalBranchName
@@ -168,7 +168,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, branchInfosPreviousRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -242,7 +242,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return deleteData{
-		branchInfosPreviousRun:   branchInfosPreviousRun,
+		branchInfosLastRun:       branchInfosLastRun,
 		branchToDeleteInfo:       *branchToDelete,
 		branchToDeleteType:       branchTypeToDelete,
 		branchWhenDone:           branchWhenDone,

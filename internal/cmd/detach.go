@@ -122,7 +122,7 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		BranchInfosLastRun:    data.branchInfosPreviousRun,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
@@ -148,23 +148,23 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 }
 
 type detachData struct {
-	branchInfosPreviousRun Option[gitdomain.BranchInfos]
-	branchToDetachInfo     gitdomain.BranchInfo
-	branchToDetachName     gitdomain.LocalBranchName
-	branchToDetachType     configdomain.BranchType
-	branchesSnapshot       gitdomain.BranchesSnapshot
-	children               []detachChildBranch
-	config                 config.ValidatedConfig
-	connector              Option[forgedomain.Connector]
-	descendents            []detachChildBranch
-	dialogTestInputs       components.TestInputs
-	dryRun                 configdomain.DryRun
-	hasOpenChanges         bool
-	initialBranch          gitdomain.LocalBranchName
-	nonExistingBranches    gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	parentBranch           gitdomain.LocalBranchName
-	previousBranch         Option[gitdomain.LocalBranchName]
-	stashSize              gitdomain.StashSize
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
+	branchToDetachInfo  gitdomain.BranchInfo
+	branchToDetachName  gitdomain.LocalBranchName
+	branchToDetachType  configdomain.BranchType
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	children            []detachChildBranch
+	config              config.ValidatedConfig
+	connector           Option[forgedomain.Connector]
+	descendents         []detachChildBranch
+	dialogTestInputs    components.TestInputs
+	dryRun              configdomain.DryRun
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	parentBranch        gitdomain.LocalBranchName
+	previousBranch      Option[gitdomain.LocalBranchName]
+	stashSize           gitdomain.StashSize
 }
 
 type detachChildBranch struct {
@@ -179,7 +179,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, branchInfosPreviousRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -285,23 +285,23 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return detachData{
-		branchInfosPreviousRun: branchInfosPreviousRun,
-		branchToDetachInfo:     *branchToDetachInfo,
-		branchToDetachName:     branchNameToDetach,
-		branchToDetachType:     branchTypeToDetach,
-		branchesSnapshot:       branchesSnapshot,
-		children:               children,
-		config:                 validatedConfig,
-		connector:              connector,
-		descendents:            descendents,
-		dialogTestInputs:       dialogTestInputs,
-		dryRun:                 dryRun,
-		hasOpenChanges:         repoStatus.OpenChanges,
-		initialBranch:          initialBranch,
-		nonExistingBranches:    nonExistingBranches,
-		parentBranch:           parentBranch,
-		previousBranch:         previousBranchOpt,
-		stashSize:              stashSize,
+		branchInfosLastRun:  branchInfosLastRun,
+		branchToDetachInfo:  *branchToDetachInfo,
+		branchToDetachName:  branchNameToDetach,
+		branchToDetachType:  branchTypeToDetach,
+		branchesSnapshot:    branchesSnapshot,
+		children:            children,
+		config:              validatedConfig,
+		connector:           connector,
+		descendents:         descendents,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		nonExistingBranches: nonExistingBranches,
+		parentBranch:        parentBranch,
+		previousBranch:      previousBranchOpt,
+		stashSize:           stashSize,
 	}, false, nil
 }
 
