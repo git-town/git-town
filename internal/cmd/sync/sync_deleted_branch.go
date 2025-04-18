@@ -9,10 +9,10 @@ import (
 )
 
 // deletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], args BranchProgramArgs) {
+func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA, parentPreviousRunSHA Option[gitdomain.SHA], args BranchProgramArgs) {
 	switch args.Config.BranchType(branch) {
 	case configdomain.BranchTypeFeatureBranch:
-		syncDeletedFeatureBranchProgram(prog, branch, originalParentName, originalParentSHA, args)
+		syncDeletedFeatureBranchProgram(prog, branch, originalParentName, originalParentSHA, parentPreviousRunSHA, args)
 	case
 		configdomain.BranchTypePerennialBranch,
 		configdomain.BranchTypeMainBranch,
@@ -26,20 +26,12 @@ func deletedBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalB
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA Option[gitdomain.SHA], args BranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdomain.LocalBranchName, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA, parentPreviousRunSHA Option[gitdomain.SHA], args BranchProgramArgs) {
 	var syncStatus gitdomain.SyncStatus
 	if preFetchBranchInfo, has := args.PrefetchBranchInfos.FindByLocalName(branch).Get(); has {
 		syncStatus = preFetchBranchInfo.SyncStatus
 	} else {
 		syncStatus = gitdomain.SyncStatusNotInSync
-	}
-	previousParentSHA := None[gitdomain.SHA]()
-	if parentName, has := originalParentName.Get(); has {
-		if previousRunInfos, has := args.BranchInfosLastRun.Get(); has {
-			if previousInfo, has := previousRunInfos.FindByLocalName(parentName).Get(); has {
-				previousParentSHA = Some(previousInfo.GetLocalOrRemoteSHA())
-			}
-		}
 	}
 	switch syncStatus {
 	case
@@ -60,7 +52,7 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 			branch:             branch,
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
-			previousParentSHA:  previousParentSHA,
+			previousParentSHA:  parentPreviousRunSHA,
 			program:            prog,
 			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy,
 		})
