@@ -17,7 +17,6 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local    | commit 1b | file_1    | another one  |
     And the current branch is "feature-2"
-    And inspect the commits
     When I run "git-town sync"
 
   Scenario: result
