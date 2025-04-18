@@ -25,8 +25,8 @@ const ConfigFileCommitMessage = "persisted config file"
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	*subshell.TestRunner
-	Git       *prodgit.Commands
 	Config    config.UnvalidatedConfig
+	Git       *prodgit.Commands
 	SnapShots map[configdomain.ConfigScope]configdomain.SingleSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
 }
 
