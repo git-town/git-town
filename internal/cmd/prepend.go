@@ -360,6 +360,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
+			BranchInfosLastRun:  data.branchInfosLastRun,
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,

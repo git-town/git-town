@@ -128,6 +128,7 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               proposeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -159,6 +160,7 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
 	branchToPropose     gitdomain.LocalBranchName
 	branchTypeToPropose configdomain.BranchType
 	branchesSnapshot    gitdomain.BranchesSnapshot
@@ -189,7 +191,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -293,6 +295,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
+		branchInfosLastRun:  branchInfosLastRun,
 		branchToPropose:     branchToPropose,
 		branchTypeToPropose: branchTypeToPropose,
 		branchesSnapshot:    branchesSnapshot,
@@ -320,6 +323,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchInfosLastRun:  data.branchInfosLastRun,
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
