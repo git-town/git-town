@@ -37,7 +37,6 @@ Feature: rebase a branch that contains amended commits
       | feature-1 | local, origin | commit 1 | file_1    | another one  |
       | feature-2 | local, origin | commit 2 | file_2    | two          |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
