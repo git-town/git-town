@@ -129,6 +129,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchInfosLastRun:  data.previousBranchInfos,
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
