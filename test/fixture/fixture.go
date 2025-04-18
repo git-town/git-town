@@ -75,7 +75,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
 		TestRunner: &runner,
-		Commands:   &gitCommands,
+		Git:        &gitCommands,
 		Config:     devRepo.Config,
 		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 	})
@@ -129,7 +129,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
 	var mainBranch gitdomain.BranchName
-	mainIsLocal := self.DevRepo.Value.BranchExists(self.DevRepo.Value, "main")
+	mainIsLocal := self.DevRepo.Value.Git.BranchExists(self.DevRepo.Value, "main")
 	if mainIsLocal {
 		mainBranch = gitdomain.NewBranchName("main")
 	} else {
