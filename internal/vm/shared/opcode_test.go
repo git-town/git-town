@@ -5,18 +5,18 @@ import (
 
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/program"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
 func TestOpcode(t *testing.T) {
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
-		give := program.Program{
+		give := []shared.Opcode{
 			&opcodes.MergeAbort{},
 			&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypePerennialBranch},
 		}
-		have := give.String()
+		have := shared.RenderOpcodes(give, "")
 		want := `
 Program:
 1: &opcodes.MergeAbort{undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
