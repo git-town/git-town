@@ -48,7 +48,11 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 			},
 		)
 	case configdomain.SyncStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{Branch: args.localName})
+		args.program.Value.Add(
+			&opcodes.RebaseParentIfNeeded{
+				Branch: args.localName,
+			},
+		)
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
 			&opcodes.MergeParentIfNeeded{
