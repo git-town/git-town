@@ -33,11 +33,11 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 			RebaseOnto:        args.Config.ValidatedConfigData.MainBranch, // TODO: RebaseOnto the latest existing parent, which isn't always main
 		})
 	}
-	parentPreviousRunSHA := None[gitdomain.SHA]()
+	parentLastRunSHA := None[gitdomain.SHA]()
 	if parent, has := originalParentName.Get(); has {
 		if branchInfosLastRun, has := args.BranchInfosLastRun.Get(); has {
-			if parentInfoPreviousRun, has := branchInfosLastRun.FindByLocalName(parent).Get(); has {
-				parentPreviousRunSHA = Some(parentInfoPreviousRun.GetLocalOrRemoteSHA())
+			if parentInfoLastRun, has := branchInfosLastRun.FindByLocalName(parent).Get(); has {
+				parentLastRunSHA = Some(parentInfoLastRun.GetLocalOrRemoteSHA())
 			}
 		}
 	}
@@ -49,11 +49,11 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 	case rebaseSyncStrategy && trackingBranchGone && hasDescendents:
 		args.BranchesToDelete.Value.Add(localName)
 	case trackingBranchGone:
-		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, parentPreviousRunSHA, args)
+		deletedBranchProgram(args.Program, localName, originalParentName, originalParentSHA, parentLastRunSHA, args)
 	case branchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// cannot sync branches that are active in another worktree
 	default:
-		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, parentPreviousRunSHA, firstCommitMessage, args)
+		LocalBranchProgram(localName, branchInfo, originalParentName, originalParentSHA, parentLastRunSHA, firstCommitMessage, args)
 	}
 	args.Program.Value.Add(&opcodes.ProgramEndOfBranch{})
 }
@@ -72,7 +72,7 @@ type BranchProgramArgs struct {
 }
 
 // LocalBranchProgram provides the program to sync a local branch.
-func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA, parentPreviousRunSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
+func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.BranchInfo, originalParentName Option[gitdomain.LocalBranchName], originalParentSHA, parentLastRunSHA Option[gitdomain.SHA], firstCommitMessage Option[gitdomain.CommitMessage], args BranchProgramArgs) {
 	branchType := args.Config.BranchType(localName)
 	isMainOrPerennialBranch := branchType == configdomain.BranchTypeMainBranch || branchType == configdomain.BranchTypePerennialBranch
 	if isMainOrPerennialBranch && !args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) {
@@ -83,31 +83,31 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage:   firstCommitMessage,
-			localName:            localName,
-			offline:              args.Config.NormalConfig.Offline,
-			originalParentName:   originalParentName,
-			originalParentSHA:    originalParentSHA,
-			parentPreviousRunSHA: parentPreviousRunSHA,
-			program:              args.Program,
-			prune:                args.Prune,
-			pushBranches:         args.PushBranches,
-			trackingBranchName:   branchInfo.RemoteName,
+			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
+			offline:            args.Config.NormalConfig.Offline,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
+			parentLastRunSHA:   parentLastRunSHA,
+			program:            args.Program,
+			prune:              args.Prune,
+			pushBranches:       args.PushBranches,
+			trackingBranchName: branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
-			firstCommitMessage:   firstCommitMessage,
-			localName:            localName,
-			offline:              args.Config.NormalConfig.Offline,
-			originalParentName:   originalParentName,
-			originalParentSHA:    originalParentSHA,
-			parentPreviousRunSHA: parentPreviousRunSHA,
-			program:              args.Program,
-			prune:                args.Prune,
-			pushBranches:         args.PushBranches,
-			trackingBranchName:   branchInfo.RemoteName,
+			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
+			offline:            args.Config.NormalConfig.Offline,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
+			parentLastRunSHA:   parentLastRunSHA,
+			program:            args.Program,
+			prune:              args.Prune,
+			pushBranches:       args.PushBranches,
+			trackingBranchName: branchInfo.RemoteName,
 		})
 	case configdomain.BranchTypeContributionBranch:
 		ContributionBranchProgram(args.Program, branchInfo)
@@ -115,16 +115,16 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		ObservedBranchProgram(branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
-			firstCommitMessage:   firstCommitMessage,
-			localName:            localName,
-			offline:              args.Config.NormalConfig.Offline,
-			originalParentName:   originalParentName,
-			originalParentSHA:    originalParentSHA,
-			parentPreviousRunSHA: parentPreviousRunSHA,
-			program:              args.Program,
-			prune:                args.Prune,
-			pushBranches:         configdomain.PushBranches(branchInfo.HasTrackingBranch()),
-			trackingBranchName:   branchInfo.RemoteName,
+			firstCommitMessage: firstCommitMessage,
+			localName:          localName,
+			offline:            args.Config.NormalConfig.Offline,
+			originalParentName: originalParentName,
+			originalParentSHA:  originalParentSHA,
+			parentLastRunSHA:   parentLastRunSHA,
+			program:            args.Program,
+			prune:              args.Prune,
+			pushBranches:       configdomain.PushBranches(branchInfo.HasTrackingBranch()),
+			trackingBranchName: branchInfo.RemoteName,
 		})
 	}
 	if args.PushBranches.IsTrue() && args.Remotes.HasRemote(args.Config.NormalConfig.DevRemote) && args.Config.NormalConfig.IsOnline() && branchType.ShouldPush(localName == args.InitialBranch) {
