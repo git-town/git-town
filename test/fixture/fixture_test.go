@@ -183,7 +183,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "origin-file", commits[1].FileName)
 		must.EqOp(t, "origin content", commits[1].FileContent)
 		// verify origin is at "initial" branch
-		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
+		branch, err := cloned.OriginRepo.GetOrPanic().Git.CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, "initial", branch)
 	})

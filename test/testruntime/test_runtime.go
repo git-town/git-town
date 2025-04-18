@@ -105,7 +105,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
-		Commands:   &gitCommands,
+		Git:        &gitCommands,
 		Config:     unvalidatedConfig,
 		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 		TestRunner: &testRunner,
