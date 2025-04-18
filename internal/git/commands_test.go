@@ -1355,6 +1355,29 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("ShortenSHA", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		branch := gitdomain.NewLocalBranchName("branch")
+		runtime.CreateBranch(branch, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "first commit",
+		})
+		commits, err := runtime.Commands.CommitsInBranch(runtime.TestRunner, "branch", Some(gitdomain.NewLocalBranchName("initial")))
+		must.NoError(t, err)
+		cmds := git.Commands{
+			CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+			RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
+		}
+		have, err := cmds.ShortenSHA(runtime, commits[0].SHA)
+		must.NoError(t, err)
+		must.True(t, len(commits[0].SHA.String()) == 40)
+		must.True(t, len(have.String()) == 7)
+	})
+
 	t.Run("StashEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("some stash entries", func(t *testing.T) {
