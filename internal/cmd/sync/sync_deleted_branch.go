@@ -33,6 +33,14 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 	} else {
 		syncStatus = gitdomain.SyncStatusNotInSync
 	}
+	previousParentSHA := None[gitdomain.SHA]()
+	if parentName, has := originalParentName.Get(); has {
+		if previousRunInfos, has := args.BranchInfosLastRun.Get(); has {
+			if previousInfo, has := previousRunInfos.FindByLocalName(parentName).Get(); has {
+				previousParentSHA = Some(previousInfo.GetLocalOrRemoteSHA())
+			}
+		}
+	}
 	switch syncStatus {
 	case
 		gitdomain.SyncStatusUpToDate,
@@ -52,9 +60,9 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 			branch:             branch,
 			originalParentName: originalParentName,
 			originalParentSHA:  originalParentSHA,
-			// previousParentSHA: args.,
-			program:      prog,
-			syncStrategy: args.Config.NormalConfig.SyncFeatureStrategy,
+			previousParentSHA:  previousParentSHA,
+			program:            prog,
+			syncStrategy:       args.Config.NormalConfig.SyncFeatureStrategy,
 		})
 		prog.Value.Add(&opcodes.BranchWithRemoteGoneDeleteIfEmptyAtRuntime{Branch: branch})
 	}
