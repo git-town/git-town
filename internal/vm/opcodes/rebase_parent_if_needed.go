@@ -54,8 +54,7 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 				CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
 			}
-		}
-		if opcode == nil {
+		} else {
 			opcode = &RebaseBranch{
 				Branch: branchToRebase,
 			}
