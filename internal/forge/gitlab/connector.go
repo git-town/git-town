@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v19/internal/messages"
 	. "github.com/git-town/git-town/v19/pkg/prelude"
-	"github.com/xanzy/go-gitlab"
+	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
 // Connector provides standardized connectivity for the given repository (gitlab.com/owner/repo)
@@ -190,7 +190,7 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) forgedomain.Proposal {
+func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		MergeWithAPI: true,
 		Number:       mergeRequest.IID,
