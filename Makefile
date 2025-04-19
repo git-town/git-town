@@ -1,4 +1,4 @@
-RTA_VERSION = 0.14.1  # run-that-app version to use
+RTA_VERSION = 0.15.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -58,7 +58,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	(cd tools/lint_steps && go build && ./lint_steps)
 	tools/rta node tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
-# tools/rta staticcheck ./...  # TODO: enable after staticcheck was compiled with Go 1.23.5 or newer
+	tools/rta --from-source staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	tools/rta golangci-lint cache clean
