@@ -183,12 +183,12 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.6
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/xanzy/go-gitlab v0.115.0
-## explicit; go 1.19
-github.com/xanzy/go-gitlab
 # github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
 ## explicit; go 1.19
 github.com/xo/terminfo
+# gitlab.com/gitlab-org/api/client-go v0.127.0
+## explicit; go 1.22
+gitlab.com/gitlab-org/api/client-go
 # golang.org/x/crypto v0.36.0
 ## explicit; go 1.23.0
 golang.org/x/crypto/blake2b
