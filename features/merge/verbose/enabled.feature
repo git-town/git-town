@@ -20,30 +20,30 @@ Feature: merging a branch verbosely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      |        | git version                                     |
-      |        | git rev-parse --show-toplevel                   |
-      |        | git config -lz --includes --global              |
-      |        | git config -lz --includes --local               |
-      |        | git branch -vva --sort=refname                  |
-      |        | git status --long --ignore-submodules           |
-      |        | git remote                                      |
-      | beta   | git fetch --prune --tags                        |
-      | (none) | git stash list                                  |
-      |        | git branch -vva --sort=refname                  |
-      |        | git remote get-url origin                       |
-      |        | git rev-parse --verify --abbrev-ref @{-1}       |
-      |        | git log alpha..beta --format=%s --reverse       |
-      |        | git log main..alpha --format=%s --reverse       |
-      |        | git log --no-merges alpha ^beta                 |
-      |        | git config git-town-branch.beta.parent main     |
-      |        | git config --unset git-town-branch.alpha.parent |
-      | beta   | git branch -D alpha                             |
-      |        | git push origin :alpha                          |
-      | (none) | git branch -vva --sort=refname                  |
-      |        | git config -lz --includes --global              |
-      |        | git config -lz --includes --local               |
-      |        | git stash list                                  |
+      | BRANCH | COMMAND                                          |
+      |        | git version                                      |
+      |        | git rev-parse --show-toplevel                    |
+      |        | git config -lz --includes --global               |
+      |        | git config -lz --includes --local                |
+      |        | git -c core.abbrev=40 branch -vva --sort=refname |
+      |        | git status --long --ignore-submodules            |
+      |        | git remote                                       |
+      | beta   | git fetch --prune --tags                         |
+      | (none) | git stash list                                   |
+      |        | git -c core.abbrev=40 branch -vva --sort=refname |
+      |        | git remote get-url origin                        |
+      |        | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | git log alpha..beta --format=%s --reverse        |
+      |        | git log main..alpha --format=%s --reverse        |
+      |        | git log --no-merges alpha ^beta                  |
+      |        | git config git-town-branch.beta.parent main      |
+      |        | git config --unset git-town-branch.alpha.parent  |
+      | beta   | git branch -D alpha                              |
+      |        | git push origin :alpha                           |
+      | (none) | git -c core.abbrev=40 branch -vva --sort=refname |
+      |        | git config -lz --includes --global               |
+      |        | git config -lz --includes --local                |
+      |        | git stash list                                   |
     And Git Town prints:
       """
       Ran 23 shell commands.
@@ -52,20 +52,20 @@ Feature: merging a branch verbosely
   Scenario: undo
     When I run "git-town undo -v"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                      |
-      |        | git version                                  |
-      |        | git rev-parse --show-toplevel                |
-      |        | git config -lz --includes --global           |
-      |        | git config -lz --includes --local            |
-      |        | git status --long --ignore-submodules        |
-      |        | git stash list                               |
-      |        | git branch -vva --sort=refname               |
-      |        | git remote get-url origin                    |
-      |        | git rev-parse --verify --abbrev-ref @{-1}    |
-      |        | git remote get-url origin                    |
-      | beta   | git branch alpha {{ sha 'alpha commit' }}    |
-      |        | git push -u origin alpha                     |
-      | (none) | git config git-town-branch.alpha.parent main |
-      |        | git config git-town-branch.beta.parent alpha |
+      | BRANCH | COMMAND                                          |
+      |        | git version                                      |
+      |        | git rev-parse --show-toplevel                    |
+      |        | git config -lz --includes --global               |
+      |        | git config -lz --includes --local                |
+      |        | git status --long --ignore-submodules            |
+      |        | git stash list                                   |
+      |        | git -c core.abbrev=40 branch -vva --sort=refname |
+      |        | git remote get-url origin                        |
+      |        | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | git remote get-url origin                        |
+      | beta   | git branch alpha {{ sha 'alpha commit' }}        |
+      |        | git push -u origin alpha                         |
+      | (none) | git config git-town-branch.alpha.parent main     |
+      |        | git config git-town-branch.beta.parent alpha     |
     And the initial commits exist now
     And the initial lineage exists now
