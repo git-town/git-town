@@ -17,12 +17,12 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git config -lz --includes --global                                 |
       |         | backend  | git config -lz --includes --local                                  |
-      |         | backend  | git branch -vva --sort=refname                                     |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname                   |
       |         | backend  | git status --long --ignore-submodules                              |
       |         | backend  | git remote                                                         |
       | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git stash list                                                     |
-      |         | backend  | git branch -vva --sort=refname                                     |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       | (none)  | frontend | Looking for proposal online ... ok                                 |
       |         | backend  | git log main..feature --format=%s --reverse                        |
@@ -39,7 +39,7 @@ Feature: display all executed Git commands
       |         | backend  | which xdg-open                                                     |
       |         | backend  | which open                                                         |
       | (none)  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-      |         | backend  | git branch -vva --sort=refname                                     |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname                   |
       |         | backend  | git config -lz --includes --global                                 |
       |         | backend  | git config -lz --includes --local                                  |
       |         | backend  | git stash list                                                     |

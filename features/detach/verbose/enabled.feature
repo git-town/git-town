@@ -45,7 +45,7 @@ Feature: detaching an omni-branch verbosely
       |          | git branch --show-current                            |
       | branch-2 | git fetch --prune --tags                             |
       | (none)   | git stash list                                       |
-      |          | git branch -vva --sort=refname                       |
+      |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git log --merges branch-1..branch-2                  |
@@ -66,7 +66,7 @@ Feature: detaching an omni-branch verbosely
       | (none)   | git config git-town-branch.branch-2.parent main      |
       |          | git config git-town-branch.branch-3.parent branch-1  |
       |          | git show-ref --verify --quiet refs/heads/branch-4    |
-      |          | git branch -vva --sort=refname                       |
+      |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git config -lz --includes --global                   |
       |          | git config -lz --includes --local                    |
       |          | git stash list                                       |
@@ -101,7 +101,7 @@ Feature: detaching an omni-branch verbosely
       |          | git config -lz --includes --local                    |
       |          | git status --long --ignore-submodules                |
       |          | git stash list                                       |
-      |          | git branch -vva --sort=refname                       |
+      |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git remote get-url origin                            |
