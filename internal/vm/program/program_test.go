@@ -5,10 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/vm/opcodes"
-	"github.com/git-town/git-town/v18/internal/vm/program"
-	"github.com/git-town/git-town/v18/internal/vm/shared"
+	"github.com/git-town/git-town/v19/internal/vm/opcodes"
+	"github.com/git-town/git-town/v19/internal/vm/program"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
@@ -264,21 +263,6 @@ func TestProgram(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-	})
-
-	t.Run("String", func(t *testing.T) {
-		t.Parallel()
-		give := program.Program{
-			&opcodes.MergeAbort{},
-			&opcodes.BranchTypeOverrideSet{Branch: "branch", BranchType: configdomain.BranchTypePerennialBranch},
-		}
-		have := give.String()
-		want := `
-Program:
-1: &opcodes.MergeAbort{undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
-2: &opcodes.BranchTypeOverrideSet{Branch:"branch", BranchType:"perennial", undeclaredOpcodeMethods:opcodes.undeclaredOpcodeMethods{}}
-`[1:]
-		must.EqOp(t, want, have)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {

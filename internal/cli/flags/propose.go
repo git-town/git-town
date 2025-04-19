@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 

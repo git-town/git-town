@@ -6,15 +6,15 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/git-town/git-town/v18/internal/cli/print"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/git/giturl"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/xanzy/go-gitlab"
+	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/git/giturl"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
 // Connector provides standardized connectivity for the given repository (gitlab.com/owner/repo)
@@ -190,7 +190,7 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) forgedomain.Proposal {
+func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.Proposal {
 	return forgedomain.Proposal{
 		MergeWithAPI: true,
 		Number:       mergeRequest.IID,

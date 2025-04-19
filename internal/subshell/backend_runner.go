@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v18/internal/cli/colors"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/colors"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -50,8 +50,10 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 	if dir, has := self.Dir.Get(); has {
 		subProcess.Dir = dir
 	}
-	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
-	subProcess.Env = append(subProcess.Environ(), `GIT_CONFIG_PARAMETERS='core.abbrev=40'`)
+	env := subProcess.Environ()
+	env = append(env, "LC_ALL=C")
+	env = append(env, `GIT_CONFIG_PARAMETERS='color.ui=never'`)
+	subProcess.Env = env
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
 	var outputBytes []byte

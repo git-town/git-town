@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/cache"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/cache"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.
@@ -89,7 +89,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	output, err := querier.Query("git", "branch", "-vva", "--sort=refname")
+	output, err := querier.Query("git", "-c", "core.abbrev=40", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
@@ -182,22 +182,22 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error
 }
 
 func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author]) error {
-	gitArgs := []string{"commit"}
+	args := []string{"commit"}
 	switch {
 	case useMessage.IsCustomMessage():
 		message := useMessage.GetCustomMessageOrPanic()
-		gitArgs = append(gitArgs, "-m", message.String())
+		args = append(args, "-m", message.String())
 	case useMessage.IsUseDefault():
-		gitArgs = append(gitArgs, "--no-edit")
+		args = append(args, "--no-edit")
 	case useMessage.IsEditDefault():
 		// This is the default behaviour of `git commit`.
 	default:
 		return fmt.Errorf("unhandled %#v case", useMessage)
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {
-		gitArgs = append(gitArgs, "--author", author.String())
+		args = append(args, "--author", author.String())
 	}
-	return runner.Run("git", gitArgs...)
+	return runner.Run("git", args...)
 }
 
 func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
@@ -551,24 +551,24 @@ func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain
 }
 
 func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage configdomain.UseMessage, branch gitdomain.LocalBranchName) error {
-	gitArgs := []string{"merge", "--no-ff"}
+	args := []string{"merge", "--no-ff"}
 	switch {
 	case useMessage.IsCustomMessage():
 		message := useMessage.GetCustomMessageOrPanic()
-		gitArgs = append(gitArgs, "-m", message.String())
+		args = append(args, "-m", message.String())
 	case useMessage.IsUseDefault():
-		gitArgs = append(gitArgs, "--no-edit")
+		args = append(args, "--no-edit")
 	case useMessage.IsEditDefault():
 		// Unlike `git commit`, `git merge` only launches the editor in a tty.
 		// Until cucumber tests run git subcommands in a tty we have to explicitly set
 		// `--edit` mode to test commit message behaviour.
-		gitArgs = append(gitArgs, "--edit")
+		args = append(args, "--edit")
 	default:
 		return fmt.Errorf("unhandled %#v case", useMessage)
 	}
 	// Add branch name as the last argument.
-	gitArgs = append(gitArgs, "--", branch.String())
-	return runner.Run("git", gitArgs...)
+	args = append(args, "--", branch.String())
+	return runner.Run("git", args...)
 }
 
 func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
@@ -766,7 +766,7 @@ func (self *Commands) RootDirectory(querier gitdomain.Querier) Option[gitdomain.
 }
 
 func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.BranchName) (gitdomain.SHA, error) {
-	output, err := querier.QueryTrim("git", "rev-parse", "--short", name.String())
+	output, err := querier.QueryTrim("git", "rev-parse", name.String())
 	if err != nil {
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
@@ -807,6 +807,14 @@ func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.
 
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
+}
+
+func (self *Commands) ShortenSHA(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.SHA, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--short", sha.String())
+	if err != nil {
+		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, sha, err)
+	}
+	return gitdomain.NewSHA(output), nil
 }
 
 func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {

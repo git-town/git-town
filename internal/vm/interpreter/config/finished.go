@@ -1,18 +1,18 @@
 package config
 
 import (
-	"github.com/git-town/git-town/v18/internal/cli/print"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/config/gitconfig"
-	"github.com/git-town/git-town/v18/internal/git"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v18/internal/vm/program"
-	"github.com/git-town/git-town/v18/internal/vm/runstate"
-	"github.com/git-town/git-town/v18/internal/vm/statefile"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/gitconfig"
+	"github.com/git-town/git-town/v19/internal/git"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v19/internal/vm/program"
+	"github.com/git-town/git-town/v19/internal/vm/runstate"
+	"github.com/git-town/git-town/v19/internal/vm/statefile"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // Finished is called when a Git Town command that only changes configuration has finished successfully.

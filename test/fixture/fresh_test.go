@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/fixture"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/fixture"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,7 +16,7 @@ func TestNewFreshFixture(t *testing.T) {
 	devRepo := result.DevRepo.GetOrPanic()
 	// verify the developer repo
 	asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
-	branch, err := devRepo.CurrentBranch(devRepo.TestRunner)
+	branch, err := devRepo.Git.CurrentBranch(devRepo.TestRunner)
 	must.NoError(t, err)
 	must.EqOp(t, "initial", branch)
 }

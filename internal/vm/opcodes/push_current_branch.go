@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v18/internal/vm/shared"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 )
 
 // PushCurrentBranch pushes the current branch to its existing tracking branch.

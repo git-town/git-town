@@ -1,11 +1,11 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/vm/opcodes"
-	"github.com/git-town/git-town/v18/internal/vm/program"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/vm/opcodes"
+	"github.com/git-town/git-town/v19/internal/vm/program"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
@@ -48,7 +48,11 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 			},
 		)
 	case configdomain.SyncStrategyRebase:
-		args.program.Value.Add(&opcodes.RebaseParentIfNeeded{Branch: args.localName})
+		args.program.Value.Add(
+			&opcodes.RebaseParentIfNeeded{
+				Branch: args.localName,
+			},
+		)
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
 			&opcodes.MergeParentIfNeeded{

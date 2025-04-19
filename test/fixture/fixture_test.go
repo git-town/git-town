@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/fixture"
-	"github.com/git-town/git-town/v18/test/testgit"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/fixture"
+	"github.com/git-town/git-town/v19/test/testgit"
 	"github.com/shoenig/test/must"
 )
 
@@ -183,7 +183,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "origin-file", commits[1].FileName)
 		must.EqOp(t, "origin content", commits[1].FileContent)
 		// verify origin is at "initial" branch
-		branch, err := cloned.OriginRepo.GetOrPanic().CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
+		branch, err := cloned.OriginRepo.GetOrPanic().Git.CurrentBranch(cloned.DevRepo.GetOrPanic().TestRunner)
 		must.NoError(t, err)
 		must.EqOp(t, "initial", branch)
 	})

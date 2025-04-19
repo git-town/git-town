@@ -1,6 +1,6 @@
 package configdomain
 
-import . "github.com/git-town/git-town/v18/pkg/prelude"
+import . "github.com/git-town/git-town/v19/pkg/prelude"
 
 // configuration setting that allows defining branches matching this regular expression as observed branches
 type ObservedRegex struct {

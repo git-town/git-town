@@ -7,17 +7,17 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v18/internal/config"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	prodgit "github.com/git-town/git-town/v18/internal/git"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/slice"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/datatable"
-	"github.com/git-town/git-town/v18/test/subshell"
-	"github.com/git-town/git-town/v18/test/testgit"
+	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	prodgit "github.com/git-town/git-town/v19/internal/git"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/slice"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/datatable"
+	"github.com/git-town/git-town/v19/test/subshell"
+	"github.com/git-town/git-town/v19/test/testgit"
 )
 
 const ConfigFileCommitMessage = "persisted config file"
@@ -25,15 +25,15 @@ const ConfigFileCommitMessage = "persisted config file"
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	*subshell.TestRunner
-	*prodgit.Commands
 	Config    config.UnvalidatedConfig
+	Git       *prodgit.Commands
 	SnapShots map[configdomain.ConfigScope]configdomain.SingleSnapshot // copy of the low-level Git config data, for verifying it in end-to-end tests
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
 func (self *TestCommands) AddRemote(name gitdomain.Remote, url string) {
 	self.MustRun("git", "remote", "add", name.String(), url)
-	self.RemotesCache.Invalidate()
+	self.Git.RemotesCache.Invalidate()
 }
 
 // AddSubmodule adds a Git submodule with the given URL to this repository.
@@ -48,11 +48,11 @@ func (self *TestCommands) AddWorktree(path string, branch gitdomain.LocalBranchN
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
-	asserts.NoError(self.Commands.CheckoutBranch(self.TestRunner, branch, false))
+	asserts.NoError(self.Git.CheckoutBranch(self.TestRunner, branch, false))
 }
 
 func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, branch, parent gitdomain.LocalBranchName) gitdomain.SHA {
-	commits := asserts.NoError1(self.CommitsInFeatureBranch(querier, branch, parent))
+	commits := asserts.NoError1(self.Git.CommitsInFeatureBranch(querier, branch, parent))
 	for _, commit := range commits {
 		if commit.Message.Parts().Subject == title {
 			return commit.SHA
@@ -146,7 +146,7 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) {
-	asserts.NoError(self.CreateAndCheckoutBranchWithParent(self, name, parent))
+	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent))
 	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
 }
 
@@ -231,10 +231,10 @@ func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, linea
 		if !hasParent {
 			return None[gitdomain.BranchName]()
 		}
-		if self.BranchExists(self, parent) {
+		if self.Git.BranchExists(self, parent) {
 			return Some(parent.BranchName())
 		}
-		if self.BranchExistsRemotely(self, parent, gitdomain.RemoteOrigin) {
+		if self.Git.BranchExistsRemotely(self, parent, gitdomain.RemoteOrigin) {
 			return Some(parent.AtRemote(gitdomain.RemoteOrigin).BranchName())
 		}
 		branch = parent
@@ -423,7 +423,7 @@ func (self *TestCommands) RemovePerennialBranchConfiguration() error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (self *TestCommands) RemoveRemote(name gitdomain.Remote) {
-	self.RemotesCache.Invalidate()
+	self.Git.RemotesCache.Invalidate()
 	self.MustRun("git", "remote", "rm", name.String())
 }
 
@@ -436,7 +436,7 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 }
 
 func (self *TestCommands) RenameRemote(oldName, newName string) {
-	self.RemotesCache.Invalidate()
+	self.Git.RemotesCache.Invalidate()
 	self.MustRun("git", "remote", "rename", oldName, newName)
 }
 

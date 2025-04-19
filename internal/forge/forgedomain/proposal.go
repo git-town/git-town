@@ -1,6 +1,6 @@
 package forgedomain
 
-import "github.com/git-town/git-town/v18/internal/git/gitdomain"
+import "github.com/git-town/git-town/v19/internal/git/gitdomain"
 
 // Proposal contains information about a change request on a forge.
 // Alternative names are "pull request" or "merge request".

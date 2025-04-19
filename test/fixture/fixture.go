@@ -7,18 +7,18 @@ import (
 
 	"github.com/cucumber/godog"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/cache"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/commands"
-	"github.com/git-town/git-town/v18/test/datatable"
-	"github.com/git-town/git-town/v18/test/helpers"
-	"github.com/git-town/git-town/v18/test/subshell"
-	"github.com/git-town/git-town/v18/test/testgit"
-	"github.com/git-town/git-town/v18/test/testruntime"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/cache"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/commands"
+	"github.com/git-town/git-town/v19/test/datatable"
+	"github.com/git-town/git-town/v19/test/helpers"
+	"github.com/git-town/git-town/v19/test/subshell"
+	"github.com/git-town/git-town/v19/test/testgit"
+	"github.com/git-town/git-town/v19/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.
@@ -75,7 +75,7 @@ func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
 	}
 	self.SecondWorktree = MutableSome(&commands.TestCommands{
 		TestRunner: &runner,
-		Commands:   &gitCommands,
+		Git:        &gitCommands,
 		Config:     devRepo.Config,
 		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 	})
@@ -129,7 +129,7 @@ func (self *Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	lineage := self.DevRepo.Value.Config.NormalConfig.Lineage
 	var mainBranch gitdomain.BranchName
-	mainIsLocal := self.DevRepo.Value.BranchExists(self.DevRepo.Value, "main")
+	mainIsLocal := self.DevRepo.Value.Git.BranchExists(self.DevRepo.Value, "main")
 	if mainIsLocal {
 		mainBranch = gitdomain.NewBranchName("main")
 	} else {

@@ -1,9 +1,9 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/messages"
-	"github.com/git-town/git-town/v18/internal/vm/shared"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 )
 
 type RebaseParentIfNeeded struct {
@@ -24,24 +24,26 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
-		if parentIsLocal {
-			var branchToRebase gitdomain.BranchName
-			if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
-			} else {
-				branchToRebase = parent.BranchName()
-			}
+		if !parentIsLocal {
+			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
+			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
 			program = append(program, &RebaseBranch{
-				Branch: branchToRebase,
+				Branch: parentTrackingName.BranchName(),
 			})
-			break
+			branch = parent
+			continue
 		}
-		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-		parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
+		// here the parent is local
+		var branchToRebase gitdomain.BranchName
+		if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
+			branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+		} else {
+			branchToRebase = parent.BranchName()
+		}
 		program = append(program, &RebaseBranch{
-			Branch: parentTrackingName.BranchName(),
+			Branch: branchToRebase,
 		})
-		branch = parent
+		break
 	}
 	args.PrependOpcodes(program...)
 	return nil

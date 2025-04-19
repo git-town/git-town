@@ -3,8 +3,8 @@ package validate
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/messages"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/messages"
 )
 
 func GitUser(config configdomain.UnvalidatedConfigData) (configdomain.GitUserEmail, configdomain.GitUserName, error) {

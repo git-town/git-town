@@ -1,7 +1,7 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 

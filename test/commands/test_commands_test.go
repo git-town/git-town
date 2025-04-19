@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/test/filesystem"
-	"github.com/git-town/git-town/v18/test/fixture"
-	"github.com/git-town/git-town/v18/test/testgit"
-	"github.com/git-town/git-town/v18/test/testruntime"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v19/test/filesystem"
+	"github.com/git-town/git-town/v19/test/fixture"
+	"github.com/git-town/git-town/v19/test/testgit"
+	"github.com/git-town/git-town/v19/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
@@ -21,12 +21,12 @@ func TestTestCommands(t *testing.T) {
 	t.Run("AddRemote", func(t *testing.T) {
 		t.Parallel()
 		dev := testruntime.Create(t)
-		remotes, err := dev.Remotes(dev)
+		remotes, err := dev.Git.Remotes(dev)
 		must.NoError(t, err)
 		must.Eq(t, gitdomain.Remotes{}, remotes)
 		origin := testruntime.Create(t)
 		dev.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
-		remotes, err = dev.Remotes(dev)
+		remotes, err = dev.Git.Remotes(dev)
 		must.NoError(t, err)
 		must.Eq(t, gitdomain.Remotes{gitdomain.RemoteOrigin}, remotes)
 	})
@@ -77,7 +77,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch("branch1", "initial")
-			currentBranch, err := runtime.CurrentBranch(runtime)
+			currentBranch, err := runtime.Git.CurrentBranch(runtime)
 			must.NoError(t, err)
 			must.EqOp(t, "initial", currentBranch)
 			branches, err := runtime.LocalBranchesMainFirst("initial")
@@ -90,7 +90,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch("my/feature", "initial")
-			currentBranch, err := runtime.CurrentBranch(runtime)
+			currentBranch, err := runtime.Git.CurrentBranch(runtime)
 			must.NoError(t, err)
 			must.EqOp(t, "initial", currentBranch)
 			branches, err := runtime.LocalBranchesMainFirst("initial")
@@ -356,7 +356,7 @@ func TestTestCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		repo.AddRemote(gitdomain.RemoteOrigin, origin.WorkingDir)
 		repo.RemoveRemote(gitdomain.RemoteOrigin)
-		remotes, err := repo.Remotes(repo.TestRunner)
+		remotes, err := repo.Git.Remotes(repo.TestRunner)
 		must.NoError(t, err)
 		must.Len(t, 0, remotes)
 	})

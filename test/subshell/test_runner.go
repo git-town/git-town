@@ -11,13 +11,13 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/subshell"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/envvars"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/subshell"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -190,7 +190,6 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	opts.Env = envvars.Replace(opts.Env, "HOME", self.HomeDir)
-	opts.Env = append(opts.Env, `GIT_CONFIG_PARAMETERS='core.abbrev=40'`)
 	// add the custom origin
 	if testOrigin, hasTestOrigin := self.testOrigin.Get(); hasTestOrigin {
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", testOrigin)

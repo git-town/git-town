@@ -5,16 +5,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/config"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/config/gitconfig"
-	"github.com/git-town/git-town/v18/internal/git"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/cache"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/test/commands"
-	testshell "github.com/git-town/git-town/v18/test/subshell"
+	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/gitconfig"
+	"github.com/git-town/git-town/v19/internal/git"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/cache"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v19/test/commands"
+	testshell "github.com/git-town/git-town/v19/test/subshell"
 	"github.com/shoenig/test/must"
 )
 
@@ -105,7 +105,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
-		Commands:   &gitCommands,
+		Git:        &gitCommands,
 		Config:     unvalidatedConfig,
 		SnapShots:  map[configdomain.ConfigScope]configdomain.SingleSnapshot{},
 		TestRunner: &testRunner,

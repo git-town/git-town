@@ -45,7 +45,7 @@ Feature: detaching an omni-branch verbosely
       |          | git branch --show-current                            |
       | branch-2 | git fetch --prune --tags                             |
       | (none)   | git stash list                                       |
-      |          | git branch -vva --sort=refname                       |
+      |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git log --merges branch-1..branch-2                  |
@@ -66,7 +66,7 @@ Feature: detaching an omni-branch verbosely
       | (none)   | git config git-town-branch.branch-2.parent main      |
       |          | git config git-town-branch.branch-3.parent branch-1  |
       |          | git show-ref --verify --quiet refs/heads/branch-4    |
-      |          | git branch -vva --sort=refname                       |
+      |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git config -lz --includes --global                   |
       |          | git config -lz --includes --local                    |
       |          | git stash list                                       |
@@ -101,21 +101,21 @@ Feature: detaching an omni-branch verbosely
       |          | git config -lz --includes --local                    |
       |          | git status --long --ignore-submodules                |
       |          | git stash list                                       |
-      |          | git branch -vva --sort=refname                       |
+      |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git remote get-url origin                            |
       |          | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | git remote get-url origin                            |
-      |          | git rev-parse --short HEAD                           |
+      |          | git rev-parse HEAD                                   |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }}               |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2 |
       | branch-2 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-3                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-3 | git reset --hard {{ sha 'commit 3b' }}               |
       | (none)   | git rev-list --left-right branch-3...origin/branch-3 |
       | branch-3 | git push --force-with-lease --force-if-includes      |
       |          | git checkout branch-4                                |
-      | (none)   | git rev-parse --short HEAD                           |
+      | (none)   | git rev-parse HEAD                                   |
       | branch-4 | git reset --hard {{ sha 'commit 4b' }}               |
       | (none)   | git rev-list --left-right branch-4...origin/branch-4 |
       | branch-4 | git push --force-with-lease --force-if-includes      |

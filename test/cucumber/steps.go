@@ -15,22 +15,22 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	cukemessages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v18/internal/cli/print"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/config/configfile"
-	"github.com/git-town/git-town/v18/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
-	"github.com/git-town/git-town/v18/test/asserts"
-	"github.com/git-town/git-town/v18/test/commands"
-	"github.com/git-town/git-town/v18/test/datatable"
-	"github.com/git-town/git-town/v18/test/filesystem"
-	"github.com/git-town/git-town/v18/test/fixture"
-	"github.com/git-town/git-town/v18/test/helpers"
-	"github.com/git-town/git-town/v18/test/output"
-	"github.com/git-town/git-town/v18/test/subshell"
-	"github.com/git-town/git-town/v18/test/testgit"
+	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/configfile"
+	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/test/commands"
+	"github.com/git-town/git-town/v19/test/datatable"
+	"github.com/git-town/git-town/v19/test/filesystem"
+	"github.com/git-town/git-town/v19/test/fixture"
+	"github.com/git-town/git-town/v19/test/helpers"
+	"github.com/git-town/git-town/v19/test/output"
+	"github.com/git-town/git-town/v19/test/subshell"
+	"github.com/git-town/git-town/v19/test/testgit"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
 )
@@ -198,7 +198,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a merge is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if !devRepo.HasMergeInProgress(devRepo.TestRunner) {
+		if !devRepo.Git.HasMergeInProgress(devRepo.TestRunner) {
 			return errors.New("expected merge in progress")
 		}
 		return nil
@@ -262,7 +262,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a rebase is (?:now|still) in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus := asserts.NoError1(devRepo.RepoStatus(devRepo.TestRunner))
+		repoStatus := asserts.NoError1(devRepo.Git.RepoStatus(devRepo.TestRunner))
 		if !repoStatus.RebaseInProgress {
 			return errors.New("expected rebase in progress")
 		}
@@ -304,7 +304,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		parent := devRepo.Config.NormalConfig.Lineage.Parent(branch).GetOrPanic()
 		sha := devRepo.CommitSHA(devRepo, title, branch, parent)
-		have := asserts.NoError1(devRepo.CommitMessage(devRepo, sha)).String()
+		have := asserts.NoError1(devRepo.Git.CommitMessage(devRepo, sha)).String()
 		want := expected.Content
 		if have != want {
 			return fmt.Errorf("\nwant:\n%q\n\nhave:\n%q", want, have)
@@ -621,7 +621,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^in a separate terminal I create branch "([^"]+)" with commits$`, func(ctx context.Context, branchName string, table *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		existingBranch := devRepo.CurrentBranchCache.Value()
+		existingBranch := devRepo.Git.CurrentBranchCache.Value()
 		newBranch := gitdomain.NewLocalBranchName(branchName)
 		devRepo.CreateBranch(newBranch, "main")
 		devRepo.CheckoutBranch(newBranch)
@@ -855,7 +855,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no merge is in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		if devRepo.HasMergeInProgress(devRepo.TestRunner) {
+		if devRepo.Git.HasMergeInProgress(devRepo.TestRunner) {
 			return errors.New("expected no merge in progress")
 		}
 		return nil
@@ -864,7 +864,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^no rebase is now in progress$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		repoStatus := asserts.NoError1(devRepo.RepoStatus(devRepo.TestRunner))
+		repoStatus := asserts.NoError1(devRepo.Git.RepoStatus(devRepo.TestRunner))
 		if repoStatus.RebaseInProgress {
 			return errors.New("expected no rebase in progress")
 		}
@@ -902,15 +902,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
-		commitMessage := asserts.NoError1(originRepo.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
+		commitMessage := asserts.NoError1(originRepo.Git.FirstCommitMessageInBranch(originRepo.TestRunner, branchToShip.BranchName(), "main"))
 		message, hasCommitMessage := commitMessage.Get()
 		if !hasCommitMessage {
 			return errors.New("branch to ship contains no commits")
 		}
 		originRepo.CheckoutBranch("main")
-		asserts.NoError(originRepo.SquashMerge(originRepo.TestRunner, branchToShip))
+		asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -921,13 +921,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch("main")
-		err := originRepo.SquashMerge(originRepo.TestRunner, branchToShip)
+		err := originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip)
 		if err == nil {
 			panic("expected a merge conflict here")
 		}
 		originRepo.CreateFile(fileName, fileContent)
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -938,9 +938,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branchToShip := gitdomain.NewLocalBranchName(branchName)
 		originRepo := state.fixture.OriginRepo.GetOrPanic()
 		originRepo.CheckoutBranch("main")
-		asserts.NoError(originRepo.SquashMerge(originRepo.TestRunner, branchToShip))
+		asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -1167,8 +1167,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the current branch in the other worktree is (?:now|still) "([^"]*)"$`, func(ctx context.Context, expected string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		secondWorkTree.CurrentBranchCache.Invalidate()
-		actual, err := secondWorkTree.CurrentBranch(secondWorkTree)
+		secondWorkTree.Git.CurrentBranchCache.Invalidate()
+		actual, err := secondWorkTree.Git.CurrentBranch(secondWorkTree)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of second worktree: %w", err)
 		}
@@ -1183,7 +1183,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branch := gitdomain.NewLocalBranchName(name)
 		state.initialCurrentBranch = Some(branch)
-		if !devRepo.BranchExists(devRepo.TestRunner, branch) {
+		if !devRepo.Git.BranchExists(devRepo.TestRunner, branch) {
 			return fmt.Errorf("cannot check out non-existing branch: %q", branch)
 		}
 		devRepo.CheckoutBranch(branch)
@@ -1203,8 +1203,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, expected string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.CurrentBranchCache.Invalidate()
-		actual, err := devRepo.CurrentBranch(devRepo.TestRunner)
+		devRepo.Git.CurrentBranchCache.Invalidate()
+		actual, err := devRepo.Git.CurrentBranch(devRepo.TestRunner)
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
@@ -1365,7 +1365,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Commands.PreviouslyCheckedOutBranch(devRepo.TestRunner)
+		have := devRepo.Git.PreviouslyCheckedOutBranch(devRepo.TestRunner)
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
