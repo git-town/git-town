@@ -205,6 +205,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if gitEditor, hasGitEditor := self.gitEditor.Get(); hasGitEditor {
 		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, gitEditor))
 	}
+	// never show colors in the output
+	opts.Env = append(opts.Env, `GIT_CONFIG_PARAMETERS='color.ui=never'`)
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment

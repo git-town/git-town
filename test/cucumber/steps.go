@@ -93,6 +93,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateEmptyFixture(scenarioName)
+		fixture.DevRepo.GetOrPanic().Run("git", "config", "color.ui", "always")
 		if helpers.HasTag(scenarioTags, "@debug") {
 			fixture.DevRepo.GetOrPanic().Verbose = true
 		}
@@ -131,6 +132,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
 		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
+		fixture.DevRepo.GetOrPanic().Run("git", "config", "color.ui", "always")
 		if helpers.HasTag(scenarioTags, "@debug") {
 			fixture.DevRepo.GetOrPanic().Verbose = true
 			fixture.OriginRepo.GetOrPanic().Verbose = true
