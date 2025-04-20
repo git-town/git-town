@@ -644,12 +644,15 @@ func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchNam
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
-func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
+func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName], version Version) error {
 	args := []string{"rebase", "--onto", branchToRebaseOnto.String()}
 	if upstream, hasUpstream := upstream.Get(); hasUpstream {
 		args = append(args, upstream.String())
 	}
-	args = append(args, commitsToRemove.String(), "--no-update-refs")
+	args = append(args, commitsToRemove.String())
+	if version.HasRebaseUpdateRefs() {
+		args = append(args, "--no-update-refs")
+	}
 	return runner.Run("git", args...)
 }
 
@@ -688,8 +691,12 @@ func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
 }
 
 // RemoveCommit removes the given commit from the current branch
-func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA) error {
-	return runner.Run("git", "rebase", "--onto", commit.String()+"^", commit.String(), "--no-update-refs")
+func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA, version Version) error {
+	args := []string{"rebase", "--onto", commit.String() + "^", commit.String()}
+	if version.HasRebaseUpdateRefs() {
+		args = append(args, "--no-update-refs")
+	}
+	return runner.Run("git", args...)
 }
 
 func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
