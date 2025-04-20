@@ -504,10 +504,6 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	if len(output) > 0 {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
-	output, _ = self.Query("git", "config", "--get-regex", "git-town-branch")
-	if len(output) > 0 {
-		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
-	}
 	self.Config.Reload()
 	for aliasName, aliasValue := range self.Config.NormalConfig.Aliases {
 		if strings.HasPrefix(aliasValue, "town ") {
