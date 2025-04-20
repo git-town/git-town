@@ -524,15 +524,6 @@ func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
 	return err == nil
 }
 
-// HasShippableChanges indicates whether the given branch has changes not currently in the main branch.
-func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", "--shortstat", mainBranch.String(), branch.String())
-	if err != nil {
-		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
-	}
-	return len(out) > 0, nil
-}
-
 // HeadCommitMessage provides the commit message for the last commit.
 func (self *Commands) HeadCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
 	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
