@@ -9,9 +9,9 @@ import (
 	"github.com/git-town/git-town/v19/internal/gohacks"
 	"github.com/git-town/git-town/v19/internal/gohacks/cache"
 	"github.com/git-town/git-town/v19/internal/subshell"
+	"github.com/git-town/git-town/v19/internal/test/testgit"
+	"github.com/git-town/git-town/v19/internal/test/testruntime"
 	. "github.com/git-town/git-town/v19/pkg/prelude"
-	"github.com/git-town/git-town/v19/test/testgit"
-	"github.com/git-town/git-town/v19/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 
