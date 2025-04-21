@@ -61,15 +61,6 @@ linters:
         text: 'appendAssign: append result not assigned to the same slice'
       - linters:
           - gosec
-        path: internal/cli/dialog/git.*_token.go
-        text: Potential hardcoded credentials
-      - linters:
-          - gosec
-        path: internal/messages/en.go
-        text: Potential hardcoded credentials
-      - linters:
-          - gosec
-        path: pkg/key_github_token.go
         text: Potential hardcoded credentials
       - linters:
           - ireturn
