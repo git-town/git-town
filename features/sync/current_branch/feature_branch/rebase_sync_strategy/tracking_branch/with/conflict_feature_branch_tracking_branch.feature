@@ -16,11 +16,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
+      | BRANCH  | COMMAND                                              |
+      | feature | git fetch --prune --tags                             |
+      |         | git -c rebase.updateRefs=false rebase main           |
+      |         | git push --force-with-lease --force-if-includes      |
+      |         | git -c rebase.updateRefs=false rebase origin/feature |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -50,7 +50,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
-      |         | git rebase main --no-update-refs                |
+      |         | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And all branches are now synchronized
@@ -65,5 +65,5 @@ Feature: handle conflicts between the current feature branch and its tracking br
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git -c core.editor=true rebase --continue       |
-      |         | git rebase main --no-update-refs                |
+      |         | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |

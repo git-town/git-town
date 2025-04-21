@@ -19,11 +19,11 @@ Feature: create a new branch when prototype branches are configured via config f
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | existing | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git checkout -b new                     |
+      | BRANCH   | COMMAND                                           |
+      | existing | git fetch --prune --tags                          |
+      |          | git checkout main                                 |
+      | main     | git -c rebase.updateRefs=false rebase origin/main |
+      |          | git checkout -b new                               |
     And branch "new" now has type "prototype"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |

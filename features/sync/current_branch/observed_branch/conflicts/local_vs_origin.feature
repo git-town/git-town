@@ -14,9 +14,9 @@ Feature: handle conflicts between the current observed branch and its tracking b
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                     |
-      | observed | git fetch --prune --tags                    |
-      |          | git rebase origin/observed --no-update-refs |
+      | BRANCH   | COMMAND                                               |
+      | observed | git fetch --prune --tags                              |
+      |          | git -c rebase.updateRefs=false rebase origin/observed |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

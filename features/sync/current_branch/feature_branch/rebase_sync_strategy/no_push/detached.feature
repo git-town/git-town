@@ -20,18 +20,18 @@ Feature: detached syncing a stacked feature branch using --no-push
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | beta   | git fetch --prune --tags                        |
-      |        | git checkout alpha                              |
-      | alpha  | git rebase main --no-update-refs                |
-      |        | git rebase origin/alpha --no-update-refs        |
-      |        | git rebase main --no-update-refs                |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout beta                               |
-      | beta   | git rebase alpha --no-update-refs               |
-      |        | git rebase origin/beta --no-update-refs         |
-      |        | git rebase alpha --no-update-refs               |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND                                            |
+      | beta   | git fetch --prune --tags                           |
+      |        | git checkout alpha                                 |
+      | alpha  | git -c rebase.updateRefs=false rebase main         |
+      |        | git -c rebase.updateRefs=false rebase origin/alpha |
+      |        | git -c rebase.updateRefs=false rebase main         |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git checkout beta                                  |
+      | beta   | git -c rebase.updateRefs=false rebase alpha        |
+      |        | git -c rebase.updateRefs=false rebase origin/beta  |
+      |        | git -c rebase.updateRefs=false rebase alpha        |
+      |        | git push --force-with-lease --force-if-includes    |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
       | main   | local         | local main commit   |

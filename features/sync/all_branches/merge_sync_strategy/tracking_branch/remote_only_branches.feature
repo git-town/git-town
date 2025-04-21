@@ -16,15 +16,15 @@ Feature: does not sync branches that exist only on remotes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout mine                       |
-      | mine   | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/mine    |
-      |        | git push                                |
-      |        | git checkout main                       |
-      | main   | git push --tags                         |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout mine                                 |
+      | mine   | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/mine              |
+      |        | git push                                          |
+      |        | git checkout main                                 |
+      | main   | git push --tags                                   |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       |

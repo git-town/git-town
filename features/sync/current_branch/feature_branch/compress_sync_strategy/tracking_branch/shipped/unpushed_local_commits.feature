@@ -16,12 +16,12 @@ Feature: using the "compress" strategy, sync a branch with unshipped local chang
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | shipped | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git checkout shipped                    |
-      | shipped | git merge --no-edit --ff main           |
+      | BRANCH  | COMMAND                                           |
+      | shipped | git fetch --prune --tags                          |
+      |         | git checkout main                                 |
+      | main    | git -c rebase.updateRefs=false rebase origin/main |
+      |         | git checkout shipped                              |
+      | shipped | git merge --no-edit --ff main                     |
     And Git Town prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.

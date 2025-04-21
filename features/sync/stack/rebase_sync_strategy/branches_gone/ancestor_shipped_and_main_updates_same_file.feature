@@ -24,10 +24,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
+      | BRANCH | COMMAND                                           |
+      | beta   | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -38,17 +38,17 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     When I resolve the conflict in "file" with "resolved main content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                       |
-      | main   | git -c core.editor=true rebase --continue     |
-      |        | git push                                      |
-      |        | git checkout beta                             |
-      | beta   | git pull                                      |
-      |        | git rebase --onto main alpha --no-update-refs |
-      |        | git checkout --theirs file                    |
-      |        | git add file                                  |
-      |        | git -c core.editor=true rebase --continue     |
-      |        | git push --force-with-lease                   |
-      |        | git branch -D alpha                           |
+      | BRANCH | COMMAND                                                 |
+      | main   | git -c core.editor=true rebase --continue               |
+      |        | git push                                                |
+      |        | git checkout beta                                       |
+      | beta   | git pull                                                |
+      |        | git -c rebase.updateRefs=false rebase --onto main alpha |
+      |        | git checkout --theirs file                              |
+      |        | git add file                                            |
+      |        | git -c core.editor=true rebase --continue               |
+      |        | git push --force-with-lease                             |
+      |        | git branch -D alpha                                     |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT          |

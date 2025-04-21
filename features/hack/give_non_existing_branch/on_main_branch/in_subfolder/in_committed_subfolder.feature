@@ -10,11 +10,11 @@ Feature: in a subfolder on the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git push                                |
-      |        | git checkout -b new                     |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push                                          |
+      |        | git checkout -b new                               |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |

@@ -20,15 +20,15 @@ Feature: beam multiple commits onto a new feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                             |
-      | existing | git checkout -b new main                                                                            |
-      | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
-      |          | git cherry-pick {{ sha-before-run 'commit 4' }}                                                     |
-      |          | git checkout existing                                                                               |
-      | existing | git rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} --no-update-refs |
-      |          | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
-      |          | git push --force-with-lease --force-if-includes                                                     |
-      |          | git checkout new                                                                                    |
+      | BRANCH   | COMMAND                                                                                                       |
+      | existing | git checkout -b new main                                                                                      |
+      | new      | git cherry-pick {{ sha-before-run 'commit 2' }}                                                               |
+      |          | git cherry-pick {{ sha-before-run 'commit 4' }}                                                               |
+      |          | git checkout existing                                                                                         |
+      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} |
+      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} |
+      |          | git push --force-with-lease --force-if-includes                                                               |
+      |          | git checkout new                                                                                              |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |

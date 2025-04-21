@@ -17,12 +17,12 @@ Feature: the branch was shipped manually on the local machine
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git push                                |
-      |        | git branch -D feature                   |
-      |        | git push --tags                         |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push                                          |
+      |        | git branch -D feature                             |
+      |        | git push --tags                                   |
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
