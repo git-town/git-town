@@ -24,7 +24,6 @@ const (
 type scenarioInfo struct {
 	FilePath      string
 	LineNumber    int64 // Gherkin library uses uint32 for line numbers
-	ScenarioName  string
 	HasTargetTag  bool
 	HasDialogStep bool
 }
@@ -69,7 +68,6 @@ func processFeatureFile(filePath string, dialogStepRegex *regexp.Regexp) ([]scen
 		return result, nil // Not an error, just an empty file or non-feature content
 	}
 	featureHasTag := hasTag(document.Feature.Tags, targetTag)
-	// --- Iterate through Scenarios and Scenario Outlines ---
 	for _, child := range document.Feature.Children {
 		var scenario *messages.Scenario
 		if child.Scenario != nil {
@@ -81,21 +79,21 @@ func processFeatureFile(filePath string, dialogStepRegex *regexp.Regexp) ([]scen
 				if ruleChild.Scenario != nil {
 					scenario = ruleChild.Scenario
 					// Process the scenario found within the rule
-					processSingleScenario(scenario, filePath, featureHasTag, dialogStepRegex, &result)
+					processScenario(scenario, filePath, featureHasTag, dialogStepRegex, &result)
 				}
 			}
 			// Skip to next top-level child after processing rule's scenarios
 			continue
 		}
 		if scenario != nil {
-			processSingleScenario(scenario, filePath, featureHasTag, dialogStepRegex, &result)
+			processScenario(scenario, filePath, featureHasTag, dialogStepRegex, &result)
 		}
 	}
 	return result, nil
 }
 
-// processSingleScenario extracts information from a single scenario message.
-func processSingleScenario(scenario *messages.Scenario, filePath string, featureHasTargetTag bool, dialogStepRegex *regexp.Regexp, results *[]scenarioInfo) {
+// processScenario extracts information from a single scenario message.
+func processScenario(scenario *messages.Scenario, filePath string, featureHasTargetTag bool, dialogStepRegex *regexp.Regexp, results *[]scenarioInfo) {
 	// Check scenario-level tag
 	scenarioHasTargetTag := hasTag(scenario.Tags, targetTag)
 
@@ -114,7 +112,6 @@ func processSingleScenario(scenario *messages.Scenario, filePath string, feature
 	// --- Store Scenario Info ---
 	info := scenarioInfo{
 		FilePath:      filePath,
-		ScenarioName:  scenario.Name,
 		LineNumber:    scenario.Location.Line,
 		HasTargetTag:  overallHasTargetTag,
 		HasDialogStep: scenarioHasDialogStep,
