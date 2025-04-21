@@ -40,7 +40,9 @@ Feature: detaching an omni-branch verbosely
       |          | git rev-parse --show-toplevel                        |
       |          | git config -lz --includes --global                   |
       |          | git config -lz --includes --local                    |
-      |          | git status --long --ignore-submodules                |
+      |          | git status -z --ignore-submodules                    |
+      |          | git rev-parse -q --verify MERGE_HEAD                 |
+      |          | git rev-parse -q --verify REBASE_HEAD                |
       |          | git remote                                           |
       |          | git branch --show-current                            |
       | branch-2 | git fetch --prune --tags                             |
@@ -72,7 +74,7 @@ Feature: detaching an omni-branch verbosely
       |          | git stash list                                       |
     And Git Town prints:
       """
-      Ran 34 shell commands.
+      Ran 36 shell commands.
       """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE   |
@@ -99,7 +101,9 @@ Feature: detaching an omni-branch verbosely
       |          | git rev-parse --show-toplevel                        |
       |          | git config -lz --includes --global                   |
       |          | git config -lz --includes --local                    |
-      |          | git status --long --ignore-submodules                |
+      |          | git status -z --ignore-submodules                    |
+      |          | git rev-parse -q --verify MERGE_HEAD                 |
+      |          | git rev-parse -q --verify REBASE_HEAD                |
       |          | git stash list                                       |
       |          | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | git remote get-url origin                            |

@@ -18,7 +18,9 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --includes --global                                 |
       |         | backend  | git config -lz --includes --local                                  |
       |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname                   |
-      |         | backend  | git status --long --ignore-submodules                              |
+      |         | backend  | git status -z --ignore-submodules                                  |
+      |         | backend  | git rev-parse -q --verify MERGE_HEAD                               |
+      |         | backend  | git rev-parse -q --verify REBASE_HEAD                              |
       |         | backend  | git remote                                                         |
       | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git stash list                                                     |
@@ -45,5 +47,5 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And Git Town prints:
       """
-      Ran 29 shell commands.
+      Ran 31 shell commands.
       """

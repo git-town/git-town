@@ -22,7 +22,9 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git config -lz --includes --global                 |
       |          | backend  | git config -lz --includes --local                  |
       |          | backend  | git -c core.abbrev=40 branch -vva --sort=refname   |
-      |          | backend  | git status --long --ignore-submodules              |
+      |          | backend  | git status -z --ignore-submodules                  |
+      |          | backend  | git rev-parse -q --verify MERGE_HEAD               |
+      |          | backend  | git rev-parse -q --verify REBASE_HEAD              |
       |          | backend  | git remote                                         |
       | branch-2 | frontend | git fetch --prune --tags                           |
       |          | backend  | git stash list                                     |
@@ -42,7 +44,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git stash list                                     |
     And Git Town prints:
       """
-      Ran 23 shell commands.
+      Ran 25 shell commands.
       """
     And the branches are now
       | REPOSITORY    | BRANCHES       |
@@ -59,7 +61,9 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git rev-parse --show-toplevel                    |
       |          | backend  | git config -lz --includes --global               |
       |          | backend  | git config -lz --includes --local                |
-      |          | backend  | git status --long --ignore-submodules            |
+      |          | backend  | git status -z --ignore-submodules                |
+      |          | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |          | backend  | git rev-parse -q --verify REBASE_HEAD            |
       |          | backend  | git stash list                                   |
       |          | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
       |          | backend  | git remote get-url origin                        |
@@ -71,6 +75,6 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git config git-town-branch.branch-2.parent main  |
     And Git Town prints:
       """
-      Ran 14 shell commands.
+      Ran 16 shell commands.
       """
     And the initial branches and lineage exist now
