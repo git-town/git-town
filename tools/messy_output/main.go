@@ -42,18 +42,16 @@ func main() {
 			return nil
 		}
 		// Process the found feature file
-		log.Printf("Processing file: %s", path)
 		scenario := asserts.NoError1(processFeatureFile(path, dialogStepRegex))
 		scenarios = append(scenarios, scenario...)
 		return nil
 	}))
-	fmt.Println("\n--- Scenarios Matching Criteria ---")
 	for _, scenario := range scenarios {
 		if scenario.HasTargetTag && !scenario.HasDialogStep {
-			fmt.Printf("%s:%d  unnecessary tag", scenario.FilePath, scenario.LineNumber)
+			fmt.Printf("%s:%d  unnecessary tag\n", scenario.FilePath, scenario.LineNumber)
 		}
 		if !scenario.HasTargetTag && scenario.HasDialogStep {
-			fmt.Printf("%s:%d  missing tag", scenario.FilePath, scenario.LineNumber)
+			fmt.Printf("%s:%d  missing tag\n", scenario.FilePath, scenario.LineNumber)
 		}
 	}
 	os.Exit(len(scenarios))
@@ -132,7 +130,7 @@ func processSingleScenario(scenario *messages.Scenario, filePath string, feature
 	// For this request, we analyze the Scenario/Scenario Outline definition itself.
 	// The line number points to the "Scenario Outline:" line.
 	if len(scenario.Examples) > 0 {
-		log.Printf("ℹ️ Scenario Outline '%s' (line %d) found. Analyzing definition, not individual examples.", scenario.Name, scenario.Location.Line)
+		// log.Printf("ℹ️ Scenario Outline '%s' (line %d) found. Analyzing definition, not individual examples.", scenario.Name, scenario.Location.Line)
 	}
 }
 
