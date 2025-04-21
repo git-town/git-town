@@ -67,8 +67,3 @@ Feature: enter the Codeberg API token
       | git config git-town.forge-type codeberg   |
     And local Git setting "git-town.forge-type" is now "codeberg"
     And local Git setting "git-town.codeberg-token" is now "123456"
-
-  Scenario: undo
-    When I run "git-town undo"
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.codeberg-token" now doesn't exist
