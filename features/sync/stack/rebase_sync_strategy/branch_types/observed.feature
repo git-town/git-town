@@ -16,9 +16,9 @@ Feature: syncing a stack that contains an observed branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                     |
-      | observed | git fetch --prune --tags                    |
-      |          | git rebase origin/observed --no-update-refs |
+      | BRANCH   | COMMAND                                               |
+      | observed | git fetch --prune --tags                              |
+      |          | git -c rebase.updateRefs=false rebase origin/observed |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE    |

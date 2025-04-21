@@ -20,10 +20,10 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: result
     Then I am not prompted for any parent branches
     And Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git checkout beta                       |
-      | beta   | git rebase origin/beta --no-update-refs |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git checkout beta                                 |
+      | beta   | git -c rebase.updateRefs=false rebase origin/beta |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -42,11 +42,11 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
   Scenario: skip
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git rebase --abort                      |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git push --tags                         |
+      | BRANCH | COMMAND                                           |
+      | beta   | git rebase --abort                                |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push --tags                                   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -68,12 +68,12 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                   |
-      | beta   | git -c core.editor=true rebase --continue |
-      |        | git push                                  |
-      |        | git checkout main                         |
-      | main   | git rebase origin/main --no-update-refs   |
-      |        | git push --tags                           |
+      | BRANCH | COMMAND                                           |
+      | beta   | git -c core.editor=true rebase --continue         |
+      |        | git push                                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push --tags                                   |
     And no rebase is now in progress
     And all branches are now synchronized
 
@@ -82,8 +82,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git push                                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git push --tags                         |
+      | BRANCH | COMMAND                                           |
+      | beta   | git push                                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push --tags                                   |

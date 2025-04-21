@@ -15,8 +15,8 @@ Feature: sync the current prototype branch in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                          |
-      | prototype | git rebase main --no-update-refs |
+      | BRANCH    | COMMAND                                    |
+      | prototype | git -c rebase.updateRefs=false rebase main |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION | MESSAGE      |

@@ -16,9 +16,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git rebase origin/main --no-update-refs |
+      | BRANCH  | COMMAND                                           |
+      | feature | git fetch --prune --tags                          |
+      |         | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".
@@ -50,9 +50,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
     And I run "git rebase --continue" in the other worktree and enter "resolved commit" for the commit message
     And I run "git-town continue" in the other worktree
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/main --no-update-refs         |
+      | BRANCH  | COMMAND                                           |
+      | feature | git push --force-with-lease --force-if-includes   |
+      |         | git -c rebase.updateRefs=false rebase origin/main |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main    | origin           | conflicting main commit | conflicting_file | main content     |

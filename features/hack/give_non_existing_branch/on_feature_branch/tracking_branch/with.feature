@@ -15,11 +15,11 @@ Feature: on a feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                 |
-      | existing | git fetch --prune --tags                |
-      |          | git checkout main                       |
-      | main     | git rebase origin/main --no-update-refs |
-      |          | git checkout -b new                     |
+      | BRANCH   | COMMAND                                           |
+      | existing | git fetch --prune --tags                          |
+      |          | git checkout main                                 |
+      | main     | git -c rebase.updateRefs=false rebase origin/main |
+      |          | git checkout -b new                               |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |

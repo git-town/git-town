@@ -19,9 +19,9 @@ Feature: a default branch type is set, the feature-regex does not match
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                      |
-      | my-branch | git fetch --prune --tags                     |
-      |           | git rebase origin/my-branch --no-update-refs |
+      | BRANCH    | COMMAND                                                |
+      | my-branch | git fetch --prune --tags                               |
+      |           | git -c rebase.updateRefs=false rebase origin/my-branch |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                 |
       | main      | local         | local main commit       |

@@ -26,16 +26,16 @@ Feature: deleting a branch that conflicts with the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                           |
-      | feature-2 | git fetch --prune --tags                          |
-      |           | git push origin :feature-2                        |
-      |           | git checkout feature-3                            |
-      | feature-3 | git pull                                          |
-      |           | git rebase --onto main feature-2 --no-update-refs |
-      |           | git rm file                                       |
-      |           | git -c core.editor=true rebase --continue         |
-      |           | git push --force-with-lease                       |
-      |           | git branch -D feature-2                           |
+      | BRANCH    | COMMAND                                                     |
+      | feature-2 | git fetch --prune --tags                                    |
+      |           | git push origin :feature-2                                  |
+      |           | git checkout feature-3                                      |
+      | feature-3 | git pull                                                    |
+      |           | git -c rebase.updateRefs=false rebase --onto main feature-2 |
+      |           | git rm file                                                 |
+      |           | git -c core.editor=true rebase --continue                   |
+      |           | git push --force-with-lease                                 |
+      |           | git branch -D feature-2                                     |
     And the branches are now
       | REPOSITORY    | BRANCHES                   |
       | local, origin | main, feature-1, feature-3 |

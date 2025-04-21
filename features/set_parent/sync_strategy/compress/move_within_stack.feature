@@ -30,10 +30,10 @@ Feature: remove a branch from a stack
       branch "branch-3" is now a child of "branch-1"
       """
     And Git Town runs the commands
-      | BRANCH   | COMMAND                                              |
-      | branch-3 | git pull                                             |
-      |          | git rebase --onto branch-1 branch-2 --no-update-refs |
-      |          | git push --force-with-lease --force-if-includes      |
+      | BRANCH   | COMMAND                                                        |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
+      |          | git push --force-with-lease --force-if-includes                |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  |
       | branch-1 | local, origin | commit 1 |

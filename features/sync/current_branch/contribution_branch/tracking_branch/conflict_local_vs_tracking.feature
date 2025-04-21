@@ -14,9 +14,9 @@ Feature: handle conflicts between the current contribution branch and its tracki
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                                         |
-      | contribution | git fetch --prune --tags                        |
-      |              | git rebase origin/contribution --no-update-refs |
+      | BRANCH       | COMMAND                                                   |
+      | contribution | git fetch --prune --tags                                  |
+      |              | git -c rebase.updateRefs=false rebase origin/contribution |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

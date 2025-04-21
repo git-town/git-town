@@ -27,7 +27,7 @@ Feature: propose a newly prepended branch
       | existing | git checkout -b new parent                                              |
       | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}                 |
       |          | git checkout existing                                                   |
-      | existing | git rebase new --no-update-refs                                         |
+      | existing | git -c rebase.updateRefs=false rebase new                               |
       |          | git push --force-with-lease --force-if-includes                         |
       |          | git checkout new                                                        |
       | new      | git push -u origin new                                                  |

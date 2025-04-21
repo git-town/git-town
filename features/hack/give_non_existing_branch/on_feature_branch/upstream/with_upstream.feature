@@ -11,12 +11,12 @@ Feature: on a forked repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                   |
-      | main   | git fetch --prune --tags                  |
-      |        | git fetch upstream main                   |
-      |        | git rebase upstream/main --no-update-refs |
-      |        | git push                                  |
-      |        | git checkout -b new                       |
+      | BRANCH | COMMAND                                             |
+      | main   | git fetch --prune --tags                            |
+      |        | git fetch upstream main                             |
+      |        | git -c rebase.updateRefs=false rebase upstream/main |
+      |        | git push                                            |
+      |        | git checkout -b new                                 |
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |

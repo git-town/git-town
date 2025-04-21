@@ -16,9 +16,9 @@ Feature: sync the current branch that is observed via regex
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                                       |
-      | renovate/1 | git fetch --prune --tags                      |
-      |            | git rebase origin/renovate/1 --no-update-refs |
+      | BRANCH     | COMMAND                                                 |
+      | renovate/1 | git fetch --prune --tags                                |
+      |            | git -c rebase.updateRefs=false rebase origin/renovate/1 |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE       |
       | main       | local, origin | main commit   |
