@@ -30,93 +30,69 @@ type scenarioInfo struct {
 
 func main() {
 	dialogStepRegex := asserts.NoError1(regexp.Compile(targetStepPat))
-	scenarios := []scenarioInfo{}
-	targetPath := filepath.Join(".", featureDir) // Look in ./feature
-	asserts.NoError(filepath.WalkDir(targetPath, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			log.Printf("cannot access path %q: %v\n", path, err)
-			return err
-		}
-		if d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
+	errors := 0
+	asserts.NoError(filepath.WalkDir(filepath.Join(".", featureDir), func(path string, d os.DirEntry, err error) error {
+		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
 			return nil
 		}
-		// Process the found feature file
-		scenario := asserts.NoError1(processFeatureFile(path, dialogStepRegex))
-		scenarios = append(scenarios, scenario...)
+		feature := parseFeatureFile(path)
+		for _, scenario := range processFeature(feature, path, dialogStepRegex) {
+			if scenario.HasTargetTag && !scenario.HasDialogStep {
+				fmt.Printf("%s:%d  unnecessary tag\n", scenario.FilePath, scenario.LineNumber)
+				errors += 1
+			}
+			if !scenario.HasTargetTag && scenario.HasDialogStep {
+				fmt.Printf("%s:%d  missing tag\n", scenario.FilePath, scenario.LineNumber)
+				errors += 1
+			}
+		}
 		return nil
 	}))
-	for _, scenario := range scenarios {
-		if scenario.HasTargetTag && !scenario.HasDialogStep {
-			fmt.Printf("%s:%d  unnecessary tag\n", scenario.FilePath, scenario.LineNumber)
-		}
-		if !scenario.HasTargetTag && scenario.HasDialogStep {
-			fmt.Printf("%s:%d  missing tag\n", scenario.FilePath, scenario.LineNumber)
-		}
-	}
-	os.Exit(len(scenarios))
+	os.Exit(errors)
 }
 
-// processFeatureFile parses a single Gherkin file and extracts relevant scenario info.
-func processFeatureFile(filePath string, dialogStepRegex *regexp.Regexp) ([]scenarioInfo, error) {
+func parseFeatureFile(filePath string) *messages.Feature {
 	file := asserts.NoError1(os.Open(filePath))
 	defer file.Close()
-	result := []scenarioInfo{}
 	idGenerator := messages.Incrementing{}
 	document := asserts.NoError1(gherkin.ParseGherkinDocument(file, idGenerator.NewId))
 	if document.Feature == nil {
-		log.Printf("ℹ️ File %s does not contain a Feature definition. Skipping.", filePath)
-		return result, nil // Not an error, just an empty file or non-feature content
+		log.Fatalf("%s:  no feature definitions", filePath)
 	}
-	featureHasTag := hasTag(document.Feature.Tags, targetTag)
-	for _, child := range document.Feature.Children {
-		var scenario *messages.Scenario
-		if child.Scenario != nil {
-			scenario = child.Scenario
+	return document.Feature
+}
+
+// processFeature parses a single Gherkin file and extracts relevant scenario info.
+func processFeature(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []scenarioInfo {
+	result := []scenarioInfo{}
+	featureHasTag := hasTag(feature.Tags, targetTag)
+	backgroundHasStep := false
+	for _, child := range feature.Children {
+		if child.Background != nil {
+			backgroundHasStep = hasStep(child.Background.Steps, dialogStepRegex)
+		} else if child.Scenario != nil {
+			processScenario(child.Scenario, filePath, featureHasTag, backgroundHasStep, dialogStepRegex, &result)
 		} else if child.Rule != nil {
-			// Also check scenarios within Rules
-			rule := child.Rule
-			for _, ruleChild := range rule.Children {
-				if ruleChild.Scenario != nil {
-					scenario = ruleChild.Scenario
-					// Process the scenario found within the rule
-					processScenario(scenario, filePath, featureHasTag, dialogStepRegex, &result)
-				}
-			}
-			// Skip to next top-level child after processing rule's scenarios
-			continue
-		}
-		if scenario != nil {
-			processScenario(scenario, filePath, featureHasTag, dialogStepRegex, &result)
+			log.Fatalf("please implement parsing the Rule's children, which are similar to the feature children")
+		} else {
+			fmt.Println("child has no known attributes")
 		}
 	}
-	return result, nil
+	return result
 }
 
 // processScenario extracts information from a single scenario message.
-func processScenario(scenario *messages.Scenario, filePath string, featureHasTargetTag bool, dialogStepRegex *regexp.Regexp, results *[]scenarioInfo) {
-	// Check scenario-level tag
-	scenarioHasTargetTag := hasTag(scenario.Tags, targetTag)
-
-	// Determine overall tag status (feature OR scenario)
-	overallHasTargetTag := featureHasTargetTag || scenarioHasTargetTag
-
-	// --- Check for Target Step ---
-	scenarioHasDialogStep := false
-	for _, step := range scenario.Steps {
-		if dialogStepRegex.MatchString(step.Text) {
-			scenarioHasDialogStep = true
-			break // Found the step, no need to check further steps in this scenario
-		}
-	}
-
-	// --- Store Scenario Info ---
-	info := scenarioInfo{
+func processScenario(scenario *messages.Scenario, filePath string, featureHasTag bool, backgroundHasStep bool, dialogStepRegex *regexp.Regexp, results *[]scenarioInfo) {
+	scenarioHasTag := hasTag(scenario.Tags, targetTag)
+	overallHasTag := featureHasTag || scenarioHasTag
+	scenarioHasStep := hasStep(scenario.Steps, dialogStepRegex)
+	overallHasStep := backgroundHasStep || scenarioHasStep
+	*results = append(*results, scenarioInfo{
 		FilePath:      filePath,
 		LineNumber:    scenario.Location.Line,
-		HasTargetTag:  overallHasTargetTag,
-		HasDialogStep: scenarioHasDialogStep,
-	}
-	*results = append(*results, info)
+		HasTargetTag:  overallHasTag,
+		HasDialogStep: overallHasStep,
+	})
 
 	// --- Handle Scenario Outline Examples ---
 	// Scenario outlines themselves don't run, their examples do.
@@ -129,6 +105,15 @@ func processScenario(scenario *messages.Scenario, filePath string, featureHasTar
 	if len(scenario.Examples) > 0 {
 		// log.Printf("ℹ️ Scenario Outline '%s' (line %d) found. Analyzing definition, not individual examples.", scenario.Name, scenario.Location.Line)
 	}
+}
+
+func hasStep(steps []*messages.Step, stepRE *regexp.Regexp) bool {
+	for _, step := range steps {
+		if stepRE.MatchString(step.Text) {
+			return true
+		}
+	}
+	return false
 }
 
 // hasTag checks if a slice of tags contains the target tag string.
