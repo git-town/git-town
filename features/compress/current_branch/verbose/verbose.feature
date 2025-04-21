@@ -23,7 +23,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --verify --abbrev-ref @{-1}                |
       |         | git status -z --ignore-submodules                        |
       |         | git rev-parse -q --verify MERGE_HEAD                     |
-      |         | git rev-parse -q --verify REBASE_HEAD                    |
+      |         | git rev-parse --absolute-git-dir                         |
       |         | git remote                                               |
       |         | git branch --show-current                                |
       | feature | git fetch --prune --tags                                 |
@@ -62,7 +62,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --includes --local                  |
       |         | git status -z --ignore-submodules                  |
       |         | git rev-parse -q --verify MERGE_HEAD               |
-      |         | git rev-parse -q --verify REBASE_HEAD              |
+      |         | git rev-parse --absolute-git-dir                   |
       |         | git stash list                                     |
       |         | git -c core.abbrev=40 branch -vva --sort=refname   |
       |         | git remote get-url origin                          |

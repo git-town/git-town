@@ -23,7 +23,7 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git status -z --ignore-submodules                 |
       |         | backend  | git rev-parse -q --verify MERGE_HEAD              |
-      |         | backend  | git rev-parse -q --verify REBASE_HEAD             |
+      |         | backend  | git rev-parse --absolute-git-dir                  |
       |         | backend  | git remote                                        |
       |         | backend  | git branch --show-current                         |
       | current | frontend | git fetch --prune --tags                          |

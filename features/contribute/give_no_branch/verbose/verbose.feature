@@ -40,7 +40,7 @@ Feature: make the current branch a contribution branch verbosely
       |        | git config -lz --includes --local                     |
       |        | git status -z --ignore-submodules                     |
       |        | git rev-parse -q --verify MERGE_HEAD                  |
-      |        | git rev-parse -q --verify REBASE_HEAD                 |
+      |        | git rev-parse --absolute-git-dir                      |
       |        | git stash list                                        |
       |        | git -c core.abbrev=40 branch -vva --sort=refname      |
       |        | git remote get-url origin                             |
