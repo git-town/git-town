@@ -526,8 +526,18 @@ func (self *Commands) HasMergeInProgress(querier gitdomain.Querier) bool {
 }
 
 func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) bool {
-	_, err := querier.Query("git", "rev-parse", "-q", "--verify", "REBASE_HEAD")
-	return err == nil
+	gitDir, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
+	if err != nil {
+		return false
+	}
+	for _, rebaseDirName := range []string{"rebase-merge", "rebase-apply"} {
+		rebaseDirPath := filepath.Join(gitDir, rebaseDirName)
+		stat, err := os.Stat(rebaseDirPath)
+		if err == nil && stat.IsDir() {
+			return true
+		}
+	}
+	return false
 }
 
 // HasShippableChanges indicates whether the given branch has changes not currently in the main branch.
