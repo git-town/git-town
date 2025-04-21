@@ -5,11 +5,11 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/git-town/git-town/v19/test/asserts"
+	"github.com/git-town/git-town/v19/pkg/asserts"
 )
 
 const (
-	fileName   = "test/cucumber/steps.go"
+	fileName   = "internal/test/cucumber/steps.go"
 	filePath   = "../../" + fileName
 	featureDir = "../../features"
 )
