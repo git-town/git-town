@@ -66,7 +66,7 @@ func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdo
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
 func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", parent.String()+".."+branch.String())
+	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
@@ -393,7 +393,7 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
-	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
+	return runner.Run("git", "diff", parentBranch.String(), branch.String())
 }
 
 func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
@@ -522,15 +522,6 @@ func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.Loc
 func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
-}
-
-// HasShippableChanges indicates whether the given branch has changes not currently in the main branch.
-func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
-	if err != nil {
-		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
-	}
-	return len(out) > 0, nil
 }
 
 // HeadCommitMessage provides the commit message for the last commit.

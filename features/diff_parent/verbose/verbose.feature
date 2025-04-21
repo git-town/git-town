@@ -17,7 +17,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                   |
       |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
       |         | backend  | git remote get-url origin                        |
-      | feature | frontend | git diff main..feature                           |
+      | feature | frontend | git diff main feature                            |
     And Git Town prints:
       """
       Ran 9 shell commands.

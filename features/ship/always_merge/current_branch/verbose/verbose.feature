@@ -28,7 +28,7 @@ Feature: display all executed Git commands when using the always-merge strategy
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git shortlog -s -n -e main..feature               |
-      |         | backend  | git diff main..feature                            |
+      |         | backend  | git diff --shortstat main feature                 |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --no-ff --edit -- feature               |
       |         | backend  | git show-ref --verify --quiet refs/heads/main     |
