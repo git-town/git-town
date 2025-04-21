@@ -33,7 +33,7 @@ Feature: display all executed Git commands
       |         | backend  | git remote get-url origin                          |
       |         | backend  | git log main..feature --format=%s --reverse        |
       | feature | frontend | git checkout main                                  |
-      | main    | frontend | git rebase origin/main --no-update-refs            |
+      | main    | frontend | git -c rebase.updateRefs=false rebase origin/main  |
       |         | backend  | git show-ref --verify --quiet refs/heads/main      |
       |         | backend  | git rev-list --left-right main...origin/main       |
       | main    | frontend | git push                                           |

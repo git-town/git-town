@@ -24,10 +24,10 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
+      | BRANCH | COMMAND                                           |
+      | beta   | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file

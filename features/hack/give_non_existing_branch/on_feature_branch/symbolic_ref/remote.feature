@@ -11,10 +11,10 @@ Feature: create a branch in the presence of a symbolic reference
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout -b new                     |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout -b new                               |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

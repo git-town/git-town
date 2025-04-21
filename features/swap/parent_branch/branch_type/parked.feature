@@ -15,13 +15,13 @@ Feature: swapping a branch with its parked parent
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | current | git fetch --prune --tags                        |
-      |         | git rebase --onto main parent --no-update-refs  |
-      |         | git checkout parent                             |
-      | parent  | git rebase --onto current main --no-update-refs |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git checkout current                            |
+      | BRANCH  | COMMAND                                                   |
+      | current | git fetch --prune --tags                                  |
+      |         | git -c rebase.updateRefs=false rebase --onto main parent  |
+      |         | git checkout parent                                       |
+      | parent  | git -c rebase.updateRefs=false rebase --onto current main |
+      |         | git push --force-with-lease --force-if-includes           |
+      |         | git checkout current                                      |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |

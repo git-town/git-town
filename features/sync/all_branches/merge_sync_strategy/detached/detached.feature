@@ -31,20 +31,20 @@ Feature: sync all feature branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                                         |
-      | alpha        | git fetch --prune --tags                        |
-      |              | git merge --no-edit --ff main                   |
-      |              | git merge --no-edit --ff origin/alpha           |
-      |              | git checkout beta                               |
-      | beta         | git merge --no-edit --ff main                   |
-      |              | git merge --no-edit --ff origin/beta            |
-      |              | git checkout contribution                       |
-      | contribution | git rebase origin/contribution --no-update-refs |
-      |              | git push                                        |
-      |              | git checkout observed                           |
-      | observed     | git rebase origin/observed --no-update-refs     |
-      |              | git checkout alpha                              |
-      | alpha        | git push --tags                                 |
+      | BRANCH       | COMMAND                                                   |
+      | alpha        | git fetch --prune --tags                                  |
+      |              | git merge --no-edit --ff main                             |
+      |              | git merge --no-edit --ff origin/alpha                     |
+      |              | git checkout beta                                         |
+      | beta         | git merge --no-edit --ff main                             |
+      |              | git merge --no-edit --ff origin/beta                      |
+      |              | git checkout contribution                                 |
+      | contribution | git -c rebase.updateRefs=false rebase origin/contribution |
+      |              | git push                                                  |
+      |              | git checkout observed                                     |
+      | observed     | git -c rebase.updateRefs=false rebase origin/observed     |
+      |              | git checkout alpha                                        |
+      | alpha        | git push --tags                                           |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE                    |
       | main         | origin        | main commit                |

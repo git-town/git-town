@@ -20,14 +20,14 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                             |
-      | existing | git checkout -b new main                                                                            |
-      | new      | git commit -m uncommitted                                                                           |
-      |          | git cherry-pick {{ sha-before-run 'commit 2' }}                                                     |
-      |          | git checkout existing                                                                               |
-      | existing | git rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} --no-update-refs |
-      |          | git push --force-with-lease --force-if-includes                                                     |
-      |          | git checkout existing                                                                               |
+      | BRANCH   | COMMAND                                                                                                       |
+      | existing | git checkout -b new main                                                                                      |
+      | new      | git commit -m uncommitted                                                                                     |
+      |          | git cherry-pick {{ sha-before-run 'commit 2' }}                                                               |
+      |          | git checkout existing                                                                                         |
+      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} |
+      |          | git push --force-with-lease --force-if-includes                                                               |
+      |          | git checkout existing                                                                                         |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |

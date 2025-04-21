@@ -19,13 +19,13 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
-      |        | git rebase main --no-update-refs                |
+      |        | git -c rebase.updateRefs=false rebase main      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase main --no-update-refs                |
+      |        | git -c rebase.updateRefs=false rebase main      |
       |        | git checkout beta                               |
-      | beta   | git rebase main --no-update-refs                |
+      | beta   | git -c rebase.updateRefs=false rebase main      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase main --no-update-refs                |
+      |        | git -c rebase.updateRefs=false rebase main      |
       |        | git checkout alpha                              |
       | alpha  | git push --tags                                 |
     And all branches are now synchronized

@@ -23,17 +23,17 @@ Feature: stacked changes where all ancestor branches aren't local
 
   Scenario: resultw
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | gamma  | git fetch --prune --tags                        |
-      |        | git rebase origin/beta --no-update-refs         |
-      |        | git rebase origin/alpha --no-update-refs        |
-      |        | git rebase origin/main --no-update-refs         |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/gamma --no-update-refs        |
-      |        | git rebase origin/beta --no-update-refs         |
-      |        | git rebase origin/alpha --no-update-refs        |
-      |        | git rebase origin/main --no-update-refs         |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND                                            |
+      | gamma  | git fetch --prune --tags                           |
+      |        | git -c rebase.updateRefs=false rebase origin/beta  |
+      |        | git -c rebase.updateRefs=false rebase origin/alpha |
+      |        | git -c rebase.updateRefs=false rebase origin/main  |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git -c rebase.updateRefs=false rebase origin/gamma |
+      |        | git -c rebase.updateRefs=false rebase origin/beta  |
+      |        | git -c rebase.updateRefs=false rebase origin/alpha |
+      |        | git -c rebase.updateRefs=false rebase origin/main  |
+      |        | git push --force-with-lease --force-if-includes    |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |

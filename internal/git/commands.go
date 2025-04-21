@@ -642,21 +642,17 @@ func (self *Commands) PushTags(runner gitdomain.Runner, noPushHook configdomain.
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName, version Version) error {
-	args := []string{"rebase", target.String()}
-	if version.HasRebaseUpdateRefs() {
-		args = append(args, "--no-update-refs")
-	}
-	return runner.Run("git", args...)
+func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName) error {
+	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", target.String())
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
 func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
-	args := []string{"rebase", "--onto", branchToRebaseOnto.String()}
+	args := []string{"-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String()}
 	if upstream, hasUpstream := upstream.Get(); hasUpstream {
 		args = append(args, upstream.String())
 	}
-	args = append(args, commitsToRemove.String(), "--no-update-refs")
+	args = append(args, commitsToRemove.String())
 	return runner.Run("git", args...)
 }
 
@@ -696,7 +692,7 @@ func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
 
 // RemoveCommit removes the given commit from the current branch
 func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA) error {
-	return runner.Run("git", "rebase", "--onto", commit.String()+"^", commit.String(), "--no-update-refs")
+	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", commit.String()+"^", commit.String())
 }
 
 func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
