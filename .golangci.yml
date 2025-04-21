@@ -54,17 +54,23 @@ linters:
       - std-error-handling
     rules:
       - linters:
+          - err113
+        text: do not define dynamic errors
+      - linters:
           - gocritic
         text: 'appendAssign: append result not assigned to the same slice'
       - linters:
-          - revive
-        text: 'dot-imports: should not use dot imports'
+          - gosec
+        path: internal/cli/dialog/git.*_token.go
+        text: Potential hardcoded credentials
       - linters:
-          - staticcheck
-        text: 'ST1001: should not use dot imports'
+          - gosec
+        path: internal/messages/en.go
+        text: Potential hardcoded credentials
       - linters:
-          - err113
-        text: do not define dynamic errors
+          - gosec
+        path: pkg/key_github_token.go
+        text: Potential hardcoded credentials
       - linters:
           - ireturn
         text: github.com/git-town/git-town/v19/internal/(hosting/hostingdomain.Connector|hosting.Connector)
@@ -78,8 +84,8 @@ linters:
           - ireturn
         path: internal/gohacks/slice/first_element_or.go
       - linters:
-          - staticcheck
-        text: receiver name should be a reflection of its identity
+          - predeclared
+        text: package name print has same name as predeclared identifier
       - linters:
           - revive
         text: receiver name should be a reflection of its identity
@@ -87,20 +93,14 @@ linters:
           - revive
         text: increment-decrement
       - linters:
-          - predeclared
-        text: package name print has same name as predeclared identifier
+          - revive
+        text: 'dot-imports: should not use dot imports'
       - linters:
-          - gosec
-        path: internal/cli/dialog/git.*_token.go
-        text: Potential hardcoded credentials
+          - staticcheck
+        text: 'ST1001: should not use dot imports'
       - linters:
-          - gosec
-        path: internal/messages/en.go
-        text: Potential hardcoded credentials
-      - linters:
-          - gosec
-        path: pkg/key_github_token.go
-        text: Potential hardcoded credentials
+          - staticcheck
+        text: receiver name should be a reflection of its identity
       - path: (.+)\.go$
         text: Using the variable on range scope `(input|expected)` in function literal
     paths:
