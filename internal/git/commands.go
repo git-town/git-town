@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -519,8 +520,13 @@ func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.Loc
 	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
-func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
-	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (self *Commands) HasMergeInProgress(querier gitdomain.Querier) bool {
+	_, err := querier.Query("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+	return err == nil
+}
+
+func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) bool {
+	_, err := querier.Query("git", "rev-parse", "-q", "--verify", "REBASE_HEAD")
 	return err == nil
 }
 
@@ -717,17 +723,22 @@ func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName git
 }
 
 func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatus, error) {
-	output, err := querier.QueryTrim("git", "status", "--long", "--ignore-submodules")
+	output, err := querier.Query("git", "status", "-z", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
-	hasConflicts := strings.Contains(output, "Unmerged paths")
-	hasOpenChanges := outputIndicatesOpenChanges(output)
-	hasUntrackedChanges := outputIndicatesUntrackedChanges(output)
-	rebaseInProgress := outputIndicatesRebaseInProgress(output)
+	statuses, err := ParseGitStatusZ(output)
+	if err != nil {
+		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
+	}
+	hasConflicts := slices.ContainsFunc(statuses, FileStatusIsUnmerged)
+	hasOpenChanges := len(statuses) > 0
+	hasUntrackedChanges := slices.ContainsFunc(statuses, FileStatusIsUntracked)
+	mergeInProgress := self.HasMergeInProgress(querier)
+	rebaseInProgress := self.HasRebaseInProgress(querier)
 	return gitdomain.RepoStatus{
 		Conflicts:        hasConflicts,
-		OpenChanges:      hasOpenChanges,
+		OpenChanges:      hasOpenChanges && !mergeInProgress && !rebaseInProgress,
 		RebaseInProgress: rebaseInProgress,
 		UntrackedChanges: hasUntrackedChanges,
 	}, nil
@@ -1036,26 +1047,4 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.Sy
 // indicates whether the branch with the given name exists locally
 func isLocalBranchName(branch string) bool {
 	return !strings.HasPrefix(branch, "remotes/")
-}
-
-func outputIndicatesMergeInProgress(output string) bool {
-	return strings.Contains(output, "You have unmerged paths")
-}
-
-func outputIndicatesOpenChanges(output string) bool {
-	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
-		return false
-	}
-	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
-		return false
-	}
-	return true
-}
-
-func outputIndicatesRebaseInProgress(output string) bool {
-	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
-}
-
-func outputIndicatesUntrackedChanges(output string) bool {
-	return strings.Contains(output, "Untracked files:")
 }

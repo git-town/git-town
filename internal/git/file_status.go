@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/git-town/git-town/v19/internal/messages"
@@ -10,9 +11,17 @@ import (
 
 // information about each file reported by "git status -z"
 type FileStatus struct {
-	Status      string         // a two-letter status code, explained at https://git-scm.com/docs/git-status#_short_format
 	Path        string         // the path to the file
 	RenamedFrom Option[string] // if the file was renamed, the old path of the file
+	ShortStatus string         // a two-letter status code, explained at https://git-scm.com/docs/git-status#_short_format
+}
+
+func FileStatusIsUnmerged(status FileStatus) bool {
+	return slices.Contains([]string{"DD", "AU", "UD", "UA", "DU", "AA", "UU"}, status.ShortStatus)
+}
+
+func FileStatusIsUntracked(status FileStatus) bool {
+	return status.ShortStatus == "??"
 }
 
 // ParseGitStatusZ parses the output of "git status -z" into a slice of FileStatus.
@@ -45,9 +54,9 @@ func ParseGitStatusZ(output string) ([]FileStatus, error) {
 			renamedFrom = Some(renamedFromString)
 		}
 		result = append(result, FileStatus{
-			Status:      status,
 			Path:        path,
 			RenamedFrom: renamedFrom,
+			ShortStatus: status,
 		})
 	}
 	return result, nil

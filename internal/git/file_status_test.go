@@ -18,7 +18,7 @@ func TestParseGitStatusZ(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileStatus{
 			{
-				Status:      " M",
+				ShortStatus: " M",
 				Path:        "internal/git/parse_git_status_z.go",
 				RenamedFrom: None[string](),
 			},
@@ -33,7 +33,7 @@ func TestParseGitStatusZ(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileStatus{
 			{
-				Status:      "R ",
+				ShortStatus: "R ",
 				Path:        "internal/git/parse_git_status_z.go",
 				RenamedFrom: Some("internal/git/parse_git_status.go"),
 			},
@@ -48,12 +48,12 @@ func TestParseGitStatusZ(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileStatus{
 			{
-				Status:      " M",
+				ShortStatus: " M",
 				Path:        "internal/git/parse_git_status_z.go",
 				RenamedFrom: None[string](),
 			},
 			{
-				Status:      " M",
+				ShortStatus: " M",
 				Path:        "internal/git/parse_git_status_z_test.go",
 				RenamedFrom: None[string](),
 			},
