@@ -239,5 +239,81 @@ Feature: test
 			wantErrors := []string{}
 			must.Eq(t, wantErrors, haveErrors)
 		})
+
+		t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
+			text := `
+@messyoutput
+Feature: test
+
+  Scenario: one
+		And I run "foo" and enter into the dialogs:
+
+	Scenario: two
+		And I run "foo" and enter into the dialogs:
+`[1:]
+			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+			defer os.Remove("test")
+			regex := messyOutput.CompileRegex()
+			feature := messyOutput.ReadGherkinFile("test")
+			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+			wantScenarios := []messyOutput.ScenarioInfo{
+				{
+					File:    "test",
+					HasStep: true,
+					HasTag:  true,
+					Line:    4,
+				},
+				{
+					File:    "test",
+					HasStep: true,
+					HasTag:  true,
+					Line:    7,
+				},
+			}
+			must.Eq(t, wantScenarios, haveScenarios)
+			must.Eq(t, wantScenarios, haveScenarios)
+			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
+			wantErrors := []string{}
+			must.Eq(t, wantErrors, haveErrors)
+		})
+
+		t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
+			text := `
+@messyoutput
+Feature: test
+
+  Scenario: one
+		And I run "foo" and enter into the dialogs:
+
+	Scenario: two
+		And another step here
+`[1:]
+			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+			defer os.Remove("test")
+			regex := messyOutput.CompileRegex()
+			feature := messyOutput.ReadGherkinFile("test")
+			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+			wantScenarios := []messyOutput.ScenarioInfo{
+				{
+					File:    "test",
+					HasStep: true,
+					HasTag:  true,
+					Line:    4,
+				},
+				{
+					File:    "test",
+					HasStep: false,
+					HasTag:  true,
+					Line:    7,
+				},
+			}
+			must.Eq(t, wantScenarios, haveScenarios)
+			must.Eq(t, wantScenarios, haveScenarios)
+			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
+			wantErrors := []string{
+				"test:7  unnecessary tag\n",
+			}
+			must.Eq(t, wantErrors, haveErrors)
+		})
 	})
 }
