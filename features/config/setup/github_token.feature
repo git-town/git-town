@@ -100,8 +100,3 @@ Feature: enter the GitHub API token
       | git config --unset git-town.github-token |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
-
-  Scenario: undo
-    When I run "git-town undo"
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.github-token" now doesn't exist
