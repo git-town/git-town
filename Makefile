@@ -133,6 +133,7 @@ UNIT_TEST_DIRS = \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
+	./tools/messy_output/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \
 	./tools/tests_sorted/...
