@@ -20,12 +20,11 @@ const (
 	targetStepPat = `^I r[ua]n ".*" and enter into the dialogs?:$` // Regex for the step
 )
 
-// scenarioInfo holds details about a scenario relevant to our analysis.
 type scenarioInfo struct {
 	File    string
 	HasStep bool
 	HasTag  bool
-	Line    int64 // Gherkin library uses uint32 for line numbers
+	Line    int64
 }
 
 func main() {
@@ -35,8 +34,8 @@ func main() {
 		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
 			return err
 		}
-		feature := parseFeatureFile(path)
-		for _, scenario := range processFeature(feature, path, dialogStepRegex) {
+		feature := parseGherkinFile(path)
+		for _, scenario := range findScenarios(feature, path, dialogStepRegex) {
 			if scenario.HasTag && !scenario.HasStep {
 				fmt.Printf("%s:%d  unnecessary tag\n", scenario.File, scenario.Line)
 				errors += 1
@@ -51,6 +50,7 @@ func main() {
 	os.Exit(errors)
 }
 
+// indicates whether the given steps contain a step that matches the given regex
 func hasStep(steps []*messages.Step, stepRE *regexp.Regexp) bool {
 	for _, step := range steps {
 		if stepRE.MatchString(step.Text) {
@@ -60,17 +60,18 @@ func hasStep(steps []*messages.Step, stepRE *regexp.Regexp) bool {
 	return false
 }
 
-// hasTag checks if a slice of tags contains the target tag string.
-func hasTag(tags []*messages.Tag, targetTagName string) bool {
+// indicates whether the given tags contain a tag with the given name
+func hasTag(tags []*messages.Tag, name string) bool {
 	for _, tag := range tags {
-		if tag.Name == targetTagName {
+		if tag.Name == name {
 			return true
 		}
 	}
 	return false
 }
 
-func parseFeatureFile(filePath string) *messages.Feature {
+// parses the content of a Gherkin file
+func parseGherkinFile(filePath string) *messages.Feature {
 	file := asserts.NoError1(os.Open(filePath))
 	defer file.Close()
 	idGenerator := messages.Incrementing{}
@@ -81,8 +82,7 @@ func parseFeatureFile(filePath string) *messages.Feature {
 	return document.Feature
 }
 
-// processFeature parses a single Gherkin file and extracts relevant scenario info.
-func processFeature(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []scenarioInfo {
+func findScenarios(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []scenarioInfo {
 	result := []scenarioInfo{}
 	featureHasTag := hasTag(feature.Tags, targetTag)
 	backgroundHasStep := false
@@ -101,16 +101,13 @@ func processFeature(feature *messages.Feature, filePath string, dialogStepRegex 
 	return result
 }
 
-// processScenario extracts information from a single scenario message.
 func processScenario(scenario *messages.Scenario, filePath string, featureHasTag bool, backgroundHasStep bool, dialogStepRegex *regexp.Regexp, results *[]scenarioInfo) {
 	scenarioHasTag := hasTag(scenario.Tags, targetTag)
-	overallHasTag := featureHasTag || scenarioHasTag
 	scenarioHasStep := hasStep(scenario.Steps, dialogStepRegex)
-	overallHasStep := backgroundHasStep || scenarioHasStep
 	*results = append(*results, scenarioInfo{
 		File:    filePath,
-		HasStep: overallHasStep,
-		HasTag:  overallHasTag,
+		HasStep: backgroundHasStep || scenarioHasStep,
+		HasTag:  featureHasTag || scenarioHasTag,
 		Line:    scenario.Location.Line,
 	})
 }
