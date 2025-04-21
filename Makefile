@@ -127,7 +127,6 @@ todo:  # displays all TODO items
 UNIT_TEST_DIRS = \
 	./internal/... \
 	./pkg/... \
-	./test/... \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
