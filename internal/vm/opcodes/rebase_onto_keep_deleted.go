@@ -29,7 +29,7 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream, args.Config.Value.NormalConfig.GitVersion)
+	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream)
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {

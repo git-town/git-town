@@ -24,5 +24,5 @@ func (self *CommitRemove) ContinueProgram() []shared.Opcode {
 }
 
 func (self *CommitRemove) Run(args shared.RunArgs) error {
-	return args.Git.RemoveCommit(args.Frontend, self.SHA, args.Config.Value.NormalConfig.GitVersion)
+	return args.Git.RemoveCommit(args.Frontend, self.SHA)
 }
