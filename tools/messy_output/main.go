@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	featureDir    = "features"                               // Subdirectory to scan
-	featureExt    = ".feature"                               // File extension to look for
-	targetTag     = "@messyoutput"                           // The specific tag we are interested in
-	targetStepPat = `^I run ".*" and enter into the dialog$` // Regex for the step
+	featureDir    = "features"                                  // Subdirectory to scan
+	featureExt    = ".feature"                                  // File extension to look for
+	targetTag     = "@messyoutput"                              // The specific tag we are interested in
+	targetStepPat = `^I run ".*" and enter into the dialogs?:$` // Regex for the step
 )
 
 // scenarioInfo holds details about a scenario relevant to our analysis.
@@ -35,6 +35,7 @@ func main() {
 		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
 			return nil
 		}
+		// path := "./features/append/on_feature_branch/missing_lineage/unknown_parent.feature"
 		feature := parseFeatureFile(path)
 		for _, scenario := range processFeature(feature, path, dialogStepRegex) {
 			if scenario.HasTargetTag && !scenario.HasDialogStep {
@@ -87,21 +88,16 @@ func processScenario(scenario *messages.Scenario, filePath string, featureHasTag
 	overallHasTag := featureHasTag || scenarioHasTag
 	scenarioHasStep := hasStep(scenario.Steps, dialogStepRegex)
 	overallHasStep := backgroundHasStep || scenarioHasStep
+	// fmt.Println("background has step:", backgroundHasStep)
+	// fmt.Println("scenario has step:", scenarioHasStep)
+	// fmt.Println("feature has tag:", featureHasTag)
+	// fmt.Println("overall has tag:", overallHasTag)
 	*results = append(*results, scenarioInfo{
 		FilePath:      filePath,
 		LineNumber:    scenario.Location.Line,
 		HasTargetTag:  overallHasTag,
 		HasDialogStep: overallHasStep,
 	})
-
-	// --- Handle Scenario Outline Examples ---
-	// Scenario outlines themselves don't run, their examples do.
-	// The gherkin parser expands outlines into concrete scenarios implicitly
-	// if you use tools like Cucumber, but the AST here represents the outline structure.
-	// If the tag/step logic needs to apply to *each generated example*,
-	// we'd need more complex handling, possibly involving Example tables.
-	// For this request, we analyze the Scenario/Scenario Outline definition itself.
-	// The line number points to the "Scenario Outline:" line.
 	if len(scenario.Examples) > 0 {
 		// log.Printf("ℹ️ Scenario Outline '%s' (line %d) found. Analyzing definition, not individual examples.", scenario.Name, scenario.Location.Line)
 	}
@@ -109,6 +105,7 @@ func processScenario(scenario *messages.Scenario, filePath string, featureHasTag
 
 func hasStep(steps []*messages.Step, stepRE *regexp.Regexp) bool {
 	for _, step := range steps {
+		// fmt.Println("step:", step.Text)
 		if stepRE.MatchString(step.Text) {
 			return true
 		}
