@@ -9,9 +9,9 @@ import (
 )
 
 func TestMessyOutput(t *testing.T) {
-	t.Run("all okay", func(t *testing.T) {
-		t.Parallel()
-		text := `
+	t.Run("ReadGherkinFile", func(t *testing.T) {
+		t.Run("vanilla", func(t *testing.T) {
+			text := `
 Feature: test
 
   Scenario: one
@@ -20,13 +20,60 @@ Feature: test
 
 	Scenario: two
 	  First step
-`
-		must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-		defer os.Remove("test")
-		regex := messyOutput.CompileRegex()
-		feature := messyOutput.ReadGherkinFile("test")
-		have := messyOutput.FindScenarios(feature, "test", regex)
-		want := []messyOutput.ScenarioInfo{}
-		must.Eq(t, want, have)
+`[1:]
+			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+			defer os.Remove("test")
+			regex := messyOutput.CompileRegex()
+			feature := messyOutput.ReadGherkinFile("test")
+			have := messyOutput.FindScenarios(feature, "test", regex)
+			want := []messyOutput.ScenarioInfo{
+				{
+					File:    "test",
+					HasStep: false,
+					HasTag:  false,
+					Line:    3,
+				},
+				{
+					File:    "test",
+					HasStep: false,
+					HasTag:  false,
+					Line:    7,
+				},
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("feature has tag", func(t *testing.T) {
+			text := `
+@messyoutput
+Feature: test
+
+  Scenario: one
+	  First step
+		Second step
+
+	Scenario: two
+	  First step
+`[1:]
+			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+			defer os.Remove("test")
+			regex := messyOutput.CompileRegex()
+			feature := messyOutput.ReadGherkinFile("test")
+			have := messyOutput.FindScenarios(feature, "test", regex)
+			want := []messyOutput.ScenarioInfo{
+				{
+					File:    "test",
+					HasStep: false,
+					HasTag:  true,
+					Line:    4,
+				},
+				{
+					File:    "test",
+					HasStep: false,
+					HasTag:  true,
+					Line:    8,
+				},
+			}
+			must.Eq(t, want, have)
+		})
 	})
 }
