@@ -17,7 +17,7 @@ const (
 	featureDir    = "features"                                     // Subdirectory to scan
 	featureExt    = ".feature"                                     // File extension to look for
 	targetTag     = "@messyoutput"                                 // The specific tag we are interested in
-	targetStepPat = `^I r[ua]n ".*" and enter into the dialogs?:$` // Regex for the step
+	targetStepPat = `^I r[au]n ".*" and enter into the dialogs?:$` // Regex for the step
 )
 
 type scenarioInfo struct {
