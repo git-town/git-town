@@ -1039,15 +1039,7 @@ func isLocalBranchName(branch string) bool {
 }
 
 func outputIndicatesMergeInProgress(output string) bool {
-	if strings.Contains(output, "You have unmerged paths") {
-		return true
-	}
-	for _, line := range strings.Split(output, "\n") {
-		if strings.HasPrefix(line, "AA ") {
-			return true
-		}
-	}
-	return false
+	return strings.Contains(output, "You have unmerged paths")
 }
 
 func outputIndicatesOpenChanges(output string) bool {
