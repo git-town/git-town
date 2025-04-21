@@ -7,7 +7,7 @@ import (
 
 const noPushLong = "no-push"
 
-// type-safe access to the CLI arguments of type configdomain.NoPushHook
+// type-safe access to the CLI arguments of type configdomain.PushBranches
 func NoPush() (AddFunc, ReadNoPushFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(noPushLong, "", false, "do not push local branches")

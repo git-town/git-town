@@ -20,11 +20,11 @@ func (self *BranchEnsureShippableChanges) AutomaticUndoError() error {
 }
 
 func (self *BranchEnsureShippableChanges) Run(args shared.RunArgs) error {
-	hasShippableChanges, err := args.Git.HasShippableChanges(args.Backend, self.Branch, self.Parent)
+	hasUnmergedChanges, err := args.Git.BranchHasUnmergedChanges(args.Backend, self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}
-	if !hasShippableChanges {
+	if !hasUnmergedChanges {
 		return fmt.Errorf(messages.ShipBranchNothingToDo, self.Branch)
 	}
 	return nil
