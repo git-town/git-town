@@ -45,6 +45,7 @@ Feature: test
 			wantErrors := []string{}
 			must.Eq(t, wantErrors, haveErrors)
 		})
+
 		t.Run("feature has tag but no steps", func(t *testing.T) {
 			text := `
 @messyoutput
@@ -84,7 +85,8 @@ Feature: test
 			}
 			must.Eq(t, wantErrors, haveErrors)
 		})
-		t.Run("one scenario has a tag", func(t *testing.T) {
+
+		t.Run("one scenario has a tag but no steps", func(t *testing.T) {
 			text := `
 Feature: test
 
@@ -100,8 +102,8 @@ Feature: test
 			defer os.Remove("test")
 			regex := messyOutput.CompileRegex()
 			feature := messyOutput.ReadGherkinFile("test")
-			have := messyOutput.FindScenarios(feature, "test", regex)
-			want := []messyOutput.ScenarioInfo{
+			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+			wantScenarios := []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: false,
@@ -115,9 +117,15 @@ Feature: test
 					Line:    8,
 				},
 			}
-			must.Eq(t, want, have)
+			must.Eq(t, wantScenarios, haveScenarios)
+			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
+			wantErrors := []string{
+				"test:4  unnecessary tag\n",
+			}
+			must.Eq(t, wantErrors, haveErrors)
 		})
-		t.Run("one scenario has the step in singular", func(t *testing.T) {
+
+		t.Run("one scenario has the step in singular but no tag", func(t *testing.T) {
 			text := `
 Feature: test
 
@@ -132,8 +140,8 @@ Feature: test
 			defer os.Remove("test")
 			regex := messyOutput.CompileRegex()
 			feature := messyOutput.ReadGherkinFile("test")
-			have := messyOutput.FindScenarios(feature, "test", regex)
-			want := []messyOutput.ScenarioInfo{
+			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+			wantScenarios := []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -147,8 +155,14 @@ Feature: test
 					Line:    7,
 				},
 			}
-			must.Eq(t, want, have)
+			must.Eq(t, wantScenarios, haveScenarios)
+			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
+			wantErrors := []string{
+				"test:3  missing tag\n",
+			}
+			must.Eq(t, wantErrors, haveErrors)
 		})
+
 		t.Run("one scenario has the step in plural", func(t *testing.T) {
 			text := `
 Feature: test
@@ -164,8 +178,8 @@ Feature: test
 			defer os.Remove("test")
 			regex := messyOutput.CompileRegex()
 			feature := messyOutput.ReadGherkinFile("test")
-			have := messyOutput.FindScenarios(feature, "test", regex)
-			want := []messyOutput.ScenarioInfo{
+			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+			wantScenarios := []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -179,7 +193,51 @@ Feature: test
 					Line:    7,
 				},
 			}
-			must.Eq(t, want, have)
+			must.Eq(t, wantScenarios, haveScenarios)
+			must.Eq(t, wantScenarios, haveScenarios)
+			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
+			wantErrors := []string{
+				"test:3  missing tag\n",
+			}
+			must.Eq(t, wantErrors, haveErrors)
+		})
+
+		t.Run("one scenario has the step and a tag", func(t *testing.T) {
+			text := `
+Feature: test
+
+  @messyoutput
+  Scenario: one
+	  First step
+		And I run "foo" and enter into the dialogs:
+
+	Scenario: two
+	  First step
+`[1:]
+			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+			defer os.Remove("test")
+			regex := messyOutput.CompileRegex()
+			feature := messyOutput.ReadGherkinFile("test")
+			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+			wantScenarios := []messyOutput.ScenarioInfo{
+				{
+					File:    "test",
+					HasStep: true,
+					HasTag:  true,
+					Line:    4,
+				},
+				{
+					File:    "test",
+					HasStep: false,
+					HasTag:  false,
+					Line:    8,
+				},
+			}
+			must.Eq(t, wantScenarios, haveScenarios)
+			must.Eq(t, wantScenarios, haveScenarios)
+			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
+			wantErrors := []string{}
+			must.Eq(t, wantErrors, haveErrors)
 		})
 	})
 }
