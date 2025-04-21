@@ -1,2 +1,2 @@
-// Package hostingdomain provides the domain model for forges.
+// Package forgedomain provides the domain model for forges.
 package forgedomain

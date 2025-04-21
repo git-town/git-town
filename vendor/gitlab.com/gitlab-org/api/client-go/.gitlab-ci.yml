@@ -1,0 +1,185 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_REF_PROTECTED == "true"
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - component: ${CI_SERVER_FQDN}/gitlab-org/components/danger-review/danger-review@2.0.0
+    inputs:
+      job_stage: lint
+      job_allow_failure: true
+
+  # NOTE: the two includes below are a hack to conditionally set the tags node
+  # on our Go jobs. We want to use the large Ultimate runners if possible,
+  # which is what we have available in the gitlab-org and gitlab-community (Community Forks)
+  # groups. However, there is no easy way to conditionally set tags or even variables without
+  # jeopardizing existing (complex) workflow:rules or job:rules. Thus, we resort to
+  # this nasty conditionally include hack.
+  - local: '.gitlab/ci/gitlab-go-runner-tags.gitlab-ci.yml'
+    rules:
+      - if: $CI_PROJECT_ROOT_NAMESPACE == 'gitlab-org' || $CI_PROJECT_ROOT_NAMESPACE == 'gitlab-community'
+  - local: '.gitlab/ci/community-go-runner-tags.gitlab-ci.yml'
+    rules:
+      - if: $CI_PROJECT_ROOT_NAMESPACE != 'gitlab-org' && $CI_PROJECT_ROOT_NAMESPACE != 'gitlab-community'
+
+stages:
+  - lint
+  - test
+  - deploy
+
+.go:versions:
+  parallel:
+    matrix:
+      - GOLANG_IMAGE_VERSION:
+        - '1.22'
+        - '1.23'
+        - '1.24'
+
+.go:base:
+  extends:
+    - .go:runner-tags
+  # From: https://docs.gitlab.com/ee/ci/caching/#cache-go-dependencies
+  variables:
+    GOPATH: $CI_PROJECT_DIR/.go
+    GOLANGCI_LINT_CACHE: $CI_PROJECT_DIR/.golangci-lint
+  before_script:
+    - mkdir -p "${GOPATH}" "${GOLANGCI_LINT_CACHE}"
+    - export PATH="${GOPATH}/bin:$PATH"
+  cache:
+    paths:
+      - $GOPATH/pkg/mod/
+      - $GOLANGCI_LINT_CACHE/
+    key:
+      files:
+        - go.sum
+  # We only need to run Go-related jobs when actual Go files changed
+  # or when running either on the default branch or for a tag.
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: $CI_COMMIT_TAG
+    - changes:
+        - '**/*.go'
+        - testdata/**
+        - go.mod
+        - go.sum
+        - .gitlab-ci.yml
+        - .gitlab/ci/*.yml
+
+golangci-lint:
+  extends:
+    - .go:base
+  stage: lint
+  needs: []
+  variables:
+    REPORT_FILENAME: 'gl-code-quality-report.json'
+  image: golangci/golangci-lint:v1.64.8
+  script:
+    - golangci-lint run --print-issued-lines=false --out-format code-climate:$REPORT_FILENAME,line-number
+  artifacts:
+    reports:
+      codequality: $REPORT_FILENAME
+    paths: [$REPORT_FILENAME]
+    when: always
+
+verify-generated-code:
+  extends:
+    - .go:base
+  stage: lint
+  needs: []
+  image: golang:1.24-bookworm
+  script:
+    - make generate
+    - |
+      echo "Checking git status"
+      [ -z "$(git status --short)" ] || {
+        echo "Error: Files should have been generated:";
+        git status --short; echo "Diff:";
+        git --no-pager diff HEAD;
+        echo "Run \"make generate\" and try again";
+        exit 1;
+      }
+
+tests:unit:
+  extends:
+    - .go:base
+    - .go:versions
+  stage: test
+  needs: []
+  image: golang:$GOLANG_IMAGE_VERSION
+  variables:
+    # configure tooling versions
+    GOTESTSUM_VERSION: 'v1.12.0'
+    GOCOVER_COBERTURA_VERSION: 'v1.2.1-0.20240107185409-0818f3538137'
+
+    # configure artifact files
+    JUNIT_FILENAME: tests.xml
+    COVERPROFILE_FILENAME: coverage.out
+    COVERPROFILE_XML_FILENAME: coverage.xml
+  script:
+    - go run gotest.tools/gotestsum@${GOTESTSUM_VERSION} --format=standard-quiet --junitfile=$JUNIT_FILENAME -- -race -coverprofile=$COVERPROFILE_FILENAME -covermode=atomic ./...
+    - grep -v '_generated.go' "$COVERPROFILE_FILENAME" | grep -v '_mock.go' > "${COVERPROFILE_FILENAME}.tmp"
+    - mv "${COVERPROFILE_FILENAME}.tmp" "$COVERPROFILE_FILENAME"
+    - go run github.com/boumenot/gocover-cobertura@${GOCOVER_COBERTURA_VERSION} < $COVERPROFILE_FILENAME > $COVERPROFILE_XML_FILENAME
+    - go tool cover -func $COVERPROFILE_FILENAME
+  coverage: '/total:.+\(statements\).+\d+\.\d+/'
+  artifacts:
+    paths:
+      - $JUNIT_FILENAME
+      - $COVERPROFILE_XML_FILENAME
+    reports:
+      junit: $JUNIT_FILENAME
+      coverage_report:
+        path: $COVERPROFILE_XML_FILENAME
+        coverage_format: cobertura
+    when: always
+
+generate-release-notes:
+  stage: deploy
+  needs: []
+  image: alpine:3.21.3
+  before_script:
+    - apk add --update jq curl git
+  script:
+    - |
+      if [ -z "$CI_COMMIT_TAG" ]; then
+        last_stable_version_sha="$(git tag | grep -E '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$' | sort -Vr | head -n1)"
+        version="${last_stable_version_sha}+${CI_COMMIT_SHA}"
+      else
+        version="$CI_COMMIT_TAG"
+      fi
+      urlencoded_version="$(jq -rn --arg x "${version}" '$x|@uri')"
+    - echo "Generating release notes for ${version} (urlencoded=${urlencoded_version}) ..."
+    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/changelog?version=${urlencoded_version}" | jq -r .notes > release-notes.md'
+    - cat release-notes.md
+  artifacts:
+    paths:
+    - release-notes.md
+
+release:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - golangci-lint
+    - tests:unit
+    - job: generate-release-notes
+      artifacts: true
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "Create release for $CI_COMMIT_TAG"
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    tag_message: 'Version $CI_COMMIT_TAG'
+    name: '$CI_COMMIT_TAG'
+    description: release-notes.md
+
+# Update rules on SAST to ensure the jobs show up in the pipeline
+# this prevents forks that don't have `ultimate` from skipping SAST scans
+# since gitlab-advaced-sast replaces semgrep.
+semgrep-sast:
+  needs: []
+  rules:
+    - when: always
