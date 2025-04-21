@@ -19,15 +19,15 @@ Feature: syncing a top-level feature branch using --no-push
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git rebase origin/main --no-update-refs         |
-      |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
-      |         | git rebase origin/feature --no-update-refs      |
-      |         | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                                              |
+      | feature | git fetch --prune --tags                             |
+      |         | git checkout main                                    |
+      | main    | git -c rebase.updateRefs=false rebase origin/main    |
+      |         | git checkout feature                                 |
+      | feature | git -c rebase.updateRefs=false rebase main           |
+      |         | git -c rebase.updateRefs=false rebase origin/feature |
+      |         | git -c rebase.updateRefs=false rebase main           |
+      |         | git push --force-with-lease --force-if-includes      |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |

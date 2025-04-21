@@ -18,15 +18,15 @@ Feature: handle merge conflicts between feature branch and main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/alpha   |
-      |        | git push                                |
-      |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff main           |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout alpha                                |
+      | alpha  | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/alpha             |
+      |        | git push                                          |
+      |        | git checkout beta                                 |
+      | beta   | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

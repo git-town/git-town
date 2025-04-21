@@ -17,9 +17,9 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                          |
-      | branch-2 | git fetch --prune --tags         |
-      |          | git rebase main --no-update-refs |
+      | BRANCH   | COMMAND                                    |
+      | branch-2 | git fetch --prune --tags                   |
+      |          | git -c rebase.updateRefs=false rebase main |
     And Git Town prints:
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.

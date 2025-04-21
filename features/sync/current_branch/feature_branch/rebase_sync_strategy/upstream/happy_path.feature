@@ -16,16 +16,16 @@ Feature: with upstream repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git checkout main                               |
-      | main    | git fetch upstream main                         |
-      |         | git rebase upstream/main --no-update-refs       |
-      |         | git push                                        |
-      |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase main --no-update-refs                |
+      | BRANCH  | COMMAND                                             |
+      | feature | git fetch --prune --tags                            |
+      |         | git checkout main                                   |
+      | main    | git fetch upstream main                             |
+      |         | git -c rebase.updateRefs=false rebase upstream/main |
+      |         | git push                                            |
+      |         | git checkout feature                                |
+      | feature | git -c rebase.updateRefs=false rebase main          |
+      |         | git push --force-with-lease --force-if-includes     |
+      |         | git -c rebase.updateRefs=false rebase main          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |

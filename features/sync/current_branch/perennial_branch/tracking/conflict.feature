@@ -15,9 +15,9 @@ Feature: handle conflicts between the current perennial branch and its tracking 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | qa     | git fetch --prune --tags              |
-      |        | git rebase origin/qa --no-update-refs |
+      | BRANCH | COMMAND                                         |
+      | qa     | git fetch --prune --tags                        |
+      |        | git -c rebase.updateRefs=false rebase origin/qa |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
