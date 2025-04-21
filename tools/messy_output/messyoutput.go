@@ -20,7 +20,7 @@ const (
 	targetStepPat = `^I r[au]n ".*" and enter into the dialogs?:$` // Regex for the step
 )
 
-type scenarioInfo struct {
+type ScenarioInfo struct {
 	File    string
 	HasStep bool
 	HasTag  bool
@@ -28,14 +28,14 @@ type scenarioInfo struct {
 }
 
 func main() {
-	dialogStepRegex := regexp.MustCompile(targetStepPat)
+	dialogStepRegex := CompileRegex()
 	errors := 0
 	asserts.NoError(filepath.WalkDir(filepath.Join(".", featureDir), func(path string, d os.DirEntry, err error) error {
 		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
 			return err
 		}
-		feature := readGherkinFile(path)
-		for _, scenario := range findScenarios(feature, path, dialogStepRegex) {
+		feature := ReadGherkinFile(path)
+		for _, scenario := range FindScenarios(feature, path, dialogStepRegex) {
 			if scenario.HasTag && !scenario.HasStep {
 				fmt.Printf("%s:%d  unnecessary tag\n", scenario.File, scenario.Line)
 				errors += 1
@@ -48,6 +48,10 @@ func main() {
 		return nil
 	}))
 	os.Exit(errors)
+}
+
+func CompileRegex() *regexp.Regexp {
+	return regexp.MustCompile(targetStepPat)
 }
 
 // indicates whether the given steps contain a step that matches the given regex
@@ -71,7 +75,7 @@ func hasTag(tags []*messages.Tag, name string) bool {
 }
 
 // parses the content of a Gherkin file
-func readGherkinFile(filePath string) *messages.Feature {
+func ReadGherkinFile(filePath string) *messages.Feature {
 	file := asserts.NoError1(os.Open(filePath))
 	defer file.Close()
 	idGenerator := messages.Incrementing{}
@@ -82,8 +86,8 @@ func readGherkinFile(filePath string) *messages.Feature {
 	return document.Feature
 }
 
-func findScenarios(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []scenarioInfo {
-	result := []scenarioInfo{}
+func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []ScenarioInfo {
+	result := []ScenarioInfo{}
 	featureHasTag := hasTag(feature.Tags, targetTag)
 	backgroundHasStep := false
 	for _, child := range feature.Children {
@@ -93,7 +97,7 @@ func findScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 		case child.Scenario != nil:
 			scenarioHasTag := hasTag(child.Scenario.Tags, targetTag)
 			scenarioHasStep := hasStep(child.Scenario.Steps, dialogStepRegex)
-			result = append(result, scenarioInfo{
+			result = append(result, ScenarioInfo{
 				File:    filePath,
 				HasStep: backgroundHasStep || scenarioHasStep,
 				HasTag:  featureHasTag || scenarioHasTag,
