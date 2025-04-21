@@ -35,15 +35,10 @@ func main() {
 			return err
 		}
 		feature := ReadGherkinFile(path)
-		for _, scenario := range FindScenarios(feature, path, dialogStepRegex) {
-			if scenario.HasTag && !scenario.HasStep {
-				fmt.Printf("%s:%d  unnecessary tag\n", scenario.File, scenario.Line)
-				errors += 1
-			}
-			if !scenario.HasTag && scenario.HasStep {
-				fmt.Printf("%s:%d  missing tag\n", scenario.File, scenario.Line)
-				errors += 1
-			}
+		scenarios := FindScenarios(feature, path, dialogStepRegex)
+		for _, error := range AnalyzeScenarios(scenarios) {
+			fmt.Println(error)
+			errors += 1
 		}
 		return nil
 	}))
@@ -107,6 +102,19 @@ func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 			log.Fatalf("please implement parsing the Rule's children, which are similar to the feature children")
 		default:
 			fmt.Println("child has no known attributes")
+		}
+	}
+	return result
+}
+
+func AnalyzeScenarios(scenarios []ScenarioInfo) []string {
+	result := []string{}
+	for _, scenario := range scenarios {
+		if scenario.HasTag && !scenario.HasStep {
+			result = append(result, fmt.Sprintf("%s:%d  unnecessary tag\n", scenario.File, scenario.Line))
+		}
+		if !scenario.HasTag && scenario.HasStep {
+			result = append(result, fmt.Sprintf("%s:%d  missing tag\n", scenario.File, scenario.Line))
 		}
 	}
 	return result
