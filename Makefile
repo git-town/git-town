@@ -80,6 +80,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
 
+lint-messy-output:
+	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
+
 lint-print-config:
 	@tools/rta node tools/print_config_exhaustive/lint.js
 
