@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	featureDir    = "features"                                  // Subdirectory to scan
-	featureExt    = ".feature"                                  // File extension to look for
-	targetTag     = "@messyoutput"                              // The specific tag we are interested in
-	targetStepPat = `^I run ".*" and enter into the dialogs?:$` // Regex for the step
+	featureDir    = "features"                                     // Subdirectory to scan
+	featureExt    = ".feature"                                     // File extension to look for
+	targetTag     = "@messyoutput"                                 // The specific tag we are interested in
+	targetStepPat = `^I r[ua]n ".*" and enter into the dialogs?:$` // Regex for the step
 )
 
 // scenarioInfo holds details about a scenario relevant to our analysis.
