@@ -34,7 +34,7 @@ func main() {
 		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
 			return err
 		}
-		feature := parseGherkinFile(path)
+		feature := readGherkinFile(path)
 		for _, scenario := range findScenarios(feature, path, dialogStepRegex) {
 			if scenario.HasTag && !scenario.HasStep {
 				fmt.Printf("%s:%d  unnecessary tag\n", scenario.File, scenario.Line)
@@ -71,7 +71,7 @@ func hasTag(tags []*messages.Tag, name string) bool {
 }
 
 // parses the content of a Gherkin file
-func parseGherkinFile(filePath string) *messages.Feature {
+func readGherkinFile(filePath string) *messages.Feature {
 	file := asserts.NoError1(os.Open(filePath))
 	defer file.Close()
 	idGenerator := messages.Incrementing{}
@@ -91,7 +91,14 @@ func findScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 		case child.Background != nil:
 			backgroundHasStep = hasStep(child.Background.Steps, dialogStepRegex)
 		case child.Scenario != nil:
-			processScenario(child.Scenario, filePath, featureHasTag, backgroundHasStep, dialogStepRegex, &result)
+			scenarioHasTag := hasTag(child.Scenario.Tags, targetTag)
+			scenarioHasStep := hasStep(child.Scenario.Steps, dialogStepRegex)
+			result = append(result, scenarioInfo{
+				File:    filePath,
+				HasStep: backgroundHasStep || scenarioHasStep,
+				HasTag:  featureHasTag || scenarioHasTag,
+				Line:    child.Scenario.Location.Line,
+			})
 		case child.Rule != nil:
 			log.Fatalf("please implement parsing the Rule's children, which are similar to the feature children")
 		default:
@@ -99,15 +106,4 @@ func findScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 		}
 	}
 	return result
-}
-
-func processScenario(scenario *messages.Scenario, filePath string, featureHasTag bool, backgroundHasStep bool, dialogStepRegex *regexp.Regexp, results *[]scenarioInfo) {
-	scenarioHasTag := hasTag(scenario.Tags, targetTag)
-	scenarioHasStep := hasStep(scenario.Steps, dialogStepRegex)
-	*results = append(*results, scenarioInfo{
-		File:    filePath,
-		HasStep: backgroundHasStep || scenarioHasStep,
-		HasTag:  featureHasTag || scenarioHasTag,
-		Line:    scenario.Location.Line,
-	})
 }
