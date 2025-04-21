@@ -353,11 +353,6 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	return result
 }
 
-// SetGitAlias sets the Git alias with the given name to the given value.
-func (self *TestCommands) LoadGitAlias(name configdomain.AliasableCommand) (string, error) {
-	return self.Query("git", "config", "--get", "--global", configdomain.AliasKeyPrefix+name.String())
-}
-
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
 func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, error) {
@@ -457,18 +452,8 @@ func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	return shasWithMessage
 }
 
-// SetColorUI configures whether Git output contains color codes.
-func (self *TestCommands) SetColorUI(value string) error {
-	return self.Run("git", "config", "color.ui", value)
-}
-
 func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 	self.MustRun("git", "config", "init.defaultbranch", value.String())
-}
-
-// SetGitAlias sets the Git alias with the given name to the given value.
-func (self *TestCommands) SetGitAlias(name configdomain.AliasableCommand, value string) error {
-	return self.Run("git", "config", "--global", configdomain.AliasKeyPrefix+name.String(), value)
 }
 
 // StageFiles adds the file with the given name to the Git index.
@@ -516,10 +501,6 @@ func (self *TestCommands) UnstashOpenFiles() error {
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	output, _ := self.Query("git", "config", "--get-regex", "git-town")
-	if len(output) > 0 {
-		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
-	}
-	output, _ = self.Query("git", "config", "--get-regex", "git-town-branch")
 	if len(output) > 0 {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
