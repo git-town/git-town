@@ -210,7 +210,7 @@ Feature: test
 		assert_errors(t, scenarios, []string{})
 	})
 
-	t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
+	t.Run("the feature has the tag, only one scenarios has the step", func(t *testing.T) {
 		text := `
 @messyoutput
 Feature: test
