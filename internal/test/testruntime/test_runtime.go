@@ -98,6 +98,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		},
 		ConfigFile:    None[configdomain.PartialConfig](),
 		DryRun:        false,
+		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
 		GitVersion:    git.Version{Major: 2, Minor: 38},
 		GlobalConfig:  configdomain.EmptyPartialConfig(),
