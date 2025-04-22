@@ -21,12 +21,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: false,
@@ -39,9 +34,8 @@ Feature: test
 					HasTag:  false,
 					Line:    7,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{})
+			})
+			assert_errors(t, scenarios, []string{})
 		})
 
 		t.Run("feature has tag but no steps", func(t *testing.T) {
@@ -56,12 +50,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: false,
@@ -74,9 +63,8 @@ Feature: test
 					HasTag:  true,
 					Line:    8,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{
+			})
+			assert_errors(t, scenarios, []string{
 				"test:4  unnecessary tag\n",
 				"test:8  unnecessary tag\n",
 			})
@@ -94,12 +82,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: false,
@@ -112,9 +95,8 @@ Feature: test
 					HasTag:  false,
 					Line:    8,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{
+			})
+			assert_errors(t, scenarios, []string{
 				"test:4  unnecessary tag\n",
 			})
 		})
@@ -130,12 +112,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -148,9 +125,8 @@ Feature: test
 					HasTag:  false,
 					Line:    7,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{
+			})
+			assert_errors(t, scenarios, []string{
 				"test:3  missing tag\n",
 			})
 		})
@@ -166,12 +142,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -184,10 +155,8 @@ Feature: test
 					HasTag:  false,
 					Line:    7,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{
+			})
+			assert_errors(t, scenarios, []string{
 				"test:3  missing tag\n",
 			})
 		})
@@ -204,12 +173,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -222,10 +186,8 @@ Feature: test
 					HasTag:  false,
 					Line:    8,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{})
+			})
+			assert_errors(t, scenarios, []string{})
 		})
 
 		t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
@@ -239,12 +201,7 @@ Feature: test
 	Scenario: two
 		And I run "foo" and enter into the dialogs:
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -257,10 +214,8 @@ Feature: test
 					HasTag:  true,
 					Line:    7,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{})
+			})
+			assert_errors(t, scenarios, []string{})
 		})
 
 		t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
@@ -274,12 +229,7 @@ Feature: test
 	Scenario: two
 		And another step here
 `[1:]
-			must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
-			defer os.Remove("test")
-			regex := messyOutput.CompileRegex()
-			feature := messyOutput.ReadGherkinFile("test")
-			haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
-			wantScenarios := []messyOutput.ScenarioInfo{
+			scenarios := assert_scenarios(t, text, []messyOutput.ScenarioInfo{
 				{
 					File:    "test",
 					HasStep: true,
@@ -292,14 +242,22 @@ Feature: test
 					HasTag:  true,
 					Line:    7,
 				},
-			}
-			must.Eq(t, wantScenarios, haveScenarios)
-			must.Eq(t, wantScenarios, haveScenarios)
-			assert_errors(t, haveScenarios, []string{
+			})
+			assert_errors(t, scenarios, []string{
 				"test:7  unnecessary tag\n",
 			})
 		})
 	})
+}
+
+func assert_scenarios(t *testing.T, text string, wantScenarios []messyOutput.ScenarioInfo) []messyOutput.ScenarioInfo {
+	must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
+	defer os.Remove("test")
+	regex := messyOutput.CompileRegex()
+	feature := messyOutput.ReadGherkinFile("test")
+	haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+	must.Eq(t, wantScenarios, haveScenarios)
+	return haveScenarios
 }
 
 func assert_errors(t *testing.T, scenarios []messyOutput.ScenarioInfo, wantErrors []string) {
