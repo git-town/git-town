@@ -27,20 +27,20 @@ Feature: shipped branch with multiple descendents
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                                           |
-      | feature-1  | git fetch --prune --tags                          |
-      |            | git checkout main                                 |
-      | main       | git rebase origin/main --no-update-refs           |
-      |            | git checkout feature-1a                           |
-      | feature-1a | git pull                                          |
-      |            | git rebase --onto main feature-1 --no-update-refs |
-      |            | git push --force-with-lease                       |
-      |            | git checkout feature-1b                           |
-      | feature-1b | git pull                                          |
-      |            | git rebase --onto main feature-1 --no-update-refs |
-      |            | git push --force-with-lease                       |
-      |            | git branch -D feature-1                           |
-      |            | git push --tags                                   |
+      | BRANCH     | COMMAND                                                     |
+      | feature-1  | git fetch --prune --tags                                    |
+      |            | git checkout main                                           |
+      | main       | git -c rebase.updateRefs=false rebase origin/main           |
+      |            | git checkout feature-1a                                     |
+      | feature-1a | git pull                                                    |
+      |            | git -c rebase.updateRefs=false rebase --onto main feature-1 |
+      |            | git push --force-with-lease                                 |
+      |            | git checkout feature-1b                                     |
+      | feature-1b | git pull                                                    |
+      |            | git -c rebase.updateRefs=false rebase --onto main feature-1 |
+      |            | git push --force-with-lease                                 |
+      |            | git branch -D feature-1                                     |
+      |            | git push --tags                                             |
     And Git Town prints:
       """
       deleted branch "feature-1"

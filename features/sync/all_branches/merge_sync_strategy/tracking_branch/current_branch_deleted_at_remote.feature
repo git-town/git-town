@@ -14,12 +14,12 @@ Feature: sync a branch whose tracking branch was shipped
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git branch -D feature                   |
-      |         | git push --tags                         |
+      | BRANCH  | COMMAND                                           |
+      | feature | git fetch --prune --tags                          |
+      |         | git checkout main                                 |
+      | main    | git -c rebase.updateRefs=false rebase origin/main |
+      |         | git branch -D feature                             |
+      |         | git push --tags                                   |
     And Git Town prints:
       """
       deleted branch "feature"

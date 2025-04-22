@@ -16,14 +16,14 @@ Feature: sync the current feature branch without a tracking branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git push                                |
-      |         | git checkout feature                    |
-      | feature | git rebase main --no-update-refs        |
-      |         | git push -u origin feature              |
+      | BRANCH  | COMMAND                                           |
+      | feature | git fetch --prune --tags                          |
+      |         | git checkout main                                 |
+      | main    | git -c rebase.updateRefs=false rebase origin/main |
+      |         | git push                                          |
+      |         | git checkout feature                              |
+      | feature | git -c rebase.updateRefs=false rebase main        |
+      |         | git push -u origin feature                        |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE              |

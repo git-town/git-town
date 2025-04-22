@@ -17,13 +17,13 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                          |
-      | branch-2 | git fetch --prune --tags                         |
-      |          | git pull                                         |
-      |          | git rebase --onto main branch-1 --no-update-refs |
-      |          | git push --force-with-lease                      |
-      |          | git branch -D branch-1                           |
-      |          | git checkout -b new main                         |
+      | BRANCH   | COMMAND                                                    |
+      | branch-2 | git fetch --prune --tags                                   |
+      |          | git pull                                                   |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+      |          | git push --force-with-lease                                |
+      |          | git branch -D branch-1                                     |
+      |          | git checkout -b new main                                   |
     And Git Town prints:
       """
       deleted branch "branch-1"

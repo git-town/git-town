@@ -16,11 +16,11 @@ Feature: shipped changes conflict with multiple existing feature branches
     And the current branch is "main"
     When I run "git-town sync --all"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | main   | git fetch --prune --tags                |
-      |        | git rebase origin/main --no-update-refs |
-      |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff main           |
+      | BRANCH | COMMAND                                           |
+      | main   | git fetch --prune --tags                          |
+      |        | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout alpha                                |
+      | alpha  | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

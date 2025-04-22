@@ -23,15 +23,15 @@ Feature: syncing a branch whose parent with dependent changes was shipped
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                          |
-      | branch-2 | git fetch --prune --tags                         |
-      |          | git checkout main                                |
-      | main     | git rebase origin/main --no-update-refs          |
-      |          | git checkout branch-2                            |
-      | branch-2 | git pull                                         |
-      |          | git rebase --onto main branch-1 --no-update-refs |
-      |          | git push --force-with-lease                      |
-      |          | git branch -D branch-1                           |
+      | BRANCH   | COMMAND                                                    |
+      | branch-2 | git fetch --prune --tags                                   |
+      |          | git checkout main                                          |
+      | main     | git -c rebase.updateRefs=false rebase origin/main          |
+      |          | git checkout branch-2                                      |
+      | branch-2 | git pull                                                   |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1 |
+      |          | git push --force-with-lease                                |
+      |          | git branch -D branch-1                                     |
     And Git Town prints:
       """
       deleted branch "branch-1"

@@ -16,15 +16,15 @@ Feature: active parked branches get synced like normal feature branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | parked | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git push                                |
-      |        | git checkout parked                     |
-      | parked | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/parked  |
-      |        | git push                                |
+      | BRANCH | COMMAND                                           |
+      | parked | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push                                          |
+      |        | git checkout parked                               |
+      | parked | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/parked            |
+      |        | git push                                          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |

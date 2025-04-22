@@ -51,6 +51,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
+	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-print-config
 	make --no-print-directory lint-structs-sorted
 	make --no-print-directory lint-tests-sorted
@@ -79,6 +80,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/tests_sorted && ../rta golangci-lint run)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
+
+lint-messy-output:
+	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
 
 lint-print-config:
 	@tools/rta node tools/print_config_exhaustive/lint.js
@@ -130,6 +134,7 @@ UNIT_TEST_DIRS = \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
+	./tools/messy_output/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \
 	./tools/tests_sorted/...

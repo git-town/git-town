@@ -15,10 +15,10 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
+      | BRANCH  | COMMAND                                           |
+      | feature | git fetch --prune --tags                          |
+      |         | git checkout main                                 |
+      | main    | git -c rebase.updateRefs=false rebase origin/main |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -51,9 +51,9 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | git -c core.editor=true rebase --continue       |
       |         | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
+      | feature | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase main --no-update-refs                |
+      |         | git -c rebase.updateRefs=false rebase main      |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now
@@ -69,9 +69,9 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH  | COMMAND                                         |
       | main    | git push                                        |
       |         | git checkout feature                            |
-      | feature | git rebase main --no-update-refs                |
+      | feature | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase main --no-update-refs                |
+      |         | git -c rebase.updateRefs=false rebase main      |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

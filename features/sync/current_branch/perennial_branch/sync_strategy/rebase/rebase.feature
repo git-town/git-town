@@ -17,11 +17,11 @@ Feature: sync the current perennial branch using the rebase sync strategy
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | qa     | git fetch --prune --tags              |
-      |        | git rebase origin/qa --no-update-refs |
-      |        | git push                              |
-      |        | git push --tags                       |
+      | BRANCH | COMMAND                                         |
+      | qa     | git fetch --prune --tags                        |
+      |        | git -c rebase.updateRefs=false rebase origin/qa |
+      |        | git push                                        |
+      |        | git push --tags                                 |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

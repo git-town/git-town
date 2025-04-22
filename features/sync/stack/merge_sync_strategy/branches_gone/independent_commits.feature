@@ -19,19 +19,19 @@ Feature: stacked changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | child  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git push                                |
-      |        | git checkout parent                     |
-      | parent | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/parent  |
-      |        | git push                                |
-      |        | git checkout child                      |
-      | child  | git merge --no-edit --ff parent         |
-      |        | git merge --no-edit --ff origin/child   |
-      |        | git push                                |
+      | BRANCH | COMMAND                                           |
+      | child  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push                                          |
+      |        | git checkout parent                               |
+      | parent | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/parent            |
+      |        | git push                                          |
+      |        | git checkout child                                |
+      | child  | git merge --no-edit --ff parent                   |
+      |        | git merge --no-edit --ff origin/child             |
+      |        | git push                                          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |

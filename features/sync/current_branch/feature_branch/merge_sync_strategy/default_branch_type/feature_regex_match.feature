@@ -19,15 +19,15 @@ Feature: a default branch type is set, the feature-regex matches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                   |
-      | my-branch | git fetch --prune --tags                  |
-      |           | git checkout main                         |
-      | main      | git rebase origin/main --no-update-refs   |
-      |           | git push                                  |
-      |           | git checkout my-branch                    |
-      | my-branch | git merge --no-edit --ff main             |
-      |           | git merge --no-edit --ff origin/my-branch |
-      |           | git push                                  |
+      | BRANCH    | COMMAND                                           |
+      | my-branch | git fetch --prune --tags                          |
+      |           | git checkout main                                 |
+      | main      | git -c rebase.updateRefs=false rebase origin/main |
+      |           | git push                                          |
+      |           | git checkout my-branch                            |
+      | my-branch | git merge --no-edit --ff main                     |
+      |           | git merge --no-edit --ff origin/my-branch         |
+      |           | git push                                          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                                                        |
