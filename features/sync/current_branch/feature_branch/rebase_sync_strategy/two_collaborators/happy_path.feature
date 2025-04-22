@@ -52,7 +52,6 @@ Feature: two people with rebase strategy sync changes made by them
       |         | coworker, origin        | coworker commit |
 
     Given the current branch is "feature"
-    And inspect the commits
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                             |
