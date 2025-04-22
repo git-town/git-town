@@ -9,33 +9,6 @@ import (
 )
 
 func TestMessyOutput(t *testing.T) {
-	t.Run("no tags and steps", func(t *testing.T) {
-		text := `
-Feature: test
-
-  Scenario: one
-	  First step
-		Second step
-
-	Scenario: two
-	  First step
-`[1:]
-		scenarios := []messy.ScenarioInfo{
-			{
-				HasStep: false,
-				HasTag:  false,
-				Line:    3,
-			},
-			{
-				HasStep: false,
-				HasTag:  false,
-				Line:    7,
-			},
-		}
-		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{})
-	})
-
 	t.Run("feature has tag but no steps", func(t *testing.T) {
 		text := `
 @messyoutput
@@ -65,6 +38,33 @@ Feature: test
 			"test:4  unnecessary tag\n",
 			"test:8  unnecessary tag\n",
 		})
+	})
+
+	t.Run("no tags and steps", func(t *testing.T) {
+		text := `
+Feature: test
+
+  Scenario: one
+	  First step
+		Second step
+
+	Scenario: two
+	  First step
+`[1:]
+		scenarios := []messy.ScenarioInfo{
+			{
+				HasStep: false,
+				HasTag:  false,
+				Line:    3,
+			},
+			{
+				HasStep: false,
+				HasTag:  false,
+				Line:    7,
+			},
+		}
+		assert_scenarios(t, text, scenarios)
+		assert_errors(t, scenarios, []string{})
 	})
 
 	t.Run("one scenario has a tag but no steps", func(t *testing.T) {
@@ -97,13 +97,14 @@ Feature: test
 		})
 	})
 
-	t.Run("one scenario has the step in singular but no tag", func(t *testing.T) {
+	t.Run("one scenario has the step and a tag", func(t *testing.T) {
 		text := `
 Feature: test
 
+  @messyoutput
   Scenario: one
 	  First step
-		And I run "foo" and enter into the dialog:
+		And I run "foo" and enter into the dialogs:
 
 	Scenario: two
 	  First step
@@ -111,19 +112,17 @@ Feature: test
 		scenarios := []messy.ScenarioInfo{
 			{
 				HasStep: true,
-				HasTag:  false,
-				Line:    3,
+				HasTag:  true,
+				Line:    4,
 			},
 			{
 				HasStep: false,
 				HasTag:  false,
-				Line:    7,
+				Line:    8,
 			},
 		}
 		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{
-			"test:3  missing tag\n",
-		})
+		assert_errors(t, scenarios, []string{})
 	})
 
 	t.Run("one scenario has the step in plural", func(t *testing.T) {
@@ -155,14 +154,13 @@ Feature: test
 		})
 	})
 
-	t.Run("one scenario has the step and a tag", func(t *testing.T) {
+	t.Run("one scenario has the step in singular but no tag", func(t *testing.T) {
 		text := `
 Feature: test
 
-  @messyoutput
   Scenario: one
 	  First step
-		And I run "foo" and enter into the dialogs:
+		And I run "foo" and enter into the dialog:
 
 	Scenario: two
 	  First step
@@ -170,17 +168,19 @@ Feature: test
 		scenarios := []messy.ScenarioInfo{
 			{
 				HasStep: true,
-				HasTag:  true,
-				Line:    4,
+				HasTag:  false,
+				Line:    3,
 			},
 			{
 				HasStep: false,
 				HasTag:  false,
-				Line:    8,
+				Line:    7,
 			},
 		}
 		assert_scenarios(t, text, scenarios)
-		assert_errors(t, scenarios, []string{})
+		assert_errors(t, scenarios, []string{
+			"test:3  missing tag\n",
+		})
 	})
 
 	t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
