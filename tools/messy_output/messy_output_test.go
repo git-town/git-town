@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	messyOutput "github.com/git-town/git-town/tools/messyoutput"
+	messy "github.com/git-town/git-town/tools/messyoutput"
 	"github.com/shoenig/test/must"
 )
 
@@ -21,7 +21,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: false,
 					HasTag:  false,
@@ -49,7 +49,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: false,
 					HasTag:  true,
@@ -80,7 +80,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: false,
 					HasTag:  true,
@@ -109,7 +109,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: true,
 					HasTag:  false,
@@ -138,7 +138,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: true,
 					HasTag:  false,
@@ -168,7 +168,7 @@ Feature: test
 	Scenario: two
 	  First step
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: true,
 					HasTag:  true,
@@ -195,7 +195,7 @@ Feature: test
 	Scenario: two
 		And I run "foo" and enter into the dialogs:
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: true,
 					HasTag:  true,
@@ -222,7 +222,7 @@ Feature: test
 	Scenario: two
 		And another step here
 `[1:]
-			scenarios := []messyOutput.ScenarioInfo{
+			scenarios := []messy.ScenarioInfo{
 				{
 					HasStep: true,
 					HasTag:  true,
@@ -242,17 +242,17 @@ Feature: test
 	})
 }
 
-func assert_scenarios(t *testing.T, text string, wantScenarios []messyOutput.ScenarioInfo) {
+func assert_scenarios(t *testing.T, text string, wantScenarios []messy.ScenarioInfo) {
 	must.NoError(t, os.WriteFile("test", []byte(text), 0o744))
 	defer os.Remove("test")
-	regex := messyOutput.CompileRegex()
-	feature := messyOutput.ReadGherkinFile("test")
-	haveScenarios := messyOutput.FindScenarios(feature, "test", regex)
+	regex := messy.CompileRegex()
+	feature := messy.ReadGherkinFile("test")
+	haveScenarios := messy.FindScenarios(feature, "test", regex)
 	must.Eq(t, wantScenarios, haveScenarios)
 }
 
-func assert_errors(t *testing.T, scenarios []messyOutput.ScenarioInfo, wantErrors []string) {
+func assert_errors(t *testing.T, scenarios []messy.ScenarioInfo, wantErrors []string) {
 	t.Helper()
-	haveErrors := messyOutput.AnalyzeScenarios("test", scenarios)
+	haveErrors := messy.AnalyzeScenarios("test", scenarios)
 	must.Eq(t, wantErrors, haveErrors)
 }
