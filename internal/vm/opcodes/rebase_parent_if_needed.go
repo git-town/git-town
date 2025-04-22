@@ -1,10 +1,9 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/messages"
-	"github.com/git-town/git-town/v18/internal/vm/shared"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 )
 
 type RebaseParentIfNeeded struct {
@@ -44,12 +43,10 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			program = append(program, opcode)
 			break
 		}
-		// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-		parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
 		program = append(program, &RebaseBranch{
-			Branch: parentTrackingName.BranchName(),
+			Branch: branchToRebase,
 		})
-		branch = parent
+		break
 	}
 	args.PrependOpcodes(program...)
 	return nil

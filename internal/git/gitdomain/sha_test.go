@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/test/asserts"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/pkg/asserts"
 	"github.com/shoenig/test/must"
 )
 
@@ -48,24 +48,6 @@ func TestSHA(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
 			gitdomain.NewSHA("abcdefg")
-		})
-	})
-
-	t.Run("TruncateTo", func(t *testing.T) {
-		t.Parallel()
-		t.Run("SHA is longer than the new length", func(t *testing.T) {
-			t.Parallel()
-			sha := gitdomain.NewSHA("123456789abcdef")
-			have := sha.TruncateTo(8)
-			want := gitdomain.NewSHA("12345678")
-			must.EqOp(t, want, have)
-		})
-		t.Run("SHA is shorter than the new length", func(t *testing.T) {
-			t.Parallel()
-			sha := gitdomain.NewSHA("123456789")
-			have := sha.TruncateTo(12)
-			want := gitdomain.NewSHA("123456789")
-			must.EqOp(t, want, have)
 		})
 	})
 

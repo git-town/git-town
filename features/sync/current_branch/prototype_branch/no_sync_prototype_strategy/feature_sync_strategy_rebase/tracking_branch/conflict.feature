@@ -15,11 +15,11 @@ Feature: handle conflicts between the current prototype branch and its tracking 
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                         |
-      | prototype | git fetch --prune --tags                        |
-      |           | git rebase main --no-update-refs                |
-      |           | git push --force-with-lease --force-if-includes |
-      |           | git rebase origin/prototype --no-update-refs    |
+      | BRANCH    | COMMAND                                                |
+      | prototype | git fetch --prune --tags                               |
+      |           | git -c rebase.updateRefs=false rebase main             |
+      |           | git push --force-with-lease --force-if-includes        |
+      |           | git -c rebase.updateRefs=false rebase origin/prototype |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -56,7 +56,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | git -c core.editor=true rebase --continue       |
-      |           | git rebase main --no-update-refs                |
+      |           | git -c rebase.updateRefs=false rebase main      |
       |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
@@ -73,7 +73,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | prototype | git rebase main --no-update-refs                |
+      | prototype | git -c rebase.updateRefs=false rebase main      |
       |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |

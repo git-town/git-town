@@ -1,4 +1,4 @@
-module github.com/git-town/git-town/v18
+module github.com/git-town/git-town/v19
 
 go 1.23.8
 
@@ -24,7 +24,7 @@ require (
 	github.com/shoenig/test v1.12.1
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
-	github.com/xanzy/go-gitlab v0.115.0
+	gitlab.com/gitlab-org/api/client-go v0.127.0
 	golang.org/x/oauth2 v0.28.0
 )
 

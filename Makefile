@@ -1,8 +1,8 @@
-RTA_VERSION = 0.14.1  # run-that-app version to use
+RTA_VERSION = 0.15.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "18.3.2"
+RELEASE_VERSION := "19.0.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
@@ -15,7 +15,7 @@ cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v18/internal/cmd.version=-dev -X github.com/git-town/git-town/v18/internal/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v19/internal/cmd.version=-dev -X github.com/git-town/git-town/v19/internal/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: install  # creates a flamegraph for the end-to-end tests
@@ -51,6 +51,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 	make --no-print-directory deadcode
+	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-print-config
 	make --no-print-directory lint-structs-sorted
 	make --no-print-directory lint-tests-sorted
@@ -58,7 +59,7 @@ lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase con
 	(cd tools/lint_steps && go build && ./lint_steps)
 	tools/rta node tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
-# tools/rta staticcheck ./...  # TODO: enable after staticcheck was compiled with Go 1.23.5 or newer
+	tools/rta --from-source staticcheck ./...
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta shfmt -f . | grep -v 'tools/node_modules' | grep -v '^vendor/' | xargs tools/rta --optional shellcheck
 	tools/rta golangci-lint cache clean
@@ -80,12 +81,15 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
 
+lint-messy-output:
+	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
+
 lint-print-config:
 	@tools/rta node tools/print_config_exhaustive/lint.js
 
 lint-smoke: tools/rta@${RTA_VERSION}  # runs only the essential linters to get quick feedback after refactoring
 	@tools/rta exhaustruct -test=false "-i=github.com/git-town/git-town.*" github.com/git-town/git-town/...
-# @tools/rta ireturn --reject="github.com/git-town/git-town/v18/pkg/prelude.Option" github.com/git-town/git-town/...
+# @tools/rta ireturn --reject="github.com/git-town/git-town/v19/pkg/prelude.Option" github.com/git-town/git-town/...
 
 lint-structs-sorted:
 	@(cd tools/structs_sorted && go build) && ./tools/structs_sorted/structs_sorted
@@ -127,10 +131,10 @@ todo:  # displays all TODO items
 UNIT_TEST_DIRS = \
 	./internal/... \
 	./pkg/... \
-	./test/... \
 	./tools/format_self/... \
 	./tools/format_unittests/... \
 	./tools/lint_steps/... \
+	./tools/messy_output/... \
 	./tools/stats_release/... \
 	./tools/structs_sorted/... \
 	./tools/tests_sorted/...
@@ -166,7 +170,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode github.com/git-town/git-town/tools/lint_steps &
-	@tools/rta deadcode -test github.com/git-town/git-town/v18 \
+	@tools/rta deadcode -test github.com/git-town/git-town/v19 \
 		| grep -v BranchExists \
 		| grep -v 'Create$$' \
 		| grep -v CreateFile \

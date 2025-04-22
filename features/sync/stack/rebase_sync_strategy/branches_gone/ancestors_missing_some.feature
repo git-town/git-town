@@ -23,22 +23,22 @@ Feature: stacked changes where an ancestor branch isn't local
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | gamma  | git fetch --prune --tags                        |
-      |        | git checkout alpha                              |
-      | alpha  | git rebase origin/main --no-update-refs         |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/alpha --no-update-refs        |
-      |        | git rebase origin/main --no-update-refs         |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout gamma                              |
-      | gamma  | git rebase origin/beta --no-update-refs         |
-      |        | git rebase alpha --no-update-refs               |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git rebase origin/gamma --no-update-refs        |
-      |        | git rebase origin/beta --no-update-refs         |
-      |        | git rebase alpha --no-update-refs               |
-      |        | git push --force-with-lease --force-if-includes |
+      | BRANCH | COMMAND                                            |
+      | gamma  | git fetch --prune --tags                           |
+      |        | git checkout alpha                                 |
+      | alpha  | git -c rebase.updateRefs=false rebase origin/main  |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git -c rebase.updateRefs=false rebase origin/alpha |
+      |        | git -c rebase.updateRefs=false rebase origin/main  |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git checkout gamma                                 |
+      | gamma  | git -c rebase.updateRefs=false rebase origin/beta  |
+      |        | git -c rebase.updateRefs=false rebase alpha        |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git -c rebase.updateRefs=false rebase origin/gamma |
+      |        | git -c rebase.updateRefs=false rebase origin/beta  |
+      |        | git -c rebase.updateRefs=false rebase alpha        |
+      |        | git push --force-with-lease --force-if-includes    |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |

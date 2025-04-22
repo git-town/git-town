@@ -1,3 +1,4 @@
+@messyoutput
 Feature: sync the current branch which has a branch-type override
 
   Background:

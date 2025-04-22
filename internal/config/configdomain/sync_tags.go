@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v18/internal/gohacks"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/gohacks"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // SyncTags contains the configuration setting whether to sync Git tags.

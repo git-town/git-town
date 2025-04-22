@@ -3,8 +3,8 @@ package gitlab_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v18/internal/forge/gitlab"
-	"github.com/git-town/git-town/v18/internal/git/giturl"
+	"github.com/git-town/git-town/v19/internal/forge/gitlab"
+	"github.com/git-town/git-town/v19/internal/git/giturl"
 	"github.com/shoenig/test/must"
 )
 

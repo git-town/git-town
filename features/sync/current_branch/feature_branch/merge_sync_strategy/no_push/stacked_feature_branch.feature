@@ -20,16 +20,16 @@ Feature: syncing a stacked feature branch using --no-push
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | child  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout parent                     |
-      | parent | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/parent  |
-      |        | git checkout child                      |
-      | child  | git merge --no-edit --ff parent         |
-      |        | git merge --no-edit --ff origin/child   |
+      | BRANCH | COMMAND                                           |
+      | child  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout parent                               |
+      | parent | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/parent            |
+      |        | git checkout child                                |
+      | child  | git merge --no-edit --ff parent                   |
+      |        | git merge --no-edit --ff origin/child             |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

@@ -19,16 +19,16 @@ Feature: shipped parent of a stacked change with independent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                   |
-      | feature-3 | git fetch --prune --tags                  |
-      |           | git checkout main                         |
-      | main      | git rebase origin/main --no-update-refs   |
-      |           | git branch -D feature-1                   |
-      |           | git branch -D feature-2                   |
-      |           | git checkout feature-3                    |
-      | feature-3 | git merge --no-edit --ff main             |
-      |           | git merge --no-edit --ff origin/feature-3 |
-      |           | git push                                  |
+      | BRANCH    | COMMAND                                           |
+      | feature-3 | git fetch --prune --tags                          |
+      |           | git checkout main                                 |
+      | main      | git -c rebase.updateRefs=false rebase origin/main |
+      |           | git branch -D feature-1                           |
+      |           | git branch -D feature-2                           |
+      |           | git checkout feature-3                            |
+      | feature-3 | git merge --no-edit --ff main                     |
+      |           | git merge --no-edit --ff origin/feature-3         |
+      |           | git push                                          |
     And Git Town prints:
       """
       deleted branch "feature-1"

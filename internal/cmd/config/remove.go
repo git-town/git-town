@@ -5,10 +5,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v18/internal/cli/flags"
-	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/execute"
+	"github.com/git-town/git-town/v19/internal/cli/flags"
+	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/execute"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +45,7 @@ func executeRemoveConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = repo.UnvalidatedConfig.NormalConfig.GitConfigAccess.RemoveLocalGitConfiguration(repo.UnvalidatedConfig.NormalConfig.Lineage, repo.UnvalidatedConfig.NormalConfig.BranchTypeOverrides)
+	err = repo.UnvalidatedConfig.NormalConfig.GitConfigAccess.RemoveLocalGitConfiguration(repo.ConfigSnapshot.Local)
 	if err != nil {
 		return err
 	}

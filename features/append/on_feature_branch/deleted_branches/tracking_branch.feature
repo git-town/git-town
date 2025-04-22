@@ -14,12 +14,12 @@ Feature: append a branch to a branch whose tracking branch was deleted
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | shipped | git fetch --prune --tags                |
-      |         | git checkout main                       |
-      | main    | git rebase origin/main --no-update-refs |
-      |         | git branch -D shipped                   |
-      |         | git checkout -b new                     |
+      | BRANCH  | COMMAND                                           |
+      | shipped | git fetch --prune --tags                          |
+      |         | git checkout main                                 |
+      | main    | git -c rebase.updateRefs=false rebase origin/main |
+      |         | git branch -D shipped                             |
+      |         | git checkout -b new                               |
     And Git Town prints:
       """
       deleted branch "shipped"

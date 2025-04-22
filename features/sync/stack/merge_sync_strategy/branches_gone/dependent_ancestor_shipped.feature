@@ -22,18 +22,18 @@ Feature: shipped the head branch of a synced stack with dependent changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git branch -D alpha                     |
-      |        | git checkout beta                       |
-      | beta   | git merge --no-edit --ff main           |
-      |        | git checkout --ours file                |
-      |        | git add file                            |
-      |        | git commit --no-edit                    |
-      |        | git merge --no-edit --ff origin/beta    |
-      |        | git push                                |
+      | BRANCH | COMMAND                                           |
+      | beta   | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git branch -D alpha                               |
+      |        | git checkout beta                                 |
+      | beta   | git merge --no-edit --ff main                     |
+      |        | git checkout --ours file                          |
+      |        | git add file                                      |
+      |        | git commit --no-edit                              |
+      |        | git merge --no-edit --ff origin/beta              |
+      |        | git push                                          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       | FILE NAME | FILE CONTENT  |

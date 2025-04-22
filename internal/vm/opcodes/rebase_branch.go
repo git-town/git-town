@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/vm/shared"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 )
 
 // RebaseBranch rebases the current branch
@@ -25,5 +25,5 @@ func (self *RebaseBranch) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseBranch) Run(args shared.RunArgs) error {
-	return args.Git.Rebase(args.Frontend, self.Branch, args.Config.Value.NormalConfig.GitVersion)
+	return args.Git.Rebase(args.Frontend, self.Branch)
 }

@@ -1,7 +1,7 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v18/internal/vm/shared"
+	"github.com/git-town/git-town/v19/internal/vm/shared"
 )
 
 // RestoreOpenChanges restores stashed away changes into the workspace.

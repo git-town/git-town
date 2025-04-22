@@ -19,16 +19,18 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
-      |         | backend  | git status --long --ignore-submodules             |
+      |         | backend  | git status -z --ignore-submodules                 |
+      |         | backend  | git rev-parse -q --verify MERGE_HEAD              |
+      |         | backend  | git rev-parse --absolute-git-dir                  |
       |         | backend  | git remote                                        |
       |         | backend  | git branch --show-current                         |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git stash list                                    |
-      |         | backend  | git branch -vva --sort=refname                    |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git shortlog -s -n -e main..feature               |
-      |         | backend  | git diff main..feature                            |
+      |         | backend  | git diff --shortstat main feature                 |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash --ff feature                   |
       |         | frontend | git commit -m done                                |
@@ -40,40 +42,42 @@ Feature: display all executed Git commands
       | main    | frontend | git push origin :feature                          |
       |         | frontend | git branch -D feature                             |
       |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
-      |         | backend  | git branch -vva --sort=refname                    |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 29 shell commands.
+      Ran 31 shell commands.
       """
 
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
-      | BRANCH | TYPE     | COMMAND                                        |
-      |        | backend  | git version                                    |
-      |        | backend  | git rev-parse --show-toplevel                  |
-      |        | backend  | git config -lz --includes --global             |
-      |        | backend  | git config -lz --includes --local              |
-      |        | backend  | git status --long --ignore-submodules          |
-      |        | backend  | git stash list                                 |
-      |        | backend  | git branch -vva --sort=refname                 |
-      |        | backend  | git remote get-url origin                      |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
-      |        | backend  | git remote get-url origin                      |
-      |        | backend  | git log --pretty=format:%H %s -10              |
-      | main   | frontend | git revert {{ sha 'done' }}                    |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main  |
-      |        | backend  | git rev-list --left-right main...origin/main   |
-      | main   | frontend | git push                                       |
-      |        | frontend | git branch feature {{ sha 'feature commit' }}  |
-      |        | frontend | git push -u origin feature                     |
-      |        | backend  | git show-ref --quiet refs/heads/feature        |
-      | main   | frontend | git checkout feature                           |
-      |        | backend  | git config git-town-branch.feature.parent main |
+      | BRANCH | TYPE     | COMMAND                                          |
+      |        | backend  | git version                                      |
+      |        | backend  | git rev-parse --show-toplevel                    |
+      |        | backend  | git config -lz --includes --global               |
+      |        | backend  | git config -lz --includes --local                |
+      |        | backend  | git status -z --ignore-submodules                |
+      |        | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend  | git rev-parse --absolute-git-dir                 |
+      |        | backend  | git stash list                                   |
+      |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
+      |        | backend  | git remote get-url origin                        |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git remote get-url origin                        |
+      |        | backend  | git log --pretty=format:%H %s -10                |
+      | main   | frontend | git revert {{ sha 'done' }}                      |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main    |
+      |        | backend  | git rev-list --left-right main...origin/main     |
+      | main   | frontend | git push                                         |
+      |        | frontend | git branch feature {{ sha 'feature commit' }}    |
+      |        | frontend | git push -u origin feature                       |
+      |        | backend  | git show-ref --quiet refs/heads/feature          |
+      | main   | frontend | git checkout feature                             |
+      |        | backend  | git config git-town-branch.feature.parent main   |
     And Git Town prints:
       """
-      Ran 20 shell commands.
+      Ran 22 shell commands.
       """

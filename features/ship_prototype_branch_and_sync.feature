@@ -26,12 +26,12 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | hooks  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git branch -D hooks                     |
-      |        | git push --tags                         |
+      | BRANCH | COMMAND                                           |
+      | hooks  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git branch -D hooks                               |
+      |        | git push --tags                                   |
     And Git Town prints:
       """
       deleted branch "hooks"

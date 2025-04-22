@@ -6,28 +6,28 @@ import (
 	"os"
 	"slices"
 
-	"github.com/git-town/git-town/v18/internal/cli/dialog"
-	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v18/internal/cli/flags"
-	"github.com/git-town/git-town/v18/internal/cli/print"
-	"github.com/git-town/git-town/v18/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v18/internal/cmd/sync"
-	"github.com/git-town/git-town/v18/internal/config"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/execute"
-	"github.com/git-town/git-town/v18/internal/forge"
-	"github.com/git-town/git-town/v18/internal/git"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/messages"
-	"github.com/git-town/git-town/v18/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v18/internal/validate"
-	configInterpreter "github.com/git-town/git-town/v18/internal/vm/interpreter/config"
-	fullInterpreter "github.com/git-town/git-town/v18/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v18/internal/vm/program"
-	"github.com/git-town/git-town/v18/internal/vm/runstate"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/dialog"
+	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v19/internal/cli/flags"
+	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v19/internal/cmd/sync"
+	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/execute"
+	"github.com/git-town/git-town/v19/internal/forge"
+	"github.com/git-town/git-town/v19/internal/git"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v19/internal/validate"
+	configInterpreter "github.com/git-town/git-town/v19/internal/vm/interpreter/config"
+	fullInterpreter "github.com/git-town/git-town/v19/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v19/internal/vm/program"
+	"github.com/git-town/git-town/v19/internal/vm/runstate"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -345,7 +345,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		if err != nil {
 			return data, false, err
 		}
-		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, dialogTestInputs.Next())
+		commitsToBeam, exit, err = dialog.CommitsToBeam(commitsInBranch, targetBranch, repo.Git, repo.Backend, dialogTestInputs.Next())
 		if err != nil || exit {
 			return data, exit, err
 		}

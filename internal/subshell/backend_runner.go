@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v18/internal/cli/colors"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/colors"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -28,24 +28,20 @@ type BackendRunner struct {
 }
 
 func (self BackendRunner) Query(executable string, args ...string) (string, error) {
-	return self.execute([]string{}, executable, args...)
+	return self.execute(executable, args...)
 }
 
 func (self BackendRunner) QueryTrim(executable string, args ...string) (string, error) {
-	output, err := self.execute([]string{}, executable, args...)
+	output, err := self.execute(executable, args...)
 	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
-func (self BackendRunner) QueryWithEnv(env []string, executable string, args ...string) (string, error) {
-	return self.execute(env, executable, args...)
-}
-
 func (self BackendRunner) Run(executable string, args ...string) error {
-	_, err := self.execute([]string{}, executable, args...)
+	_, err := self.execute(executable, args...)
 	return err
 }
 
-func (self BackendRunner) execute(additionalEnv []string, executable string, args ...string) (string, error) {
+func (self BackendRunner) execute(executable string, args ...string) (string, error) {
 	self.CommandsCounter.Value.Inc()
 	if self.Verbose {
 		printHeader(executable, args...)
@@ -56,9 +52,7 @@ func (self BackendRunner) execute(additionalEnv []string, executable string, arg
 	}
 	env := subProcess.Environ()
 	env = append(env, "LC_ALL=C")
-	for _, entry := range additionalEnv {
-		env = append(env, entry)
-	}
+	env = append(env, `GIT_CONFIG_PARAMETERS='color.ui=never'`)
 	subProcess.Env = env
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string

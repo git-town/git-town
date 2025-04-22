@@ -7,11 +7,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v18/internal/cli/colors"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/colors"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 type Runner interface {
@@ -59,7 +59,7 @@ func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage, branchTypeOverrides configdomain.BranchTypeOverrides) error {
+func (self *Access) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSnapshot) error {
 	err := self.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
@@ -72,18 +72,12 @@ func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage, br
 		}
 		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
-	for _, entry := range lineage.Entries() {
-		key := fmt.Sprintf("git-town-branch.%s.parent", entry.Child)
-		err = self.Run("git", "config", "--unset", key)
-		if err != nil {
-			return fmt.Errorf(messages.ConfigRemoveError, err)
-		}
-	}
-	for branch := range branchTypeOverrides {
-		key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-		err = self.Run("git", "config", "--unset", key.String())
-		if err != nil {
-			return fmt.Errorf(messages.ConfigRemoveError, err)
+	for key := range localSnapshot {
+		if strings.HasPrefix(key.String(), "git-town-branch.") {
+			err = self.Run("git", "config", "--unset", key.String())
+			if err != nil {
+				return fmt.Errorf(messages.ConfigRemoveError, err)
+			}
 		}
 	}
 	return nil

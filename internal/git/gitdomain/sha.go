@@ -51,11 +51,3 @@ func (self SHA) Location() Location {
 func (self SHA) String() string {
 	return string(self)
 }
-
-// TruncateTo provides a new SHA instance that contains a shorter checksum.
-func (self SHA) TruncateTo(newLength int) SHA {
-	if len(self) < newLength {
-		return self
-	}
-	return NewSHA(string(self)[0:newLength])
-}

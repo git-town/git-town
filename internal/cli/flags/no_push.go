@@ -1,13 +1,13 @@
 package flags
 
 import (
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
 const noPushLong = "no-push"
 
-// type-safe access to the CLI arguments of type configdomain.NoPushHook
+// type-safe access to the CLI arguments of type configdomain.PushBranches
 func NoPush() (AddFunc, ReadNoPushFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(noPushLong, "", false, "do not push local branches")

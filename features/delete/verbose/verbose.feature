@@ -21,12 +21,14 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
-      |         | backend  | git status --long --ignore-submodules             |
+      |         | backend  | git status -z --ignore-submodules                 |
+      |         | backend  | git rev-parse -q --verify MERGE_HEAD              |
+      |         | backend  | git rev-parse --absolute-git-dir                  |
       |         | backend  | git remote                                        |
       |         | backend  | git branch --show-current                         |
       | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git stash list                                    |
-      |         | backend  | git branch -vva --sort=refname                    |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       | current | frontend | git push origin :current                          |
@@ -34,11 +36,11 @@ Feature: display all executed Git commands
       | other   | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
       |         | backend  | git show-ref --verify --quiet refs/heads/current  |
-      |         | backend  | git branch -vva --sort=refname                    |
+      |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 21 shell commands.
+      Ran 23 shell commands.
       """

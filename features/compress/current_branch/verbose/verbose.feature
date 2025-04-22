@@ -21,12 +21,14 @@ Feature: compress the commits on a feature branch verbosely
       |         | git config -lz --includes --global                       |
       |         | git config -lz --includes --local                        |
       |         | git rev-parse --verify --abbrev-ref @{-1}                |
-      |         | git status --long --ignore-submodules                    |
+      |         | git status -z --ignore-submodules                        |
+      |         | git rev-parse -q --verify MERGE_HEAD                     |
+      |         | git rev-parse --absolute-git-dir                         |
       |         | git remote                                               |
       |         | git branch --show-current                                |
       | feature | git fetch --prune --tags                                 |
       | (none)  | git stash list                                           |
-      |         | git branch -vva --sort=refname                           |
+      |         | git -c core.abbrev=40 branch -vva --sort=refname         |
       |         | git remote get-url origin                                |
       |         | git cherry -v main feature                               |
       |         | git log --format=%B -n 1 {{ sha-before-run 'commit 1' }} |
@@ -34,13 +36,13 @@ Feature: compress the commits on a feature branch verbosely
       |         | git commit -m "commit 1"                                 |
       | (none)  | git rev-list --left-right feature...origin/feature       |
       | feature | git push --force-with-lease --force-if-includes          |
-      | (none)  | git branch -vva --sort=refname                           |
+      | (none)  | git -c core.abbrev=40 branch -vva --sort=refname         |
       |         | git config -lz --includes --global                       |
       |         | git config -lz --includes --local                        |
       |         | git stash list                                           |
     And Git Town prints:
       """
-      Ran 22 shell commands
+      Ran 24 shell commands
       """
     And all branches are now synchronized
     And these commits exist now
@@ -58,9 +60,11 @@ Feature: compress the commits on a feature branch verbosely
       |         | git rev-parse --show-toplevel                      |
       |         | git config -lz --includes --global                 |
       |         | git config -lz --includes --local                  |
-      |         | git status --long --ignore-submodules              |
+      |         | git status -z --ignore-submodules                  |
+      |         | git rev-parse -q --verify MERGE_HEAD               |
+      |         | git rev-parse --absolute-git-dir                   |
       |         | git stash list                                     |
-      |         | git branch -vva --sort=refname                     |
+      |         | git -c core.abbrev=40 branch -vva --sort=refname   |
       |         | git remote get-url origin                          |
       |         | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | git remote get-url origin                          |

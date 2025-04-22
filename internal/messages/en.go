@@ -139,6 +139,7 @@ END OUTPUT FROM 'git branch -vva'
 	HackCannotFeaturePerennialBranch    = "branch %q is a perennial branch and cannot be a feature branch"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	InvalidStatusOutput                 = `invalid "git status -z" output: %q`
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
 	KillDeprecation                     = `DEPRECATION NOTICE
@@ -239,7 +240,6 @@ and will be removed in future versions of Git Town.`
 	ShipMessageWithFastForward              = "shipping with the fast-forward strategy does not use the given commit message"
 	ShipOpenChanges                         = "you have uncommitted changes. Did you mean to commit them before shipping?"
 	ShipStrategyMissing                     = "no ship strategy provided"
-	ShippableChangesProblem                 = "cannot determine whether branch %q has shippable changes: %w"
 	SkipBranchHasConflicts                  = "cannot skip branch that resulted in conflicts"
 	SkipMessage                             = `You can run "git town skip" to skip the currently failing operation.`
 	SkipNothingToDo                         = "nothing to skip"

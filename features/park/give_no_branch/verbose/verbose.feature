@@ -15,9 +15,9 @@ Feature: park the current branch verbosely
       |        | git rev-parse --show-toplevel                        |
       |        | git config -lz --includes --global                   |
       |        | git config -lz --includes --local                    |
-      |        | git branch -vva --sort=refname                       |
+      |        | git -c core.abbrev=40 branch -vva --sort=refname     |
       |        | git config git-town-branch.feature.branchtype parked |
-      |        | git branch -vva --sort=refname                       |
+      |        | git -c core.abbrev=40 branch -vva --sort=refname     |
       |        | git config -lz --includes --global                   |
       |        | git config -lz --includes --local                    |
     And Git Town prints:
@@ -38,15 +38,17 @@ Feature: park the current branch verbosely
       |        | git rev-parse --show-toplevel                         |
       |        | git config -lz --includes --global                    |
       |        | git config -lz --includes --local                     |
-      |        | git status --long --ignore-submodules                 |
+      |        | git status -z --ignore-submodules                     |
+      |        | git rev-parse -q --verify MERGE_HEAD                  |
+      |        | git rev-parse --absolute-git-dir                      |
       |        | git stash list                                        |
-      |        | git branch -vva --sort=refname                        |
+      |        | git -c core.abbrev=40 branch -vva --sort=refname      |
       |        | git remote get-url origin                             |
       |        | git rev-parse --verify --abbrev-ref @{-1}             |
       |        | git remote get-url origin                             |
       |        | git config --unset git-town-branch.feature.branchtype |
     And Git Town prints:
       """
-      Ran 11 shell commands
+      Ran 13 shell commands
       """
     And branch "feature" now has type "feature"

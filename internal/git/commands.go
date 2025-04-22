@@ -5,15 +5,16 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/git/gitdomain"
-	"github.com/git-town/git-town/v18/internal/gohacks/cache"
-	"github.com/git-town/git-town/v18/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks/cache"
+	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.
@@ -66,7 +67,7 @@ func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdo
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
 func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", parent.String()+".."+branch.String())
+	out, err := querier.QueryTrim("git", "diff", "--shortstat", parent.String(), branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
@@ -89,7 +90,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	output, err := querier.QueryWithEnv([]string{`GIT_CONFIG_PARAMETERS='core.abbrev=40'`}, "git", "branch", "-vva", "--sort=refname")
+	output, err := querier.Query("git", "-c", "core.abbrev=40", "branch", "-vva", "--sort=refname")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
@@ -182,22 +183,22 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error
 }
 
 func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author]) error {
-	gitArgs := []string{"commit"}
+	args := []string{"commit"}
 	switch {
 	case useMessage.IsCustomMessage():
 		message := useMessage.GetCustomMessageOrPanic()
-		gitArgs = append(gitArgs, "-m", message.String())
+		args = append(args, "-m", message.String())
 	case useMessage.IsUseDefault():
-		gitArgs = append(gitArgs, "--no-edit")
+		args = append(args, "--no-edit")
 	case useMessage.IsEditDefault():
 		// This is the default behaviour of `git commit`.
 	default:
 		return fmt.Errorf("unhandled %#v case", useMessage)
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {
-		gitArgs = append(gitArgs, "--author", author.String())
+		args = append(args, "--author", author.String())
 	}
-	return runner.Run("git", gitArgs...)
+	return runner.Run("git", args...)
 }
 
 func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
@@ -393,7 +394,7 @@ func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdoma
 
 // DiffParent displays the diff between the given branch and its given parent branch.
 func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
-	return runner.Run("git", "diff", parentBranch.String()+".."+branch.String())
+	return runner.Run("git", "diff", parentBranch.String(), branch.String())
 }
 
 func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
@@ -519,18 +520,24 @@ func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.Loc
 	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
-func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
-	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (self *Commands) HasMergeInProgress(querier gitdomain.Querier) bool {
+	_, err := querier.Query("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
-// HasShippableChanges indicates whether the given branch has changes not currently in the main branch.
-func (self *Commands) HasShippableChanges(querier gitdomain.Querier, branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
-	out, err := querier.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
+func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) bool {
+	gitDir, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
 	if err != nil {
-		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
+		return false
 	}
-	return len(out) > 0, nil
+	for _, rebaseDirName := range []string{"rebase-merge", "rebase-apply"} {
+		rebaseDirPath := filepath.Join(gitDir, rebaseDirName)
+		stat, err := os.Stat(rebaseDirPath)
+		if err == nil && stat.IsDir() {
+			return true
+		}
+	}
+	return false
 }
 
 // HeadCommitMessage provides the commit message for the last commit.
@@ -551,24 +558,24 @@ func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain
 }
 
 func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage configdomain.UseMessage, branch gitdomain.LocalBranchName) error {
-	gitArgs := []string{"merge", "--no-ff"}
+	args := []string{"merge", "--no-ff"}
 	switch {
 	case useMessage.IsCustomMessage():
 		message := useMessage.GetCustomMessageOrPanic()
-		gitArgs = append(gitArgs, "-m", message.String())
+		args = append(args, "-m", message.String())
 	case useMessage.IsUseDefault():
-		gitArgs = append(gitArgs, "--no-edit")
+		args = append(args, "--no-edit")
 	case useMessage.IsEditDefault():
 		// Unlike `git commit`, `git merge` only launches the editor in a tty.
 		// Until cucumber tests run git subcommands in a tty we have to explicitly set
 		// `--edit` mode to test commit message behaviour.
-		gitArgs = append(gitArgs, "--edit")
+		args = append(args, "--edit")
 	default:
 		return fmt.Errorf("unhandled %#v case", useMessage)
 	}
 	// Add branch name as the last argument.
-	gitArgs = append(gitArgs, "--", branch.String())
-	return runner.Run("git", gitArgs...)
+	args = append(args, "--", branch.String())
+	return runner.Run("git", args...)
 }
 
 func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.LocalBranchName] {
@@ -635,21 +642,17 @@ func (self *Commands) PushTags(runner gitdomain.Runner, noPushHook configdomain.
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName, version Version) error {
-	args := []string{"rebase", target.String()}
-	if version.HasRebaseUpdateRefs() {
-		args = append(args, "--no-update-refs")
-	}
-	return runner.Run("git", args...)
+func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName) error {
+	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", target.String())
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
 func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
-	args := []string{"rebase", "--onto", branchToRebaseOnto.String()}
+	args := []string{"-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String()}
 	if upstream, hasUpstream := upstream.Get(); hasUpstream {
 		args = append(args, upstream.String())
 	}
-	args = append(args, commitsToRemove.String(), "--no-update-refs")
+	args = append(args, commitsToRemove.String())
 	return runner.Run("git", args...)
 }
 
@@ -689,7 +692,7 @@ func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
 
 // RemoveCommit removes the given commit from the current branch
 func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA) error {
-	return runner.Run("git", "rebase", "--onto", commit.String()+"^", commit.String(), "--no-update-refs")
+	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", commit.String()+"^", commit.String())
 }
 
 func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
@@ -717,17 +720,22 @@ func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName git
 }
 
 func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatus, error) {
-	output, err := querier.QueryTrim("git", "status", "--long", "--ignore-submodules")
+	output, err := querier.Query("git", "status", "-z", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
-	hasConflicts := strings.Contains(output, "Unmerged paths")
-	hasOpenChanges := outputIndicatesOpenChanges(output)
-	hasUntrackedChanges := outputIndicatesUntrackedChanges(output)
-	rebaseInProgress := outputIndicatesRebaseInProgress(output)
+	statuses, err := ParseGitStatusZ(output)
+	if err != nil {
+		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
+	}
+	hasConflicts := slices.ContainsFunc(statuses, FileStatusIsUnmerged)
+	hasOpenChanges := len(statuses) > 0
+	hasUntrackedChanges := slices.ContainsFunc(statuses, FileStatusIsUntracked)
+	mergeInProgress := self.HasMergeInProgress(querier)
+	rebaseInProgress := self.HasRebaseInProgress(querier)
 	return gitdomain.RepoStatus{
 		Conflicts:        hasConflicts,
-		OpenChanges:      hasOpenChanges,
+		OpenChanges:      hasOpenChanges && !mergeInProgress && !rebaseInProgress,
 		RebaseInProgress: rebaseInProgress,
 		UntrackedChanges: hasUntrackedChanges,
 	}, nil
@@ -807,6 +815,14 @@ func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.
 
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
+}
+
+func (self *Commands) ShortenSHA(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.SHA, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--short", sha.String())
+	if err != nil {
+		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, sha, err)
+	}
+	return gitdomain.NewSHA(output), nil
 }
 
 func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
@@ -1028,34 +1044,4 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.Sy
 // indicates whether the branch with the given name exists locally
 func isLocalBranchName(branch string) bool {
 	return !strings.HasPrefix(branch, "remotes/")
-}
-
-func outputIndicatesMergeInProgress(output string) bool {
-	if strings.Contains(output, "You have unmerged paths") {
-		return true
-	}
-	for _, line := range strings.Split(output, "\n") {
-		if strings.HasPrefix(line, "AA ") {
-			return true
-		}
-	}
-	return false
-}
-
-func outputIndicatesOpenChanges(output string) bool {
-	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
-		return false
-	}
-	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
-		return false
-	}
-	return true
-}
-
-func outputIndicatesRebaseInProgress(output string) bool {
-	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
-}
-
-func outputIndicatesUntrackedChanges(output string) bool {
-	return strings.Contains(output, "Untracked files:")
 }

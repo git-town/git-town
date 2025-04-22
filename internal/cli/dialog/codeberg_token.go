@@ -3,15 +3,14 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v18/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v18/internal/config/configdomain"
-	"github.com/git-town/git-town/v18/internal/messages"
-	. "github.com/git-town/git-town/v18/pkg/prelude"
+	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/messages"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
-//nolint:gosec
 const (
-	codebergTokenTitle = `Codeberg API token` //nolint:gosec
+	codebergTokenTitle = `Codeberg API token`
 	codebergTokenHelp  = `
 Git Town can update pull requests and ship branches on codeberg-based forges for you.
 To enable this, please enter a codeberg API token.

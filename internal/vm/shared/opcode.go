@@ -1,5 +1,10 @@
 package shared
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Opcode is an atomic operation that the Git Town interpreter can execute.
 // Opcodes implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and provide opcodes to continue and abort them.
@@ -31,4 +36,17 @@ type Opcode interface {
 	// The undo program returned here is only for external changes
 	// like updating proposals at the forge.
 	UndoExternalChangesProgram() []Opcode
+}
+
+func RenderOpcodes(opcodes []Opcode, indent string) string {
+	sb := strings.Builder{}
+	if len(opcodes) == 0 {
+		sb.WriteString("(empty program)\n")
+	} else {
+		sb.WriteString("Program:\n")
+		for o, opcode := range opcodes {
+			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
+		}
+	}
+	return sb.String()
 }
