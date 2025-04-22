@@ -21,7 +21,7 @@ func TestMain(_ *testing.M) {
 	options.Paths = pflag.Args()
 	flagThis := len(os.Getenv("cukethis")) > 0
 	flagSmoke := len(os.Getenv("smoke")) > 0
-	flagSkipMessyOutput := len(os.Getenv("skipmessyoutput")) > 0
+	flagMessyOutput := os.Getenv("messyoutput")
 	switch {
 	case flagThis:
 		options.Format = "pretty"
@@ -39,8 +39,14 @@ func TestMain(_ *testing.M) {
 	} else {
 		options.Concurrency = runtime.NumCPU() * 4
 	}
-	if flagSkipMessyOutput {
+	switch flagMessyOutput {
+	case "":
+	case "0":
 		options.Tags = "~@messyoutput"
+	case "1":
+		options.Tags = "@messyoutput"
+	default:
+		panic("unknown value for messyoutput")
 	}
 	if flagSmoke {
 		options.Tags = "@smoke"

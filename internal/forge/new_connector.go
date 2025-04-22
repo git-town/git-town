@@ -61,7 +61,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	case configdomain.ForgeTypeGitHub:
 		var err error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
-			APIToken:  github.GetAPIToken(config.NormalConfig.GitHubToken),
+			APIToken:  config.NormalConfig.GitHubToken,
 			Log:       log,
 			RemoteURL: remoteURL,
 		})
