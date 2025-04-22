@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"os"
 	"strconv"
 
 	"github.com/git-town/git-town/v19/internal/cli/colors"
@@ -180,22 +179,6 @@ func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBra
 	}
 	self.log.Ok()
 	return nil
-}
-
-// getGitHubApiToken returns the GitHub API token to use.
-// It first checks the GITHUB_TOKEN environment variable.
-// If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
-// If that is not set, it checks the git config.
-func GetAPIToken(gitConfigToken Option[configdomain.GitHubToken]) Option[configdomain.GitHubToken] {
-	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
-	if len(apiToken) > 0 {
-		return Some(configdomain.GitHubToken(apiToken))
-	}
-	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
-	if len(apiToken) > 0 {
-		return Some(configdomain.GitHubToken(apiToken))
-	}
-	return gitConfigToken
 }
 
 // NewConnector provides a fully configured GithubConnector instance
