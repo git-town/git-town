@@ -16,7 +16,7 @@ Feature: running a sync after running another Git Town command
       |        | origin   | origin parent commit |
     And the current branch is "child"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
-    When I ran "git-town sync"
+    And I ran "git-town sync"
     And I ran "git-town hack new"
     And the current branch is "child"
     When I run "git-town sync"
