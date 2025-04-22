@@ -111,6 +111,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               mergeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -141,6 +142,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 }
 
 type mergeData struct {
+	branchInfosLastRun              Option[gitdomain.BranchInfos]
 	branchesSnapshot                gitdomain.BranchesSnapshot
 	config                          config.ValidatedConfig
 	connector                       Option[forgedomain.Connector]
@@ -174,7 +176,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
-	branchesSnapshot, stashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -267,6 +269,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		}
 	}
 	return mergeData{
+		branchInfosLastRun:              branchInfosLastRun,
 		branchesSnapshot:                branchesSnapshot,
 		config:                          validatedConfig,
 		connector:                       connectorOpt,

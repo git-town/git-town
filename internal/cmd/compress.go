@@ -122,6 +122,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		RunProgram:            runProgram,
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
@@ -147,6 +148,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 }
 
 type compressBranchesData struct {
+	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToCompress []compressBranchData
 	config             config.ValidatedConfig
@@ -174,7 +176,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -280,6 +282,7 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 		return data, exit, fmt.Errorf(messages.CompressNoCommits, branchNamesToCompress[0])
 	}
 	return compressBranchesData{
+		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		branchesToCompress: branchesToCompress,
 		config:             validatedConfig,

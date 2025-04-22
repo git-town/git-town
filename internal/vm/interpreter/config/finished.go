@@ -49,7 +49,7 @@ func Finished(args FinishedArgs) error {
 		EndConfigSnapshot:        Some(configSnapshot),
 		EndStashSize:             None[gitdomain.StashSize](),
 		FinalUndoProgram:         program.Program{},
-		PreviousBranchInfos:      None[gitdomain.BranchInfos](),
+		BranchInfosLastRun:       None[gitdomain.BranchInfos](),
 		RunProgram:               program.Program{},
 		TouchedBranches:          args.TouchedBranches,
 		UndoablePerennialCommits: gitdomain.SHAs{},

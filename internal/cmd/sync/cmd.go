@@ -129,6 +129,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchInfosLastRun:  data.previousBranchInfos,
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
@@ -166,7 +167,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
-		PreviousBranchInfos:   data.previousBranchInfos,
+		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,
 		TouchedBranches:       optimizedProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},

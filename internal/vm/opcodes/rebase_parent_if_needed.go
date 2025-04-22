@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/messages"
 	"github.com/git-town/git-town/v19/internal/vm/shared"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 type RebaseParentIfNeeded struct {
@@ -25,27 +26,37 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			break
 		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
-		if parentIsLocal {
-			var opcode shared.Opcode
-			previousBranchInfos, hasPreviousBranchInfos := args.PreviousBranchInfos.Get()
-			previousParentInfo, hasPreviousParentInfo := previousBranchInfos.FindByLocalName(parent).Get()
-			if hasPreviousBranchInfos && hasPreviousParentInfo && !branchInfos.BranchIsActiveInAnotherWorktree(parent) {
-				opcode = &RebaseOntoKeepDeleted{
-					BranchToRebaseOnto: parent,
-					CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
-					Upstream:           None[gitdomain.LocalBranchName](),
-				}
-			} else {
-				opcode = &RebaseBranch{
-					Branch: parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName(),
-				}
-			}
-			program = append(program, opcode)
-			break
+		if !parentIsLocal {
+			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
+			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
+			program = append(program, &RebaseBranch{
+				Branch: parentTrackingName.BranchName(),
+			})
+			branch = parent
+			continue
 		}
-		program = append(program, &RebaseBranch{
-			Branch: branchToRebase,
-		})
+		// here the parent is local
+		var branchToRebase gitdomain.BranchName
+		if branchInfos.BranchIsActiveInAnotherWorktree(parent) {
+			branchToRebase = parent.TrackingBranch(args.Config.Value.NormalConfig.DevRemote).BranchName()
+		} else {
+			branchToRebase = parent.BranchName()
+		}
+		var opcode shared.Opcode
+		previousBranchInfos, hasPreviousBranchInfos := args.PreviousBranchInfos.Get()
+		previousParentInfo, hasPreviousBranchInfo := previousBranchInfos.FindByLocalName(parent).Get()
+		if hasPreviousBranchInfos && hasPreviousBranchInfo {
+			opcode = &RebaseOntoKeepDeleted{
+				BranchToRebaseOnto: branchToRebase,
+				CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
+				Upstream:           None[gitdomain.LocalBranchName](),
+			}
+		} else {
+			opcode = &RebaseBranch{
+				Branch: branchToRebase,
+			}
+		}
+		program = append(program, opcode)
 		break
 	}
 	args.PrependOpcodes(program...)

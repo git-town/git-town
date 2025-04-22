@@ -24,9 +24,9 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	previousBranchInfos := None[gitdomain.BranchInfos]()
 	if runstate, hasRunstate := runStateOpt.Get(); hasRunstate {
 		if endSnapshot, hasEndSnapshot := runstate.EndBranchesSnapshot.Get(); hasEndSnapshot {
-			runstate.PreviousBranchInfos = Some(endSnapshot.Branches)
+			runstate.BranchInfosLastRun = Some(endSnapshot.Branches)
 		}
-		previousBranchInfos = runstate.PreviousBranchInfos
+		previousBranchInfos = runstate.BranchInfosLastRun
 	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
