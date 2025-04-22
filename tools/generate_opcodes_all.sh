@@ -20,7 +20,7 @@ temp_file=$(mktemp)
 	cat internal/vm/opcodes/*.go | grep '^type .* struct .*$' | sed -e 's/type /\t\t\&/' -e 's/ .*/{},/'
 	echo '	} //exhaustruct:ignore'
 	echo '}'
-) > temp_file
+) >temp_file
 
 mv temp_file internal/vm/opcodes/all.go
 echo "Generated internal/vm/opcodes/all.go"
