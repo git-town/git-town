@@ -43,7 +43,7 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 				_ = args.Git.StageFiles(args.Frontend, baseChange.FilePath)
 			}
 		}
-		_ = args.Git.ContinueRebase(args.Frontend)
+		err = args.Git.ContinueRebase(args.Frontend)
 	}
-	return nil
+	return err
 }
