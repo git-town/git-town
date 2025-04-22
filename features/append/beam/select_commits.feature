@@ -1,3 +1,4 @@
+@messyoutput
 Feature: beam multiple commits onto a new child branch
 
   Background:
