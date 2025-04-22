@@ -44,6 +44,9 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 			}
 		}
 		err = args.Git.ContinueRebase(args.Frontend)
+		if err != nil {
+			return fmt.Errorf("cannot continue rebase: %w", err)
+		}
 	}
-	return err
+	return nil
 }
