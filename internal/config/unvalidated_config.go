@@ -88,12 +88,12 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 
 func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig, envConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
 	result := configdomain.EmptyPartialConfig()
-	result = result.Merge(envConfig)
 	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
 		result = result.Merge(configFile)
 	}
 	result = result.Merge(globalGitConfig)
 	result = result.Merge(localGitConfig)
+	result = result.Merge(envConfig)
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }
 
