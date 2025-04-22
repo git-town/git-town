@@ -21,7 +21,6 @@ const (
 )
 
 type ScenarioInfo struct {
-	File    string
 	HasStep bool
 	HasTag  bool
 	Line    int64
@@ -36,7 +35,7 @@ func main() {
 		}
 		feature := ReadGherkinFile(path)
 		scenarios := FindScenarios(feature, path, dialogStepRegex)
-		for _, error := range AnalyzeScenarios(scenarios) {
+		for _, error := range AnalyzeScenarios(path, scenarios) {
 			fmt.Println(error)
 			errors += 1
 		}
@@ -93,7 +92,6 @@ func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 			scenarioHasTag := hasTag(child.Scenario.Tags, targetTag)
 			scenarioHasStep := hasStep(child.Scenario.Steps, dialogStepRegex)
 			result = append(result, ScenarioInfo{
-				File:    filePath,
 				HasStep: backgroundHasStep || scenarioHasStep,
 				HasTag:  featureHasTag || scenarioHasTag,
 				Line:    child.Scenario.Location.Line,
@@ -107,14 +105,14 @@ func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *
 	return result
 }
 
-func AnalyzeScenarios(scenarios []ScenarioInfo) []string {
+func AnalyzeScenarios(file string, scenarios []ScenarioInfo) []string {
 	result := []string{}
 	for _, scenario := range scenarios {
 		if scenario.HasTag && !scenario.HasStep {
-			result = append(result, fmt.Sprintf("%s:%d  unnecessary tag\n", scenario.File, scenario.Line))
+			result = append(result, fmt.Sprintf("%s:%d  unnecessary tag\n", file, scenario.Line))
 		}
 		if !scenario.HasTag && scenario.HasStep {
-			result = append(result, fmt.Sprintf("%s:%d  missing tag\n", scenario.File, scenario.Line))
+			result = append(result, fmt.Sprintf("%s:%d  missing tag\n", file, scenario.Line))
 		}
 	}
 	return result
