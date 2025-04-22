@@ -16,7 +16,9 @@ Feature: display all executed Git commands
       |        | backend | git rev-parse --show-toplevel                    |
       |        | backend | git config -lz --includes --global               |
       |        | backend | git config -lz --includes --local                |
-      |        | backend | git status --long --ignore-submodules            |
+      |        | backend | git status -z --ignore-submodules                |
+      |        | backend | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend | git rev-parse --absolute-git-dir                 |
       |        | backend | git stash list                                   |
       |        | backend | git -c core.abbrev=40 branch -vva --sort=refname |
       |        | backend | git remote get-url origin                        |
@@ -27,7 +29,7 @@ Feature: display all executed Git commands
       |        | backend | git stash list                                   |
     And Git Town prints:
       """
-      Ran 13 shell commands.
+      Ran 15 shell commands.
       """
     And this lineage exists now
       | BRANCH | PARENT |
@@ -42,7 +44,9 @@ Feature: display all executed Git commands
       |        | backend | git rev-parse --show-toplevel                    |
       |        | backend | git config -lz --includes --global               |
       |        | backend | git config -lz --includes --local                |
-      |        | backend | git status --long --ignore-submodules            |
+      |        | backend | git status -z --ignore-submodules                |
+      |        | backend | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend | git rev-parse --absolute-git-dir                 |
       |        | backend | git stash list                                   |
       |        | backend | git -c core.abbrev=40 branch -vva --sort=refname |
       |        | backend | git remote get-url origin                        |
@@ -51,7 +55,7 @@ Feature: display all executed Git commands
       |        | backend | git config git-town-branch.child.parent parent   |
     And Git Town prints:
       """
-      Ran 11 shell commands.
+      Ran 13 shell commands.
       """
     And the initial commits exist now
     And the initial branches and lineage exist now
