@@ -481,15 +481,12 @@ func (self *TestCommands) Tags() []string {
 
 // UncommittedFiles provides the names of the files not committed into Git.
 func (self *TestCommands) UncommittedFiles() []string {
-	output := self.MustQuery("git", "status", "--porcelain", "--untracked-files=all")
-	lines := stringslice.Lines(output)
-	result := make([]string, 0, len(lines))
-	for _, line := range lines {
-		if line == "" {
-			continue
-		}
-		parts := strings.Split(line, " ")
-		result = append(result, parts[1])
+	output := self.MustQuery("git", "status", "-z", "--untracked-files=all")
+	statuses, err := prodgit.ParseGitStatusZ(output)
+	asserts.NoError(err)
+	result := make([]string, 0, len(statuses))
+	for _, status := range statuses {
+		result = append(result, status.Path)
 	}
 	return result
 }

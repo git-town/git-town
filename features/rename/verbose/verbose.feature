@@ -20,7 +20,9 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --includes --global               |
       |        | backend  | git config -lz --includes --local                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
-      |        | backend  | git status --long --ignore-submodules            |
+      |        | backend  | git status -z --ignore-submodules                |
+      |        | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend  | git rev-parse --absolute-git-dir                 |
       |        | backend  | git remote                                       |
       |        | backend  | git branch --show-current                        |
       | old    | frontend | git fetch --prune --tags                         |
@@ -40,7 +42,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                   |
     And Git Town prints:
       """
-      Ran 23 shell commands.
+      Ran 25 shell commands.
       """
 
   Scenario: undo
@@ -51,7 +53,9 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --show-toplevel                    |
       |        | backend  | git config -lz --includes --global               |
       |        | backend  | git config -lz --includes --local                |
-      |        | backend  | git status --long --ignore-submodules            |
+      |        | backend  | git status -z --ignore-submodules                |
+      |        | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend  | git rev-parse --absolute-git-dir                 |
       |        | backend  | git stash list                                   |
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
       |        | backend  | git remote get-url origin                        |
@@ -66,5 +70,5 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main       |
     And Git Town prints:
       """
-      Ran 17 shell commands.
+      Ran 19 shell commands.
       """

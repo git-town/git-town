@@ -38,7 +38,9 @@ Feature: observe the current branch verbosely
       |        | git rev-parse --show-toplevel                         |
       |        | git config -lz --includes --global                    |
       |        | git config -lz --includes --local                     |
-      |        | git status --long --ignore-submodules                 |
+      |        | git status -z --ignore-submodules                     |
+      |        | git rev-parse -q --verify MERGE_HEAD                  |
+      |        | git rev-parse --absolute-git-dir                      |
       |        | git stash list                                        |
       |        | git -c core.abbrev=40 branch -vva --sort=refname      |
       |        | git remote get-url origin                             |
@@ -47,6 +49,6 @@ Feature: observe the current branch verbosely
       |        | git config --unset git-town-branch.feature.branchtype |
     And Git Town prints:
       """
-      Ran 11 shell commands
+      Ran 13 shell commands
       """
     And branch "feature" now has type "feature"
