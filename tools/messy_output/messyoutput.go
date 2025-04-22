@@ -13,12 +13,7 @@ import (
 	"github.com/git-town/git-town/v19/pkg/asserts"
 )
 
-const (
-	featureDir    = "features"                                     // Subdirectory to scan
-	featureExt    = ".feature"                                     // File extension to look for
-	targetTag     = "@messyoutput"                                 // The specific tag we are interested in
-	targetStepPat = `^I r[au]n ".*" and enter into the dialogs?:$` // Regex for the step
-)
+const tag = "@messyoutput"
 
 type ScenarioInfo struct {
 	HasStep bool
@@ -29,8 +24,8 @@ type ScenarioInfo struct {
 func main() {
 	dialogStepRegex := CompileRegex()
 	errors := 0
-	asserts.NoError(filepath.WalkDir(filepath.Join(".", featureDir), func(path string, d os.DirEntry, err error) error {
-		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), featureExt) {
+	asserts.NoError(filepath.WalkDir("features", func(path string, d os.DirEntry, err error) error {
+		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), ".feature") {
 			return err
 		}
 		feature := ReadGherkinFile(path)
@@ -45,7 +40,7 @@ func main() {
 }
 
 func CompileRegex() *regexp.Regexp {
-	return regexp.MustCompile(targetStepPat)
+	return regexp.MustCompile(`^I r[au]n ".*" and enter into the dialogs?:$`)
 }
 
 // indicates whether the given steps contain a step that matches the given regex
@@ -82,14 +77,14 @@ func ReadGherkinFile(filePath string) *messages.Feature {
 
 func FindScenarios(feature *messages.Feature, filePath string, dialogStepRegex *regexp.Regexp) []ScenarioInfo {
 	result := []ScenarioInfo{}
-	featureHasTag := hasTag(feature.Tags, targetTag)
+	featureHasTag := hasTag(feature.Tags, tag)
 	backgroundHasStep := false
 	for _, child := range feature.Children {
 		switch {
 		case child.Background != nil:
 			backgroundHasStep = hasStep(child.Background.Steps, dialogStepRegex)
 		case child.Scenario != nil:
-			scenarioHasTag := hasTag(child.Scenario.Tags, targetTag)
+			scenarioHasTag := hasTag(child.Scenario.Tags, tag)
 			scenarioHasStep := hasStep(child.Scenario.Steps, dialogStepRegex)
 			result = append(result, ScenarioInfo{
 				HasStep: backgroundHasStep || scenarioHasStep,
