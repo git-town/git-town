@@ -85,6 +85,7 @@ func TestRunState(t *testing.T) {
     "Local": {}
   },
   "BeginStashSize": 0,
+	"BranchInfosLastRun": null,
   "Command": "sync",
   "DryRun": true,
   "EndBranchesSnapshot": {

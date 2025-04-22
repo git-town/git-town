@@ -66,11 +66,11 @@ Feature: compatibility between different sync-feature-strategy settings
     And inspect the commits
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                            |
-      | feature | git fetch --prune --tags                                           |
-      |         | git rebase --onto main {{ sha 'initial commit' }} --no-update-refs |
-      |         | git push --force-with-lease --force-if-includes                    |
-      |         | git rebase origin/feature --no-update-refs                         |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git fetch --prune --tags                                                     |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git push --force-with-lease --force-if-includes                              |
+      |         | git -c rebase.updateRefs=false rebase origin/feature                         |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file.txt
@@ -82,9 +82,13 @@ Feature: compatibility between different sync-feature-strategy settings
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                    |
-      | feature | git -c core.editor=true rebase --continue  |
-      |         | git -c rebase.updateRefs=false rebase main |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git -c core.editor=true rebase --continue                                    |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git checkout --theirs file.txt                                               |
+      |         | git add file.txt                                                             |
+      |         | git -c core.editor=true rebase --continue                                    |
+      |         | git push --force-with-lease --force-if-includes                              |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file.txt
@@ -98,8 +102,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git -c core.editor=true rebase --continue       |
-      |         | git push --force-with-lease --force-if-includes |
+      | feature | git push --force-with-lease --force-if-includes |
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
