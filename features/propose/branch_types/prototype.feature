@@ -22,7 +22,7 @@ Feature: Create proposals for prototype branches
       | prototype | git fetch --prune --tags                                             |
       | (none)    | Looking for proposal online ... ok                                   |
       | prototype | git checkout main                                                    |
-      | main      | git rebase origin/main --no-update-refs                              |
+      | main      | git -c rebase.updateRefs=false rebase origin/main                    |
       |           | git push                                                             |
       |           | git checkout prototype                                               |
       | prototype | git merge --no-edit --ff main                                        |

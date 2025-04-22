@@ -27,7 +27,7 @@ Feature: sync before proposing
       | child  | git fetch --prune --tags                                                  |
       | (none) | Looking for proposal online ... ok                                        |
       | child  | git checkout main                                                         |
-      | main   | git rebase origin/main --no-update-refs                                   |
+      | main   | git -c rebase.updateRefs=false rebase origin/main                         |
       |        | git push                                                                  |
       |        | git checkout parent                                                       |
       | parent | git merge --no-edit --ff main                                             |

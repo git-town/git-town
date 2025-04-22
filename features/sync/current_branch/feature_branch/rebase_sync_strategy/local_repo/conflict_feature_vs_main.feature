@@ -16,8 +16,8 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                          |
-      | feature | git rebase main --no-update-refs |
+      | BRANCH  | COMMAND                                    |
+      | feature | git -c rebase.updateRefs=false rebase main |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

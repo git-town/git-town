@@ -20,15 +20,15 @@ Feature: sync a branch whose parent is active in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | child  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git push                                |
-      |        | git checkout child                      |
-      | child  | git merge --no-edit --ff origin/parent  |
-      |        | git merge --no-edit --ff origin/child   |
-      |        | git push                                |
+      | BRANCH | COMMAND                                           |
+      | child  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git push                                          |
+      |        | git checkout child                                |
+      | child  | git merge --no-edit --ff origin/parent            |
+      |        | git merge --no-edit --ff origin/child             |
+      |        | git push                                          |
     And these commits exist now
       | BRANCH | LOCATION                | MESSAGE                                                 |
       | main   | local, origin, worktree | origin main commit                                      |

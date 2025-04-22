@@ -30,11 +30,11 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | COMMAND                                         |
       | feature-2 | git fetch --prune --tags                        |
       |           | git checkout feature-1                          |
-      | feature-1 | git rebase main --no-update-refs                |
+      | feature-1 | git -c rebase.updateRefs=false rebase main      |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git rebase main --no-update-refs                |
+      |           | git -c rebase.updateRefs=false rebase main      |
       |           | git checkout feature-2                          |
-      | feature-2 | git rebase feature-1 --no-update-refs           |
+      | feature-2 | git -c rebase.updateRefs=false rebase feature-1 |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file_1
@@ -48,7 +48,7 @@ Feature: rebase a branch that contains amended commits
       | BRANCH    | COMMAND                                         |
       | feature-2 | git -c core.editor=true rebase --continue       |
       |           | git push --force-with-lease --force-if-includes |
-      |           | git rebase feature-1 --no-update-refs           |
+      |           | git -c rebase.updateRefs=false rebase feature-1 |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local, origin | commit 1b | file_1    | another one  |

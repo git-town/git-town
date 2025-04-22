@@ -18,13 +18,13 @@ Feature: Sync a feature branch that is in another worktree than the main branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git rebase origin/main --no-update-refs         |
-      |         | git push --force-with-lease --force-if-includes |
-      |         | git rebase origin/feature --no-update-refs      |
-      |         | git rebase origin/main --no-update-refs         |
-      |         | git push --force-with-lease --force-if-includes |
+      | BRANCH  | COMMAND                                              |
+      | feature | git fetch --prune --tags                             |
+      |         | git -c rebase.updateRefs=false rebase origin/main    |
+      |         | git push --force-with-lease --force-if-includes      |
+      |         | git -c rebase.updateRefs=false rebase origin/feature |
+      |         | git -c rebase.updateRefs=false rebase origin/main    |
+      |         | git push --force-with-lease --force-if-includes      |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE               |

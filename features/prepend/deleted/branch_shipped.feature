@@ -16,16 +16,16 @@ Feature: prepend a branch to a branch that was shipped at the remote
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | child  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout parent                     |
-      | parent | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/parent  |
-      |        | git push                                |
-      |        | git branch -D child                     |
-      |        | git checkout -b new                     |
+      | BRANCH | COMMAND                                           |
+      | child  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout parent                               |
+      | parent | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/parent            |
+      |        | git push                                          |
+      |        | git branch -D child                               |
+      |        | git checkout -b new                               |
     And Git Town prints:
       """
       deleted branch "child"

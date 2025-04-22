@@ -34,25 +34,25 @@ Feature: detaching a branch from a chain that edits the same file
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                              |
-      | branch-2 | git fetch --prune --tags                             |
-      |          | git rebase --onto main branch-1 --no-update-refs     |
-      |          | git checkout --theirs file                           |
-      |          | git add file                                         |
-      |          | git -c core.editor=true rebase --continue            |
-      |          | git push --force-with-lease --force-if-includes      |
-      |          | git checkout branch-3                                |
-      | branch-3 | git pull                                             |
-      |          | git rebase --onto branch-1 branch-2 --no-update-refs |
-      |          | git push --force-with-lease                          |
-      |          | git checkout branch-4                                |
-      | branch-4 | git pull                                             |
-      |          | git rebase --onto branch-3 branch-2 --no-update-refs |
-      |          | git checkout --theirs file                           |
-      |          | git add file                                         |
-      |          | git -c core.editor=true rebase --continue            |
-      |          | git push --force-with-lease                          |
-      |          | git checkout branch-2                                |
+      | BRANCH   | COMMAND                                                        |
+      | branch-2 | git fetch --prune --tags                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
+      |          | git checkout --theirs file                                     |
+      |          | git add file                                                   |
+      |          | git -c core.editor=true rebase --continue                      |
+      |          | git push --force-with-lease --force-if-includes                |
+      |          | git checkout branch-3                                          |
+      | branch-3 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-1 branch-2 |
+      |          | git push --force-with-lease                                    |
+      |          | git checkout branch-4                                          |
+      | branch-4 | git pull                                                       |
+      |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
+      |          | git checkout --theirs file                                     |
+      |          | git add file                                                   |
+      |          | git -c core.editor=true rebase --continue                      |
+      |          | git push --force-with-lease                                    |
+      |          | git checkout branch-2                                          |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | main     | local, origin | main commit | file      | main content |

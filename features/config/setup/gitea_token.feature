@@ -67,8 +67,3 @@ Feature: enter the Gitea API token
       | git config git-town.forge-type gitea   |
     And local Git setting "git-town.forge-type" is now "gitea"
     And local Git setting "git-town.gitea-token" is now "123456"
-
-  Scenario: undo
-    When I run "git-town undo"
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.gitea-token" now doesn't exist

@@ -19,17 +19,17 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | child  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git branch -D parent                    |
-      |        | git checkout child                      |
-      | child  | git merge --no-edit --ff main           |
-      |        | git merge --no-edit --ff origin/child   |
-      |        | git reset --soft main                   |
-      |        | git commit -m "child commit 1"          |
-      |        | git push --force-with-lease             |
+      | BRANCH | COMMAND                                           |
+      | child  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git branch -D parent                              |
+      |        | git checkout child                                |
+      | child  | git merge --no-edit --ff main                     |
+      |        | git merge --no-edit --ff origin/child             |
+      |        | git reset --soft main                             |
+      |        | git commit -m "child commit 1"                    |
+      |        | git push --force-with-lease                       |
     And Git Town prints:
       """
       deleted branch "parent"

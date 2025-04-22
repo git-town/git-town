@@ -14,12 +14,12 @@ Feature: sync a stack that makes conflicting changes
     And the current branch is "alpha"
     When I run "git-town sync --all"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | alpha  | git fetch --prune --tags                |
-      |        | git checkout main                       |
-      | main   | git rebase origin/main --no-update-refs |
-      |        | git checkout alpha                      |
-      | alpha  | git merge --no-edit --ff main           |
+      | BRANCH | COMMAND                                           |
+      | alpha  | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout alpha                                |
+      | alpha  | git merge --no-edit --ff main                     |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file

@@ -15,10 +15,10 @@ Feature: sync the current contribution branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH       | COMMAND                                         |
-      | contribution | git fetch --prune --tags                        |
-      |              | git rebase origin/contribution --no-update-refs |
-      |              | git push                                        |
+      | BRANCH       | COMMAND                                                   |
+      | contribution | git fetch --prune --tags                                  |
+      |              | git -c rebase.updateRefs=false rebase origin/contribution |
+      |              | git push                                                  |
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE       |
       | main         | local, origin | main commit   |

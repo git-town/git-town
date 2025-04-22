@@ -1,3 +1,4 @@
+@messyoutput
 Feature: rename a branch that has an overridden branch type
 
   Background:

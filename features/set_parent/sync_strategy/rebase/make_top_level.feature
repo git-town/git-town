@@ -16,8 +16,8 @@ Feature: reproduce bug
       branch "test" is now a child of "main"
       """
     And Git Town runs the commands
-      | BRANCH | COMMAND                          |
-      | test   | git rebase main --no-update-refs |
+      | BRANCH | COMMAND                                    |
+      | test   | git -c rebase.updateRefs=false rebase main |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE  |
       | test   | local    | commit 1 |
