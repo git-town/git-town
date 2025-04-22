@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v19/internal/config"
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/git-town/git-town/v19/internal/config/configfile"
+	"github.com/git-town/git-town/v19/internal/config/envconfig"
 	"github.com/git-town/git-town/v19/internal/config/gitconfig"
 	"github.com/git-town/git-town/v19/internal/git"
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
@@ -88,6 +89,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		Access:        configGitAccess,
 		ConfigFile:    configFile,
 		DryRun:        args.DryRun,
+		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
 		GitVersion:    gitVersion,
 		GlobalConfig:  globalConfig,
