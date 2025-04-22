@@ -139,6 +139,7 @@ END OUTPUT FROM 'git branch -vva'
 	HackCannotFeaturePerennialBranch    = "branch %q is a perennial branch and cannot be a feature branch"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	InvalidStatusOutput                 = `invalid "git status -z" output: %q`
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
 	KillDeprecation                     = `DEPRECATION NOTICE
