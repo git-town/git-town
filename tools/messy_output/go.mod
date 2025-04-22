@@ -1,3 +1,3 @@
-module github.com/git-town/git-town/tools/messyoutput
+module github.com/git-town/git-town/tools/messy_output
 
 go 1.23

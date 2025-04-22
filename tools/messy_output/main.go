@@ -1,4 +1,4 @@
-package messyoutput
+package main
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	gherkin "github.com/cucumber/gherkin/go/v26"
 	messages "github.com/cucumber/messages/go/v21"
@@ -25,7 +24,7 @@ func main() {
 	dialogStepRegex := CompileRegex()
 	errors := 0
 	asserts.NoError(filepath.WalkDir("features", func(path string, d os.DirEntry, err error) error {
-		if err != nil || d.IsDir() || !strings.HasSuffix(strings.ToLower(d.Name()), ".feature") {
+		if err != nil || d.IsDir() || filepath.Ext(d.Name()) != ".feature" {
 			return err
 		}
 		feature := ReadGherkinFile(path)

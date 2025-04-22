@@ -1,10 +1,10 @@
-package messyoutput_test
+package main_test
 
 import (
 	"os"
 	"testing"
 
-	messy "github.com/git-town/git-town/tools/messyoutput"
+	messy "github.com/git-town/git-town/tools/messy_output"
 	"github.com/shoenig/test/must"
 )
 
