@@ -40,6 +40,7 @@ func TestMain(_ *testing.M) {
 		options.Concurrency = runtime.NumCPU() * 4
 	}
 	switch flagMessyOutput {
+	case "":
 	case "0":
 		options.Tags = "~@messyoutput"
 	case "1":
