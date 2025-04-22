@@ -97,22 +97,22 @@ make cuke
 
 </a>
 
-Run all (nice and messy) end-to-end tests:
-
-<a type="make/command" dir="..">
-
-```
-make cukeall
-```
-
-</a>
-
 Run only the messy end-to-end tests:
 
 <a type="make/command" dir="..">
 
 ```
 make cukemessy
+```
+
+</a>
+
+Run all (nice and messy) end-to-end tests:
+
+<a type="make/command" dir="..">
+
+```
+make cukeall
 ```
 
 </a>
