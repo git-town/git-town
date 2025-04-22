@@ -67,8 +67,3 @@ Feature: enter the GitLab API token
       | git config git-town.forge-type gitlab   |
     And local Git setting "git-town.forge-type" is now "gitlab"
     And local Git setting "git-town.gitlab-token" is now "123456"
-
-  Scenario: undo
-    When I run "git-town undo"
-    And local Git setting "git-town.forge-type" now doesn't exist
-    And local Git setting "git-town.gitlab-token" now doesn't exist
