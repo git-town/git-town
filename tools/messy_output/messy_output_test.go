@@ -41,9 +41,7 @@ Feature: test
 				},
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{}
-			must.Eq(t, wantErrors, haveErrors)
+			assert_errors(t, haveScenarios, []string{})
 		})
 
 		t.Run("feature has tag but no steps", func(t *testing.T) {
@@ -78,12 +76,10 @@ Feature: test
 				},
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{
+			assert_errors(t, haveScenarios, []string{
 				"test:4  unnecessary tag\n",
 				"test:8  unnecessary tag\n",
-			}
-			must.Eq(t, wantErrors, haveErrors)
+			})
 		})
 
 		t.Run("one scenario has a tag but no steps", func(t *testing.T) {
@@ -118,11 +114,9 @@ Feature: test
 				},
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{
+			assert_errors(t, haveScenarios, []string{
 				"test:4  unnecessary tag\n",
-			}
-			must.Eq(t, wantErrors, haveErrors)
+			})
 		})
 
 		t.Run("one scenario has the step in singular but no tag", func(t *testing.T) {
@@ -156,11 +150,9 @@ Feature: test
 				},
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{
+			assert_errors(t, haveScenarios, []string{
 				"test:3  missing tag\n",
-			}
-			must.Eq(t, wantErrors, haveErrors)
+			})
 		})
 
 		t.Run("one scenario has the step in plural", func(t *testing.T) {
@@ -195,11 +187,9 @@ Feature: test
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{
+			assert_errors(t, haveScenarios, []string{
 				"test:3  missing tag\n",
-			}
-			must.Eq(t, wantErrors, haveErrors)
+			})
 		})
 
 		t.Run("one scenario has the step and a tag", func(t *testing.T) {
@@ -235,9 +225,7 @@ Feature: test
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{}
-			must.Eq(t, wantErrors, haveErrors)
+			assert_errors(t, haveScenarios, []string{})
 		})
 
 		t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
@@ -272,9 +260,7 @@ Feature: test
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{}
-			must.Eq(t, wantErrors, haveErrors)
+			assert_errors(t, haveScenarios, []string{})
 		})
 
 		t.Run("the feature has the tag, both scenarios have the step", func(t *testing.T) {
@@ -309,11 +295,15 @@ Feature: test
 			}
 			must.Eq(t, wantScenarios, haveScenarios)
 			must.Eq(t, wantScenarios, haveScenarios)
-			haveErrors := messyOutput.AnalyzeScenarios(haveScenarios)
-			wantErrors := []string{
+			assert_errors(t, haveScenarios, []string{
 				"test:7  unnecessary tag\n",
-			}
-			must.Eq(t, wantErrors, haveErrors)
+			})
 		})
 	})
+}
+
+func assert_errors(t *testing.T, scenarios []messyOutput.ScenarioInfo, wantErrors []string) {
+	t.Helper()
+	haveErrors := messyOutput.AnalyzeScenarios(scenarios)
+	must.Eq(t, wantErrors, haveErrors)
 }
