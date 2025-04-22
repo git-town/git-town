@@ -19,7 +19,9 @@ Feature: display all executed Git commands when using the always-merge strategy
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
-      |         | backend  | git status --long --ignore-submodules             |
+      |         | backend  | git status -z --ignore-submodules                 |
+      |         | backend  | git rev-parse -q --verify MERGE_HEAD              |
+      |         | backend  | git rev-parse --absolute-git-dir                  |
       |         | backend  | git remote                                        |
       |         | backend  | git branch --show-current                         |
       | feature | frontend | git fetch --prune --tags                          |
@@ -44,7 +46,7 @@ Feature: display all executed Git commands when using the always-merge strategy
       |         | backend  | git stash list                                    |
     And Git Town prints:
       """
-      Ran 27 shell commands.
+      Ran 29 shell commands.
       """
 
   Scenario: undo
@@ -55,7 +57,9 @@ Feature: display all executed Git commands when using the always-merge strategy
       |        | backend  | git rev-parse --show-toplevel                    |
       |        | backend  | git config -lz --includes --global               |
       |        | backend  | git config -lz --includes --local                |
-      |        | backend  | git status --long --ignore-submodules            |
+      |        | backend  | git status -z --ignore-submodules                |
+      |        | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend  | git rev-parse --absolute-git-dir                 |
       |        | backend  | git stash list                                   |
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
       |        | backend  | git remote get-url origin                        |
@@ -68,5 +72,5 @@ Feature: display all executed Git commands when using the always-merge strategy
       |        | backend  | git config git-town-branch.feature.parent main   |
     And Git Town prints:
       """
-      Ran 15 shell commands.
+      Ran 17 shell commands.
       """
