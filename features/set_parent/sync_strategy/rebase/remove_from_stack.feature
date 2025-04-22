@@ -25,17 +25,17 @@ Feature: remove a branch from a stack
     When I run "git-town set-parent main"
 
   Scenario: result
-    And Git Town prints:
-      """
-      branch "branch-3" is now a child of "main"
-      """
-    And Git Town runs the commands
+    Then Git Town runs the commands
       | BRANCH   | COMMAND                                                    |
       | branch-3 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
       |          | git add file_1                                             |
       |          | git -c core.editor=true rebase --continue                  |
       |          | git push --force-with-lease --force-if-includes            |
+    And Git Town prints:
+      """
+      branch "branch-3" is now a child of "main"
+      """
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | branch-1 | local, origin | commit 1 | file_1    | content 1    |
