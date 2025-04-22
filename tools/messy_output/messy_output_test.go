@@ -9,7 +9,7 @@ import (
 )
 
 func TestMessyOutput(t *testing.T) {
-	t.Run("vanilla", func(t *testing.T) {
+	t.Run("no tags and steps", func(t *testing.T) {
 		text := `
 Feature: test
 
