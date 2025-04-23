@@ -2,7 +2,6 @@ package handlebars
 
 import (
 	"fmt"
-	"log"
 	"maps"
 	"regexp"
 	"strings"
@@ -87,7 +86,7 @@ func Expand(text string, args ExpandArgs) string {
 			}
 			text = strings.Replace(text, match, sha.String(), 1)
 		default:
-			log.Fatalf("DataTable.Expand: unknown template expression %q", text)
+			panic(fmt.Sprintf("DataTable.Expand: unknown template expression %q", match))
 		}
 	}
 	return text
