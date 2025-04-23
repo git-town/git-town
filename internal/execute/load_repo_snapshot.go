@@ -19,7 +19,7 @@ import (
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	runStateOpt, err := statefile.Load(args.RootDir)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
+		return gitdomain.EmptyBranchesSnapshot(), 0, false, err
 	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
