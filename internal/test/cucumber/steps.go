@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v19/internal/test/datatable"
 	"github.com/git-town/git-town/v19/internal/test/filesystem"
 	"github.com/git-town/git-town/v19/internal/test/fixture"
+	"github.com/git-town/git-town/v19/internal/test/handlebars"
 	"github.com/git-town/git-town/v19/internal/test/helpers"
 	"github.com/git-town/git-town/v19/internal/test/output"
 	"github.com/git-town/git-town/v19/internal/test/subshell"
@@ -471,14 +472,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
-		expanded := dataTable.Expand(
-			devRepo,
-			state.fixture.OriginRepo.Value,
-			state.fixture.SecondWorktree.Value,
-			state.initialDevSHAs.GetOrPanic(),
-			state.initialOriginSHAs,
-			state.initialWorktreeSHAs,
-		)
+		expanded := dataTable.Expand(handlebars.ExpandArgs{
+			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
+			InitialOriginSHAsOpt:   state.initialOriginSHAs,
+			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
+			LocalRepo:              devRepo,
+			RemoteRepo:             state.fixture.OriginRepo.Value,
+			WorktreeRepo:           state.fixture.SecondWorktree.Value,
+		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
