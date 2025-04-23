@@ -326,6 +326,23 @@ func (self *Commands) CurrentBranch(querier gitdomain.Querier) (gitdomain.LocalB
 	return self.CurrentBranchCache.Value(), nil
 }
 
+func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
+	output, err := querier.QueryTrim("git", "branch", "--list")
+	if err != nil {
+		return "", err
+	}
+	lines := stringslice.Lines(output)
+	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
+	if len(linesWithStar) == 0 {
+		return "", err
+	}
+	if len(linesWithStar) > 1 {
+		panic("multiple lines with star found:\n " + output)
+	}
+	lineWithStar := linesWithStar[0]
+	return ParseActiveBranchDuringRebase(lineWithStar), nil
+}
+
 func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
 	return err == nil
@@ -338,7 +355,7 @@ func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomai
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
-	return self.currentBranchDuringRebase(querier)
+	return self.CurrentBranchDuringRebase(querier)
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
@@ -849,23 +866,6 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
-}
-
-func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
-	output, err := querier.QueryTrim("git", "branch", "--list")
-	if err != nil {
-		return "", err
-	}
-	lines := stringslice.Lines(output)
-	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
-	if len(linesWithStar) == 0 {
-		return "", err
-	}
-	if len(linesWithStar) > 1 {
-		panic("multiple lines with star found:\n " + output)
-	}
-	lineWithStar := linesWithStar[0]
-	return ParseActiveBranchDuringRebase(lineWithStar), nil
 }
 
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
