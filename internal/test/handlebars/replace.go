@@ -22,7 +22,6 @@ var templateRE *regexp.Regexp
 func Replace(text string, args ReplaceArgs) string {
 	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 	for strings.Contains(text, "{{") {
-		templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 		match := templateRE.FindString(text)
 		switch {
 		case strings.HasPrefix(match, "{{ sha "):
