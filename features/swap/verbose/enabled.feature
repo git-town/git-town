@@ -91,7 +91,7 @@ Feature: swapping a feature branch verbosely
       | branch-3 | git reset --hard {{ sha 'commit 3' }}                |
       | (none)   | git rev-list --left-right branch-3...origin/branch-3 |
       | branch-3 | git push --force-with-lease --force-if-includes      |
-      | (none)   | git show-ref --quiet refs/heads/branch-2             |
+      | (none)   | git show-ref --verify --quiet refs/heads/branch-2    |
       | branch-3 | git checkout branch-2                                |
       | (none)   | git config git-town-branch.branch-1.parent main      |
       |          | git config git-town-branch.branch-2.parent branch-1  |
