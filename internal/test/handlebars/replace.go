@@ -17,9 +17,9 @@ type Runner interface {
 }
 
 var templateOnce sync.Once
+var templateRE *regexp.Regexp
 
 func Replace(text string, args ReplaceArgs) string {
-	var templateRE *regexp.Regexp
 	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 	for strings.Contains(text, "{{") {
 		templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
