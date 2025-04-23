@@ -1,8 +1,6 @@
 package execute
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v19/internal/config"
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
@@ -11,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/gohacks"
 	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/messages"
 	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v19/internal/validate"
 	"github.com/git-town/git-town/v19/internal/vm/statefile"
@@ -22,7 +19,7 @@ import (
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	runStateOpt, err := statefile.Load(args.RootDir)
 	if err != nil {
-		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
 	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
