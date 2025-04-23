@@ -472,16 +472,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput.GetOrPanic())
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
-		expanded := dataTable.Expand(
-			handlebars.ExpandArgs{
-				InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
-				InitialOriginSHAsOpt:   state.initialOriginSHAs,
-				InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
-				LocalRepo:              devRepo,
-				RemoteRepo:             state.fixture.OriginRepo.Value,
-				WorktreeRepo:           state.fixture.SecondWorktree.Value,
-			},
-		)
+		expanded := dataTable.Expand(handlebars.ExpandArgs{
+			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
+			InitialOriginSHAsOpt:   state.initialOriginSHAs,
+			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
+			LocalRepo:              devRepo,
+			RemoteRepo:             state.fixture.OriginRepo.Value,
+			WorktreeRepo:           state.fixture.SecondWorktree.Value,
+		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
