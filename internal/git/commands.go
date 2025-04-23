@@ -327,6 +327,28 @@ func (self *Commands) CurrentBranch(querier gitdomain.Querier) (gitdomain.LocalB
 	return self.CurrentBranchCache.Value(), nil
 }
 
+func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
+	gitDir, err := self.gitDirectory(querier)
+	if err != nil {
+		return gitdomain.LocalBranchName(""), err
+	}
+	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
+		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
+		content, err := os.ReadFile(rebaseHeadFilePath)
+		if err != nil {
+			continue
+		}
+		refName := strings.TrimSpace(string(content))
+		if strings.HasPrefix(refName, "refs/heads/") {
+			branchName := strings.TrimPrefix(refName, "refs/heads/")
+			return gitdomain.NewLocalBranchName(branchName), nil
+		}
+		// rebase head name is not a branch name
+		break
+	}
+	return gitdomain.LocalBranchName(""), errors.New(messages.BranchCurrentProblemNoError)
+}
+
 func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
 	return err == nil
@@ -342,7 +364,7 @@ func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomai
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
-	return self.currentBranchDuringRebase(querier)
+	return self.CurrentBranchDuringRebase(querier)
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
@@ -855,28 +877,6 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
-}
-
-func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
-	gitDir, err := self.gitDirectory(querier)
-	if err != nil {
-		return gitdomain.LocalBranchName(""), err
-	}
-	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
-		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
-		content, err := os.ReadFile(rebaseHeadFilePath)
-		if err != nil {
-			continue
-		}
-		refName := strings.TrimSpace(string(content))
-		if strings.HasPrefix(refName, "refs/heads/") {
-			branchName := strings.TrimPrefix(refName, "refs/heads/")
-			return gitdomain.NewLocalBranchName(branchName), nil
-		}
-		// rebase head name is not a branch name
-		break
-	}
-	return gitdomain.LocalBranchName(""), errors.New(messages.BranchCurrentProblemNoError)
 }
 
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
