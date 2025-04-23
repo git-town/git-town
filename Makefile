@@ -6,10 +6,13 @@ RELEASE_VERSION := "19.0.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests except the ones that mess up the output, best for development
-	@env $(GO_TEST_ARGS) skipmessyoutput=1 go test -v
+	@env $(GO_TEST_ARGS) messyoutput=0 go test -v
 
 cukeall: install  # runs all end-to-end tests
 	@env $(GO_TEST_ARGS) go test -v
+
+cukemessy: install  # runs all the end-to-end tests that "cuke all" doesn't run
+	@env $(GO_TEST_ARGS) messyoutput=1 go test -v
 
 cukethis: install  # runs the end-to-end tests that have a @this tag
 	@env $(GO_TEST_ARGS) cukethis=1 go test . -v -count=1
@@ -40,6 +43,7 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	tools/rta dprint fmt --config dprint-changelog.json
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta ghokin fmt replace features/
+	tools/generate_opcodes_all.sh
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

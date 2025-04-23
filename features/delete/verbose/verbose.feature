@@ -35,7 +35,7 @@ Feature: display all executed Git commands
       |         | frontend | git checkout other                                |
       | other   | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
-      |         | backend  | git show-ref --verify --quiet refs/heads/current  |
+      |         | backend  | git rev-parse --verify -q refs/heads/current      |
       |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |

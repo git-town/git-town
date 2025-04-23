@@ -46,6 +46,7 @@ type PartialConfig struct {
 func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{
 		Aliases: Aliases{},
+		Lineage: NewLineage(),
 	} //exhaustruct:ignore
 }
 

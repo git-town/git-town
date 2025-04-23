@@ -31,13 +31,13 @@ Feature: display all executed Git commands
       |          | backend  | git log main..existing --format=%s --reverse         |
       | existing | frontend | git merge --no-edit --ff main                        |
       |          | frontend | git merge --no-edit --ff origin/existing             |
-      |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
+      |          | backend  | git rev-parse --verify -q refs/heads/existing        |
       |          | backend  | git rev-list --left-right existing...origin/existing |
-      |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
+      |          | backend  | git rev-parse --verify -q refs/heads/existing        |
       | existing | frontend | git checkout -b new                                  |
-      |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
+      |          | backend  | git rev-parse --verify -q refs/heads/existing        |
       |          | backend  | git config git-town-branch.new.parent existing       |
-      |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
+      |          | backend  | git rev-parse --verify -q refs/heads/existing        |
       |          | backend  | git -c core.abbrev=40 branch -vva --sort=refname     |
       |          | backend  | git config -lz --includes --global                   |
       |          | backend  | git config -lz --includes --local                    |

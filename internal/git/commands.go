@@ -55,7 +55,7 @@ func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, pa
 }
 
 func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
+	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
 	return err == nil
 }
 
@@ -326,6 +326,23 @@ func (self *Commands) CurrentBranch(querier gitdomain.Querier) (gitdomain.LocalB
 	return self.CurrentBranchCache.Value(), nil
 }
 
+func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
+	output, err := querier.QueryTrim("git", "branch", "--list")
+	if err != nil {
+		return "", err
+	}
+	lines := stringslice.Lines(output)
+	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
+	if len(linesWithStar) == 0 {
+		return "", err
+	}
+	if len(linesWithStar) > 1 {
+		panic("multiple lines with star found:\n " + output)
+	}
+	lineWithStar := linesWithStar[0]
+	return ParseActiveBranchDuringRebase(lineWithStar), nil
+}
+
 func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
 	return err == nil
@@ -338,7 +355,7 @@ func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomai
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
-	return self.currentBranchDuringRebase(querier)
+	return self.CurrentBranchDuringRebase(querier)
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
@@ -516,12 +533,8 @@ func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
 	}, nil
 }
 
-func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) bool {
-	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
-}
-
-func (self *Commands) HasMergeInProgress(querier gitdomain.Querier) bool {
-	_, err := querier.Query("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
+	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
@@ -719,8 +732,8 @@ func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName git
 	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
 }
 
-func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatus, error) {
-	output, err := querier.Query("git", "status", "-z", "--ignore-submodules")
+func (self *Commands) RepoStatus(backend gitdomain.RunnerQuerier) (gitdomain.RepoStatus, error) {
+	output, err := backend.Query("git", "status", "-z", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
@@ -731,8 +744,8 @@ func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatu
 	hasConflicts := slices.ContainsFunc(statuses, FileStatusIsUnmerged)
 	hasOpenChanges := len(statuses) > 0
 	hasUntrackedChanges := slices.ContainsFunc(statuses, FileStatusIsUntracked)
-	mergeInProgress := self.HasMergeInProgress(querier)
-	rebaseInProgress := self.HasRebaseInProgress(querier)
+	mergeInProgress := self.HasMergeInProgress(backend)
+	rebaseInProgress := self.HasRebaseInProgress(backend)
 	return gitdomain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges && !mergeInProgress && !rebaseInProgress,
@@ -853,23 +866,6 @@ func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
 
 func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
-}
-
-func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
-	output, err := querier.QueryTrim("git", "branch", "--list")
-	if err != nil {
-		return "", err
-	}
-	lines := stringslice.Lines(output)
-	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
-	if len(linesWithStar) == 0 {
-		return "", err
-	}
-	if len(linesWithStar) > 1 {
-		panic("multiple lines with star found:\n " + output)
-	}
-	lineWithStar := linesWithStar[0]
-	return ParseActiveBranchDuringRebase(lineWithStar), nil
 }
 
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
