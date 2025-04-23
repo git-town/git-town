@@ -857,20 +857,26 @@ func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 }
 
 func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
-	output, err := querier.QueryTrim("git", "branch", "--list")
+	gitDir, err := self.gitDirectory(querier)
 	if err != nil {
-		return "", err
+		return gitdomain.LocalBranchName(""), err
 	}
-	lines := stringslice.Lines(output)
-	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
-	if len(linesWithStar) == 0 {
-		return "", err
+	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
+		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
+		content, err := os.ReadFile(rebaseHeadFilePath)
+		if err != nil {
+			continue
+		}
+		refName := strings.TrimSpace(string(content))
+		if strings.HasPrefix(refName, "refs/heads/") {
+			branchName := strings.TrimPrefix(refName, "refs/heads/")
+			return gitdomain.NewLocalBranchName(branchName), nil
+		} else {
+			// rebase head name is not a branch name
+			break
+		}
 	}
-	if len(linesWithStar) > 1 {
-		panic("multiple lines with star found:\n " + output)
-	}
-	lineWithStar := linesWithStar[0]
-	return ParseActiveBranchDuringRebase(lineWithStar), nil
+	return gitdomain.LocalBranchName(""), fmt.Errorf(messages.BranchCurrentProblemNoError)
 }
 
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
