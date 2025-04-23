@@ -104,7 +104,7 @@ const (
 	KeyGitUserName                         = Key("user.name")
 )
 
-var keys = []Key{ //nolint:gochecknoglobals
+var keys = []Key{
 	KeyHostingOriginHostname,
 	KeyBitbucketAppPassword,
 	KeyBitbucketUsername,
@@ -175,7 +175,7 @@ func ParseKey(name string) Option[Key] {
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
-var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
+var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedCodeHostingDriver:         KeyForgeType,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
 	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,
@@ -190,11 +190,11 @@ var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 }
 
 // ObsoleteKeys defines the keys that are sunset and should get deleted
-var ObsoleteKeys = []Key{ //nolint:gochecknoglobals
+var ObsoleteKeys = []Key{
 	KeyObsoleteSyncBeforeShip,
 }
 
-var ObsoleteBranchLists = map[Key]BranchType{ //nolint:gochecknoglobals
+var ObsoleteBranchLists = map[Key]BranchType{
 	KeyDeprecatedContributionBranches: BranchTypeContributionBranch,
 	KeyDeprecatedObservedBranches:     BranchTypeObservedBranch,
 	KeyDeprecatedParkedBranches:       BranchTypeParkedBranch,
@@ -202,7 +202,7 @@ var ObsoleteBranchLists = map[Key]BranchType{ //nolint:gochecknoglobals
 }
 
 // ConfigUpdates defines the config that should have its keys and values to be updated
-var ConfigUpdates = []ConfigUpdate{ //nolint:gochecknoglobals
+var ConfigUpdates = []ConfigUpdate{
 	{
 		Before: ConfigSetting{
 			Key:   KeyDeprecatedAliasKill,
