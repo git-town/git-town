@@ -113,6 +113,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitHubEnterpriseInitializeError = "cannot initialize GitHub Enterprise client: %s"
 	GitHubToken                     = "GitHub token: %s\n"
 	GitLabToken                     = "GitLab token: %s\n"
+	GitDirMissing                   = "cannot determine the '.git' directory: %w"
 	GitOutputIrregular              = `
 ERROR: Encountered irregular Git output
 
