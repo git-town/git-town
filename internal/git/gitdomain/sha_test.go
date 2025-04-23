@@ -51,6 +51,14 @@ func TestSHA(t *testing.T) {
 		})
 	})
 
+	t.Run("Truncate", func(t *testing.T) {
+		t.Parallel()
+		give := gitdomain.NewSHA("12345678901234567890123456789012")
+		want := gitdomain.NewSHA("1234567")
+		have := give.Truncate(7)
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"123456"`

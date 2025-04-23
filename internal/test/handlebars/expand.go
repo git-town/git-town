@@ -33,6 +33,14 @@ func Expand(text string, args ExpandArgs) string {
 			}
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-short "):
+			commitName := match[14 : len(match)-4]
+			shas := args.LocalRepo.SHAsForCommit(commitName)
+			if len(shas) == 0 {
+				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
+			}
+			sha := shas.First().Truncate(7)
+			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin "):
 			commitName := match[18 : len(match)-4]
 			shas := args.RemoteRepo.SHAsForCommit(commitName)
