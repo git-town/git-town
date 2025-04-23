@@ -18,6 +18,7 @@ const (
 	BranchCheckoutProblem              = "cannot check out branch %q: %w"
 	BranchContainsMergeCommits         = "branch %q contains merge commits, please compress and try again"
 	BranchCurrentProblem               = "cannot determine current branch: %w"
+	BranchCurrentProblemNoError        = "cannot determine current branch"
 	BranchDeleted                      = "deleted branch %q"
 	BranchDeletedAtRemote              = "branch %q was deleted at the remote"
 	BranchDeletedHasUnmergedChanges    = "Branch %q was deleted at the remote but the local branch contains unshipped changes.\nI am therefore not removing this branch. You can see the unshipped changes by running \"git town diff-parent\"."
@@ -113,6 +114,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitHubEnterpriseInitializeError = "cannot initialize GitHub Enterprise client: %s"
 	GitHubToken                     = "GitHub token: %s\n"
 	GitLabToken                     = "GitLab token: %s\n"
+	GitDirMissing                   = "cannot determine the '.git' directory: %w"
 	GitOutputIrregular              = `
 ERROR: Encountered irregular Git output
 
