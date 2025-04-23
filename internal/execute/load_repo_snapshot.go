@@ -11,11 +11,16 @@ import (
 	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v19/internal/validate"
+	"github.com/git-town/git-town/v19/internal/vm/statefile"
 	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+	runStateOpt, err := statefile.Load(args.RootDir)
+	if err != nil {
+		return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
@@ -29,6 +34,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			PushHook:          args.UnvalidatedConfig.NormalConfig.PushHook,
 			RepoStatus:        args.RepoStatus,
 			RootDir:           args.Repo.RootDir,
+			RunState:          runStateOpt,
 			UnvalidatedConfig: args.UnvalidatedConfig,
 			Verbose:           args.Verbose,
 		})
@@ -36,7 +42,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err
 		}
 	}
-	var err error
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
