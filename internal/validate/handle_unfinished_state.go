@@ -72,6 +72,7 @@ type UnfinishedStateArgs struct {
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
 	RootDir           gitdomain.RepoRootDir
+	RunState          Option[runstate.RunState]
 	UnvalidatedConfig config.UnvalidatedConfig
 	Verbose           configdomain.Verbose
 }
