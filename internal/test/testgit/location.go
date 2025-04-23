@@ -25,7 +25,7 @@ const (
 	LocationUpstream = Location("upstream")
 )
 
-var allLocations = Locations{ //nolint:gochecknoglobals
+var allLocations = Locations{
 	LocationLocal,
 	LocationOrigin,
 	LocationCoworker,
