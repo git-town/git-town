@@ -16,8 +16,10 @@ type Runner interface {
 	SHAsForCommit(name string) gitdomain.SHAs
 }
 
-var templateOnce sync.Once
-var templateRE *regexp.Regexp
+var (
+	templateOnce sync.Once
+	templateRE   *regexp.Regexp
+)
 
 func Replace(text string, args ReplaceArgs) string {
 	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
