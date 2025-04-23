@@ -35,13 +35,13 @@ Feature: display all executed Git commands
       | main    | frontend | git merge --squash --ff feature                   |
       |         | frontend | git commit -m done                                |
       |         | backend  | git rev-parse main                                |
-      |         | backend  | git show-ref --verify --quiet refs/heads/main     |
+      |         | backend  | git rev-parse --verify -q refs/heads/main         |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | backend  | git config --unset git-town-branch.feature.parent |
       | main    | frontend | git push origin :feature                          |
       |         | frontend | git branch -D feature                             |
-      |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
+      |         | backend  | git rev-parse --verify -q refs/heads/feature      |
       |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |         | backend  | git config -lz --includes --global                |
       |         | backend  | git config -lz --includes --local                 |
@@ -69,12 +69,12 @@ Feature: display all executed Git commands
       |        | backend  | git remote get-url origin                        |
       |        | backend  | git log --pretty=format:%H %s -10                |
       | main   | frontend | git revert {{ sha 'done' }}                      |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main    |
+      |        | backend  | git rev-parse --verify -q refs/heads/main        |
       |        | backend  | git rev-list --left-right main...origin/main     |
       | main   | frontend | git push                                         |
       |        | frontend | git branch feature {{ sha 'feature commit' }}    |
       |        | frontend | git push -u origin feature                       |
-      |        | backend  | git show-ref --verify --quiet refs/heads/feature |
+      |        | backend  | git rev-parse --verify -q refs/heads/feature     |
       | main   | frontend | git checkout feature                             |
       |        | backend  | git config git-town-branch.feature.parent main   |
     And Git Town prints:
