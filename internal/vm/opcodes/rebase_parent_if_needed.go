@@ -43,8 +43,7 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			branchToRebase = parent.BranchName()
 		}
 		var opcode shared.Opcode
-		previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get()
-		if hasPreviousParentSHA {
+		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
 			opcode = &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    previousParentSHA.Location(),
