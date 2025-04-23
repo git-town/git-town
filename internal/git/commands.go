@@ -1,6 +1,7 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -871,12 +872,11 @@ func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitd
 		if strings.HasPrefix(refName, "refs/heads/") {
 			branchName := strings.TrimPrefix(refName, "refs/heads/")
 			return gitdomain.NewLocalBranchName(branchName), nil
-		} else {
-			// rebase head name is not a branch name
-			break
 		}
+		// rebase head name is not a branch name
+		break
 	}
-	return gitdomain.LocalBranchName(""), fmt.Errorf(messages.BranchCurrentProblemNoError)
+	return gitdomain.LocalBranchName(""), errors.New(messages.BranchCurrentProblemNoError)
 }
 
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
@@ -942,13 +942,6 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 		}
 	}
 	return 0, fmt.Errorf("unknown stage ID: %q", value)
-}
-
-func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchName {
-	parts := strings.Split(lineWithStar, " ")
-	partsWithBranchName := parts[4:]
-	branchNameWithClosingParen := strings.Join(partsWithBranchName, " ")
-	return gitdomain.NewLocalBranchName(branchNameWithClosingParen[:len(branchNameWithClosingParen)-1])
 }
 
 func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gitdomain.LocalBranchName]) {
