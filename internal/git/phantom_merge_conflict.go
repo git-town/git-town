@@ -35,7 +35,7 @@ const (
 )
 
 // all possile UnmergedStages instances
-var UnmergedStages = []UnmergedStage{ //nolint:gochecknoglobals
+var UnmergedStages = []UnmergedStage{
 	UnmergedStageBase,
 	UnmergedStageCurrentBranch,
 	UnmergedStageIncoming,

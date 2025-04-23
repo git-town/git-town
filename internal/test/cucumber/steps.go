@@ -37,7 +37,7 @@ import (
 )
 
 // the global FixtureFactory instance.
-var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
+var fixtureFactory *fixture.Factory
 
 // dedicated type for storing data in context.Context
 type key int
