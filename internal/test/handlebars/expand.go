@@ -39,8 +39,7 @@ func Expand(text string, args ExpandArgs) string {
 			if len(shas) == 0 {
 				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
 			}
-			sha := shas.First()
-			sha = gitdomain.NewSHA(sha.String()[:7])
+			sha := shas.First().Truncate(7)
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin "):
 			commitName := match[18 : len(match)-4]

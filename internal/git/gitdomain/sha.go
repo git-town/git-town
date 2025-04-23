@@ -51,3 +51,7 @@ func (self SHA) Location() Location {
 func (self SHA) String() string {
 	return string(self)
 }
+
+func (self SHA) Truncate(newLen int) SHA {
+	return NewSHA(self.String()[:newLen])
+}
