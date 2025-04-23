@@ -6,10 +6,8 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v19/internal/test/handlebars"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -63,13 +61,13 @@ func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (self *DataTable) Expand(localRepo, remoteRepo, worktreeRepo handlebars.Runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAsOpt, initialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]) DataTable {
+func (self *DataTable) Expand(args handlebars.ReplaceArgs) DataTable {
 	result := DataTable{}
 	for row := range self.Cells {
 		var cells []string
 		for col := range self.Cells[row] {
 			cell := self.Cells[row][col]
-			cell = handlebars.Replace(cell, localRepo, remoteRepo, worktreeRepo, initialDevSHAs, initialOriginSHAsOpt, initialWorktreeSHAsOpt)
+			cell = handlebars.Replace(cell, args)
 			cells = append(cells, cell)
 		}
 		result.AddRow(cells...)

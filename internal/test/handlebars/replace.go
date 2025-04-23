@@ -18,7 +18,7 @@ type Runner interface {
 
 var templateOnce sync.Once
 
-func Replace(text string, localRepo, remoteRepo, worktreeRepo Runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAsOpt, initialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]) string {
+func Replace(text string, args ReplaceArgs) string {
 	var templateRE *regexp.Regexp
 	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 	for strings.Contains(text, "{{") {
@@ -27,7 +27,7 @@ func Replace(text string, localRepo, remoteRepo, worktreeRepo Runner, initialDev
 		switch {
 		case strings.HasPrefix(match, "{{ sha "):
 			commitName := match[8 : len(match)-4]
-			shas := localRepo.SHAsForCommit(commitName)
+			shas := args.LocalRepo.SHAsForCommit(commitName)
 			if len(shas) == 0 {
 				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
 			}
@@ -35,23 +35,23 @@ func Replace(text string, localRepo, remoteRepo, worktreeRepo Runner, initialDev
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin "):
 			commitName := match[18 : len(match)-4]
-			shas := remoteRepo.SHAsForCommit(commitName)
+			shas := args.RemoteRepo.SHAsForCommit(commitName)
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-before-run "):
 			commitName := match[19 : len(match)-4]
-			sha, found := initialDevSHAs[commitName]
+			sha, found := args.InitialDevSHAs[commitName]
 			if !found {
 				fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
-				fmt.Printf("I have records about %d commits:\n", len(initialDevSHAs))
-				for key := range maps.Keys(initialDevSHAs) {
+				fmt.Printf("I have records about %d commits:\n", len(args.InitialDevSHAs))
+				for key := range maps.Keys(args.InitialDevSHAs) {
 					fmt.Println("  -", key)
 				}
 				panic("see error above")
 			}
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
-			initialOriginSHAs, has := initialOriginSHAsOpt.Get()
+			initialOriginSHAs, has := args.InitialOriginSHAsOpt.Get()
 			if !has {
 				panic("no origin SHAs recorded")
 			}
@@ -67,12 +67,12 @@ func Replace(text string, localRepo, remoteRepo, worktreeRepo Runner, initialDev
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-worktree "):
 			commitName := match[20 : len(match)-4]
-			shas := worktreeRepo.SHAsForCommit(commitName)
+			shas := args.WorktreeRepo.SHAsForCommit(commitName)
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-worktree-before-run "):
 			commitName := match[31 : len(match)-4]
-			initialWorktreeSHAs, has := initialWorktreeSHAsOpt.Get()
+			initialWorktreeSHAs, has := args.InitialWorktreeSHAsOpt.Get()
 			if !has {
 				panic("no initial worktree SHAs recorded")
 			}
@@ -90,4 +90,13 @@ func Replace(text string, localRepo, remoteRepo, worktreeRepo Runner, initialDev
 		}
 	}
 	return text
+}
+
+type ReplaceArgs struct {
+	LocalRepo              Runner
+	RemoteRepo             Runner
+	WorktreeRepo           Runner
+	InitialDevSHAs         map[string]gitdomain.SHA
+	InitialOriginSHAsOpt   Option[map[string]gitdomain.SHA]
+	InitialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]
 }
