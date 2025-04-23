@@ -19,6 +19,15 @@ func TestRunState(t *testing.T) {
 	t.Run("Marshal and Unmarshal", func(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
+			BranchInfosLastRun: Some(gitdomain.BranchInfos{
+				{
+					LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
+					SyncStatus: gitdomain.SyncStatusAhead,
+				},
+			}),
 			Command: "sync",
 			DryRun:  true,
 			AbortProgram: program.Program{
@@ -85,7 +94,15 @@ func TestRunState(t *testing.T) {
     "Local": {}
   },
   "BeginStashSize": 0,
-	"BranchInfosLastRun": null,
+  "BranchInfosLastRun": [
+    {
+      "LocalName": "branch",
+      "LocalSHA": "111111",
+      "RemoteName": "origin/branch",
+      "RemoteSHA": "222222",
+      "SyncStatus": "ahead"
+    }
+  ],
   "Command": "sync",
   "DryRun": true,
   "EndBranchesSnapshot": {

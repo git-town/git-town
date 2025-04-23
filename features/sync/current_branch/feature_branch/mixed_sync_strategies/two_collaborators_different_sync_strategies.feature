@@ -1,6 +1,5 @@
 Feature: compatibility between different sync-feature-strategy settings
 
-  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -63,7 +62,7 @@ Feature: compatibility between different sync-feature-strategy settings
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
-    And inspect the commits
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
@@ -88,7 +87,6 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git checkout --theirs file.txt                                               |
       |         | git add file.txt                                                             |
       |         | git -c core.editor=true rebase --continue                                    |
-      |         | git push --force-with-lease --force-if-includes                              |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file.txt
@@ -106,9 +104,9 @@ Feature: compatibility between different sync-feature-strategy settings
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
-      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
-      |         | local, origin           | my first commit                                            | file.txt  | my and coworker content     |
-      |         |                         | my second commit                                           | file.txt  | my new and coworker content |
-      |         | coworker                | my first commit                                            | file.txt  | my content                  |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT            |
+      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content        |
+      |         | local, origin           | my first commit                                            | file.txt  | my content              |
+      |         |                         | my second commit                                           | file.txt  | my and coworker content |
+      |         | coworker                | my first commit                                            | file.txt  | my content              |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content |
