@@ -356,14 +356,12 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
 func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, error) {
-	output, err := self.QueryTrim("git", "branch")
+	output, err := self.QueryTrim("git", "for-each-ref", "--format=%(refname:lstrip=2)", "refs/heads/")
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, err
 	}
 	result := gitdomain.LocalBranchNames{}
 	for _, line := range stringslice.Lines(output) {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
 		result = append(result, gitdomain.NewLocalBranchName(line))
 	}
 	return result, nil
