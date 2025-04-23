@@ -474,12 +474,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
 			handlebars.ReplaceArgs{
-				LocalRepo:              devRepo,
-				RemoteRepo:             state.fixture.OriginRepo.Value,
-				WorktreeRepo:           state.fixture.SecondWorktree.Value,
 				InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
 				InitialOriginSHAsOpt:   state.initialOriginSHAs,
 				InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
+				LocalRepo:              devRepo,
+				RemoteRepo:             state.fixture.OriginRepo.Value,
+				WorktreeRepo:           state.fixture.SecondWorktree.Value,
 			},
 		)
 		diff, errorCount := table.EqualDataTable(expanded)

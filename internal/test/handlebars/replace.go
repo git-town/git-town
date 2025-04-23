@@ -92,10 +92,10 @@ func Replace(text string, args ReplaceArgs) string {
 }
 
 type ReplaceArgs struct {
-	LocalRepo              Runner
-	RemoteRepo             Runner
-	WorktreeRepo           Runner
 	InitialDevSHAs         map[string]gitdomain.SHA
 	InitialOriginSHAsOpt   Option[map[string]gitdomain.SHA]
 	InitialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]
+	LocalRepo              Runner
+	RemoteRepo             Runner
+	WorktreeRepo           Runner
 }
