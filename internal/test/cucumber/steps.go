@@ -328,7 +328,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
-		actualContent = handlebars.Expand(actualContent, handlebars.ExpandArgs{
+		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
 			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
 			InitialOriginSHAsOpt:   state.initialOriginSHAs,
 			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
@@ -336,8 +336,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 			RemoteRepo:             state.fixture.OriginRepo.Value,
 			WorktreeRepo:           state.fixture.SecondWorktree.Value,
 		})
-		if expectedContent.Content != actualContent {
-			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent.Content, actualContent)
+		if expectedText != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedText, actualContent)
 		}
 		return nil
 	})

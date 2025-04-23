@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -76,6 +77,14 @@ Feature: compatibility between different sync-feature-strategy settings
     And Git Town prints something like:
       """
       Could not apply \S+ my second commit
+      """
+    And file "file.txt" now has content:
+      """
+      <<<<<<< HEAD
+      my and coworker content
+      =======
+      my new content
+      >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
       """
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor

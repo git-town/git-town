@@ -2,7 +2,6 @@ package handlebars
 
 import (
 	"fmt"
-	"log"
 	"maps"
 	"regexp"
 	"strings"
@@ -22,9 +21,12 @@ var (
 )
 
 func Expand(text string, args ExpandArgs) string {
+	fmt.Println("111111111111111111111111111111111111", text)
 	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 	for strings.Contains(text, "{{") {
+		fmt.Println("22222222222222222222222222222222222222222222222222")
 		match := templateRE.FindString(text)
+		fmt.Println("33333333333333333333333333333333333333333333333333", match)
 		switch {
 		case strings.HasPrefix(match, "{{ sha "):
 			commitName := match[8 : len(match)-4]
@@ -87,7 +89,7 @@ func Expand(text string, args ExpandArgs) string {
 			}
 			text = strings.Replace(text, match, sha.String(), 1)
 		default:
-			log.Fatalf("DataTable.Expand: unknown template expression %q", text)
+			panic(fmt.Sprintf("DataTable.Expand: unknown template expression %q", match))
 		}
 	}
 	return text
