@@ -43,12 +43,11 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 			branchToRebase = parent.BranchName()
 		}
 		var opcode shared.Opcode
-		previousBranchInfos, hasPreviousBranchInfos := args.PreviousBranchInfos.Get()
-		previousParentInfo, hasPreviousBranchInfo := previousBranchInfos.FindByLocalName(parent).Get()
-		if hasPreviousBranchInfos && hasPreviousBranchInfo {
+		previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get()
+		if hasPreviousParentSHA {
 			opcode = &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
-				CommitsToRemove:    previousParentInfo.GetLocalOrRemoteSHA().Location(),
+				CommitsToRemove:    previousParentSHA.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
 			}
 		} else {
