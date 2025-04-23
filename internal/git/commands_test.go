@@ -82,6 +82,18 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchExists", func(t *testing.T) {
+		t.Parallel()
+		origin := testruntime.Create(t)
+		repoDir := t.TempDir()
+		runner := testruntime.Clone(origin.TestRunner, repoDir)
+		runner.CreateBranch("b1", initial.BranchName())
+		runner.CreateBranch("b2", initial.BranchName())
+		must.True(t, runner.Git.BranchExists(runner, "b1"))
+		must.True(t, runner.Git.BranchExists(runner, "b2"))
+		must.False(t, runner.Git.BranchExists(runner, "b3"))
+	})
+
 	t.Run("BranchHasUnmergedChanges", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch without commits", func(t *testing.T) {
@@ -695,18 +707,6 @@ func TestBackendCommands(t *testing.T) {
 			want := None[gitdomain.LocalBranchName]()
 			must.EqOp(t, want, have)
 		})
-	})
-
-	t.Run("HasLocalBranch", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", initial.BranchName())
-		runner.CreateBranch("b2", initial.BranchName())
-		must.True(t, runner.Git.HasLocalBranch(runner, "b1"))
-		must.True(t, runner.Git.HasLocalBranch(runner, "b2"))
-		must.False(t, runner.Git.HasLocalBranch(runner, "b3"))
 	})
 
 	t.Run("IsAhead", func(t *testing.T) {

@@ -20,7 +20,7 @@ func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
 	if existingBranch == self.Branch {
 		return nil
 	}
-	if !args.Git.HasLocalBranch(args.Backend, self.Branch) {
+	if !args.Git.BranchExists(args.Backend, self.Branch) {
 		return nil
 	}
 	args.PrependOpcodes(&CheckoutIfNeeded{Branch: self.Branch})

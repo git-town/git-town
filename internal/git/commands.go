@@ -55,7 +55,7 @@ func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, pa
 }
 
 func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
+	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
 	return err == nil
 }
 
@@ -516,12 +516,8 @@ func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
 	}, nil
 }
 
-func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) bool {
-	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
-}
-
-func (self *Commands) HasMergeInProgress(querier gitdomain.Querier) bool {
-	_, err := querier.Query("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
+	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
@@ -719,8 +715,8 @@ func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName git
 	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
 }
 
-func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatus, error) {
-	output, err := querier.Query("git", "status", "-z", "--ignore-submodules")
+func (self *Commands) RepoStatus(backend gitdomain.RunnerQuerier) (gitdomain.RepoStatus, error) {
+	output, err := backend.Query("git", "status", "-z", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
@@ -731,8 +727,8 @@ func (self *Commands) RepoStatus(querier gitdomain.Querier) (gitdomain.RepoStatu
 	hasConflicts := slices.ContainsFunc(statuses, FileStatusIsUnmerged)
 	hasOpenChanges := len(statuses) > 0
 	hasUntrackedChanges := slices.ContainsFunc(statuses, FileStatusIsUntracked)
-	mergeInProgress := self.HasMergeInProgress(querier)
-	rebaseInProgress := self.HasRebaseInProgress(querier)
+	mergeInProgress := self.HasMergeInProgress(backend)
+	rebaseInProgress := self.HasRebaseInProgress(backend)
 	return gitdomain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges && !mergeInProgress && !rebaseInProgress,

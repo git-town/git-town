@@ -35,8 +35,8 @@ Feature: display all executed Git commands for the "compress" sync strategy
       | branch-2 | frontend | git checkout main                                  |
       |          | backend  | git config --unset git-town-branch.branch-2.parent |
       | main     | frontend | git branch -D branch-2                             |
-      |          | backend  | git show-ref --verify --quiet refs/heads/branch-2  |
-      |          | backend  | git show-ref --verify --quiet refs/heads/branch-1  |
+      |          | backend  | git rev-parse --verify -q refs/heads/branch-2      |
+      |          | backend  | git rev-parse --verify -q refs/heads/branch-1      |
       | main     | frontend | git checkout branch-1                              |
       |          | backend  | git -c core.abbrev=40 branch -vva --sort=refname   |
       |          | backend  | git config -lz --includes --global                 |
@@ -70,7 +70,7 @@ Feature: display all executed Git commands for the "compress" sync strategy
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       |          | backend  | git remote get-url origin                        |
       | branch-1 | frontend | git branch branch-2 {{ sha 'initial commit' }}   |
-      |          | backend  | git show-ref --quiet refs/heads/branch-2         |
+      |          | backend  | git rev-parse --verify -q refs/heads/branch-2    |
       | branch-1 | frontend | git checkout branch-2                            |
       |          | backend  | git config git-town-branch.branch-2.parent main  |
     And Git Town prints:
