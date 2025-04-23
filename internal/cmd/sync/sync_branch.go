@@ -59,8 +59,8 @@ func BranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomain.Bra
 }
 
 type BranchProgramArgs struct {
-	BranchInfos         gitdomain.BranchInfos // the initial BranchInfos, after "git fetch" ran
-	BranchInfosLastRun  Option[gitdomain.BranchInfos]
+	BranchInfos         gitdomain.BranchInfos                       // the initial BranchInfos, after "git fetch" ran
+	BranchInfosLastRun  Option[gitdomain.BranchInfos]               // the BranchInfos at the end of the previous Git Town command
 	BranchesToDelete    Mutable[set.Set[gitdomain.LocalBranchName]] // branches that should be deleted after the branches are all synced
 	Config              config.ValidatedConfig
 	InitialBranch       gitdomain.LocalBranchName
