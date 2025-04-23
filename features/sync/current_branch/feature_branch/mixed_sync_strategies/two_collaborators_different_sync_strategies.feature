@@ -104,8 +104,16 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       Could not apply \S+ my first commit
       """
+    And file "file.txt" now has content:
+      """
+      <<<<<<< HEAD
+      my content
+      =======
+      my new and coworker content
+      >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
+      """
     And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with "my and coworker content"
+    When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -114,9 +122,9 @@ Feature: compatibility between different sync-feature-strategy settings
     And no rebase is now in progress
     And all branches are now synchronized
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT            |
-      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content        |
-      |         | local, origin           | my first commit                                            | file.txt  | my content              |
-      |         |                         | my second commit                                           | file.txt  | my and coworker content |
-      |         | coworker                | my first commit                                            | file.txt  | my content              |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content |
+      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
+      | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
+      |         | local, origin           | my first commit                                            | file.txt  | my content                  |
+      |         |                         | my second commit                                           | file.txt  | my new and coworker content |
+      |         | coworker                | my first commit                                            | file.txt  | my content                  |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |
