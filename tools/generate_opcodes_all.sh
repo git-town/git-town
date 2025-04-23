@@ -18,7 +18,7 @@ temp_file=$(mktemp)
 	echo '// This is used to iterate all opcode types.'
 	echo 'func All() []shared.Opcode {'
 	echo '	return []shared.Opcode{'
-	cat internal/vm/opcodes/*.go | grep '^type .* struct .*$' | sed -e 's/type /\t\t\&/' -e 's/ .*/{},/'
+	cat internal/vm/opcodes/*.go | grep '^type .* struct .*$' | sed -e 's/type /\t\t\&/' -e 's/ .*/{},/' | sort
 	echo '	} //exhaustruct:ignore'
 	echo '}'
 ) >"$temp_file"
