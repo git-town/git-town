@@ -62,7 +62,6 @@ Feature: compatibility between different sync-feature-strategy settings
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
       | my second commit | file.txt  | my new content |
-    And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                      |
