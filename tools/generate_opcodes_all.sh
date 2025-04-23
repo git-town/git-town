@@ -19,5 +19,5 @@ set -e
 	cat internal/vm/opcodes/*.go | grep '^type .* struct .*$' | sed -e 's/type /\t\t\&/' -e 's/ .*/{},/' | sort
 	echo '	} //exhaustruct:ignore'
 	echo '}'
-) > internal/vm/opcodes/all.go
+) >internal/vm/opcodes/all.go
 echo "Generated internal/vm/opcodes/all.go"
