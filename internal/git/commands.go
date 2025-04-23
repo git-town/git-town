@@ -516,10 +516,6 @@ func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
 	}, nil
 }
 
-func (self *Commands) HasLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) bool {
-	return runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
-}
-
 func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil

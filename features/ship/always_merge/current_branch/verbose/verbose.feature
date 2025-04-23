@@ -67,7 +67,7 @@ Feature: display all executed Git commands when using the always-merge strategy
       |        | backend  | git remote get-url origin                        |
       | main   | frontend | git branch feature {{ sha 'feature commit' }}    |
       |        | frontend | git push -u origin feature                       |
-      |        | backend  | git show-ref --quiet refs/heads/feature          |
+      |        | backend  | git show-ref --verify --quiet refs/heads/feature |
       | main   | frontend | git checkout feature                             |
       |        | backend  | git config git-town-branch.feature.parent main   |
     And Git Town prints:

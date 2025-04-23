@@ -69,7 +69,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       |        | backend  | git remote get-url origin                        |
       | active | frontend | git branch old {{ sha 'initial commit' }}        |
-      |        | backend  | git show-ref --quiet refs/heads/old              |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old     |
       | active | frontend | git checkout old                                 |
       |        | backend  | git config git-town-branch.old.parent main       |
     And Git Town prints:

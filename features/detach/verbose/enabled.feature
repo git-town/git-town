@@ -123,7 +123,7 @@ Feature: detaching an omni-branch verbosely
       | branch-4 | git reset --hard {{ sha 'commit 4b' }}               |
       | (none)   | git rev-list --left-right branch-4...origin/branch-4 |
       | branch-4 | git push --force-with-lease --force-if-includes      |
-      | (none)   | git show-ref --quiet refs/heads/branch-2             |
+      | (none)   | git show-ref --verify --quiet refs/heads/branch-2    |
       | branch-4 | git checkout branch-2                                |
       | (none)   | git config git-town-branch.branch-2.parent branch-1  |
       |          | git config git-town-branch.branch-3.parent branch-2  |
