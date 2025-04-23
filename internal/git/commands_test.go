@@ -439,6 +439,35 @@ func TestBackendCommands(t *testing.T) {
 		must.EqOp(t, initial, branch)
 	})
 
+	t.Run("CurrentBranchDuringRebase", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		runtime.CreateBranch("branch", "initial")
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      "branch",
+			FileContent: "branch content",
+			FileName:    "file",
+			Locations:   testgit.Locations{testgit.LocationLocal},
+			Message:     "branch commit",
+		})
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      "initial",
+			FileContent: "initial content",
+			FileName:    "file",
+			Locations:   testgit.Locations{testgit.LocationLocal},
+			Message:     "initial commit",
+		})
+		runtime.CheckoutBranch("branch")
+		err := runtime.RebaseAgainstBranch("initial")
+		must.Error(t, err)
+		rebaseInProgress, err := runtime.Git.HasRebaseInProgress(runtime)
+		must.NoError(t, err)
+		must.True(t, rebaseInProgress)
+		have, err := runtime.Git.CurrentBranchDuringRebase(runtime)
+		must.NoError(t, err)
+		must.EqOp(t, "branch", have)
+	})
+
 	t.Run("CurrentBranchHasTrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has tracking branch", func(t *testing.T) {
@@ -1409,30 +1438,5 @@ func TestBackendCommands(t *testing.T) {
 			have := git.LastBranchInRef(give)
 			must.EqOp(t, want, have)
 		}
-	})
-
-	t.Run("parseActiveBranchDuringRebase", func(t *testing.T) {
-		t.Parallel()
-		t.Run("branch name is one word", func(t *testing.T) {
-			t.Parallel()
-			give := "* (no branch, rebasing feature)"
-			have := git.ParseActiveBranchDuringRebase(give)
-			want := gitdomain.NewLocalBranchName("feature")
-			must.Eq(t, want, have)
-		})
-		t.Run("branch name is two words", func(t *testing.T) {
-			t.Parallel()
-			give := "* (no branch, rebasing feature branch)"
-			have := git.ParseActiveBranchDuringRebase(give)
-			want := gitdomain.NewLocalBranchName("feature branch")
-			must.Eq(t, want, have)
-		})
-		t.Run("branch name is three words", func(t *testing.T) {
-			t.Parallel()
-			give := "* (no branch, rebasing the feature branch)"
-			have := git.ParseActiveBranchDuringRebase(give)
-			want := gitdomain.NewLocalBranchName("the feature branch")
-			must.Eq(t, want, have)
-		})
 	})
 }

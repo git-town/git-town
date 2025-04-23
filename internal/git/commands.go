@@ -1,6 +1,7 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -326,6 +327,28 @@ func (self *Commands) CurrentBranch(querier gitdomain.Querier) (gitdomain.LocalB
 	return self.CurrentBranchCache.Value(), nil
 }
 
+func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
+	gitDir, err := self.gitDirectory(querier)
+	if err != nil {
+		return "", err
+	}
+	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
+		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
+		content, err := os.ReadFile(rebaseHeadFilePath)
+		if err != nil {
+			continue
+		}
+		refName := strings.TrimSpace(string(content))
+		if strings.HasPrefix(refName, "refs/heads/") {
+			branchName := strings.TrimPrefix(refName, "refs/heads/")
+			return gitdomain.NewLocalBranchName(branchName), nil
+		}
+		// rebase head name is not a branch name
+		break
+	}
+	return "", errors.New(messages.BranchCurrentProblemNoError)
+}
+
 func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
 	return err == nil
@@ -334,11 +357,14 @@ func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bo
 func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	// first try to detect the current branch the normal way
 	output, err := querier.QueryTrim("git", "branch", "--show-current")
-	if err == nil && output != "" {
+	if err != nil {
+		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
+	}
+	if output != "" {
 		return gitdomain.NewLocalBranchName(output), nil
 	}
 	// here we couldn't detect the current branch the normal way --> assume we are in a rebase and try the rebase way
-	return self.currentBranchDuringRebase(querier)
+	return self.CurrentBranchDuringRebase(querier)
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
@@ -521,19 +547,19 @@ func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
 	return err == nil
 }
 
-func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) bool {
-	gitDir, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
+func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) (bool, error) {
+	gitDir, err := self.gitDirectory(querier)
 	if err != nil {
-		return false
+		return false, err
 	}
 	for _, rebaseDirName := range []string{"rebase-merge", "rebase-apply"} {
 		rebaseDirPath := filepath.Join(gitDir, rebaseDirName)
 		stat, err := os.Stat(rebaseDirPath)
 		if err == nil && stat.IsDir() {
-			return true
+			return true, nil
 		}
 	}
-	return false
+	return false, nil
 }
 
 // HeadCommitMessage provides the commit message for the last commit.
@@ -728,7 +754,10 @@ func (self *Commands) RepoStatus(backend gitdomain.RunnerQuerier) (gitdomain.Rep
 	hasOpenChanges := len(statuses) > 0
 	hasUntrackedChanges := slices.ContainsFunc(statuses, FileStatusIsUntracked)
 	mergeInProgress := self.HasMergeInProgress(backend)
-	rebaseInProgress := self.HasRebaseInProgress(backend)
+	rebaseInProgress, err := self.HasRebaseInProgress(backend)
+	if err != nil {
+		return gitdomain.RepoStatus{}, err
+	}
 	return gitdomain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges && !mergeInProgress && !rebaseInProgress,
@@ -759,8 +788,7 @@ func (self *Commands) RevertCommit(runner gitdomain.Runner, sha gitdomain.SHA) e
 	return runner.Run("git", "revert", sha.String())
 }
 
-// RootDirectory provides the path of the root directory of the current repository,
-// i.e. the directory that contains the ".git" folder.
+// RootDirectory provides the path of the root directory of the current repository.
 func (self *Commands) RootDirectory(querier gitdomain.Querier) Option[gitdomain.RepoRootDir] {
 	output, err := querier.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
@@ -851,23 +879,6 @@ func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
 }
 
-func (self *Commands) currentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
-	output, err := querier.QueryTrim("git", "branch", "--list")
-	if err != nil {
-		return "", err
-	}
-	lines := stringslice.Lines(output)
-	linesWithStar := stringslice.LinesWithPrefix(lines, "* ")
-	if len(linesWithStar) == 0 {
-		return "", err
-	}
-	if len(linesWithStar) > 1 {
-		panic("multiple lines with star found:\n " + output)
-	}
-	lineWithStar := linesWithStar[0]
-	return ParseActiveBranchDuringRebase(lineWithStar), nil
-}
-
 func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
@@ -931,13 +942,6 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 		}
 	}
 	return 0, fmt.Errorf("unknown stage ID: %q", value)
-}
-
-func ParseActiveBranchDuringRebase(lineWithStar string) gitdomain.LocalBranchName {
-	parts := strings.Split(lineWithStar, " ")
-	partsWithBranchName := parts[4:]
-	branchNameWithClosingParen := strings.Join(partsWithBranchName, " ")
-	return gitdomain.NewLocalBranchName(branchNameWithClosingParen[:len(branchNameWithClosingParen)-1])
 }
 
 func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gitdomain.LocalBranchName]) {
@@ -1035,6 +1039,15 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.Sy
 		return gitdomain.SyncStatusRemoteOnly, None[gitdomain.RemoteBranchName]()
 	}
 	return gitdomain.SyncStatusLocalOnly, None[gitdomain.RemoteBranchName]()
+}
+
+// provides the path of the `.git` directory of the current repository.
+func (self *Commands) gitDirectory(querier gitdomain.Querier) (string, error) {
+	output, err := querier.QueryTrim("git", "rev-parse", "--absolute-git-dir")
+	if err != nil {
+		return "", fmt.Errorf(messages.GitDirMissing, err)
+	}
+	return output, nil
 }
 
 // indicates whether the branch with the given name exists locally
