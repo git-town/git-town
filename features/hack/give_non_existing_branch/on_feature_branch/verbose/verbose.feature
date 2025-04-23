@@ -26,13 +26,13 @@ Feature: display all executed Git commands
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |        | backend  | git remote get-url origin                         |
       | main   | frontend | git -c rebase.updateRefs=false rebase origin/main |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main     |
+      |        | backend  | git rev-parse --verify -q refs/heads/main         |
       |        | backend  | git rev-list --left-right main...origin/main      |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main     |
+      |        | backend  | git rev-parse --verify -q refs/heads/main         |
       | main   | frontend | git checkout -b new                               |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main     |
+      |        | backend  | git rev-parse --verify -q refs/heads/main         |
       |        | backend  | git config git-town-branch.new.parent main        |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main     |
+      |        | backend  | git rev-parse --verify -q refs/heads/main         |
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname  |
       |        | backend  | git config -lz --includes --global                |
       |        | backend  | git config -lz --includes --local                 |

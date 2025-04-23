@@ -31,15 +31,15 @@ Feature: display all executed Git commands
       |        | backend  | git log main..old --format=%s --reverse          |
       | old    | frontend | git merge --no-edit --ff main                    |
       |        | frontend | git merge --no-edit --ff origin/old              |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old     |
+      |        | backend  | git rev-parse --verify -q refs/heads/old         |
       |        | backend  | git rev-list --left-right old...origin/old       |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main    |
+      |        | backend  | git rev-parse --verify -q refs/heads/main        |
       | old    | frontend | git checkout -b parent main                      |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main    |
+      |        | backend  | git rev-parse --verify -q refs/heads/main        |
       |        | backend  | git config git-town-branch.parent.parent main    |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old     |
+      |        | backend  | git rev-parse --verify -q refs/heads/old         |
       |        | backend  | git config git-town-branch.old.parent parent     |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old     |
+      |        | backend  | git rev-parse --verify -q refs/heads/old         |
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
       |        | backend  | git config -lz --includes --global               |
       |        | backend  | git config -lz --includes --local                |

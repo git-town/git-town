@@ -55,7 +55,7 @@ func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, pa
 }
 
 func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
-	err := runner.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
+	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
 	return err == nil
 }
 

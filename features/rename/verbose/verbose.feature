@@ -35,7 +35,7 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.old.parent    |
       | new    | frontend | git push -u origin new                           |
       |        | frontend | git push origin :old                             |
-      |        | backend  | git show-ref --verify --quiet refs/heads/old     |
+      |        | backend  | git rev-parse --verify -q refs/heads/old         |
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
       |        | backend  | git config -lz --includes --global               |
       |        | backend  | git config -lz --includes --local                |
