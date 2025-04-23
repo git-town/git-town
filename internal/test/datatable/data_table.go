@@ -61,13 +61,13 @@ func (self *DataTable) EqualGherkin(other *godog.Table) (diff string, errorCount
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (self *DataTable) Expand(args handlebars.ReplaceArgs) DataTable {
+func (self *DataTable) Expand(args handlebars.ExpandArgs) DataTable {
 	result := DataTable{}
 	for row := range self.Cells {
 		var cells []string
 		for col := range self.Cells[row] {
 			cell := self.Cells[row][col]
-			cell = handlebars.Replace(cell, args)
+			cell = handlebars.Expand(cell, args)
 			cells = append(cells, cell)
 		}
 		result.AddRow(cells...)

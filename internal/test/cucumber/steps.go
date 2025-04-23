@@ -473,7 +473,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
-			handlebars.ReplaceArgs{
+			handlebars.ExpandArgs{
 				InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
 				InitialOriginSHAsOpt:   state.initialOriginSHAs,
 				InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,

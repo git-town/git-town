@@ -21,7 +21,7 @@ var (
 	templateRE   *regexp.Regexp
 )
 
-func Replace(text string, args ReplaceArgs) string {
+func Expand(text string, args ExpandArgs) string {
 	templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 	for strings.Contains(text, "{{") {
 		match := templateRE.FindString(text)
@@ -93,7 +93,7 @@ func Replace(text string, args ReplaceArgs) string {
 	return text
 }
 
-type ReplaceArgs struct {
+type ExpandArgs struct {
 	InitialDevSHAs         map[string]gitdomain.SHA
 	InitialOriginSHAsOpt   Option[map[string]gitdomain.SHA]
 	InitialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]
