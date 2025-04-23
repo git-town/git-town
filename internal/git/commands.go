@@ -330,7 +330,7 @@ func (self *Commands) CurrentBranch(querier gitdomain.Querier) (gitdomain.LocalB
 func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitdomain.LocalBranchName, error) {
 	gitDir, err := self.gitDirectory(querier)
 	if err != nil {
-		return gitdomain.LocalBranchName(""), err
+		return "", err
 	}
 	for _, rebaseHeadFileName := range []string{"rebase-merge/head-name", "rebase-apply/head-name"} {
 		rebaseHeadFilePath := filepath.Join(gitDir, rebaseHeadFileName)
@@ -346,7 +346,7 @@ func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitd
 		// rebase head name is not a branch name
 		break
 	}
-	return gitdomain.LocalBranchName(""), errors.New(messages.BranchCurrentProblemNoError)
+	return "", errors.New(messages.BranchCurrentProblemNoError)
 }
 
 func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bool {
@@ -358,7 +358,7 @@ func (self *Commands) CurrentBranchUncached(querier gitdomain.Querier) (gitdomai
 	// first try to detect the current branch the normal way
 	output, err := querier.QueryTrim("git", "branch", "--show-current")
 	if err != nil {
-		return gitdomain.LocalBranchName(""), fmt.Errorf(messages.BranchCurrentProblem, err)
+		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if output != "" {
 		return gitdomain.NewLocalBranchName(output), nil
