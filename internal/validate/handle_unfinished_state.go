@@ -24,10 +24,6 @@ import (
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func HandleUnfinishedState(args UnfinishedStateArgs) (bool, error) {
-	runStateOpt, err := statefile.Load(args.RootDir)
-	if err != nil {
-		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
 	runState, hasRunState := runStateOpt.Get()
 	if !hasRunState || runState.IsFinished() {
 		return false, nil
