@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v19/internal/messages"
 )
 
-var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)") //nolint:gochecknoglobals
+var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)")
 
 const (
 	parentBranchTitleTemplate = `Parent branch for %s`
