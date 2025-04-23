@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v19/pkg/set"
 )
 
-var unusedWhitelist = []string{ //nolint:gochecknoglobals
+var unusedWhitelist = []string{
 	`^display "([^"]+)"$`,
 	`^inspect the commits$`,
 	`^inspect the repo$`,

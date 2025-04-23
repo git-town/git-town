@@ -11,7 +11,7 @@ import (
 )
 
 // file paths to ignore
-var ignorePaths = []string{ //nolint:gochecknoglobals
+var ignorePaths = []string{
 	"vendor/",
 }
 
