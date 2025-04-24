@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/git-town/git-town/v19/internal/browser"
 	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v19/internal/cli/flags"
 	"github.com/git-town/git-town/v19/internal/cli/print"
@@ -118,10 +117,6 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 	data, exit, err := determineProposeData(repo, detached, dryRun, verbose, title, body, bodyFile)
 	if err != nil || exit {
 		return err
-	}
-	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
-		browser.Open(existingProposalURL, repo.Frontend, repo.Backend)
-		return nil
 	}
 	runProgram := proposeProgram(repo, data)
 	runState := runstate.RunState{
@@ -319,6 +314,14 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
+	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
+		prog.Value.Add(
+			&opcodes.BrowserOpen{
+				URL: existingProposalURL,
+			},
+		)
+		return prog.Immutable()
+	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{

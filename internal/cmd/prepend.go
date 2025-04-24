@@ -210,6 +210,7 @@ type prependData struct {
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
+	initialBranchInfo   gitdomain.BranchInfo
 	newParentCandidates gitdomain.LocalBranchNames
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
@@ -267,6 +268,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
+		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
+	}
+	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
+	if !hasInitialBranchInfo {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
@@ -338,6 +343,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		existingParent:      ancestor,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
+		initialBranchInfo:   *initialBranchInfo,
 		newParentCandidates: parentAndAncestors,
 		nonExistingBranches: nonExistingBranches,
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
@@ -499,7 +505,7 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 			&opcodes.Checkout{Branch: data.initialBranch},
 		)
 		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(prog, data.targetBranch, initialBranchType, data.config.NormalConfig.NormalConfigData)
+		syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
 		prog.Value.Add(
 			&opcodes.Checkout{Branch: data.targetBranch},
 		)
@@ -507,19 +513,27 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
+func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchInfo gitdomain.BranchInfo, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
 	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
 		switch syncStrategy {
 		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
 			prog.Value.Add(
 				&opcodes.MergeParent{Parent: parentName.BranchName()},
-				&opcodes.PushCurrentBranch{},
 			)
+			if initialBranchInfo.HasTrackingBranch() {
+				prog.Value.Add(
+					&opcodes.PushCurrentBranch{},
+				)
+			}
 		case configdomain.SyncStrategyRebase:
 			prog.Value.Add(
 				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
-				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 			)
+			if initialBranchInfo.HasTrackingBranch() {
+				prog.Value.Add(
+					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+				)
+			}
 		case configdomain.SyncStrategyFFOnly:
 			// the ff-only sync strategy does not sync with the parent
 		}
