@@ -180,6 +180,9 @@ type proposeData struct {
 	stashSize            gitdomain.StashSize
 }
 
+type branchToProposeData struct {
+}
+
 func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -224,7 +227,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err != nil {
 		return data, false, err
 	}
-	branchToPropose := initialBranch
+	branchesToPropose := initialBranch
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -267,7 +270,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 				print.Error(err)
 			}
 			if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-				existingProposalURL = Some(existingProposal.URL)
+				existingProposalURLs[initialBranch] = existingProposal.URL
 			}
 		}
 	}
@@ -306,7 +309,7 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	}
 	return proposeData{
 		branchInfos:          branchesSnapshot.Branches,
-		branchesToPropose:    branchToPropose,
+		branchesToPropose:    branchesToPropose,
 		branchTypeToPropose:  branchTypeToPropose,
 		branchesSnapshot:     branchesSnapshot,
 		branchesToSync:       branchesToSync,
