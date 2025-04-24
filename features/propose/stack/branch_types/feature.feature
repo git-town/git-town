@@ -27,9 +27,11 @@ Feature: propose an entire stack
       |          | git checkout branch-2                                                          |
       | branch-2 | git merge --no-edit --ff branch-1                                              |
       |          | git merge --no-edit --ff origin/branch-2                                       |
+      |          | git push                                                                       |
       |          | git checkout branch-3                                                          |
       | branch-3 | git merge --no-edit --ff branch-2                                              |
       |          | git merge --no-edit --ff origin/branch-3                                       |
+      |          | git push                                                                       |
       | (none)   | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
       |          | open https://github.com/git-town/git-town/compare/branch-1...branch-2?expand=1 |
       |          | open https://github.com/git-town/git-town/compare/branch-2...branch-3?expand=1 |
