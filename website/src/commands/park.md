@@ -8,7 +8,7 @@ The _park_ command [parks](../branch-types.md#parked-branches) some of your
 branches.
 
 To convert a parked branch back into a feature branch, use the [hack](hack.md)
-command.
+command or [propose](propose.md) it.
 
 ## Positional arguments
 
