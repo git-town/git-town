@@ -167,9 +167,10 @@ type proposeData struct {
 }
 
 type branchToProposeData struct {
-	name                gitdomain.LocalBranchName
 	branchType          configdomain.BranchType
 	existingProposalURL Option[string]
+	name                gitdomain.LocalBranchName
+	syncStatus          gitdomain.SyncStatus
 }
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
@@ -263,6 +264,10 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil {
 		return data, false, err
 	}
+	branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchToPropose).Get()
+	if !hasBranchInfo {
+		return data, false, fmt.Errorf("cannot find branch info for %q", branchToPropose)
+	}
 	var bodyText gitdomain.ProposalBody
 	if len(body) > 0 {
 		bodyText = body
@@ -284,9 +289,10 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	return proposeData{
 		branchInfos: branchesSnapshot.Branches,
 		branchToPropose: branchToProposeData{
-			name:                branchToPropose,
 			branchType:          branchTypeToPropose,
 			existingProposalURL: existingProposalURL,
+			name:                branchToPropose,
+			syncStatus:          branchInfo.SyncStatus,
 		},
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
@@ -335,8 +341,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	branchInfo, has := data.branchInfos.FindByLocalName(data.branchToPropose.name).Get()
-	if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
+	if data.branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
 		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToPropose.name))
 		return prog.Immutable()
 	}
