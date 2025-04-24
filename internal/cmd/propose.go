@@ -318,8 +318,8 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 	}
 	return proposeData{
-		branchInfosLastRun:  branchInfosLastRun,
 		branchInfos:         branchesSnapshot.Branches,
+		branchInfosLastRun:  branchInfosLastRun,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPropose:   branchesToPropose,
 		branchesToSync:      branchesToSync,
