@@ -249,7 +249,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
 		copy(branchNamesToPropose, branchNamesToSync)
 	} else {
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestorsWithoutRoot(initialBranch)
 		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
 		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
 			return data, false, err
