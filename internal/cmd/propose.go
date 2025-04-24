@@ -55,7 +55,6 @@ where hostname matches what is in your ssh config file.`
 func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
-	addDetachedFlag, readDetachedFlag := flags.Detached()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
@@ -67,10 +66,6 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			detached, err := readDetachedFlag(cmd)
-			if err != nil {
-				return err
-			}
 			dryRun, err := readDryRunFlag(cmd)
 			if err != nil {
 				return err
@@ -95,12 +90,11 @@ func proposeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePropose(detached, dryRun, verbose, title, bodyText, bodyFile, stack)
+			return executePropose(dryRun, verbose, title, bodyText, bodyFile, stack)
 		},
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
-	addDetachedFlag(&cmd)
 	addDryRunFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
@@ -108,7 +102,7 @@ func proposeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
+func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -120,7 +114,7 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineProposeData(repo, detached, dryRun, fullStack, verbose, title, body, bodyFile)
+	data, exit, err := determineProposeData(repo, dryRun, fullStack, verbose, title, body, bodyFile)
 	if err != nil || exit {
 		return err
 	}
@@ -184,7 +178,7 @@ type branchToProposeData struct {
 	branchType configdomain.BranchType
 }
 
-func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
