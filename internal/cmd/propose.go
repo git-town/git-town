@@ -283,7 +283,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToPropose).Get()
 		if !hasBranchInfo {
-			return data, false, fmt.Errorf("cannot find branch info for %q", branchNameToPropose)
+			return data, false, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
 		}
 		branchesToPropose[b] = branchToProposeData{
 			branchType:          branchType,
