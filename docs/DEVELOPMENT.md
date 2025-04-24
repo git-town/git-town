@@ -87,7 +87,7 @@ go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 
 ## End-to-end tests
 
-Run the nice looking end-to-end tests:
+Run the end-to-end tests during development:
 
 <a type="make/command" dir="..">
 
@@ -97,17 +97,7 @@ make cuke
 
 </a>
 
-Run only the messy end-to-end tests:
-
-<a type="make/command" dir="..">
-
-```
-make cukemessy
-```
-
-</a>
-
-Run all (nice and messy) end-to-end tests:
+Run all end-to-end tests as they run on CI:
 
 <a type="make/command" dir="..">
 
