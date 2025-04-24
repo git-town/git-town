@@ -12,6 +12,7 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       | old    | local    | commit 2 |
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
+    And wait 1 second to ensure new Git timestamps
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG          | KEYS        |
       | select commit 1 | space enter |
@@ -36,8 +37,9 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout old     |
-      | old    | git branch -D parent |
+      | BRANCH | COMMAND                               |
+      | parent | git checkout old                      |
+      | old    | git reset --hard {{ sha 'commit 2' }} |
+      |        | git branch -D parent                  |
     And the initial commits exist now
     And the initial lineage exists now
