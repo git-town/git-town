@@ -6,6 +6,9 @@ Feature: Create proposals for parked branches
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE       |
+      | parked | local    | parked commit |
     And the current branch is "parked"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
