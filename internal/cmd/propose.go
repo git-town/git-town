@@ -281,9 +281,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	} else {
 		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestors(branchToPropose)
 	}
-	if detached {
-		branchNamesToSync = validatedConfig.RemovePerennials(branchNamesToSync)
-	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
