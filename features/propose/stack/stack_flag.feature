@@ -30,7 +30,7 @@ Feature: propose an entire stack
       |          | git checkout branch-3                                                          |
       | branch-3 | git merge --no-edit --ff branch-2                                              |
       |          | git merge --no-edit --ff origin/branch-3                                       |
-      |          | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
+      | (none)   | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
       |          | open https://github.com/git-town/git-town/pull/2                               |
       |          | open https://github.com/git-town/git-town/compare/branch-2...branch-3?expand=1 |
 
