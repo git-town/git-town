@@ -24,7 +24,7 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       | parent | git cherry-pick {{ sha-before-run 'commit 1' }} |
       |        | git checkout old                                |
       | old    | git -c rebase.updateRefs=false rebase parent    |
-      |        | git push --force-with-lease --force-if-includes |
+      |        | git checkout parent                             |
   # And these commits exist now
   #   | BRANCH | LOCATION      | MESSAGE  |
   #   | old    | local, origin | commit 2 |
@@ -52,10 +52,9 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | parent | git checkout old                                |
-      | old    | git reset --hard {{ sha 'commit 4' }}           |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git branch -D parent                            |
+      | BRANCH | COMMAND                               |
+      | parent | git checkout old                      |
+      | old    | git reset --hard {{ sha 'commit 4' }} |
+      |        | git branch -D parent                  |
     And the initial commits exist now
     And the initial lineage exists now
