@@ -16,7 +16,6 @@ Feature: proposing a child branch
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose --stack"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
