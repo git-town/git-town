@@ -2,7 +2,6 @@ package handlebars
 
 import (
 	"fmt"
-	"log"
 	"maps"
 	"regexp"
 	"strings"
@@ -33,6 +32,14 @@ func Expand(text string, args ExpandArgs) string {
 				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
 			}
 			sha := shas.First()
+			text = strings.Replace(text, match, sha.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-short "):
+			commitName := match[14 : len(match)-4]
+			shas := args.LocalRepo.SHAsForCommit(commitName)
+			if len(shas) == 0 {
+				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
+			}
+			sha := shas.First().Truncate(7)
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin "):
 			commitName := match[18 : len(match)-4]
@@ -87,7 +94,7 @@ func Expand(text string, args ExpandArgs) string {
 			}
 			text = strings.Replace(text, match, sha.String(), 1)
 		default:
-			log.Fatalf("DataTable.Expand: unknown template expression %q", text)
+			panic(fmt.Sprintf("DataTable.Expand: unknown template expression %q", match))
 		}
 	}
 	return text
