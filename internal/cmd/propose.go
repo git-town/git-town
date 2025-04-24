@@ -281,6 +281,10 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 				}
 			}
 		}
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToPropose).Get()
+		if !hasBranchInfo {
+			return data, false, fmt.Errorf("cannot find branch info for %q", branchNameToPropose)
+		}
 		branchesToPropose[b] = branchToProposeData{
 			name:                branchNameToPropose,
 			branchType:          branchType,
@@ -292,10 +296,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
-	}
-	branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchToPropose).Get()
-	if !hasBranchInfo {
-		return data, false, fmt.Errorf("cannot find branch info for %q", branchToPropose)
 	}
 	var bodyText gitdomain.ProposalBody
 	if len(body) > 0 {
@@ -366,12 +366,11 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 			StashOpenChanges:         data.hasOpenChanges,
 			PreviousBranchCandidates: previousBranchCandidates,
 		})
-		branchInfo, has := data.branchInfos.FindByLocalName(branchToPropose.).Get()
-		if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchesToPropose.name))
+		if branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, branchToPropose.name))
 			return prog.Immutable()
 		}
-		if existingProposalURL, hasExistingProposal := data.branchToPropose.existingProposalURL.Get(); hasExistingProposal {
+		if existingProposalURL, hasExistingProposal := branchToPropose.existingProposalURL.Get(); hasExistingProposal {
 			prog.Value.Add(
 				&opcodes.BrowserOpen{
 					URL: existingProposalURL,
@@ -379,7 +378,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 			)
 		} else {
 			prog.Value.Add(&opcodes.ProposalCreate{
-				Branch:        data.branchesToPropose.name,
+				Branch:        branchToPropose.name,
 				MainBranch:    data.config.ValidatedConfigData.MainBranch,
 				ProposalBody:  data.proposalBody,
 				ProposalTitle: data.proposalTitle,
