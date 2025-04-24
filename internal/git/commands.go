@@ -543,7 +543,7 @@ func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
 }
 
 func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
-	err := runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+	err := runner.Run("git", "rev-parse", "--verify", "-q", "MERGE_HEAD")
 	return err == nil
 }
 
