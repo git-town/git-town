@@ -16,7 +16,6 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       | DIALOG          | KEYS        |
       | select commit 1 | space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
@@ -25,29 +24,14 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
       |        | git checkout old                                |
       | old    | git -c rebase.updateRefs=false rebase parent    |
       |        | git checkout parent                             |
-  # And these commits exist now
-  #   | BRANCH | LOCATION      | MESSAGE  |
-  #   | old    | local, origin | commit 2 |
-  #   |        | origin        | commit 2 |
-  #   |        |               | commit 4 |
-  #   | parent | local         | commit 2 |
-  #   |        |               | commit 4 |
-  # And this lineage exists now
-  #   | BRANCH | PARENT |
-  #   | old    | parent |
-  #   | parent | main   |
-  # When I run "git town sync"
-  # Then Git Town runs the commands
-  #   | BRANCH | COMMAND                                    |
-  #   | parent | git fetch --prune --tags                   |
-  #   |        | git -c rebase.updateRefs=false rebase main |
-  #   |        | git push -u origin parent                  |
-  # And these commits exist now
-  #   | BRANCH | LOCATION      | MESSAGE  |
-  #   | old    | local, origin | commit 1 |
-  #   |        |               | commit 3 |
-  #   | parent | local, origin | commit 2 |
-  #   |        |               | commit 4 |
+    And these commits exist now
+      | BRANCH | LOCATION | MESSAGE  |
+      | old    | local    | commit 2 |
+      | parent | local    | commit 1 |
+    And this lineage exists now
+      | BRANCH | PARENT |
+      | old    | parent |
+      | parent | main   |
 
   Scenario: undo
     When I run "git-town undo"
