@@ -228,7 +228,6 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err != nil {
 		return data, false, err
 	}
-	branchesToPropose := initialBranch
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -247,7 +246,13 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToPropose := validatedConfig.BranchType(branchToPropose)
+	var branchesToPropose gitdomain.LocalBranchNames
+	if fullStack {
+		branchesToPropose = gitdomain.LocalBranchNames{initialBranch}
+	} else {
+		branchesToPropose = gitdomain.LocalBranchNames{initialBranch}
+	}
+	branchTypeToPropose := validatedConfig.BranchType(branchesToPropose)
 	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
 		return data, false, err
 	}
