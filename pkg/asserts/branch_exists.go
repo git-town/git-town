@@ -9,7 +9,7 @@ import (
 
 func BranchExists(t *testing.T, dir, expectedBranch string) {
 	t.Helper()
-	cmd := exec.Command("git", "rev-parse", "--verify", "-q", "refs/heads/"+expectedBranch)
+	cmd := exec.Command("git", "rev-parse", "--verify", "-q", "refs/heads/"+expectedBranch) //nolint:gosec
 	cmd.Dir = dir
 	err := cmd.Run()
 	must.NoError(t, err)
