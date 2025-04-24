@@ -6,6 +6,9 @@ Feature: Create proposals for parked branches
     And the branches
       | NAME   | TYPE   | PARENT | LOCATIONS     |
       | parked | parked | main   | local, origin |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE       |
+      | parked | local    | parked commit |
     And the current branch is "parked"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
@@ -19,4 +22,10 @@ Feature: Create proposals for parked branches
       | (none) | Looking for proposal online ... ok                                |
       | parked | git merge --no-edit --ff main                                     |
       |        | git merge --no-edit --ff origin/parked                            |
+      |        | git push                                                          |
       | (none) | open https://github.com/git-town/git-town/compare/parked?expand=1 |
+    And Git Town prints:
+      """
+      branch "parked" is no longer parked
+      """
+    And branch "parked" now has type "feature"

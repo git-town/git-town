@@ -352,9 +352,16 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		PushBranches:        true,
 	})
 	for _, branchToPropose := range data.branchesToPropose {
-		if branchToPropose.branchType == configdomain.BranchTypePrototypeBranch {
+		switch branchToPropose.branchType {
+		case configdomain.BranchTypePrototypeBranch:
 			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
 			repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, branchToPropose.name))
+		case configdomain.BranchTypeParkedBranch:
+			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
+			repo.FinalMessages.Add(fmt.Sprintf(messages.ParkedRemoved, branchToPropose.name))
+		case configdomain.BranchTypeFeatureBranch:
+		case configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypePerennialBranch:
+			continue
 		}
 		prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
 			CurrentBranch: branchToPropose.name,
