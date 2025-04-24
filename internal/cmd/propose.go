@@ -154,8 +154,8 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
-	branchesToPropose   []branchToProposeData
 	branchesSnapshot    gitdomain.BranchesSnapshot
+	branchesToPropose   []branchToProposeData
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
@@ -286,9 +286,9 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			return data, false, fmt.Errorf("cannot find branch info for %q", branchNameToPropose)
 		}
 		branchesToPropose[b] = branchToProposeData{
-			name:                branchNameToPropose,
 			branchType:          branchType,
 			existingProposalURL: existingProposalURL,
+			name:                branchNameToPropose,
 			syncStatus:          branchInfo.SyncStatus,
 		}
 	}
@@ -317,8 +317,8 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
-		branchesToPropose:   branchesToPropose,
 		branchesSnapshot:    branchesSnapshot,
+		branchesToPropose:   branchesToPropose,
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
 		connector:           connectorOpt,
