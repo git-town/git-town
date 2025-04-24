@@ -240,19 +240,22 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil || exit {
 		return data, exit, err
 	}
-	var branchesToPropose gitdomain.LocalBranchNames
+	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
+	var branchNamesToPropose gitdomain.LocalBranchNames
+	var branchNamesToSync gitdomain.LocalBranchNames
 	if fullStack {
-		branchesToPropose = gitdomain.LocalBranchNames{initialBranch}
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
+		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
+		copy(branchNamesToPropose, branchNamesToSync)
 	} else {
-		branchesToPropose = gitdomain.LocalBranchNames{initialBranch}
-	}
-	branchTypeToPropose := validatedConfig.BranchType(branchesToPropose)
-	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
-		return data, false, err
-	}
-	parentOfBranchToPropose, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchToPropose).Get()
-	if !hasParentBranch {
-		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.AncestorsWithoutRoot(initialBranch)
+		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
+		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
+			return data, false, err
+		}
+		if validatedConfig.NormalConfig.Lineage.Parent(initialBranch).IsNone() {
+			return data, false, fmt.Errorf(messages.ProposalNoParent, initialBranch)
+		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
@@ -261,25 +264,17 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	existingProposalURLs := map[gitdomain.LocalBranchName]string{}
 	findProposal, canFindProposals := connector.FindProposalFn().Get()
 	if canFindProposals {
-		if fullStack {
-			for _, branchToPropose := range branchesToPropose {
-			}
-		} else {
-			existingProposalOpt, err := findProposal(initialBranch, parentOfBranchToPropose)
-			if err != nil {
-				print.Error(err)
-			}
-			if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-				existingProposalURLs[initialBranch] = existingProposal.URL
+		for _, branchToPropose := range branchNamesToPropose {
+			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchToPropose).Get(); hasParent {
+				existingProposalOpt, err := findProposal(initialBranch, parent)
+				if err != nil {
+					print.Error(err)
+				}
+				if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
+					existingProposalURLs[initialBranch] = existingProposal.URL
+				}
 			}
 		}
-	}
-	var branchNamesToSync gitdomain.LocalBranchNames
-	if fullStack {
-		perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
-	} else {
-		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestors(branchToPropose)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
