@@ -80,10 +80,10 @@ func (self Lineage) Ancestors(branch gitdomain.LocalBranchName) gitdomain.LocalB
 // AncestorsWithoutRoot provides the names of all parent branches of the branch with the given name, excluding the root perennial branch.
 func (self Lineage) AncestorsWithoutRoot(branch gitdomain.LocalBranchName) gitdomain.LocalBranchNames {
 	ancestors := self.Ancestors(branch)
-	if len(ancestors) > 0 {
-		return ancestors[1:]
+	if len(ancestors) == 0 {
+		return ancestors
 	}
-	return ancestors
+	return ancestors[1:]
 }
 
 // BranchAndAncestors provides the full ancestry for the branch with the given name,
