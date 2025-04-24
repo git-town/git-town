@@ -267,7 +267,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	for b, branchNameToPropose := range branchNamesToPropose {
 		branchType, has := branchesAndTypes[branchNameToPropose]
 		if !has {
-			return data, false, fmt.Errorf("cannot determine type of branch %q", branchNameToPropose)
+			return data, false, fmt.Errorf(messages.BranchTypeCannotDetermine, branchNameToPropose)
 		}
 		existingProposalURL := None[string]()
 		if canFindProposals {
