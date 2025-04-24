@@ -273,6 +273,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		if canFindProposals {
 			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToPropose).Get(); hasParent {
 				existingProposalOpt, err := findProposal(branchNameToPropose, parent)
+				fmt.Println("111111111111111111111111111111", existingProposalOpt)
 				if err != nil {
 					print.Error(err)
 				}
