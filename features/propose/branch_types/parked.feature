@@ -25,8 +25,8 @@ Feature: Create proposals for parked branches
       |        | git merge --no-edit --ff origin/parked                            |
       |        | git push                                                          |
       | (none) | open https://github.com/git-town/git-town/compare/parked?expand=1 |
-    # And Git Town prints:
-    #   """
-    #   branch "parked" is no longer parked
-    #   """
+    And Git Town prints:
+      """
+      branch "parked" is no longer parked
+      """
     And branch "parked" now has type "feature"

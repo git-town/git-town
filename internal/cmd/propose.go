@@ -356,6 +356,10 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
 			repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, branchToPropose.name))
 		}
+		if branchToPropose.branchType == configdomain.BranchTypeParkedBranch {
+			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
+			repo.FinalMessages.Add(fmt.Sprintf(messages.ParkedRemoved, branchToPropose.name))
+		}
 		prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
 			CurrentBranch: branchToPropose.name,
 		})
