@@ -10,7 +10,7 @@ a new proposal in your browser and pre-populates information like branch and
 source/target repository. It also [syncs](sync.md) the branch to merge before
 opening the pull request in [detached](sync.md#-d--detached) mode.
 
-Proposing prototype and parked branches removes their prototype status.
+Proposing prototype and parked branches makes them feature branches.
 
 You can create pull requests for repositories hosted on:
 
