@@ -124,7 +124,7 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 	if err != nil || exit {
 		return err
 	}
-	runProgram := proposeProgram(repo, data)
+	runProgram := proposeProgram(repo, data, fullStack)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -255,7 +255,6 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if !hasConnector {
 		return data, false, forgedomain.UnsupportedServiceError()
 	}
-	existingProposalURL := None[string]()
 	existingProposalURLs := map[gitdomain.LocalBranchName]string{}
 	findProposal, canFindProposals := connector.FindProposalFn().Get()
 	if canFindProposals {
