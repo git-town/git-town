@@ -155,7 +155,6 @@ type proposeData struct {
 	connector           Option[forgedomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
-	existingProposalURL Option[string]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -168,8 +167,9 @@ type proposeData struct {
 }
 
 type branchToProposeData struct {
-	name       gitdomain.LocalBranchName
-	branchType configdomain.BranchType
+	name                gitdomain.LocalBranchName
+	branchType          configdomain.BranchType
+	existingProposalURL Option[string]
 }
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
@@ -284,8 +284,9 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	return proposeData{
 		branchInfos: branchesSnapshot.Branches,
 		branchToPropose: branchToProposeData{
-			name:       branchToPropose,
-			branchType: branchTypeToPropose,
+			name:                branchToPropose,
+			branchType:          branchTypeToPropose,
+			existingProposalURL: existingProposalURL,
 		},
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
@@ -293,7 +294,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
-		existingProposalURL: existingProposalURL,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,
@@ -340,7 +340,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToPropose.name))
 		return prog.Immutable()
 	}
-	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
+	if existingProposalURL, hasExistingProposal := data.branchToPropose.existingProposalURL.Get(); hasExistingProposal {
 		prog.Value.Add(
 			&opcodes.BrowserOpen{
 				URL: existingProposalURL,
