@@ -26,10 +26,7 @@ Feature: sync before proposing
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
       | (none) | Looking for proposal online ... ok                                        |
-      | child  | git checkout main                                                         |
-      | main   | git -c rebase.updateRefs=false rebase origin/main                         |
-      |        | git push                                                                  |
-      |        | git checkout parent                                                       |
+      | child  | git checkout parent                                                       |
       | parent | git merge --no-edit --ff main                                             |
       |        | git merge --no-edit --ff origin/parent                                    |
       |        | git push                                                                  |
@@ -40,8 +37,8 @@ Feature: sync before proposing
       | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
-      | main   | local, origin | origin main commit                                       |
-      |        |               | local main commit                                        |
+      | main   | local         | local main commit                                        |
+      |        | origin        | origin main commit                                       |
       | child  | local, origin | local child commit                                       |
       |        |               | Merge branch 'parent' into child                         |
       |        |               | origin child commit                                      |
@@ -50,3 +47,4 @@ Feature: sync before proposing
       |        |               | Merge branch 'main' into parent                          |
       |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
+      |        | origin        | local main commit                                        |
