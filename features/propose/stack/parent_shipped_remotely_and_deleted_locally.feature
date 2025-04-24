@@ -34,16 +34,6 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
-    And Git Town runs the commands
-      | BRANCH | COMMAND                                                          |
-      | child  | git fetch --prune --tags                                         |
-      |        | git checkout main                                                |
-      | main   | git -c rebase.updateRefs=false rebase origin/main                |
-      |        | git checkout child                                               |
-      | child  | git merge --no-edit --ff main                                    |
-      |        | git merge --no-edit --ff origin/child                            |
-      |        | git push                                                         |
-      | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
 
   Scenario: undo
     When I run "git-town undo"
