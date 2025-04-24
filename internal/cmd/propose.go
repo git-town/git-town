@@ -311,14 +311,6 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
-		prog.Value.Add(
-			&opcodes.BrowserOpen{
-				URL: existingProposalURL,
-			},
-		)
-		return prog.Immutable()
-	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
@@ -351,12 +343,20 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToPropose))
 		return prog.Immutable()
 	}
-	prog.Value.Add(&opcodes.ProposalCreate{
-		Branch:        data.branchToPropose,
-		MainBranch:    data.config.ValidatedConfigData.MainBranch,
-		ProposalBody:  data.proposalBody,
-		ProposalTitle: data.proposalTitle,
-	})
+	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
+		prog.Value.Add(
+			&opcodes.BrowserOpen{
+				URL: existingProposalURL,
+			},
+		)
+	} else {
+		prog.Value.Add(&opcodes.ProposalCreate{
+			Branch:        data.branchToPropose,
+			MainBranch:    data.config.ValidatedConfigData.MainBranch,
+			ProposalBody:  data.proposalBody,
+			ProposalTitle: data.proposalTitle,
+		})
+	}
 	return optimizer.Optimize(prog.Immutable())
 }
 
