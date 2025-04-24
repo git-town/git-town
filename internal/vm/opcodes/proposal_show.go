@@ -5,13 +5,13 @@ import (
 	"github.com/git-town/git-town/v19/internal/vm/shared"
 )
 
-// BrowserOpen opens the browser with the given URL.
-type BrowserOpen struct {
+// ProposalShow displays the existing proposal with the given URL in the browser.
+type ProposalShow struct {
 	URL                     string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *BrowserOpen) Run(args shared.RunArgs) error {
+func (self *ProposalShow) Run(args shared.RunArgs) error {
 	browser.Open(self.URL, args.Frontend, args.Backend)
 	return nil
 }

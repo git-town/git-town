@@ -313,7 +313,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	prog := NewMutable(&program.Program{})
 	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
 		prog.Value.Add(
-			&opcodes.BrowserOpen{
+			&opcodes.ProposalShow{
 				URL: existingProposalURL,
 			},
 		)
