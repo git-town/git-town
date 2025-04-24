@@ -255,7 +255,6 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 	if !hasConnector {
 		return data, false, forgedomain.UnsupportedServiceError()
 	}
-	existingProposalURL := None[string]()
 	existingProposalURLs := map[gitdomain.LocalBranchName]string{}
 	findProposal, canFindProposals := connector.FindProposalFn().Get()
 	if canFindProposals {
