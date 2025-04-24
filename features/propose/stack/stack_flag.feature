@@ -17,31 +17,10 @@ Feature: propose an entire stack
   @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                          |
-      | child  | git fetch --prune --tags                                         |
-      |        | git checkout main                                                |
-      | main   | git rebase origin/main --no-update-refs                          |
-      |        | git checkout child                                               |
-      | child  | git merge --no-edit --ff main                                    |
-      |        | git merge --no-edit --ff origin/child                            |
-      |        | git push                                                         |
-      | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
-    And this lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
-    And Git Town runs the commands
-      | BRANCH | COMMAND                                                          |
-      | child  | git fetch --prune --tags                                         |
-      |        | git checkout main                                                |
-      | main   | git rebase origin/main --no-update-refs                          |
-      |        | git checkout child                                               |
-      | child  | git merge --no-edit --ff main                                    |
-      |        | git merge --no-edit --ff origin/child                            |
-      |        | git push                                                         |
-      | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
+      | BRANCH   | COMMAND                                          |
+      | branch-3 | git fetch --prune --tags                         |
+      | (none)   | Looking for proposal online ... ok               |
+      |          | open https://github.com/git-town/git-town/pull/3 |
 
   Scenario: undo
     When I run "git-town undo"
