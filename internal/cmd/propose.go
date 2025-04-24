@@ -173,9 +173,10 @@ type proposeData struct {
 }
 
 type branchToProposeData struct {
-	name                gitdomain.LocalBranchName
 	branchType          configdomain.BranchType
 	existingProposalURL Option[string]
+	name                gitdomain.LocalBranchName
+	syncStatus          gitdomain.SyncStatus
 }
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
@@ -284,12 +285,17 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			name:                branchNameToPropose,
 			branchType:          branchType,
 			existingProposalURL: existingProposalURL,
+			syncStatus:          branchInfo.SyncStatus,
 		}
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
+	}
+	branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchToPropose).Get()
+	if !hasBranchInfo {
+		return data, false, fmt.Errorf("cannot find branch info for %q", branchToPropose)
 	}
 	var bodyText gitdomain.ProposalBody
 	if len(body) > 0 {
