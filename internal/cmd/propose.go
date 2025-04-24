@@ -159,31 +159,32 @@ func executePropose(detached configdomain.Detached, dryRun configdomain.DryRun, 
 }
 
 type proposeData struct {
-	branchInfos          gitdomain.BranchInfos
-	branchesToPropose    gitdomain.LocalBranchNames
-	branchTypeToPropose  configdomain.BranchType
-	branchesSnapshot     gitdomain.BranchesSnapshot
-	branchesToSync       configdomain.BranchesToSync
-	config               config.ValidatedConfig
-	connector            Option[forgedomain.Connector]
-	dialogTestInputs     components.TestInputs
-	dryRun               configdomain.DryRun
-	existingProposalURLs map[gitdomain.LocalBranchName]string // used when proposing multiple branches (with --stack)
-	hasOpenChanges       bool
-	initialBranch        gitdomain.LocalBranchName
-	nonExistingBranches  gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
-	preFetchBranchInfos  gitdomain.BranchInfos
-	previousBranch       Option[gitdomain.LocalBranchName]
-	proposalBody         gitdomain.ProposalBody
-	proposalTitle        gitdomain.ProposalTitle
-	remotes              gitdomain.Remotes
-	stashSize            gitdomain.StashSize
+	branchInfos         gitdomain.BranchInfos
+	branchToProposeData branchToProposeData
+	branchesSnapshot    gitdomain.BranchesSnapshot
+	branchesToSync      configdomain.BranchesToSync
+	config              config.ValidatedConfig
+	connector           Option[forgedomain.Connector]
+	dialogTestInputs    components.TestInputs
+	dryRun              configdomain.DryRun
+	existingProposalURL Option[string]
+	hasOpenChanges      bool
+	initialBranch       gitdomain.LocalBranchName
+	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
+	preFetchBranchInfos gitdomain.BranchInfos
+	previousBranch      Option[gitdomain.LocalBranchName]
+	proposalBody        gitdomain.ProposalBody
+	proposalTitle       gitdomain.ProposalTitle
+	remotes             gitdomain.Remotes
+	stashSize           gitdomain.StashSize
 }
 
 type branchToProposeData struct {
+	name       gitdomain.LocalBranchName
+	branchType configdomain.BranchType
 }
 
-func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -308,25 +309,27 @@ func determineProposeData(repo execute.OpenRepoResult, detached configdomain.Det
 		}
 	}
 	return proposeData{
-		branchInfos:          branchesSnapshot.Branches,
-		branchesToPropose:    branchesToPropose,
-		branchTypeToPropose:  branchTypeToPropose,
-		branchesSnapshot:     branchesSnapshot,
-		branchesToSync:       branchesToSync,
-		config:               validatedConfig,
-		connector:            connectorOpt,
-		dialogTestInputs:     dialogTestInputs,
-		dryRun:               dryRun,
-		existingProposalURLs: existingProposalURLs,
-		hasOpenChanges:       repoStatus.OpenChanges,
-		initialBranch:        initialBranch,
-		nonExistingBranches:  nonExistingBranches,
-		preFetchBranchInfos:  preFetchBranchSnapshot.Branches,
-		previousBranch:       previousBranch,
-		proposalBody:         bodyText,
-		proposalTitle:        title,
-		remotes:              remotes,
-		stashSize:            stashSize,
+		branchInfos: branchesSnapshot.Branches,
+		branchToProposeData: branchToProposeData{
+			name:       branchToPropose,
+			branchType: branchTypeToPropose,
+		},
+		branchesSnapshot:    branchesSnapshot,
+		branchesToSync:      branchesToSync,
+		config:              validatedConfig,
+		connector:           connectorOpt,
+		dialogTestInputs:    dialogTestInputs,
+		dryRun:              dryRun,
+		existingProposalURL: existingProposalURL,
+		hasOpenChanges:      repoStatus.OpenChanges,
+		initialBranch:       initialBranch,
+		nonExistingBranches: nonExistingBranches,
+		preFetchBranchInfos: preFetchBranchSnapshot.Branches,
+		previousBranch:      previousBranch,
+		proposalBody:        bodyText,
+		proposalTitle:       title,
+		remotes:             remotes,
+		stashSize:           stashSize,
 	}, false, err
 }
 
@@ -345,12 +348,12 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 		Prune:               false,
 		PushBranches:        true,
 	})
-	if data.branchTypeToPropose == configdomain.BranchTypePrototypeBranch {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: data.branchesToPropose})
-		repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, data.branchesToPropose))
+	if data.branchToProposeData.branchType == configdomain.BranchTypePrototypeBranch {
+		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: data.branchToProposeData.name})
+		repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, data.branchToProposeData.name))
 	}
 	prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
-		CurrentBranch: data.branchesToPropose,
+		CurrentBranch: data.branchToProposeData.name,
 	})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
@@ -359,9 +362,9 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
 	})
-	branchInfo, has := data.branchInfos.FindByLocalName(data.branchesToPropose).Get()
+	branchInfo, has := data.branchInfos.FindByLocalName(data.branchToProposeData.name).Get()
 	if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchesToPropose))
+		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToProposeData.name))
 		return prog.Immutable()
 	}
 	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
@@ -372,7 +375,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 		)
 	} else {
 		prog.Value.Add(&opcodes.ProposalCreate{
-			Branch:        data.branchToPropose,
+			Branch:        data.branchToProposeData.name,
 			MainBranch:    data.config.ValidatedConfigData.MainBranch,
 			ProposalBody:  data.proposalBody,
 			ProposalTitle: data.proposalTitle,
