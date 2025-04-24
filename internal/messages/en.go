@@ -36,6 +36,7 @@ const (
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
 	BranchOtherWorktree                = `branch %q is active in another worktree`
 	BranchParentChanged                = "branch %q is now a child of %q"
+	BranchTypeCannotDetermine          = "cannot determine type of branch %q"
 	BrowserOpen                        = "Please open in a browser: %s\n"
 	CacheUnitialized                   = "using a cached value before initialization"
 	CodebergToken                      = "Codeberg token: %s\n"

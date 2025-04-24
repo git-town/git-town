@@ -41,6 +41,11 @@ body text from STDIN.
 When called with the `--title <title>` aka `-t` flag, the _propose_ command
 pre-populate the title of the pull request to the given text.
 
+#### `-s`<br>`--stack`
+
+The `--stack` aka `-s` parameter makes Git Town propose all branches in the
+stack that the current branch belongs to.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands

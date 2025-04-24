@@ -56,6 +56,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFlag, readBodyFlag := flags.ProposalBody("b")
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -77,6 +78,10 @@ func proposeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			stack, err := readStackFlag(cmd)
+			if err != nil {
+				return err
+			}
 			title, err := readTitleFlag(cmd)
 			if err != nil {
 				return err
@@ -85,18 +90,19 @@ func proposeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePropose(dryRun, verbose, title, bodyText, bodyFile)
+			return executePropose(dryRun, verbose, title, bodyText, bodyFile, stack)
 		},
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) error {
+func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -108,7 +114,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineProposeData(repo, dryRun, verbose, title, body, bodyFile)
+	data, exit, err := determineProposeData(repo, dryRun, fullStack, verbose, title, body, bodyFile)
 	if err != nil || exit {
 		return err
 	}
@@ -148,8 +154,8 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
-	branchToPropose     branchToProposeData
 	branchesSnapshot    gitdomain.BranchesSnapshot
+	branchesToPropose   []branchToProposeData
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
@@ -173,7 +179,7 @@ type branchToProposeData struct {
 	syncStatus          gitdomain.SyncStatus
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -217,7 +223,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil {
 		return data, false, err
 	}
-	branchToPropose := initialBranch
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
@@ -236,37 +241,61 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil || exit {
 		return data, exit, err
 	}
-	branchTypeToPropose := validatedConfig.BranchType(branchToPropose)
-	if err = validateBranchTypeToPropose(branchTypeToPropose); err != nil {
-		return data, false, err
-	}
-	parentOfBranchToPropose, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(branchToPropose).Get()
-	if !hasParentBranch {
-		return data, false, fmt.Errorf(messages.ProposalNoParent, branchToPropose)
+	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
+	var branchNamesToPropose gitdomain.LocalBranchNames
+	var branchNamesToSync gitdomain.LocalBranchNames
+	if fullStack {
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialAndMain)
+		branchNamesToPropose = make(gitdomain.LocalBranchNames, len(branchNamesToSync))
+		copy(branchNamesToPropose, branchNamesToSync)
+	} else {
+		branchNamesToSync = validatedConfig.NormalConfig.Lineage.BranchAndAncestors(initialBranch)
+		branchNamesToPropose = gitdomain.LocalBranchNames{initialBranch}
+		if err = validateBranchTypeToPropose(branchesAndTypes[initialBranch]); err != nil {
+			return data, false, err
+		}
+		if validatedConfig.NormalConfig.Lineage.Parent(initialBranch).IsNone() {
+			return data, false, fmt.Errorf(messages.ProposalNoParent, initialBranch)
+		}
 	}
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
 		return data, false, forgedomain.UnsupportedServiceError()
 	}
-	existingProposalURL := None[string]()
-	if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
-		existingProposalOpt, err := findProposal(initialBranch, parentOfBranchToPropose)
-		if err != nil {
-			print.Error(err)
+	findProposal, canFindProposals := connector.FindProposalFn().Get()
+	branchesToPropose := make([]branchToProposeData, len(branchNamesToPropose))
+	for b, branchNameToPropose := range branchNamesToPropose {
+		branchType, has := branchesAndTypes[branchNameToPropose]
+		if !has {
+			return data, false, fmt.Errorf(messages.BranchTypeCannotDetermine, branchNameToPropose)
 		}
-		if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-			existingProposalURL = Some(existingProposal.URL)
+		existingProposalURL := None[string]()
+		if canFindProposals {
+			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToPropose).Get(); hasParent {
+				existingProposalOpt, err := findProposal(branchNameToPropose, parent)
+				if err != nil {
+					print.Error(err)
+				}
+				if existingProposal, has := existingProposalOpt.Get(); has {
+					existingProposalURL = Some(existingProposal.URL)
+				}
+			}
+		}
+		branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchNameToPropose).Get()
+		if !hasBranchInfo {
+			return data, false, fmt.Errorf(messages.BranchInfoNotFound, branchNameToPropose)
+		}
+		branchesToPropose[b] = branchToProposeData{
+			branchType:          branchType,
+			existingProposalURL: existingProposalURL,
+			name:                branchNameToPropose,
+			syncStatus:          branchInfo.SyncStatus,
 		}
 	}
-	branchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(branchToPropose)
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
 	branchesToSync, err := sync.BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
 	if err != nil {
 		return data, false, err
-	}
-	branchInfo, hasBranchInfo := branchesSnapshot.Branches.FindByLocalName(branchToPropose).Get()
-	if !hasBranchInfo {
-		return data, false, fmt.Errorf("cannot find branch info for %q", branchToPropose)
 	}
 	var bodyText gitdomain.ProposalBody
 	if len(body) > 0 {
@@ -287,14 +316,9 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		}
 	}
 	return proposeData{
-		branchInfos: branchesSnapshot.Branches,
-		branchToPropose: branchToProposeData{
-			branchType:          branchTypeToPropose,
-			existingProposalURL: existingProposalURL,
-			name:                branchToPropose,
-			syncStatus:          branchInfo.SyncStatus,
-		},
+		branchInfos:         branchesSnapshot.Branches,
 		branchesSnapshot:    branchesSnapshot,
+		branchesToPropose:   branchesToPropose,
 		branchesToSync:      branchesToSync,
 		config:              validatedConfig,
 		connector:           connectorOpt,
@@ -327,37 +351,39 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 		Prune:               false,
 		PushBranches:        true,
 	})
-	if data.branchToPropose.branchType == configdomain.BranchTypePrototypeBranch {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: data.branchToPropose.name})
-		repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, data.branchToPropose.name))
-	}
-	prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
-		CurrentBranch: data.branchToPropose.name,
-	})
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
-	})
-	if data.branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchToPropose.name))
-		return prog.Immutable()
-	}
-	if existingProposalURL, hasExistingProposal := data.branchToPropose.existingProposalURL.Get(); hasExistingProposal {
-		prog.Value.Add(
-			&opcodes.BrowserOpen{
-				URL: existingProposalURL,
-			},
-		)
-	} else {
-		prog.Value.Add(&opcodes.ProposalCreate{
-			Branch:        data.branchToPropose.name,
-			MainBranch:    data.config.ValidatedConfigData.MainBranch,
-			ProposalBody:  data.proposalBody,
-			ProposalTitle: data.proposalTitle,
+	for _, branchToPropose := range data.branchesToPropose {
+		if branchToPropose.branchType == configdomain.BranchTypePrototypeBranch {
+			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
+			repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, branchToPropose.name))
+		}
+		prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
+			CurrentBranch: branchToPropose.name,
 		})
+		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+			DryRun:                   data.dryRun,
+			RunInGitRoot:             true,
+			StashOpenChanges:         data.hasOpenChanges,
+			PreviousBranchCandidates: previousBranchCandidates,
+		})
+		if branchToPropose.syncStatus == gitdomain.SyncStatusDeletedAtRemote {
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, branchToPropose.name))
+			return prog.Immutable()
+		}
+		if existingProposalURL, hasExistingProposal := branchToPropose.existingProposalURL.Get(); hasExistingProposal {
+			prog.Value.Add(
+				&opcodes.BrowserOpen{
+					URL: existingProposalURL,
+				},
+			)
+		} else {
+			prog.Value.Add(&opcodes.ProposalCreate{
+				Branch:        branchToPropose.name,
+				MainBranch:    data.config.ValidatedConfigData.MainBranch,
+				ProposalBody:  data.proposalBody,
+				ProposalTitle: data.proposalTitle,
+			})
+		}
 	}
 	return optimizer.Optimize(prog.Immutable())
 }
