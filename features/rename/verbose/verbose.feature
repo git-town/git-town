@@ -21,7 +21,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --includes --local                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       |        | backend  | git status -z --ignore-submodules                |
-      |        | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend  | git rev-parse --verify -q MERGE_HEAD             |
       |        | backend  | git rev-parse --absolute-git-dir                 |
       |        | backend  | git remote                                       |
       |        | backend  | git branch --show-current                        |
@@ -54,7 +54,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --includes --global               |
       |        | backend  | git config -lz --includes --local                |
       |        | backend  | git status -z --ignore-submodules                |
-      |        | backend  | git rev-parse -q --verify MERGE_HEAD             |
+      |        | backend  | git rev-parse --verify -q MERGE_HEAD             |
       |        | backend  | git rev-parse --absolute-git-dir                 |
       |        | backend  | git stash list                                   |
       |        | backend  | git -c core.abbrev=40 branch -vva --sort=refname |
