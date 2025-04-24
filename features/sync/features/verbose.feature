@@ -23,7 +23,7 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --includes --local                  |
       |         | backend  | git -c core.abbrev=40 branch -vva --sort=refname   |
       |         | backend  | git status -z --ignore-submodules                  |
-      |         | backend  | git rev-parse -q --verify MERGE_HEAD               |
+      |         | backend  | git rev-parse --verify -q MERGE_HEAD               |
       |         | backend  | git rev-parse --absolute-git-dir                   |
       |         | backend  | git remote                                         |
       | feature | frontend | git fetch --prune --tags                           |

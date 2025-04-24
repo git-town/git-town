@@ -28,6 +28,7 @@ func All() []shared.Opcode {
 		&BranchTypeOverrideRemove{},
 		&BranchTypeOverrideSet{},
 		&BranchWithRemoteGoneDeleteIfEmptyAtRuntime{},
+		&BrowserOpen{},
 		&ChangesDiscard{},
 		&ChangesStage{},
 		&ChangesUnstageAll{},
