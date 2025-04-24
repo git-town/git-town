@@ -1,11 +1,11 @@
-Feature: proposing a stack containing an observed branch
+Feature: proposing a stack containing a contribution branch
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME   | TYPE     | PARENT | LOCATIONS     |
-      | parent | observed |        | local, origin |
-      | child  | feature  | parent | local, origin |
+      | NAME   | TYPE         | PARENT | LOCATIONS     |
+      | parent | contribution |        | local, origin |
+      | child  | feature      | parent | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |

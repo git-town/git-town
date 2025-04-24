@@ -1,11 +1,11 @@
-Feature: proposing a stack containing an observed branch
+Feature: proposing a stack containing a parked branch
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME   | TYPE     | PARENT | LOCATIONS     |
-      | parent | observed |        | local, origin |
-      | child  | feature  | parent | local, origin |
+      | NAME   | TYPE    | PARENT | LOCATIONS     |
+      | parent | parked  | main   | local, origin |
+      | child  | feature | parent | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
@@ -22,7 +22,8 @@ Feature: proposing a stack containing an observed branch
       |        | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
-      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      | (none) | open https://github.com/git-town/git-town/compare/parent?expand=1         |
+      |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the initial branches exist now
     And the initial lineage exists now
 
