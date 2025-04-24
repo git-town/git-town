@@ -87,7 +87,7 @@ go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 
 ## End-to-end tests
 
-Run the end-to-end tests during development:
+Run the end-to-end tests during development (nicer output):
 
 <a type="make/command" dir="..">
 
@@ -97,7 +97,7 @@ make cuke
 
 </a>
 
-Run all end-to-end tests as they run on CI:
+Run the end-to-end tests as they run on CI:
 
 <a type="make/command" dir="..">
 
