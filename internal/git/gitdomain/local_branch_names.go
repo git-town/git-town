@@ -83,19 +83,6 @@ func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchName
 	return result
 }
 
-// RemoveWorktreeMarkers removes the workspace markers from the branch names in this list.
-func (self LocalBranchNames) RemoveWorktreeMarkers() LocalBranchNames {
-	result := make(LocalBranchNames, len(self))
-	for b, branch := range self {
-		if strings.HasPrefix(branch.String(), "+ ") {
-			result[b] = branch[2:]
-		} else {
-			result[b] = branch
-		}
-	}
-	return result
-}
-
 // Sort orders the branches in this collection alphabetically.
 func (self LocalBranchNames) Sort() {
 	sort.Slice(self, func(a, b int) bool {
