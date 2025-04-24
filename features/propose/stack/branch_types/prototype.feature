@@ -1,4 +1,4 @@
-Feature: proposing a stack containing a parked branch
+Feature: proposing a stack containing a prototype branch
 
   Background:
     Given a Git repo with origin
