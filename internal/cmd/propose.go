@@ -161,7 +161,6 @@ type proposeData struct {
 	connector           Option[forgedomain.Connector]
 	dialogTestInputs    components.TestInputs
 	dryRun              configdomain.DryRun
-	existingProposalURL Option[string]
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
@@ -174,8 +173,9 @@ type proposeData struct {
 }
 
 type branchToProposeData struct {
-	name       gitdomain.LocalBranchName
-	branchType configdomain.BranchType
+	name                gitdomain.LocalBranchName
+	branchType          configdomain.BranchType
+	existingProposalURL Option[string]
 }
 
 func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit bool, err error) {
@@ -257,34 +257,33 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			return data, false, fmt.Errorf(messages.ProposalNoParent, initialBranch)
 		}
 	}
+	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
+		return data, false, forgedomain.UnsupportedServiceError()
+	}
+	findProposal, canFindProposals := connector.FindProposalFn().Get()
 	branchesToPropose := make([]branchToProposeData, len(branchNamesToPropose))
 	for b, branchNameToPropose := range branchNamesToPropose {
 		branchType, has := branchesAndTypes[branchNameToPropose]
 		if !has {
 			return data, false, fmt.Errorf("cannot determine type of branch %q", branchNameToPropose)
 		}
-		branchesToPropose[b] = branchToProposeData{
-			name:       branchNameToPropose,
-			branchType: branchType,
-		}
-	}
-	connector, hasConnector := connectorOpt.Get()
-	if !hasConnector {
-		return data, false, forgedomain.UnsupportedServiceError()
-	}
-	existingProposalURLs := map[gitdomain.LocalBranchName]string{}
-	findProposal, canFindProposals := connector.FindProposalFn().Get()
-	if canFindProposals {
-		for _, branchToPropose := range branchNamesToPropose {
-			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchToPropose).Get(); hasParent {
+		existingProposalURL := None[string]()
+		if canFindProposals {
+			if parent, hasParent := validatedConfig.NormalConfig.Lineage.Parent(branchNameToPropose).Get(); hasParent {
 				existingProposalOpt, err := findProposal(initialBranch, parent)
 				if err != nil {
 					print.Error(err)
 				}
-				if existingProposal, hasExistingProposal := existingProposalOpt.Get(); hasExistingProposal {
-					existingProposalURLs[initialBranch] = existingProposal.URL
+				if existingProposal, has := existingProposalOpt.Get(); has {
+					existingProposalURL = Some(existingProposal.URL)
 				}
 			}
+		}
+		branchesToPropose[b] = branchToProposeData{
+			name:                branchNameToPropose,
+			branchType:          branchType,
+			existingProposalURL: existingProposalURL,
 		}
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, branchNamesToSync...)
@@ -319,7 +318,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
 		dryRun:              dryRun,
-		existingProposalURL: existingProposalURL,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,
@@ -366,7 +364,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchesToPropose.name))
 		return prog.Immutable()
 	}
-	if existingProposalURL, hasExistingProposal := data.existingProposalURL.Get(); hasExistingProposal {
+	if existingProposalURL, hasExistingProposal := data.branchToPropose.existingProposalURL.Get(); hasExistingProposal {
 		prog.Value.Add(
 			&opcodes.BrowserOpen{
 				URL: existingProposalURL,
