@@ -118,7 +118,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 	if err != nil || exit {
 		return err
 	}
-	runProgram := proposeProgram(repo, data, fullStack)
+	runProgram := proposeProgram(repo, data)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -336,7 +336,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	}, false, err
 }
 
-func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack configdomain.FullStack) program.Program {
+func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
