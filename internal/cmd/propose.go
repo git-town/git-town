@@ -345,38 +345,40 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData, fullStack con
 		Prune:               false,
 		PushBranches:        true,
 	})
-	if data.branchesToPropose.branchType == configdomain.BranchTypePrototypeBranch {
-		prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: data.branchesToPropose.name})
-		repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, data.branchesToPropose.name))
-	}
-	prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
-		CurrentBranch: data.branchesToPropose.name,
-	})
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
-	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
-		DryRun:                   data.dryRun,
-		RunInGitRoot:             true,
-		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
-	})
-	branchInfo, has := data.branchInfos.FindByLocalName(data.branchesToPropose.name).Get()
-	if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
-		repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchesToPropose.name))
-		return prog.Immutable()
-	}
-	if existingProposalURL, hasExistingProposal := data.branchToPropose.existingProposalURL.Get(); hasExistingProposal {
-		prog.Value.Add(
-			&opcodes.BrowserOpen{
-				URL: existingProposalURL,
-			},
-		)
-	} else {
-		prog.Value.Add(&opcodes.ProposalCreate{
-			Branch:        data.branchesToPropose.name,
-			MainBranch:    data.config.ValidatedConfigData.MainBranch,
-			ProposalBody:  data.proposalBody,
-			ProposalTitle: data.proposalTitle,
+	for _, branchToPropose := range data.branchesToPropose {
+		if branchToPropose.branchType == configdomain.BranchTypePrototypeBranch {
+			prog.Value.Add(&opcodes.BranchTypeOverrideRemove{Branch: branchToPropose.name})
+			repo.FinalMessages.Add(fmt.Sprintf(messages.PrototypeRemoved, branchToPropose.name))
+		}
+		prog.Value.Add(&opcodes.PushCurrentBranchIfLocal{
+			CurrentBranch: branchToPropose.name,
 		})
+		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
+		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
+			DryRun:                   data.dryRun,
+			RunInGitRoot:             true,
+			StashOpenChanges:         data.hasOpenChanges,
+			PreviousBranchCandidates: previousBranchCandidates,
+		})
+		branchInfo, has := data.branchInfos.FindByLocalName(branchToPropose.).Get()
+		if has && branchInfo.SyncStatus == gitdomain.SyncStatusDeletedAtRemote {
+			repo.FinalMessages.Add(fmt.Sprintf(messages.BranchDeletedAtRemote, data.branchesToPropose.name))
+			return prog.Immutable()
+		}
+		if existingProposalURL, hasExistingProposal := data.branchToPropose.existingProposalURL.Get(); hasExistingProposal {
+			prog.Value.Add(
+				&opcodes.BrowserOpen{
+					URL: existingProposalURL,
+				},
+			)
+		} else {
+			prog.Value.Add(&opcodes.ProposalCreate{
+				Branch:        data.branchesToPropose.name,
+				MainBranch:    data.config.ValidatedConfigData.MainBranch,
+				ProposalBody:  data.proposalBody,
+				ProposalTitle: data.proposalTitle,
+			})
+		}
 	}
 	return optimizer.Optimize(prog.Immutable())
 }
