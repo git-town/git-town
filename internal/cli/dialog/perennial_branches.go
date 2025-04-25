@@ -13,13 +13,14 @@ import (
 const (
 	perennialBranchesTitle = `Perennial branches`
 	PerennialBranchesHelp  = `
-Perennial branches are long-lived branches.
-They are never shipped and have no ancestors.
-Typically, perennial branches have names like
-"development", "staging", "qa", "production", etc.
+Perennial branches are long-lived branches
+that aren't shipped and don't have parent branches.
+They typically represent environments like
+development, staging, qa, or production.
 
-There is also a "perennial-regex" setting that allows
-to .
+For more flexible configuration,
+you can also use the "perennial-regex" setting
+to match branch names dynamically.
 
 `
 )
