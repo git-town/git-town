@@ -12,9 +12,10 @@ import (
 const (
 	originHostnameTitle = `Origin hostname`
 	OriginHostnameHelp  = `
-When using SSH identities, define the hostname
-of your source code repository. Only change this
-if the auto-detection does not work for you.
+If you're using SSH identities,
+specify the hostname of your source code repository.
+
+Only update this if Git Town's auto-detection doesn't work.
 
 `
 )
