@@ -355,7 +355,7 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, gitdomain.LocalBranchNames, error) {
+func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
 	forEachRefFormat := strings.Join(
 		[]string{
 			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
@@ -376,29 +376,27 @@ func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, gitdomain
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, gitdomain.LocalBranchNames{}, err
 	}
-	branches := gitdomain.LocalBranchNames{}
-	branchesInOtherWorktree := gitdomain.LocalBranchNames{}
 	for _, line := range stringslice.Lines(output) {
 		branch, worktreeMarker, found := strings.Cut(line, " ")
 		if !found {
 			panic(fmt.Sprintf("cannot parse branch line %q", line))
 		}
-		branches = append(branches, gitdomain.NewLocalBranchName(branch))
+		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 		if worktreeMarker == "+" {
-			branchesInOtherWorktree = append(branchesInOtherWorktree, gitdomain.NewLocalBranchName(branch))
+			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
 		}
 	}
-	return branches, branchesInOtherWorktree, nil
+	return allBranches, branchesInOtherWorktrees, nil
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, gitdomain.LocalBranchNames, error) {
-	branches, branchesInOtherWorktree, err := self.LocalBranches()
+func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
+	allBranches, branchesInOtherWorktrees, err = self.LocalBranches()
 	if err != nil {
-		return gitdomain.LocalBranchNames{}, gitdomain.LocalBranchNames{}, err
+		return
 	}
-	branches = slice.Hoist(branches, mainBranch)
-	return branches, branchesInOtherWorktree, nil
+	allBranches = slice.Hoist(allBranches, mainBranch)
+	return
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
