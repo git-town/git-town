@@ -90,6 +90,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "rename",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -120,6 +121,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 }
 
 type renameData struct {
+	branchInfosLastRun       Option[gitdomain.BranchInfos]
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
@@ -143,7 +145,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -238,6 +240,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		OldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
 	})
 	return renameData{
+		branchInfosLastRun:       branchInfosLastRun,
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
 		connector:                connectorOpt,

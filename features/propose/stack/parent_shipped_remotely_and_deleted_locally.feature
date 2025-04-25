@@ -21,12 +21,8 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
       | child  | git fetch --prune --tags                                         |
-      |        | git checkout main                                                |
-      | main   | git -c rebase.updateRefs=false rebase origin/main                |
-      |        | git checkout child                                               |
-      | child  | git merge --no-edit --ff main                                    |
+      |        | git merge --no-edit --ff main                                    |
       |        | git merge --no-edit --ff origin/child                            |
-      |        | git push                                                         |
       | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -34,26 +30,10 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     And this lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
-    And Git Town runs the commands
-      | BRANCH | COMMAND                                                          |
-      | child  | git fetch --prune --tags                                         |
-      |        | git checkout main                                                |
-      | main   | git -c rebase.updateRefs=false rebase origin/main                |
-      |        | git checkout child                                               |
-      | child  | git merge --no-edit --ff main                                    |
-      |        | git merge --no-edit --ff origin/child                            |
-      |        | git push                                                         |
-      | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | child  | git reset --hard {{ sha 'child commit' }}       |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout main                               |
-      | main   | git reset --hard {{ sha 'initial commit' }}     |
-      |        | git checkout child                              |
+    Then Git Town runs no commands
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

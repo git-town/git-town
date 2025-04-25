@@ -14,6 +14,7 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
 		FeatureTrackingBranchProgram(trackingBranch, syncStrategy, FeatureTrackingArgs{
 			FirstCommitMessage: args.firstCommitMessage,
+			LastRunParentSHA:   args.parentLastRunSHA,
 			LocalName:          args.localName,
 			Offline:            args.offline,
 			Program:            args.program,
@@ -31,6 +32,7 @@ type featureBranchArgs struct {
 	offline            configdomain.Offline              // whether offline mode is enabled
 	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
+	parentLastRunSHA   Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
 	program            Mutable[program.Program]          // the program to update
 	prune              configdomain.Prune
 	pushBranches       configdomain.PushBranches
@@ -50,7 +52,8 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(
 			&opcodes.RebaseParentIfNeeded{
-				Branch: args.localName,
+				Branch:      args.localName,
+				PreviousSHA: args.parentLastRunSHA,
 			},
 		)
 	case configdomain.SyncStrategyCompress:
@@ -92,7 +95,8 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					PushBranches: args.PushBranches,
 				},
 				&opcodes.RebaseParentIfNeeded{
-					Branch: args.LocalName,
+					Branch:      args.LocalName,
+					PreviousSHA: args.LastRunParentSHA,
 				},
 				&opcodes.PushCurrentBranchForceIfNeeded{
 					ForceIfIncludes: true,
@@ -108,6 +112,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 
 type FeatureTrackingArgs struct {
 	FirstCommitMessage Option[gitdomain.CommitMessage]
+	LastRunParentSHA   Option[gitdomain.SHA]
 	LocalName          gitdomain.LocalBranchName
 	Offline            configdomain.Offline     // whether offline mode is enabled
 	Program            Mutable[program.Program] // the program to update

@@ -129,6 +129,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchInfosLastRun:  data.previousBranchInfos,
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,
@@ -166,6 +167,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    data.previousBranchInfos,
 		RunProgram:            optimizedProgram,
 		TouchedBranches:       optimizedProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
@@ -202,6 +204,7 @@ type syncData struct {
 	nonExistingBranches      gitdomain.LocalBranchNames
 	prefetchBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch           Option[gitdomain.LocalBranchName]
+	previousBranchInfos      Option[gitdomain.BranchInfos]
 	remotes                  gitdomain.Remotes
 	shouldPushTags           bool
 	stashSize                gitdomain.StashSize
@@ -217,7 +220,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, previousBranchInfos, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -348,6 +351,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		nonExistingBranches:      nonExistingBranches,
 		prefetchBranchesSnapshot: preFetchBranchesSnapshot,
 		previousBranch:           previousBranchOpt,
+		previousBranchInfos:      previousBranchInfos,
 		remotes:                  remotes,
 		shouldPushTags:           shouldPushTags,
 		stashSize:                stashSize,

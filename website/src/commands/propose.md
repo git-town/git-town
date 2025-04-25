@@ -8,7 +8,9 @@ The _propose_ command helps create a new pull request (also known as merge
 request) for the current feature branch. It opens your forge's website to create
 a new proposal in your browser and pre-populates information like branch and
 source/target repository. It also [syncs](sync.md) the branch to merge before
-opening the pull request.
+opening the pull request in [detached](sync.md#-d--detached) mode.
+
+Proposing prototype and parked branches makes them feature branches.
 
 You can create pull requests for repositories hosted on:
 
@@ -39,11 +41,10 @@ body text from STDIN.
 When called with the `--title <title>` aka `-t` flag, the _propose_ command
 pre-populate the title of the pull request to the given text.
 
-#### `-d`<br>`--detached`
+#### `-s`<br>`--stack`
 
-The `--detached` aka `-d` flag does not pull updates from the main or perennial
-branch. This allows you to build out your stack and decide when to pull in
-changes from other developers.
+The `--stack` aka `-s` parameter makes Git Town propose all branches in the
+stack that the current branch belongs to.
 
 #### `--dry-run`
 

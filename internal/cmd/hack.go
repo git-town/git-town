@@ -150,6 +150,7 @@ func executeHack(args []string, beam configdomain.Beam, commit configdomain.Comm
 			beginBranchesSnapshot: createNewFeatureBranchData.branchesSnapshot,
 			beginConfigSnapshot:   repo.ConfigSnapshot,
 			beginStashSize:        createNewFeatureBranchData.stashSize,
+			branchInfosLastRun:    createNewFeatureBranchData.branchInfosLastRun,
 			commandsCounter:       repo.CommandsCounter,
 			dryRun:                dryRun,
 			finalMessages:         repo.FinalMessages,
@@ -188,6 +189,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
 		BeginStashSize:        args.beginStashSize,
+		BranchInfosLastRun:    args.branchInfosLastRun,
 		Command:               "hack",
 		DryRun:                args.dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -223,6 +225,7 @@ type createFeatureBranchArgs struct {
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
+	branchInfosLastRun    Option[gitdomain.BranchInfos]
 	commandsCounter       Mutable[gohacks.Counter]
 	dryRun                configdomain.DryRun
 	finalMessages         stringslice.Collector
@@ -245,7 +248,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -353,6 +356,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,
+		branchInfosLastRun:        branchInfosLastRun,
 		branchesSnapshot:          branchesSnapshot,
 		branchesToSync:            branchesToSync,
 		commit:                    commit,
