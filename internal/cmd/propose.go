@@ -156,8 +156,6 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
 	branchInfosLastRun  Option[gitdomain.BranchInfos]
-	branchToPropose     gitdomain.LocalBranchName
-	branchTypeToPropose configdomain.BranchType
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPropose   []branchToProposeData
 	branchesToSync      configdomain.BranchesToSync
@@ -322,8 +320,6 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
 		branchInfosLastRun:  branchInfosLastRun,
-		branchToPropose:     branchToPropose,
-		branchTypeToPropose: branchTypeToPropose,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPropose:   branchesToPropose,
 		branchesToSync:      branchesToSync,
