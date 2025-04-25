@@ -10,13 +10,13 @@ import (
 )
 
 const (
-	syncFeatureStrategyTitle = `Sync-feature strategy`
+	syncFeatureStrategyTitle = `Feature branch sync strategy`
 	SyncFeatureStrategyHelp  = `
-How should Git Town synchronize feature branches?
-Feature branches are short-lived branches cut from
-the main branch and shipped back into the main branch.
-Typically you develop features and bug fixes on them,
-hence their name.
+Choose how Git Town should synchronize feature branches.
+
+These are short-lived branches created from the main branch
+and eventually merged back into it.
+Commonly used for developing new features and bug fixes.
 
 `
 )
