@@ -18,7 +18,8 @@ They are never shipped and have no ancestors.
 Typically, perennial branches have names like
 "development", "staging", "qa", "production", etc.
 
-See also the "perennial-regex" setting.
+There is also a "perennial-regex" setting that allows
+to .
 
 `
 )
