@@ -358,18 +358,17 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
 	forEachRefFormat := strings.Join(
 		[]string{
-			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
-
-			" ", // a literal space
-
-			// "+" if the branch is checked out in another worktree
 			"%(if)", "%(HEAD)", "%(then)", // If the branch is checked out in the current worktree
-			// show nothing
+			"H", // literal "H"
 			"%(else)",
 			"%(if)", "%(worktreepath)", "%(then)", // If the branch is checked out in any (other) worktree
-			"+", // show "+"
+			"W", // literal "W"
+			"%(else)",
+			" ", // literal " "
 			"%(end)",
 			"%(end)",
+
+			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
 		},
 		"")
 	output, err := self.Query("git", "for-each-ref", "--format="+forEachRefFormat, "refs/heads/")
@@ -377,13 +376,17 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 		return gitdomain.LocalBranchNames{}, gitdomain.LocalBranchNames{}, err
 	}
 	for _, line := range stringslice.Lines(output) {
-		branch, worktreeMarker, found := strings.Cut(line, " ")
-		if !found {
-			panic(fmt.Sprintf("cannot parse branch line %q", line))
-		}
-		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
-		if worktreeMarker == "+" {
+		marker := line[0]
+		branch := line[1:]
+		switch marker {
+		case 'H':
+		case ' ':
+			allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
+		case 'W':
+			allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
+		default:
+			panic(fmt.Sprintf("unexpected marker %q in line %q", marker, line))
 		}
 	}
 	return allBranches, branchesInOtherWorktrees, nil
