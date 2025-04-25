@@ -125,6 +125,7 @@ func executeSetParent(args []string, verbose configdomain.Verbose) error {
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "set-parent",
 		DryRun:                false,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -155,16 +156,17 @@ func executeSetParent(args []string, verbose configdomain.Verbose) error {
 }
 
 type setParentData struct {
-	branchesSnapshot gitdomain.BranchesSnapshot
-	config           config.ValidatedConfig
-	connector        Option[forgedomain.Connector]
-	defaultChoice    gitdomain.LocalBranchName
-	dialogTestInputs components.TestInputs
-	hasOpenChanges   bool
-	initialBranch    gitdomain.LocalBranchName
-	mainBranch       gitdomain.LocalBranchName
-	proposal         Option[forgedomain.Proposal]
-	stashSize        gitdomain.StashSize
+	branchInfosLastRun Option[gitdomain.BranchInfos]
+	branchesSnapshot   gitdomain.BranchesSnapshot
+	config             config.ValidatedConfig
+	connector          Option[forgedomain.Connector]
+	defaultChoice      gitdomain.LocalBranchName
+	dialogTestInputs   components.TestInputs
+	hasOpenChanges     bool
+	initialBranch      gitdomain.LocalBranchName
+	mainBranch         gitdomain.LocalBranchName
+	proposal           Option[forgedomain.Proposal]
+	stashSize          gitdomain.StashSize
 }
 
 func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setParentData, exit bool, err error) {
@@ -173,7 +175,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -234,16 +236,17 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	}
 	return setParentData{
-		branchesSnapshot: branchesSnapshot,
-		config:           validatedConfig,
-		connector:        connectorOpt,
-		defaultChoice:    defaultChoice,
-		dialogTestInputs: dialogTestInputs,
-		hasOpenChanges:   repoStatus.OpenChanges,
-		initialBranch:    initialBranch,
-		mainBranch:       mainBranch,
-		proposal:         proposalOpt,
-		stashSize:        stashSize,
+		branchInfosLastRun: branchInfosLastRun,
+		branchesSnapshot:   branchesSnapshot,
+		config:             validatedConfig,
+		connector:          connectorOpt,
+		defaultChoice:      defaultChoice,
+		dialogTestInputs:   dialogTestInputs,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		mainBranch:         mainBranch,
+		proposal:           proposalOpt,
+		stashSize:          stashSize,
 	}, false, nil
 }
 
@@ -289,7 +292,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 			if parent, hasParent := parentOpt.Get(); hasParent {
 				prog.Add(
 					&opcodes.RebaseOntoKeepDeleted{
-						BranchToRebaseOnto: selectedBranch,
+						BranchToRebaseOnto: selectedBranch.BranchName(),
 						CommitsToRemove:    parent.Location(),
 						Upstream:           None[gitdomain.LocalBranchName](),
 					},

@@ -112,6 +112,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               swapCommandName,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -142,6 +143,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 }
 
 type swapData struct {
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
 	branchToSwapInfo    gitdomain.BranchInfo
 	branchToSwapName    gitdomain.LocalBranchName
 	branchToSwapType    configdomain.BranchType
@@ -174,7 +176,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -283,6 +285,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	return swapData{
+		branchInfosLastRun:  branchInfosLastRun,
 		branchToSwapInfo:    *branchToSwapInfo,
 		branchToSwapName:    branchNameToSwap,
 		branchToSwapType:    branchTypeToSwap,
@@ -309,7 +312,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
 	prog.Value.Add(
 		&opcodes.RebaseOntoKeepDeleted{
-			BranchToRebaseOnto: data.grandParentBranch,
+			BranchToRebaseOnto: data.grandParentBranch.BranchName(),
 			CommitsToRemove:    data.parentBranch.Location(),
 			Upstream:           None[gitdomain.LocalBranchName](),
 		},
@@ -324,7 +327,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 			Branch: data.parentBranch,
 		},
 		&opcodes.RebaseOntoKeepDeleted{
-			BranchToRebaseOnto: data.branchToSwapName,
+			BranchToRebaseOnto: data.branchToSwapName.BranchName(),
 			CommitsToRemove:    data.grandParentBranch.Location(),
 			Upstream:           None[gitdomain.LocalBranchName](),
 		},
@@ -346,7 +349,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		}
 		prog.Value.Add(
 			&opcodes.RebaseOntoKeepDeleted{
-				BranchToRebaseOnto: data.parentBranch,
+				BranchToRebaseOnto: data.parentBranch.BranchName(),
 				CommitsToRemove:    oldBranchSHA.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
 			},

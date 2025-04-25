@@ -4,10 +4,12 @@ import (
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/messages"
 	"github.com/git-town/git-town/v19/internal/vm/shared"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
 type RebaseParentIfNeeded struct {
 	Branch                  gitdomain.LocalBranchName
+	PreviousSHA             Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -40,9 +42,19 @@ func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebase = parent.BranchName()
 		}
-		program = append(program, &RebaseBranch{
-			Branch: branchToRebase,
-		})
+		var opcode shared.Opcode
+		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
+			opcode = &RebaseOntoKeepDeleted{
+				BranchToRebaseOnto: branchToRebase,
+				CommitsToRemove:    previousParentSHA.Location(),
+				Upstream:           None[gitdomain.LocalBranchName](),
+			}
+		} else {
+			opcode = &RebaseBranch{
+				Branch: branchToRebase,
+			}
+		}
+		program = append(program, opcode)
 		break
 	}
 	args.PrependOpcodes(program...)

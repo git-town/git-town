@@ -64,11 +64,11 @@ Feature: compatibility between different sync-feature-strategy settings
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                              |
-      | feature | git fetch --prune --tags                             |
-      |         | git -c rebase.updateRefs=false rebase main           |
-      |         | git push --force-with-lease --force-if-includes      |
-      |         | git -c rebase.updateRefs=false rebase origin/feature |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git fetch --prune --tags                                                     |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git push --force-with-lease --force-if-includes                              |
+      |         | git -c rebase.updateRefs=false rebase origin/feature                         |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file.txt
@@ -88,9 +88,12 @@ Feature: compatibility between different sync-feature-strategy settings
     When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                    |
-      | feature | git -c core.editor=true rebase --continue  |
-      |         | git -c rebase.updateRefs=false rebase main |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git -c core.editor=true rebase --continue                                    |
+      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |         | git checkout --theirs file.txt                                               |
+      |         | git add file.txt                                                             |
+      |         | git -c core.editor=true rebase --continue                                    |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file.txt
@@ -99,8 +102,16 @@ Feature: compatibility between different sync-feature-strategy settings
       """
       Could not apply \S+ my first commit
       """
+    And file "file.txt" now has content:
+      """
+      <<<<<<< HEAD
+      my content
+      =======
+      my new and coworker content
+      >>>>>>> {{ sha-short 'my second commit' }} (my second commit)
+      """
     And a rebase is now in progress
-    When I resolve the conflict in "file.txt" with "my and coworker content"
+    When I resolve the conflict in "file.txt" with "my new and coworker content"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
@@ -111,7 +122,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME | FILE CONTENT                |
       | feature | local, coworker, origin | coworker first commit                                      | file.txt  | coworker content            |
-      |         | local, origin           | my first commit                                            | file.txt  | my and coworker content     |
+      |         | local, origin           | my first commit                                            | file.txt  | my content                  |
       |         |                         | my second commit                                           | file.txt  | my new and coworker content |
       |         | coworker                | my first commit                                            | file.txt  | my content                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content     |

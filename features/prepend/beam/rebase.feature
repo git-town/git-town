@@ -42,10 +42,10 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | parent | main   |
     When I run "git town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                    |
-      | parent | git fetch --prune --tags                   |
-      |        | git -c rebase.updateRefs=false rebase main |
-      |        | git push -u origin parent                  |
+      | BRANCH | COMMAND                                                                      |
+      | parent | git fetch --prune --tags                                                     |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |        | git push -u origin parent                                                    |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |

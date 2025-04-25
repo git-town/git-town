@@ -16,10 +16,17 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], bool, error) {
 	runStateOpt, err := statefile.Load(args.RootDir)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
+	}
+	previousBranchInfos := None[gitdomain.BranchInfos]()
+	if runstate, hasRunstate := runStateOpt.Get(); hasRunstate {
+		if endSnapshot, hasEndSnapshot := runstate.EndBranchesSnapshot.Get(); hasEndSnapshot {
+			runstate.BranchInfosLastRun = Some(endSnapshot.Branches)
+		}
+		previousBranchInfos = runstate.BranchInfosLastRun
 	}
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
@@ -39,34 +46,34 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Verbose:           args.Verbose,
 		})
 		if err != nil || exit {
-			return gitdomain.EmptyBranchesSnapshot(), 0, exit, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Git.Remotes(args.Repo.Backend)
 		if err != nil {
-			return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 		}
 		if remotes.HasRemote(args.UnvalidatedConfig.NormalConfig.DevRemote) && args.Repo.IsOffline.IsFalse() {
 			err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags)
 			if err != nil {
-				return gitdomain.EmptyBranchesSnapshot(), 0, false, err
+				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 			}
 		}
 	}
 	stashSize, err := args.Repo.Git.StashSize(args.Repo.Backend)
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, previousBranchInfos, false, err
 	}
 	branchesSnapshot, err := args.Repo.Git.BranchesSnapshot(args.Repo.Backend)
-	return branchesSnapshot, stashSize, false, err
+	return branchesSnapshot, stashSize, previousBranchInfos, false, err
 }
 
 type LoadRepoSnapshotArgs struct {

@@ -164,6 +164,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomai
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "prepend",
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -196,6 +197,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomai
 type prependData struct {
 	beam                configdomain.Beam
 	branchInfos         gitdomain.BranchInfos
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToSync      configdomain.BranchesToSync
 	commit              configdomain.Commit
@@ -234,7 +236,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, false, err
 	}
 	fc := execute.FailureCollector{}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -328,6 +330,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	return prependData{
 		beam:                beam,
 		branchInfos:         branchesSnapshot.Branches,
+		branchInfosLastRun:  branchInfosLastRun,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToSync:      branchesToSync,
 		commit:              commit,
@@ -363,6 +366,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
+			BranchInfosLastRun:  data.branchInfosLastRun,
 			BranchesToDelete:    NewMutable(&branchesToDelete),
 			Config:              data.config,
 			InitialBranch:       data.initialBranch,

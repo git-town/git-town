@@ -123,6 +123,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
+		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               proposeCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
@@ -154,6 +155,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 
 type proposeData struct {
 	branchInfos         gitdomain.BranchInfos
+	branchInfosLastRun  Option[gitdomain.BranchInfos]
 	branchesSnapshot    gitdomain.BranchesSnapshot
 	branchesToPropose   []branchToProposeData
 	branchesToSync      configdomain.BranchesToSync
@@ -189,7 +191,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil {
 		return data, false, err
 	}
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
@@ -317,6 +319,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	}
 	return proposeData{
 		branchInfos:         branchesSnapshot.Branches,
+		branchInfosLastRun:  branchInfosLastRun,
 		branchesSnapshot:    branchesSnapshot,
 		branchesToPropose:   branchesToPropose,
 		branchesToSync:      branchesToSync,
@@ -342,6 +345,7 @@ func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Progr
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
+		BranchInfosLastRun:  data.branchInfosLastRun,
 		BranchesToDelete:    NewMutable(&branchesToDelete),
 		Config:              data.config,
 		InitialBranch:       data.initialBranch,

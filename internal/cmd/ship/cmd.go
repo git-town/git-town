@@ -145,6 +145,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
+		BranchInfosLastRun:    sharedData.previousBranchInfos,
 		RunProgram:            optimizedProgram,
 		TouchedBranches:       optimizedProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},

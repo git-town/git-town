@@ -22,6 +22,7 @@ type RunState struct {
 	BeginBranchesSnapshot    gitdomain.BranchesSnapshot                 // snapshot of the Git branches before the Git Town command that this RunState is for ran
 	BeginConfigSnapshot      undoconfig.ConfigSnapshot                  // snapshot of the Git configuration before the Git Town command that this RunState is for ran
 	BeginStashSize           gitdomain.StashSize                        // size of the Git stash before the Git Town command that this RunState is for ran
+	BranchInfosLastRun       Option[gitdomain.BranchInfos]              // branch infos when the last Git Town command ended
 	Command                  string                                     // name of the Git Town command that this RunState is for
 	DryRun                   configdomain.DryRun                        // whether the Git Town command that this RunState is for operated in dry-run mode
 	EndBranchesSnapshot      Option[gitdomain.BranchesSnapshot]         // snapshot of the Git branches after the Git Town command that this RunState is for ran

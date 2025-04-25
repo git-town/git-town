@@ -23,16 +23,16 @@ Feature: running a sync after running another Git Town command
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | child  | git fetch --prune --tags                        |
-      |        | git checkout parent                             |
-      | parent | git -c rebase.updateRefs=false rebase main      |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git -c rebase.updateRefs=false rebase main      |
-      |        | git checkout child                              |
-      | child  | git -c rebase.updateRefs=false rebase parent    |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git -c rebase.updateRefs=false rebase parent    |
+      | BRANCH | COMMAND                                                                             |
+      | child  | git fetch --prune --tags                                                            |
+      |        | git checkout parent                                                                 |
+      | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha 'local main commit' }}     |
+      |        | git push --force-with-lease --force-if-includes                                     |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'local main commit' }}     |
+      |        | git checkout child                                                                  |
+      | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'local parent commit' }} |
+      |        | git push --force-with-lease --force-if-includes                                     |
+      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'local parent commit' }} |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
