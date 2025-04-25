@@ -13,9 +13,10 @@ import (
 const (
 	defaultBranchTypeTitle = `Default branch type`
 	DefaultBranchTypeHelp  = `
-Which type should Git Town assume for branches whose type isn't specified?
+Select the type Git Town should assume for new branches.
 
-When changing this, you should also set the "feature-regex" setting.
+If you change this, consider also configuring
+the "feature-regex" setting.
 
 `
 )
