@@ -16,7 +16,7 @@ const (
 Select the type Git Town should assume for new branches.
 
 If you change this, consider also configuring
-the "feature-regex" setting.
+the "feature-regex" setting on the next screen.
 
 `
 )
