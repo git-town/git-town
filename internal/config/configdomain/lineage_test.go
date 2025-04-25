@@ -92,6 +92,17 @@ func TestLineage(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("BranchAndAncestorsWithoutRoot", func(t *testing.T) {
+		t.Parallel()
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			one: main,
+			two: one,
+		})
+		have := lineage.BranchAndAncestorsWithoutRoot(two)
+		want := gitdomain.LocalBranchNames{one, two}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("BranchLineageWithoutRoot", func(t *testing.T) {
 		t.Parallel()
 		t.Run("only root exists", func(t *testing.T) {

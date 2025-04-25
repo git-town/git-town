@@ -36,6 +36,7 @@ const (
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
 	BranchOtherWorktree                = `branch %q is active in another worktree`
 	BranchParentChanged                = "branch %q is now a child of %q"
+	BranchTypeCannotDetermine          = "cannot determine type of branch %q"
 	BrowserOpen                        = "Please open in a browser: %s\n"
 	CacheUnitialized                   = "using a cached value before initialization"
 	CodebergToken                      = "Codeberg token: %s\n"
@@ -172,6 +173,7 @@ END OUTPUT FROM 'git branch -vva'
 	OriginHostname                        = "Origin hostname: %s\n"
 	ParentDialogSelected                  = "Selected parent branch for %q: %s\n"
 	ParkedBranchIsNowParked               = "branch %q is now parked\n"
+	ParkedRemoved                         = "branch %q is no longer parked"
 	PerennialBranchCannotMakeContribution = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
 	PerennialBranchCannotPark             = "cannot park perennial branches"
