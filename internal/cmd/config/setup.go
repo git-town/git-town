@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"slices"
 
@@ -112,14 +113,15 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[configdomain.ForgeType]()
 }
 
-func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, err error) {
+func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.StorageLocation, err error) {
+	tokenScope := configdomain.StorageLocationLocal
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.NormalConfig.Aliases, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	existingMainBranch := config.UnvalidatedConfig.MainBranch
 	if existingMainBranch.IsNone() {
@@ -130,115 +132,150 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	}
 	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.UnvalidatedConfig.MainBranch = Some(mainBranch)
 	data.userInput.config.NormalConfig.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.NormalConfig.PerennialBranches, mainBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.PerennialRegex, aborted, err = dialog.PerennialRegex(config.NormalConfig.PerennialRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(config.NormalConfig.ForgeType, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	if platform, has := determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType).Get(); has {
 		switch platform {
 		case configdomain.ForgeTypeBitbucket, configdomain.ForgeTypeBitbucketDatacenter:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, err
+				return aborted, tokenScope, err
 			}
 			data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, err
+				return aborted, tokenScope, err
+			}
+			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
+				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				if err != nil || aborted {
+					return aborted, tokenScope, err
+				}
 			}
 		case configdomain.ForgeTypeCodeberg:
 			data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, err
+				return aborted, tokenScope, err
+			}
+			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				if err != nil || aborted {
+					return aborted, tokenScope, err
+				}
 			}
 		case configdomain.ForgeTypeGitea:
 			data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, err
+				return aborted, tokenScope, err
+			}
+			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				if err != nil || aborted {
+					return aborted, tokenScope, err
+				}
 			}
 		case configdomain.ForgeTypeGitHub:
 			data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, err
+				return aborted, tokenScope, err
+			}
+			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				if err != nil || aborted {
+					return aborted, tokenScope, err
+				}
 			}
 		case configdomain.ForgeTypeGitLab:
 			data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, err
+				return aborted, tokenScope, err
+			}
+			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				if err != nil || aborted {
+					return aborted, tokenScope, err
+				}
 			}
 		}
 	}
 	data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.NormalConfig.SyncPerennialStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.SyncPrototypeStrategy, aborted, err = dialog.SyncPrototypeStrategy(config.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.SyncUpstream, aborted, err = dialog.SyncUpstream(config.NormalConfig.SyncUpstream, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.SyncTags, aborted, err = dialog.SyncTags(config.NormalConfig.SyncTags, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.PushNewBranches, aborted, err = dialog.PushNewBranches(config.NormalConfig.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.PushHook, aborted, err = dialog.PushHook(config.NormalConfig.PushHook, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.NewBranchType, aborted, err = dialog.NewBranchType(config.NormalConfig.NewBranchType, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.ShipStrategy, aborted, err = dialog.ShipStrategy(config.NormalConfig.ShipStrategy, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.config.NormalConfig.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
 	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, err
+		return aborted, tokenScope, err
 	}
-	return false, nil
+	return false, tokenScope, nil
+}
+
+func showScopeDialog[T fmt.Stringer](input, existing T) bool {
+	return input.String() != "" && input.String() != existing.String()
 }
 
 func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setupData, exit bool, err error) {
