@@ -13,10 +13,10 @@ import (
 const (
 	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
 	ShipDeleteTrackingBranchHelp  = `
-Should "git town ship" delete the tracking branch?
-You want to disable this if your forge
-(GitHub, GitLab, etc) deletes head branches when
-merging pull requests through its UI.
+Should git town ship delete the remote tracking branch after shipping?
+
+Disable this if your code hosting provider (GitHub, GitLab, etc.)
+automatically deletes branches when pull requests are merged through its UI.
 
 `
 )
