@@ -100,7 +100,6 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                            |
       | git config --global git-town.codeberg-token 123456 |
-    And local Git setting "git-town.forge-type" still doesn't exist
     And global Git setting "git-town.codeberg-token" is now "123456"
 
   Scenario: edit global Codeberge API token
@@ -134,5 +133,4 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --global git-town.codeberg-token 456 |
-    And local Git setting "git-town.forge-type" still doesn't exist
     And global Git setting "git-town.codeberg-token" is now "456"
