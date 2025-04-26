@@ -20,7 +20,7 @@ Options:
 
 - api: merge the proposal on your forge via the forge API
 - always-merge: on your machine, merge by always creating a merge comment (git merge --no-ff)
-- fast-forward: on your machine, fast-forward the parent branch include the feature branch commits
+- fast-forward: on your machine, fast-forward the parent branch to include the feature branch commits
 - squash-merge: on your machine, squash all commits on the feature branch into a single commit on the parent branch
 
 `
