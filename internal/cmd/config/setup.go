@@ -172,7 +172,8 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
 				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
+				scope := determineScope(config.NormalConfig.GlobalGitConfig.BitbucketAppPassword)
+				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -183,7 +184,8 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
+				scope := determineScope(config.NormalConfig.GlobalGitConfig.CodebergToken)
+				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -194,7 +196,8 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
+				scope := determineScope(config.NormalConfig.GlobalGitConfig.GiteaToken)
+				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -205,10 +208,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
-				scope := configdomain.ConfigScopeLocal
-				if config.NormalConfig.GlobalGitConfig.GitHubToken.IsSome() {
-					scope = configdomain.ConfigScopeGlobal
-				}
+				scope := determineScope(config.NormalConfig.GlobalGitConfig.GitHubToken)
 				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
@@ -220,7 +220,8 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
+				scope := determineScope(config.NormalConfig.GlobalGitConfig.GitLabToken)
+				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -276,6 +277,18 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		return aborted, tokenScope, err
 	}
 	return false, tokenScope, nil
+}
+
+type option interface {
+	IsSome() bool
+}
+
+func determineScope(global option) configdomain.ConfigScope {
+	if global.IsSome() {
+		return configdomain.ConfigScopeGlobal
+	} else {
+		return configdomain.ConfigScopeLocal
+	}
 }
 
 func showScopeDialog[T fmt.Stringer](input, existing T) bool {

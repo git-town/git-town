@@ -137,6 +137,7 @@ Feature: enter the GitHub API token
     And global Git setting "git-town.github-token" is now "123456"
 
   Scenario: edit global GitHub token
+    Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     Given global Git setting "git-town.github-token" is "123"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS                                      | DESCRIPTION                                 |
@@ -148,7 +149,7 @@ Feature: enter the GitHub API token
       | default branch type         | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
-      | forge type                  | down down down down down enter            |                                             |
+      | forge type                  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
@@ -166,6 +167,4 @@ Feature: enter the GitHub API token
     Then Git Town runs the commands
       | COMMAND                                       |
       | git config --global git-town.github-token 456 |
-      | git config git-town.forge-type github         |
-    And local Git setting "git-town.forge-type" is now "github"
     And global Git setting "git-town.github-token" is now "456"

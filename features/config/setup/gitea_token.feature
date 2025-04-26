@@ -104,7 +104,8 @@ Feature: enter the Gitea API token
     And global Git setting "git-town.gitea-token" is now "123456"
 
   Scenario: edit global Gitea token
-    Given global Git setting "git-town.gitea-token" is "123"
+    Given my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
+    And global Git setting "git-town.gitea-token" is "123"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS                                      | DESCRIPTION                                 |
       | welcome                     | enter                                     |                                             |
@@ -117,7 +118,7 @@ Feature: enter the Gitea API token
       | dev-remote                  | enter                                     |                                             |
       | forge type                  | down down down down enter                 |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
-      | token scope                 | down enter                                |                                             |
+      | token scope                 | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | sync-feature-strategy       | enter                                     |                                             |
       | sync-perennial-strategy     | enter                                     |                                             |
