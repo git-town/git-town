@@ -14,8 +14,7 @@ const (
 	SyncPrototypeStrategyHelp  = `
 Choose how Git Town should synchronize prototype branches.
 
-Prototype branches are early-stage feature branches
-that haven't been proposed for review.
+Prototype branches are local-only feature branches.
 They are useful for reducing load on CI systems
 and limiting the sharing of confidential changes.
 
