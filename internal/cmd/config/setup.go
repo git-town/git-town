@@ -173,7 +173,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
 				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.BitbucketAppPassword)
-				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -185,7 +185,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.CodebergToken)
-				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -197,7 +197,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.GiteaToken)
-				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -209,7 +209,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.GitHubToken)
-				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -221,7 +221,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.GitLabToken)
-				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}

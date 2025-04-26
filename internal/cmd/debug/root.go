@@ -33,6 +33,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterSyncPrototypeStrategy())
 	debugCommand.AddCommand(enterSyncUpstream())
 	debugCommand.AddCommand(enterSyncTags())
+	debugCommand.AddCommand(enterTokenScope())
 	debugCommand.AddCommand(enterPushHookCmd())
 	debugCommand.AddCommand(enterPushNewBranches())
 	debugCommand.AddCommand(enterShipDeleteTrackingBranch())
