@@ -380,6 +380,7 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 		branch := line[1:]
 		switch marker {
 		case 'H':
+			fallthrough
 		case ' ':
 			allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 		case 'W':
