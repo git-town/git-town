@@ -60,7 +60,7 @@ const (
 	ConfigLineageEmptyChild            = "removing empty lineage entry"
 	ConfigMainbranchInConfigFile       = "please configure the main branch in the config file"
 	ConfigNeeded                       = "Git Town needs to be configured\n\n"
-	ConfigScopeUnknown                 = "unknown config storage location"
+	ConfigScopeUnknown                 = "unknown configuration scope"
 	ConfigStorage                      = "Config storage: %s\n"
 	ConfigShipStrategyUnknown          = "unknown ship strategy: %q"
 	ConfigSyncStrategyUnknown          = "unknown sync strategy: %q"
