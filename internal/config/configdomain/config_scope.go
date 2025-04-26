@@ -14,6 +14,7 @@ const (
 	ConfigScopeLocal  ConfigScope = "local"
 )
 
+// GitFlag provides the flag to use when storing configuration data with this scope in Git metadata.
 func (self ConfigScope) GitFlag() string {
 	switch self {
 	case ConfigScopeGlobal:
