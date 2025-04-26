@@ -317,7 +317,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("BranchesSnapshot", func(t *testing.T) {
 		t.Parallel()
-		t.Run("recognizes the branch names", func(t *testing.T) {
+		t.Run("recognizes the active branch names", func(t *testing.T) {
 			t.Parallel()
 			t.Run("first branch is checked out", func(t *testing.T) {
 				t.Parallel()
@@ -367,7 +367,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 		})
 
-		t.Run("recognize the branch sync status", func(t *testing.T) {
+		t.Run("recognizes the branch sync status", func(t *testing.T) {
 			t.Parallel()
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
 				t.Parallel()
