@@ -951,14 +951,12 @@ func TestBackendCommands(t *testing.T) {
 			Branch:      "branch",
 			FileContent: "branch content",
 			FileName:    "file",
-			Locations:   testgit.Locations{testgit.LocationLocal},
 			Message:     "branch commit",
 		})
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      "initial",
 			FileContent: "initial content",
 			FileName:    "file",
-			Locations:   testgit.Locations{testgit.LocationLocal},
 			Message:     "initial commit",
 		})
 		runtime.CheckoutBranch("branch")
