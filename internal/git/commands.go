@@ -805,12 +805,12 @@ func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.Bra
 	return gitdomain.NewSHA(output), nil
 }
 
-func (self *Commands) SetBitbucketAppPassword(runner gitdomain.Runner, value configdomain.BitbucketAppPassword) error {
-	return runner.Run("git", "config", configdomain.KeyBitbucketAppPassword.String(), value.String())
+func (self *Commands) SetBitbucketAppPassword(runner gitdomain.Runner, value configdomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketAppPassword.String(), value.String())
 }
 
-func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value configdomain.BitbucketUsername) error {
-	return runner.Run("git", "config", configdomain.KeyBitbucketUsername.String(), value.String())
+func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value configdomain.BitbucketUsername, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
 func (self *Commands) SetCodebergToken(runner gitdomain.Runner, value configdomain.CodebergToken, scope configdomain.ConfigScope) error {
@@ -829,8 +829,8 @@ func (self *Commands) SetGitHubToken(runner gitdomain.Runner, value configdomain
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGithubToken.String(), value.String())
 }
 
-func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain.GitLabToken) error {
-	return runner.Run("git", "config", configdomain.KeyGitlabToken.String(), value.String())
+func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitlabToken.String(), value.String())
 }
 
 func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {

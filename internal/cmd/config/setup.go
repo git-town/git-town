@@ -326,11 +326,11 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, tokenScope
 	if err != nil {
 		return err
 	}
-	err = saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, gitCommands, frontend)
+	err = saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, gitCommands, frontend)
+	err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
@@ -346,7 +346,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, tokenScope
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, gitCommands, frontend)
+	err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
@@ -399,22 +399,22 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 	return nil
 }
 
-func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newPassword == oldPassword {
 		return nil
 	}
 	if value, has := newPassword.Get(); has {
-		return gitCommands.SetBitbucketAppPassword(frontend, value)
+		return gitCommands.SetBitbucketAppPassword(frontend, value, scope)
 	}
 	return gitCommands.RemoveBitbucketAppPassword(frontend)
 }
 
-func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return gitCommands.SetBitbucketUsername(frontend, value)
+		return gitCommands.SetBitbucketUsername(frontend, value, scope)
 	}
 	return gitCommands.RemoveBitbucketUsername(frontend)
 }
@@ -490,22 +490,22 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], tokenScope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGitHubToken(frontend, value, tokenScope)
+		return gitCommands.SetGitHubToken(frontend, value, scope)
 	}
 	return gitCommands.RemoveGitHubToken(frontend)
 }
 
-func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGitLabToken(frontend, value)
+		return gitCommands.SetGitLabToken(frontend, value, scope)
 	}
 	return gitCommands.RemoveGitLabToken(frontend)
 }

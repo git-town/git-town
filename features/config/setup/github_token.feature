@@ -18,6 +18,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
+      | token scope                 | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |
@@ -31,8 +32,8 @@ Feature: enter the GitHub API token
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
-      | COMMAND                                 |
-      | git config git-town.github-token 123456 |
+      | COMMAND                                         |
+      | git config --local git-town.github-token 123456 |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" is now "123456"
 
@@ -49,6 +50,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
       | github token                | 1 2 3 4 5 6 enter              |                                             |
+      | token scope                 | enter                          |                                             |
       | origin hostname             | enter                          |                                             |
       | sync-feature-strategy       | enter                          |                                             |
       | sync-perennial-strategy     | enter                          |                                             |
@@ -62,9 +64,9 @@ Feature: enter the GitHub API token
       | ship-delete-tracking-branch | enter                          |                                             |
       | save config to Git metadata | down enter                     |                                             |
     Then Git Town runs the commands
-      | COMMAND                                 |
-      | git config git-town.github-token 123456 |
-      | git config git-town.forge-type github   |
+      | COMMAND                                         |
+      | git config --local git-town.github-token 123456 |
+      | git config git-town.forge-type github           |
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
 
