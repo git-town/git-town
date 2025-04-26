@@ -14,10 +14,6 @@ const (
 	ConfigScopeLocal  ConfigScope = "local"
 )
 
-func (self ConfigScope) String() string {
-	return string(self)
-}
-
 func (self ConfigScope) GitFlag() string {
 	switch self {
 	case ConfigScopeGlobal:
@@ -26,6 +22,10 @@ func (self ConfigScope) GitFlag() string {
 		return "--local"
 	}
 	panic(messages.ConfigScopeUnknown)
+}
+
+func (self ConfigScope) String() string {
+	return string(self)
 }
 
 func ParseConfigScope(text string) ConfigScope {
