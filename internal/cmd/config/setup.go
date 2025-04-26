@@ -205,7 +205,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
+				scope := configdomain.ConfigScopeLocal
+				if config.NormalConfig.GlobalGitConfig.GitHubToken.IsSome() {
+					scope = configdomain.ConfigScopeGlobal
+				}
+				tokenScope, aborted, err = dialog.TokenGlobal(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
