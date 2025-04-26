@@ -378,13 +378,10 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 	for _, line := range stringslice.Lines(output) {
 		marker := line[0]
 		branch := line[1:]
+		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 		switch marker {
-		case 'H':
-			fallthrough
-		case ' ':
-			allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
+		case 'H', ' ':
 		case 'W':
-			allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
 		default:
 			panic(fmt.Sprintf("unexpected marker %q in line %q", marker, line))
