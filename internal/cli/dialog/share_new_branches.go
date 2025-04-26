@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	pushNewBranchesTitle = `Sharing new branches`
+	pushNewBranchesTitle = `Share new branches`
 	PushNewBranchesHelp  = `
 How should Git Town share the new branches it creates?
 
@@ -23,7 +23,7 @@ Possible options:
 `
 )
 
-func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
+func ShareNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
 	entries := list.Entries[configdomain.PushNewBranches]{
 		{
 			Data: true,
