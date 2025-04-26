@@ -399,7 +399,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -434,7 +435,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -477,7 +479,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -505,7 +508,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -544,7 +548,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -582,7 +587,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -626,7 +632,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := local.Git.BranchesSnapshot(local)
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -657,7 +664,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := runtime.Git.BranchesSnapshot(runtime)
+				have, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 
@@ -706,7 +714,8 @@ func TestBackendCommands(t *testing.T) {
 						},
 					},
 				}
-				have, _ := runtime.Git.BranchesSnapshot(runtime)
+				have, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
 				must.Eq(t, want, have)
 			})
 		})
@@ -779,7 +788,8 @@ func TestBackendCommands(t *testing.T) {
 					},
 				},
 			}
-			have, _ := local.Git.BranchesSnapshot(local)
+			have, err := local.Git.BranchesSnapshot(local)
+			must.NoError(t, err)
 			must.Eq(t, want, have)
 		})
 
@@ -803,7 +813,8 @@ func TestBackendCommands(t *testing.T) {
 					},
 				},
 			}
-			have, _ := local.Git.BranchesSnapshot(local)
+			have, err := local.Git.BranchesSnapshot(local)
+			must.NoError(t, err)
 			must.Eq(t, want, have)
 		})
 	})
