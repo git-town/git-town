@@ -252,7 +252,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	data.userInput.config.NormalConfig.PushNewBranches, aborted, err = dialog.PushNewBranches(config.NormalConfig.PushNewBranches, data.dialogInputs.Next())
+	data.userInput.config.NormalConfig.PushNewBranches, aborted, err = dialog.ShareNewBranches(config.NormalConfig.PushNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}

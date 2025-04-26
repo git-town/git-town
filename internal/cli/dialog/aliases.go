@@ -16,12 +16,11 @@ import (
 const (
 	aliasesTitle = `Git Aliases for Git Town commands`
 	aliasesHelp  = `
-Aliases allow you to call frequently used Git Town commands
-with less typing. For example, if the "git town sync" command
-is aliased, you can call it as "git sync".
+Aliases let you run Git Town commands with shorter, more convenient names.
+For example, with an alias set up, "git town sync" can be run as simply "git sync".
 
-Please select which Git Town commands should be aliased.
-If you are not sure, select all :)
+Select which commands you'd like to alias.
+If you're unsure, it's safe to enable all of them - you can always adjust later.
 
 `
 )
