@@ -813,8 +813,8 @@ func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value config
 	return runner.Run("git", "config", configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
-func (self *Commands) SetCodebergToken(runner gitdomain.Runner, value configdomain.CodebergToken) error {
-	return runner.Run("git", "config", configdomain.KeyCodebergToken.String(), value.String())
+func (self *Commands) SetCodebergToken(runner gitdomain.Runner, value configdomain.CodebergToken, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 
 func (self *Commands) SetForgeType(runner gitdomain.Runner, platform configdomain.ForgeType) error {
@@ -825,16 +825,16 @@ func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand conf
 	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
 }
 
-func (self *Commands) SetGitHubToken(runner gitdomain.Runner, value configdomain.GitHubToken) error {
-	return runner.Run("git", "config", configdomain.KeyGithubToken.String(), value.String())
+func (self *Commands) SetGitHubToken(runner gitdomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGithubToken.String(), value.String())
 }
 
 func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain.GitLabToken) error {
 	return runner.Run("git", "config", configdomain.KeyGitlabToken.String(), value.String())
 }
 
-func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken) error {
-	return runner.Run("git", "config", configdomain.KeyGiteaToken.String(), value.String())
+func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGiteaToken.String(), value.String())
 }
 
 func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {

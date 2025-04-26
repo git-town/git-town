@@ -1,6 +1,10 @@
 package configdomain
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v19/internal/messages"
+)
 
 // defines the type of Git configuration used
 type ConfigScope string
@@ -14,6 +18,16 @@ func (self ConfigScope) String() string {
 	return string(self)
 }
 
+func (self ConfigScope) GitFlag() string {
+	switch self {
+	case ConfigScopeGlobal:
+		return "--global"
+	case ConfigScopeLocal:
+		return "--local"
+	}
+	panic(messages.ConfigScopeUnknown)
+}
+
 func ParseConfigScope(text string) ConfigScope {
 	switch strings.TrimSpace(text) {
 	case "local", "":
@@ -21,6 +35,6 @@ func ParseConfigScope(text string) ConfigScope {
 	case "global":
 		return ConfigScopeGlobal
 	default:
-		panic("unknown locality: " + text)
+		panic(messages.ConfigScopeUnknown)
 	}
 }

@@ -67,11 +67,11 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterData(repo.UnvalidatedConfig, repo.Git, repo.Backend, &data)
+	aborted, tokenScope, err := enterData(repo.UnvalidatedConfig, repo.Git, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.userInput, repo.UnvalidatedConfig, repo.Git, repo.Frontend)
+	err = saveAll(data.userInput, repo.UnvalidatedConfig, tokenScope, repo.Git, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -113,8 +113,8 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[configdomain.ForgeType]()
 }
 
-func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.StorageLocation, err error) {
-	tokenScope := configdomain.StorageLocationLocal
+func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
+	tokenScope = configdomain.ConfigScopeLocal
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
@@ -172,7 +172,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
 				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -183,7 +183,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -194,7 +194,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -205,7 +205,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -216,7 +216,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 				return aborted, tokenScope, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
-				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.StorageLocationLocal, data.dialogInputs.Next())
+				tokenScope, aborted, err = dialog.TokenGlobal(configdomain.ConfigScopeLocal, data.dialogInputs.Next())
 				if err != nil || aborted {
 					return aborted, tokenScope, err
 				}
@@ -321,7 +321,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, tokenScope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	err := saveAliases(oldConfig.NormalConfig.Aliases, userInput.config.NormalConfig.Aliases, gitCommands, frontend)
 	if err != nil {
 		return err
@@ -334,15 +334,15 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommand
 	if err != nil {
 		return err
 	}
-	err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, gitCommands, frontend)
+	err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, gitCommands, frontend)
+	err = saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, gitCommands, frontend)
+	err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
@@ -470,32 +470,32 @@ func saveForgeType(oldForgeType, newForgeType Option[configdomain.ForgeType], gi
 	return gitCommands.DeleteConfigEntryForgeType(frontend)
 }
 
-func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetCodebergToken(frontend, value)
+		return gitCommands.SetCodebergToken(frontend, value, scope)
 	}
 	return gitCommands.RemoveCodebergToken(frontend)
 }
 
-func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGiteaToken(frontend, value)
+		return gitCommands.SetGiteaToken(frontend, value, scope)
 	}
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], tokenScope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
 	if newToken == oldToken {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGitHubToken(frontend, value)
+		return gitCommands.SetGitHubToken(frontend, value, tokenScope)
 	}
 	return gitCommands.RemoveGitHubToken(frontend)
 }
