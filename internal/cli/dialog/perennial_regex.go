@@ -10,12 +10,15 @@ import (
 )
 
 const (
-	perennialRegexTitle = `Regular expression for perennial branches`
+	perennialRegexTitle = `Perennial branch Regex`
 	PerennialRegexHelp  = `
-All branches whose name matches this regular expression
-are also considered perennial branches.
+Any branch name matching this regular expression
+will be treated as a perennial branch.
 
-If you are not sure, leave this empty.
+Example: ^release-.+
+
+If you're not sure what to enter here,
+it's safe to leave it blank.
 
 `
 )

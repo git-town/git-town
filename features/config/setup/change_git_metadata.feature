@@ -23,6 +23,7 @@ Feature: change existing information in Git metadata
       | dev-remote                                | enter                  |
       | set forge type to "github"                | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
+      | token scope                               | enter                  |
       | origin hostname                           | c o d e enter          |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
@@ -54,7 +55,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.set-parent "town set-parent"   |
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
-      | git config git-town.github-token 123456                  |
+      | git config --local git-town.github-token 123456          |
       | git config git-town.forge-type github                    |
       | git config git-town.hosting-origin-hostname code         |
     And global Git setting "alias.append" is now "town append"

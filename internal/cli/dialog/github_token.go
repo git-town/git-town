@@ -12,11 +12,15 @@ import (
 const (
 	githubTokenTitle = `GitHub API token`
 	gitHubTokenHelp  = `
-Git Town can update pull requests and ship branches on GitHub for you.
-To enable this, please enter a GitHub API token.
-More info at https://www.git-town.com/preferences/github-token.
+Git Town can update pull requests
+and ship branches on your behalf
+using the GitHub API.
+To enable this, enter a GitHub API token.
 
-If you leave this empty, Git Town will not use the GitHub API.
+More details: https://www.git-town.com/preferences/github-token
+
+If you leave this blank,
+Git Town will not interact with the GitHub API.
 
 `
 )
