@@ -12,10 +12,12 @@ import (
 const (
 	syncPrototypeStrategyTitle = `Sync-prototype strategy`
 	SyncPrototypeStrategyHelp  = `
-How should Git Town synchronize prototype branches?
-Prototype branches are feature branches that haven't been proposed yet.
-Typically they contain  features and bug fixes on them,
-hence their name.
+Choose how Git Town should synchronize prototype branches.
+
+Prototype branches are early-stage feature branches
+that haven't been proposed for review.
+They are useful for reducing load on CI systems
+and limiting the sharing of confidential changes.
 
 `
 )
