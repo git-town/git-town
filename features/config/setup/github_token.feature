@@ -137,7 +137,7 @@ Feature: enter the GitHub API token
 
   Scenario: edit global GitHub token
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
-    Given global Git setting "git-town.github-token" is "123"
+    And global Git setting "git-town.github-token" is "123"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS                                      | DESCRIPTION                                 |
       | welcome                     | enter                                     |                                             |

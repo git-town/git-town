@@ -286,9 +286,8 @@ type option interface {
 func determineScope(global option) configdomain.ConfigScope {
 	if global.IsSome() {
 		return configdomain.ConfigScopeGlobal
-	} else {
-		return configdomain.ConfigScopeLocal
 	}
+	return configdomain.ConfigScopeLocal
 }
 
 func showScopeDialog[T fmt.Stringer](input, existing T) bool {
