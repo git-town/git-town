@@ -232,7 +232,7 @@ func (self *NormalConfig) SetPushHookLocally(value configdomain.PushHook) error 
 
 // SetPushNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
-func (self *NormalConfig) SetPushNewBranches(value configdomain.PushNewBranches, scope configdomain.ConfigScope) error {
+func (self *NormalConfig) SetPushNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
 	setting := strconv.FormatBool(bool(value))
 	self.PushNewBranches = value
 	return self.GitConfigAccess.SetConfigValue(scope, configdomain.KeyPushNewBranches, setting)

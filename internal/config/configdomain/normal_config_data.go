@@ -31,7 +31,7 @@ type NormalConfigData struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	PushHook                 PushHook
-	PushNewBranches          PushNewBranches
+	PushNewBranches          ShareNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 	ShipStrategy             ShipStrategy
 	SyncFeatureStrategy      SyncFeatureStrategy

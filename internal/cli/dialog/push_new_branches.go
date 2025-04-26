@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v19/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v19/internal/cli/format"
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/git-town/git-town/v19/internal/messages"
 )
@@ -27,22 +26,22 @@ on the first run of "git town sync".
 `
 )
 
-func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
-	entries := list.Entries[configdomain.PushNewBranches]{
+func PushNewBranches(existing configdomain.ShareNewBranches, inputs components.TestInput) (configdomain.ShareNewBranches, bool, error) {
+	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
-			Data: true,
+			Data: configdomain.ShareNewBranchesNone,
 			Text: "yes: push new branches to origin",
 		},
 		{
-			Data: false,
+			Data: configdomain.ShareNewBranchesPush,
 			Text: "no, new branches remain local until synced",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
 	if err != nil || aborted {
-		return true, aborted, err
+		return configdomain.ShareNewBranchesNone, aborted, err
 	}
-	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(format.Bool(selection.IsTrue()), aborted))
+	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

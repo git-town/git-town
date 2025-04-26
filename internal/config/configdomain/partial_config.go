@@ -33,7 +33,7 @@ type PartialConfig struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	PushHook                 Option[PushHook]
-	PushNewBranches          Option[PushNewBranches]
+	ShareNewBranches         Option[ShareNewBranches]
 	ShipDeleteTrackingBranch Option[ShipDeleteTrackingBranch]
 	ShipStrategy             Option[ShipStrategy]
 	SyncFeatureStrategy      Option[SyncFeatureStrategy]
@@ -75,7 +75,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
 	ec.Check(err)
-	pushNewBranches, err := ParsePushNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches)
+	shareNewBranches, err := ParseShareNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches)
 	ec.Check(err)
 	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch)
 	ec.Check(err)
@@ -116,7 +116,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
 		PerennialRegex:           perennialRegex,
 		PushHook:                 pushHook,
-		PushNewBranches:          pushNewBranches,
+		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
 		SyncFeatureStrategy:      syncFeatureStrategy,
@@ -157,7 +157,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		PerennialBranches:        append(other.PerennialBranches, self.PerennialBranches...),
 		PerennialRegex:           other.PerennialRegex.Or(self.PerennialRegex),
 		PushHook:                 other.PushHook.Or(self.PushHook),
-		PushNewBranches:          other.PushNewBranches.Or(self.PushNewBranches),
+		ShareNewBranches:         other.ShareNewBranches.Or(self.ShareNewBranches),
 		ShipDeleteTrackingBranch: other.ShipDeleteTrackingBranch.Or(self.ShipDeleteTrackingBranch),
 		ShipStrategy:             other.ShipStrategy.Or(self.ShipStrategy),
 		SyncFeatureStrategy:      other.SyncFeatureStrategy.Or(self.SyncFeatureStrategy),
@@ -192,7 +192,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		PerennialBranches:        self.PerennialBranches,
 		PerennialRegex:           self.PerennialRegex,
 		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
-		PushNewBranches:          self.PushNewBranches.GetOrElse(defaults.PushNewBranches),
+		PushNewBranches:          self.ShareNewBranches.GetOrElse(defaults.PushNewBranches),
 		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
 		ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
 		SyncFeatureStrategy:      syncFeatureStrategy,

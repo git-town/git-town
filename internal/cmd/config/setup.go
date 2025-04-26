@@ -568,7 +568,7 @@ func savePushHook(oldValue, newValue configdomain.PushHook, config config.Unvali
 	return config.NormalConfig.SetPushHookLocally(newValue)
 }
 
-func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.UnvalidatedConfig) error {
+func savePushNewBranches(oldValue, newValue configdomain.ShareNewBranches, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
