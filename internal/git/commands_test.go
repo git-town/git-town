@@ -376,14 +376,14 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      initial,
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on both parent and child",
+					Message:     "local and origin commit",
 				})
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
 				local.CreateCommit(testgit.Commit{
 					Branch:      initial,
 					FileContent: "content 2",
 					FileName:    "file",
-					Message:     "commit only on child",
+					Message:     "local commit",
 				})
 				commits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
 				must.NoError(t, err)
@@ -410,14 +410,14 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      initial,
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on both parent and child",
+					Message:     "local and origin commit",
 				})
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
 				origin.CreateCommit(testgit.Commit{
 					Branch:      initial,
 					FileContent: "content 2",
 					FileName:    "file",
-					Message:     "commit only on parent",
+					Message:     "origin commit",
 				})
 				local.Fetch()
 				commits, err := origin.Git.CommitsInBranch(origin, initial, None[gitdomain.LocalBranchName]())
@@ -445,20 +445,20 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      initial,
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on both parent and child",
+					Message:     "local and origin commit",
 				})
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
 				local.CreateCommit(testgit.Commit{
 					Branch:      initial,
 					FileContent: "content 2",
 					FileName:    "file",
-					Message:     "commit only on child",
+					Message:     "local commit",
 				})
 				origin.CreateCommit(testgit.Commit{
 					Branch:      initial,
 					FileContent: "content 3",
 					FileName:    "file",
-					Message:     "commit only on parent",
+					Message:     "origin commit",
 				})
 				local.Fetch()
 				originCommits, err := origin.Git.CommitsInBranch(origin, initial, None[gitdomain.LocalBranchName]())
@@ -488,7 +488,7 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      initial,
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on both parent and child",
+					Message:     "local and origin commit",
 				})
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
 				commits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
@@ -518,7 +518,7 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      "branch",
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on parent-only branch",
+					Message:     "origin commit",
 				})
 				localCommits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
 				must.NoError(t, err)
@@ -559,7 +559,7 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      "branch",
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on local-only branch",
+					Message:     "local commit",
 				})
 				localBranchCommits, err := local.Git.CommitsInBranch(local, "branch", Some(initial))
 				must.NoError(t, err)
@@ -595,7 +595,7 @@ func TestBackendCommands(t *testing.T) {
 					Branch:      "branch",
 					FileContent: "content",
 					FileName:    "file",
-					Message:     "commit on parent-only branch",
+					Message:     "origin commit",
 				})
 				local.Fetch()
 				local.CheckoutBranch("branch")
@@ -720,14 +720,14 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      "branch-1",
 				FileContent: "content",
 				FileName:    "file",
-				Message:     "[ci skip] local only commit",
+				Message:     "[ci skip] local commit",
 			})
 			local.CreateBranch("branch-2", initial.BranchName()) // Both local and remote
 			local.CreateCommit(testgit.Commit{
 				Branch:      "branch-2",
 				FileContent: "content",
 				FileName:    "file",
-				Message:     "[ci skip] local and remote commit",
+				Message:     "[ci skip] local and origin commit",
 			})
 			local.PushBranchToRemote(gitdomain.NewLocalBranchName("branch-2"), gitdomain.RemoteOrigin)
 			origin.CreateBranch("branch-3", initial.BranchName()) // Remote only
@@ -735,7 +735,7 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      "branch-3",
 				FileContent: "content",
 				FileName:    "file",
-				Message:     "[ci skip] remote only commit",
+				Message:     "[ci skip] origin commit",
 			})
 			local.Fetch()
 			branch1Commits, err := local.Git.CommitsInBranch(local, "branch-1", Some(initial))
