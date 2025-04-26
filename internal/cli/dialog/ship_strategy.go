@@ -12,16 +12,17 @@ import (
 const (
 	shipStrategyTitle = `Ship strategy`
 	ShipStrategyHelp  = `
-Which method should Git Town use to ship feature branches?
+Choose how Git Town should ship feature branches.
+
+All options update proposals of child branches and remove the shipped branch locally and remotely.
 
 Options:
 
 - api: merge the proposal on your forge via the forge API
-- always-merge: in your local repo, merge the feature branch into its parent by always creating a merge comment (merge --no-ff)
-- fast-forward: in your local repo, fast-forward the parent branch to point to the commits on the feature branch
-- squash-merge: in your local repo, squash-merge the feature branch into its parent branch
+- always-merge: on your machine, merge by always creating a merge comment (git merge --no-ff)
+- fast-forward: on your machine, fast-forward the parent branch include the feature branch commits
+- squash-merge: on your machine, squash all commits on the feature branch into a single commit on the parent branch
 
-All options update proposals of child branches and remove the shipped branch locally and remotely.
 `
 )
 
