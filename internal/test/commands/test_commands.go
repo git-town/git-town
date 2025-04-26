@@ -86,10 +86,10 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 	// NOTE: This method uses the provided lineage instead of self.Config.NormalConfig.Lineage
 	//       because it might determine the commits on a remote repo, and that repo has no lineage information.
 	//       We therefore always provide the lineage of the local repo.
-	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch.LocalName()))
+	branches, branchesInOtherWorktree := asserts.NoError2(self.LocalBranchesMainFirst(mainBranch.LocalName()))
 	var result []testgit.Commit
 	for _, branch := range branches {
-		if strings.HasPrefix(branch.String(), "+ ") {
+		if slices.Contains(branchesInOtherWorktree, branch) {
 			// branch is checked out in another workspace --> skip here
 			continue
 		}
@@ -284,7 +284,7 @@ func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []stri
 func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches := asserts.NoError1(self.LocalBranchesMainFirst(mainBranch))
+	branches, _ := asserts.NoError2(self.LocalBranchesMainFirst(mainBranch))
 	var lastBranch gitdomain.LocalBranchName
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
@@ -355,28 +355,49 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, error) {
-	output, err := self.QueryTrim("git", "branch")
+func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
+	forEachRefFormat := strings.Join(
+		[]string{
+			"%(if)", "%(HEAD)", "%(then)", // If the branch is checked out in the current worktree
+			"H", // literal "H"
+			"%(else)",
+			"%(if)", "%(worktreepath)", "%(then)", // If the branch is checked out in any (other) worktree
+			"W", // literal "W"
+			"%(else)",
+			" ", // literal " "
+			"%(end)",
+			"%(end)",
+
+			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
+		},
+		"")
+	output, err := self.Query("git", "for-each-ref", "--format="+forEachRefFormat, "refs/heads/")
 	if err != nil {
-		return gitdomain.LocalBranchNames{}, err
+		return gitdomain.LocalBranchNames{}, gitdomain.LocalBranchNames{}, err
 	}
-	result := gitdomain.LocalBranchNames{}
 	for _, line := range stringslice.Lines(output) {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		result = append(result, gitdomain.NewLocalBranchName(line))
+		marker := line[0]
+		branch := line[1:]
+		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
+		switch marker {
+		case 'H', ' ':
+		case 'W':
+			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
+		default:
+			panic(fmt.Sprintf("unexpected marker %q in line %q", marker, line))
+		}
 	}
-	return result, nil
+	return allBranches, branchesInOtherWorktrees, nil
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, error) {
-	branches, err := self.LocalBranches()
+func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
+	allBranches, branchesInOtherWorktrees, err = self.LocalBranches()
 	if err != nil {
-		return gitdomain.LocalBranchNames{}, err
+		return
 	}
-	branches = slice.Hoist(branches, mainBranch)
-	return branches, nil
+	allBranches = slice.Hoist(allBranches, mainBranch)
+	return
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
