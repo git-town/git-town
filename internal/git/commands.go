@@ -97,23 +97,12 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	}
 	if output == "" {
 		// We are in a brand-new repo.
-		// Even though `git branch` returns nothing, `git branch --show-current` will return the initial branch name.
+		// Report the initial branch name (reported by `git branch --show-current`) as the current branch.
 		currentBranch, err := self.CurrentBranchUncached(querier)
 		if err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), err
 		}
-		return gitdomain.BranchesSnapshot{
-			Active: Some(currentBranch),
-			Branches: gitdomain.BranchInfos{
-				gitdomain.BranchInfo{
-					LocalName:  Some(currentBranch),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
-			},
-		}, nil
+		return makeBranchesSnapshotNewRepo(currentBranch), nil
 	}
 	branches, currentBranchOpt := ParseVerboseBranchesOutput(output)
 	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
@@ -1053,4 +1042,19 @@ func (self *Commands) gitDirectory(querier gitdomain.Querier) (string, error) {
 // indicates whether the branch with the given name exists locally
 func isLocalBranchName(branch string) bool {
 	return !strings.HasPrefix(branch, "remotes/")
+}
+
+func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.BranchesSnapshot {
+	return gitdomain.BranchesSnapshot{
+		Active: Some(branch),
+		Branches: gitdomain.BranchInfos{
+			gitdomain.BranchInfo{
+				LocalName:  Some(branch),
+				LocalSHA:   None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
+			},
+		},
+	}
 }
