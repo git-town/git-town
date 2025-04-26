@@ -10,11 +10,11 @@ import (
 )
 
 const (
-	featureRegexTitle = `Regular expression for feature branches`
+	featureRegexTitle = `Feature branch regex`
 	FeatureRegexHelp  = `
-Branches matching this regular expression are treated as feature branches.
-This setting is effective only when the "default-branch-type" setting is
-set to something different than "feature".
+Branches matching this regular expression will be treated as feature branches.
+This setting only applies if the "default-branch-type"
+is set to something other than "feature".
 
 `
 )

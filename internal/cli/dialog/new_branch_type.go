@@ -13,11 +13,12 @@ import (
 const (
 	newBranchTypeTitle = `New branch type`
 	NewBranchTypeHelp  = `
-The "new-branch-type" setting allows you to override the type that new branches
-will have when you run "git town hack", "append", or "prepend".
+This setting controls the type new branches that you create with git town hack, append, or prepend will have.
 
-Branches for which no branch type is set, and for which no configuration entries match, are considered feature branches.
-More info at https://www.git-town.com/preferences/new-branch-type.
+If no type is explicitly set and no config entries match,
+branches default to being feature branches.
+
+More details: https://www.git-town.com/preferences/new-branch-type.
 
 `
 )

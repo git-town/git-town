@@ -11,31 +11,27 @@ import (
 )
 
 const (
-	pushNewBranchesTitle = `Push new branches`
+	pushNewBranchesTitle = `Share new branches`
 	PushNewBranchesHelp  = `
-Should Git Town push the new branches it creates
-immediately to origin even if they are empty?
+How should Git Town share the new branches it creates?
 
-When enabled, you can run "git push" right away
-but creating new branches is slower and
-it triggers an unnecessary CI run on the empty branch.
+Possible options:
 
-When disabled, many Git Town commands execute faster
-and Git Town will create the missing tracking branch
-on the first run of "git town sync".
+- none: New branches remain local until you sync or propose them.
+- push: New branches are automatically pushed to the development remote.
 
 `
 )
 
-func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
+func ShareNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
 	entries := list.Entries[configdomain.PushNewBranches]{
 		{
 			Data: true,
-			Text: "yes: push new branches to origin",
+			Text: "don't share: new branches are local until synced or proposed",
 		},
 		{
 			Data: false,
-			Text: "no, new branches remain local until synced",
+			Text: "push new branches to the dev remote",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)

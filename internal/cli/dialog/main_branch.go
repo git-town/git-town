@@ -14,9 +14,12 @@ import (
 const (
 	mainBranchTitle = `Main branch`
 	MainBranchHelp  = `
-The main branch is the branch from which you cut new feature branches,
-and into which you ship feature branches when they are done.
-This branch is often called "main", "master", or "development".
+The main branch is your project's default branch.
+It's where new feature branches are created from,
+and where completed features are merged back into.
+
+This is typically the branch called
+"main", "master", or "development".
 
 `
 )

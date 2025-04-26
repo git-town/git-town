@@ -13,13 +13,15 @@ import (
 const (
 	pushHookTitle = `Push hook`
 	PushHookHelp  = `
-The "push-hook" setting determines whether Git Town
-permits or prevents Git hooks while pushing branches.
-Hooks are enabled by default. If your Git hooks are slow,
+The push-hook setting controls whether
+Git Town allows Git hooks to run when pushing branches.
+Hooks are enabled by default.
+If your Git hooks are slow,
 you can disable them to speed up branch syncing.
 
-When disabled, Git Town pushes using the "--no-verify" switch.
-More info at https://www.git-town.com/preferences/push-hook.
+When disabled, Git Town pushes with the --no-verify flag.
+
+More details: https://www.git-town.com/preferences/push-hook.
 
 `
 )

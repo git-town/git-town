@@ -11,16 +11,16 @@ import (
 )
 
 const (
-	syncUpstreamTitle = `Sync-upstream strategy`
+	syncUpstreamTitle = `Sync with upstream remote`
 	SyncUpstreamHelp  = `
-Should "git town sync" also fetch updates from the upstream remote?
+Should git town sync also fetch updates from the upstream remote?
 
-If an "upstream" remote exists, and this setting is enabled,
-"git town sync" will also update the local main branch
-with commits from the main branch at the upstream remote.
+If an upstream remote exists and this option is enabled,
+"git town sync" will update your local main branch
+with commits from the upstream's main branch.
 
-This is useful if the repository you work on is a fork,
-and you want to keep it in sync with the repo it was forked from.
+This keeps a forked repository up-to-date
+with changes made to the original project.
 
 `
 )
