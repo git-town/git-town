@@ -15,8 +15,8 @@ const (
 	HostingPlatformHelp  = `
 Git Town uses this setting to open browser URLs
 and interact with your code hosting provider's API.
-Most users can leave this on "auto-detect".
 
+Most users can leave this on "auto-detect".
 Only change this if your forge is hosted at a custom URL.
 
 `
