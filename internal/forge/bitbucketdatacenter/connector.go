@@ -87,6 +87,18 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
+func (self Connector) GetProposalCommentsFn() Option[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)] {
+	return None[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)]()
+}
+
+func (self Connector) UpdateProposalCommentFn() Option[func(number int, commentID int, comment gitdomain.Comment) error] {
+	return None[func(number int, commentID int, comment gitdomain.Comment) error]()
+}
+
+func (self Connector) CreateProposalCommentFn() Option[func(number int, comment gitdomain.Comment) error] {
+	return None[func(number int, comment gitdomain.Comment) error]()
+}
+
 func (self Connector) apiBaseURL() string {
 	return fmt.Sprintf(
 		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",

@@ -75,6 +75,18 @@ func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gi
 	return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
+func (self Connector) GetProposalCommentsFn() Option[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)] {
+	return None[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)]()
+}
+
+func (self Connector) UpdateProposalCommentFn() Option[func(number int, commentID int, comment gitdomain.Comment) error] {
+	return None[func(number int, commentID int, comment gitdomain.Comment) error]()
+}
+
+func (self Connector) CreateProposalCommentFn() Option[func(number int, comment gitdomain.Comment) error] {
+	return None[func(number int, comment gitdomain.Comment) error]()
+}
+
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{

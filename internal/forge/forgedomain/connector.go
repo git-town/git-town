@@ -52,4 +52,8 @@ type Connector interface {
 	// to update the target branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
 	UpdateProposalTargetFn() Option[func(number int, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+
+	GetProposalCommentsFn() Option[func(number int, cfgs ...ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)]
+	UpdateProposalCommentFn() Option[func(number int, commentID int, comment gitdomain.Comment) error]
+	CreateProposalCommentFn() Option[func(number int, comment gitdomain.Comment) error]
 }
