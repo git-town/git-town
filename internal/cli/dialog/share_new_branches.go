@@ -22,7 +22,7 @@ Possible options:
 `
 )
 
-func PushNewBranches(existing configdomain.ShareNewBranches, inputs components.TestInput) (configdomain.ShareNewBranches, bool, error) {
+func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.TestInput) (configdomain.ShareNewBranches, bool, error) {
 	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
 			Data: configdomain.ShareNewBranchesNone,
