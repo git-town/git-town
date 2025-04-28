@@ -219,6 +219,10 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
+func (self *TestCommands) CreateWorktree(path string, branch gitdomain.LocalBranchName) {
+	self.MustRun("git", "worktree", "add", path, branch.String())
+}
+
 func (self *TestCommands) CurrentCommitMessage() string {
 	return self.MustQuery("git", "log", "-1", "--pretty=%B")
 }
@@ -243,7 +247,7 @@ func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, linea
 
 // Fetch retrieves the updates from the origin repo.
 func (self *TestCommands) Fetch() {
-	self.MustRun("git", "fetch")
+	self.MustRun("git", "fetch", "--prune")
 }
 
 // FileContent provides the current content of a file.

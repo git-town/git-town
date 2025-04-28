@@ -315,6 +315,510 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchesSnapshot", func(t *testing.T) {
+		t.Parallel()
+		t.Run("recognizes the active branch names", func(t *testing.T) {
+			t.Parallel()
+			t.Run("first branch is checked out", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateBranch("first-branch", initial.BranchName())
+				runtime.CreateBranch("second-branch", initial.BranchName())
+				runtime.CheckoutBranch("first-branch")
+				snapshot, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
+				must.Eq(t, Some[gitdomain.LocalBranchName]("first-branch"), snapshot.Active)
+			})
+			t.Run("second branch is checked out", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateBranch("first-branch", initial.BranchName())
+				runtime.CreateBranch("second-branch", initial.BranchName())
+				runtime.CheckoutBranch("second-branch")
+				snapshot, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
+				must.Eq(t, Some[gitdomain.LocalBranchName]("second-branch"), snapshot.Active)
+			})
+			t.Run("in the middle of a rebase", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateBranch("branch", initial.BranchName())
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      "branch",
+					FileContent: "branch content",
+					FileName:    "file",
+					Message:     "branch commit",
+				})
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "initial content",
+					FileName:    "file",
+					Message:     "initial commit",
+				})
+				runtime.CheckoutBranch("branch")
+				err := runtime.RebaseAgainstBranch(initial)
+				must.Error(t, err)
+				rebaseInProgress, err := runtime.Git.HasRebaseInProgress(runtime)
+				must.NoError(t, err)
+				must.True(t, rebaseInProgress)
+				snapshot, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
+				must.Eq(t, None[gitdomain.LocalBranchName](), snapshot.Active)
+			})
+		})
+
+		t.Run("recognizes the branch sync status", func(t *testing.T) {
+			t.Parallel()
+			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				origin.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "local and origin commit",
+				})
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				local.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content 2",
+					FileName:    "file",
+					Message:     "local commit",
+				})
+				commits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some(initial),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(commits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusAhead,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(commits[1].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("branch is behind its remote branch", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				origin.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "local and origin commit",
+				})
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				origin.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content 2",
+					FileName:    "file",
+					Message:     "origin commit",
+				})
+				local.Fetch()
+				commits, err := origin.Git.CommitsInBranch(origin, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some(initial),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(commits[1].SHA),
+							SyncStatus: gitdomain.SyncStatusBehind,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(commits[0].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				origin.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "local and origin commit",
+				})
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				local.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content 2",
+					FileName:    "file",
+					Message:     "local commit",
+				})
+				origin.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content 3",
+					FileName:    "file",
+					Message:     "origin commit",
+				})
+				local.Fetch()
+				originCommits, err := origin.Git.CommitsInBranch(origin, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				localCommits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some(initial),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(localCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusNotInSync,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(originCommits[0].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("branch is in sync", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				origin.CreateCommit(testgit.Commit{
+					Branch:      initial,
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "local and origin commit",
+				})
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				commits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some(initial),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(commits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusUpToDate,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(commits[0].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("remote-only branch", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				origin.CreateAndCheckoutFeatureBranch("branch", initial.Location())
+				origin.CreateCommit(testgit.Commit{
+					Branch:      "branch",
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "origin commit",
+				})
+				localCommits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				local.Fetch()
+				originBranchCommits, err := origin.Git.CommitsInBranch(origin, "branch", Some(initial))
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some(initial),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(localCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusUpToDate,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(localCommits[0].SHA),
+						},
+						gitdomain.BranchInfo{
+							LocalName:  None[gitdomain.LocalBranchName](),
+							LocalSHA:   None[gitdomain.SHA](),
+							SyncStatus: gitdomain.SyncStatusRemoteOnly,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+							RemoteSHA:  Some(originBranchCommits[0].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("local-only branch", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				initialCommits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				local.CreateAndCheckoutFeatureBranch("branch", initial.Location())
+				local.CreateCommit(testgit.Commit{
+					Branch:      "branch",
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "local commit",
+				})
+				localBranchCommits, err := local.Git.CommitsInBranch(local, "branch", Some(initial))
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some[gitdomain.LocalBranchName]("branch"),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some[gitdomain.LocalBranchName]("branch"),
+							LocalSHA:   Some(localBranchCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusLocalOnly,
+							RemoteName: None[gitdomain.RemoteBranchName](),
+							RemoteSHA:  None[gitdomain.SHA](),
+						},
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(initialCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusUpToDate,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(initialCommits[0].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("branch is deleted at the remote", func(t *testing.T) {
+				t.Parallel()
+				origin := testruntime.Create(t)
+				local := testruntime.Clone(origin.TestRunner, t.TempDir())
+				origin.CreateAndCheckoutFeatureBranch("branch", initial.Location())
+				origin.CreateCommit(testgit.Commit{
+					Branch:      "branch",
+					FileContent: "content",
+					FileName:    "file",
+					Message:     "origin commit",
+				})
+				local.Fetch()
+				local.CheckoutBranch("branch")
+				origin.CheckoutBranch(initial)
+				err := origin.Git.DeleteLocalBranch(origin, "branch")
+				must.NoError(t, err)
+				local.Fetch()
+				initialCommits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				branchCommits, err := local.Git.CommitsInBranch(local, "branch", None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some[gitdomain.LocalBranchName]("branch"),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some[gitdomain.LocalBranchName]("branch"),
+							LocalSHA:   Some(branchCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch")),
+							RemoteSHA:  None[gitdomain.SHA](),
+						},
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(initialCommits[1].SHA),
+							SyncStatus: gitdomain.SyncStatusUpToDate,
+							RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+							RemoteSHA:  Some(initialCommits[1].SHA),
+						},
+					},
+				}
+				have, err := local.Git.BranchesSnapshot(local)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("branch is active in another worktree", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateBranch("branch", initial.BranchName())
+				worktreeDir := t.TempDir()
+				runtime.CreateWorktree(worktreeDir, "branch")
+				commits, err := runtime.Git.CommitsInBranch(runtime, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: Some[gitdomain.LocalBranchName]("initial"),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some(gitdomain.NewLocalBranchName("branch")),
+							LocalSHA:   Some(commits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusOtherWorktree,
+							RemoteName: None[gitdomain.RemoteBranchName](),
+							RemoteSHA:  None[gitdomain.SHA](),
+						},
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(commits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusLocalOnly,
+							RemoteName: None[gitdomain.RemoteBranchName](),
+							RemoteSHA:  None[gitdomain.SHA](),
+						},
+					},
+				}
+				have, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+
+			t.Run("in the middle of a rebase", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.CreateBranch("branch", "initial")
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      "branch",
+					FileContent: "branch content",
+					FileName:    "file",
+					Message:     "branch commit",
+				})
+				runtime.CreateCommit(testgit.Commit{
+					Branch:      "initial",
+					FileContent: "initial content",
+					FileName:    "file",
+					Message:     "initial commit",
+				})
+				runtime.CheckoutBranch("branch")
+				err := runtime.RebaseAgainstBranch("initial")
+				must.Error(t, err)
+				rebaseInProgress, err := runtime.Git.HasRebaseInProgress(runtime)
+				must.NoError(t, err)
+				must.True(t, rebaseInProgress)
+				branchCommits, err := runtime.Git.CommitsInBranch(runtime, "branch", Some(initial))
+				must.NoError(t, err)
+				initialCommits, err := runtime.Git.CommitsInBranch(runtime, initial, None[gitdomain.LocalBranchName]())
+				must.NoError(t, err)
+				want := gitdomain.BranchesSnapshot{
+					Active: None[gitdomain.LocalBranchName](),
+					Branches: gitdomain.BranchInfos{
+						gitdomain.BranchInfo{
+							LocalName:  Some[gitdomain.LocalBranchName]("branch"),
+							LocalSHA:   Some(branchCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusLocalOnly,
+							RemoteName: None[gitdomain.RemoteBranchName](),
+							RemoteSHA:  None[gitdomain.SHA](),
+						},
+						gitdomain.BranchInfo{
+							LocalName:  Some(initial),
+							LocalSHA:   Some(initialCommits[0].SHA),
+							SyncStatus: gitdomain.SyncStatusLocalOnly,
+							RemoteName: None[gitdomain.RemoteBranchName](),
+							RemoteSHA:  None[gitdomain.SHA](),
+						},
+					},
+				}
+				have, err := runtime.Git.BranchesSnapshot(runtime)
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			})
+		})
+
+		t.Run("square brackets in the commit message", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local.CreateBranch("branch-1", initial.BranchName())
+			local.CreateCommit(testgit.Commit{
+				Branch:      "branch-1",
+				FileContent: "content",
+				FileName:    "file",
+				Message:     "[ci skip] local commit",
+			})
+			local.CreateBranch("branch-2", initial.BranchName()) // Both local and remote
+			local.CreateCommit(testgit.Commit{
+				Branch:      "branch-2",
+				FileContent: "content",
+				FileName:    "file",
+				Message:     "[ci skip] local and origin commit",
+			})
+			local.PushBranchToRemote(gitdomain.NewLocalBranchName("branch-2"), gitdomain.RemoteOrigin)
+			origin.CreateBranch("branch-3", initial.BranchName()) // Remote only
+			origin.CreateCommit(testgit.Commit{
+				Branch:      "branch-3",
+				FileContent: "content",
+				FileName:    "file",
+				Message:     "[ci skip] origin commit",
+			})
+			local.Fetch()
+			branch1Commits, err := local.Git.CommitsInBranch(local, "branch-1", Some(initial))
+			must.NoError(t, err)
+			branch2Commits, err := local.Git.CommitsInBranch(local, "branch-2", Some(initial))
+			must.NoError(t, err)
+			initialCommits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+			must.NoError(t, err)
+			branch3Commits, err := local.Git.CommitsInBranch(local, "origin/branch-3", Some(gitdomain.NewLocalBranchName("origin/initial")))
+			must.NoError(t, err)
+			want := gitdomain.BranchesSnapshot{
+				Active: Some(gitdomain.NewLocalBranchName("branch-2")),
+				Branches: gitdomain.BranchInfos{
+					gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+						LocalSHA:   Some(branch1Commits[0].SHA),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+						RemoteName: None[gitdomain.RemoteBranchName](),
+						RemoteSHA:  None[gitdomain.SHA](),
+					},
+					gitdomain.BranchInfo{
+						LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
+						LocalSHA:   Some(branch2Commits[0].SHA),
+						SyncStatus: gitdomain.SyncStatusUpToDate,
+						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
+						RemoteSHA:  Some(branch2Commits[0].SHA),
+					},
+					gitdomain.BranchInfo{
+						LocalName:  Some(initial),
+						LocalSHA:   Some(initialCommits[1].SHA),
+						SyncStatus: gitdomain.SyncStatusUpToDate,
+						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+						RemoteSHA:  Some(initialCommits[1].SHA),
+					},
+					gitdomain.BranchInfo{
+						LocalName:  None[gitdomain.LocalBranchName](),
+						LocalSHA:   None[gitdomain.SHA](),
+						SyncStatus: gitdomain.SyncStatusRemoteOnly,
+						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
+						RemoteSHA:  Some(branch3Commits[0].SHA),
+					},
+				},
+			}
+			have, err := local.Git.BranchesSnapshot(local)
+			must.NoError(t, err)
+			must.Eq(t, want, have)
+		})
+
+		t.Run("ignores symbolic refs", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			err := local.Run("git", "symbolic-ref", "refs/remotes/origin/master", "refs/remotes/origin/initial")
+			must.NoError(t, err)
+			commits, err := local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]())
+			must.NoError(t, err)
+			want := gitdomain.BranchesSnapshot{
+				Active: Some(initial),
+				Branches: gitdomain.BranchInfos{
+					gitdomain.BranchInfo{
+						LocalName:  Some(initial),
+						LocalSHA:   Some(commits[0].SHA),
+						SyncStatus: gitdomain.SyncStatusUpToDate,
+						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/initial")),
+						RemoteSHA:  Some(commits[0].SHA),
+					},
+				},
+			}
+			have, err := local.Git.BranchesSnapshot(local)
+			must.NoError(t, err)
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("CheckoutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
@@ -447,14 +951,12 @@ func TestBackendCommands(t *testing.T) {
 			Branch:      "branch",
 			FileContent: "branch content",
 			FileName:    "file",
-			Locations:   testgit.Locations{testgit.LocationLocal},
 			Message:     "branch commit",
 		})
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      "initial",
 			FileContent: "initial content",
 			FileName:    "file",
-			Locations:   testgit.Locations{testgit.LocationLocal},
 			Message:     "initial commit",
 		})
 		runtime.CheckoutBranch("branch")
@@ -871,332 +1373,6 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
-	})
-
-	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
-		t.Parallel()
-		t.Run("recognizes the branch names", func(t *testing.T) {
-			t.Parallel()
-			t.Run("marker is at the first entry", func(t *testing.T) {
-				t.Parallel()
-				give := `
-* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
-  branch-2                     da796a69 [origin/branch-2] Commit message 2
-  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
-				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-1")), currentBranch)
-			})
-			t.Run("marker is at the middle entry", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
-* branch-2                     da796a69 [origin/branch-2] Commit message 2
-  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
-				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
-			})
-			t.Run("marker is at the last entry", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
-  branch-2                     da796a69 [origin/branch-2] Commit message 2
-* branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
-				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-3")), currentBranch)
-			})
-			t.Run("in the middle of a rebase", func(t *testing.T) {
-				t.Parallel()
-				give := `
-				* (no branch, rebasing main) 214ba79 origin main commit
-  feature                    62bf22e [origin/feature: ahead 1] feature commit
-  main                       11716d4 [origin/main: ahead 1, behind 1] local main commit`[1:]
-				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, None[gitdomain.LocalBranchName](), currentBranch)
-			})
-		})
-
-		t.Run("recognize the branch sync status", func(t *testing.T) {
-			t.Parallel()
-			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  branch-1                     111111 [origin/branch-1: ahead 1] Commit message 1a
-  remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						SyncStatus: gitdomain.SyncStatusAhead,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("branch is behind its remote branch", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  branch-1                     1111111111111111111111111111111111111111 [origin/branch-1: behind 2] Commit message 1
-  remotes/origin/branch-1      2222222222222222222222222222222222222222 Commit message 1b`[1:]
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("1111111111111111111111111111111111111111")),
-						SyncStatus: gitdomain.SyncStatusBehind,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("2222222222222222222222222222222222222222")),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  branch-1                     111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
-  remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						SyncStatus: gitdomain.SyncStatusNotInSync,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("branch is in sync", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  branch-1                     111111 [origin/branch-1] Commit message 1
-  remotes/origin/branch-1      111111 Commit message 1`[1:]
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("111111")),
-						SyncStatus: gitdomain.SyncStatusUpToDate,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("remote-only branch", func(t *testing.T) {
-				t.Parallel()
-				give := `
-  remotes/origin/branch-1    222222 Commit message 2`[1:]
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  None[gitdomain.LocalBranchName](),
-						LocalSHA:   None[gitdomain.SHA](),
-						SyncStatus: gitdomain.SyncStatusRemoteOnly,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("local-only branch", func(t *testing.T) {
-				t.Parallel()
-				give := `  branch-1                     01a7eded Commit message 1`
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
-						SyncStatus: gitdomain.SyncStatusLocalOnly,
-						RemoteName: None[gitdomain.RemoteBranchName](),
-						RemoteSHA:  None[gitdomain.SHA](),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("branch is deleted at the remote", func(t *testing.T) {
-				t.Parallel()
-				isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: gone] commit message")
-				must.True(t, isGone)
-				must.Eq(t, Some(gitdomain.NewRemoteBranchName("origin/branch-1")), remoteBranchName)
-			})
-
-			t.Run("branch is active in another worktree", func(t *testing.T) {
-				t.Parallel()
-				give := `+ branch-1    3d0c4c13 (/path/to/other/worktree) [origin/branch-1] commit message`
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-						LocalSHA:   Some(gitdomain.NewSHA("3d0c4c13")),
-						SyncStatus: gitdomain.SyncStatusOtherWorktree,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-						RemoteSHA:  None[gitdomain.SHA](),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-
-			t.Run("in the middle of a rebase", func(t *testing.T) {
-				t.Parallel()
-				give := `
-* (no branch, rebasing main) 214ba79 origin main commit
-  feature                    62bf22e [origin/feature: ahead 1] feature commit
-  main                       11716d4 [origin/main: ahead 1, behind 1] local main commit
-  remotes/origin/feature     4989007 initial commit
-  remotes/origin/main        214ba79 origin main commit`[1:]
-
-				want := gitdomain.BranchInfos{
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("feature")),
-						LocalSHA:   Some(gitdomain.NewSHA("62bf22e")),
-						SyncStatus: gitdomain.SyncStatusAhead,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature")),
-						RemoteSHA:  Some(gitdomain.NewSHA("4989007")),
-					},
-					gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("main")),
-						LocalSHA:   Some(gitdomain.NewSHA("11716d4")),
-						SyncStatus: gitdomain.SyncStatusNotInSync,
-						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
-						RemoteSHA:  Some(gitdomain.SHA("214ba79")),
-					},
-				}
-				have, active := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-				must.Eq(t, None[gitdomain.LocalBranchName](), active)
-			})
-		})
-
-		t.Run("square brackets in the commit message", func(t *testing.T) {
-			t.Parallel()
-			give := `
-  branch-1                 111111 [ci skip]
-  branch-2                 222222 ️[origin/branch-2] [ci skip]
-  remotes/origin/branch-2  222222 [ci skip]
-  remotes/origin/branch-3  333333 [ci skip]`[1:]
-			want := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("111111")),
-					SyncStatus: gitdomain.SyncStatusLocalOnly,
-					RemoteName: None[gitdomain.RemoteBranchName](),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
-					LocalSHA:   Some(gitdomain.NewSHA("222222")),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
-					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
-					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
-				},
-			}
-			have, _ := git.ParseVerboseBranchesOutput(give)
-			must.Eq(t, want, have)
-		})
-
-		t.Run("symbolic reference", func(t *testing.T) {
-			t.Parallel()
-			give := `
-  main                                   4dc97db26 [origin/main] Commit 1
-  remotes/origin/HEAD                    -> origin/main
-  remotes/origin/main                    4dc97db26 Commit 1
-  remotes/origin/master                  -> origin/main
-`[1:]
-			want := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
-					LocalSHA:   Some(gitdomain.NewSHA("4dc97db26")),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
-					RemoteSHA:  Some(gitdomain.NewSHA("4dc97db26")),
-				},
-			}
-			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			must.Eq(t, want, have)
-			must.Eq(t, None[gitdomain.LocalBranchName](), currentBranch)
-		})
-
-		t.Run("complex example", func(t *testing.T) {
-			give := `
-  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a
-* branch-2                     da796a69 [origin/branch-2] Commit message 2
-  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
-  main                         41c3f128 [origin/main: behind 2] Commit message on main (#1234)
-  branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
-+ branch-5                     55555555 (/path/to/other/worktree) [origin/branch-5] Commit message 5
-  remotes/origin/branch-1      307a7bf4 Commit message 1b
-  remotes/origin/branch-2      da796a69 Commit message 2
-  remotes/origin/branch-3      bc39378a Commit message 3b
-  remotes/origin/branch-5      55555555 Commit message 5
-  remotes/origin/HEAD          -> origin/initial
-  remotes/origin/main          02c192178 Commit message on main (#1234)
-  remotes/upstream/HEAD        -> upstream/main
-
-`[1:]
-			want := gitdomain.BranchInfos{
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
-					LocalSHA:   Some(gitdomain.NewSHA("01a7eded")),
-					SyncStatus: gitdomain.SyncStatusAhead,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
-					RemoteSHA:  Some(gitdomain.NewSHA("307a7bf4")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-2")),
-					LocalSHA:   Some(gitdomain.NewSHA("da796a69")),
-					SyncStatus: gitdomain.SyncStatusUpToDate,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-2")),
-					RemoteSHA:  Some(gitdomain.NewSHA("da796a69")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-3")),
-					LocalSHA:   Some(gitdomain.NewSHA("f4ebec0a")),
-					SyncStatus: gitdomain.SyncStatusBehind,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-3")),
-					RemoteSHA:  Some(gitdomain.NewSHA("bc39378a")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
-					LocalSHA:   Some(gitdomain.NewSHA("41c3f128")),
-					SyncStatus: gitdomain.SyncStatusBehind,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
-					RemoteSHA:  Some(gitdomain.NewSHA("02c192178")),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-4")),
-					LocalSHA:   Some(gitdomain.NewSHA("e4d6bc09")),
-					SyncStatus: gitdomain.SyncStatusDeletedAtRemote,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-4")),
-					RemoteSHA:  None[gitdomain.SHA](),
-				},
-				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-5")),
-					LocalSHA:   Some(gitdomain.NewSHA("55555555")),
-					SyncStatus: gitdomain.SyncStatusOtherWorktree,
-					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-5")),
-					RemoteSHA:  Some(gitdomain.NewSHA("55555555")),
-				},
-			}
-			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			must.Eq(t, want, have)
-			must.Eq(t, Some(gitdomain.NewLocalBranchName("branch-2")), currentBranch)
-		})
 	})
 
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
