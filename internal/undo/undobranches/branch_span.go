@@ -54,8 +54,20 @@ func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterNam
 		return false, "", ""
 	}
 	beforeName, hasBeforeName := before.LocalName.Get()
+	if !hasBeforeName {
+		return false, "", ""
+	}
 	afterName, hasAfterName := after.LocalName.Get()
-	return before.LocalSHA.Equal(after.LocalSHA) && hasBeforeName && hasAfterName && before.LocalName.Equal(after.LocalName), beforeName, afterName
+	if !hasAfterName {
+		return false, "", ""
+	}
+	if before.LocalSHA.Equal(after.LocalSHA) {
+		return false, "", ""
+	}
+	if before.LocalName.Equal(after.LocalName) {
+		return false, "", ""
+	}
+	return true, beforeName, afterName
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
@@ -128,6 +140,7 @@ func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.L
 func (self BranchSpan) NoChanges() bool {
 	localAdded, _, _ := self.LocalAdded()
 	localRemoved, _, _ := self.LocalRemoved()
+	localRenamed, _, _ := self.IsLocalRename()
 	remoteAdded, _, _ := self.RemoteAdded()
 	remoteRemoved, _, _ := self.RemoteRemoved()
 	localChanged, _, _, _ := self.LocalChanged()
