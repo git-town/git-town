@@ -136,18 +136,6 @@ func (self BranchSpan) LocalRemoved() (localRemoved bool, branchName gitdomain.L
 	return localRemoved, branchName, beforeSHA
 }
 
-// NoChanges indicates whether this BranchSpan contains changes or not.
-func (self BranchSpan) NoChanges() bool {
-	localAdded, _, _ := self.LocalAdded()
-	localRemoved, _, _ := self.LocalRemoved()
-	localRenamed, _, _ := self.IsLocalRename()
-	remoteAdded, _, _ := self.RemoteAdded()
-	remoteRemoved, _, _ := self.RemoteRemoved()
-	localChanged, _, _, _ := self.LocalChanged()
-	remoteChanged, _, _, _ := self.RemoteChanged()
-	return !localAdded && !localRemoved && !localChanged && !remoteAdded && !remoteRemoved && !remoteChanged
-}
-
 func (self BranchSpan) RemoteAdded() (remoteAdded bool, addedRemoteBranchName gitdomain.RemoteBranchName, addedRemoteBranchSHA gitdomain.SHA) {
 	before, hasBefore := self.Before.Get()
 	beforeHasRemoteBranch, _, _ := before.HasRemoteBranch()
