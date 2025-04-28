@@ -69,10 +69,6 @@ func executeUndo(verbose configdomain.Verbose) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	fmt.Println("222222222222222222222222222222222222222222222")
-	fmt.Println(runState.EndBranchesSnapshot)
-	fmt.Println("333333333333333333333333333333333333333333333")
-	fmt.Println(runState.BeginBranchesSnapshot)
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return err
@@ -129,8 +125,6 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 	if err != nil || exit {
 		return data, false, err
 	}
-	fmt.Println("111111111111111111111111111111111111111111111111")
-	fmt.Println(branchesSnapshot.Branches)
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
 	if err != nil {
 		return data, false, err
