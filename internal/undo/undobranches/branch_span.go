@@ -177,9 +177,9 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	return remoteRemoved, remoteBranchName, beforeSHA
 }
 
-func (self BranchSpan) String() string {
-	result := "BranchSpan:\n"
-	result += "Before:" + self.Before.String() + "\n"
-	result += "After:" + self.After.String() + "\n"
-	return result
-}
+// func (self BranchSpan) String() string {
+// 	result := "BranchSpan:\n"
+// 	result += "Before:" + self.Before.String() + "\n"
+// 	result += "After:" + self.After.String() + "\n"
+// 	return result
+// }
