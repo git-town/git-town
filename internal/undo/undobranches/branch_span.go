@@ -43,16 +43,19 @@ func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before
 	return isInconsistentChange, before, after
 }
 
-func (self BranchSpan) IsLocalRename() (isRename bool) {
+// IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
+func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterName gitdomain.LocalBranchName) {
 	before, hasBefore := self.Before.Get()
 	if !hasBefore {
-		return false
+		return false, "", ""
 	}
 	after, hasAfter := self.After.Get()
 	if !hasAfter {
-		return false
+		return false, "", ""
 	}
-	return before.LocalSHA == after.LocalSHA && before.LocalName != after.LocalName
+	beforeName, hasBeforeName := before.LocalName.Get()
+	afterName, hasAfterName := after.LocalName.Get()
+	return before.LocalSHA.Equal(after.LocalSHA) && hasBeforeName && hasAfterName && before.LocalName.Equal(after.LocalName), beforeName, afterName
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch

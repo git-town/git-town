@@ -36,7 +36,7 @@ func (self BranchSpans) Changes() BranchChanges {
 	localAdded := gitdomain.LocalBranchNames{}
 	localChanged := LocalBranchChange{}
 	localRemoved := LocalBranchesSHAs{}
-	localRenamed := LocalBranchRename{}
+	localRenamed := []LocalBranchRename{}
 	omniChanged := LocalBranchChange{}
 	omniRemoved := LocalBranchesSHAs{}
 	remoteAdded := gitdomain.RemoteBranchNames{}
@@ -57,7 +57,13 @@ func (self BranchSpans) Changes() BranchChanges {
 			}
 			continue
 		}
-		// isLocalRename := branchSpan.IsLocalRename
+		isLocalRename, beforeName, afterName := branchSpan.IsLocalRename()
+		if isLocalRename {
+			localRenamed = append(localRenamed, LocalBranchRename{
+				Before: beforeName,
+				After:  afterName,
+			})
+		}
 		isInconsistentChange, before, after := branchSpan.IsInconsistentChange()
 		if isInconsistentChange {
 			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{

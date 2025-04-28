@@ -5,4 +5,4 @@ import (
 	"github.com/git-town/git-town/v19/internal/undo/undodomain"
 )
 
-type LocalBranchRename []undodomain.Change[gitdomain.LocalBranchName]
+type LocalBranchRename undodomain.Change[gitdomain.LocalBranchName]

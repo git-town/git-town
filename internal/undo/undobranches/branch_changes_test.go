@@ -1040,7 +1040,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
-			LocalRenamed: undobranches.LocalBranchRename{
+			LocalRenamed: []undobranches.LocalBranchRename{
 				{
 					Before: gitdomain.NewLocalBranchName("old"),
 					After:  gitdomain.NewLocalBranchName("new"),
