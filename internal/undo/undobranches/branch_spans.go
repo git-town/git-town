@@ -46,11 +46,6 @@ func (self BranchSpans) Changes() BranchChanges {
 	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
 	fmt.Println("11111111111111111111111111111111111111111")
 	for _, branchSpan := range self {
-		fmt.Println("2222222222222222222222222222222222222", branchSpan)
-		if branchSpan.NoChanges() {
-			continue
-		}
-		fmt.Println("33333333333333333333333333333333")
 		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
 			omniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
