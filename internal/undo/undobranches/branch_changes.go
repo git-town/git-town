@@ -150,7 +150,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		})
 	}
 
-	// rename locally renamed branches
+	// restore the name of locally renamed branches
 	for _, rename := range self.LocalRenamed {
 		result.Add(&opcodes.BranchLocalRename{
 			NewName: rename.Before,
