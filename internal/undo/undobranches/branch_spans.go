@@ -1,8 +1,6 @@
 package undobranches
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/gohacks/slice"
 	"github.com/git-town/git-town/v19/internal/undo/undodomain"
@@ -44,13 +42,11 @@ func (self BranchSpans) Changes() BranchChanges {
 	remoteAdded := gitdomain.RemoteBranchNames{}
 	remoteChanged := map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{}
 	remoteRemoved := map[gitdomain.RemoteBranchName]gitdomain.SHA{}
-	fmt.Println("11111111111111111111111111111111111111111")
 	for _, branchSpan := range self {
 		if isOmniRemove, beforeLocalBranch, beforeLocalSHA := branchSpan.IsOmniRemove(); isOmniRemove {
 			omniRemoved[beforeLocalBranch] = beforeLocalSHA
 			continue
 		}
-		fmt.Println("44444444444444444444444444444444")
 		if isOmniChange, branchName, beforeSHA, afterSHA := branchSpan.IsOmniChange(); isOmniChange {
 			omniChanged[branchName] = undodomain.Change[gitdomain.SHA]{
 				Before: beforeSHA,
@@ -58,7 +54,6 @@ func (self BranchSpans) Changes() BranchChanges {
 			}
 			continue
 		}
-		fmt.Println("555555555555555555555555555555")
 		isLocalRename, beforeName, afterName := branchSpan.IsLocalRename()
 		if isLocalRename {
 			localRenamed = append(localRenamed, LocalBranchRename{

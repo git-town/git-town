@@ -61,13 +61,15 @@ func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterNam
 	if !hasAfterName {
 		return false, "", ""
 	}
-	if before.LocalSHA.Equal(after.LocalSHA) {
+	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
+	if !hasBeforeSHA {
 		return false, "", ""
 	}
-	if before.LocalName.Equal(after.LocalName) {
+	afterSHA, hasAfterSHA := after.LocalSHA.Get()
+	if !hasAfterSHA {
 		return false, "", ""
 	}
-	return true, beforeName, afterName
+	return beforeName != afterName && beforeSHA == afterSHA, beforeName, afterName
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
