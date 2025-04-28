@@ -362,15 +362,18 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
 	forEachRefFormat := strings.Join(
 		[]string{
+			// worktree marker
 			"%(if)", "%(HEAD)", "%(then)", // If the branch is checked out in the current worktree
 			"H", // literal "H"
 			"%(else)",
 			"%(if)", "%(worktreepath)", "%(then)", // If the branch is checked out in any (other) worktree
 			"W", // literal "W"
 			"%(else)",
-			" ", // literal " "
+			"-", // literal "-"
 			"%(end)",
 			"%(end)",
+
+			" ", // space separator
 
 			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
 		},
@@ -381,10 +384,10 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 	}
 	for _, line := range stringslice.Lines(output) {
 		marker := line[0]
-		branch := line[1:]
+		branch := line[2:]
 		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 		switch marker {
-		case 'H', ' ':
+		case 'H', '-':
 		case 'W':
 			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
 		default:
