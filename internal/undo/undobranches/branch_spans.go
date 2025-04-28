@@ -56,6 +56,7 @@ func (self BranchSpans) Changes() BranchChanges {
 			}
 			continue
 		}
+		isRename := branchSpan.IsLocalRename
 		isInconsistentChange, before, after := branchSpan.IsInconsistentChange()
 		if isInconsistentChange {
 			inconsistentlyChanged = append(inconsistentlyChanged, undodomain.InconsistentChange{
