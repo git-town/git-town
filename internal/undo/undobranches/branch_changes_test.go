@@ -1009,6 +1009,82 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
+	t.Run("omnibranch renamed locally", func(t *testing.T) {
+		t.Parallel()
+		before := gitdomain.BranchesSnapshot{
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("old")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+				},
+			},
+			Active: Some(gitdomain.NewLocalBranchName("old")),
+		}
+		after := gitdomain.BranchesSnapshot{
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("new")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusNotInSync,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+				},
+			},
+			Active: Some(gitdomain.NewLocalBranchName("new")),
+		}
+		span := undobranches.NewBranchSpans(before, after)
+		haveChanges := span.Changes()
+		wantChanges := undobranches.BranchChanges{
+			LocalAdded:   gitdomain.LocalBranchNames{},
+			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: undobranches.LocalBranchRename{
+				{
+					Before: gitdomain.NewLocalBranchName("old"),
+					After:  gitdomain.NewLocalBranchName("new"),
+				},
+			},
+			LocalChanged:          undobranches.LocalBranchChange{},
+			RemoteAdded:           gitdomain.RemoteBranchNames{},
+			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
+			RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
+			OmniRemoved:           undobranches.LocalBranchesSHAs{},
+			OmniChanged:           undobranches.LocalBranchChange{},
+			InconsistentlyChanged: undodomain.InconsistentChanges{},
+		}
+		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"old": "main",
+		})
+		config := config.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
+					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
+					Lineage:           lineage,
+				},
+			},
+		}
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active.GetOrPanic(),
+			Config:                   config,
+			EndBranch:                after.Active.GetOrDefault(),
+			FinalMessages:            stringslice.NewCollector(),
+			UndoablePerennialCommits: []gitdomain.SHA{},
+		})
+		wantProgram := program.Program{
+			&opcodes.BranchLocalRename{
+				NewName: "old",
+				OldName: "new",
+			},
+		}
+		must.Eq(t, wantProgram, haveProgram)
+	})
+
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
 		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
