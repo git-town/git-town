@@ -150,6 +150,14 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		})
 	}
 
+	// rename locally renamed branches
+	for _, rename := range self.LocalRenamed {
+		result.Add(&opcodes.BranchLocalRename{
+			NewName: rename.Before,
+			OldName: rename.After,
+		})
+	}
+
 	// remove locally added branches
 	for _, addedLocalBranch := range self.LocalAdded {
 		if args.EndBranch == addedLocalBranch {

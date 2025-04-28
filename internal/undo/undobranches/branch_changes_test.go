@@ -1110,6 +1110,9 @@ func TestChanges(t *testing.T) {
 				NewName: "old",
 				OldName: "new",
 			},
+			&opcodes.CheckoutIfExists{
+				Branch: "old",
+			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
 	})
