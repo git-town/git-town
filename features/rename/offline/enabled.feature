@@ -27,19 +27,12 @@ Feature: offline mode
       | BRANCH | PARENT |
       | new    | main   |
 
-  @debug
-  @this
   Scenario: undo
-    When I run "git-town undo -v"
+    When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND          |
-      | new    | git checkout old |
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, origin | main commit |
-      | new    | local         | old commit  |
-      | old    | local, origin | old commit  |
-    And these branches exist now
-      | REPOSITORY | BRANCHES       |
-      | local      | main, new, old |
-      | origin     | main, old      |
+      | BRANCH | COMMAND                               |
+      | new    | git branch old {{ sha 'old commit' }} |
+      |        | git checkout old                      |
+      | old    | git branch -D new                     |
+    And the initial commits exist now
+    And the initial branches and lineage exist now
