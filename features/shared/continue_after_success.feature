@@ -35,4 +35,4 @@ Feature: continue after successful command
       | sync                    |
       | version                 |
 
-# TODO: delete share-new-branches and sync-perennial-strategy from the table above
+  # TODO: delete share-new-branches and sync-perennial-strategy from the table above
