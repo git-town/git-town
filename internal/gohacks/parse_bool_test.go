@@ -31,14 +31,14 @@ func TestParseBool(t *testing.T) {
 			"0":        Some(false),
 		}
 		for give, want := range tests {
-			have, err := gohacks.ParseBool(give, "test")
+			have, err := gohacks.ParseBoolOpt(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
 
 		t.Run("invalid input", func(t *testing.T) {
 			t.Parallel()
-			_, err := gohacks.ParseBool("zonk", "test")
+			_, err := gohacks.ParseBoolOpt("zonk", "test")
 			must.Error(t, err)
 		})
 	})

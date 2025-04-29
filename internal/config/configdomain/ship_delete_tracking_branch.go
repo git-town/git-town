@@ -19,7 +19,7 @@ func (self ShipDeleteTrackingBranch) String() string {
 }
 
 func ParseShipDeleteTrackingBranch(value string, source Key) (Option[ShipDeleteTrackingBranch], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(ShipDeleteTrackingBranch(parsed)), err
 	}

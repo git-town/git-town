@@ -10,6 +10,9 @@ import (
 )
 
 func ParseBool(text, source string) (Option[bool], error) {
+}
+
+func ParseBoolOpt(text, source string) (Option[bool], error) {
 	switch strings.ToLower(text) {
 	case "":
 		return None[bool](), nil

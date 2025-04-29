@@ -19,7 +19,7 @@ func (self SyncUpstream) String() string {
 }
 
 func ParseSyncUpstream(value string, source Key) (Option[SyncUpstream], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncUpstream(parsed)), err
 	}
