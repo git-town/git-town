@@ -30,7 +30,7 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 		},
 		{
 			Data: configdomain.ShareNewBranchesPush,
-			Text: "push new branches to origin",
+			Text: "push new branches to the dev remote",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
