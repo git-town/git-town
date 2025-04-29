@@ -223,10 +223,6 @@ func (self *TestCommands) CreateWorktree(path string, branch gitdomain.LocalBran
 	self.MustRun("git", "worktree", "add", path, branch.String())
 }
 
-func (self *TestCommands) CurrentCommitMessage() string {
-	return self.MustQuery("git", "log", "-1", "--pretty=%B")
-}
-
 // provides the first ancestor of the given branch that actually exists in the repo
 func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
