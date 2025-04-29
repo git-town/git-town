@@ -993,22 +993,21 @@ func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchNam
 	}
 	ahead := strings.Contains(track, "ahead")
 	behind := strings.Contains(track, "behind")
-	if ahead && behind {
+	switch {
+	case ahead && behind:
 		return gitdomain.SyncStatusNotInSync
-	}
-	if ahead {
+	case ahead:
 		return gitdomain.SyncStatusAhead
-	}
-	if behind {
+	case behind:
 		return gitdomain.SyncStatusBehind
-	}
-	if track == "" {
+	case track == "":
 		if upstream.IsSome() {
 			return gitdomain.SyncStatusUpToDate
 		}
 		return gitdomain.SyncStatusLocalOnly
+	default:
+		panic(fmt.Sprintf(`unrecognized track "%s"`, track))
 	}
-	panic(fmt.Sprintf(`unrecognized track "%s"`, track))
 }
 
 // provides the path of the `.git` directory of the current repository.
