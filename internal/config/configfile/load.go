@@ -134,11 +134,10 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
-			parsed, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			newBranchType, err = configdomain.ParseBranchType(*data.Create.NewBranchType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
-			newBranchType = parsed
 		}
 		if data.Create.PushNewbranches != nil {
 			pushNewBranches = Some(configdomain.PushNewBranches(*data.Create.PushNewbranches))
