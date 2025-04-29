@@ -409,7 +409,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		}
 	}
 	proposal, hasProposal := data.proposal.Get()
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.IsOnline() && (data.config.ShouldPushNewBranch() || hasProposal) {
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	connector, hasConnector := data.connector.Get()

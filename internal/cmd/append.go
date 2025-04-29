@@ -294,6 +294,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 			return data, exit, err
 		}
 	}
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		propose = true
+	}
 	return appendFeatureData{
 		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,
@@ -344,7 +347,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.ShouldPushNewBranch() && data.config.NormalConfig.IsOnline() {
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush && data.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{

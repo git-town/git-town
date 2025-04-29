@@ -96,13 +96,3 @@ func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) err
 	self.ValidatedConfigData.MainBranch = branch
 	return self.NormalConfig.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }
-
-func (self *ValidatedConfig) ShouldPushNewBranch() bool {
-	switch self.NormalConfig.ShareNewBranches {
-	case configdomain.ShareNewBranchesNone:
-		return false
-	case configdomain.ShareNewBranchesPropose, configdomain.ShareNewBranchesPush:
-		return true
-	}
-	panic("unhandled")
-}

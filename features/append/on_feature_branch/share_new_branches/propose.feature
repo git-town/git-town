@@ -11,15 +11,14 @@ Feature: auto-propose the new branch
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town append new"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                            |
-      | main   | git fetch --prune --tags                                           |
-      |        | git -c rebase.updateRefs=false rebase origin/main                  |
-      |        | git checkout -b new                                                |
-      | new    | git push -u origin new                                             |
-      | (none) | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+      | BRANCH | COMMAND                                                        |
+      | main   | git fetch --prune --tags                                       |
+      |        | git -c rebase.updateRefs=false rebase origin/main              |
+      |        | git checkout -b new                                            |
+      | new    | git push -u origin new                                         |
+      | (none) | open https://github.com/git-town/git-town/compare/new?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
