@@ -153,9 +153,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, err
 		}
 	}
-	data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, err
+	if !hasConfigFile || configFile.DefaultBranchType.IsNone() {
+		data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
 	}
 	data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
 	if err != nil || aborted {
