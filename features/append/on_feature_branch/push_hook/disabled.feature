@@ -10,8 +10,6 @@ Feature: auto-push the new branch to origin without running Git push hooks
     And Git setting "git-town.push-hook" is "false"
     When I run "git-town append new"
 
-  @debug
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |

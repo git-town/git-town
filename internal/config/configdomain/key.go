@@ -93,7 +93,7 @@ const (
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
 	KeyPushHook                            = Key("git-town.push-hook")
-	KeyShareNewBranches                    = Key("git-towwn.share-new-branches")
+	KeyShareNewBranches                    = Key("git-town.share-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
 	KeyShipStrategy                        = Key("git-town.ship-strategy")
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")

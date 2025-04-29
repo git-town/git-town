@@ -70,7 +70,6 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	fmt.Println("3333333333333333333333333333333", localConfig.ShareNewBranches, localSnapshot)
 	configSnapshot := undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,

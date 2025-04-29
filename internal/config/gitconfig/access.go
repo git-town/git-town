@@ -176,6 +176,5 @@ func (self *Access) load(scope configdomain.ConfigScope, updateOutdated bool) (c
 		}
 	}
 	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
-	fmt.Println("222222222222222222222222222222", partialConfig.ShareNewBranches)
 	return snapshot, partialConfig, err
 }
