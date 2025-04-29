@@ -26,7 +26,7 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
 			Data: configdomain.ShareNewBranchesNone,
-			Text: "yes: push new branches to origin",
+			Text: "push: push new branches to origin",
 		},
 		{
 			Data: configdomain.ShareNewBranchesPush,
