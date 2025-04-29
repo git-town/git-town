@@ -125,7 +125,7 @@ perennial-regex = ""
 
 [create]
 new-branch-type = ""
-push-new-branches = false
+share-new-branches = "none"
 
 [hosting]
 dev-remote = "origin"
