@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
@@ -101,6 +102,7 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 }
 
 func (self *NormalConfigData) ShouldPushNewBranches() bool {
+	fmt.Println("1111111111111111111111111111111111111", self.ShareNewBranches)
 	return self.ShareNewBranches == ShareNewBranchesPush
 }
 
