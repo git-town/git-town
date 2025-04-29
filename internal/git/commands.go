@@ -140,9 +140,9 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		refName := strings.TrimPrefix(parts[0], "refname:")
 		branchName := strings.TrimPrefix(parts[1], "branchname:")
 		sha := strings.TrimPrefix(parts[2], "sha:")
-		head := strings.TrimPrefix(parts[3], "head:") == "Y"
-		worktree := strings.TrimPrefix(parts[4], "worktree:") == "Y"
-		symref := strings.TrimPrefix(parts[5], "symref:") == "Y"
+		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
+		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
+		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
 		upstream := strings.TrimPrefix(parts[6], "upstream:")
 		upstreamOption := None[gitdomain.RemoteBranchName]()
 		if len(upstream) > 0 {
@@ -1039,5 +1039,16 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		},
+	}
+}
+
+func parseYN(value string) bool {
+	switch value {
+	case "Y":
+		return true
+	case "N":
+		return false
+	default:
+		panic(fmt.Sprintf("unrecognized value %q", value))
 	}
 }
