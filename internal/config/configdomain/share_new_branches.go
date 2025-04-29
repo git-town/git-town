@@ -24,6 +24,9 @@ func (self ShareNewBranches) String() string {
 }
 
 func ParseShareNewBranches(value string, source Key) (Option[ShareNewBranches], error) {
+	if value == "" {
+		return None[ShareNewBranches](), nil
+	}
 	for _, option := range ShareNewBranchValues {
 		if value == option.String() {
 			return Some(option), nil
