@@ -1,4 +1,4 @@
-Feature: auto-push new branches
+Feature: auto-propose new branches
 
   Background:
     Given a Git repo with origin

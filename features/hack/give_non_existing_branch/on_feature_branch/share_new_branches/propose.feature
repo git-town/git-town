@@ -1,4 +1,4 @@
-Feature: auto-propose the new branch
+Feature: auto-propose new branches
 
   Background:
     Given a Git repo with origin
