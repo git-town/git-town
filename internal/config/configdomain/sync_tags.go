@@ -23,7 +23,7 @@ func (self SyncTags) String() string {
 }
 
 func ParseSyncTags(value string, source Key) (Option[SyncTags], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncTags(parsed)), err
 	}

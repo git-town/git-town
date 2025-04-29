@@ -24,7 +24,7 @@ func (self PushHook) String() string {
 }
 
 func ParsePushHook(value string, source Key) (Option[PushHook], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(PushHook(parsed)), err
 	}
