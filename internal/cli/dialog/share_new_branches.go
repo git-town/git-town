@@ -26,7 +26,7 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
 			Data: configdomain.ShareNewBranchesNone,
-			Text: "no sharing: new branches remain local until synced",
+			Text: "no sharing: new branches remain local until synced or proposed",
 		},
 		{
 			Data: configdomain.ShareNewBranchesPush,
