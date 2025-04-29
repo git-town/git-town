@@ -61,7 +61,7 @@ func TestSave(t *testing.T) {
 					PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
 					PerennialRegex:           None[configdomain.PerennialRegex](),
 					PushHook:                 true,
-					ShareNewBranches:         false,
+					ShareNewBranches:         configdomain.ShareNewBranchesPush,
 					ShipStrategy:             configdomain.ShipStrategySquashMerge,
 					ShipDeleteTrackingBranch: true,
 					SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
@@ -82,7 +82,7 @@ perennial-regex = ""
 
 [create]
 new-branch-type = "prototype"
-push-new-branches = false
+share-new-branches = "push"
 
 [hosting]
 dev-remote = "fork"
