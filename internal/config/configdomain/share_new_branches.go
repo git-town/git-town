@@ -6,7 +6,7 @@ import (
 	. "github.com/git-town/git-town/v19/pkg/prelude"
 )
 
-// ShareNewBranches indicates whether newly created branches should be pushed to the remote or not.
+// ShareNewBranches describes how newly created branches should be shared.
 type ShareNewBranches string
 
 const (
