@@ -1,17 +1,22 @@
 # Share new branches
 
-By default, Git Town doesn't push new feature branches to the
-[development remote](dev-remote.md) since that would make creating branches
-slower and triggers an unnecessary CI run for a branch containing no changes.
-Running [git town sync](../commands/sync.md) or
-[git town propose](../commands/propose.md) later will push the branch to the dev
-remote. If you prefer to push new branches upon creation, set this configuration
-option.
+This setting allows you to change how Git Town shares new branches created with
+[hack](../commands/hack.md), [append](../commands/append.md), or
+[prepend](../commands/prepend.md).
+
+Allowed values:
+
+- **no:** Keep new branches local on your machine until you
+  [sync](../commands/sync.md) or [propose](../commands/propose.md) them (default
+  behavior).
+- **push:** Push new branches to the [development remote](dev-remote.md).
+- **propose:** Create a pull request for the new branch. This is similar to
+  always adding the [propose flag](../commands/hack.md#--propose).
 
 ## in config file
 
 ```toml
-create.share-new-branches = "push"
+create.share-new-branches = "push|propose"
 ```
 
 ## in Git metadata
@@ -19,7 +24,7 @@ create.share-new-branches = "push"
 To enable pushing new branches in Git, run this command:
 
 ```wrap
-git config [--global] share-new-branches push
+git config [--global] share-new-branches <push|propose>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
