@@ -10,7 +10,7 @@ import (
 type ShareNewBranches string
 
 const (
-	ShareNewBranchesNone ShareNewBranches = "none"
+	ShareNewBranchesNone ShareNewBranches = "no"
 	ShareNewBranchesPush ShareNewBranches = "push"
 )
 
