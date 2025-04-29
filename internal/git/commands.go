@@ -146,15 +146,19 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:"))
 		track := strings.TrimPrefix(parts[7], "track:")
 		if refName == "HEAD" {
+			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
 			headSHA = sha
 			continue
 		}
 		if symref {
+			// Ignore symbolic refs.
 			continue
 		}
 		if head {
 			currentBranchOpt = Some(gitdomain.NewLocalBranchName(branchName))
-		} else if worktree {
+		}
+		switch {
+		case worktree && !head:
 			branches = append(branches, gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
 				LocalSHA:   Some(gitdomain.NewSHA(sha)),
@@ -162,9 +166,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
 			})
-			continue
-		}
-		if isLocalRefName(refName) {
+		case isLocalRefName(refName):
 			syncStatus := determineSyncStatus(track, upstreamOption)
 			branches = append(branches, gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
@@ -173,7 +175,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: syncStatus,
 			})
-		} else {
+		default:
 			remoteBranchName := gitdomain.NewRemoteBranchName(branchName)
 			if existingBranchWithTracking, hasExistingBranchWithTracking := branches.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
 				existingBranchWithTracking.RemoteSHA = Some(gitdomain.NewSHA(sha))
