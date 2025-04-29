@@ -6,7 +6,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.share-new-branches" is "push"
     And Git setting "git-town.push-hook" is "false"
     When I run "git-town append new"
 

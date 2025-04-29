@@ -30,7 +30,7 @@ Feature: show the configuration from a subfolder
 
       Create:
         new branch type: (not set)
-        push new branches: no
+        share new branches: no
 
       Hosting:
         development remote: origin

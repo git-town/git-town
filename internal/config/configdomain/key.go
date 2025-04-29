@@ -74,6 +74,7 @@ const (
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
 	KeyDeprecatedPrototypeBranches         = Key("git-town.prototype-branches")
 	KeyDeprecatedPullBranchStrategy        = Key("git-town.pull-branch-strategy")
+	KeyDeprecatedPushNewBranches           = Key("git-town.push-new-branches")
 	KeyDeprecatedPushVerify                = Key("git-town.push-verify")
 	KeyDeprecatedShipDeleteRemoteBranch    = Key("git-town.ship-delete-remote-branch")
 	KeyDeprecatedSyncStrategy              = Key("git-town.sync-strategy")
@@ -92,7 +93,7 @@ const (
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
 	KeyPushHook                            = Key("git-town.push-hook")
-	KeyPushNewBranches                     = Key("git-town.push-new-branches")
+	KeyShareNewBranches                    = Key("git-town.share-new-branches")
 	KeyShipDeleteTrackingBranch            = Key("git-town.ship-delete-tracking-branch")
 	KeyShipStrategy                        = Key("git-town.ship-strategy")
 	KeySyncFeatureStrategy                 = Key("git-town.sync-feature-strategy")
@@ -126,6 +127,7 @@ var keys = []Key{
 	KeyDeprecatedPerennialBranchNames,
 	KeyDeprecatedPrototypeBranches,
 	KeyDeprecatedPullBranchStrategy,
+	KeyDeprecatedPushNewBranches,
 	KeyDeprecatedPushVerify,
 	KeyDeprecatedShipDeleteRemoteBranch,
 	KeyDeprecatedSyncStrategy,
@@ -145,7 +147,7 @@ var keys = []Key{
 	KeyPerennialBranches,
 	KeyPerennialRegex,
 	KeyPushHook,
-	KeyPushNewBranches,
+	KeyShareNewBranches,
 	KeyShipDeleteTrackingBranch,
 	KeyShipStrategy,
 	KeySyncFeatureStrategy,
@@ -181,7 +183,7 @@ var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedCodeHostingPlatform:       KeyForgeType,
 	KeyDeprecatedHostingPlatform:           KeyForgeType,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
-	KeyDeprecatedNewBranchPushFlag:         KeyPushNewBranches,
+	KeyDeprecatedNewBranchPushFlag:         KeyDeprecatedPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:      KeyPerennialBranches,
 	KeyDeprecatedPullBranchStrategy:        KeySyncPerennialStrategy,
 	KeyDeprecatedPushVerify:                KeyPushHook,
@@ -241,6 +243,26 @@ var ConfigUpdates = []ConfigUpdate{
 		After: ConfigSetting{
 			Key:   KeyNewBranchType,
 			Value: "feature",
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedPushNewBranches,
+			Value: "true",
+		},
+		After: ConfigSetting{
+			Key:   KeyShareNewBranches,
+			Value: ShareNewBranchesPush.String(),
+		},
+	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedPushNewBranches,
+			Value: "false",
+		},
+		After: ConfigSetting{
+			Key:   KeyShareNewBranches,
+			Value: ShareNewBranchesNone.String(),
 		},
 	},
 }
