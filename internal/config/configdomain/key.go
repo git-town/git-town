@@ -255,4 +255,14 @@ var ConfigUpdates = []ConfigUpdate{
 			Value: ShareNewBranchesPush.String(),
 		},
 	},
+	{
+		Before: ConfigSetting{
+			Key:   KeyDeprecatedPushNewBranches,
+			Value: "false",
+		},
+		After: ConfigSetting{
+			Key:   KeyShareNewBranches,
+			Value: ShareNewBranchesNone.String(),
+		},
+	},
 }
