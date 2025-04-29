@@ -67,6 +67,10 @@ func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
 	return result
 }
 
+func (self LocalBranchNames) IsEmpty() bool {
+	return len(self) == 0
+}
+
 // Join provides the names of all branches in this collection connected by the given separator.
 func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
