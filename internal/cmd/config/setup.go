@@ -147,9 +147,11 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, err
 		}
 	}
-	data.userInput.config.NormalConfig.PerennialRegex, aborted, err = dialog.PerennialRegex(config.NormalConfig.PerennialRegex, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, err
+	if !hasConfigFile || configFile.PerennialRegex.IsNone() {
+		data.userInput.config.NormalConfig.PerennialRegex, aborted, err = dialog.PerennialRegex(config.NormalConfig.PerennialRegex, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
 	}
 	data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
 	if err != nil || aborted {
