@@ -551,15 +551,6 @@ func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) (bool, erro
 	return false, nil
 }
 
-// HeadCommitMessage provides the commit message for the last commit.
-func (self *Commands) HeadCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
-	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
-	if err != nil {
-		return "", fmt.Errorf(messages.CommitMessageProblem, err)
-	}
-	return gitdomain.CommitMessage(out), nil
-}
-
 func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
