@@ -143,11 +143,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
-		upstream := strings.TrimPrefix(parts[6], "upstream:")
-		upstreamOption := None[gitdomain.RemoteBranchName]()
-		if len(upstream) > 0 {
-			upstreamOption = Some(gitdomain.NewRemoteBranchName(upstream))
-		}
+		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:"))
 		track := strings.TrimPrefix(parts[7], "track:")
 		if refName == "HEAD" {
 			headSHA = sha
