@@ -129,8 +129,8 @@ func (self *NormalConfig) RemovePushHook() {
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyPushHook)
 }
 
-func (self *NormalConfig) RemovePushNewBranches() {
-	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyPushNewBranches)
+func (self *NormalConfig) RemoveShareNewBranches() {
+	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.KeyShareNewBranches)
 }
 
 func (self *NormalConfig) RemoveShipDeleteTrackingBranch() {
@@ -230,12 +230,11 @@ func (self *NormalConfig) SetPushHookLocally(value configdomain.PushHook) error 
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
-// SetPushNewBranches updates whether the current repository is configured to push
+// SetShareNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
-func (self *NormalConfig) SetPushNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
-	setting := strconv.FormatBool(bool(value))
-	self.PushNewBranches = value
-	return self.GitConfigAccess.SetConfigValue(scope, configdomain.KeyPushNewBranches, setting)
+func (self *NormalConfig) SetShareNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
+	self.ShareNewBranches = value
+	return self.GitConfigAccess.SetConfigValue(scope, configdomain.KeyShareNewBranches, value.String())
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.

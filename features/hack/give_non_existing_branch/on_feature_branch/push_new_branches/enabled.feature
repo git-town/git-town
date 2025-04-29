@@ -6,7 +6,7 @@ Feature: auto-push the new branch
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |
     And the current branch is "main"
-    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.share-new-branches" is "push"
     When I run "git-town hack new"
 
   Scenario: result

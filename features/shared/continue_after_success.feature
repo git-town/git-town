@@ -28,9 +28,11 @@ Feature: continue after successful command
       | prepend new             |
       | propose                 |
       | sync-perennial-strategy |
-      | push-new-branches       |
+      | share-new-branches      |
       | rename                  |
       | repo                    |
       | ship feature -m done    |
       | sync                    |
       | version                 |
+
+# TODO: delete share-new-branches and sync-perennial-strategy from the table above

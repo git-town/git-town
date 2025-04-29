@@ -26,14 +26,14 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.feature-regex" is "user.*"
     And local Git setting "git-town.default-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"
-    And local Git setting "git-town.push-new-branches" is "false"
+    And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is "rebase"
     And local Git setting "git-town.sync-upstream" is "true"
     And local Git setting "git-town.sync-tags" is "true"
-    And local Git setting "git-town.push-new-branches" is "true"
+    And local Git setting "git-town.share-new-branches" is "push"
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
@@ -55,7 +55,7 @@ Feature: remove existing configuration in Git metadata
       | sync-prototype-strategy                 | down enter                                                        |
       | sync-upstream                           | down enter                                                        |
       | sync-tags                               | down enter                                                        |
-      | enable push-new-branches                | down enter                                                        |
+      | enable share-new-branches               | down enter                                                        |
       | disable the push hook                   | down enter                                                        |
       | new-branch-type                         | down enter                                                        |
       | change ship-strategy                    | down enter                                                        |
@@ -103,7 +103,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.default-branch-type" is now "parked"
-    And local Git setting "git-town.push-new-branches" is now "false"
+    And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" is now "api"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "true"
@@ -129,14 +129,14 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.feature-regex" is now "user.*"
     And local Git setting "git-town.default-branch-type" is now "observed"
-    And local Git setting "git-town.push-new-branches" is now "true"
+    And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
     And local Git setting "git-town.sync-feature-strategy" is now "rebase"
     And local Git setting "git-town.sync-perennial-strategy" is now "rebase"
     And local Git setting "git-town.sync-upstream" is now "true"
     And local Git setting "git-town.sync-tags" is now "true"
-    And local Git setting "git-town.push-new-branches" is now "true"
+    And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"

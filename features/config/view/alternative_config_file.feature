@@ -29,7 +29,7 @@ Feature: show the configuration when using an alternative config file
 
       Create:
         new branch type: (not set)
-        push new branches: no
+        share new branches: no
 
       Hosting:
         development remote: origin

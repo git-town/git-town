@@ -9,7 +9,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.feature-regex" is "user-.*"
     And local Git setting "git-town.default-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"
-    And local Git setting "git-town.push-new-branches" is "false"
+    And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "true"
     And local Git setting "git-town.new-branch-type" is "prototype"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
@@ -35,7 +35,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync-prototype-strategy                   | enter |
       | sync-upstream                             | enter |
       | sync-tags                                 | enter |
-      | enable push-new-branches                  | enter |
+      | share-new-branches                        | enter |
       | disable the push hook                     | enter |
       | new-branch-type                           | enter |
       | ship-strategy                             | enter |
@@ -55,7 +55,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" is still "user-.*"
     And local Git setting "git-town.default-branch-type" is still "observed"
-    And local Git setting "git-town.push-new-branches" now doesn't exist
+    And local Git setting "git-town.share-new-branches" now doesn't exist
     And local Git setting "git-town.push-hook" now doesn't exist
     And local Git setting "git-town.new-branch-type" now doesn't exist
     And local Git setting "git-town.ship-strategy" now doesn't exist
@@ -71,7 +71,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
       [create]
       new-branch-type = "prototype"
-      push-new-branches = false
+      share-new-branches = "no"
 
       [hosting]
       dev-remote = "origin"
@@ -99,7 +99,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.perennial-regex" is now "release-.*"
     And local Git setting "git-town.feature-regex" is now "user-.*"
     And local Git setting "git-town.default-branch-type" is now "observed"
-    And local Git setting "git-town.push-new-branches" is now "false"
+    And local Git setting "git-town.share-new-branches" is now "false"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"

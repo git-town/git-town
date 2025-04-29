@@ -35,7 +35,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterSyncTags())
 	debugCommand.AddCommand(enterTokenScope())
 	debugCommand.AddCommand(enterPushHookCmd())
-	debugCommand.AddCommand(enterPushNewBranches())
+	debugCommand.AddCommand(enterShareNewBranches())
 	debugCommand.AddCommand(enterShipDeleteTrackingBranch())
 	debugCommand.AddCommand(enterShipStrategy())
 	debugCommand.AddCommand(selectCommitAuthorCmd())
