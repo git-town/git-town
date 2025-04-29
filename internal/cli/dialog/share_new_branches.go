@@ -26,11 +26,11 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
 			Data: configdomain.ShareNewBranchesNone,
-			Text: "no, new branches remain local until synced",
+			Text: "no sharing: new branches remain local until synced",
 		},
 		{
 			Data: configdomain.ShareNewBranchesPush,
-			Text: "push: push new branches to origin",
+			Text: "push new branches to origin",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
