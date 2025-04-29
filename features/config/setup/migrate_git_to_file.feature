@@ -99,7 +99,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git setting "git-town.perennial-regex" is now "release-.*"
     And local Git setting "git-town.feature-regex" is now "user-.*"
     And local Git setting "git-town.default-branch-type" is now "observed"
-    And local Git setting "git-town.share-new-branches" is now "false"
+    And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
