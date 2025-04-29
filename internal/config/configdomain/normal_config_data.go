@@ -100,10 +100,6 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 	return matching.Values()
 }
 
-func (self *NormalConfigData) ShouldPushNewBranches() bool {
-	return self.ShareNewBranches == ShareNewBranchesPush
-}
-
 func DefaultNormalConfig() NormalConfigData {
 	return NormalConfigData{
 		Aliases:                  Aliases{},
