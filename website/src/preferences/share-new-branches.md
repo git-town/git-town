@@ -5,8 +5,8 @@ By default, Git Town does not share new feature branches to the
 slower and triggers an unnecessary CI run for a branch containing no changes.
 Running [git town sync](../commands/sync.md) or
 [git town propose](../commands/propose.md) later will push the branch to the dev
-remote. If you prefer to push new branches upon creation, enable this
-configuration option.
+remote. If you prefer to push new branches upon creation, set this configuration
+option.
 
 ## in config file
 
