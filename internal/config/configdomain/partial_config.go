@@ -75,7 +75,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
 	ec.Check(err)
-	shareNewBranches, err := ParseShareNewBranches(snapshot[KeyDeprecatedPushNewBranches], KeyDeprecatedPushNewBranches)
+	shareNewBranches, err := ParseShareNewBranches(snapshot[KeyShareNewBranches], KeyShareNewBranches)
 	ec.Check(err)
 	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch)
 	ec.Check(err)

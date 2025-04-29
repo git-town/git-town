@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	pushNewBranchesTitle = `Share new branches`
-	PushNewBranchesHelp  = `
+	shareNewBranchesTitle = `Share new branches`
+	ShareNewBranchesHelp  = `
 How should Git Town share the new branches it creates?
 
 Possible options:
@@ -34,10 +34,10 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.ShareNewBranchesNone, aborted, err
 	}
-	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(selection.String(), aborted))
+	fmt.Printf(messages.ShareNewBranches, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

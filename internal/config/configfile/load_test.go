@@ -36,6 +36,7 @@ perennial-regex = "release-.*"
 [create]
 new-branch-type = "prototype"
 push-new-branches = true
+share-new-branches = "push"
 
 [hosting]
 forge-type = "github"
@@ -71,8 +72,9 @@ prototype-branches = "compress"
 					Perennials:        []string{"public", "staging"},
 				},
 				Create: &configfile.Create{
-					NewBranchType:   Ptr("prototype"),
-					PushNewbranches: Ptr(true),
+					NewBranchType:    Ptr("prototype"),
+					PushNewbranches:  Ptr(true),
+					ShareNewBranches: Ptr("push"),
 				},
 				Hosting: &configfile.Hosting{
 					ForgeType:      Ptr("github"),
@@ -120,9 +122,9 @@ main = "main"
 					Perennials:     nil,
 					PerennialRegex: nil,
 				},
+				Create:                   nil,
 				Hosting:                  nil,
 				SyncStrategy:             nil,
-				PushNewbranches:          nil,
 				PushHook:                 nil,
 				ShipDeleteTrackingBranch: nil,
 				SyncUpstream:             nil,

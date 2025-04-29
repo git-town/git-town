@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func enterPushNewBranches() *cobra.Command {
+func enterShareNewBranches() *cobra.Command {
 	return &cobra.Command{
-		Use: "push-new-branches",
+		Use: "share-new-branches",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.ShareNewBranches(configdomain.ShareNewBranchesNone, dialogTestInputs.Next())

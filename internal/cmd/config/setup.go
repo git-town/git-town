@@ -572,7 +572,7 @@ func saveShareNewBranches(oldValue, newValue configdomain.ShareNewBranches, conf
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetPushNewBranches(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShareNewBranches(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
@@ -635,7 +635,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()
 	config.NormalConfig.RemovePerennialRegex()
-	config.NormalConfig.RemovePushNewBranches()
+	config.NormalConfig.RemoveShareNewBranches()
 	config.NormalConfig.RemovePushHook()
 	config.NormalConfig.RemoveShipStrategy()
 	config.NormalConfig.RemoveShipDeleteTrackingBranch()
