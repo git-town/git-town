@@ -43,6 +43,35 @@ func (self BranchSpan) IsInconsistentChange() (isInconsistentChange bool, before
 	return isInconsistentChange, before, after
 }
 
+// IsLocalRename indicates whether this BranchSpan describes the situation where only the local branch was renamed.
+func (self BranchSpan) IsLocalRename() (isLocalRename bool, beforeName, afterName gitdomain.LocalBranchName) {
+	before, hasBefore := self.Before.Get()
+	if !hasBefore {
+		return false, "", ""
+	}
+	after, hasAfter := self.After.Get()
+	if !hasAfter {
+		return false, "", ""
+	}
+	beforeName, hasBeforeName := before.LocalName.Get()
+	if !hasBeforeName {
+		return false, "", ""
+	}
+	afterName, hasAfterName := after.LocalName.Get()
+	if !hasAfterName {
+		return false, "", ""
+	}
+	beforeSHA, hasBeforeSHA := before.LocalSHA.Get()
+	if !hasBeforeSHA {
+		return false, "", ""
+	}
+	afterSHA, hasAfterSHA := after.LocalSHA.Get()
+	if !hasAfterSHA {
+		return false, "", ""
+	}
+	return beforeName != afterName && beforeSHA == afterSHA, beforeName, afterName
+}
+
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (self BranchSpan) IsOmniChange() (isOmniChange bool, branchName gitdomain.LocalBranchName, beforeSHA, afterSHA gitdomain.SHA) {
@@ -147,3 +176,10 @@ func (self BranchSpan) RemoteRemoved() (remoteRemoved bool, remoteBranchName git
 	remoteRemoved = beforeHasRemoteBranch && (!hasAfter || !afterHasRemoteBranch)
 	return remoteRemoved, remoteBranchName, beforeSHA
 }
+
+// func (self BranchSpan) String() string {
+// 	result := "BranchSpan:\n"
+// 	result += "Before:" + self.Before.String() + "\n"
+// 	result += "After:" + self.After.String() + "\n"
+// 	return result
+// }
