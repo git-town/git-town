@@ -142,6 +142,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		if data.Create.PushNewbranches != nil {
 			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
+			finalMessages.Add(messages.PushNewBranchesDeprecation)
 		}
 		if data.Create.ShareNewBranches != nil {
 			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
