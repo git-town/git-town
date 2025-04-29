@@ -50,7 +50,7 @@ Feature: detaching an omni-branch verbosely
       |          | git -c core.abbrev=40 branch -vva --sort=refname               |
       |          | git remote get-url origin                                      |
       |          | git rev-parse --verify --abbrev-ref @{-1}                      |
-      |          | git log --merges branch-1..branch-2                            |
+      |          | git log --merges --format=%H branch-1..branch-2                |
       | branch-2 | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       | (none)   | git rev-list --left-right branch-2...origin/branch-2           |
       | branch-2 | git push --force-with-lease --force-if-includes                |

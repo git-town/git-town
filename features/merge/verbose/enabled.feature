@@ -37,7 +37,7 @@ Feature: merging a branch verbosely
       |        | git rev-parse --verify --abbrev-ref @{-1}        |
       |        | git log alpha..beta --format=%s --reverse        |
       |        | git log main..alpha --format=%s --reverse        |
-      |        | git log --no-merges alpha ^beta                  |
+      |        | git log --no-merges --format=%H alpha ^beta      |
       |        | git config git-town-branch.beta.parent main      |
       |        | git config --unset git-town-branch.alpha.parent  |
       | beta   | git branch -D alpha                              |
