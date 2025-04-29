@@ -979,12 +979,12 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 }
 
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
-	if track == "gone" {
-		return gitdomain.SyncStatusDeletedAtRemote
-	}
+	gone := track == "gone"
 	ahead := strings.Contains(track, "ahead")
 	behind := strings.Contains(track, "behind")
 	switch {
+	case gone:
+		return gitdomain.SyncStatusDeletedAtRemote
 	case ahead && behind:
 		return gitdomain.SyncStatusNotInSync
 	case ahead:
