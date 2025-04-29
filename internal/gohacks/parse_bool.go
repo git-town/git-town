@@ -13,9 +13,9 @@ func ParseBool(text, source string) (bool, error) {
 	switch strings.ToLower(text) {
 	case "":
 		return false, fmt.Errorf(messages.ValueInvalid, source, text)
-	case "yes", "on", "enable", "enabled":
+	case "yes", "y", "on", "enable", "enabled":
 		return true, nil
-	case "no", "off", "disable", "disabled":
+	case "no", "n", "off", "disable", "disabled":
 		return false, nil
 	}
 	result, err := strconv.ParseBool(text)
