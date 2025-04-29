@@ -9,7 +9,7 @@ Feature: auto-push new branches
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
     And the current branch is "old"
-    And Git setting "git-town.push-new-branches" is "true"
+    And Git setting "git-town.share-new-branches" is "push"
     When I run "git-town prepend new"
 
   Scenario: result

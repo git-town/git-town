@@ -54,8 +54,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
-	var pushNewBranches Option[configdomain.PushNewBranches]
 	var pushHook Option[configdomain.PushHook]
+	var shareNewBranches Option[configdomain.ShareNewBranches]
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
 	var shipStrategy Option[configdomain.ShipStrategy]
 	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
@@ -69,7 +69,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.PushNewbranches != nil {
-		pushNewBranches = Some(configdomain.PushNewBranches(*data.PushNewbranches))
+		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewbranches))
+		finalMessages.Add(messages.PushNewBranchesDeprecation)
 	}
 	if data.PushHook != nil {
 		pushHook = Some(configdomain.PushHook(*data.PushHook))
@@ -134,14 +135,20 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
-			parsed, err := configdomain.ParseBranchType(*data.Create.NewBranchType)
+			newBranchType, err = configdomain.ParseBranchType(*data.Create.NewBranchType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
-			newBranchType = parsed
 		}
 		if data.Create.PushNewbranches != nil {
-			pushNewBranches = Some(configdomain.PushNewBranches(*data.Create.PushNewbranches))
+			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
+			finalMessages.Add(messages.PushNewBranchesDeprecation)
+		}
+		if data.Create.ShareNewBranches != nil {
+			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
 		}
 	}
 	if data.Hosting != nil {
@@ -246,7 +253,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		PushHook:                 pushHook,
-		PushNewBranches:          pushNewBranches,
+		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
 		SyncFeatureStrategy:      syncFeatureStrategy,

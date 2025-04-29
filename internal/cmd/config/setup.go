@@ -252,7 +252,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	data.userInput.config.NormalConfig.PushNewBranches, aborted, err = dialog.ShareNewBranches(config.NormalConfig.PushNewBranches, data.dialogInputs.Next())
+	data.userInput.config.NormalConfig.ShareNewBranches, aborted, err = dialog.ShareNewBranches(config.NormalConfig.ShareNewBranches, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
@@ -387,7 +387,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitComma
 	fc.Check(saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig))
 	fc.Check(saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
 	fc.Check(savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
-	fc.Check(savePushNewBranches(oldConfig.NormalConfig.PushNewBranches, userInput.config.NormalConfig.PushNewBranches, oldConfig))
+	fc.Check(saveShareNewBranches(oldConfig.NormalConfig.ShareNewBranches, userInput.config.NormalConfig.ShareNewBranches, oldConfig))
 	fc.Check(saveShipStrategy(oldConfig.NormalConfig.ShipStrategy, userInput.config.NormalConfig.ShipStrategy, oldConfig))
 	fc.Check(saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
 	fc.Check(saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
@@ -568,11 +568,11 @@ func savePushHook(oldValue, newValue configdomain.PushHook, config config.Unvali
 	return config.NormalConfig.SetPushHookLocally(newValue)
 }
 
-func savePushNewBranches(oldValue, newValue configdomain.PushNewBranches, config config.UnvalidatedConfig) error {
+func saveShareNewBranches(oldValue, newValue configdomain.ShareNewBranches, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetPushNewBranches(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShareNewBranches(newValue, configdomain.ConfigScopeLocal)
 }
 
 func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
@@ -635,7 +635,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()
 	config.NormalConfig.RemovePerennialRegex()
-	config.NormalConfig.RemovePushNewBranches()
+	config.NormalConfig.RemoveShareNewBranches()
 	config.NormalConfig.RemovePushHook()
 	config.NormalConfig.RemoveShipStrategy()
 	config.NormalConfig.RemoveShipDeleteTrackingBranch()

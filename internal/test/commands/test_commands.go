@@ -63,7 +63,7 @@ func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, bra
 
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
-	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")
+	output := self.MustQuery("git", "log", "--all", "--format=%H %s")
 	if output == "" {
 		return result
 	}
@@ -221,10 +221,6 @@ func (self *TestCommands) CreateTag(name string) {
 
 func (self *TestCommands) CreateWorktree(path string, branch gitdomain.LocalBranchName) {
 	self.MustRun("git", "worktree", "add", path, branch.String())
-}
-
-func (self *TestCommands) CurrentCommitMessage() string {
-	return self.MustQuery("git", "log", "-1", "--pretty=%B")
 }
 
 // provides the first ancestor of the given branch that actually exists in the repo

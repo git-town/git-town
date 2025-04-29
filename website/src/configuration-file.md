@@ -21,7 +21,7 @@ perennials = []
 
 [create]
 new-branch-type = "feature"
-push-new-branches = false
+share-new-branches = "no"
 
 [hosting]
 dev-remote = "origin"

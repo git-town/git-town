@@ -25,7 +25,7 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.NormalConfig.PerennialRegex))
 	result.WriteString("\n[create]\n")
 	result.WriteString(fmt.Sprintf("new-branch-type = %q\n", config.NormalConfig.NewBranchType))
-	result.WriteString(fmt.Sprintf("push-new-branches = %t\n", config.NormalConfig.PushNewBranches))
+	result.WriteString(fmt.Sprintf("share-new-branches = %q\n", config.NormalConfig.ShareNewBranches))
 	result.WriteString("\n[hosting]\n")
 	result.WriteString(fmt.Sprintf("dev-remote = %q\n", config.NormalConfig.DevRemote.String()))
 	if forgeType, has := config.NormalConfig.ForgeType.Get(); has {

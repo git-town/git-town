@@ -51,7 +51,7 @@ func (self *Commands) BranchAuthors(querier gitdomain.Querier, branch, parent gi
 }
 
 func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	output, err := querier.QueryTrim("git", "log", "--merges", fmt.Sprintf("%s..%s", parent, branch))
+	output, err := querier.QueryTrim("git", "log", "--merges", "--format=%H", fmt.Sprintf("%s..%s", parent, branch))
 	return len(output) > 0, err
 }
 
@@ -76,7 +76,7 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchInSyncWithParent(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
-	output, err := querier.QueryTrim("git", "log", "--no-merges", parent.String(), "^"+branch.String())
+	output, err := querier.QueryTrim("git", "log", "--no-merges", "--format=%H", parent.String(), "^"+branch.String())
 	return len(output) == 0, err
 }
 
@@ -336,7 +336,7 @@ func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch, 
 }
 
 func (self *Commands) CommitsInPerennialBranch(querier gitdomain.Querier) (gitdomain.Commits, error) {
-	output, err := querier.QueryTrim("git", "log", "--pretty=format:%H %s", "-10")
+	output, err := querier.QueryTrim("git", "log", "--format=%H %s", "-10")
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
@@ -654,15 +654,6 @@ func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) (bool, erro
 		}
 	}
 	return false, nil
-}
-
-// HeadCommitMessage provides the commit message for the last commit.
-func (self *Commands) HeadCommitMessage(querier gitdomain.Querier) (gitdomain.CommitMessage, error) {
-	out, err := querier.QueryTrim("git", "log", "-1", "--format=%B")
-	if err != nil {
-		return "", fmt.Errorf(messages.CommitMessageProblem, err)
-	}
-	return gitdomain.CommitMessage(out), nil
 }
 
 func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomain.BranchName) error {

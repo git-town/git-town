@@ -21,7 +21,7 @@ Feature: Configure a different development remote
       | sync-prototype-strategy     | enter    |
       | sync-upstream               | enter    |
       | sync-tags                   | enter    |
-      | push-new-branches           | enter    |
+      | share-new-branches          | enter    |
       | push-hook                   | enter    |
       | new-branch-type             | enter    |
       | ship-strategy               | enter    |
@@ -41,7 +41,7 @@ Feature: Configure a different development remote
 
       [create]
       new-branch-type = ""
-      push-new-branches = false
+      share-new-branches = "no"
 
       [hosting]
       dev-remote = "fork"

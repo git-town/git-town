@@ -64,7 +64,7 @@
   - [Create]()
     - [Create prototype branches](preferences/create-prototype-branches.md)
     - [New branch type](preferences/new-branch-type.md)
-    - [Push new branches](preferences/push-new-branches.md)
+    - [Share new branches](preferences/share-new-branches.md)
   - [Hosting]()
     - [Development remote](preferences/dev-remote.md)
     - [Forge Type](preferences/forge-type.md)

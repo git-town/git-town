@@ -1,13 +1,13 @@
-Feature: auto-push the new branch
+Feature: auto-push the new branch to origin
 
   Background:
     Given a Git repo with origin
     And the commits
-      | BRANCH | LOCATION | MESSAGE       |
-      | main   | origin   | origin commit |
+      | BRANCH | LOCATION | MESSAGE     |
+      | main   | origin   | main commit |
+    And Git setting "git-town.share-new-branches" is "push"
     And the current branch is "main"
-    And Git setting "git-town.push-new-branches" is "true"
-    When I run "git-town hack new"
+    When I run "git-town append new"
 
   Scenario: result
     Then Git Town runs the commands
@@ -17,8 +17,8 @@ Feature: auto-push the new branch
       |        | git checkout -b new                               |
       | new    | git push -u origin new                            |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | origin commit |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

@@ -40,7 +40,7 @@ Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the origin repository
-(if "push-new-branches" is true),
+(if "share-new-branches" is "push"),
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
@@ -409,7 +409,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		}
 	}
 	proposal, hasProposal := data.proposal.Get()
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShouldPushNewBranches() || hasProposal) {
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.IsOnline() && (data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	connector, hasConnector := data.connector.Get()

@@ -11,6 +11,46 @@ import (
 func TestParseBool(t *testing.T) {
 	t.Parallel()
 
+	t.Run("ParseBool", func(t *testing.T) {
+		t.Parallel()
+		t.Run("valid inputs", func(t *testing.T) {
+			tests := map[string]bool{
+				"y":        true,
+				"Y":        true,
+				"yes":      true,
+				"Yes":      true,
+				"YES":      true,
+				"n":        false,
+				"N":        false,
+				"no":       false,
+				"on":       true,
+				"off":      false,
+				"true":     true,
+				"false":    false,
+				"enable":   true,
+				"enabled":  true,
+				"disable":  false,
+				"disabled": false,
+				"1":        true,
+				"0":        false,
+			}
+			for give, want := range tests {
+				have, err := gohacks.ParseBool(give, "test")
+				must.NoError(t, err)
+				must.Eq(t, want, have)
+			}
+		})
+
+		t.Run("invalid inputs", func(t *testing.T) {
+			t.Parallel()
+			tests := []string{"", "zonk"}
+			for _, give := range tests {
+				_, err := gohacks.ParseBool(give, "test")
+				must.Error(t, err)
+			}
+		})
+	})
+
 	t.Run("ParseBoolOpt", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]Option[bool]{
@@ -31,14 +71,14 @@ func TestParseBool(t *testing.T) {
 			"0":        Some(false),
 		}
 		for give, want := range tests {
-			have, err := gohacks.ParseBool(give, "test")
+			have, err := gohacks.ParseBoolOpt(give, "test")
 			must.NoError(t, err)
 			must.Eq(t, want, have)
 		}
 
 		t.Run("invalid input", func(t *testing.T) {
 			t.Parallel()
-			_, err := gohacks.ParseBool("zonk", "test")
+			_, err := gohacks.ParseBoolOpt("zonk", "test")
 			must.Error(t, err)
 		})
 	})

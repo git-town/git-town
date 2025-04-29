@@ -190,8 +190,9 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 
 This command has been renamed to "git town propose"
 and will be removed in future versions of Git Town.`
-	PushHook                = "Push hook: %s\n"
-	PushNewBranches         = "Push new branches: %s\n"
+	PushHook                   = "Push hook: %s\n"
+	PushNewBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "push-new-branches".
+Please upgrade to the new format: share-new-branches = "push"`
 	RebaseProblem           = "cannot determine rebase in progress: %w"
 	RemoteExistsProblem     = "cannot determine if remote %q exists: %w"
 	RemotesProblem          = "cannot determine remotes: %w"
@@ -220,6 +221,7 @@ and will be removed in future versions of Git Town.`
 	SettingIgnoreInvalid                    = "Notice: ignoring invalid dialog input setting %q\n"
 	SettingSunsetDeleted                    = "Deleting obsolete setting %q"
 	SettingSunsetBranchList                 = "Inlining deprecated branch list %q"
+	ShareNewBranches                        = "Share new branches: %s\n"
 	ShipBranchIsInOtherWorktree             = "branch %q is checked out in another worktree, please ship from there"
 	ShipBranchNotInSync                     = "branch %q is not in sync"
 	ShipAbortedMergeError                   = "aborted because merge exited with error"
