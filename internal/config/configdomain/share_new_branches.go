@@ -10,7 +10,9 @@ import (
 type ShareNewBranches string
 
 const (
+	// don't share new branches
 	ShareNewBranchesNone ShareNewBranches = "no"
+	// push new branches to the dev remote
 	ShareNewBranchesPush ShareNewBranches = "push"
 )
 
