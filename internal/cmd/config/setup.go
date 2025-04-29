@@ -115,7 +115,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 
 func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
 	tokenScope = configdomain.ConfigScopeLocal
-	configFile, hasConfigFile := data.configFile.Get()
+	configFile := data.configFile.GetOrDefault()
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
@@ -125,7 +125,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		return aborted, tokenScope, err
 	}
 	var mainBranch gitdomain.LocalBranchName
-	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); hasConfigFile && configFileHasMainBranch {
+	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); configFileHasMainBranch {
 		mainBranch = configFileMainBranch
 	} else {
 		existingMainBranch := config.UnvalidatedConfig.MainBranch
@@ -141,19 +141,19 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 		}
 		data.userInput.config.UnvalidatedConfig.MainBranch = Some(mainBranch)
 	}
-	if !hasConfigFile || len(configFile.PerennialBranches) == 0 {
+	if len(configFile.PerennialBranches) == 0 {
 		data.userInput.config.NormalConfig.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.NormalConfig.PerennialBranches, mainBranch, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
 	}
-	if !hasConfigFile || configFile.PerennialRegex.IsNone() {
+	if configFile.PerennialRegex.IsNone() {
 		data.userInput.config.NormalConfig.PerennialRegex, aborted, err = dialog.PerennialRegex(config.NormalConfig.PerennialRegex, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
 	}
-	if !hasConfigFile || configFile.DefaultBranchType.IsNone() {
+	if configFile.DefaultBranchType.IsNone() {
 		data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
