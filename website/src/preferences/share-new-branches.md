@@ -1,6 +1,6 @@
 # Share new branches
 
-By default, Git Town does not push new feature branches to the
+By default, Git Town doesn't push new feature branches to the
 [development remote](dev-remote.md) since that would make creating branches
 slower and triggers an unnecessary CI run for a branch containing no changes.
 Running [git town sync](../commands/sync.md) or
