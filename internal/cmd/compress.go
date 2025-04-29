@@ -42,7 +42,7 @@ You can provide a custom commit message with the -m switch.
 
 Assuming you have a feature branch with these commits:
 
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 commit 2
 commit 3
@@ -54,7 +54,7 @@ $ git town compress
 Now your branch has a single commit with the name of the first commit but
 containing the changes of all three commits that existed on the branch before:
 
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 `
 )
