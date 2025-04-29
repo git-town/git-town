@@ -91,8 +91,8 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 
 type setupData struct {
 	config        config.UnvalidatedConfig
+	configFile    Option[configdomain.PartialConfig]
 	dialogInputs  components.TestInputs
-	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
 	userInput     userInput
@@ -272,7 +272,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Next())
+	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.configFile.IsSome(), data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
@@ -329,8 +329,8 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
+		configFile:    repo.UnvalidatedConfig.NormalConfig.ConfigFile,
 		dialogInputs:  dialogTestInputs,
-		hasConfigFile: repo.UnvalidatedConfig.NormalConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
 		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
