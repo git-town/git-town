@@ -107,7 +107,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)",             // is the branch checked out in the current worktree? Y/N
 		"worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end)", // is the branch checked out in any worktree? Y/N
 		"symref:%(if)%(symref)%(then)Y%(else)N%(end)",         // is the branch a symbolic ref? Y/N
-		"upstream:%(upstream:lstrip=2)",                       // the upstream branch name
+		"upstream:%(upstream:lstrip=2)",                       // the tracking branch name
 		// Leave `track` in the last position because it is the only one that contains spaces.
 		// Then we can use SplitN to split the output correctly.
 		"track:%(upstream:track,nobracket)", // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
@@ -143,7 +143,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
 		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
 		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
-		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:"))
+		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
 		track := strings.TrimPrefix(parts[7], "track:")
 		if refName == "HEAD" {
 			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
