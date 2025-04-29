@@ -54,6 +54,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:            gitdomain.NewLocalBranchNames("branch-1"),
 			LocalRemoved:          undobranches.LocalBranchesSHAs{},
+			LocalRenamed:          []undobranches.LocalBranchRename{},
 			LocalChanged:          undobranches.LocalBranchChange{},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
@@ -150,6 +151,7 @@ func TestChanges(t *testing.T) {
 			},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
+			LocalRenamed:          []undobranches.LocalBranchRename{},
 			RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
 			OmniRemoved:           undobranches.LocalBranchesSHAs{},
 			OmniChanged:           undobranches.LocalBranchChange{},
@@ -241,6 +243,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{},
 			LocalChanged: undobranches.LocalBranchChange{},
 			RemoteAdded: gitdomain.RemoteBranchNames{
 				"origin/perennial-branch",
@@ -312,6 +315,7 @@ func TestChanges(t *testing.T) {
 			LocalRemoved: undobranches.LocalBranchesSHAs{
 				"branch-1": "111111",
 			},
+			LocalRenamed:          []undobranches.LocalBranchRename{},
 			LocalChanged:          undobranches.LocalBranchChange{},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
@@ -383,6 +387,7 @@ func TestChanges(t *testing.T) {
 				"feature-branch",
 			},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{},
 			LocalChanged: undobranches.LocalBranchChange{},
 			RemoteAdded: gitdomain.RemoteBranchNames{
 				"origin/perennial-branch",
@@ -477,6 +482,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{},
 			LocalChanged: undobranches.LocalBranchChange{
 				"perennial-branch": {
 					Before: "111111",
@@ -580,6 +586,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undobranches.LocalBranchesSHAs{},
+			LocalRenamed:  []undobranches.LocalBranchRename{},
 			LocalChanged:  undobranches.LocalBranchChange{},
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
@@ -722,6 +729,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undobranches.LocalBranchesSHAs{},
+			LocalRenamed:  []undobranches.LocalBranchRename{},
 			LocalChanged:  undobranches.LocalBranchChange{},
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
@@ -830,6 +838,7 @@ func TestChanges(t *testing.T) {
 				"perennial-branch": "111111",
 				"feature-branch":   "222222",
 			},
+			LocalRenamed:          []undobranches.LocalBranchRename{},
 			LocalChanged:          undobranches.LocalBranchChange{},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
@@ -955,6 +964,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undobranches.LocalBranchesSHAs{},
+			LocalRenamed:  []undobranches.LocalBranchRename{},
 			LocalChanged:  undobranches.LocalBranchChange{},
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
@@ -1009,6 +1019,104 @@ func TestChanges(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
+	t.Run("omnibranch renamed locally", func(t *testing.T) {
+		t.Parallel()
+		before := gitdomain.BranchesSnapshot{
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("old")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+				},
+			},
+			Active: Some(gitdomain.NewLocalBranchName("old")),
+		}
+		after := gitdomain.BranchesSnapshot{
+			Branches: gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("new")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusNotInSync,
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+				},
+			},
+			Active: Some(gitdomain.NewLocalBranchName("new")),
+		}
+		haveSpan := undobranches.NewBranchSpans(before, after)
+		wantSpan := undobranches.BranchSpans{
+			undobranches.BranchSpan{
+				Before: Some(gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("old")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusUpToDate,
+				}),
+				After: Some(gitdomain.BranchInfo{
+					LocalName:  Some(gitdomain.NewLocalBranchName("new")),
+					LocalSHA:   Some(gitdomain.NewSHA("111111")),
+					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
+					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
+					SyncStatus: gitdomain.SyncStatusNotInSync,
+				}),
+			},
+		}
+		must.Eq(t, wantSpan, haveSpan)
+		haveChanges := haveSpan.Changes()
+		wantChanges := undobranches.BranchChanges{
+			LocalAdded:   gitdomain.LocalBranchNames{},
+			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{
+				{
+					Before: gitdomain.NewLocalBranchName("old"),
+					After:  gitdomain.NewLocalBranchName("new"),
+				},
+			},
+			LocalChanged:          undobranches.LocalBranchChange{},
+			RemoteAdded:           gitdomain.RemoteBranchNames{},
+			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
+			RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
+			OmniRemoved:           undobranches.LocalBranchesSHAs{},
+			OmniChanged:           undobranches.LocalBranchChange{},
+			InconsistentlyChanged: undodomain.InconsistentChanges{},
+		}
+		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.NewLineageWith(configdomain.LineageData{
+			"old": "main",
+		})
+		config := config.ValidatedConfig{
+			ValidatedConfigData: configdomain.ValidatedConfigData{
+				MainBranch: "main",
+			},
+			NormalConfig: config.NormalConfig{
+				NormalConfigData: configdomain.NormalConfigData{
+					DefaultBranchType: configdomain.BranchTypeFeatureBranch,
+					Lineage:           lineage,
+				},
+			},
+		}
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active.GetOrPanic(),
+			Config:                   config,
+			EndBranch:                after.Active.GetOrDefault(),
+			FinalMessages:            stringslice.NewCollector(),
+			UndoablePerennialCommits: []gitdomain.SHA{},
+		})
+		wantProgram := program.Program{
+			&opcodes.BranchLocalRename{
+				NewName: "old",
+				OldName: "new",
+			},
+			&opcodes.CheckoutIfExists{
+				Branch: "old",
+			},
+		}
+		must.Eq(t, wantProgram, haveProgram)
+	})
+
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
 		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
@@ -1054,6 +1162,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{},
 			LocalChanged: undobranches.LocalBranchChange{},
 			RemoteAdded:  gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{
@@ -1146,6 +1255,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{},
 			LocalChanged: undobranches.LocalBranchChange{
 				"perennial-branch": {
 					Before: "111111",
@@ -1249,6 +1359,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undobranches.LocalBranchesSHAs{},
+			LocalRenamed:  []undobranches.LocalBranchRename{},
 			LocalChanged:  undobranches.LocalBranchChange{},
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},
@@ -1347,6 +1458,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:            gitdomain.LocalBranchNames{"perennial-branch", "feature-branch"},
 			LocalRemoved:          undobranches.LocalBranchesSHAs{},
+			LocalRenamed:          []undobranches.LocalBranchRename{},
 			LocalChanged:          undobranches.LocalBranchChange{},
 			RemoteAdded:           gitdomain.RemoteBranchNames{},
 			RemoteRemoved:         undobranches.RemoteBranchesSHAs{},
@@ -1424,6 +1536,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undobranches.LocalBranchesSHAs{},
+			LocalRenamed: []undobranches.LocalBranchRename{},
 			LocalChanged: undobranches.LocalBranchChange{},
 			RemoteAdded: gitdomain.RemoteBranchNames{
 				"upstream/main",
@@ -1523,6 +1636,7 @@ func TestChanges(t *testing.T) {
 		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undobranches.LocalBranchesSHAs{},
+			LocalRenamed:  []undobranches.LocalBranchRename{},
 			LocalChanged:  undobranches.LocalBranchChange{},
 			RemoteAdded:   gitdomain.RemoteBranchNames{},
 			RemoteRemoved: undobranches.RemoteBranchesSHAs{},

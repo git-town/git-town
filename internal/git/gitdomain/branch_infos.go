@@ -178,6 +178,14 @@ func (self BranchInfos) Select(remote Remote, names ...LocalBranchName) (result 
 	return result, nonExisting
 }
 
+func (self BranchInfos) String() string {
+	result := "BranchInfos:\n"
+	for _, bi := range self {
+		result += bi.String() + "\n"
+	}
+	return result
+}
+
 func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
 	for b := range self {
 		if localName, hasLocalName := self[b].LocalName.Get(); hasLocalName {
