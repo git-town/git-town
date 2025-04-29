@@ -31,7 +31,7 @@ type NormalConfigData struct {
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           Option[PerennialRegex]
 	PushHook                 PushHook
-	PushNewBranches          ShareNewBranches
+	ShareNewBranches         ShareNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 	ShipStrategy             ShipStrategy
 	SyncFeatureStrategy      SyncFeatureStrategy
@@ -101,7 +101,7 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 }
 
 func (self *NormalConfigData) ShouldPushNewBranches() bool {
-	return self.PushNewBranches.IsTrue()
+	return self.ShareNewBranches == ShareNewBranchesPush
 }
 
 func DefaultNormalConfig() NormalConfigData {
@@ -127,7 +127,7 @@ func DefaultNormalConfig() NormalConfigData {
 		PerennialBranches:        gitdomain.LocalBranchNames{},
 		PerennialRegex:           None[PerennialRegex](),
 		PushHook:                 true,
-		PushNewBranches:          false,
+		ShareNewBranches:         ShareNewBranchesNone,
 		ShipDeleteTrackingBranch: true,
 		ShipStrategy:             ShipStrategyAPI,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,

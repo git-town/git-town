@@ -54,8 +54,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var observedRegex Option[configdomain.ObservedRegex]
 	var perennialBranches gitdomain.LocalBranchNames
 	var perennialRegex Option[configdomain.PerennialRegex]
-	var pushNewBranches Option[configdomain.ShareNewBranches]
 	var pushHook Option[configdomain.PushHook]
+	var shareNewBranches Option[configdomain.ShareNewBranches]
 	var shipDeleteTrackingBranch Option[configdomain.ShipDeleteTrackingBranch]
 	var shipStrategy Option[configdomain.ShipStrategy]
 	var syncFeatureStrategy Option[configdomain.SyncFeatureStrategy]
@@ -69,7 +69,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		finalMessages.Add(messages.CreatePrototypeBranchesDeprecation)
 	}
 	if data.PushNewbranches != nil {
-		pushNewBranches = Some(configdomain.ShareNewBranches(*data.PushNewbranches))
+		shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.PushNewbranches))
+		finalMessages.Add(messages.PushNewBranchesDeprecation)
 	}
 	if data.PushHook != nil {
 		pushHook = Some(configdomain.PushHook(*data.PushHook))
@@ -141,7 +142,13 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			newBranchType = parsed
 		}
 		if data.Create.PushNewbranches != nil {
-			pushNewBranches = Some(configdomain.ShareNewBranches(*data.Create.PushNewbranches))
+			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
+		}
+		if data.Create.ShareNewBranches != nil {
+			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
 		}
 	}
 	if data.Hosting != nil {
@@ -246,7 +253,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		PushHook:                 pushHook,
-		ShareNewBranches:         pushNewBranches,
+		ShareNewBranches:         shareNewBranches,
 		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
 		ShipStrategy:             shipStrategy,
 		SyncFeatureStrategy:      syncFeatureStrategy,

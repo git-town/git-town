@@ -75,7 +75,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
 	ec.Check(err)
-	shareNewBranches, err := ParseShareNewBranches(snapshot[KeyPushNewBranches], KeyPushNewBranches)
+	shareNewBranches, err := ParseShareNewBranches(snapshot[KeyDeprecatedPushNewBranches], KeyDeprecatedPushNewBranches)
 	ec.Check(err)
 	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch)
 	ec.Check(err)
@@ -192,7 +192,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		PerennialBranches:        self.PerennialBranches,
 		PerennialRegex:           self.PerennialRegex,
 		PushHook:                 self.PushHook.GetOrElse(defaults.PushHook),
-		PushNewBranches:          self.ShareNewBranches.GetOrElse(defaults.PushNewBranches),
+		ShareNewBranches:         self.ShareNewBranches.GetOrElse(defaults.ShareNewBranches),
 		ShipDeleteTrackingBranch: self.ShipDeleteTrackingBranch.GetOrElse(defaults.ShipDeleteTrackingBranch),
 		ShipStrategy:             self.ShipStrategy.GetOrElse(defaults.ShipStrategy),
 		SyncFeatureStrategy:      syncFeatureStrategy,

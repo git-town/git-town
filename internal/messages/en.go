@@ -201,8 +201,10 @@ END OUTPUT FROM 'git branch -vva'
 
 This command has been renamed to "git town propose"
 and will be removed in future versions of Git Town.`
-	PushHook                = "Push hook: %s\n"
-	PushNewBranches         = "Push new branches: %s\n"
+	PushHook                   = "Push hook: %s\n"
+	PushNewBranches            = "Push new branches: %s\n"
+	PushNewBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "push-new-branches".
+Please upgrade to the new format: share-new-branches = "push"`
 	RebaseProblem           = "cannot determine rebase in progress: %w"
 	RemoteExistsProblem     = "cannot determine if remote %q exists: %w"
 	RemotesProblem          = "cannot determine remotes: %w"
