@@ -19,7 +19,7 @@ func (self PushNewBranches) String() string {
 }
 
 func ParsePushNewBranches(value string, source Key) (Option[PushNewBranches], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(PushNewBranches(parsed)), err
 	}
