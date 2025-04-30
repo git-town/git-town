@@ -4,7 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/git-town/git-town/v19/internal/cli/flags"
 	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/git-town/git-town/v19/internal/git"
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
 	"github.com/git-town/git-town/v19/internal/gohacks"
@@ -19,24 +21,30 @@ import (
 const statusResetDesc = "Resets the current suspended Git Town command"
 
 func resetRunstateCommand() *cobra.Command {
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,
 		Short: statusResetDesc,
 		Long:  cmdhelpers.Long(statusResetDesc),
-		RunE: func(_ *cobra.Command, _ []string) error {
-			return executeStatusReset()
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			verbose, err := readVerboseFlag(cmd)
+			if err != nil {
+				return err
+			}
+			return executeStatusReset(verbose)
 		},
 	}
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeStatusReset() error {
+func executeStatusReset(verbose configdomain.Verbose) error {
 	commandsCounter := NewMutable(new(gohacks.Counter))
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
-		Verbose:         false,
+		Verbose:         verbose,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
