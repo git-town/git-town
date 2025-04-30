@@ -983,7 +983,6 @@ func branchesQuery(querier gitdomain.Querier) (result branchesQueryResults, head
 	}
 	lines := stringslice.Lines(output)
 	for _, line := range lines {
-		fmt.Printf("%q\n", line)
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
 		sha := gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:"))
