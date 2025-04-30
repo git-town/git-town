@@ -91,38 +91,11 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	// WHAT DOES `:lstrip=2` DO?
-	// A ref name looks like "refs/heads/branch-name" or
-	// "refs/remotes/origin/branch-name". We want to remove the "refs/heads/" or
-	// "refs/remotes" prefixes, so we use `:lstrip=2` to remove the first two path
-	// components.
-	// WHY NOT USE `:short`?
-	// `:short` returns a "non-ambiguous" name. This means that if a branch and a
-	// tag have the same name, it will return something like "heads/branch-name"
-	// instead of "branch-name". We just want the branch name.
-	forEachRefFormats := []string{
-		"refname:%(refname)",                                  // full ref name
-		"branchname:%(refname:lstrip=2)",                      // branch name
-		"sha:%(objectname)",                                   // SHA of the commit the ref points to
-		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)",             // is the branch checked out in the current worktree? Y/N
-		"worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end)", // is the branch checked out in any worktree? Y/N
-		"symref:%(if)%(symref)%(then)Y%(else)N%(end)",         // is the branch a symbolic ref? Y/N
-		"upstream:%(upstream:lstrip=2)",                       // the tracking branch name
-		// Leave `track` in the last position because it is the only one that contains spaces.
-		// Then we can use SplitN to split the output correctly.
-		"track:%(upstream:track,nobracket)", // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
-	}
-	output, err := querier.QueryTrim(
-		"git", "for-each-ref",
-		"--format="+strings.Join(forEachRefFormats, " "),
-		"--sort=refname",
-		"--include-root-refs",                  // include HEAD (to be able to detect detached HEAD)
-		"HEAD", "refs/heads/", "refs/remotes/", // HEAD, local branches, remote branches
-	)
+	branches, err := branchesQuery(querier)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
-	if output == "" {
+	if len(branches) == 0 {
 		// We are in a brand-new repo.
 		// Report the initial branch name (reported by `git branch --show-current`) as the current branch.
 		currentBranch, err := self.CurrentBranchUncached(querier)
@@ -131,60 +104,50 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		}
 		return makeBranchesSnapshotNewRepo(currentBranch), nil
 	}
-	lines := stringslice.Lines(output)
-	branches := gitdomain.BranchInfos{}
+	result := gitdomain.BranchInfos{}
 	currentBranchOpt := None[gitdomain.LocalBranchName]()
 	var headSHA string
-	for _, line := range lines {
-		parts := strings.SplitN(line, " ", len(forEachRefFormats))
-		refName := strings.TrimPrefix(parts[0], "refname:")
-		branchName := strings.TrimPrefix(parts[1], "branchname:")
-		sha := strings.TrimPrefix(parts[2], "sha:")
-		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
-		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
-		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
-		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
-		track := strings.TrimPrefix(parts[7], "track:")
-		if refName == "HEAD" {
+	for _, branch := range branches {
+		if branch.RefName == "HEAD" {
 			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
-			headSHA = sha
+			headSHA = branch.SHA
 			continue
 		}
-		if symref {
+		if branch.Symref {
 			// Ignore symbolic refs.
 			continue
 		}
-		if head {
-			currentBranchOpt = Some(gitdomain.NewLocalBranchName(branchName))
+		if branch.Head {
+			currentBranchOpt = Some(gitdomain.NewLocalBranchName(branch.BranchName))
 		}
 		switch {
-		case worktree && !head:
-			branches = append(branches, gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
-				LocalSHA:   Some(gitdomain.NewSHA(sha)),
-				RemoteName: upstreamOption,
+		case branch.Worktree && !branch.Head:
+			result = append(result, gitdomain.BranchInfo{
+				LocalName:  Some(gitdomain.NewLocalBranchName(branch.BranchName)),
+				LocalSHA:   Some(gitdomain.NewSHA(branch.SHA)),
+				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
 			})
-		case isLocalRefName(refName):
-			syncStatus := determineSyncStatus(track, upstreamOption)
-			branches = append(branches, gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
-				LocalSHA:   Some(gitdomain.NewSHA(sha)),
-				RemoteName: upstreamOption,
+		case isLocalRefName(branch.RefName):
+			syncStatus := determineSyncStatus(branch.Track, branch.UpstreamOption)
+			result = append(result, gitdomain.BranchInfo{
+				LocalName:  Some(gitdomain.NewLocalBranchName(branch.BranchName)),
+				LocalSHA:   Some(gitdomain.NewSHA(branch.SHA)),
+				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: syncStatus,
 			})
 		default:
-			remoteBranchName := gitdomain.NewRemoteBranchName(branchName)
-			if existingBranchWithTracking, hasExistingBranchWithTracking := branches.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
-				existingBranchWithTracking.RemoteSHA = Some(gitdomain.NewSHA(sha))
+			remoteBranchName := gitdomain.NewRemoteBranchName(branch.BranchName)
+			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
+				existingBranchWithTracking.RemoteSHA = Some(gitdomain.NewSHA(branch.SHA))
 			} else {
-				branches = append(branches, gitdomain.BranchInfo{
+				result = append(result, gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					RemoteName: Some(remoteBranchName),
-					RemoteSHA:  Some(gitdomain.NewSHA(sha)),
+					RemoteSHA:  Some(gitdomain.NewSHA(branch.SHA)),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				})
 			}
@@ -201,8 +164,8 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		if !rebaseInProgress {
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
 			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA))
-			// prepend to branches
-			branches = slices.Insert(branches, 0, gitdomain.BranchInfo{
+			// prepend to result
+			result = slices.Insert(result, 0, gitdomain.BranchInfo{
 				LocalName:  currentBranchOpt,
 				LocalSHA:   Some(gitdomain.NewSHA(headSHA)),
 				RemoteName: None[gitdomain.RemoteBranchName](),
@@ -215,7 +178,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
-		Branches: branches,
+		Branches: result,
 		Active:   currentBranchOpt,
 	}, nil
 }
@@ -976,6 +939,69 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 		}
 	}
 	return 0, fmt.Errorf("unknown stage ID: %q", value)
+}
+
+type branchesQueryResult struct {
+	BranchName     string
+	Head           bool
+	RefName        string
+	SHA            string
+	Symref         bool
+	Track          string
+	UpstreamOption Option[gitdomain.RemoteBranchName] // the tracking branch name
+	Worktree       bool
+}
+
+type branchesQueryResults []branchesQueryResult
+
+func branchesQuery(querier gitdomain.Querier) (branchesQueryResults, error) {
+	// WHAT DOES `:lstrip=2` DO?
+	// A ref name looks like "refs/heads/branch-name" or
+	// "refs/remotes/origin/branch-name". We want to remove the "refs/heads/" or
+	// "refs/remotes" prefixes, so we use `:lstrip=2` to remove the first two path
+	// components.
+	// WHY NOT USE `:short`?
+	// `:short` returns a "non-ambiguous" name. This means that if a branch and a
+	// tag have the same name, it will return something like "heads/branch-name"
+	// instead of "branch-name". We just want the branch name.
+	forEachRefFormats := []string{
+		"refname:%(refname)",                                  // full ref name
+		"branchname:%(refname:lstrip=2)",                      // branch name
+		"sha:%(objectname)",                                   // SHA of the commit the ref points to
+		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)",             // is the branch checked out in the current worktree? Y/N
+		"worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end)", // is the branch checked out in any worktree? Y/N
+		"symref:%(if)%(symref)%(then)Y%(else)N%(end)",         // is the branch a symbolic ref? Y/N
+		"upstream:%(upstream:lstrip=2)",                       // the tracking branch name
+		// Leave `track` in the last position because it is the only one that contains spaces.
+		// Then we can use SplitN to split the output correctly.
+		"track:%(upstream:track,nobracket)", // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
+	}
+	output, err := querier.QueryTrim(
+		"git", "for-each-ref",
+		"--format="+strings.Join(forEachRefFormats, " "),
+		"--sort=refname",
+		"--include-root-refs",                  // include HEAD (to be able to detect detached HEAD)
+		"HEAD", "refs/heads/", "refs/remotes/", // HEAD, local branches, remote branches
+	)
+	if err != nil {
+		return branchesQueryResults{}, err
+	}
+	lines := stringslice.Lines(output)
+	result := branchesQueryResults{}
+	for _, line := range lines {
+		parts := strings.SplitN(line, " ", len(forEachRefFormats))
+		result = append(result, branchesQueryResult{
+			BranchName:     strings.TrimPrefix(parts[1], "branchname:"),
+			Head:           parseYN(strings.TrimPrefix(parts[3], "head:")),
+			RefName:        strings.TrimPrefix(parts[0], "refname:"),
+			SHA:            strings.TrimPrefix(parts[2], "sha:"),
+			Symref:         parseYN(strings.TrimPrefix(parts[5], "symref:")),
+			Track:          strings.TrimPrefix(parts[7], "track:"),
+			UpstreamOption: gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")), // the tracking branch name
+			Worktree:       parseYN(strings.TrimPrefix(parts[4], "worktree:")),
+		})
+	}
+	return result, nil
 }
 
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
