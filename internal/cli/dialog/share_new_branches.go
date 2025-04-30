@@ -17,7 +17,8 @@ How should Git Town share the new branches it creates?
 Possible options:
 
 - none: New branches remain local until you sync or propose them.
-- push: New branches are automatically pushed to the development remote.
+- push: push new branches to the development remote.
+- propose: propose new branches
 
 `
 )
@@ -31,6 +32,10 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 		{
 			Data: configdomain.ShareNewBranchesPush,
 			Text: "push new branches to the dev remote",
+		},
+		{
+			Data: configdomain.ShareNewBranchesPropose,
+			Text: "propose new branches",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
