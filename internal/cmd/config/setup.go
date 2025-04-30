@@ -440,7 +440,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	if configFile.MainBranch.IsNone() {
 		fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
 	}
-	if configFile.PerennialBranches.IsEmpty() {
+	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
 	}
 	if configFile.PerennialRegex.IsNone() {
