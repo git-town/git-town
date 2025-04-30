@@ -117,13 +117,13 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 			// Ignore symbolic refs.
 			continue
 		}
-		if branch.Head {
-			currentBranchOpt = Some(gitdomain.NewLocalBranchName(branch.BranchName))
+		if branch.Head && branch.BranchName.IsLocal() {
+			currentBranchOpt = Some(branch.BranchName.LocalName())
 		}
 		switch {
 		case branch.Worktree && !branch.Head:
 			result = append(result, gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName(branch.BranchName)),
+				LocalName:  Some(branch.BranchName.LocalName()),
 				LocalSHA:   Some(branch.SHA),
 				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
@@ -132,14 +132,15 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		case isLocalRefName(branch.RefName):
 			syncStatus := determineSyncStatus(branch.Track, branch.UpstreamOption)
 			result = append(result, gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName(branch.BranchName)),
+				LocalName:  Some(branch.BranchName.LocalName()),
 				LocalSHA:   Some(branch.SHA),
 				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: syncStatus,
 			})
 		default:
-			remoteBranchName := gitdomain.NewRemoteBranchName(branch.BranchName)
+			// Not using `BranchName.RemoteName()` because it might not necessarily be prefixed with "origin/".
+			remoteBranchName := gitdomain.NewRemoteBranchName(branch.BranchName.String())
 			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
 				existingBranchWithTracking.RemoteSHA = Some(branch.SHA)
 			} else {
@@ -942,7 +943,7 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 }
 
 type branchesQueryResult struct {
-	BranchName     string
+	BranchName     gitdomain.BranchName
 	Head           bool
 	RefName        string
 	SHA            gitdomain.SHA
@@ -991,7 +992,7 @@ func branchesQuery(querier gitdomain.Querier) (branchesQueryResults, error) {
 	for _, line := range lines {
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		result = append(result, branchesQueryResult{
-			BranchName:     strings.TrimPrefix(parts[1], "branchname:"),
+			BranchName:     gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:")),
 			Head:           parseYN(strings.TrimPrefix(parts[3], "head:")),
 			RefName:        strings.TrimPrefix(parts[0], "refname:"),
 			SHA:            gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:")),
