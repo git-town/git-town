@@ -67,11 +67,11 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, tokenScope, err := enterData(repo.UnvalidatedConfig, repo.Git, repo.Backend, &data)
+	aborted, tokenScope, forgeTypeOpt, err := enterData(repo.UnvalidatedConfig, repo.Git, repo.Backend, &data)
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.userInput, repo.UnvalidatedConfig, data.configFile, tokenScope, repo.Git, repo.Frontend)
+	err = saveAll(data.userInput, repo.UnvalidatedConfig, data.configFile, tokenScope, forgeTypeOpt, repo.Git, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -113,16 +113,16 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[configdomain.ForgeType]()
 }
 
-func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
+func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[configdomain.ForgeType], err error) {
 	tokenScope = configdomain.ConfigScopeLocal
 	configFile := data.configFile.GetOrDefault()
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, tokenScope, err
+		return aborted, tokenScope, None[configdomain.ForgeType](), err
 	}
 	data.userInput.config.NormalConfig.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), config.NormalConfig.Aliases, data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, tokenScope, err
+		return aborted, tokenScope, None[configdomain.ForgeType](), err
 	}
 	var mainBranch gitdomain.LocalBranchName
 	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); configFileHasMainBranch {
@@ -177,71 +177,72 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, err
 		}
 	}
-	if forgeType, hasForgeType := determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType).Get(); hasForgeType {
+	forgeTypeOpt = determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType)
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case configdomain.ForgeTypeBitbucket, configdomain.ForgeTypeBitbucketDatacenter:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, err
+				return aborted, tokenScope, None[configdomain.ForgeType](), err
 			}
 			data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, err
+				return aborted, tokenScope, None[configdomain.ForgeType](), err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
 				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.BitbucketAppPassword)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, err
+					return aborted, tokenScope, None[configdomain.ForgeType](), err
 				}
 			}
 		case configdomain.ForgeTypeCodeberg:
 			data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, err
+				return aborted, tokenScope, None[configdomain.ForgeType](), err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.CodebergToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, err
+					return aborted, tokenScope, None[configdomain.ForgeType](), err
 				}
 			}
 		case configdomain.ForgeTypeGitea:
 			data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, err
+				return aborted, tokenScope, None[configdomain.ForgeType](), err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.GiteaToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, err
+					return aborted, tokenScope, None[configdomain.ForgeType](), err
 				}
 			}
 		case configdomain.ForgeTypeGitHub:
 			data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, err
+				return aborted, tokenScope, None[configdomain.ForgeType](), err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.GitHubToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, err
+					return aborted, tokenScope, None[configdomain.ForgeType](), err
 				}
 			}
 		case configdomain.ForgeTypeGitLab:
 			data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, err
+				return aborted, tokenScope, None[configdomain.ForgeType](), err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
 				scope := determineScope(config.NormalConfig.GlobalGitConfig.GitLabToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, err
+					return aborted, tokenScope, None[configdomain.ForgeType](), err
 				}
 			}
 		}
@@ -314,9 +315,9 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	}
 	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.dialogInputs.Next())
 	if err != nil || aborted {
-		return aborted, tokenScope, err
+		return aborted, tokenScope, None[configdomain.ForgeType](), err
 	}
-	return false, tokenScope, nil
+	return false, tokenScope, forgeTypeOpt, nil
 }
 
 type option interface {
@@ -377,34 +378,43 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[configdomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) error {
 	err := saveAliases(oldConfig.NormalConfig.Aliases, userInput.config.NormalConfig.Aliases, gitCommands, frontend)
 	if err != nil {
 		return err
 	}
-	err = saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch forgeType {
+		case configdomain.ForgeTypeBitbucket, configdomain.ForgeTypeBitbucketDatacenter:
+			err = saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend)
+			if err != nil {
+				return err
+			}
+			err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend)
+			if err != nil {
+				return err
+			}
+		case configdomain.ForgeTypeCodeberg:
+			err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend)
+			if err != nil {
+				return err
+			}
+		case configdomain.ForgeTypeGitHub:
+			err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
+			if err != nil {
+				return err
+			}
+		case configdomain.ForgeTypeGitLab:
+			err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, gitCommands, frontend)
+			if err != nil {
+				return err
+			}
+		case configdomain.ForgeTypeGitea:
+			err = saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
