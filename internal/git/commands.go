@@ -91,7 +91,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	branches, err := branchesQuery(querier)
+	branches, headSHA, err := branchesQuery(querier)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
@@ -106,13 +106,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	}
 	result := gitdomain.BranchInfos{}
 	currentBranchOpt := None[gitdomain.LocalBranchName]()
-	var headSHA gitdomain.SHA
 	for _, branch := range branches {
-		if branch.RefName == "HEAD" {
-			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
-			headSHA = branch.SHA
-			continue
-		}
 		if branch.Symref {
 			// Ignore symbolic refs.
 			continue
@@ -955,7 +949,7 @@ type branchesQueryResult struct {
 
 type branchesQueryResults []branchesQueryResult
 
-func branchesQuery(querier gitdomain.Querier) (branchesQueryResults, error) {
+func branchesQuery(querier gitdomain.Querier) (result branchesQueryResults, headSHA gitdomain.SHA, err error) {
 	// WHAT DOES `:lstrip=2` DO?
 	// A ref name looks like "refs/heads/branch-name" or
 	// "refs/remotes/origin/branch-name". We want to remove the "refs/heads/" or
@@ -985,24 +979,38 @@ func branchesQuery(querier gitdomain.Querier) (branchesQueryResults, error) {
 		"HEAD", "refs/heads/", "refs/remotes/", // HEAD, local branches, remote branches
 	)
 	if err != nil {
-		return branchesQueryResults{}, err
+		return branchesQueryResults{}, "", err
 	}
 	lines := stringslice.Lines(output)
-	result := branchesQueryResults{}
 	for _, line := range lines {
+		fmt.Printf("%q\n", line)
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
-		result = append(result, branchesQueryResult{
-			BranchName:     gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:")),
-			Head:           parseYN(strings.TrimPrefix(parts[3], "head:")),
-			RefName:        strings.TrimPrefix(parts[0], "refname:"),
-			SHA:            gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:")),
-			Symref:         parseYN(strings.TrimPrefix(parts[5], "symref:")),
-			Track:          strings.TrimPrefix(parts[7], "track:"),
-			UpstreamOption: gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")), // the tracking branch name
-			Worktree:       parseYN(strings.TrimPrefix(parts[4], "worktree:")),
-		})
+		refname := strings.TrimPrefix(parts[0], "refname:")
+		sha := gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:"))
+		switch {
+		case refname == "HEAD":
+			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
+			headSHA = sha
+		default:
+			branchName := gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:"))
+			head := parseYN(strings.TrimPrefix(parts[3], "head:"))
+			worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
+			symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
+			upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
+			track := strings.TrimPrefix(parts[7], "track:")
+			result = append(result, branchesQueryResult{
+				BranchName:     branchName,
+				Head:           head,
+				RefName:        refname,
+				SHA:            sha,
+				Symref:         symref,
+				Track:          track,
+				UpstreamOption: upstreamOption,
+				Worktree:       worktree,
+			})
+		}
 	}
-	return result, nil
+	return result, headSHA, nil
 }
 
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
