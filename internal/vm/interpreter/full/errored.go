@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v19/internal/cli/print"
+	"github.com/git-town/git-town/v19/internal/config/configdomain"
 	"github.com/git-town/git-town/v19/internal/config/gitconfig"
 	"github.com/git-town/git-town/v19/internal/messages"
 	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
@@ -21,11 +22,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
-	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
+	globalSnapshot, _, err := configGitAccess.Load(configdomain.ConfigScopeGlobal, false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, _, err := configGitAccess.LoadLocal(false)
+	localSnapshot, _, err := configGitAccess.Load(configdomain.ConfigScopeLocal, false)
 	if err != nil {
 		return err
 	}
