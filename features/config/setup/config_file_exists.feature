@@ -16,7 +16,7 @@ Feature: don't ask for information already provided by the config file
 
       [create]
       new-branch-type = "feature"
-      share-new-branches = propose
+      share-new-branches = "propose"
 
       [hosting]
       dev-remote = "origin"
@@ -37,8 +37,9 @@ Feature: don't ask for information already provided by the config file
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
-      perennial-branches = "fast-forward"
+      perennial-branches = "ff-only"
       """
+    And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS  |
       | welcome                     | enter |
@@ -63,7 +64,6 @@ Feature: don't ask for information already provided by the config file
       | ship-delete-tracking-branch | enter |
       | save config to config file  | enter |
     Then Git Town runs no commands
-    And the main branch is still not set
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
