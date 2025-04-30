@@ -343,29 +343,31 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, tokenScope
 	if err != nil {
 		return err
 	}
-	err = saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
-	}
-	err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, gitCommands, frontend)
-	if err != nil {
-		return err
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		err = saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend)
+		if err != nil {
+			return err
+		}
+		err = saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend)
+		if err != nil {
+			return err
+		}
+		err = saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend)
+		if err != nil {
+			return err
+		}
+		err = saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend)
+		if err != nil {
+			return err
+		}
+		err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
+		if err != nil {
+			return err
+		}
+		err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, gitCommands, frontend)
+		if err != nil {
+			return err
+		}
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
