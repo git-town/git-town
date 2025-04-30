@@ -353,6 +353,9 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 			return data, exit, err
 		}
 	}
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		propose = true
+	}
 	data = Left[appendFeatureData, convertToFeatureData](appendFeatureData{
 		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,

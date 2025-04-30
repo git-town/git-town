@@ -14,11 +14,14 @@ const (
 	ShareNewBranchesNone ShareNewBranches = "no"
 	// push new branches to the dev remote
 	ShareNewBranchesPush ShareNewBranches = "push"
+	// propose new branches
+	ShareNewBranchesPropose ShareNewBranches = "propose"
 )
 
 var ShareNewBranchValues = []ShareNewBranches{
 	ShareNewBranchesNone,
 	ShareNewBranchesPush,
+	ShareNewBranchesPropose,
 }
 
 func (self ShareNewBranches) String() string {

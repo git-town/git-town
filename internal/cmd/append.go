@@ -294,6 +294,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 			return data, exit, err
 		}
 	}
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		propose = true
+	}
 	return appendFeatureData{
 		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,

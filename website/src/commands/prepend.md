@@ -47,6 +47,9 @@ Requires `--propose`.
 
 Propose the created branch.
 
+To always propose new branches, set the
+[share new branches](../preferences/share-new-branches.md) setting to `propose`.
+
 #### `-p`<br>`--prototype`
 
 Adding the `--prototype` aka `-p` switch creates a

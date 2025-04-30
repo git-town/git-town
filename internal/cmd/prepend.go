@@ -327,6 +327,9 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
 	}
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		propose = true
+	}
 	return prependData{
 		beam:                beam,
 		branchInfos:         branchesSnapshot.Branches,
