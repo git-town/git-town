@@ -1,7 +1,6 @@
 @messyoutput
 Feature: a global API token of another forge exists
 
-  @this
   Scenario: on GitHub, with global GitLab token
     Given a Git repo with origin
     And my repo's "origin" remote is "git@github.com:git-town/git-town.git"
