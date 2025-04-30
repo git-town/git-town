@@ -1,13 +1,18 @@
 package status
 
 import (
+	"errors"
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v19/internal/git"
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v19/internal/gohacks/cache"
 	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v19/internal/subshell"
 	"github.com/git-town/git-town/v19/internal/vm/statefile"
+	. "github.com/git-town/git-town/v19/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +24,7 @@ func resetRunstateCommand() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: statusResetDesc,
 		Long:  cmdhelpers.Long(statusResetDesc),
-		RunE: func(_ *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return executeStatusReset()
 		},
 	}
@@ -27,11 +32,21 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func executeStatusReset() error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return err
+	commandsCounter := NewMutable(new(gohacks.Counter))
+	backendRunner := subshell.BackendRunner{
+		Dir:             None[string](),
+		CommandsCounter: commandsCounter,
+		Verbose:         false,
 	}
-	err = statefile.Delete(gitdomain.RepoRootDir(cwd))
+	gitCommands := git.Commands{
+		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
+		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
+	}
+	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
+	if !hasRootDir {
+		return errors.New(messages.RepoOutside)
+	}
+	err := statefile.Delete(rootDir)
 	if err != nil {
 		return err
 	}
