@@ -469,7 +469,9 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	if configFile.SyncUpstream.IsNone() {
 		fc.Check(saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
 	}
-	fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
+	if configFile.SyncTags.IsNone() {
+		fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
+	}
 	return fc.Err
 }
 

@@ -39,30 +39,13 @@ Feature: don't ask for information already provided by the config file
       prototype-branches = "merge"
       perennial-branches = "ff-only"
       """
-    And inspect the repo
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                      | KEYS  |
-      | welcome                     | enter |
-      | aliases                     | enter |
-      | main branch                 | enter |
-      | perennial branches          | enter |
-      | perennial regex             | enter |
-      | default branch type         | enter |
-      | feature regex               | enter |
-      | dev-remote                  | enter |
-      | forge type                  | enter |
-      | origin hostname             | enter |
-      | sync-feature-strategy       | enter |
-      | sync-perennial-strategy     | enter |
-      | sync-prototype-strategy     | enter |
-      | sync-upstream               | enter |
-      | sync-tags                   | enter |
-      | share-new-branches          | enter |
-      | push-hook                   | enter |
-      | new-branch-type             | enter |
-      | ship-strategy               | enter |
-      | ship-delete-tracking-branch | enter |
-      | save config to config file  | enter |
+      | DIALOG       | KEYS  |
+      | welcome      | enter |
+      | aliases      | enter |
+      | GitHub token | enter |
+    # | save config to config file | enter |
     Then Git Town runs no commands
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
