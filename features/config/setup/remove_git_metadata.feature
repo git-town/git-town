@@ -26,7 +26,6 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.feature-regex" is "user.*"
     And local Git setting "git-town.default-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"
-    And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
@@ -55,7 +54,7 @@ Feature: remove existing configuration in Git metadata
       | sync-prototype-strategy                 | down enter                                                        |
       | sync-upstream                           | down enter                                                        |
       | sync-tags                               | down enter                                                        |
-      | enable share-new-branches               | down enter                                                        |
+      | enable share-new-branches               | up enter                                                          |
       | disable the push hook                   | down enter                                                        |
       | new-branch-type                         | down enter                                                        |
       | change ship-strategy                    | down enter                                                        |
