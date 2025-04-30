@@ -312,7 +312,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, err
 		}
 	}
-	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.configFile.IsSome(), data.dialogInputs.Next())
+	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
@@ -584,7 +584,8 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 }
 
 func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newToken == oldToken {
+	fmt.Println("11111111111111111111111111111111111111", newToken, oldToken, newToken == oldToken)
+	if newToken.Equal(oldToken) {
 		return nil
 	}
 	if value, has := newToken.Get(); has {

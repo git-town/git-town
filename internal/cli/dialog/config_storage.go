@@ -31,10 +31,7 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStorageOption, bool, error) {
-	if hasConfigFile {
-		return ConfigStorageOptionFile, false, nil
-	}
+func ConfigStorage(inputs components.TestInput) (ConfigStorageOption, bool, error) {
 	entries := list.NewEntries(
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,

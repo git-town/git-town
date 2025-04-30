@@ -1,5 +1,6 @@
 Feature: don't ask for information already provided by the config file
 
+  @debug
   @this
   Scenario:
     Given a Git repo with origin
@@ -40,7 +41,7 @@ Feature: don't ask for information already provided by the config file
       perennial-branches = "ff-only"
       """
     # And inspect the repo
-    When I run "git-town config setup" and enter into the dialogs:
+    When I run "git-town config setup -v" and enter into the dialogs:
       | DIALOG       | KEYS  |
       | welcome      | enter |
       | aliases      | enter |
