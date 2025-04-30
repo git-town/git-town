@@ -111,7 +111,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 }
 
 func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
-	err := statefile.Delete(rootDir)
+	_, err := statefile.Delete(rootDir)
 	return false, err
 }
 
