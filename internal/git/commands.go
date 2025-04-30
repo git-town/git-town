@@ -106,7 +106,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 	}
 	result := gitdomain.BranchInfos{}
 	currentBranchOpt := None[gitdomain.LocalBranchName]()
-	var headSHA string
+	var headSHA gitdomain.SHA
 	for _, branch := range branches {
 		if branch.RefName == "HEAD" {
 			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
@@ -124,7 +124,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		case branch.Worktree && !branch.Head:
 			result = append(result, gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName(branch.BranchName)),
-				LocalSHA:   Some(gitdomain.NewSHA(branch.SHA)),
+				LocalSHA:   Some(branch.SHA),
 				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: gitdomain.SyncStatusOtherWorktree,
@@ -133,7 +133,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 			syncStatus := determineSyncStatus(branch.Track, branch.UpstreamOption)
 			result = append(result, gitdomain.BranchInfo{
 				LocalName:  Some(gitdomain.NewLocalBranchName(branch.BranchName)),
-				LocalSHA:   Some(gitdomain.NewSHA(branch.SHA)),
+				LocalSHA:   Some(branch.SHA),
 				RemoteName: branch.UpstreamOption,
 				RemoteSHA:  None[gitdomain.SHA](), // may be added later
 				SyncStatus: syncStatus,
@@ -141,13 +141,13 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		default:
 			remoteBranchName := gitdomain.NewRemoteBranchName(branch.BranchName)
 			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
-				existingBranchWithTracking.RemoteSHA = Some(gitdomain.NewSHA(branch.SHA))
+				existingBranchWithTracking.RemoteSHA = Some(branch.SHA)
 			} else {
 				result = append(result, gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
 					LocalSHA:   None[gitdomain.SHA](),
 					RemoteName: Some(remoteBranchName),
-					RemoteSHA:  Some(gitdomain.NewSHA(branch.SHA)),
+					RemoteSHA:  Some(branch.SHA),
 					SyncStatus: gitdomain.SyncStatusRemoteOnly,
 				})
 			}
@@ -163,11 +163,11 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		}
 		if !rebaseInProgress {
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
-			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA))
+			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA.String()))
 			// prepend to result
 			result = slices.Insert(result, 0, gitdomain.BranchInfo{
 				LocalName:  currentBranchOpt,
-				LocalSHA:   Some(gitdomain.NewSHA(headSHA)),
+				LocalSHA:   Some(headSHA),
 				RemoteName: None[gitdomain.RemoteBranchName](),
 				RemoteSHA:  None[gitdomain.SHA](),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
@@ -945,7 +945,7 @@ type branchesQueryResult struct {
 	BranchName     string
 	Head           bool
 	RefName        string
-	SHA            string
+	SHA            gitdomain.SHA
 	Symref         bool
 	Track          string
 	UpstreamOption Option[gitdomain.RemoteBranchName] // the tracking branch name
@@ -994,7 +994,7 @@ func branchesQuery(querier gitdomain.Querier) (branchesQueryResults, error) {
 			BranchName:     strings.TrimPrefix(parts[1], "branchname:"),
 			Head:           parseYN(strings.TrimPrefix(parts[3], "head:")),
 			RefName:        strings.TrimPrefix(parts[0], "refname:"),
-			SHA:            strings.TrimPrefix(parts[2], "sha:"),
+			SHA:            gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:")),
 			Symref:         parseYN(strings.TrimPrefix(parts[5], "symref:")),
 			Track:          strings.TrimPrefix(parts[7], "track:"),
 			UpstreamOption: gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")), // the tracking branch name
