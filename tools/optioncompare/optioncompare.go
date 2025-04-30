@@ -6,7 +6,6 @@ import (
 	"go/ast"
 	"go/token"
 	"go/types"
-	"strings"
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
@@ -59,28 +58,17 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		// 2. Get type information for left and right operands
 		leftTypeInfo := pass.TypesInfo.TypeOf(binExpr.X)
 		rightTypeInfo := pass.TypesInfo.TypeOf(binExpr.Y)
-
 		if leftTypeInfo == nil || rightTypeInfo == nil {
 			// Skip if type info is unavailable for some reason
 			return
 		}
 
-		// 3. Allow comparisons with untyped or typed nil
-		// If one side is nil, it's okay (e.g., opt == nil)
-		// if isNil(pass, binExpr.X) || isNil(pass, binExpr.Y) {
-		// 	return
-		// }
-
-		// 4. Check if *both* operands are the target Option[T] type
-		if isTargetOptionType(leftTypeInfo) && isTargetOptionType(rightTypeInfo) {
-			// Construct a user-friendly type name (e.g., main.Option[int])
-			typeName := leftTypeInfo.String()
-			// Sometimes type String() might include the package path redundantly, clean it up if needed for display
-			typeName = strings.Replace(typeName, targetPackagePath+".", "", 1) // Basic cleanup
-
-			pass.Reportf(binExpr.OpPos, // Report at the position of the '==' operator
-				"direct comparison of type %s using ==; use the Equal() method instead", typeName)
+		// 3. Check if *both* operands are the target Option[T] type
+		if !isTargetOptionType(leftTypeInfo) || !isTargetOptionType(rightTypeInfo) {
+			return
 		}
+
+		pass.Reportf(binExpr.OpPos, "must compare Options using .Equal instead of ==")
 	})
 
 	return nil, nil
@@ -141,19 +129,4 @@ func isTargetOptionType(typ types.Type) bool {
 
 	// If all checks pass, it's an instantiation of our target Option[T] type.
 	return true
-}
-
-// isNil checks if an expression resolves to the untyped nil literal or a typed nil value.
-func isNil(pass *analysis.Pass, expr ast.Expr) bool {
-	// Check for untyped nil literal
-	if basic, ok := pass.TypesInfo.TypeOf(expr).(*types.Basic); ok && basic.Kind() == types.UntypedNil {
-		return true
-	}
-	// Check for typed nil identifier
-	if id, ok := expr.(*ast.Ident); ok && id.Name == "nil" {
-		// Check if it's the predefined nil object
-		obj := pass.TypesInfo.ObjectOf(id)
-		return obj != nil && obj.Name() == "nil" && obj.Parent() == types.Universe // Ensure it's the universal nil
-	}
-	return false
 }

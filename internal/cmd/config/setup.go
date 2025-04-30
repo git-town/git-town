@@ -416,7 +416,7 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 }
 
 func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newPassword == oldPassword {
+	if newPassword.Equal(oldPassword) {
 		return nil
 	}
 	if value, has := newPassword.Get(); has {
