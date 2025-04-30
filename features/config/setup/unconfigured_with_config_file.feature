@@ -1,6 +1,5 @@
 Feature: don't ask for information already provided by the config file
 
-  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
