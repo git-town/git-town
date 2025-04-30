@@ -9,7 +9,7 @@ import (
 )
 
 // Delete removes the stored run state from disk.
-func Delete(repoDir gitdomain.RepoRootDir) (bool, error) {
+func Delete(repoDir gitdomain.RepoRootDir) (existed bool, err error) {
 	filename, err := FilePath(repoDir)
 	if err != nil {
 		return false, err
