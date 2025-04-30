@@ -177,8 +177,8 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, err
 		}
 	}
-	if platform, has := determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType).Get(); has {
-		switch platform {
+	if forgeType, hasForgeType := determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType).Get(); hasForgeType {
+		switch forgeType {
 		case configdomain.ForgeTypeBitbucket, configdomain.ForgeTypeBitbucketDatacenter:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
