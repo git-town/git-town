@@ -40,13 +40,17 @@ Feature: don't ask for information already provided by the config file
       prototype-branches = "merge"
       perennial-branches = "ff-only"
       """
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                     | KEYS       |
-      | welcome                    | enter      |
-      | aliases                    | enter      |
-      | GitHub token               | enter      |
-      | save config to config file | down enter |
-    Then Git Town runs no commands
+      | DIALOG                     | KEYS              |
+      | welcome                    | enter             |
+      | aliases                    | enter             |
+      | GitHub token               | 1 2 3 4 5 6 enter |
+      | token scope: local         | enter             |
+      | save config to config file | down enter        |
+    Then Git Town runs the commands
+      | COMMAND                                         |
+      | git config --local git-town.github-token 123456 |
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist
@@ -55,6 +59,7 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.default-branch-type" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
     And local Git setting "git-town.forge-type" still doesn't exist
+    And local Git setting "git-town.github-token" is now "123456"
     And local Git setting "git-town.share-new-branches" still doesn't exist
     And local Git setting "git-town.push-hook" still doesn't exist
     And local Git setting "git-town.sync-feature-strategy" still doesn't exist
