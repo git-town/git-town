@@ -91,11 +91,11 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	output, err := querier.Query("git", "-c", "core.abbrev=40", "branch", "-vva", "--sort=refname")
+	branches, headSHA, err := branchesQuery(querier)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
-	if output == "" {
+	if len(branches) == 0 {
 		// We are in a brand-new repo.
 		// Report the initial branch name (reported by `git branch --show-current`) as the current branch.
 		currentBranch, err := self.CurrentBranchUncached(querier)
@@ -104,13 +104,76 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		}
 		return makeBranchesSnapshotNewRepo(currentBranch), nil
 	}
-	branches, currentBranchOpt := ParseVerboseBranchesOutput(output)
-	currentBranch, hasCurrentBranch := currentBranchOpt.Get()
-	if hasCurrentBranch {
+	result := gitdomain.BranchInfos{}
+	currentBranchOpt := None[gitdomain.LocalBranchName]()
+	for _, branch := range branches {
+		if branch.Symref {
+			// Ignore symbolic refs.
+			continue
+		}
+		if branch.Head && branch.BranchName.IsLocal() {
+			currentBranchOpt = Some(branch.BranchName.LocalName())
+		}
+		switch {
+		case branch.Worktree && !branch.Head:
+			result = append(result, gitdomain.BranchInfo{
+				LocalName:  Some(branch.BranchName.LocalName()),
+				LocalSHA:   Some(branch.SHA),
+				RemoteName: branch.UpstreamOption,
+				RemoteSHA:  None[gitdomain.SHA](), // may be added later
+				SyncStatus: gitdomain.SyncStatusOtherWorktree,
+			})
+		case isLocalRefName(branch.RefName):
+			syncStatus := determineSyncStatus(branch.Track, branch.UpstreamOption)
+			result = append(result, gitdomain.BranchInfo{
+				LocalName:  Some(branch.BranchName.LocalName()),
+				LocalSHA:   Some(branch.SHA),
+				RemoteName: branch.UpstreamOption,
+				RemoteSHA:  None[gitdomain.SHA](), // may be added later
+				SyncStatus: syncStatus,
+			})
+		default:
+			// Not using `BranchName.RemoteName()` because it might not necessarily be prefixed with "origin/".
+			remoteBranchName := gitdomain.NewRemoteBranchName(branch.BranchName.String())
+			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
+				existingBranchWithTracking.RemoteSHA = Some(branch.SHA)
+			} else {
+				result = append(result, gitdomain.BranchInfo{
+					LocalName:  None[gitdomain.LocalBranchName](),
+					LocalSHA:   None[gitdomain.SHA](),
+					RemoteName: Some(remoteBranchName),
+					RemoteSHA:  Some(branch.SHA),
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
+				})
+			}
+		}
+	}
+	if headSHA == "" {
+		panic("HEAD not found in for-each-ref output")
+	}
+	if currentBranchOpt.IsNone() {
+		rebaseInProgress, err := self.HasRebaseInProgress(querier)
+		if err != nil {
+			return gitdomain.EmptyBranchesSnapshot(), err
+		}
+		if !rebaseInProgress {
+			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
+			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA.String()))
+			// prepend to result
+			result = slices.Insert(result, 0, gitdomain.BranchInfo{
+				LocalName:  currentBranchOpt,
+				LocalSHA:   Some(headSHA),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+				RemoteSHA:  None[gitdomain.SHA](),
+				SyncStatus: gitdomain.SyncStatusLocalOnly,
+			})
+		}
+	}
+	if currentBranch, hasCurrentBranch := currentBranchOpt.Get(); hasCurrentBranch {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
 	return gitdomain.BranchesSnapshot{
-		Branches: branches,
+		Branches: result,
 		Active:   currentBranchOpt,
 	}, nil
 }
@@ -859,57 +922,6 @@ func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
 }
 
-func IsAhead(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-func IsAheadAndBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-func IsBehind(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-func IsInSync(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
-// IsRemoteGone indicates whether the given part of "git branch -vva" indicates a deleted tracking branch.
-func IsRemoteGone(branchName, remoteText string) (bool, Option[gitdomain.RemoteBranchName]) {
-	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, regexp.QuoteMeta(branchName))
-	re := regexp.MustCompile(reText)
-	matches := re.FindStringSubmatch(remoteText)
-	if len(matches) == 2 {
-		return true, Some(gitdomain.NewRemoteBranchName(matches[1]))
-	}
-	return false, None[gitdomain.RemoteBranchName]()
-}
-
 func LastBranchInRef(output string) string {
 	index := strings.LastIndex(output, "/")
 	return output[index+1:]
@@ -924,101 +936,104 @@ func NewUnmergedStage(value int) (UnmergedStage, error) {
 	return 0, fmt.Errorf("unknown stage ID: %q", value)
 }
 
-func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, Option[gitdomain.LocalBranchName]) {
-	result := gitdomain.BranchInfos{}
-	spaceRE := regexp.MustCompile(" +")
-	lines := stringslice.Lines(output)
-	checkedoutBranch := None[gitdomain.LocalBranchName]()
-	for _, line := range lines {
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
-		parts := spaceRE.Split(line[2:], 3)
-		if strings.HasSuffix(parts[0], "/HEAD") {
-			continue
-		}
-		if len(parts) < 2 {
-			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
-			fmt.Printf(messages.GitOutputIrregular, line, output)
-			os.Exit(1)
-		}
-		if parts[0] == "(no" || parts[1] == "(no" || parts[1] == "branch," { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			continue
-		}
-		var branchName string
-		var sha Option[gitdomain.SHA]
-		if parts[1] == "detached" {
-			parts := spaceRE.Split(line[2:], 6)
-			branchName = parts[4]
-			sha = Some(gitdomain.NewSHA(parts[4]))
-		} else {
-			branchName = parts[0]
-			rawSHA := parts[1]
-			if rawSHA == "->" {
-				continue
-			}
-			sha = Some(gitdomain.NewSHA(rawSHA))
-		}
-		remoteText := parts[2]
-		if line[0] == '*' {
-			checkedoutBranch = Some(gitdomain.NewLocalBranchName(branchName))
-		}
-		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
-		switch {
-		case line[0] == '+':
-			result = append(result, gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
-				LocalSHA:   sha,
-				SyncStatus: gitdomain.SyncStatusOtherWorktree,
-				RemoteName: trackingBranchName,
-				RemoteSHA:  None[gitdomain.SHA](),
-			})
-		case isLocalBranchName(branchName):
-			result = append(result, gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName(branchName)),
-				LocalSHA:   sha,
-				SyncStatus: syncStatus,
-				RemoteName: trackingBranchName,
-				RemoteSHA:  None[gitdomain.SHA](), // will be added later
-			})
-		default:
-			remoteBranchName := gitdomain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-			if existingBranchWithTracking, hasExistingBranchWithTracking := result.FindByRemoteName(remoteBranchName).Get(); hasExistingBranchWithTracking {
-				existingBranchWithTracking.RemoteSHA = sha
-			} else {
-				result = append(result, gitdomain.BranchInfo{
-					LocalName:  None[gitdomain.LocalBranchName](),
-					LocalSHA:   None[gitdomain.SHA](),
-					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: Some(remoteBranchName),
-					RemoteSHA:  sha,
-				})
-			}
-		}
-	}
-	return result, checkedoutBranch
+type branchesQueryResult struct {
+	BranchName     gitdomain.BranchName
+	Head           bool
+	RefName        string
+	SHA            gitdomain.SHA
+	Symref         bool
+	Track          string
+	UpstreamOption Option[gitdomain.RemoteBranchName] // the tracking branch name
+	Worktree       bool
 }
 
-func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.SyncStatus, trackingBranchName Option[gitdomain.RemoteBranchName]) {
-	if isInSync, trackingBranchName := IsInSync(branchName, remoteText); isInSync {
-		return gitdomain.SyncStatusUpToDate, trackingBranchName
+type branchesQueryResults []branchesQueryResult
+
+func branchesQuery(querier gitdomain.Querier) (result branchesQueryResults, headSHA gitdomain.SHA, err error) {
+	// WHAT DOES `:lstrip=2` DO?
+	// A ref name looks like "refs/heads/branch-name" or
+	// "refs/remotes/origin/branch-name". We want to remove the "refs/heads/" or
+	// "refs/remotes" prefixes, so we use `:lstrip=2` to remove the first two path
+	// components.
+	// WHY NOT USE `:short`?
+	// `:short` returns a "non-ambiguous" name. This means that if a branch and a
+	// tag have the same name, it will return something like "heads/branch-name"
+	// instead of "branch-name". We just want the branch name.
+	forEachRefFormats := []string{
+		"refname:%(refname)",                                  // full ref name
+		"branchname:%(refname:lstrip=2)",                      // branch name
+		"sha:%(objectname)",                                   // SHA of the commit the ref points to
+		"head:%(if)%(HEAD)%(then)Y%(else)N%(end)",             // is the branch checked out in the current worktree? Y/N
+		"worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end)", // is the branch checked out in any worktree? Y/N
+		"symref:%(if)%(symref)%(then)Y%(else)N%(end)",         // is the branch a symbolic ref? Y/N
+		"upstream:%(upstream:lstrip=2)",                       // the tracking branch name
+		// Leave `track` in the last position because it is the only one that contains spaces.
+		// Then we can use SplitN to split the output correctly.
+		"track:%(upstream:track,nobracket)", // e.g. "ahead 2", "behind 2", "ahead 2, behind 3", "gone"
 	}
-	if isGone, trackingBranchName := IsRemoteGone(branchName, remoteText); isGone {
-		return gitdomain.SyncStatusDeletedAtRemote, trackingBranchName
+	output, err := querier.QueryTrim(
+		"git", "for-each-ref",
+		"--format="+strings.Join(forEachRefFormats, " "),
+		"--sort=refname",
+		"--include-root-refs",                  // include HEAD (to be able to detect detached HEAD)
+		"HEAD", "refs/heads/", "refs/remotes/", // HEAD, local branches, remote branches
+	)
+	if err != nil {
+		return branchesQueryResults{}, "", err
 	}
-	if isAhead, trackingBranchName := IsAhead(branchName, remoteText); isAhead {
-		return gitdomain.SyncStatusAhead, trackingBranchName
+	lines := stringslice.Lines(output)
+	for _, line := range lines {
+		fmt.Printf("%q\n", line)
+		parts := strings.SplitN(line, " ", len(forEachRefFormats))
+		refname := strings.TrimPrefix(parts[0], "refname:")
+		sha := gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:"))
+		switch {
+		case refname == "HEAD":
+			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
+			headSHA = sha
+		default:
+			branchName := gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:"))
+			head := parseYN(strings.TrimPrefix(parts[3], "head:"))
+			worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
+			symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
+			upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
+			track := strings.TrimPrefix(parts[7], "track:")
+			result = append(result, branchesQueryResult{
+				BranchName:     branchName,
+				Head:           head,
+				RefName:        refname,
+				SHA:            sha,
+				Symref:         symref,
+				Track:          track,
+				UpstreamOption: upstreamOption,
+				Worktree:       worktree,
+			})
+		}
 	}
-	if isBehind, trackingBranchName := IsBehind(branchName, remoteText); isBehind {
-		return gitdomain.SyncStatusBehind, trackingBranchName
+	return result, headSHA, nil
+}
+
+func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
+	gone := track == "gone"
+	ahead := strings.Contains(track, "ahead")
+	behind := strings.Contains(track, "behind")
+	switch {
+	case gone:
+		return gitdomain.SyncStatusDeletedAtRemote
+	case ahead && behind:
+		return gitdomain.SyncStatusNotInSync
+	case ahead:
+		return gitdomain.SyncStatusAhead
+	case behind:
+		return gitdomain.SyncStatusBehind
+	case track == "":
+		if upstream.IsSome() {
+			return gitdomain.SyncStatusUpToDate
+		}
+		return gitdomain.SyncStatusLocalOnly
+	default:
+		panic(fmt.Sprintf(`unrecognized track "%s"`, track))
 	}
-	if isAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText); isAheadAndBehind {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
-	}
-	if strings.HasPrefix(branchName, "remotes/") {
-		return gitdomain.SyncStatusRemoteOnly, None[gitdomain.RemoteBranchName]()
-	}
-	return gitdomain.SyncStatusLocalOnly, None[gitdomain.RemoteBranchName]()
 }
 
 // provides the path of the `.git` directory of the current repository.
@@ -1030,9 +1045,9 @@ func (self *Commands) gitDirectory(querier gitdomain.Querier) (string, error) {
 	return output, nil
 }
 
-// indicates whether the branch with the given name exists locally
-func isLocalBranchName(branch string) bool {
-	return !strings.HasPrefix(branch, "remotes/")
+// indicates whether the ref is a local branch
+func isLocalRefName(ref string) bool {
+	return strings.HasPrefix(ref, "refs/heads/")
 }
 
 func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.BranchesSnapshot {
@@ -1047,5 +1062,16 @@ func makeBranchesSnapshotNewRepo(branch gitdomain.LocalBranchName) gitdomain.Bra
 				RemoteSHA:  None[gitdomain.SHA](),
 			},
 		},
+	}
+}
+
+func parseYN(value string) bool {
+	switch value {
+	case "Y":
+		return true
+	case "N":
+		return false
+	default:
+		panic(fmt.Sprintf("unrecognized value %q", value))
 	}
 }
