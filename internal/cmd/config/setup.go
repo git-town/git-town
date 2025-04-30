@@ -426,7 +426,7 @@ func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.Bitbu
 }
 
 func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newValue == oldValue {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
@@ -436,7 +436,7 @@ func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsern
 }
 
 func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], config config.UnvalidatedConfig) error {
-	if newValue == oldValue {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, hasValue := newValue.Get(); hasValue {
@@ -461,7 +461,7 @@ func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.Unvalidate
 }
 
 func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
-	if newValue == oldValue {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
@@ -487,7 +487,7 @@ func saveForgeType(oldForgeType, newForgeType Option[configdomain.ForgeType], gi
 }
 
 func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newToken == oldToken {
+	if newToken.Equal(oldToken) {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
@@ -497,7 +497,7 @@ func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], sc
 }
 
 func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newToken == oldToken {
+	if newToken.Equal(oldToken) {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
@@ -507,7 +507,7 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 }
 
 func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newToken == oldToken {
+	if newToken.Equal(oldToken) {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
@@ -517,7 +517,7 @@ func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope 
 }
 
 func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newToken == oldToken {
+	if newToken.Equal(oldToken) {
 		return nil
 	}
 	if value, has := newToken.Get(); has {
@@ -527,14 +527,14 @@ func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope 
 }
 
 func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {
-	if Some(newValue) == oldValue {
+	if Some(newValue).Equal(oldValue) {
 		return nil
 	}
 	return config.SetMainBranch(newValue)
 }
 
 func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], gitCommands git.Commands, frontend gitdomain.Runner) error {
-	if newValue == oldValue {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
@@ -551,7 +551,7 @@ func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config
 }
 
 func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.UnvalidatedConfig) error {
-	if newValue == oldValue {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
