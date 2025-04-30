@@ -192,7 +192,7 @@ func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.Us
 }
 
 func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA) (gitdomain.CommitMessage, error) {
-	output, err := querier.QueryTrim("git", "log", "--format=%B", "-n", "1", sha.String())
+	output, err := querier.QueryTrim("git", "show", "--no-patch", "--format=%B", sha.String())
 	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
 }
 

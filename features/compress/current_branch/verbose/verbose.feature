@@ -15,31 +15,31 @@ Feature: compress the commits on a feature branch verbosely
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                  |
-      |         | git version                                              |
-      |         | git rev-parse --show-toplevel                            |
-      |         | git config -lz --includes --global                       |
-      |         | git config -lz --includes --local                        |
-      |         | git rev-parse --verify --abbrev-ref @{-1}                |
-      |         | git status -z --ignore-submodules                        |
-      |         | git rev-parse --verify -q MERGE_HEAD                     |
-      |         | git rev-parse --absolute-git-dir                         |
-      |         | git remote                                               |
-      |         | git branch --show-current                                |
-      | feature | git fetch --prune --tags                                 |
-      | (none)  | git stash list                                           |
-      |         | git -c core.abbrev=40 branch -vva --sort=refname         |
-      |         | git remote get-url origin                                |
-      |         | git cherry -v main feature                               |
-      |         | git log --format=%B -n 1 {{ sha-before-run 'commit 1' }} |
-      | feature | git reset --soft main                                    |
-      |         | git commit -m "commit 1"                                 |
-      | (none)  | git rev-list --left-right feature...origin/feature       |
-      | feature | git push --force-with-lease --force-if-includes          |
-      | (none)  | git -c core.abbrev=40 branch -vva --sort=refname         |
-      |         | git config -lz --includes --global                       |
-      |         | git config -lz --includes --local                        |
-      |         | git stash list                                           |
+      | BRANCH  | COMMAND                                                         |
+      |         | git version                                                     |
+      |         | git rev-parse --show-toplevel                                   |
+      |         | git config -lz --includes --global                              |
+      |         | git config -lz --includes --local                               |
+      |         | git rev-parse --verify --abbrev-ref @{-1}                       |
+      |         | git status -z --ignore-submodules                               |
+      |         | git rev-parse --verify -q MERGE_HEAD                            |
+      |         | git rev-parse --absolute-git-dir                                |
+      |         | git remote                                                      |
+      |         | git branch --show-current                                       |
+      | feature | git fetch --prune --tags                                        |
+      | (none)  | git stash list                                                  |
+      |         | git -c core.abbrev=40 branch -vva --sort=refname                |
+      |         | git remote get-url origin                                       |
+      |         | git cherry -v main feature                                      |
+      |         | git show --no-patch --format=%B {{ sha-before-run 'commit 1' }} |
+      | feature | git reset --soft main                                           |
+      |         | git commit -m "commit 1"                                        |
+      | (none)  | git rev-list --left-right feature...origin/feature              |
+      | feature | git push --force-with-lease --force-if-includes                 |
+      | (none)  | git -c core.abbrev=40 branch -vva --sort=refname                |
+      |         | git config -lz --includes --global                              |
+      |         | git config -lz --includes --local                               |
+      |         | git stash list                                                  |
     And Git Town prints:
       """
       Ran 24 shell commands
