@@ -594,6 +594,7 @@ func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope 
 }
 
 func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+	fmt.Println("1111111111111111111111111111111111", newToken, oldToken)
 	if newToken.Equal(oldToken) {
 		return nil
 	}
