@@ -1,3 +1,4 @@
+@messyoutput
 Feature: don't ask for information already provided by the config file
 
   Scenario:
