@@ -13,13 +13,10 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-// --- Configuration ---
-// CHANGE THIS to the actual package import path where your Option[T] is defined.
-const targetPackagePath = "github.com/git-town/git-town/v19/pkg/prelude"
-
-const targetTypeName = "Option"
-
-// --- End Configuration ---
+const (
+	packagePath = "github.com/git-town/git-town/v19/pkg/prelude"
+	typeName    = "Option"
+)
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "optioncompare",
@@ -29,58 +26,39 @@ var Analyzer = &analysis.Analyzer{
 	Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError), // Include flags for configuration
 }
 
-func init() {
-	// Define the flag for the package path within the analyzer's FlagSet
-	// The default value is set above where targetPackagePath is initialized.
-	// Analyzer.Flags.StringVar(targetPackagePath, "optionpkg", "main", "Import path of the package defining Option[T]")
-}
-
 func main() {
-	// The flag is parsed by singlechecker.Main automatically
 	singlechecker.Main(Analyzer)
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	inspectorInstance := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-
 	nodeFilter := []ast.Node{
 		(*ast.BinaryExpr)(nil), // We are interested in binary expressions like 'a == b'
 	}
-
-	inspectorInstance.Preorder(nodeFilter, func(n ast.Node) {
-		binExpr := n.(*ast.BinaryExpr)
-
-		// 1. Check if the operator is ==
+	inspectorInstance.Preorder(nodeFilter, func(node ast.Node) {
+		binExpr := node.(*ast.BinaryExpr)
+		// operator must be ==
 		if binExpr.Op != token.EQL {
 			return
 		}
-
-		// 2. Get type information for left and right operands
+		// get types for left and right operands
 		leftTypeInfo := pass.TypesInfo.TypeOf(binExpr.X)
 		rightTypeInfo := pass.TypesInfo.TypeOf(binExpr.Y)
 		if leftTypeInfo == nil || rightTypeInfo == nil {
-			// Skip if type info is unavailable for some reason
+			panic("cannot determine types")
+		}
+		// both operands must be an Option type
+		if !isOptionType(leftTypeInfo) || !isOptionType(rightTypeInfo) {
 			return
 		}
-
-		// 3. Check if *both* operands are the target Option[T] type
-		if !isTargetOptionType(leftTypeInfo) || !isTargetOptionType(rightTypeInfo) {
-			return
-		}
-
+		// bingo --> report the problem
 		pass.Reportf(binExpr.OpPos, "must compare Options using .Equal instead of ==")
 	})
-
 	return nil, nil
 }
 
-// isTargetOptionType checks if a type is an instance of the target Option[T] generic type
-// from the configured package.
-func isTargetOptionType(typ types.Type) bool {
-	if typ == nil {
-		return false
-	}
-
+// isOptionType indicates whether the given type is an Option[T] generic type
+func isOptionType(typ types.Type) bool {
 	// Check if it's a Named type (like main.Option[int])
 	// Using Underlying() can help resolve type aliases if needed, but start with direct type.
 	named, ok := typ.(*types.Named)
@@ -94,13 +72,13 @@ func isTargetOptionType(typ types.Type) bool {
 	}
 
 	// Check the type name itself
-	if named.Obj() == nil || named.Obj().Name() != targetTypeName {
+	if named.Obj() == nil || named.Obj().Name() != typeName {
 		return false
 	}
 
 	// Check the package path where the type is defined
 	pkg := named.Obj().Pkg()
-	if pkg == nil || pkg.Path() != targetPackagePath {
+	if pkg == nil || pkg.Path() != packagePath {
 		// This check prevents flagging types named "Option" from other packages.
 		// It also handles vendored paths correctly if the paths match.
 		return false
@@ -117,8 +95,8 @@ func isTargetOptionType(typ types.Type) bool {
 	}
 
 	// Double-check the origin's name and package for robustness
-	if origin.Obj() == nil || origin.Obj().Name() != targetTypeName ||
-		origin.Obj().Pkg() == nil || origin.Obj().Pkg().Path() != targetPackagePath {
+	if origin.Obj() == nil || origin.Obj().Name() != typeName ||
+		origin.Obj().Pkg() == nil || origin.Obj().Pkg().Path() != packagePath {
 		return false
 	}
 
