@@ -54,10 +54,14 @@ func executeStatusReset(verbose configdomain.Verbose) error {
 	if !hasRootDir {
 		return errors.New(messages.RepoOutside)
 	}
-	err := statefile.Delete(rootDir)
+	existed, err := statefile.Delete(rootDir)
 	if err != nil {
 		return err
 	}
-	fmt.Println(messages.RunstateDeleted)
+	if existed {
+		fmt.Println(messages.RunstateDeleted)
+	} else {
+		fmt.Println(messages.RunstateDoesntExist)
+	}
 	return nil
 }

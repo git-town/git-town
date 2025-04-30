@@ -42,7 +42,7 @@ func Execute(args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          program,
 	})
-	err := statefile.Delete(args.RootDir)
+	_, err := statefile.Delete(args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
