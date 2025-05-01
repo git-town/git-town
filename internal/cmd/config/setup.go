@@ -71,7 +71,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 	if err != nil || aborted {
 		return err
 	}
-	err = saveAll(data.userInput, repo.UnvalidatedConfig, tokenScope, forgeTypeOpt, repo.Git, repo.Frontend)
+	err = saveAll(data.userInput, repo.UnvalidatedConfig, data.configFile, tokenScope, forgeTypeOpt, repo.Git, repo.Frontend)
 	if err != nil {
 		return err
 	}
@@ -91,8 +91,8 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 
 type setupData struct {
 	config        config.UnvalidatedConfig
+	configFile    Option[configdomain.PartialConfig]
 	dialogInputs  components.TestInputs
-	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
 	userInput     userInput
@@ -115,6 +115,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 
 func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backend gitdomain.RunnerQuerier, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[configdomain.ForgeType], err error) {
 	tokenScope = configdomain.ConfigScopeLocal
+	configFile := data.configFile.GetOrDefault()
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, None[configdomain.ForgeType](), err
@@ -123,41 +124,58 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if err != nil || aborted {
 		return aborted, tokenScope, None[configdomain.ForgeType](), err
 	}
-	existingMainBranch := config.UnvalidatedConfig.MainBranch
-	if existingMainBranch.IsNone() {
-		existingMainBranch = gitCommands.DefaultBranch(backend)
+	var mainBranch gitdomain.LocalBranchName
+	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); configFileHasMainBranch {
+		mainBranch = configFileMainBranch
+	} else {
+		existingMainBranch := config.UnvalidatedConfig.MainBranch
+		if existingMainBranch.IsNone() {
+			existingMainBranch = gitCommands.DefaultBranch(backend)
+		}
+		if existingMainBranch.IsNone() {
+			existingMainBranch = gitCommands.OriginHead(backend)
+		}
+		mainBranch, aborted, err = dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
+		data.userInput.config.UnvalidatedConfig.MainBranch = Some(mainBranch)
 	}
-	if existingMainBranch.IsNone() {
-		existingMainBranch = gitCommands.OriginHead(backend)
+	if len(configFile.PerennialBranches) == 0 {
+		data.userInput.config.NormalConfig.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.NormalConfig.PerennialBranches, mainBranch, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	mainBranch, aborted, err := dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.PerennialRegex.IsNone() {
+		data.userInput.config.NormalConfig.PerennialRegex, aborted, err = dialog.PerennialRegex(config.NormalConfig.PerennialRegex, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.UnvalidatedConfig.MainBranch = Some(mainBranch)
-	data.userInput.config.NormalConfig.PerennialBranches, aborted, err = dialog.PerennialBranches(data.localBranches.Names(), config.NormalConfig.PerennialBranches, mainBranch, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.DefaultBranchType.IsNone() {
+		data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.PerennialRegex, aborted, err = dialog.PerennialRegex(config.NormalConfig.PerennialRegex, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.FeatureRegex.IsNone() {
+		data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.DevRemote.IsNone() {
+		data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
-	}
-	data.userInput.config.NormalConfig.DevRemote, aborted, err = dialog.DevRemote(config.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
-	}
-	data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(config.NormalConfig.ForgeType, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.ForgeType.IsNone() {
+		data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(config.NormalConfig.ForgeType, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
 	forgeTypeOpt = determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType)
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
@@ -229,51 +247,73 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			}
 		}
 	}
-	data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.HostingOriginHostname.IsNone() {
+		data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(config.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.SyncFeatureStrategy.IsNone() {
+		data.userInput.config.NormalConfig.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(config.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.NormalConfig.SyncPerennialStrategy, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.SyncPerennialStrategy.IsNone() {
+		data.userInput.config.NormalConfig.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(config.NormalConfig.SyncPerennialStrategy, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.SyncPrototypeStrategy, aborted, err = dialog.SyncPrototypeStrategy(config.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.SyncPrototypeStrategy.IsNone() {
+		data.userInput.config.NormalConfig.SyncPrototypeStrategy, aborted, err = dialog.SyncPrototypeStrategy(config.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.SyncUpstream, aborted, err = dialog.SyncUpstream(config.NormalConfig.SyncUpstream, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.SyncUpstream.IsNone() {
+		data.userInput.config.NormalConfig.SyncUpstream, aborted, err = dialog.SyncUpstream(config.NormalConfig.SyncUpstream, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.SyncTags, aborted, err = dialog.SyncTags(config.NormalConfig.SyncTags, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.SyncTags.IsNone() {
+		data.userInput.config.NormalConfig.SyncTags, aborted, err = dialog.SyncTags(config.NormalConfig.SyncTags, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.ShareNewBranches, aborted, err = dialog.ShareNewBranches(config.NormalConfig.ShareNewBranches, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.ShareNewBranches.IsNone() {
+		data.userInput.config.NormalConfig.ShareNewBranches, aborted, err = dialog.ShareNewBranches(config.NormalConfig.ShareNewBranches, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.PushHook, aborted, err = dialog.PushHook(config.NormalConfig.PushHook, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.PushHook.IsNone() {
+		data.userInput.config.NormalConfig.PushHook, aborted, err = dialog.PushHook(config.NormalConfig.PushHook, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.NewBranchType, aborted, err = dialog.NewBranchType(config.NormalConfig.NewBranchType, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.NewBranchType.IsNone() {
+		data.userInput.config.NormalConfig.NewBranchType, aborted, err = dialog.NewBranchType(config.NormalConfig.NewBranchType, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.ShipStrategy, aborted, err = dialog.ShipStrategy(config.NormalConfig.ShipStrategy, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.ShipStrategy.IsNone() {
+		data.userInput.config.NormalConfig.ShipStrategy, aborted, err = dialog.ShipStrategy(config.NormalConfig.ShipStrategy, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.config.NormalConfig.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, None[configdomain.ForgeType](), err
+	if configFile.ShipDeleteTrackingBranch.IsNone() {
+		data.userInput.config.NormalConfig.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(config.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[configdomain.ForgeType](), err
+		}
 	}
-	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.hasConfigFile, data.dialogInputs.Next())
+	data.userInput.configStorage, aborted, err = dialog.ConfigStorage(data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, None[configdomain.ForgeType](), err
 	}
@@ -330,15 +370,15 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
+		configFile:    repo.UnvalidatedConfig.NormalConfig.ConfigFile,
 		dialogInputs:  dialogTestInputs,
-		hasConfigFile: repo.UnvalidatedConfig.NormalConfig.ConfigFile.IsSome(),
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
 		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[configdomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[configdomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) error {
 	err := saveAliases(oldConfig.NormalConfig.Aliases, userInput.config.NormalConfig.Aliases, gitCommands, frontend)
 	if err != nil {
 		return err
@@ -380,31 +420,68 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, tokenScope
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, oldConfig)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, oldConfig, gitCommands, frontend)
+		return saveToGit(userInput, oldConfig, configFile, gitCommands, frontend)
 	}
 	panic("unknown configStorage: " + userInput.configStorage)
 }
 
-func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend gitdomain.Runner) error {
+	configFile := configFileOpt.GetOrDefault()
 	fc := execute.FailureCollector{}
-	fc.Check(saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig))
-	fc.Check(saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend))
-	fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
-	fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
-	fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
-	fc.Check(savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
-	fc.Check(saveDefaultBranchType(oldConfig.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
-	fc.Check(saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig))
-	fc.Check(saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
-	fc.Check(savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
-	fc.Check(saveShareNewBranches(oldConfig.NormalConfig.ShareNewBranches, userInput.config.NormalConfig.ShareNewBranches, oldConfig))
-	fc.Check(saveShipStrategy(oldConfig.NormalConfig.ShipStrategy, userInput.config.NormalConfig.ShipStrategy, oldConfig))
-	fc.Check(saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
-	fc.Check(saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
-	fc.Check(saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig))
-	fc.Check(saveSyncPrototypeStrategy(oldConfig.NormalConfig.SyncPrototypeStrategy, userInput.config.NormalConfig.SyncPrototypeStrategy, oldConfig))
-	fc.Check(saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
-	fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
+	if configFile.NewBranchType.IsNone() {
+		fc.Check(saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig))
+	}
+	if configFile.ForgeType.IsNone() {
+		fc.Check(saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend))
+	}
+	if configFile.HostingOriginHostname.IsNone() {
+		fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
+	}
+	if configFile.MainBranch.IsNone() {
+		fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
+	}
+	if len(configFile.PerennialBranches) == 0 {
+		fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
+	}
+	if configFile.PerennialRegex.IsNone() {
+		fc.Check(savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
+	}
+	if configFile.DefaultBranchType.IsNone() {
+		fc.Check(saveDefaultBranchType(oldConfig.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
+	}
+	if configFile.DevRemote.IsNone() {
+		fc.Check(saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig))
+	}
+	if configFile.FeatureRegex.IsNone() {
+		fc.Check(saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig))
+	}
+	if configFile.PushHook.IsNone() {
+		fc.Check(savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig))
+	}
+	if configFile.ShareNewBranches.IsNone() {
+		fc.Check(saveShareNewBranches(oldConfig.NormalConfig.ShareNewBranches, userInput.config.NormalConfig.ShareNewBranches, oldConfig))
+	}
+	if configFile.ShipStrategy.IsNone() {
+		fc.Check(saveShipStrategy(oldConfig.NormalConfig.ShipStrategy, userInput.config.NormalConfig.ShipStrategy, oldConfig))
+	}
+	if configFile.ShipDeleteTrackingBranch.IsNone() {
+		fc.Check(saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig))
+	}
+	if configFile.SyncFeatureStrategy.IsNone() {
+		fc.Check(saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig))
+	}
+	if configFile.SyncPerennialStrategy.IsNone() {
+		fc.Check(saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig))
+	}
+	if configFile.SyncPrototypeStrategy.IsNone() {
+		fc.Check(saveSyncPrototypeStrategy(oldConfig.NormalConfig.SyncPrototypeStrategy, userInput.config.NormalConfig.SyncPrototypeStrategy, oldConfig))
+	}
+	if configFile.SyncUpstream.IsNone() {
+		fc.Check(saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig))
+	}
+	if configFile.SyncTags.IsNone() {
+		fc.Check(saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig))
+	}
 	return fc.Err
 }
 
