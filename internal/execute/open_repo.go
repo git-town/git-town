@@ -94,13 +94,13 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access:         configGitAccess,
-		ConfigFile:     configFile,
-		DryRun:         args.DryRun,
-		EnvConfig:      envconfig.Load(),
-		FinalMessages:  finalMessages,
-		GitVersion:     gitVersion,
-		UnscopedConfig: unscopedConfig,
+		Access:        configGitAccess,
+		ConfigFile:    configFile,
+		DryRun:        args.DryRun,
+		EnvConfig:     envconfig.Load(),
+		FinalMessages: finalMessages,
+		GitVersion:    gitVersion,
+		GitConfig:     unscopedConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
