@@ -38,10 +38,10 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdom
 	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
+		env:    envConfig,
 		file:   self.NormalConfig.ConfigFile,
 		global: globalGitConfig,
 		local:  localGitConfig,
-		env:    envConfig,
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
@@ -97,10 +97,10 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
+		env:    args.EnvConfig,
 		file:   args.ConfigFile,
 		global: args.GlobalConfig,
 		local:  args.LocalConfig,
-		env:    args.EnvConfig,
 	})
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
@@ -140,8 +140,8 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, co
 }
 
 type mergeConfigsArgs struct {
+	env    configdomain.PartialConfig
 	file   Option[configdomain.PartialConfig]
 	global configdomain.PartialConfig
 	local  configdomain.PartialConfig
-	env    configdomain.PartialConfig
 }
