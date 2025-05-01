@@ -66,15 +66,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	globalConfig, err := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, true, configGitAccess.RemoveLocalConfigValue)
-	if err != nil {
-		return emptyOpenRepoResult(), err
-	}
 	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), true)
-	if err != nil {
-		return emptyOpenRepoResult(), err
-	}
-	localConfig, err := configdomain.NewPartialConfigFromSnapshot(localSnapshot, true, configGitAccess.RemoveLocalConfigValue)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -82,7 +74,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, configGitAccess.RemoveLocalConfigValue)
+	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, true, configGitAccess.RemoveLocalConfigValue)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -108,8 +100,6 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		EnvConfig:      envconfig.Load(),
 		FinalMessages:  finalMessages,
 		GitVersion:     gitVersion,
-		GlobalConfig:   globalConfig,
-		LocalConfig:    localConfig,
 		UnscopedConfig: unscopedConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{

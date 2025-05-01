@@ -23,14 +23,12 @@ type NormalConfig struct {
 	EnvConfig         configdomain.PartialConfig         // content of the Git Town related environment variables
 	GitConfigAccess   gitconfig.Access                   // access to the Git configuration settings
 	GitVersion        git.Version                        // version of the installed Git executable
-	GlobalGitConfig   configdomain.PartialConfig         // content of the global Git configuration
-	LocalGitConfig    configdomain.PartialConfig         // content of the local Git configuration
 	UnscopedGitConfig configdomain.PartialConfig         // content of the unscoped Git configuration
 }
 
 // removes the given branch from the lineage, and updates its children
 func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchName) {
-	parent, hasParent := self.LocalGitConfig.Lineage.Parent(branch).Get()
+	parent, hasParent := self.UnscopedGitConfig.Lineage.Parent(branch).Get()
 	children := self.Lineage.Children(branch)
 	for _, child := range children {
 		if hasParent {
@@ -105,7 +103,7 @@ func (self *NormalConfig) RemoveNewBranchType() {
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
-	self.LocalGitConfig.Lineage = self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	self.UnscopedGitConfig.Lineage = self.UnscopedGitConfig.Lineage.RemoveBranch(branch)
 	_ = self.GitConfigAccess.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }
 
