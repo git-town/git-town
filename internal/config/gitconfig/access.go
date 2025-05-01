@@ -26,14 +26,7 @@ type Access struct {
 
 func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
 	snapshot := configdomain.SingleSnapshot{}
-	cmdArgs := []string{"config", "-lz", "--includes"}
-	switch scope {
-	case configdomain.ConfigScopeGlobal:
-		cmdArgs = append(cmdArgs, "--global")
-	case configdomain.ConfigScopeLocal:
-		cmdArgs = append(cmdArgs, "--local")
-	}
-	output, err := self.Runner.Query("git", cmdArgs...)
+	output, err := self.Runner.Query("git", "config", "-lz", "--includes", scope.GitFlag())
 	if err != nil {
 		return snapshot, configdomain.EmptyPartialConfig(), nil //nolint:nilerr
 	}
