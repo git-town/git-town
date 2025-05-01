@@ -99,8 +99,8 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		DryRun:        args.DryRun,
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
-		GitVersion:    gitVersion,
 		GitConfig:     unscopedConfig,
+		GitVersion:    gitVersion,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,

@@ -21,9 +21,9 @@ type NormalConfig struct {
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          configdomain.DryRun                // whether to only print the Git commands but not execute them
 	EnvConfig       configdomain.PartialConfig         // content of the Git Town related environment variables
+	GitConfig       configdomain.PartialConfig         // content of the unscoped Git configuration
 	GitConfigAccess gitconfig.Access                   // access to the Git configuration settings
 	GitVersion      git.Version                        // version of the installed Git executable
-	GitConfig       configdomain.PartialConfig         // content of the unscoped Git configuration
 }
 
 // removes the given branch from the lineage, and updates its children
