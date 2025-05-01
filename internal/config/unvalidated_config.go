@@ -140,8 +140,8 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, co
 }
 
 type mergeConfigsArgs struct {
-	env    configdomain.PartialConfig
-	file   Option[configdomain.PartialConfig]
-	global configdomain.PartialConfig
-	local  configdomain.PartialConfig
+	env    configdomain.PartialConfig         // configuration data taken from environment variables
+	file   Option[configdomain.PartialConfig] // data of the configuration file
+	global configdomain.PartialConfig         // data from the global Git configuration
+	local  configdomain.PartialConfig         // data from the local Git configuration
 }
