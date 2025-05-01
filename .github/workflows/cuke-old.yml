@@ -19,6 +19,7 @@ jobs:
           path: git-2.30.0
           key: ${{ runner.os }}-git
       - name: Install old Git
+        # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
         run: |
           sudo apt-get install dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
           curl -O https://www.kernel.org/pub/software/scm/git/git-2.30.0.tar.gz
