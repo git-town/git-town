@@ -30,8 +30,9 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                   |
-      | new    | git branch --move new old |
-      |        | git checkout old          |
+      | BRANCH | COMMAND                               |
+      | new    | git branch old {{ sha 'old commit' }} |
+      |        | git checkout old                      |
+      | old    | git branch -D new                     |
     And the initial commits exist now
     And the initial branches and lineage exist now
