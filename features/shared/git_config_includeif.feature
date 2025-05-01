@@ -2,12 +2,12 @@ Feature: the Git configuration uses includeIf
 
   Scenario: global Git config uses includeIf
     Given a Git repo with origin
-    And file ".gitconfig" in the home directory
+    And the home directory contains file ".gitconfig" with content
       """
       [includeIf "hasconfig:remote.*.url:git@github.com*/**"]
       path = .gitconfig-personal
       """
-    And file ".gitconfig-personal" in the home directory
+    And the home directory contains file ".gitconfig-personal" in the home directory
       """
       [user]
         name = The User
