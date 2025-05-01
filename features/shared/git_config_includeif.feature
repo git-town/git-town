@@ -1,22 +1,20 @@
 Feature: the Git configuration uses includeIf
 
-  @this
   Scenario: global Git config uses includeIf
     Given a Git repo with origin
-    And Git Town is not configured
-    And file ".gitconfig" in the homedirectory
+    And file ".gitconfig" in the home directory
       """
       [includeIf "hasconfig:remote.*.url:git@github.com*/**"]
       path = .gitconfig-personal
       """
-    And file ".gitconfig-personal" in the homedirectory
+    And file ".gitconfig-personal" in the home directory
       """
       [user]
         name = The User
         email = user@acme.com
       """
-    When I run "git-town config"
-    Then Git Town prints:
+    When I run "git-town hack new"
+    Then Git Town prints the error:
       """
-      xxx
+      please set the Git user email by running: git config --global user.email "<your email>"
       """
