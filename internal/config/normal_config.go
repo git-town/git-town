@@ -20,6 +20,7 @@ type NormalConfig struct {
 	configdomain.NormalConfigData
 	ConfigFile      Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	DryRun          configdomain.DryRun                // whether to only print the Git commands but not execute them
+	EnvConfig       configdomain.PartialConfig         // content of the environment variables
 	GitConfigAccess gitconfig.Access                   // access to the Git configuration settings
 	GitVersion      git.Version                        // version of the installed Git executable
 	GlobalGitConfig configdomain.PartialConfig         // content of the global Git configuration

@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/envconfig"
 	"github.com/git-town/git-town/v19/internal/config/gitconfig"
 	"github.com/git-town/git-town/v19/internal/git"
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
@@ -35,11 +36,13 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
 	globalSnapshot, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeGlobal, false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
+	envConfig := envconfig.Load()
+	unvalidatedConfig, normalConfig := MergeConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig, envConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
 		ConfigFile:       self.NormalConfig.ConfigFile,
 		DryRun:           self.NormalConfig.DryRun,
+		EnvConfig:        envConfig,
 		GitConfigAccess:  self.NormalConfig.GitConfigAccess,
 		GitVersion:       self.NormalConfig.GitVersion,
 		GlobalGitConfig:  globalGitConfig,
@@ -76,6 +79,7 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
+			EnvConfig:        configdomain.EmptyPartialConfig(),
 			GitConfigAccess:  gitAccess,
 			GitVersion:       gitVersion,
 			GlobalGitConfig:  configdomain.EmptyPartialConfig(),
@@ -97,22 +101,13 @@ func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }
 
-func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
-	config := configdomain.EmptyPartialConfig()
-	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		config = config.Merge(configFile)
-	}
-	config = config.Merge(globalGitConfig)
-	config = config.Merge(localGitConfig)
-	return config.ToUnvalidatedConfig(), config.ToNormalConfig(configdomain.DefaultNormalConfig())
-}
-
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := MergeConfigs(args.ConfigFile, args.GlobalConfig, args.LocalConfig, args.EnvConfig)
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       args.ConfigFile,
 			DryRun:           args.DryRun,
+			EnvConfig:        args.EnvConfig,
 			GitConfigAccess:  args.Access,
 			GitVersion:       args.GitVersion,
 			GlobalGitConfig:  args.GlobalConfig,
