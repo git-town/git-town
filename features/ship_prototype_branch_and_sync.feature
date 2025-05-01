@@ -15,10 +15,6 @@ Feature: end-to-end workflow of creating a prototype branch, shipping, and pruni
     And I ran "git-town propose"
     And Git Town prints:
       """
-      branch 'hooks' set up to track 'origin/hooks'
-      """
-    And Git Town prints:
-      """
       branch "hooks" is no longer a prototype branch
       """
     And origin ships the "hooks" branch using the "squash-merge" ship-strategy

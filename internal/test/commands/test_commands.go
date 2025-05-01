@@ -102,7 +102,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
-	args := []string{"log", "--format=%H|%s|%an <%ae>", "--topo-order", "--reverse"}
+	args := []string{"log", "--format=%H%x00%s%x00%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
 	} else {
@@ -115,7 +115,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
-		parts := strings.Split(line, "|")
+		parts := strings.Split(line, "\x00")
 		commit := testgit.Commit{
 			Branch:  branch,
 			SHA:     gitdomain.NewSHA(parts[0]),
