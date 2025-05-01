@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v19/internal/config/envconfig"
 	"github.com/git-town/git-town/v19/internal/config/gitconfig"
 	"github.com/git-town/git-town/v19/internal/git"
 	"github.com/git-town/git-town/v19/internal/git/gitdomain"
@@ -36,10 +37,12 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdom
 	globalSnapshot, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeGlobal, false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
+	envConfig := envconfig.Load()
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
 		ConfigFile:       self.NormalConfig.ConfigFile,
 		DryRun:           self.NormalConfig.DryRun,
+		EnvConfig:        envConfig,
 		GitConfigAccess:  self.NormalConfig.GitConfigAccess,
 		GitVersion:       self.NormalConfig.GitVersion,
 		GlobalGitConfig:  globalGitConfig,
@@ -76,6 +79,7 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
+			EnvConfig:        configdomain.EmptyPartialConfig(),
 			GitConfigAccess:  gitAccess,
 			GitVersion:       gitVersion,
 			GlobalGitConfig:  configdomain.EmptyPartialConfig(),
@@ -115,6 +119,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		NormalConfig: NormalConfig{
 			ConfigFile:       args.ConfigFile,
 			DryRun:           args.DryRun,
+			EnvConfig:        args.EnvConfig,
 			GitConfigAccess:  args.Access,
 			GitVersion:       args.GitVersion,
 			GlobalGitConfig:  args.GlobalConfig,
