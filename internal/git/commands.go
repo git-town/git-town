@@ -91,7 +91,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.BranchesSnapshot, error) {
-	branches, headSHA, err := branchesQuery(querier)
+	branches, err := branchesQuery(querier)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
@@ -148,9 +148,6 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 			}
 		}
 	}
-	if headSHA == "" {
-		panic("HEAD not found in for-each-ref output")
-	}
 	if currentBranchOpt.IsNone() {
 		rebaseInProgress, err := self.HasRebaseInProgress(querier)
 		if err != nil {
@@ -158,6 +155,10 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 		}
 		if !rebaseInProgress {
 			// We are in a detached HEAD state. Use the current HEAD location as the branch name.
+			headSHA, err := self.CurrentSHA(querier)
+			if err != nil {
+				return gitdomain.EmptyBranchesSnapshot(), err
+			}
 			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA.String()))
 			// prepend to result
 			result = slices.Insert(result, 0, gitdomain.BranchInfo{
@@ -949,7 +950,7 @@ type branchesQueryResult struct {
 
 type branchesQueryResults []branchesQueryResult
 
-func branchesQuery(querier gitdomain.Querier) (result branchesQueryResults, headSHA gitdomain.SHA, err error) {
+func branchesQuery(querier gitdomain.Querier) (branchesQueryResults, error) {
 	// WHAT DOES `:lstrip=2` DO?
 	// A ref name looks like "refs/heads/branch-name" or
 	// "refs/remotes/origin/branch-name". We want to remove the "refs/heads/" or
@@ -975,41 +976,35 @@ func branchesQuery(querier gitdomain.Querier) (result branchesQueryResults, head
 		"git", "for-each-ref",
 		"--format="+strings.Join(forEachRefFormats, " "),
 		"--sort=refname",
-		"--include-root-refs",                  // include HEAD (to be able to detect detached HEAD)
-		"HEAD", "refs/heads/", "refs/remotes/", // HEAD, local branches, remote branches
+		"refs/heads/", "refs/remotes/", // local branches, remote branches
 	)
 	if err != nil {
-		return branchesQueryResults{}, "", err
+		return branchesQueryResults{}, err
 	}
 	lines := stringslice.Lines(output)
-	for _, line := range lines {
+	result := make(branchesQueryResults, len(lines))
+	for l, line := range lines {
 		parts := strings.SplitN(line, " ", len(forEachRefFormats))
 		refname := strings.TrimPrefix(parts[0], "refname:")
+		branchName := gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:"))
 		sha := gitdomain.NewSHA(strings.TrimPrefix(parts[2], "sha:"))
-		switch {
-		case refname == "HEAD":
-			// Track where HEAD is pointing. If we're in a detached HEAD state, we'll use this later.
-			headSHA = sha
-		default:
-			branchName := gitdomain.NewBranchName(strings.TrimPrefix(parts[1], "branchname:"))
-			head := parseYN(strings.TrimPrefix(parts[3], "head:"))
-			worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
-			symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
-			upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
-			track := strings.TrimPrefix(parts[7], "track:")
-			result = append(result, branchesQueryResult{
-				BranchName:     branchName,
-				Head:           head,
-				RefName:        refname,
-				SHA:            sha,
-				Symref:         symref,
-				Track:          track,
-				UpstreamOption: upstreamOption,
-				Worktree:       worktree,
-			})
+		head := parseYN(strings.TrimPrefix(parts[3], "head:"))
+		worktree := parseYN(strings.TrimPrefix(parts[4], "worktree:"))
+		symref := parseYN(strings.TrimPrefix(parts[5], "symref:"))
+		upstreamOption := gitdomain.NewRemoteBranchNameOption(strings.TrimPrefix(parts[6], "upstream:")) // the tracking branch name
+		track := strings.TrimPrefix(parts[7], "track:")
+		result[l] = branchesQueryResult{
+			BranchName:     branchName,
+			Head:           head,
+			RefName:        refname,
+			SHA:            sha,
+			Symref:         symref,
+			Track:          track,
+			UpstreamOption: upstreamOption,
+			Worktree:       worktree,
 		}
 	}
-	return result, headSHA, nil
+	return result, nil
 }
 
 func determineSyncStatus(track string, upstream Option[gitdomain.RemoteBranchName]) gitdomain.SyncStatus {
