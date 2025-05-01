@@ -24,14 +24,16 @@ type Access struct {
 	Runner
 }
 
-func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, configdomain.PartialConfig, error) {
+func (self *Access) LoadSnapshot(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
-	output, err := self.Runner.Query("git", "config", "-lz", "--includes", scope.GitFlag())
+	cmdArgs := []string{"config", "-lz", "--includes"}
+	cmdArgs = append(cmdArgs, scope.GitFlag())
+	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return snapshot, configdomain.EmptyPartialConfig(), nil //nolint:nilerr
+		return snapshot, nil //nolint:nilerr
 	}
 	if output == "" {
-		return snapshot, configdomain.EmptyPartialConfig(), nil
+		return snapshot, nil
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -78,8 +80,7 @@ func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (c
 			snapshot[configKey] = value
 		}
 	}
-	partialConfig, err := configdomain.NewPartialConfigFromSnapshot(snapshot, updateOutdated, self.RemoveLocalConfigValue)
-	return snapshot, partialConfig, err
+	return snapshot, err
 }
 
 func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
