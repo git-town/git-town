@@ -14,6 +14,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - uses: actions/cache@v4
+        with:
+          path: git-2.30.0
+          key: ${{ runner.os }}-git
       - name: Install old Git
         run: |
           sudo apt-get install dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
