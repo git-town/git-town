@@ -344,7 +344,8 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	_, localGitConfig, _ := self.Config.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ := self.Config.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false)
+	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, self.Config.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
 	lineage := localGitConfig.Lineage
 	for _, entry := range lineage.Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())
