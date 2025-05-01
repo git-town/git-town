@@ -103,10 +103,10 @@ func AnalyzeScenarios(file string, scenarios []ScenarioInfo) []string {
 	result := []string{}
 	for _, scenario := range scenarios {
 		if scenario.HasTag && !scenario.HasStep {
-			result = append(result, fmt.Sprintf("%s:%d  unnecessary tag\n", file, scenario.Line))
+			result = append(result, fmt.Sprintf("%s:%d  unnecessary @messyoutput tag\n", file, scenario.Line))
 		}
 		if !scenario.HasTag && scenario.HasStep {
-			result = append(result, fmt.Sprintf("%s:%d  missing tag\n", file, scenario.Line))
+			result = append(result, fmt.Sprintf("%s:%d  missing @messyoutput tag\n", file, scenario.Line))
 		}
 	}
 	return result

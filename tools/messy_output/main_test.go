@@ -35,8 +35,8 @@ Feature: test
 		}
 		assert_scenarios(t, text, scenarios)
 		assert_errors(t, scenarios, []string{
-			"test:4  unnecessary tag\n",
-			"test:8  unnecessary tag\n",
+			"test:4  unnecessary @messyoutput tag\n",
+			"test:8  unnecessary @messyoutput tag\n",
 		})
 	})
 
@@ -93,7 +93,7 @@ Feature: test
 		}
 		assert_scenarios(t, text, scenarios)
 		assert_errors(t, scenarios, []string{
-			"test:4  unnecessary tag\n",
+			"test:4  unnecessary @messyoutput tag\n",
 		})
 	})
 
@@ -150,7 +150,7 @@ Feature: test
 		}
 		assert_scenarios(t, text, scenarios)
 		assert_errors(t, scenarios, []string{
-			"test:3  missing tag\n",
+			"test:3  missing @messyoutput tag\n",
 		})
 	})
 
@@ -179,7 +179,7 @@ Feature: test
 		}
 		assert_scenarios(t, text, scenarios)
 		assert_errors(t, scenarios, []string{
-			"test:3  missing tag\n",
+			"test:3  missing @messyoutput tag\n",
 		})
 	})
 
@@ -235,7 +235,7 @@ Feature: test
 		}
 		assert_scenarios(t, text, scenarios)
 		assert_errors(t, scenarios, []string{
-			"test:7  unnecessary tag\n",
+			"test:7  unnecessary @messyoutput tag\n",
 		})
 	})
 }
