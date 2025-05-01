@@ -36,8 +36,8 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
 	globalSnapshot, globalGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeGlobal, false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	localSnapshot, localGitConfig, _ := self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false)    // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unvalidatedConfig, normalConfig := NewConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig)
 	envConfig := envconfig.Load()
+	unvalidatedConfig, normalConfig := MergeConfigs(self.NormalConfig.ConfigFile, globalGitConfig, localGitConfig, envConfig)
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
 		ConfigFile:       self.NormalConfig.ConfigFile,
@@ -99,18 +99,6 @@ func MergeConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig
 	result = result.Merge(localGitConfig)
 	result = result.Merge(envConfig)
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
-}
-
-func NewConfigs(configFile Option[configdomain.PartialConfig], globalGitConfig, localGitConfig configdomain.PartialConfig) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
-	config := configdomain.EmptyPartialConfig()
-	if configFile, hasConfigFile := configFile.Get(); hasConfigFile {
-		config = config.Merge(configFile)
-	}
-	config = config.Merge(globalGitConfig)
-	config = config.Merge(localGitConfig)
-	normalConfig := config.ToNormalConfig(configdomain.DefaultNormalConfig())
-	unvalidatedConfig := config.ToUnvalidatedConfig()
-	return unvalidatedConfig, normalConfig
 }
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
