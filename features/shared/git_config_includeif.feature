@@ -7,7 +7,7 @@ Feature: the Git configuration uses includeIf
       [includeIf "hasconfig:remote.*.url:git@github.com*/**"]
       path = .gitconfig-personal
       """
-    And the home directory contains file ".gitconfig-personal" in the home directory
+    And the home directory contains file ".gitconfig-personal"
       """
       [user]
         name = The User
