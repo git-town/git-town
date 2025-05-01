@@ -24,10 +24,13 @@ type Access struct {
 	Runner
 }
 
-func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, error) {
+func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated bool) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz", "--includes"}
-	cmdArgs = append(cmdArgs, scope.GitFlag())
+	scope, hasScope := scopeOpt.Get()
+	if hasScope {
+		cmdArgs = append(cmdArgs, scope.GitFlag())
+	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
 		return snapshot, nil //nolint:nilerr
