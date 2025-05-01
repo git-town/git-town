@@ -329,7 +329,6 @@ func TestBackendCommands(t *testing.T) {
 				must.NoError(t, err)
 				must.Eq(t, Some[gitdomain.LocalBranchName]("first-branch"), snapshot.Active)
 			})
-
 			t.Run("second branch is checked out", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
@@ -340,7 +339,6 @@ func TestBackendCommands(t *testing.T) {
 				must.NoError(t, err)
 				must.Eq(t, Some[gitdomain.LocalBranchName]("second-branch"), snapshot.Active)
 			})
-
 			t.Run("in the middle of a rebase", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
@@ -1239,6 +1237,63 @@ func TestBackendCommands(t *testing.T) {
 			have := runtime.Git.FirstExistingBranch(runtime, branch1, branch2)
 			want := None[gitdomain.LocalBranchName]()
 			must.EqOp(t, want, have)
+		})
+	})
+
+	t.Run("IsAhead", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is actually ahead", func(t *testing.T) {
+			t.Parallel()
+			isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: ahead 10] commit message")
+			must.True(t, isAhead)
+			must.EqOp(t, "origin/branch-1", remoteBranchName.String())
+		})
+		t.Run("is not ahead", func(t *testing.T) {
+			t.Parallel()
+			isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: behind 10] commit message")
+			must.False(t, isAhead)
+			must.EqOp(t, "", remoteBranchName.String())
+		})
+	})
+
+	t.Run("IsBehind", func(t *testing.T) {
+		t.Parallel()
+		has, branchNameOpt := git.IsBehind("production", "[origin/production: behind 1] initial commit")
+		must.True(t, has)
+		branchName, hasBranchName := branchNameOpt.Get()
+		must.True(t, hasBranchName)
+		must.EqOp(t, "origin/production", branchName)
+	})
+
+	t.Run("IsInSync", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is actually in sync", func(t *testing.T) {
+			t.Parallel()
+			isInSync, remoteBranchName := git.IsInSync("branch-1", "[origin/branch-1] commit message")
+			must.True(t, isInSync)
+			must.EqOp(t, "origin/branch-1", remoteBranchName.String())
+		})
+	})
+
+	t.Run("IsRemoteGone", func(t *testing.T) {
+		t.Parallel()
+		t.Run("remote is gone", func(t *testing.T) {
+			t.Parallel()
+			isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: gone] commit message")
+			must.True(t, isGone)
+			must.Eq(t, Some(gitdomain.NewRemoteBranchName("origin/branch-1")), remoteBranchName)
+		})
+		t.Run("other sync status", func(t *testing.T) {
+			t.Parallel()
+			isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: ahead] commit message")
+			must.False(t, isGone)
+			must.Eq(t, None[gitdomain.RemoteBranchName](), remoteBranchName)
+		})
+		t.Run("other text", func(t *testing.T) {
+			t.Parallel()
+			isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[skip ci]")
+			must.False(t, isGone)
+			must.Eq(t, None[gitdomain.RemoteBranchName](), remoteBranchName)
 		})
 	})
 
