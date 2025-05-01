@@ -33,30 +33,32 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
-func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
+func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
 	globalSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeGlobal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	globalGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, false, self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
 	localSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
+	unscopedSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(None[configdomain.ConfigScope](), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unscopedGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
-		env:    envConfig,
-		file:   self.NormalConfig.ConfigFile,
-		global: globalGitConfig,
-		local:  localGitConfig,
+		env:      envConfig,
+		file:     self.NormalConfig.ConfigFile,
+		unscoped: unscopedGitConfig,
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		ConfigFile:       self.NormalConfig.ConfigFile,
-		DryRun:           self.NormalConfig.DryRun,
-		EnvConfig:        envConfig,
-		GitConfigAccess:  self.NormalConfig.GitConfigAccess,
-		GitVersion:       self.NormalConfig.GitVersion,
-		GlobalGitConfig:  globalGitConfig,
-		LocalGitConfig:   localGitConfig,
-		NormalConfigData: normalConfig,
+		ConfigFile:        self.NormalConfig.ConfigFile,
+		DryRun:            self.NormalConfig.DryRun,
+		EnvConfig:         envConfig,
+		GitConfigAccess:   self.NormalConfig.GitConfigAccess,
+		GitVersion:        self.NormalConfig.GitVersion,
+		GlobalGitConfig:   globalGitConfig,
+		LocalGitConfig:    localGitConfig,
+		NormalConfigData:  normalConfig,
+		UnscopedGitConfig: unscopedGitConfig,
 	}
-	return globalSnapshot, localSnapshot
+	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
@@ -84,14 +86,15 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			ConfigFile:       None[configdomain.PartialConfig](),
-			DryRun:           false,
-			EnvConfig:        configdomain.EmptyPartialConfig(),
-			GitConfigAccess:  gitAccess,
-			GitVersion:       gitVersion,
-			GlobalGitConfig:  configdomain.EmptyPartialConfig(),
-			LocalGitConfig:   configdomain.EmptyPartialConfig(),
-			NormalConfigData: configdomain.DefaultNormalConfig(),
+			ConfigFile:        None[configdomain.PartialConfig](),
+			DryRun:            false,
+			EnvConfig:         configdomain.EmptyPartialConfig(),
+			GitConfigAccess:   gitAccess,
+			GitVersion:        gitVersion,
+			GlobalGitConfig:   configdomain.EmptyPartialConfig(),
+			LocalGitConfig:    configdomain.EmptyPartialConfig(),
+			NormalConfigData:  configdomain.DefaultNormalConfig(),
+			UnscopedGitConfig: configdomain.EmptyPartialConfig(),
 		},
 		UnvalidatedConfig: configdomain.DefaultUnvalidatedConfig(),
 	}
@@ -99,35 +102,36 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
-		env:    args.EnvConfig,
-		file:   args.ConfigFile,
-		global: args.GlobalConfig,
-		local:  args.LocalConfig,
+		env:      args.EnvConfig,
+		file:     args.ConfigFile,
+		unscoped: args.UnscopedConfig,
 	})
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			ConfigFile:       args.ConfigFile,
-			DryRun:           args.DryRun,
-			EnvConfig:        args.EnvConfig,
-			GitConfigAccess:  args.Access,
-			GitVersion:       args.GitVersion,
-			GlobalGitConfig:  args.GlobalConfig,
-			LocalGitConfig:   args.LocalConfig,
-			NormalConfigData: normalConfig,
+			ConfigFile:        args.ConfigFile,
+			DryRun:            args.DryRun,
+			EnvConfig:         args.EnvConfig,
+			GitConfigAccess:   args.Access,
+			GitVersion:        args.GitVersion,
+			GlobalGitConfig:   args.GlobalConfig,
+			LocalGitConfig:    args.LocalConfig,
+			NormalConfigData:  normalConfig,
+			UnscopedGitConfig: args.UnscopedConfig,
 		},
 		UnvalidatedConfig: unvalidatedConfig,
 	}
 }
 
 type NewUnvalidatedConfigArgs struct {
-	Access        gitconfig.Access
-	ConfigFile    Option[configdomain.PartialConfig]
-	DryRun        configdomain.DryRun
-	EnvConfig     configdomain.PartialConfig
-	FinalMessages stringslice.Collector
-	GitVersion    git.Version
-	GlobalConfig  configdomain.PartialConfig
-	LocalConfig   configdomain.PartialConfig
+	Access         gitconfig.Access
+	ConfigFile     Option[configdomain.PartialConfig]
+	DryRun         configdomain.DryRun
+	EnvConfig      configdomain.PartialConfig
+	FinalMessages  stringslice.Collector
+	GitVersion     git.Version
+	GlobalConfig   configdomain.PartialConfig
+	LocalConfig    configdomain.PartialConfig
+	UnscopedConfig configdomain.PartialConfig
 }
 
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {
@@ -135,15 +139,13 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, co
 	if configFile, hasConfigFile := args.file.Get(); hasConfigFile {
 		result = result.Merge(configFile)
 	}
-	result = result.Merge(args.global)
-	result = result.Merge(args.local)
+	result = result.Merge(args.unscoped)
 	result = result.Merge(args.env)
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }
 
 type mergeConfigsArgs struct {
-	env    configdomain.PartialConfig         // configuration data taken from environment variables
-	file   Option[configdomain.PartialConfig] // data of the configuration file
-	global configdomain.PartialConfig         // data from the global Git configuration
-	local  configdomain.PartialConfig         // data from the local Git configuration
+	env      configdomain.PartialConfig         // configuration data taken from environment variables
+	file     Option[configdomain.PartialConfig] // data of the configuration file
+	unscoped configdomain.PartialConfig         // data from the unscoped Git configuration
 }

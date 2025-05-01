@@ -15,6 +15,7 @@ Feature: make the current branch a contribution branch verbosely
       |        | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                  |
       |        | git config -lz --includes --global                                                                                                                                                                                                                                                                                                             |
       |        | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
+      |        | git config -lz --includes                                                                                                                                                                                                                                                                                                                      |
       |        | git for-each-ref --format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket) --sort=refname refs/heads/ refs/remotes/ |
       |        | git config git-town-branch.feature.branchtype contribution                                                                                                                                                                                                                                                                                     |
       |        | git for-each-ref --format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket) --sort=refname refs/heads/ refs/remotes/ |
@@ -22,7 +23,7 @@ Feature: make the current branch a contribution branch verbosely
       |        | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
     And Git Town prints:
       """
-      Ran 9 shell commands
+      Ran 10 shell commands
       """
     And Git Town prints:
       """
@@ -38,6 +39,7 @@ Feature: make the current branch a contribution branch verbosely
       |        | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                  |
       |        | git config -lz --includes --global                                                                                                                                                                                                                                                                                                             |
       |        | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
+      |        | git config -lz --includes                                                                                                                                                                                                                                                                                                                      |
       |        | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                              |
       |        | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                           |
       |        | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                               |
@@ -49,6 +51,6 @@ Feature: make the current branch a contribution branch verbosely
       |        | git config --unset git-town-branch.feature.branchtype                                                                                                                                                                                                                                                                                          |
     And Git Town prints:
       """
-      Ran 13 shell commands
+      Ran 14 shell commands
       """
     And branch "feature" now has type "feature"

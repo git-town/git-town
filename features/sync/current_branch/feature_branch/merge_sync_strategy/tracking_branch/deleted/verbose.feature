@@ -20,6 +20,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                  |
       |        | backend  | git config -lz --includes --global                                                                                                                                                                                                                                                                                                             |
       |        | backend  | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
+      |        | backend  | git config -lz --includes                                                                                                                                                                                                                                                                                                                      |
       |        | backend  | git for-each-ref --format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket) --sort=refname refs/heads/ refs/remotes/ |
       |        | backend  | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                              |
       |        | backend  | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                           |
@@ -43,7 +44,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                 |
     And Git Town prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And the branches are now
       | REPOSITORY    | BRANCHES     |
@@ -60,6 +61,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                  |
       |        | backend  | git config -lz --includes --global                                                                                                                                                                                                                                                                                                             |
       |        | backend  | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
+      |        | backend  | git config -lz --includes                                                                                                                                                                                                                                                                                                                      |
       |        | backend  | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                              |
       |        | backend  | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                           |
       |        | backend  | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                               |
@@ -74,6 +76,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main                                                                                                                                                                                                                                                                                                     |
     And Git Town prints:
       """
-      Ran 16 shell commands.
+      Ran 17 shell commands.
       """
     And the initial branches and lineage exist now
