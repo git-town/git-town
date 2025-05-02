@@ -55,12 +55,12 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved conflict between main and feature branch" for the commit message
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                    |
-      | feature | git commit --no-edit                       |
-      |         | git merge --no-edit --ff origin/feature    |
-      |         | git reset --soft main                      |
-      |         | git commit -m "conflicting feature commit" |
-      |         | git push --force-with-lease                |
+      | BRANCH  | COMMAND                                                |
+      | feature | git commit --no-edit                                   |
+      |         | git merge --no-edit --ff origin/feature                |
+      |         | git reset --soft main                                  |
+      |         | git commit -m "conflicting feature commit" --no-verify |
+      |         | git push --force-with-lease                            |
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now
@@ -74,11 +74,11 @@ Feature: while syncing using the "compress" strategy, handle conflicts between t
     And I run "git commit" and enter "resolved conflict between main and feature branch" for the commit message
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                    |
-      | feature | git merge --no-edit --ff origin/feature    |
-      |         | git reset --soft main                      |
-      |         | git commit -m "conflicting feature commit" |
-      |         | git push --force-with-lease                |
+      | BRANCH  | COMMAND                                                |
+      | feature | git merge --no-edit --ff origin/feature                |
+      |         | git reset --soft main                                  |
+      |         | git commit -m "conflicting feature commit" --no-verify |
+      |         | git push --force-with-lease                            |
     And all branches are now synchronized
     And no merge is in progress
     And these committed files exist now

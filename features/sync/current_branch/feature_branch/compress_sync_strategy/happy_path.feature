@@ -32,7 +32,7 @@ Feature: one person making a series of commits and syncs in between
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature"             |
+      |         | git commit -m "the feature" --no-verify |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
@@ -51,7 +51,7 @@ Feature: one person making a series of commits and syncs in between
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature"             |
+      |         | git commit -m "the feature" --no-verify |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
@@ -70,7 +70,7 @@ Feature: one person making a series of commits and syncs in between
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature"             |
+      |         | git commit -m "the feature" --no-verify |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
