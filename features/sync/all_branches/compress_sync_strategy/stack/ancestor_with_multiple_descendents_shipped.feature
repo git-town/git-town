@@ -36,13 +36,13 @@ Feature: shipped branch with multiple descendents
       | feature-1a | git merge --no-edit --ff main                     |
       |            | git merge --no-edit --ff origin/feature-1a        |
       |            | git reset --soft main                             |
-      |            | git commit -m "feature-1a commit"                 |
+      |            | git commit -m "feature-1a commit" --no-verify     |
       |            | git push --force-with-lease                       |
       |            | git checkout feature-1b                           |
       | feature-1b | git merge --no-edit --ff main                     |
       |            | git merge --no-edit --ff origin/feature-1b        |
       |            | git reset --soft main                             |
-      |            | git commit -m "feature-1b commit"                 |
+      |            | git commit -m "feature-1b commit" --no-verify     |
       |            | git push --force-with-lease                       |
       |            | git push --tags                                   |
     And Git Town prints:

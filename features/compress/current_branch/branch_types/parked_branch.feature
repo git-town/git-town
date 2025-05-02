@@ -18,7 +18,7 @@ Feature: compress the commits on a parked branch
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
       |        | git reset --soft main                           |
-      |        | git commit -m "commit 1"                        |
+      |        | git commit -m "commit 1" --no-verify            |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

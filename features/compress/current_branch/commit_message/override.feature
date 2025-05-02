@@ -18,7 +18,7 @@ Feature: compress the commits on a feature branch
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git reset --soft main                           |
-      |         | git commit -m compressed                        |
+      |         | git commit -m compressed --no-verify            |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

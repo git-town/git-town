@@ -27,11 +27,11 @@ Feature: compress the commits on an entire stack when at the stack root
       |        | git add -A                                      |
       |        | git stash -m "Git Town WIP"                     |
       |        | git reset --soft main                           |
-      |        | git commit -m "alpha 1"                         |
+      |        | git commit -m "alpha 1" --no-verify             |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
       | beta   | git reset --soft alpha                          |
-      |        | git commit -m "beta 1"                          |
+      |        | git commit -m "beta 1" --no-verify              |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
       | alpha  | git stash pop                                   |

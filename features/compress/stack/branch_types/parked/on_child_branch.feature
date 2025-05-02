@@ -24,7 +24,7 @@ Feature: does not compress non-active parked branches in the stack
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git reset --soft parked                         |
-      |        | git commit -m "child 1"                         |
+      |        | git commit -m "child 1" --no-verify             |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

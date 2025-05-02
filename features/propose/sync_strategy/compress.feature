@@ -25,7 +25,7 @@ Feature: proposing using the "compress" sync strategy
       | existing | git merge --no-edit --ff main                                       |
       |          | git merge --no-edit --ff origin/existing                            |
       |          | git reset --soft main                                               |
-      |          | git commit -m "local existing commit 1"                             |
+      |          | git commit -m "local existing commit 1" --no-verify                 |
       |          | git push --force-with-lease                                         |
       | (none)   | open https://github.com/git-town/git-town/compare/existing?expand=1 |
     And the initial branches and lineage exist now

@@ -16,14 +16,14 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | existing | git fetch --prune --tags                 |
-      |          | git merge --no-edit --ff main            |
-      |          | git merge --no-edit --ff origin/existing |
-      |          | git reset --soft main                    |
-      |          | git commit -m "existing commit 1"        |
-      |          | git push --force-with-lease              |
-      |          | git checkout -b new                      |
+      | BRANCH   | COMMAND                                       |
+      | existing | git fetch --prune --tags                      |
+      |          | git merge --no-edit --ff main                 |
+      |          | git merge --no-edit --ff origin/existing      |
+      |          | git reset --soft main                         |
+      |          | git commit -m "existing commit 1" --no-verify |
+      |          | git push --force-with-lease                   |
+      |          | git checkout -b new                           |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           |
       | existing | local, origin | existing commit 1 |

@@ -34,15 +34,15 @@ Feature: compress the commits on an entire stack when at the stack root
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
       |        | git reset --soft main                           |
-      |        | git commit -m "alpha 1"                         |
+      |        | git commit -m "alpha 1" --no-verify             |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
       | beta   | git reset --soft alpha                          |
-      |        | git commit -m "beta 1"                          |
+      |        | git commit -m "beta 1" --no-verify              |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout gamma                              |
       | gamma  | git reset --soft beta                           |
-      |        | git commit -m "gamma 1"                         |
+      |        | git commit -m "gamma 1" --no-verify             |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout alpha                              |
     And all branches are now synchronized

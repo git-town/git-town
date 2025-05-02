@@ -24,11 +24,11 @@ Feature: compresses active parked branches
       | BRANCH | COMMAND                                         |
       | parked | git fetch --prune --tags                        |
       |        | git reset --soft main                           |
-      |        | git commit -m "parked 1"                        |
+      |        | git commit -m "parked 1" --no-verify            |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout child                              |
       | child  | git reset --soft parked                         |
-      |        | git commit -m "child 1"                         |
+      |        | git commit -m "child 1" --no-verify             |
       |        | git push --force-with-lease --force-if-includes |
       |        | git checkout parked                             |
     And all branches are now synchronized
