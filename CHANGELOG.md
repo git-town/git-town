@@ -1,6 +1,5 @@
 # Git Town Changelog
 
-Git Town 20 includes many new features and stability improvements. Git Town now uses plumbing commands in the backend, greatly improving the long-term stability of the tool for decades to come.
 
 ## 20.0.0 (2025-05-02)
 
@@ -18,7 +17,7 @@ Git Town 20 includes many new features and stability improvements. Git Town now 
 
 - `git town sync` can now correcly sync branches whose commits got amended or rebased ([#4586](https://github.com/git-town/git-town/issues/4586)).
 - You can now propose an entire stack by running `git town propose --stack` ([#3840](https://github.com/git-town/git-town/issues/3840)).
-- `git town propose` now always syncs in [detached mode](https://www.git-town.com/commands/sync.html#-d--detached) ([](https://github.com/git-town/git-town/issues/4781)).
+- `git town propose` now always syncs in [detached mode](https://www.git-town.com/commands/sync.html#-d--detached) ([#4781](https://github.com/git-town/git-town/issues/4781)).
 - `git town propose` now un-parks parked branches when proposing them ([#4780](https://github.com/git-town/git-town/issues/4780)).
 - The [setup assistant](https://www.git-town.com/configuration.html) no longer asks for data already provided by the [Git Town configuration file](https://www.git-town.com/configuration-file.html) ([#4710](https://github.com/git-town/git-town/issues/4710)).
 - The setup assistant now offers to store forge API tokens globally for all repos on your machine ([#4112](https://github.com/git-town/git-town/issues/4112)).
@@ -32,7 +31,7 @@ Git Town 20 includes many new features and stability improvements. Git Town now 
 - `git town prepend --beam` now works correctly with prototype branches ([#4768](https://github.com/git-town/git-town/issues/4768)).
 - Git Town now loads the forge API token with the same precendence as other configuration data ([#7428](https://github.com/git-town/git-town/pull/4728)).
 - [git town undo](https://www.git-town.com/commands/undo.html) now correctly undoes situations where only the local part of a branch got renamed ([#4794](https://github.com/git-town/git-town/pull/4794)).
-- Git Town no longer overrides colored output settings ([#4840](https://github.com/git-town/git-town/pull/4840)).
+- Git Town is now works even if Git's `color.ui` setting is `always` ([#4840](https://github.com/git-town/git-town/pull/4840)).
 - The setup assistant now only updates the stored access token of the forge that is actually being used ([#4819](https://github.com/git-town/git-town/issues/4819)).
 
 ## 19.0.0 (2025-04-17)
