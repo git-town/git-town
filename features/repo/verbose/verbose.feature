@@ -10,9 +10,9 @@ Feature: display all executed Git commands
       | BRANCH | TYPE     | COMMAND                                   |
       |        | backend  | git version                               |
       |        | backend  | git rev-parse --show-toplevel             |
-      |        | backend  | git config -lz --includes --global        |
-      |        | backend  | git config -lz --includes --local         |
-      |        | backend  | git config -lz --includes                 |
+      |        | backend  | git config -lz --global                   |
+      |        | backend  | git config -lz --local                    |
+      |        | backend  | git config -lz                            |
       |        | backend  | which wsl-open                            |
       |        | backend  | which garcon-url-handler                  |
       |        | backend  | which xdg-open                            |

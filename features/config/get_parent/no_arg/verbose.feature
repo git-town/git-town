@@ -9,13 +9,13 @@ Feature: display the parent of a top-level feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | TYPE    | COMMAND                            |
-      |        | backend | git version                        |
-      |        | backend | git rev-parse --show-toplevel      |
-      |        | backend | git config -lz --includes --global |
-      |        | backend | git config -lz --includes --local  |
-      |        | backend | git config -lz --includes          |
-      |        | backend | git branch --show-current          |
+      | BRANCH | TYPE    | COMMAND                       |
+      |        | backend | git version                   |
+      |        | backend | git rev-parse --show-toplevel |
+      |        | backend | git config -lz --global       |
+      |        | backend | git config -lz --local        |
+      |        | backend | git config -lz                |
+      |        | backend | git branch --show-current     |
     And Git Town prints:
       """
       Ran 6 shell commands.
