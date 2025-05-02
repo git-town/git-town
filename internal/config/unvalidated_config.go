@@ -35,10 +35,8 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 
 func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
 	globalSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeGlobal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	globalGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, false, nil)
-	localSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
-	unscopedSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(None[configdomain.ConfigScope](), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unscopedSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(None[configdomain.ConfigScope](), false)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unscopedGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
@@ -53,8 +51,6 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 		EnvConfig:         envConfig,
 		GitConfigAccess:   self.NormalConfig.GitConfigAccess,
 		GitVersion:        self.NormalConfig.GitVersion,
-		GlobalGitConfig:   globalGitConfig,
-		LocalGitConfig:    localGitConfig,
 		NormalConfigData:  normalConfig,
 		UnscopedGitConfig: unscopedGitConfig,
 	}
@@ -91,8 +87,6 @@ func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version
 			EnvConfig:         configdomain.EmptyPartialConfig(),
 			GitConfigAccess:   gitAccess,
 			GitVersion:        gitVersion,
-			GlobalGitConfig:   configdomain.EmptyPartialConfig(),
-			LocalGitConfig:    configdomain.EmptyPartialConfig(),
 			NormalConfigData:  configdomain.DefaultNormalConfig(),
 			UnscopedGitConfig: configdomain.EmptyPartialConfig(),
 		},
@@ -113,8 +107,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 			EnvConfig:         args.EnvConfig,
 			GitConfigAccess:   args.Access,
 			GitVersion:        args.GitVersion,
-			GlobalGitConfig:   args.GlobalConfig,
-			LocalGitConfig:    args.LocalConfig,
 			NormalConfigData:  normalConfig,
 			UnscopedGitConfig: args.UnscopedConfig,
 		},
@@ -129,8 +121,6 @@ type NewUnvalidatedConfigArgs struct {
 	EnvConfig      configdomain.PartialConfig
 	FinalMessages  stringslice.Collector
 	GitVersion     git.Version
-	GlobalConfig   configdomain.PartialConfig
-	LocalConfig    configdomain.PartialConfig
 	UnscopedConfig configdomain.PartialConfig
 }
 
