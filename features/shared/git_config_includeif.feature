@@ -4,7 +4,7 @@ Feature: the Git configuration uses includeIf
     Given a Git repo with origin
     And the home directory contains file ".gitconfig" with content
       """
-      [includeIf "hasconfig:remote.*.url:git@github.com*/**"]
+      [includeIf "onbranch:main"]
       path = .gitconfig-personal
       """
     And the home directory contains file ".gitconfig-personal" with content
@@ -14,7 +14,7 @@ Feature: the Git configuration uses includeIf
         email = user@acme.com
       """
     When I run "git-town hack new"
-    Then Git Town prints the error:
-      """
-      please set the Git user email by running: git config --global user.email "<your email>"
-      """
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git checkout -b new      |
