@@ -8,7 +8,7 @@ import (
 const mergeLong = "merge"
 
 // type-safe access to the CLI arguments of type configdomain.ShipIntoNonPerennialParent
-func SwitchMerge() (AddFunc, ReadMergeFlagFunc) {
+func Merge() (AddFunc, ReadMergeFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.Flags().BoolP(mergeLong, "m", false, "merge uncommitted changes into the target branch")
 	}
