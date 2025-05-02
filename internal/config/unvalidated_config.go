@@ -35,11 +35,11 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 
 func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
 	globalSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeGlobal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	globalGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, false, self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
+	globalGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, false, nil)
 	localSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
+	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	unscopedSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(None[configdomain.ConfigScope](), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unscopedGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, self.NormalConfig.GitConfigAccess.RemoveLocalConfigValue)
+	unscopedGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		env:      envConfig,
