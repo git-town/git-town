@@ -34,9 +34,9 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 }
 
 func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot configdomain.SingleSnapshot) {
-	globalSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeGlobal, false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	globalSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeGlobal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	globalGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, false, nil)
-	localSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(configdomain.ConfigScopeLocal, false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ = self.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
