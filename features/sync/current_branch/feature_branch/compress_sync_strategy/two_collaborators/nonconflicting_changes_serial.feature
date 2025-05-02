@@ -38,7 +38,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature" --no-verify |
+      |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                         |
@@ -68,7 +68,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature" --no-verify |
+      |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME | FILE CONTENT                         |
@@ -91,11 +91,11 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     When I resolve the conflict in "file" with "my content 1 \n\n coworker content 1"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git commit --no-edit                    |
-      |         | git reset --soft main                   |
-      |         | git commit -m "the feature" --no-verify |
-      |         | git push --force-with-lease             |
+      | BRANCH  | COMMAND                     |
+      | feature | git commit --no-edit        |
+      |         | git reset --soft main       |
+      |         | git commit -m "the feature" |
+      |         | git push --force-with-lease |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                         |
       | feature | local, origin | the feature | file      | my content 1 \n\n coworker content 1 |
@@ -112,7 +112,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature" --no-verify |
+      |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                         |
@@ -135,11 +135,11 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     When the coworker resolves the conflict in "file" with "my content 2 \n\n coworker content 1"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | feature | git commit --no-edit                    |
-      |         | git reset --soft main                   |
-      |         | git commit -m "the feature" --no-verify |
-      |         | git push --force-with-lease             |
+      | BRANCH  | COMMAND                     |
+      | feature | git commit --no-edit        |
+      |         | git reset --soft main       |
+      |         | git commit -m "the feature" |
+      |         | git push --force-with-lease |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE     |
       | feature | local            | the feature |
@@ -156,7 +156,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature" --no-verify |
+      |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME | FILE CONTENT                         |
