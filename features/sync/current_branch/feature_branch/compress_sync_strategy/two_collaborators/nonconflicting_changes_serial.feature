@@ -6,7 +6,6 @@ Feature: two people make alternating non-conflicting changes to the same branch 
   because each of their branches contains a single commit that introduces all the changes
   and Git doesn't know which of the branches is correct.
 
-  @this
   Scenario:
     Given a Git repo with origin
     And the committed configuration file:
