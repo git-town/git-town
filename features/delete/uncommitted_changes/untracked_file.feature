@@ -16,13 +16,13 @@ Feature: delete the current branch that has an uncommitted file
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                               |
-      | current | git fetch --prune --tags                                              |
-      |         | git push origin :current                                              |
-      |         | git add -A                                                            |
-      |         | git commit -m "Committing open changes on deleted branch" --no-verify |
-      |         | git checkout other                                                    |
-      | other   | git branch -D current                                                 |
+      | BRANCH  | COMMAND                                                   |
+      | current | git fetch --prune --tags                                  |
+      |         | git push origin :current                                  |
+      |         | git add -A                                                |
+      |         | git commit -m "Committing open changes on deleted branch" |
+      |         | git checkout other                                        |
+      | other   | git branch -D current                                     |
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |
