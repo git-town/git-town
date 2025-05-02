@@ -49,7 +49,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
-		if updateOutdated {
+		if updateOutdated && hasScope {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
 				self.UpdateDeprecatedSetting(scope, configKey, newKey, value)
