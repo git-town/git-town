@@ -371,8 +371,8 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "AuthorOverride": "user@acme.com",
-        "Message": "my message",
-        "RunCommitHook": true
+        "CommitHook": true,
+        "Message": "my message"
       },
       "type": "CommitWithMessage"
     },
