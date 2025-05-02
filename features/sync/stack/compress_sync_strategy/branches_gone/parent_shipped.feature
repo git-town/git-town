@@ -28,7 +28,7 @@ Feature: using the "compress" strategy, sync a branch whose parent was shipped
       | child  | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/child             |
       |        | git reset --soft main                             |
-      |        | git commit -m "child commit 1" --no-verify        |
+      |        | git commit -m "child commit 1"                    |
       |        | git push --force-with-lease                       |
     And Git Town prints:
       """

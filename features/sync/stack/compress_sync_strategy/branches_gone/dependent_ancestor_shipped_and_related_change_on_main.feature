@@ -52,12 +52,12 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                 |
-      | beta   | git commit --no-edit                    |
-      |        | git merge --no-edit --ff origin/beta    |
-      |        | git reset --soft main                   |
-      |        | git commit -m "beta commit" --no-verify |
-      |        | git push --force-with-lease             |
+      | BRANCH | COMMAND                              |
+      | beta   | git commit --no-edit                 |
+      |        | git merge --no-edit --ff origin/beta |
+      |        | git reset --soft main                |
+      |        | git commit -m "beta commit"          |
+      |        | git push --force-with-lease          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                    | FILE NAME | FILE CONTENT          |

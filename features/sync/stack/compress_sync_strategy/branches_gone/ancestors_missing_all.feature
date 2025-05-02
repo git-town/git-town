@@ -23,15 +23,15 @@ Feature: stacked changes where all ancestor branches aren't local
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                        |
-      | gamma  | git fetch --prune --tags                       |
-      |        | git merge --no-edit --ff origin/beta           |
-      |        | git merge --no-edit --ff origin/alpha          |
-      |        | git merge --no-edit --ff origin/main           |
-      |        | git merge --no-edit --ff origin/gamma          |
-      |        | git reset --soft origin/beta                   |
-      |        | git commit -m "local gamma commit" --no-verify |
-      |        | git push --force-with-lease                    |
+      | BRANCH | COMMAND                               |
+      | gamma  | git fetch --prune --tags              |
+      |        | git merge --no-edit --ff origin/beta  |
+      |        | git merge --no-edit --ff origin/alpha |
+      |        | git merge --no-edit --ff origin/main  |
+      |        | git merge --no-edit --ff origin/gamma |
+      |        | git reset --soft origin/beta          |
+      |        | git commit -m "local gamma commit"    |
+      |        | git push --force-with-lease           |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |
