@@ -10,8 +10,8 @@ This guide is for maintainers who make releases of Git Town.
     the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `19.0.0`
-    - double-digits: `19.0`
+    - triple-digits: `20.0.0`
+    - double-digits: `20.0`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
