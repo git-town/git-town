@@ -24,7 +24,7 @@ type Access struct {
 	Runner
 }
 
-func (self *Access) LoadSnapshot(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, error) {
+func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz", "--includes"}
 	cmdArgs = append(cmdArgs, scope.GitFlag())
