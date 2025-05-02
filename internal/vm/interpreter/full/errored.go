@@ -22,11 +22,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
-	globalSnapshot, _, err := configGitAccess.Load(configdomain.ConfigScopeGlobal, false)
+	globalSnapshot, err := configGitAccess.Load(configdomain.ConfigScopeGlobal, false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, _, err := configGitAccess.Load(configdomain.ConfigScopeLocal, false)
+	localSnapshot, err := configGitAccess.Load(configdomain.ConfigScopeLocal, false)
 	if err != nil {
 		return err
 	}

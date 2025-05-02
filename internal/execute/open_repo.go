@@ -62,11 +62,19 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
-	globalSnapshot, globalConfig, err := configGitAccess.Load(configdomain.ConfigScopeGlobal, true)
+	globalSnapshot, err := configGitAccess.Load(configdomain.ConfigScopeGlobal, true)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	localSnapshot, localConfig, err := configGitAccess.Load(configdomain.ConfigScopeLocal, true)
+	globalConfig, err := configdomain.NewPartialConfigFromSnapshot(globalSnapshot, true, configGitAccess.RemoveLocalConfigValue)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	localSnapshot, err := configGitAccess.Load(configdomain.ConfigScopeLocal, true)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	localConfig, err := configdomain.NewPartialConfigFromSnapshot(localSnapshot, true, configGitAccess.RemoveLocalConfigValue)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
