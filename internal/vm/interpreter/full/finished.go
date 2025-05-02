@@ -24,11 +24,11 @@ func finished(args finishedArgs) error {
 		return err
 	}
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
-	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), false)
+	globalSnapshot, err := configGitAccess.LoadSnapshot(configdomain.ConfigScopeGlobal, false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), false)
+	localSnapshot, err := configGitAccess.LoadSnapshot(configdomain.ConfigScopeLocal, false)
 	if err != nil {
 		return err
 	}
