@@ -29,7 +29,7 @@ Git Town 2000! 🎉
 - `git town prepend --beam` now works correctly with prototype branches ([#4768](https://github.com/git-town/git-town/issues/4768)).
 - Git Town now loads the forge API token with the same precendence as other configuration data ([#7428](https://github.com/git-town/git-town/pull/4728)).
 - [git town undo](https://www.git-town.com/commands/undo.html) now correctly undoes situations where only the local part of a branch got renamed ([#4794](https://github.com/git-town/git-town/pull/4794)).
-- Git Town is now works even if Git's `color.ui` setting is `always` ([#4840](https://github.com/git-town/git-town/pull/4840)).
+- Git Town now works even if Git's `color.ui` setting is `always` ([#4840](https://github.com/git-town/git-town/pull/4840)).
 - The setup assistant now only updates the stored access token of the forge that is actually being used ([#4819](https://github.com/git-town/git-town/issues/4819)).
 - [git town status reset](https://www.git-town.com/commands/status-reset.html) can now be run from a subdirectory ([#4812](https://github.com/git-town/git-town/pull/4812)).
 
