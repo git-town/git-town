@@ -23,6 +23,7 @@ Feature: swapping a feature branch verbosely
       |          | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                  |
       |          | git config -lz --includes --global                                                                                                                                                                                                                                                                                                             |
       |          | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
+      |          | git config -lz --includes                                                                                                                                                                                                                                                                                                                      |
       |          | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                              |
       |          | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                           |
       |          | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                               |
@@ -57,7 +58,7 @@ Feature: swapping a feature branch verbosely
       |          | git stash list                                                                                                                                                                                                                                                                                                                                 |
     And Git Town prints:
       """
-      Ran 36 shell commands.
+      Ran 37 shell commands.
       """
 
   Scenario: undo
@@ -68,6 +69,7 @@ Feature: swapping a feature branch verbosely
       |          | git rev-parse --show-toplevel                                                                                                                                                                                                                                                                                                                  |
       |          | git config -lz --includes --global                                                                                                                                                                                                                                                                                                             |
       |          | git config -lz --includes --local                                                                                                                                                                                                                                                                                                              |
+      |          | git config -lz --includes                                                                                                                                                                                                                                                                                                                      |
       |          | git status -z --ignore-submodules                                                                                                                                                                                                                                                                                                              |
       |          | git rev-parse --verify -q MERGE_HEAD                                                                                                                                                                                                                                                                                                           |
       |          | git rev-parse --absolute-git-dir                                                                                                                                                                                                                                                                                                               |
@@ -98,5 +100,5 @@ Feature: swapping a feature branch verbosely
       |          | git config git-town-branch.branch-3.parent branch-2                                                                                                                                                                                                                                                                                            |
     And Git Town prints:
       """
-      Ran 32 shell commands.
+      Ran 33 shell commands.
       """

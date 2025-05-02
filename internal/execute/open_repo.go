@@ -78,6 +78,14 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
+	unscopedSnapshot, err := configGitAccess.Load(None[configdomain.ConfigScope](), false)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, configGitAccess.RemoveLocalConfigValue)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
 	configSnapshot := undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
@@ -94,14 +102,15 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access:        configGitAccess,
-		ConfigFile:    configFile,
-		DryRun:        args.DryRun,
-		EnvConfig:     envconfig.Load(),
-		FinalMessages: finalMessages,
-		GitVersion:    gitVersion,
-		GlobalConfig:  globalConfig,
-		LocalConfig:   localConfig,
+		Access:         configGitAccess,
+		ConfigFile:     configFile,
+		DryRun:         args.DryRun,
+		EnvConfig:      envconfig.Load(),
+		FinalMessages:  finalMessages,
+		GitVersion:     gitVersion,
+		GlobalConfig:   globalConfig,
+		LocalConfig:    localConfig,
+		UnscopedConfig: unscopedConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,

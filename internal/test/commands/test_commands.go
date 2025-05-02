@@ -421,7 +421,7 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 }
 
 func (self *TestCommands) Reload() {
-	globalConfigSnapshot, localConfigSnapshot := self.Config.Reload()
+	globalConfigSnapshot, localConfigSnapshot, _ := self.Config.Reload()
 	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
 	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
 }
