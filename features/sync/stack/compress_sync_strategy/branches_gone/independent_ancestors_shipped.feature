@@ -32,7 +32,7 @@ Feature: sync a stack that contains shipped parent branches using the "compress"
       | feature-3 | git merge --no-edit --ff main                     |
       |           | git merge --no-edit --ff origin/feature-3         |
       |           | git reset --soft main                             |
-      |           | git commit -m "feature-3 commit A"                |
+      |           | git commit -m "feature-3 commit A" --no-verify    |
       |           | git push --force-with-lease                       |
     And Git Town prints:
       """

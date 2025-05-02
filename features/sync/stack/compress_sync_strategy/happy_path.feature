@@ -30,13 +30,13 @@ Feature: sync a grandchild feature branch using the "compress" strategy
       | parent | git merge --no-edit --ff main                     |
       |        | git merge --no-edit --ff origin/parent            |
       |        | git reset --soft main                             |
-      |        | git commit -m "local parent commit"               |
+      |        | git commit -m "local parent commit" --no-verify   |
       |        | git push --force-with-lease                       |
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff parent                   |
       |        | git merge --no-edit --ff origin/child             |
       |        | git reset --soft parent                           |
-      |        | git commit -m "local child commit"                |
+      |        | git commit -m "local child commit" --no-verify    |
       |        | git push --force-with-lease                       |
     And all branches are now synchronized
     And these commits exist now
