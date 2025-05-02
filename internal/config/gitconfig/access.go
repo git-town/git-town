@@ -32,7 +32,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 		cmdArgs = append(cmdArgs, scope.GitFlag())
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
-	if err != nil {
+	if err != nil || output == "" {
 		return snapshot, err
 	}
 	for _, line := range strings.Split(output, "\x00") {
