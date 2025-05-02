@@ -1,4 +1,4 @@
-Feature: compress the commits on a feature branch
+Feature: compress while disabling the pre-commit hook
 
   Background:
     Given a Git repo with origin
