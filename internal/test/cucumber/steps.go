@@ -1517,7 +1517,10 @@ func runCommand(ctx context.Context, command string) {
 		cmd, args := parts[0], parts[1:]
 		subProcess := exec.Command(cmd, args...) // #nosec
 		subProcess.Dir = state.fixture.Dir
-		subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
+		env := subProcess.Environ()
+		env = append(env, "LC_ALL=C")
+		env = append(env, "GIT_CONFIG_PARAMETERS='color.ui=always'")
+		subProcess.Env = env
 		outputBytes, _ := subProcess.CombinedOutput()
 		runOutput = string(outputBytes)
 		exitCode = subProcess.ProcessState.ExitCode()
