@@ -2,6 +2,7 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
@@ -20,8 +21,9 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
 		result.Value.Add(&opcodes.ChangesStage{})
 		result.Value.Add(&opcodes.CommitWithMessage{
-			AuthorOverride: None[gitdomain.Author](),
-			Message:        "Committing open changes to undo them",
+			AuthorOverride:   None[gitdomain.Author](),
+			Message:          "Committing open changes to undo them",
+			RunPreCommitHook: configdomain.CommitHookEnabled,
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {

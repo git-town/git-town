@@ -78,8 +78,9 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 		if firstCommitMessage, has := args.FirstCommitMessage.Get(); has {
 			args.Program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.LocalName})
 			args.Program.Value.Add(&opcodes.CommitWithMessage{
-				AuthorOverride: None[gitdomain.Author](),
-				Message:        firstCommitMessage,
+				AuthorOverride:   None[gitdomain.Author](),
+				Message:          firstCommitMessage,
+				RunPreCommitHook: configdomain.CommitHookEnabled,
 			})
 		}
 		if args.Offline.IsFalse() {
