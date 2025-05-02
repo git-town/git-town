@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v19/internal/cli/colors"
-	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v20/internal/cli/colors"
+	"github.com/git-town/git-town/v20/internal/gohacks"
 )
 
 // List contains elements and operations common to all BubbleTea-based list implementations.

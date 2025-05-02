@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/flags"
-	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v19/internal/config"
+	"github.com/git-town/git-town/v20/internal/cli/flags"
+	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/config"
 	"github.com/spf13/cobra"
 )
 

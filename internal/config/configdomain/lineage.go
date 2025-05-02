@@ -7,12 +7,12 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/cli/colors"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v19/internal/gohacks/slice"
-	"github.com/git-town/git-town/v19/internal/messages"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/colors"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v20/internal/gohacks/slice"
+	"github.com/git-town/git-town/v20/internal/messages"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // Lineage encapsulates all data and functionality around parent branches.

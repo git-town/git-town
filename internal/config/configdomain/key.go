@@ -3,9 +3,9 @@ package configdomain
 import (
 	"encoding/json"
 
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/pkg"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/pkg"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // Key contains all the keys used in Git Town's Git metadata configuration.

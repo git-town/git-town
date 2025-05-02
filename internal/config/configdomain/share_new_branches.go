@@ -3,7 +3,7 @@ package configdomain
 import (
 	"fmt"
 
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // ShareNewBranches describes how newly created branches should be shared with the rest of the team.
