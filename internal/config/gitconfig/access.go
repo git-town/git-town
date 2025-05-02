@@ -30,7 +30,7 @@ func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (c
 	cmdArgs = append(cmdArgs, scope.GitFlag())
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		// TODO: either document why we return nil here when there was an error here,
+		// TODO: either document why we return nil here when there was an error,
 		// or start returning the error.
 		// If returning nil, there is a risk that the initial snapshot is accidentally empty,
 		// the final snapshot contains things, and "git town undo" will remove every single Git config value.
