@@ -11,9 +11,10 @@ import (
 type CommitWithMessage struct {
 	AuthorOverride          Option[gitdomain.Author]
 	Message                 gitdomain.CommitMessage
+	RunPreCommitHook        configdomain.CommitHook
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CommitWithMessage) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, configdomain.UseCustomMessage(self.Message), self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, configdomain.UseCustomMessage(self.Message), self.AuthorOverride, self.RunPreCommitHook)
 }

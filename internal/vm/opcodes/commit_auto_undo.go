@@ -29,7 +29,7 @@ func (self *CommitAutoUndo) AutomaticUndoError() error {
 }
 
 func (self *CommitAutoUndo) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride, configdomain.CommitHookEnabled)
 }
 
 func (self *CommitAutoUndo) ShouldUndoOnError() bool {
