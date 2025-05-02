@@ -40,10 +40,6 @@ branches.
 Branches must be in sync to compress them; run `git town sync` before running
 this command.
 
-Compression disables the
-[pre-commit hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
-because it doesn't change committed data nor the commit message.
-
 ## Options
 
 #### `-m <text>`<br>`--message <text>`
@@ -77,6 +73,11 @@ compressed commit
 
 The new `compressed commit` now contains the changes from the old `commit 1`,
 `commit 2`, and `commit 3`.
+
+#### `--no-verify`
+
+Disables the
+[pre-commit hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
 
 #### `-s`<br>`--stack`
 
