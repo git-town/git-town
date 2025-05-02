@@ -1,4 +1,4 @@
-Feature: compressing a branch that is out of sync with its parent
+Feature: compressing a branch when its parent received additional commits
 
   Scenario: parent got more commits
     Given a Git repo with origin
