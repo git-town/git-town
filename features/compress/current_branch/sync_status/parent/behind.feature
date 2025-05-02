@@ -1,6 +1,6 @@
 Feature: compressing a branch when its parent received additional commits
 
-  Scenario: parent got more commits
+  Scenario: parent received more commits
     Given a Git repo with origin
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
