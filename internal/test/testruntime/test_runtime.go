@@ -96,12 +96,12 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		Access: gitconfig.Access{
 			Runner: &testRunner,
 		},
-		ConfigFile:     None[configdomain.PartialConfig](),
-		DryRun:         false,
-		EnvConfig:      configdomain.EmptyPartialConfig(),
-		FinalMessages:  stringslice.NewCollector(),
-		GitVersion:     git.Version{Major: 2, Minor: 38},
-		UnscopedConfig: configdomain.EmptyPartialConfig(),
+		ConfigFile:    None[configdomain.PartialConfig](),
+		DryRun:        false,
+		EnvConfig:     configdomain.EmptyPartialConfig(),
+		FinalMessages: stringslice.NewCollector(),
+		GitConfig:     configdomain.EmptyPartialConfig(),
+		GitVersion:    git.Version{Major: 2, Minor: 38},
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
 	testCommands := commands.TestCommands{
