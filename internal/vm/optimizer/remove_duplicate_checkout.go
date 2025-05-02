@@ -1,8 +1,8 @@
 package optimizer
 
 import (
-	"github.com/git-town/git-town/v19/internal/vm/program"
-	"github.com/git-town/git-town/v19/internal/vm/shared"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
 // RemoveDuplicateCheckout returns the given program were checkout opcodes

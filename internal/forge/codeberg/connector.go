@@ -7,15 +7,15 @@ import (
 	"strconv"
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
-	"github.com/git-town/git-town/v19/internal/cli/colors"
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/git/giturl"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/messages"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/colors"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/git/giturl"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/messages"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // Connector provides standardized connectivity for the given repository (codeberg.org/owner/repo)

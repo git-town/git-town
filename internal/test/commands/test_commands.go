@@ -7,17 +7,17 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	prodgit "github.com/git-town/git-town/v19/internal/git"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks/slice"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/test/datatable"
-	"github.com/git-town/git-town/v19/internal/test/subshell"
-	"github.com/git-town/git-town/v19/internal/test/testgit"
-	"github.com/git-town/git-town/v19/pkg/asserts"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	prodgit "github.com/git-town/git-town/v20/internal/git"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks/slice"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/test/datatable"
+	"github.com/git-town/git-town/v20/internal/test/subshell"
+	"github.com/git-town/git-town/v20/internal/test/testgit"
+	"github.com/git-town/git-town/v20/pkg/asserts"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 const ConfigFileCommitMessage = "persisted config file"
@@ -130,7 +130,10 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if slices.Contains(fields, "FILE CONTENT") {
-			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+			filecontent := ""
+			if commit.FileName != "" {
+				filecontent = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+			}
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -260,10 +263,6 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) string {
 	output := self.MustQuery("git", "show", location.String()+":"+filename)
-	if strings.HasPrefix(output, "tree ") {
-		// merge commits get an empty file content instead of "tree <SHA>"
-		return ""
-	}
 	return output
 }
 

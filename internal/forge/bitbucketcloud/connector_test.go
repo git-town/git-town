@@ -3,11 +3,11 @@ package bitbucketcloud_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/forge/bitbucketcloud"
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v19/internal/git/giturl"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/git/giturl"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

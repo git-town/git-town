@@ -1,7 +1,7 @@
 package components
 
 import (
-	"github.com/git-town/git-town/v19/internal/cli/colors"
+	"github.com/git-town/git-town/v20/internal/cli/colors"
 )
 
 // FormattedToken provides the given API token in a printable format.

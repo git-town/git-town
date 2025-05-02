@@ -3,11 +3,11 @@ package undoconfig_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v19/internal/undo/undodomain"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/program"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/undo/undodomain"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/shoenig/test/must"
 )
 

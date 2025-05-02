@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/messages"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/messages"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 func ParseBool(text, source string) (bool, error) {

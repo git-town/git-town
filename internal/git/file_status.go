@@ -5,8 +5,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/messages"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/messages"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // information about each file reported by "git status -z"

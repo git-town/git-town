@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/vm/shared"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
 // restores stashed away changes into the workspace
