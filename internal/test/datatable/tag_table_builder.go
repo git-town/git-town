@@ -3,7 +3,7 @@ package datatable
 import (
 	"sort"
 
-	"github.com/git-town/git-town/v19/internal/test/helpers"
+	"github.com/git-town/git-town/v20/internal/test/helpers"
 )
 
 // TagTableBuilder collects data about tags in Git repositories

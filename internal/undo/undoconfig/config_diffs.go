@@ -1,10 +1,10 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks/mapstools"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/program"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/program"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.

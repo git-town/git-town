@@ -10,7 +10,7 @@ set -e
 	echo
 	echo 'package opcodes'
 	echo
-	echo 'import "github.com/git-town/git-town/v19/internal/vm/shared"'
+	echo 'import "github.com/git-town/git-town/v20/internal/vm/shared"'
 	echo
 	echo '// All provides all existing opcodes.'
 	echo '// This is used to iterate all opcode types.'

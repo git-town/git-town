@@ -3,7 +3,7 @@ package format
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
 )
 
 // BranchLineage provides printable formatting of the given branch lineage.

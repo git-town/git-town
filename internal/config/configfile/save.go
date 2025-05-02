@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 )
 
 func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {

@@ -1,8 +1,8 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v19/internal/browser"
-	"github.com/git-town/git-town/v19/internal/vm/shared"
+	"github.com/git-town/git-town/v20/internal/browser"
+	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
 // BrowserOpen displays the existing proposal with the given URL in the browser.

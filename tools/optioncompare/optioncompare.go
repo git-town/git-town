@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	packagePath = "github.com/git-town/git-town/v19/pkg/prelude"
+	packagePath = "github.com/git-town/git-town/v20/pkg/prelude"
 	typeName    = "Option"
 )
 

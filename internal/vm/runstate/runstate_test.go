@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/program"
-	"github.com/git-town/git-town/v19/internal/vm/runstate"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	"github.com/git-town/git-town/v20/internal/vm/runstate"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
