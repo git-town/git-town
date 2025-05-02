@@ -26,11 +26,11 @@ func Finished(args FinishedArgs) error {
 		endBranchesSnapshot = Some(snapshot)
 	}
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
-	globalSnapshot, err := configGitAccess.LoadSnapshot(configdomain.ConfigScopeGlobal, false)
+	globalSnapshot, err := configGitAccess.Load(configdomain.ConfigScopeGlobal, false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, err := configGitAccess.LoadSnapshot(configdomain.ConfigScopeLocal, false)
+	localSnapshot, err := configGitAccess.Load(configdomain.ConfigScopeLocal, false)
 	if err != nil {
 		return err
 	}
