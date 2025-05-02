@@ -1,7 +1,8 @@
 # Git Town Changelog
 
-
 ## 20.0.0 (2025-05-02)
+
+Git Town 2000! 🎉
 
 #### BREAKING CHANGES
 
@@ -31,6 +32,10 @@
 - Git Town is now works even if Git's `color.ui` setting is `always` ([#4840](https://github.com/git-town/git-town/pull/4840)).
 - The setup assistant now only updates the stored access token of the forge that is actually being used ([#4819](https://github.com/git-town/git-town/issues/4819)).
 - [git town status reset](https://www.git-town.com/commands/status-reset.html) can now be run from a subdirectory ([#4812](https://github.com/git-town/git-town/pull/4812)).
+
+#### Contributors
+
+Git Town 2000 is a big release. Shoutout to @AmitJoki, @Ydot19, @ahgraber, @davidolrik, @erik-rw, @haltcase, @jmyers-figma, @judec-ps, @kevgo, @lvlcn-t, @nekitk, @niklastreml, @pradeepmurugesan, @ruudk, @stephenwade, @terheyden, @tharun208 for contributing code, feedback, and ideas to 124 shipped PRs and 17 resolved issues!
 
 ## 19.0.0 (2025-04-17)
 
