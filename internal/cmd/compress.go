@@ -79,7 +79,7 @@ func compressCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			noVerify, err := readNoVerifyFlag(cmd)
+			preCommitHook, err := readNoVerifyFlag(cmd)
 			if err != nil {
 				return err
 			}
@@ -91,7 +91,7 @@ func compressCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeCompress(dryRun, verbose, message, noVerify, stack)
+			return executeCompress(dryRun, verbose, message, preCommitHook, stack)
 		},
 	}
 	addDryRunFlag(&cmd)
