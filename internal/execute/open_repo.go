@@ -78,14 +78,6 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedSnapshot, err := configGitAccess.Load(None[configdomain.ConfigScope](), false)
-	if err != nil {
-		return emptyOpenRepoResult(), err
-	}
-	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, configGitAccess.RemoveLocalConfigValue)
-	if err != nil {
-		return emptyOpenRepoResult(), err
-	}
 	configSnapshot := undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
