@@ -21,9 +21,9 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
 		result.Value.Add(&opcodes.ChangesStage{})
 		result.Value.Add(&opcodes.CommitWithMessage{
-			AuthorOverride:   None[gitdomain.Author](),
-			Message:          "Committing open changes to undo them",
-			RunPreCommitHook: configdomain.CommitHookEnabled,
+			AuthorOverride: None[gitdomain.Author](),
+			Message:        "Committing open changes to undo them",
+			RunCommitHook:  configdomain.CommitHookEnabled,
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {
