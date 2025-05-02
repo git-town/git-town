@@ -58,6 +58,10 @@ Please be aware that this sync strategy leads to more merge conflicts than the
 "merge" sync strategy when more than one Git user makes commits to the same
 branch.
 
+The compress sync strategy disables the
+[pre-commit hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
+because it doesn't change committed data nor the commit message.
+
 ### config file
 
 In the [config file](../configuration-file.md) the feature sync strategy is part
