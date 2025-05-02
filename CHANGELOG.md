@@ -6,7 +6,7 @@ Git Town 2000! 🎉
 
 #### BREAKING CHANGES
 
-- The `push-new-branches` configuration option is now called `share-new-branches` and has additional options ([#3912](https://github.com/git-town/git-town/issues/3912)):
+- The `push-new-branches` configuration option is now called `share-new-branches` and allows additional ways of sharing freshly created branches ([#3912](https://github.com/git-town/git-town/issues/3912)):
   - `no`: keep new branches local (default)
   - `push`: push new branches to the [development remote](https://www.git-town.com/preferences/dev-remote.html)
   - `propose`: automatically create proposals for new branches. This helps being maximally transparent with progress on each item worked on.
