@@ -5,7 +5,7 @@ Feature: compressing a branch when its parent received additional commits
     And the branches
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
-    Given the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE          | FILE NAME    | FILE CONTENT      |
       | feature | local, origin | feature commit 1 | feature_file | feature content 1 |
       | feature | local, origin | feature commit 2 | feature_file | feature content 2 |
