@@ -24,10 +24,13 @@ type Access struct {
 	Runner
 }
 
-func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (configdomain.SingleSnapshot, error) {
+func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated bool) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz", "--includes"}
-	cmdArgs = append(cmdArgs, scope.GitFlag())
+	scope, hasScope := scopeOpt.Get()
+	if hasScope {
+		cmdArgs = append(cmdArgs, scope.GitFlag())
+	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
 		// TODO: either document why we return nil here when there was an error,
@@ -46,7 +49,7 @@ func (self *Access) Load(scope configdomain.ConfigScope, updateOutdated bool) (c
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
-		if updateOutdated {
+		if updateOutdated && hasScope {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
 				self.UpdateDeprecatedSetting(scope, configKey, newKey, value)
