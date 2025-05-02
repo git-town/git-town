@@ -19,7 +19,7 @@ Feature: compress a branch with a merge commit
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
       |         | git reset --soft main                           |
-      |         | git commit -m "commit 1" --no-verify            |
+      |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now

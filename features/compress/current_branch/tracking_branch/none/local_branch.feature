@@ -15,10 +15,10 @@ Feature: compress the commits on a local feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                              |
-      | feature | git fetch --prune --tags             |
-      |         | git reset --soft main                |
-      |         | git commit -m "commit 1" --no-verify |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git reset --soft main    |
+      |         | git commit -m "commit 1" |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE  |
