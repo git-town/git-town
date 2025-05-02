@@ -9,7 +9,6 @@ Feature: compress while disabling the pre-commit hook
       | BRANCH  | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | feature | local, origin | commit 1 | file_1    | content 1    |
       |         |               | commit 2 | file_2    | content 2    |
-      |         |               | commit 3 | file_3    | content 3    |
     And the current branch is "feature"
     When I run "git-town compress --no-verify"
 
@@ -26,13 +25,12 @@ Feature: compress while disabling the pre-commit hook
       | feature | local, origin | commit 1 |
     And file "file_1" still has content "content 1"
     And file "file_2" still has content "content 2"
-    And file "file_3" still has content "content 3"
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git reset --hard {{ sha 'commit 3' }}           |
+      | feature | git reset --hard {{ sha 'commit 2' }}           |
       |         | git push --force-with-lease --force-if-includes |
     And the initial commits exist now
     And the initial branches and lineage exist now
