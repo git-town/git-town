@@ -22,8 +22,8 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.Value.Add(&opcodes.ChangesStage{})
 		result.Value.Add(&opcodes.CommitWithMessage{
 			AuthorOverride: None[gitdomain.Author](),
+			CommitHook:     configdomain.CommitHookEnabled,
 			Message:        "Committing open changes to undo them",
-			RunCommitHook:  configdomain.CommitHookEnabled,
 		})
 	}
 	if endBranchesSnapshot, hasEndBranchesSnapshot := args.RunState.EndBranchesSnapshot.Get(); hasEndBranchesSnapshot {

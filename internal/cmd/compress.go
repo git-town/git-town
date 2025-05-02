@@ -325,8 +325,8 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	prog.Value.Add(&opcodes.BranchCurrentReset{Base: data.parentBranch.BranchName()})
 	prog.Value.Add(&opcodes.CommitWithMessage{
 		AuthorOverride: None[gitdomain.Author](),
+		CommitHook:     commitHook,
 		Message:        data.newCommitMessage,
-		RunCommitHook:  commitHook,
 	})
 	if data.hasTracking && online.IsTrue() {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true})
