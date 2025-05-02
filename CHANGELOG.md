@@ -16,7 +16,7 @@ Git Town 2000! 🎉
 #### New Features
 
 - `git town sync` now correcly syncs branches whose commits got amended or rebased ([#4586](https://github.com/git-town/git-town/issues/4586)).
-- You can now propose all branches in a stack by running `git town propose --stack` ([#3840](https://github.com/git-town/git-town/issues/3840)).
+- You can now propose all branches in a stack with `git town propose --stack` ([#3840](https://github.com/git-town/git-town/issues/3840)).
 - `git town propose` now un-parks parked branches when proposing them ([#4780](https://github.com/git-town/git-town/issues/4780)).
 - The [setup assistant](https://www.git-town.com/configuration.html) no longer asks for data already provided by the [Git Town configuration file](https://www.git-town.com/configuration-file.html) ([#4710](https://github.com/git-town/git-town/issues/4710)).
 - The setup assistant now offers to store forge API tokens globally for all repos on your machine ([#4112](https://github.com/git-town/git-town/issues/4112)).
