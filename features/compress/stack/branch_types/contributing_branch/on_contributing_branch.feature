@@ -25,7 +25,7 @@ Feature: does not compress the active contribution branch
       | contribution | git fetch --prune --tags                        |
       |              | git checkout child                              |
       | child        | git reset --soft contribution                   |
-      |              | git commit -m "child 1" --no-verify             |
+      |              | git commit -m "child 1"                         |
       |              | git push --force-with-lease --force-if-includes |
       |              | git checkout contribution                       |
     And all branches are now synchronized

@@ -25,7 +25,7 @@ Feature: does not compress an active observed branch
       | observed | git fetch --prune --tags                        |
       |          | git checkout child                              |
       | child    | git reset --soft observed                       |
-      |          | git commit -m "child 1" --no-verify             |
+      |          | git commit -m "child 1"                         |
       |          | git push --force-with-lease --force-if-includes |
       |          | git checkout observed                           |
     And all branches are now synchronized

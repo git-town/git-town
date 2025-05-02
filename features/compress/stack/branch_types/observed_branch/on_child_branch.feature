@@ -24,7 +24,7 @@ Feature: does not compress observed branches in the stack
       | BRANCH | COMMAND                                         |
       | child  | git fetch --prune --tags                        |
       |        | git reset --soft observed                       |
-      |        | git commit -m "child 1" --no-verify             |
+      |        | git commit -m "child 1"                         |
       |        | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
