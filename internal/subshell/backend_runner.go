@@ -52,7 +52,6 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 	}
 	env := subProcess.Environ()
 	env = append(env, "LC_ALL=C")
-	env = append(env, `GIT_CONFIG_PARAMETERS='color.ui=never'`)
 	subProcess.Env = env
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
