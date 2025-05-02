@@ -33,7 +33,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil || output == "" {
-		return snapshot, err
+		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config instead
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
