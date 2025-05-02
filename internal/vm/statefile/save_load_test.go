@@ -79,7 +79,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRemove{SHA: "123456"},
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
-				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message"},
+				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictPhantomDetect{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456"))},
@@ -371,6 +371,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "AuthorOverride": "user@acme.com",
+        "CommitHook": true,
         "Message": "my message"
       },
       "type": "CommitWithMessage"

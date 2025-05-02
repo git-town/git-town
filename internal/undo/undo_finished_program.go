@@ -2,6 +2,7 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
@@ -21,6 +22,7 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.Value.Add(&opcodes.ChangesStage{})
 		result.Value.Add(&opcodes.CommitWithMessage{
 			AuthorOverride: None[gitdomain.Author](),
+			CommitHook:     configdomain.CommitHookEnabled,
 			Message:        "Committing open changes to undo them",
 		})
 	}

@@ -236,7 +236,7 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author]) error {
+func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
 	switch {
 	case useMessage.IsCustomMessage():
@@ -251,6 +251,11 @@ func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.Us
 	}
 	if author, hasAuthor := author.Get(); hasAuthor {
 		args = append(args, "--author", author.String())
+	}
+	switch commitHook {
+	case configdomain.CommitHookDisabled:
+		args = append(args, "--no-verify")
+	case configdomain.CommitHookEnabled:
 	}
 	return runner.Run("git", args...)
 }

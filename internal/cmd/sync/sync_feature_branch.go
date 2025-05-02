@@ -79,6 +79,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 			args.Program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.LocalName})
 			args.Program.Value.Add(&opcodes.CommitWithMessage{
 				AuthorOverride: None[gitdomain.Author](),
+				CommitHook:     configdomain.CommitHookEnabled,
 				Message:        firstCommitMessage,
 			})
 		}

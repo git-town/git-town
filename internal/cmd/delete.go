@@ -312,6 +312,7 @@ func deleteLocalBranch(prog, finalUndoProgram Mutable[program.Program], data del
 				prog.Value.Add(&opcodes.ChangesStage{})
 				prog.Value.Add(&opcodes.CommitWithMessage{
 					AuthorOverride: None[gitdomain.Author](),
+					CommitHook:     configdomain.CommitHookEnabled,
 					Message:        "Committing open changes on deleted branch",
 				})
 				// update the registered initial SHA for this branch so that undo restores the just committed changes
