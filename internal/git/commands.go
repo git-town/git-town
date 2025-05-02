@@ -252,8 +252,10 @@ func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.Us
 	if author, hasAuthor := author.Get(); hasAuthor {
 		args = append(args, "--author", author.String())
 	}
-	if !commitHook {
+	switch commitHook {
+	case configdomain.CommitHookDisabled:
 		args = append(args, "--no-verify")
+	case configdomain.CommitHookEnabled:
 	}
 	return runner.Run("git", args...)
 }
