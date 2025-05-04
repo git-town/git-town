@@ -14,8 +14,8 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Install language support
-        run: >
+        run: |
           sudo apt-get -y install language-selector-common
-          sudo apt-get -y install $(check-language-support -l es)
+          sudo apt-get -y install "$(check-language-support -l es)"
       - run: make cukeall
         shell: 'script -q -e -c "bash {0}"' # this creates /dev/tty needed by BubbleTea
