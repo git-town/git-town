@@ -13,7 +13,9 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-      - name: Install dependencies
-        run: sudo apt-get install -y $(check-language-support -l es)
+      - name: Install language support
+        run: >
+          sudo apt-get -y install language-selector-common
+          sudo apt-get -y install $(check-language-support -l es)
       - run: make cukeall
         shell: 'script -q -e -c "bash {0}"' # this creates /dev/tty needed by BubbleTea
