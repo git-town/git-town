@@ -50,9 +50,6 @@ func (self BackendRunner) execute(executable string, args ...string) (string, er
 	if dir, has := self.Dir.Get(); has {
 		subProcess.Dir = dir
 	}
-	env := subProcess.Environ()
-	env = append(env, "LC_ALL=C")
-	subProcess.Env = env
 	concurrentGitRetriesLeft := concurrentGitRetries
 	var outputText string
 	var outputBytes []byte
