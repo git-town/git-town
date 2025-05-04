@@ -1517,7 +1517,6 @@ func runCommand(ctx context.Context, command string) {
 		cmd, args := parts[0], parts[1:]
 		subProcess := exec.Command(cmd, args...) // #nosec
 		subProcess.Dir = state.fixture.Dir
-		subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
 		outputBytes, _ := subProcess.CombinedOutput()
 		runOutput = string(outputBytes)
 		exitCode = subProcess.ProcessState.ExitCode()
