@@ -15,6 +15,7 @@ jobs:
           go-version-file: go.mod
       - name: Install language support
         run: |
+          sudo apt-get update
           sudo apt-get -y install language-selector-common
           sudo apt-get -y install "$(check-language-support -l es)"
       - run: make cukeall
