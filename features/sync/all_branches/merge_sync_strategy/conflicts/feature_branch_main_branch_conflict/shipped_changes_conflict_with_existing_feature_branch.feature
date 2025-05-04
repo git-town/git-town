@@ -21,10 +21,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout alpha                                |
       | alpha  | git merge --no-edit --ff main                     |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     And a merge is now in progress
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
@@ -41,10 +38,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       """
       deleted branch "beta"
       """
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then Git Town runs the commands

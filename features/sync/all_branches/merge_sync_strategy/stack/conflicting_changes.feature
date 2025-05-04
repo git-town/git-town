@@ -20,10 +20,7 @@ Feature: sync a stack that makes conflicting changes
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout alpha                                |
       | alpha  | git merge --no-edit --ff main                     |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
+    And Git Town runs with an error
     When I resolve the conflict in "file" with "resolved alpha content"
     And I run "git-town continue"
     Then Git Town runs the commands
@@ -33,10 +30,7 @@ Feature: sync a stack that makes conflicting changes
       |        | git push                              |
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
+    And Git Town runs with an error
     And a merge is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue"

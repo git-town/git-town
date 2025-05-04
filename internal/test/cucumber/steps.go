@@ -497,6 +497,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
+	sc.Step(`^Git Town runs with an error$`, func(ctx context.Context) error {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		state.runExitCodeChecked = true
+		if exitCode := state.runExitCode.GetOrPanic(); exitCode == 0 {
+			return fmt.Errorf("unexpected exit code %d", exitCode)
+		}
+		return nil
+	})
+
 	sc.Step(`^Git Town runs without errors`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		exitCode := state.runExitCode.GetOrPanic()

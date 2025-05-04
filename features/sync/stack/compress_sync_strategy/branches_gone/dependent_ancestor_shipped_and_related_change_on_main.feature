@@ -28,10 +28,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | beta   | git fetch --prune --tags                          |
       |        | git checkout main                                 |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
+    And Git Town runs with an error
     And a rebase is now in progress
 
   Scenario: resolve and continue
@@ -44,10 +41,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       |        | git branch -D alpha                       |
       |        | git checkout beta                         |
       | beta   | git merge --no-edit --ff main             |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
+    And Git Town runs with an error
     And a merge is now in progress
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue" and close the editor

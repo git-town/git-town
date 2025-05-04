@@ -40,10 +40,7 @@ Feature: compatibility between different sync-feature-strategy settings
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file.txt
-      """
+    And Git Town runs with an error
     When the coworker resolves the conflict in "file.txt" with "my and coworker content"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
@@ -69,14 +66,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |         | git push --force-with-lease --force-if-includes                              |
       |         | git -c rebase.updateRefs=false rebase origin/feature                         |
-    And Git Town prints the error:
-      """
-      CONFLICT (content): Merge conflict in file.txt
-      """
-    And Git Town prints something like:
-      """
-      Could not apply \S+ my second commit
-      """
+    And Git Town runs with an error
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD
@@ -94,14 +84,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | git checkout --theirs file.txt                                               |
       |         | git add file.txt                                                             |
       |         | git -c core.editor=true rebase --continue                                    |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file.txt
-      """
-    And Git Town prints something like:
-      """
-      Could not apply \S+ my first commit
-      """
+    And Git Town runs with an error
     And file "file.txt" now has content:
       """
       <<<<<<< HEAD

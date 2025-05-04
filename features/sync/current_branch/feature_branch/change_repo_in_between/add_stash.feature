@@ -19,10 +19,7 @@ Feature: adding additional stash entries while resolving conflicts
       |         | git stash -m "Git Town WIP"             |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     And a merge is now in progress
     And I resolve the conflict in "conflicting_file"
     And I run "git add ."

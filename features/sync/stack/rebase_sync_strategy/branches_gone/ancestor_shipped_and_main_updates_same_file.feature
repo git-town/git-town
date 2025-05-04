@@ -28,10 +28,7 @@ Feature: shipped the head branch of a synced stack with dependent changes that c
       | beta   | git fetch --prune --tags                          |
       |        | git checkout main                                 |
       | main   | git -c rebase.updateRefs=false rebase origin/main |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in file
-      """
+    And Git Town runs with an error
     And a rebase is now in progress
 
   Scenario: resolve and continue

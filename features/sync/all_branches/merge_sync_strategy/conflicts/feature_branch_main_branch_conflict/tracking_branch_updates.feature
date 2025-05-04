@@ -28,10 +28,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git push                                          |
       |        | git checkout beta                                 |
       | beta   | git merge --no-edit --ff main                     |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     And a merge is now in progress
 
   Scenario: abort

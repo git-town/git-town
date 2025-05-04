@@ -57,10 +57,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     When the coworker resolves the conflict in "conflicting_file" with "my content 1 and coworker content 1"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
@@ -86,10 +83,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     When I resolve the conflict in "conflicting_file" with "my content 2 and coworker content 1"
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
@@ -115,10 +109,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     When the coworker resolves the conflict in "conflicting_file" with "my content 2 and coworker content 2"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands

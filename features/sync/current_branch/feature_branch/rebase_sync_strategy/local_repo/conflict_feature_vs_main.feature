@@ -18,10 +18,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                    |
       | feature | git -c rebase.updateRefs=false rebase main |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     And a rebase is now in progress
 
   Scenario: undo

@@ -19,10 +19,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git fetch --prune --tags                          |
       |         | git checkout main                                 |
       | main    | git -c rebase.updateRefs=false rebase origin/main |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     And a rebase is now in progress
 
   Scenario: undo

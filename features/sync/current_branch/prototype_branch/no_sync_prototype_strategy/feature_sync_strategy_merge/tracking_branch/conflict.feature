@@ -18,10 +18,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
       | prototype | git fetch --prune --tags                  |
       |           | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/prototype |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".

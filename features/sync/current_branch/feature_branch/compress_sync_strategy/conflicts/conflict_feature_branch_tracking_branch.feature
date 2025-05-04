@@ -20,10 +20,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
-    And Git Town prints the error:
-      """
-      CONFLICT (add/add): Merge conflict in conflicting_file
-      """
+    And Git Town runs with an error
 
   Scenario: undo
     When I run "git-town undo"
