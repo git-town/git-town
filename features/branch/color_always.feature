@@ -1,12 +1,17 @@
-Feature: display the local branch hierarchy when I use color.ui=always
+Feature: display the local branch hierarchy with types for unusual branches
 
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME  | TYPE    | PARENT | LOCATIONS     |
-      | alpha | feature | main   | local, origin |
-      | beta  | feature | alpha  | local, origin |
-      | gamma | feature | beta   | local, origin |
+      | NAME         | TYPE         | PARENT | LOCATIONS     |
+      | alpha        | feature      | main   | local, origin |
+      | beta         | feature      | alpha  | local, origin |
+      | gamma        | feature      | beta   | local, origin |
+      | observed     | observed     |        | local, origin |
+      | contribution | contribution |        | local, origin |
+      | prototype    | prototype    | main   | local         |
+      | parked       | parked       | main   | local         |
+      | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
     And local Git setting "color.ui" is "always"
     When I run "git-town branch"
@@ -19,4 +24,9 @@ Feature: display the local branch hierarchy when I use color.ui=always
           alpha
       *     beta
               gamma
+          parked  (parked)
+          prototype  (prototype)
+        contribution  (contribution)
+        observed  (observed)
+        perennial  (perennial)
       """
