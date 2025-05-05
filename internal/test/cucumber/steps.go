@@ -729,9 +729,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -743,9 +741,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage("")
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCode(cmd)
+		output, exitCode := devRepo.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -757,9 +753,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage(message)
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCode(cmd)
+		output, exitCode := devRepo.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -770,9 +764,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.CaptureState()
 		updateInitialSHAs(state)
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -783,9 +775,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		var exitCode int
-		var output string
-		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
+		output, exitCode := secondWorkTree.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
@@ -797,9 +787,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.MockCommitMessage(message)
-		var exitCode int
-		var output string
-		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
+		output, exitCode := secondWorkTree.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
@@ -815,9 +803,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
 		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -1136,9 +1122,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		var exitCode int
-		var output string
-		output, exitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
+		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
@@ -1146,9 +1130,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(ctx context.Context, cmd string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		var exitCode int
-		var output string
-		output, exitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
