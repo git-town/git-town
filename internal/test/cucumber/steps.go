@@ -736,9 +736,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			value := row.Cells[1].Value
 			env = append(env, fmt.Sprintf("%s=%s", name, value))
 		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
+		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
