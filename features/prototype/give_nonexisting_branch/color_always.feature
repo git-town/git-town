@@ -1,0 +1,21 @@
+Feature: does not create prototyping branches this way
+
+  Background:
+    Given a Git repo with origin
+    And local Git setting "color.ui" is "always"
+    When I run "git-town prototype zonk"
+
+  Scenario: result
+    Then Git Town runs no commands
+    And Git Town prints the error:
+      """
+      there is no branch "zonk"
+      """
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then Git Town runs no commands
+    And Git Town prints:
+      """
+      nothing to undo
+      """
