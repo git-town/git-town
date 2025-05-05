@@ -9,7 +9,6 @@ Feature: run in Spanish
     When I run "git-town append new" with these environment variables
       | LANG | es_ES |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
