@@ -214,7 +214,9 @@ you hints at which test fails.
 
 ## Configure the Cucumber IDE extension
 
-To configure the official [Cucumber extension](https://marketplace.visualstudio.com/items/?itemName=CucumberOpen.cucumber-official) add this to your `settings.json` file:
+To configure the official
+[Cucumber extension](https://marketplace.visualstudio.com/items/?itemName=CucumberOpen.cucumber-official)
+add this to your `settings.json` file:
 
 ```json
 "cucumber.features": [
@@ -228,7 +230,8 @@ To configure the official [Cucumber extension](https://marketplace.visualstudio.
 This enables useful functionality:
 
 - auto-complete steps in `.feature` files
-- `go to definition` on a step in a feature file to see the code that runs when this step executes
+- `go to definition` on a step in a feature file to see the code that runs when
+  this step executes
 
 ## Run linters
 
