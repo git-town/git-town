@@ -7,12 +7,11 @@ Feature: make the current feature branch a contribution branch in Spanish
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
     And an uncommitted file
-    When I run "git-town contribute -v" with these environment variables
+    When I run "git-town contribute" with these environment variables
       | LANG | es_ES |
 
-  @this
   Scenario: result
-    # Then Git Town runs no commands
+    Then Git Town runs no commands
     And Git Town prints:
       """
       branch "feature" is now a contribution branch
