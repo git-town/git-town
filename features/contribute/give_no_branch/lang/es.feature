@@ -10,8 +10,7 @@ Feature: make the current feature branch a contribution branch in Spanish
     When I run "git-town contribute -v" with these environment variables
       | LANG | es_ES |
 
-  @debug
-  @this
+  @debug @this
   Scenario: result
     # Then Git Town runs no commands
     And Git Town prints:
