@@ -127,6 +127,12 @@ Then run only the scenarios that have a `@this` tag:
 make cukethis
 ```
 
+Run all files named `es.feature`:
+
+```
+find . -name es.feature | xargs go test --
+```
+
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
 GitLab, Bitbucket, or Codeberg address. This causes `git push` operations in
 this test to also go to GitHub. To prevent this, set an environment variable
