@@ -292,9 +292,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName))
 		want := wantOpt.GetOrPanic()
-		fmt.Println("1111111111111111111111", want)
 		have := devRepo.Config.BranchType(branch)
-		fmt.Println("2222222222222222222222", have)
 		if have != want {
 			return fmt.Errorf("branch %q is %s", branch, have)
 		}
@@ -727,11 +725,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I run "(.+)" with these environment variables$`, func(ctx context.Context, command string, envVars *godog.Table) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo, hasDevRepo := state.fixture.DevRepo.Get()
-		if hasDevRepo {
-			state.CaptureState()
-			updateInitialSHAs(state)
-		}
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.CaptureState()
+		updateInitialSHAs(state)
 		env := os.Environ()
 		for _, row := range envVars.Rows {
 			name := row.Cells[0].Value
@@ -741,6 +737,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
+		devRepo.Reload()
 	})
 
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
