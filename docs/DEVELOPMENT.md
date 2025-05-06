@@ -212,21 +212,23 @@ Alternatively, open `main_test.go`, change `Format` to `pretty` and
 `Concurrency` to 1, and run the entire test suite. The detailed output will give
 you hints at which test fails.
 
-## Auto-complete of Cucumber steps
+## Configure the Cucumber IDE extension
 
-In VSCode:
+To configure the official [Cucumber extension](https://marketplace.visualstudio.com/items/?itemName=CucumberOpen.cucumber-official) add this to your `settings.json` file:
 
-- install the official [Cucumber extension](https://marketplace.visualstudio.com/items/?itemName=CucumberOpen.cucumber-official)
-- add this to your `settings.json` file:
+```json
+"cucumber.features": [
+  "features/**/*.feature",
+],
+"cucumber.glue": [
+  "internal/test/cucumber/steps.go"
+]
+```
 
-  ```json
-  "cucumber.features": [
-    "features/**/*.feature",
-  ],
-  "cucumber.glue": [
-    "internal/test/cucumber/steps.go"
-  ]
-  ```
+This enables useful functionality:
+
+- auto-complete steps in `.feature` files
+- `go to definition` on a step in a feature file to see the code that runs when this step executes
 
 ## Run linters
 
