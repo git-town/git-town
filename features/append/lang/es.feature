@@ -18,7 +18,6 @@ Feature: append a branch in Spanish
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-      | new    | local         | main commit |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
