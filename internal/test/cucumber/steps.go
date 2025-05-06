@@ -292,7 +292,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName))
 		want := wantOpt.GetOrPanic()
+		fmt.Println("1111111111111111111111", want)
 		have := devRepo.Config.BranchType(branch)
+		fmt.Println("2222222222222222222222", have)
 		if have != want {
 			return fmt.Errorf("branch %q is %s", branch, have)
 		}
@@ -736,9 +738,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 			value := row.Cells[1].Value
 			env = append(env, fmt.Sprintf("%s=%s", name, value))
 		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
+		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
