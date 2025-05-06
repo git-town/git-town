@@ -1,4 +1,4 @@
-Feature: run in Spanish
+Feature: append a branch in Spanish
 
   Background:
     Given a Git repo with origin

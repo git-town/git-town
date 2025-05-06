@@ -292,7 +292,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		wantOpt := asserts.NoError1(configdomain.ParseBranchType(branchTypeName))
 		want := wantOpt.GetOrPanic()
+		fmt.Println("1111111111111111111111", want)
 		have := devRepo.Config.BranchType(branch)
+		fmt.Println("2222222222222222222222", have)
 		if have != want {
 			return fmt.Errorf("branch %q is %s", branch, have)
 		}
