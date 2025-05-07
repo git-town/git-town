@@ -23,6 +23,7 @@ Feature: conflicts between the main branch and its tracking branch
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     And a rebase is now in progress
+    And inspect the repo
 
   Scenario: undo
     When I run "git-town undo"
