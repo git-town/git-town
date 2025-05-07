@@ -11,7 +11,8 @@ Feature: delete the current feature branch in Spanish
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And the current branch is "current" and the previous branch is "other"
-    When I run "git-town delete"
+    When I run "git-town delete" with these environment variables
+      | LANG | es_ES |
 
   Scenario: result
     Then Git Town runs the commands
@@ -20,6 +21,10 @@ Feature: delete the current feature branch in Spanish
       |         | git push origin :current |
       |         | git checkout other       |
       | other   | git branch -D current    |
+    And Git Town prints:
+      """
+      Eliminada la rama current
+      """
     And no uncommitted files exist now
     And the branches are now
       | REPOSITORY    | BRANCHES    |

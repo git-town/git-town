@@ -15,6 +15,10 @@ Feature: append a branch in Spanish
       | main   | git fetch --prune --tags                          |
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout -b new                               |
+    And Git Town prints:
+      """
+      Cambiado a nueva rama 'new'
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
