@@ -19,6 +19,7 @@ jobs:
       - run: find /usr/share/locale/es/LC_MESSAGES -name "git.mo" || echo "No Spanish Git translations found"
       - run: locale -a
       - run: locale
+      - run: env LANG=es_ES git status
       - run: env LANG=es_ES.UTF-8 git status
       - run: env LC_ALL=es_ES.UTF-8 git status
       - run: make cukeall
