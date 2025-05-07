@@ -5,25 +5,25 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v19/internal/cli/flags"
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/execute"
-	"github.com/git-town/git-town/v19/internal/forge"
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v19/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v19/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/optimizer"
-	"github.com/git-town/git-town/v19/internal/vm/program"
-	"github.com/git-town/git-town/v19/internal/vm/runstate"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v20/internal/cli/flags"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/execute"
+	"github.com/git-town/git-town/v20/internal/forge"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/optimizer"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	"github.com/git-town/git-town/v20/internal/vm/runstate"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +42,7 @@ You can provide a custom commit message with the -m switch.
 
 Assuming you have a feature branch with these commits:
 
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 commit 2
 commit 3
@@ -54,7 +54,7 @@ $ git town compress
 Now your branch has a single commit with the name of the first commit but
 containing the changes of all three commits that existed on the branch before:
 
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 `
 )
@@ -62,6 +62,7 @@ commit 1
 func compressCmd() *cobra.Command {
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addMessageFlag, readMessageFlag := flags.CommitMessage("customize the commit message")
+	addNoVerifyFlag, readNoVerifyFlag := flags.NoVerify()
 	addStackFlag, readStackFlag := flags.Stack("Compress the entire stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -78,6 +79,10 @@ func compressCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			commitHook, err := readNoVerifyFlag(cmd)
+			if err != nil {
+				return err
+			}
 			stack, err := readStackFlag(cmd)
 			if err != nil {
 				return err
@@ -86,17 +91,18 @@ func compressCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeCompress(dryRun, verbose, message, stack)
+			return executeCompress(dryRun, verbose, message, commitHook, stack)
 		},
 	}
 	addDryRunFlag(&cmd)
 	addMessageFlag(&cmd)
+	addNoVerifyFlag(&cmd)
 	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) error {
+func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], commitHook configdomain.CommitHook, compressEntireStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -112,7 +118,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	if err != nil || exit {
 		return err
 	}
-	runProgram := compressProgram(data)
+	runProgram := compressProgram(data, commitHook)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -295,10 +301,10 @@ func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdom
 	}, false, nil
 }
 
-func compressProgram(data compressBranchesData) program.Program {
+func compressProgram(data compressBranchesData, commitHook configdomain.CommitHook) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToCompress := range data.branchesToCompress {
-		compressBranchProgram(prog, branchToCompress, data.config.NormalConfig.Online(), data.initialBranch)
+		compressBranchProgram(prog, branchToCompress, data.config.NormalConfig.Online(), data.initialBranch, commitHook)
 	}
 	prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: data.initialBranch})
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -311,7 +317,7 @@ func compressProgram(data compressBranchesData) program.Program {
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName) {
+func compressBranchProgram(prog Mutable[program.Program], data compressBranchData, online configdomain.Online, initialBranch gitdomain.LocalBranchName, commitHook configdomain.CommitHook) {
 	if !shouldCompressBranch(data.name, data.branchType, initialBranch) {
 		return
 	}
@@ -319,6 +325,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 	prog.Value.Add(&opcodes.BranchCurrentReset{Base: data.parentBranch.BranchName()})
 	prog.Value.Add(&opcodes.CommitWithMessage{
 		AuthorOverride: None[gitdomain.Author](),
+		CommitHook:     commitHook,
 		Message:        data.newCommitMessage,
 	})
 	if data.hasTracking && online.IsTrue() {

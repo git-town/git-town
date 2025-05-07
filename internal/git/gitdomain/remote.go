@@ -3,7 +3,7 @@ package gitdomain
 import (
 	"strings"
 
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // Remote represents a Git remote.

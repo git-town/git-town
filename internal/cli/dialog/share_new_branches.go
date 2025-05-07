@@ -3,42 +3,46 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v19/internal/cli/format"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/messages"
 )
 
 const (
-	pushNewBranchesTitle = `Share new branches`
-	PushNewBranchesHelp  = `
+	shareNewBranchesTitle = `Share new branches`
+	ShareNewBranchesHelp  = `
 How should Git Town share the new branches it creates?
 
 Possible options:
 
 - none: New branches remain local until you sync or propose them.
-- push: New branches are automatically pushed to the development remote.
+- push: push new branches to the development remote.
+- propose: propose new branches
 
 `
 )
 
-func ShareNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
-	entries := list.Entries[configdomain.PushNewBranches]{
+func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.TestInput) (configdomain.ShareNewBranches, bool, error) {
+	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
-			Data: true,
-			Text: "don't share: new branches are local until synced or proposed",
+			Data: configdomain.ShareNewBranchesNone,
+			Text: "no sharing: new branches remain local until synced or proposed",
 		},
 		{
-			Data: false,
+			Data: configdomain.ShareNewBranchesPush,
 			Text: "push new branches to the dev remote",
+		},
+		{
+			Data: configdomain.ShareNewBranchesPropose,
+			Text: "propose new branches",
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs)
 	if err != nil || aborted {
-		return true, aborted, err
+		return configdomain.ShareNewBranchesNone, aborted, err
 	}
-	fmt.Printf(messages.PushNewBranches, components.FormattedSelection(format.Bool(selection.IsTrue()), aborted))
+	fmt.Printf(messages.ShareNewBranches, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

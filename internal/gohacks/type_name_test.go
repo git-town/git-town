@@ -3,8 +3,8 @@ package gohacks_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks"
 	"github.com/shoenig/test/must"
 )
 

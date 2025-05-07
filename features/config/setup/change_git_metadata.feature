@@ -8,7 +8,7 @@ Feature: change existing information in Git metadata
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
-    And local Git setting "git-town.push-new-branches" is "false"
+    And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.sync-tags" is "false"
     When I run "git-town config setup" and enter into the dialogs:
@@ -30,7 +30,7 @@ Feature: change existing information in Git metadata
       | sync-prototype-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
       | sync-tags                                 | down enter             |
-      | enable push-new-branches                  | down enter             |
+      | enable share-new-branches                 | down enter             |
       | disable the push hook                     | down enter             |
       | new-branch-type                           | down down enter        |
       | set ship-strategy to "fast-forward"       | down down enter        |
@@ -84,7 +84,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.perennial-regex" is now "3366"
     And local Git setting "git-town.feature-regex" is now "user"
     And local Git setting "git-town.default-branch-type" is now "observed"
-    And local Git setting "git-town.push-new-branches" is now "true"
+    And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
     And local Git setting "git-town.ship-delete-tracking-branch" is now "false"
@@ -115,7 +115,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.default-branch-type" now doesn't exist
-    And local Git setting "git-town.push-new-branches" is now "false"
+    And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" now doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" now doesn't exist

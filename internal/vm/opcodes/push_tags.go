@@ -1,6 +1,6 @@
 package opcodes
 
-import "github.com/git-town/git-town/v19/internal/vm/shared"
+import "github.com/git-town/git-town/v20/internal/vm/shared"
 
 // PushTags pushes newly created Git tags to origin.
 type PushTags struct {

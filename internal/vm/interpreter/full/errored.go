@@ -4,13 +4,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/config/gitconfig"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v19/internal/vm/shared"
-	"github.com/git-town/git-town/v19/internal/vm/statefile"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/config/gitconfig"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/vm/shared"
+	"github.com/git-town/git-town/v20/internal/vm/statefile"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // errored is called when the given opcode has resulted in the given error.
@@ -21,11 +22,11 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
-	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
+	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, _, err := configGitAccess.LoadLocal(false)
+	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), false)
 	if err != nil {
 		return err
 	}

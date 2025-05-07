@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/test/handlebars"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/test/handlebars"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 

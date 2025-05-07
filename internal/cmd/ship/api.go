@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/program"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // data only needed for shipping via the API

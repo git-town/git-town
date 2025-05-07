@@ -21,7 +21,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | sync-prototype-strategy     | enter      |                                             |
       | sync-upstream               | enter      |                                             |
       | sync-tags                   | enter      |                                             |
-      | push-new-branches           | enter      |                                             |
+      | share-new-branches          | enter      |                                             |
       | push-hook                   | enter      |                                             |
       | new-branch-type             | enter      |                                             |
       | ship-strategy               | enter      |                                             |

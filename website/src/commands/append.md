@@ -74,6 +74,9 @@ Commit message to use together with `--commit`. Implies `--commit`.
 
 Propose the created branch.
 
+To always propose new branches, set the
+[share new branches](../preferences/share-new-branches.md) setting to `propose`.
+
 #### `--dry-run`
 
 Use the `--dry-run` flag to test-drive this command. It prints the Git commands
@@ -86,7 +89,7 @@ determine the repository state.
 
 ## Configuration
 
-If [push-new-branches](../preferences/push-new-branches.md) is set,
+If [share-new-branches](../preferences/share-new-branches.md) is configured,
 `git town append` also creates the tracking branch for the new feature branch.
 This behavior is disabled by default to make `git town append` run fast and save
 CI runs. The first run of `git town sync` will create the remote tracking

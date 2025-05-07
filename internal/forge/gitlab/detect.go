@@ -1,6 +1,6 @@
 package gitlab
 
-import "github.com/git-town/git-town/v19/internal/git/giturl"
+import "github.com/git-town/git-town/v20/internal/git/giturl"
 
 // Detect indicates whether the current repository is hosted on a GitLab server.
 func Detect(remoteURL giturl.Parts) bool {

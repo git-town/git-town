@@ -3,18 +3,18 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/config/gitconfig"
-	"github.com/git-town/git-town/v19/internal/git"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v19/internal/vm/runstate"
-	"github.com/git-town/git-town/v19/internal/vm/statefile"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/config/gitconfig"
+	"github.com/git-town/git-town/v20/internal/git"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/vm/runstate"
+	"github.com/git-town/git-town/v20/internal/vm/statefile"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // finished is called when executing all steps has successfully finished.
@@ -24,11 +24,11 @@ func finished(args finishedArgs) error {
 		return err
 	}
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
-	globalSnapshot, _, err := configGitAccess.LoadGlobal(false)
+	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), false)
 	if err != nil {
 		return err
 	}
-	localSnapshot, _, err := configGitAccess.LoadLocal(false)
+	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), false)
 	if err != nil {
 		return err
 	}

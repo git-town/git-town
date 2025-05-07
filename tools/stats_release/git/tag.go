@@ -17,7 +17,7 @@ type Tag struct {
 
 // provides the time when the Git tag with the given name was created
 func LoadTag(name string) Tag {
-	cmd := exec.Command("git", "log", "-1", "--format=%cI", name)
+	cmd := exec.Command("git", "show", "--no-patch", "--format=%cI", name)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(string(output))

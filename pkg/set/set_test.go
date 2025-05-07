@@ -3,7 +3,7 @@ package set_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v19/pkg/set"
+	"github.com/git-town/git-town/v20/pkg/set"
 	"github.com/shoenig/test/must"
 )
 

@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v19/internal/gohacks"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/gohacks"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // PushHook contains the push-hook configuration setting.
@@ -24,7 +24,7 @@ func (self PushHook) String() string {
 }
 
 func ParsePushHook(value string, source Key) (Option[PushHook], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(PushHook(parsed)), err
 	}

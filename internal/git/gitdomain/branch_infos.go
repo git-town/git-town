@@ -3,7 +3,7 @@ package gitdomain
 import (
 	"fmt"
 
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // BranchInfos contains the BranchInfos for all branches in a repo.
@@ -176,6 +176,14 @@ func (self BranchInfos) Select(remote Remote, names ...LocalBranchName) (result 
 		nonExisting = append(nonExisting, name)
 	}
 	return result, nonExisting
+}
+
+func (self BranchInfos) String() string {
+	result := "BranchInfos:\n"
+	for _, bi := range self {
+		result += bi.String() + "\n"
+	}
+	return result
 }
 
 func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {

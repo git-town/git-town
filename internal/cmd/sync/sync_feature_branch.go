@@ -1,11 +1,11 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/program"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
@@ -79,6 +79,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 			args.Program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.LocalName})
 			args.Program.Value.Add(&opcodes.CommitWithMessage{
 				AuthorOverride: None[gitdomain.Author](),
+				CommitHook:     configdomain.CommitHookEnabled,
 				Message:        firstCommitMessage,
 			})
 		}

@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v19/internal/gohacks"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/gohacks"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // SyncUpstream contains the configuration setting whether to sync with the upstream remote.
@@ -19,7 +19,7 @@ func (self SyncUpstream) String() string {
 }
 
 func ParseSyncUpstream(value string, source Key) (Option[SyncUpstream], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncUpstream(parsed)), err
 	}

@@ -45,7 +45,7 @@ Feature: show the configuration
 
       Create:
         new branch type: (not set)
-        push new branches: no
+        share new branches: no
 
       Hosting:
         development remote: origin
@@ -84,7 +84,7 @@ Feature: show the configuration
       observed-regex = "^dependabot/"
 
       [create]
-      push-new-branches = true
+      share-new-branches = "push"
 
       [hosting]
       forge-type = "github"
@@ -122,7 +122,7 @@ Feature: show the configuration
 
       Create:
         new branch type: (not set)
-        push new branches: yes
+        share new branches: push
 
       Hosting:
         development remote: origin
@@ -156,7 +156,7 @@ Feature: show the configuration
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
     And Git setting "git-town.default-branch-type" is "observed"
-    And Git setting "git-town.push-new-branches" is "false"
+    And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
     And Git setting "git-town.sync-upstream" is "false"
@@ -176,7 +176,7 @@ Feature: show the configuration
       observed-regex = "^config-observed-regex"
 
       [create]
-      push-new-branches = true
+      share-new-branches = "push"
 
       [hosting]
       forge-type = "github"
@@ -214,7 +214,7 @@ Feature: show the configuration
 
       Create:
         new branch type: (not set)
-        push new branches: no
+        share new branches: no
 
       Hosting:
         development remote: origin
@@ -270,7 +270,7 @@ Feature: show the configuration
 
       Create:
         new branch type: (not set)
-        push new branches: no
+        share new branches: no
 
       Hosting:
         development remote: origin
@@ -332,7 +332,7 @@ Feature: show the configuration
 
       Create:
         new branch type: (not set)
-        push new branches: no
+        share new branches: no
 
       Hosting:
         development remote: origin

@@ -3,11 +3,11 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/vm/shared"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/vm/shared"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // CommitAutoUndo is a Commit that automatically aborts the Git Town command on failure.
@@ -29,7 +29,7 @@ func (self *CommitAutoUndo) AutomaticUndoError() error {
 }
 
 func (self *CommitAutoUndo) Run(args shared.RunArgs) error {
-	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride)
+	return args.Git.Commit(args.Frontend, configdomain.UseMessageWithFallbackToDefault(self.Message, self.FallbackToDefaultCommitMessage), self.AuthorOverride, configdomain.CommitHookEnabled)
 }
 
 func (self *CommitAutoUndo) ShouldUndoOnError() bool {

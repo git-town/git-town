@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/config/configfile"
-	"github.com/git-town/git-town/v19/internal/config/gitconfig"
-	"github.com/git-town/git-town/v19/internal/git"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/config/configfile"
+	"github.com/git-town/git-town/v20/internal/config/gitconfig"
+	"github.com/git-town/git-town/v20/internal/git"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -61,7 +61,7 @@ func TestSave(t *testing.T) {
 					PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
 					PerennialRegex:           None[configdomain.PerennialRegex](),
 					PushHook:                 true,
-					PushNewBranches:          false,
+					ShareNewBranches:         configdomain.ShareNewBranchesPush,
 					ShipStrategy:             configdomain.ShipStrategySquashMerge,
 					ShipDeleteTrackingBranch: true,
 					SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
@@ -82,7 +82,7 @@ perennial-regex = ""
 
 [create]
 new-branch-type = "prototype"
-push-new-branches = false
+share-new-branches = "push"
 
 [hosting]
 dev-remote = "fork"
@@ -125,7 +125,7 @@ perennial-regex = ""
 
 [create]
 new-branch-type = ""
-push-new-branches = false
+share-new-branches = "no"
 
 [hosting]
 dev-remote = "origin"

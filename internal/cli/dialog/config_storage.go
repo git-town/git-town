@@ -3,9 +3,9 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v20/internal/messages"
 )
 
 const (
@@ -31,10 +31,7 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStorageOption, bool, error) {
-	if hasConfigFile {
-		return ConfigStorageOptionFile, false, nil
-	}
+func ConfigStorage(inputs components.TestInput) (ConfigStorageOption, bool, error) {
 	entries := list.NewEntries(
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,

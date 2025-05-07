@@ -3,8 +3,8 @@ package bitbucketcloud_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/forge/bitbucketcloud"
-	"github.com/git-town/git-town/v19/internal/git/giturl"
+	"github.com/git-town/git-town/v20/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v20/internal/git/giturl"
 	"github.com/shoenig/test/must"
 )
 

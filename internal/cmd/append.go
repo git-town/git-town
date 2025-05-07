@@ -5,29 +5,29 @@ import (
 	"os"
 	"slices"
 
-	"github.com/git-town/git-town/v19/internal/cli/dialog"
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v19/internal/cli/flags"
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v19/internal/cmd/sync"
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/execute"
-	"github.com/git-town/git-town/v19/internal/forge"
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v19/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v19/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v19/internal/vm/opcodes"
-	"github.com/git-town/git-town/v19/internal/vm/optimizer"
-	"github.com/git-town/git-town/v19/internal/vm/program"
-	"github.com/git-town/git-town/v19/internal/vm/runstate"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
-	"github.com/git-town/git-town/v19/pkg/set"
+	"github.com/git-town/git-town/v20/internal/cli/dialog"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v20/internal/cli/flags"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/cmd/sync"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/execute"
+	"github.com/git-town/git-town/v20/internal/forge"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/validate"
+	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/optimizer"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	"github.com/git-town/git-town/v20/internal/vm/runstate"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v20/pkg/set"
 	"github.com/spf13/cobra"
 )
 
@@ -294,6 +294,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 			return data, exit, err
 		}
 	}
+	if validatedConfig.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPropose {
+		propose = true
+	}
 	return appendFeatureData{
 		beam:                      beam,
 		branchInfos:               branchesSnapshot.Branches,
@@ -344,7 +347,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 		Ancestors: data.newBranchParentCandidates,
 		Branch:    data.targetBranch,
 	})
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShouldPushNewBranches() && data.config.NormalConfig.IsOnline() {
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush && data.config.NormalConfig.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
 	}
 	prog.Value.Add(&opcodes.LineageParentSetFirstExisting{

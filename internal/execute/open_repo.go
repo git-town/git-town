@@ -7,20 +7,20 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/config/configfile"
-	"github.com/git-town/git-town/v19/internal/config/envconfig"
-	"github.com/git-town/git-town/v19/internal/config/gitconfig"
-	"github.com/git-town/git-town/v19/internal/git"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks"
-	"github.com/git-town/git-town/v19/internal/gohacks/cache"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/messages"
-	"github.com/git-town/git-town/v19/internal/subshell"
-	"github.com/git-town/git-town/v19/internal/undo/undoconfig"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/config/configfile"
+	"github.com/git-town/git-town/v20/internal/config/envconfig"
+	"github.com/git-town/git-town/v20/internal/config/gitconfig"
+	"github.com/git-town/git-town/v20/internal/git"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks"
+	"github.com/git-town/git-town/v20/internal/gohacks/cache"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v20/internal/subshell"
+	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
@@ -62,11 +62,19 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
-	globalSnapshot, globalConfig, err := configGitAccess.LoadGlobal(true)
+	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), true)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	localSnapshot, localConfig, err := configGitAccess.LoadLocal(true)
+	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), true)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	unscopedSnapshot, err := configGitAccess.Load(None[configdomain.ConfigScope](), false)
+	if err != nil {
+		return emptyOpenRepoResult(), err
+	}
+	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, true, configGitAccess.RemoveLocalConfigValue)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -91,9 +99,8 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		DryRun:        args.DryRun,
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
+		GitConfig:     unscopedConfig,
 		GitVersion:    gitVersion,
-		GlobalConfig:  globalConfig,
-		LocalConfig:   localConfig,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,

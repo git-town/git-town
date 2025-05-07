@@ -3,7 +3,7 @@ package forgedomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/shoenig/test/must"
 )
 

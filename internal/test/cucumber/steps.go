@@ -15,23 +15,23 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	cukemessages "github.com/cucumber/messages/go/v21"
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/config/configfile"
-	"github.com/git-town/git-town/v19/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/test/commands"
-	"github.com/git-town/git-town/v19/internal/test/datatable"
-	"github.com/git-town/git-town/v19/internal/test/filesystem"
-	"github.com/git-town/git-town/v19/internal/test/fixture"
-	"github.com/git-town/git-town/v19/internal/test/handlebars"
-	"github.com/git-town/git-town/v19/internal/test/helpers"
-	"github.com/git-town/git-town/v19/internal/test/output"
-	"github.com/git-town/git-town/v19/internal/test/subshell"
-	"github.com/git-town/git-town/v19/internal/test/testgit"
-	"github.com/git-town/git-town/v19/pkg/asserts"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/config/configfile"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/test/commands"
+	"github.com/git-town/git-town/v20/internal/test/datatable"
+	"github.com/git-town/git-town/v20/internal/test/filesystem"
+	"github.com/git-town/git-town/v20/internal/test/fixture"
+	"github.com/git-town/git-town/v20/internal/test/handlebars"
+	"github.com/git-town/git-town/v20/internal/test/helpers"
+	"github.com/git-town/git-town/v20/internal/test/output"
+	"github.com/git-town/git-town/v20/internal/test/subshell"
+	"github.com/git-town/git-town/v20/internal/test/testgit"
+	"github.com/git-town/git-town/v20/pkg/asserts"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kballard/go-shellquote"
 )
@@ -342,7 +342,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		return nil
 	})
 
-	sc.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
+	sc.Step(`^file "([^"]+)" (?:now|still) has content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := devRepo.FileContent(file)
@@ -729,9 +729,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -743,9 +741,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage("")
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCode(cmd)
+		output, exitCode := devRepo.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -757,9 +753,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage(message)
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCode(cmd)
+		output, exitCode := devRepo.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -770,9 +764,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		state.CaptureState()
 		updateInitialSHAs(state)
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -783,9 +775,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
-		var exitCode int
-		var output string
-		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
+		output, exitCode := secondWorkTree.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
@@ -797,9 +787,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		secondWorkTree := state.fixture.SecondWorktree.GetOrPanic()
 		secondWorkTree.MockCommitMessage(message)
-		var exitCode int
-		var output string
-		output, exitCode = secondWorkTree.MustQueryStringCode(cmd)
+		output, exitCode := secondWorkTree.MustQueryStringCode(cmd)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		secondWorkTree.Reload()
@@ -815,9 +803,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
 		}
-		var exitCode int
-		var output string
-		output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -919,7 +905,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.CheckoutBranch("main")
 		asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(message), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -936,7 +922,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		originRepo.CreateFile(fileName, fileContent)
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -949,7 +935,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		originRepo.CheckoutBranch("main")
 		asserts.NoError(originRepo.Git.SquashMerge(originRepo.TestRunner, branchToShip))
 		originRepo.StageFiles("-A")
-		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>")))
+		asserts.NoError(originRepo.Git.Commit(originRepo.TestRunner, configdomain.UseCustomMessage(gitdomain.CommitMessage(commitMessage)), gitdomain.NewAuthorOpt("CI <ci@acme.com>"), configdomain.CommitHookEnabled))
 		originRepo.RemoveBranch(branchToShip)
 		originRepo.CheckoutBranch("initial")
 		return nil
@@ -1136,9 +1122,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker runs "([^"]+)"$`, func(ctx context.Context, command string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		var exitCode int
-		var output string
-		output, exitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
+		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCode(command)
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
@@ -1146,9 +1130,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(ctx context.Context, cmd string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		var exitCode int
-		var output string
-		output, exitCode = state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
@@ -1226,8 +1208,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the currently checked out commit is "([^"]+)"$`, func(ctx context.Context, want string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.CurrentCommitMessage()
-		if have != want {
+		have, err := devRepo.Git.CommitMessage(devRepo, "HEAD")
+		if err != nil {
+			return fmt.Errorf("cannot determine current commit: %w", err)
+		}
+		if have.String() != want {
 			return fmt.Errorf("expected commit %q but got %q", want, have)
 		}
 		return nil
@@ -1339,7 +1324,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the main branch is (?:now|still) not set$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		have := devRepo.Config.NormalConfig.LocalGitConfig.MainBranch
+		have := devRepo.Config.NormalConfig.GitConfig.MainBranch
 		if branch, has := have.Get(); has {
 			return fmt.Errorf("unexpected main branch setting %q", branch)
 		}
@@ -1384,7 +1369,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^there are (?:now|still) no perennial branches$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		branches := devRepo.Config.NormalConfig.LocalGitConfig.PerennialBranches
+		branches := devRepo.Config.NormalConfig.GitConfig.PerennialBranches
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
@@ -1514,7 +1499,6 @@ func runCommand(ctx context.Context, command string) {
 		cmd, args := parts[0], parts[1:]
 		subProcess := exec.Command(cmd, args...) // #nosec
 		subProcess.Dir = state.fixture.Dir
-		subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
 		outputBytes, _ := subProcess.CombinedOutput()
 		runOutput = string(outputBytes)
 		exitCode = subProcess.ProcessState.ExitCode()

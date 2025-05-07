@@ -3,8 +3,8 @@ package configdomain
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v19/internal/gohacks"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/gohacks"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // SyncTags contains the configuration setting whether to sync Git tags.
@@ -23,7 +23,7 @@ func (self SyncTags) String() string {
 }
 
 func ParseSyncTags(value string, source Key) (Option[SyncTags], error) {
-	parsedOpt, err := gohacks.ParseBool(value, source.String())
+	parsedOpt, err := gohacks.ParseBoolOpt(value, source.String())
 	if parsed, has := parsedOpt.Get(); has {
 		return Some(SyncTags(parsed)), err
 	}

@@ -3,17 +3,17 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/flags"
-	"github.com/git-town/git-town/v19/internal/cli/format"
-	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/execute"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks"
-	"github.com/git-town/git-town/v19/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v19/internal/vm/interpreter/config"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/cli/flags"
+	"github.com/git-town/git-town/v20/internal/cli/format"
+	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/execute"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks"
+	"github.com/git-town/git-town/v20/internal/messages"
+	configInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/config"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -87,9 +87,6 @@ func setOfflineStatus(text string, config config.UnvalidatedConfig) error {
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	if offline, has := value.Get(); has {
-		return config.NormalConfig.SetOffline(configdomain.Offline(offline))
-	}
+	return config.NormalConfig.SetOffline(configdomain.Offline(value))
 	// in the future, we could remove the offline setting here
-	return nil
 }

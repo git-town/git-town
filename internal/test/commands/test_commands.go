@@ -7,17 +7,17 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	prodgit "github.com/git-town/git-town/v19/internal/git"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks/slice"
-	"github.com/git-town/git-town/v19/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v19/internal/test/datatable"
-	"github.com/git-town/git-town/v19/internal/test/subshell"
-	"github.com/git-town/git-town/v19/internal/test/testgit"
-	"github.com/git-town/git-town/v19/pkg/asserts"
-	. "github.com/git-town/git-town/v19/pkg/prelude"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	prodgit "github.com/git-town/git-town/v20/internal/git"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks/slice"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v20/internal/test/datatable"
+	"github.com/git-town/git-town/v20/internal/test/subshell"
+	"github.com/git-town/git-town/v20/internal/test/testgit"
+	"github.com/git-town/git-town/v20/pkg/asserts"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 const ConfigFileCommitMessage = "persisted config file"
@@ -63,7 +63,7 @@ func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, bra
 
 func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 	result := map[string]gitdomain.SHA{}
-	output := self.MustQuery("git", "log", "--all", "--pretty=format:%H %s")
+	output := self.MustQuery("git", "log", "--all", "--format=%H %s")
 	if output == "" {
 		return result
 	}
@@ -102,7 +102,7 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
-	args := []string{"log", "--format=%H|%s|%an <%ae>", "--topo-order", "--reverse"}
+	args := []string{"log", "--format=%H%x00%s%x00%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
 	} else {
@@ -115,7 +115,7 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
-		parts := strings.Split(line, "|")
+		parts := strings.Split(line, "\x00")
 		commit := testgit.Commit{
 			Branch:  branch,
 			SHA:     gitdomain.NewSHA(parts[0]),
@@ -130,7 +130,10 @@ func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, pare
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if slices.Contains(fields, "FILE CONTENT") {
-			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+			filecontent := ""
+			if commit.FileName != "" {
+				filecontent = self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+			}
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -223,10 +226,6 @@ func (self *TestCommands) CreateWorktree(path string, branch gitdomain.LocalBran
 	self.MustRun("git", "worktree", "add", path, branch.String())
 }
 
-func (self *TestCommands) CurrentCommitMessage() string {
-	return self.MustQuery("git", "log", "-1", "--pretty=%B")
-}
-
 // provides the first ancestor of the given branch that actually exists in the repo
 func (self *TestCommands) ExistingParent(branch gitdomain.LocalBranchName, lineage configdomain.Lineage) Option[gitdomain.BranchName] {
 	for {
@@ -264,10 +263,6 @@ func (self *TestCommands) FileContentErr(filename string) (string, error) {
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) string {
 	output := self.MustQuery("git", "show", location.String()+":"+filename)
-	if strings.HasPrefix(output, "tree ") {
-		// merge commits get an empty file content instead of "tree <SHA>"
-		return ""
-	}
 	return output
 }
 
@@ -348,7 +343,8 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	_, localGitConfig, _ := self.Config.NormalConfig.GitConfigAccess.LoadLocal(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ := self.Config.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false)
+	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	lineage := localGitConfig.Lineage
 	for _, entry := range lineage.Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())
@@ -362,15 +358,18 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees gitdomain.LocalBranchNames, err error) {
 	forEachRefFormat := strings.Join(
 		[]string{
+			// worktree marker
 			"%(if)", "%(HEAD)", "%(then)", // If the branch is checked out in the current worktree
 			"H", // literal "H"
 			"%(else)",
 			"%(if)", "%(worktreepath)", "%(then)", // If the branch is checked out in any (other) worktree
 			"W", // literal "W"
 			"%(else)",
-			" ", // literal " "
+			"-", // literal "-"
 			"%(end)",
 			"%(end)",
+
+			" ", // space separator
 
 			"%(refname:lstrip=2)", // the branch name (without refs/heads/)
 		},
@@ -381,10 +380,10 @@ func (self *TestCommands) LocalBranches() (allBranches, branchesInOtherWorktrees
 	}
 	for _, line := range stringslice.Lines(output) {
 		marker := line[0]
-		branch := line[1:]
+		branch := line[2:]
 		allBranches = append(allBranches, gitdomain.NewLocalBranchName(branch))
 		switch marker {
-		case 'H', ' ':
+		case 'H', '-':
 		case 'W':
 			branchesInOtherWorktrees = append(branchesInOtherWorktrees, gitdomain.NewLocalBranchName(branch))
 		default:
@@ -421,7 +420,7 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 }
 
 func (self *TestCommands) Reload() {
-	globalConfigSnapshot, localConfigSnapshot := self.Config.Reload()
+	globalConfigSnapshot, localConfigSnapshot, _ := self.Config.Reload()
 	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
 	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
 }

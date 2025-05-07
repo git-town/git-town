@@ -4,13 +4,13 @@ package config
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/flags"
-	"github.com/git-town/git-town/v19/internal/cli/format"
-	"github.com/git-town/git-town/v19/internal/cli/print"
-	"github.com/git-town/git-town/v19/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v19/internal/config"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/execute"
+	"github.com/git-town/git-town/v20/internal/cli/flags"
+	"github.com/git-town/git-town/v20/internal/cli/format"
+	"github.com/git-town/git-town/v20/internal/cli/print"
+	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/execute"
 	"github.com/spf13/cobra"
 )
 
@@ -59,14 +59,14 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
-	print.Entry("contribution regex", format.OptionalStringerSetting((config.NormalConfig.ContributionRegex)))
+	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
 	print.Entry("default branch type", config.NormalConfig.DefaultBranchType.String())
 	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
 	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
 	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
-	print.Entry("observed regex", format.OptionalStringerSetting((config.NormalConfig.ObservedRegex)))
+	print.Entry("observed regex", format.OptionalStringerSetting(config.NormalConfig.ObservedRegex))
 	print.Entry("parked branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeParkedBranch)))
-	print.Entry("perennial branches", format.StringsSetting((config.NormalConfig.PerennialBranches.Join(", "))))
+	print.Entry("perennial branches", format.StringsSetting(config.NormalConfig.PerennialBranches.Join(", ")))
 	print.Entry("perennial regex", format.OptionalStringerSetting(config.NormalConfig.PerennialRegex))
 	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
 	fmt.Println()
@@ -75,7 +75,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))
-	print.Entry("push new branches", format.Bool(config.NormalConfig.ShouldPushNewBranches()))
+	print.Entry("share new branches", config.NormalConfig.ShareNewBranches.String())
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("development remote", config.NormalConfig.DevRemote.String())

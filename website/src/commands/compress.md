@@ -9,7 +9,7 @@ The _compress_ command squashes all commits on a branch into a single commit.
 Assuming you have a feature branch with these commits:
 
 ```bash
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 commit 2
 commit 3
@@ -25,7 +25,7 @@ Now your branch has a single commit with the name of the first commit but
 containing the changes of all three commits that existed on the branch before:
 
 ```bash
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 ```
 
@@ -52,7 +52,7 @@ with the `--message <message>` aka `-m` flag, which works similar to the
 Assuming you have a feature branch with these commits:
 
 ```bash
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 commit 1
 commit 2
 commit 3
@@ -67,12 +67,17 @@ git town compress -m "compressed commit"
 Now your branch has these commits:
 
 ```bash
-$ git log --pretty=format:'%s'
+$ git log --format='%s'
 compressed commit
 ```
 
 The new `compressed commit` now contains the changes from the old `commit 1`,
 `commit 2`, and `commit 3`.
+
+#### `--no-verify`
+
+Disables the
+[pre-commit hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
 
 #### `-s`<br>`--stack`
 

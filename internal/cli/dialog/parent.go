@@ -3,12 +3,12 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v19/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v19/internal/config/configdomain"
-	"github.com/git-town/git-town/v19/internal/git/gitdomain"
-	"github.com/git-town/git-town/v19/internal/gohacks/slice"
-	"github.com/git-town/git-town/v19/internal/messages"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/gohacks/slice"
+	"github.com/git-town/git-town/v20/internal/messages"
 )
 
 var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)")
