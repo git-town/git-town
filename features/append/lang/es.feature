@@ -7,7 +7,8 @@ Feature: append a branch in Spanish
       | main   | origin   | main commit |
     And the current branch is "main"
     When I run "git-town append new" with these environment variables
-      | LANG | es_ES |
+      | LANG   | es_ES       |
+      | LC_ALL | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands
