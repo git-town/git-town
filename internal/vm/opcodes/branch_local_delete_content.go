@@ -17,16 +17,19 @@ type BranchLocalDeleteContent struct {
 func (self *BranchLocalDeleteContent) Run(args shared.RunArgs) error {
 	switch args.Config.Value.NormalConfig.SyncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyRebase:
-		args.PrependOpcodes(
-			&RebaseOntoRemoveDeleted{
+		opcodes := []shared.Opcode{}
+		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.BranchToDelete).Get()
+		if hasParent && !args.Config.Value.IsMainOrPerennialBranch(parent) {
+			opcodes = append(opcodes, &RebaseOntoRemoveDeleted{
 				BranchToRebaseOnto: self.BranchToRebaseOnto,
 				CommitsToRemove:    self.BranchToDelete.BranchName(),
 				Upstream:           None[gitdomain.LocalBranchName](),
-			},
-			&BranchLocalDelete{
-				Branch: self.BranchToDelete,
-			},
-		)
+			})
+		}
+		opcodes = append(opcodes, &BranchLocalDelete{
+			Branch: self.BranchToDelete,
+		})
+		args.PrependOpcodes(opcodes...)
 	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.PrependOpcodes(
 			&BranchLocalDelete{Branch: self.BranchToDelete},
