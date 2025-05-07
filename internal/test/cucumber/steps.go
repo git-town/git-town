@@ -723,6 +723,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 		runCommand(ctx, command)
 	})
 
+	sc.Step(`^I run "(.+)" with these environment variables$`, func(ctx context.Context, command string, envVars *godog.Table) {
+		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		devRepo := state.fixture.DevRepo.GetOrPanic()
+		state.CaptureState()
+		updateInitialSHAs(state)
+		env := os.Environ()
+		for _, row := range envVars.Rows {
+			env = append(env, fmt.Sprintf("%s=%s", row.Cells[0].Value, row.Cells[1].Value))
+		}
+		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
+		state.runOutput = Some(output)
+		state.runExitCode = Some(exitCode)
+		devRepo.Reload()
+	})
+
 	sc.Step(`^I run "([^"]*)" and close the editor$`, func(ctx context.Context, cmd string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
