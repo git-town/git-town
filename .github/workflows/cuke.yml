@@ -16,8 +16,10 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install language-pack-es language-pack-es-base
       - run: sudo locale-gen es_ES.UTF-8
-      - run: git config --show-origin --get i18n.logoutputencoding || echo "No i18n config"
       - run: find /usr/share/locale/es/LC_MESSAGES -name "git.mo" || echo "No Spanish Git translations found"
+      - run: locale -a
       - run: locale
+      - run: env LANG=es_ES.UTF-8 git status
+      - run: env LC_ALL=es_ES.UTF-8 git status
       - run: make cukeall
         shell: 'script -q -e -c "bash {0}"' # this creates /dev/tty needed by BubbleTea
