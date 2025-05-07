@@ -41,9 +41,14 @@ Feature: detaching a branch in Spanish
       | branch-2 | main   |
 
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo" with these environment variables
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }} |
+    And Git Town prints:
+      """
+      HEAD está ahora
+      """
     And the initial commits exist now
     And the initial lineage exists now
