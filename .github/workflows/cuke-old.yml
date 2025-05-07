@@ -17,6 +17,8 @@ jobs:
         with:
           path: git-2.30.0
           key: ${{ runner.os }}-git
+      - name: install Spanish language pack
+        run: sudo apt-get install language-pack-es language-pack-es-base
       - name: Install old Git
         # https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
         run: |
