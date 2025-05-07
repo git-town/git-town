@@ -730,9 +730,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		for _, row := range envVars.Rows {
-			name := row.Cells[0].Value
-			value := row.Cells[1].Value
-			env = append(env, fmt.Sprintf("%s=%s", name, value))
+			env = append(env, fmt.Sprintf("%s=%s", row.Cells[0].Value, row.Cells[1].Value))
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(command, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
