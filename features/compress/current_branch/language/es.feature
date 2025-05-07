@@ -21,10 +21,6 @@ Feature: compress the commits in Spanish
       |         | git reset --soft main                           |
       |         | git commit -m "commit 1"                        |
       |         | git push --force-with-lease --force-if-includes |
-    And Git Town prints:
-      """
-      xxxx
-      """
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE  |
