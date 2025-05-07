@@ -25,7 +25,7 @@ Feature: sync the current branch in Spanish
       |         | git push -u origin feature                        |
     And Git Town prints:
       """
-      rama 'feature' configurada para rastrear 'origin/feature'
+      Cambiado a rama 'feature'
       """
     And all branches are now synchronized
     And these commits exist now

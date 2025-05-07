@@ -27,11 +27,16 @@ Feature: append a branch in Spanish
       | new    | main   |
 
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo" with these environment variables
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | new    | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
+    And Git Town prints:
+      """
+      Eliminada la rama new
+      """
     And the initial commits exist now
     And the initial branches and lineage exist now
