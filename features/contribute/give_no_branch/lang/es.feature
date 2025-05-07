@@ -20,12 +20,17 @@ Feature: make the current feature branch a contribution branch in Spanish
     And the uncommitted file still exists
 
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo" with these environment variables
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH  | COMMAND                     |
       | feature | git add -A                  |
       |         | git stash -m "Git Town WIP" |
       |         | git stash pop               |
       |         | git restore --staged .      |
+    And Git Town prints:
+      """
+      Cambios a ser confirmados:
+      """
     And branch "feature" now has type "feature"
     And the uncommitted file still exists
