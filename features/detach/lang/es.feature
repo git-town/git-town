@@ -45,10 +45,5 @@ Feature: detaching a branch in Spanish
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                |
       | branch-2 | git reset --hard {{ sha 'commit 2b' }} |
-      |          | git checkout branch-3                  |
-      | branch-3 | git reset --hard {{ sha 'commit 3b' }} |
-      |          | git checkout branch-4                  |
-      | branch-4 | git reset --hard {{ sha 'commit 4b' }} |
-      |          | git checkout branch-2                  |
     And the initial commits exist now
     And the initial lineage exists now

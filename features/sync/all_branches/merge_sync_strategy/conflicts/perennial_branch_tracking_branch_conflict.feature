@@ -30,7 +30,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     And a rebase is now in progress
-    And inspect the repo
 
   Scenario: undo
     When I run "git-town undo"
