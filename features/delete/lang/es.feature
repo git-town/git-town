@@ -37,11 +37,16 @@ Feature: delete the current feature branch in Spanish
       | other  | main   |
 
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo" with these environment variables
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                       |
       | other  | git branch current {{ sha 'current commit' }} |
       |        | git push -u origin current                    |
       |        | git checkout current                          |
+    And Git Town prints:
+      """
+      Cambiado a rama 'current'
+      """
     And the initial commits exist now
     And the initial branches and lineage exist now
