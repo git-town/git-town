@@ -17,7 +17,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And the current branch is "main"
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then I am not prompted for any parent branches
     And Git Town runs the commands
