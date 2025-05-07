@@ -14,7 +14,7 @@ Feature: display branches in Spanish
       | perennial    | perennial    |        | local, origin |
     And the current branch is "beta"
     When I run "git-town branch" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs no commands

@@ -12,7 +12,7 @@ Feature: compress the commits in Spanish
       |         |               | commit 3 | file_3    | content 3    |
     And the current branch is "feature"
     When I run "git-town compress" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands

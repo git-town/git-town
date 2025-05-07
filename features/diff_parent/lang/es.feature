@@ -7,7 +7,7 @@ Feature: view changes made on the current feature branch
       | feature | feature | main   | local     |
     And the current branch is "feature"
     When I run "git-town diff-parent" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands

@@ -12,7 +12,7 @@ Feature: delete the current feature branch in Spanish
       | other   | local, origin | other commit   |
     And the current branch is "current" and the previous branch is "other"
     When I run "git-town delete" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands

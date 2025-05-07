@@ -16,7 +16,7 @@ Feature: merging in Spanish
       | beta   | local    | beta commit |
     And the current branch is "beta"
     When I run "git-town merge" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands
@@ -36,7 +36,7 @@ Feature: merging in Spanish
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                              |
       | beta   | git branch alpha {{ sha-before-run 'alpha commit' }} |

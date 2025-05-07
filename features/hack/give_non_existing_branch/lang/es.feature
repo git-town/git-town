@@ -7,7 +7,7 @@ Feature: hack in Spanish
       | main   | origin   | main commit |
     And the current branch is "main"
     When I run "git-town hack new" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands
@@ -28,7 +28,7 @@ Feature: hack in Spanish
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH | COMMAND                                     |
       | new    | git checkout main                           |

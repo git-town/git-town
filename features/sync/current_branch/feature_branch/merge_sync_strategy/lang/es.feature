@@ -11,7 +11,7 @@ Feature: sync the current branch in Spanish
       | feature | local    | local feature commit |
     And the current branch is "feature"
     When I run "git-town sync" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands
@@ -39,7 +39,7 @@ Feature: sync the current branch in Spanish
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |

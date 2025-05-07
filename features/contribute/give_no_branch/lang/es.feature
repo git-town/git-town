@@ -8,7 +8,7 @@ Feature: make the current feature branch a contribution branch in Spanish
     And the current branch is "feature"
     And an uncommitted file
     When I run "git-town contribute" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs no commands

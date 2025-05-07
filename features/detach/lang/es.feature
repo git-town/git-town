@@ -18,7 +18,7 @@ Feature: detaching a branch in Spanish
       | branch-2 | local    | commit 2b |
     And the current branch is "branch-2"
     When I run "git-town detach" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands

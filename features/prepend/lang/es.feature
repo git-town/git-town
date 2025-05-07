@@ -10,7 +10,7 @@ Feature: prepend a branch in Spanish
       | old    | local, origin | old commit |
     And the current branch is "old"
     When I run "git-town prepend parent" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
 
   Scenario: result
     Then Git Town runs the commands
@@ -33,7 +33,7 @@ Feature: prepend a branch in Spanish
 
   Scenario: undo
     When I run "git-town undo" with these environment variables
-      | LANG | es_ES |
+      | LANG | es_ES.UTF-8 |
     Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | parent | git checkout old     |
