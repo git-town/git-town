@@ -36,6 +36,10 @@ Feature: sync the current branch in Spanish
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
+
+  Scenario: undo
+    When I run "git-town undo" with these environment variables
+      | LANG | es_ES |
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
