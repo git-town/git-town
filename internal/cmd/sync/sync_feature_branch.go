@@ -51,7 +51,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 		)
 	case configdomain.SyncStrategyRebase:
 		args.program.Value.Add(
-			&opcodes.RebaseParentIfNeeded{
+			&opcodes.RebaseParentsUntilLocal{
 				Branch:      args.localName,
 				PreviousSHA: args.parentLastRunSHA,
 			},
@@ -95,7 +95,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					RemoteBranch: trackingBranch,
 					PushBranches: args.PushBranches,
 				},
-				&opcodes.RebaseParentIfNeeded{
+				&opcodes.RebaseParentsUntilLocal{
 					Branch:      args.LocalName,
 					PreviousSHA: args.LastRunParentSHA,
 				},

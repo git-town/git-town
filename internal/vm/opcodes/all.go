@@ -90,7 +90,7 @@ func All() []shared.Opcode {
 		&RebaseContinue{},
 		&RebaseOntoKeepDeleted{},
 		&RebaseOntoRemoveDeleted{},
-		&RebaseParentIfNeeded{},
+		&RebaseParentsUntilLocal{},
 		&RebaseTrackingBranch{},
 		&RegisterUndoablePerennialCommit{},
 		&SnapshotInitialUpdateLocalSHAIfNeeded{},
