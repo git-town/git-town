@@ -10,25 +10,26 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-type ConflictPhantomDetect struct {
+type ConflictPhantomResolveAll struct {
 	ParentBranch            Option[gitdomain.LocalBranchName]
 	ParentSHA               Option[gitdomain.SHA]
+	Resolution              gitdomain.ConflictResolution
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ConflictPhantomDetect) AbortProgram() []shared.Opcode {
+func (self *ConflictPhantomResolveAll) AbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeAbort{},
 	}
 }
 
-func (self *ConflictPhantomDetect) ContinueProgram() []shared.Opcode {
+func (self *ConflictPhantomResolveAll) ContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&MergeContinue{},
 	}
 }
 
-func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
+func (self *ConflictPhantomResolveAll) Run(args shared.RunArgs) error {
 	parentSHA, hasParentSHA := self.ParentSHA.Get()
 	if !hasParentSHA {
 		return errors.New(messages.ConflictMerge)
@@ -47,7 +48,7 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	for p, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes[p] = &ConflictPhantomResolve{
 			FilePath:   phantomMergeConflict.FilePath,
-			Resolution: gitdomain.ConflictResolutionOurs,
+			Resolution: self.Resolution,
 		}
 	}
 	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}

@@ -49,7 +49,7 @@ func All() []shared.Opcode {
 		&Commit{},
 		&ConfigRemove{},
 		&ConfigSet{},
-		&ConflictPhantomDetect{},
+		&ConflictPhantomResolveAll{},
 		&ConflictPhantomFinalize{},
 		&ConflictPhantomResolve{},
 		&ConnectorProposalMerge{},
