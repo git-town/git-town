@@ -383,8 +383,7 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 
 func validateCompressBranchesData(data compressBranchesData, repo execute.OpenRepoResult) error {
 	for _, branch := range data.branchesToCompress {
-		parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get()
-		if hasParent {
+		if parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get(); hasParent {
 			isInSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, branch.name, parent)
 			if err != nil {
 				return err
