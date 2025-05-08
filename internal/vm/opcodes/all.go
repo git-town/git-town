@@ -40,6 +40,7 @@ func All() []shared.Opcode {
 		&CheckoutUncached{},
 		&Checkout{},
 		&CherryPick{},
+		&CompressMergeTrackingBranch{},
 		&CommitAutoUndo{},
 		&CommitMessageCommentOut{},
 		&CommitRemove{},
