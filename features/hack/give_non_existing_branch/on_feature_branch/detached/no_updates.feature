@@ -1,4 +1,4 @@
-Feature: on a feature branch with a clean workspace in detached mode
+Feature: on a feature branch with a clean workspace in detached mode with no updates
 
   Background:
     Given a Git repo with origin
