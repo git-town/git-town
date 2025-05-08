@@ -12,6 +12,9 @@
 - `git town sync` now doesn't remove commits of branches with deleted tracking branch if they don't have descendents ([#4872](https://github.com/git-town/git-town/discussions/4872)).
 - Git Town no longer overrides the language of executed Git commands to US-English ([#4861](https://github.com/git-town/git-town/pull/4861)).
 
+#### Contributors
+
+Shoutout to @AmitJoki, @fcurella, @haltcase, @kevgo, @lvlcn-t, @mw00120, @niklastreml, @stephenwade for contributing code, feedback, and ideas to 34 shipped PRs and 6 resolved issues!
 
 ## 20.0.0 (2025-05-02)
 
