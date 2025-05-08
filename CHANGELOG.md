@@ -1,5 +1,21 @@
 # Git Town Changelog
 
+## 20.1.0 (2025-05-08)
+
+#### New Features
+
+- `git town compress` now has a `--no-verify` flag that disables Git's pre-commit hook ([#4843](https://github.com/git-town/git-town/issues/4843)).
+
+#### Bug Fixes
+
+- `git town compress` now enforces that the branch to compress is in sync with its parent branch ([#4845](https://github.com/git-town/git-town/issues/4845)).
+- `git town sync` now doesn't remove commits of branches with deleted tracking branch if they don't have descendents ([#4872](https://github.com/git-town/git-town/discussions/4872)).
+- Git Town no longer overrides the language of executed Git commands to US-English ([#4861](https://github.com/git-town/git-town/pull/4861)).
+
+#### Contributors
+
+Shoutout to @AmitJoki, @fcurella, @haltcase, @kevgo, @lvlcn-t, @mw00120, @niklastreml, @stephenwade for contributing code, feedback, and ideas to 34 shipped PRs and 6 resolved issues!
+
 ## 20.0.0 (2025-05-02)
 
 Git Town 2000! 🎉
