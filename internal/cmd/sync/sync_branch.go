@@ -239,7 +239,7 @@ func shouldPushPerennialBranch(syncStatus gitdomain.SyncStatus) bool {
 func updateCurrentPerennialBranchOpcode(prog Mutable[program.Program], otherBranch gitdomain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
 	switch strategy {
 	case configdomain.SyncPerennialStrategyMerge:
-		prog.Value.Add(&opcodes.Merge{Branch: otherBranch.BranchName()})
+		prog.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: otherBranch.BranchName()})
 	case configdomain.SyncPerennialStrategyRebase:
 		prog.Value.Add(&opcodes.RebaseBranch{Branch: otherBranch.BranchName()})
 	case configdomain.SyncPerennialStrategyFFOnly:

@@ -74,7 +74,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args FeatureTrackingArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
-		args.Program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
+		args.Program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
 		if firstCommitMessage, has := args.FirstCommitMessage.Get(); has {
 			args.Program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.LocalName})
 			args.Program.Value.Add(&opcodes.CommitWithMessage{
@@ -87,7 +87,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 			args.Program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
 		}
 	case configdomain.SyncStrategyMerge:
-		args.Program.Value.Add(&opcodes.Merge{Branch: trackingBranch.BranchName()})
+		args.Program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
 	case configdomain.SyncStrategyRebase:
 		if args.Offline.IsFalse() {
 			args.Program.Value.Add(
