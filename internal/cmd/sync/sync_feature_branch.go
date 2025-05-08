@@ -43,7 +43,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 	switch syncStrategy {
 	case configdomain.SyncStrategyMerge:
 		args.program.Value.Add(
-			&opcodes.MergeParentIfNeeded{
+			&opcodes.MergeParentsUntilLocal{
 				Branch:             args.localName,
 				OriginalParentName: args.originalParentName,
 				OriginalParentSHA:  args.originalParentSHA,
@@ -58,7 +58,7 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 		)
 	case configdomain.SyncStrategyCompress:
 		args.program.Value.Add(
-			&opcodes.MergeParentIfNeeded{
+			&opcodes.MergeParentsUntilLocal{
 				Branch:             args.localName,
 				OriginalParentName: args.originalParentName,
 				OriginalParentSHA:  args.originalParentSHA,

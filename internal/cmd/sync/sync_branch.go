@@ -148,7 +148,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
+		args.program.Value.Add(&opcodes.MergeParentsUntilLocal{
 			Branch:             args.branch,
 			OriginalParentName: args.originalParentName,
 			OriginalParentSHA:  args.originalParentSHA,
@@ -159,7 +159,7 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 			PreviousSHA: args.previousParentSHA,
 		})
 	case configdomain.SyncFeatureStrategyCompress:
-		args.program.Value.Add(&opcodes.MergeParentIfNeeded{
+		args.program.Value.Add(&opcodes.MergeParentsUntilLocal{
 			Branch:             args.branch,
 			OriginalParentName: args.originalParentName,
 			OriginalParentSHA:  args.originalParentSHA,

@@ -97,7 +97,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeAbort{},
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentsUntilLocal{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
@@ -492,7 +492,7 @@ func TestLoadSave(t *testing.T) {
         "OriginalParentName": "original-parent",
         "OriginalParentSHA": "123456"
       },
-      "type": "MergeParentIfNeeded"
+      "type": "MergeParentsUntilLocal"
     },
     {
       "data": {
