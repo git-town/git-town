@@ -1,4 +1,4 @@
-Feature: append a new feature branch to an existing feature branch in detached mode
+Feature: append a new feature branch to an existing feature branch in detached mode when there are no updates
 
   Background:
     Given a Git repo with origin

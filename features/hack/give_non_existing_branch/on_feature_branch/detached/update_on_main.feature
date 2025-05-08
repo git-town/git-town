@@ -1,4 +1,4 @@
-Feature: on a feature branch with a clean workspace in detached mode
+Feature: on a feature branch with a clean workspace in detached mode with updates on main
 
   Background:
     Given a Git repo with origin
@@ -7,7 +7,7 @@ Feature: on a feature branch with a clean workspace in detached mode
       | existing | feature | main   | local, origin |
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
-      | main     | origin   | main commit     |
+      | main     | local    | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
     When I run "git-town hack new --detached"
