@@ -97,7 +97,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeAbort{},
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentsUntilLocal{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
@@ -120,7 +120,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseOntoKeepDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
 				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: Some(gitdomain.NewLocalBranchName("upstream"))},
-				&opcodes.RebaseParentIfNeeded{Branch: "branch", PreviousSHA: Some(gitdomain.SHA("123456"))},
+				&opcodes.RebaseParentsUntilLocal{Branch: "branch", PreviousSHA: Some(gitdomain.SHA("123456"))},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
@@ -492,7 +492,7 @@ func TestLoadSave(t *testing.T) {
         "OriginalParentName": "original-parent",
         "OriginalParentSHA": "123456"
       },
-      "type": "MergeParentIfNeeded"
+      "type": "MergeParentsUntilLocal"
     },
     {
       "data": {
@@ -636,7 +636,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "PreviousSHA": "123456"
       },
-      "type": "RebaseParentIfNeeded"
+      "type": "RebaseParentsUntilLocal"
     },
     {
       "data": {

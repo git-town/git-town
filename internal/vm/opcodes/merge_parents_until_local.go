@@ -7,15 +7,15 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// merges the branch that at runtime is the parent branch of the given branch into the given branch
-type MergeParentIfNeeded struct {
+// MergeParentsUntilLocal merges the parent branches of the given branch until a local parent is found.
+type MergeParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
 	OriginalParentName      Option[gitdomain.LocalBranchName]
 	OriginalParentSHA       Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
+func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
