@@ -118,7 +118,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	if err != nil || exit {
 		return err
 	}
-	err = validateCompressBranchesData(data)
+	err = validateCompressBranchesData(data, repo)
 	if err != nil {
 		return err
 	}
@@ -383,14 +383,14 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 
 func validateCompressBranchesData(data compressBranchesData, repo execute.OpenRepoResult) error {
 	for _, branch := range data.branchesToCompress {
-		parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch).Get()
+		parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get()
 		if hasParent {
 			isInSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, branch.name, parent)
 			if err != nil {
 				return err
 			}
 			if !isInSyncWithParent {
-				return fmt.Errorf("branch %q is not in sync with its parent - please sync and try again")
+				return fmt.Errorf(messages.BranchNotInSyncWithParent, branch.name)
 			}
 		}
 	}
