@@ -1,4 +1,3 @@
-@smoke
 Feature: sync the current feature branch with a tracking branch in detached mode with no updates
 
   Background:
