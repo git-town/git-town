@@ -783,7 +783,7 @@ func TestChanges(t *testing.T) {
 			// reset the feature branch to the previous SHA
 			&opcodes.CheckoutIfNeeded{Branch: "feature-branch"},
 			&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "666666", SetToSHA: "333333", Hard: true},
-			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "feature-branch", ForceIfIncludes: true},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}

@@ -109,7 +109,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
-				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIgnoreError{},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
@@ -575,6 +575,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "CurrentBranch": "branch",
         "ForceIfIncludes": true
       },
       "type": "PushCurrentBranchForceIfNeeded"
