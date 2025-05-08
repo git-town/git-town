@@ -93,7 +93,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageParentSetFirstExisting{Ancestors: gitdomain.NewLocalBranchNames("one", "two"), Branch: "branch"},
 				&opcodes.LineageParentSetIfExists{Branch: "branch", Parent: "parent"},
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
-				&opcodes.Merge{Branch: "branch"},
+				&opcodes.MergeIntoCurrentBranch{BranchToMerge: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
@@ -469,9 +469,9 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "BranchToMerge": "branch"
       },
-      "type": "Merge"
+      "type": "MergeIntoCurrentBranch"
     },
     {
       "data": {},

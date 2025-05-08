@@ -14,8 +14,8 @@ func TestBranchesInOpcode(t *testing.T) {
 
 	t.Run("BranchName", func(t *testing.T) {
 		t.Parallel()
-		opcode := opcodes.Merge{
-			Branch: "branch",
+		opcode := opcodes.MergeIntoCurrentBranch{
+			BranchToMerge: "branch",
 		}
 		have := shared.BranchesInOpcode(&opcode)
 		want := []gitdomain.BranchName{
