@@ -15,26 +15,17 @@ Feature: compressing a branch when its parent received additional commits
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git fetch --prune --tags                        |
-      |         | git reset --soft main                           |
-      |         | git commit -m "feature commit 1"                |
-      |         | git push --force-with-lease --force-if-includes |
-    And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE          |
-      | main    | local, origin | main commit      |
-      | feature | local, origin | feature commit 1 |
-    And the branches contain these files:
-      | BRANCH  | NAME         |
-      | feature | feature_file |
-      | main    | main_file    |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+    And Git Town prints the error:
+      """
+      branch "feature" is not in sync with its parent, please run "git town sync" and try again
+      """
+    And the initial commits exist now
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH  | COMMAND                                         |
-      | feature | git reset --hard {{ sha 'feature commit 2' }}   |
-      |         | git push --force-with-lease --force-if-includes |
+    Then Git Town runs no commands
     And the initial commits exist now
     And the initial branches and lineage exist now

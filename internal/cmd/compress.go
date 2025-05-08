@@ -118,6 +118,10 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	if err != nil || exit {
 		return err
 	}
+	err = validateCompressBranchesData(data, repo)
+	if err != nil {
+		return err
+	}
 	runProgram := compressProgram(data, commitHook)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
@@ -375,4 +379,19 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 		return fmt.Errorf(messages.CompressUnsynced, branchName)
 	}
 	panic("unhandled syncstatus: " + syncStatus.String())
+}
+
+func validateCompressBranchesData(data compressBranchesData, repo execute.OpenRepoResult) error {
+	for _, branch := range data.branchesToCompress {
+		if parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get(); hasParent {
+			isInSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, branch.name, parent)
+			if err != nil {
+				return err
+			}
+			if !isInSyncWithParent {
+				return fmt.Errorf(messages.BranchNotInSyncWithParent, branch.name)
+			}
+		}
+	}
+	return nil
 }
