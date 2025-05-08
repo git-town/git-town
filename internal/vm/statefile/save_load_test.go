@@ -84,7 +84,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictPhantomDetect{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.ConflictPhantomFinalize{},
-				&opcodes.ConflictPhantomResolve{FilePath: "file"},
+				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -404,7 +404,8 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "FilePath": "file"
+        "FilePath": "file",
+        "Resolution": "ours"
       },
       "type": "ConflictPhantomResolve"
     },
