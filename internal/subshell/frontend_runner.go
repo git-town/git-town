@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/cli/colors"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/gohacks"
+	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/messages"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
@@ -37,17 +38,9 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, ex
 	} else {
 		result = executable + " "
 	}
-	for index, part := range args {
-		if part == "" {
-			part = `""`
-		} else if strings.Contains(part, " ") {
-			part = `"` + part + `"`
-		}
-		if index != 0 {
-			result += " "
-		}
-		result += part
-	}
+	quoted := stringslice.SurroundEmptyWith(args, `"`)
+	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
+	result += strings.Join(quoted, " ")
 	return result
 }
 

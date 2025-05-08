@@ -96,6 +96,7 @@ func containsConcurrentGitAccess(text string) bool {
 
 func printHeader(cmd string, args ...string) {
 	quoted := stringslice.SurroundEmptyWith(args, `"`)
+	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
 	text := "\n(verbose) " + cmd + " " + strings.Join(quoted, " ")
 	fmt.Println(colors.Bold().Styled(text))
 }
