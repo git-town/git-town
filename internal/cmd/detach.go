@@ -317,7 +317,7 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 	)
 	if data.branchToDetachInfo.HasTrackingBranch() {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToDetachName, ForceIfIncludes: true},
 		)
 	}
 	lastParent := data.parentBranch
@@ -331,7 +331,7 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 		})
 		if descendent.info.HasTrackingBranch() {
 			prog.Value.Add(
-				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: descendent.name, ForceIfIncludes: true},
 			)
 		}
 		lastParent = descendent.name

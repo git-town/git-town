@@ -84,7 +84,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 			})
 		}
 		if args.Offline.IsFalse() {
-			args.Program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
+			args.Program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.LocalName, ForceIfIncludes: false})
 		}
 	case configdomain.SyncStrategyMerge:
 		args.Program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
@@ -100,6 +100,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					PreviousSHA: args.LastRunParentSHA,
 				},
 				&opcodes.PushCurrentBranchForceIfNeeded{
+					CurrentBranch:   args.LocalName,
 					ForceIfIncludes: true,
 				},
 			)

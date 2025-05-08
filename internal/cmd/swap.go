@@ -319,7 +319,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	)
 	if data.branchToSwapInfo.HasTrackingBranch() {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.branchToSwapName, ForceIfIncludes: true},
 		)
 	}
 	prog.Value.Add(
@@ -334,7 +334,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	)
 	if data.parentBranchInfo.HasTrackingBranch() {
 		prog.Value.Add(
-			&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.parentBranch, ForceIfIncludes: true},
 		)
 	}
 	for _, child := range data.children {
@@ -357,6 +357,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 		if child.info.HasTrackingBranch() {
 			prog.Value.Add(
 				&opcodes.PushCurrentBranchForceIfNeeded{
+					CurrentBranch:   child.name,
 					ForceIfIncludes: true,
 				},
 			)

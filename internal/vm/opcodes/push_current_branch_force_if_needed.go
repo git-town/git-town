@@ -1,21 +1,19 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
 // PushCurrentBranchForceIfNeeded force-pushes the branch with the given name to the origin remote.
 type PushCurrentBranchForceIfNeeded struct {
+	CurrentBranch           gitdomain.LocalBranchName
 	ForceIfIncludes         bool
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
-	currentBranch, err := args.Git.CurrentBranch(args.Backend)
-	if err != nil {
-		return err
-	}
-	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, currentBranch, args.Config.Value.NormalConfig.DevRemote)
+	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
 		return err
 	}
