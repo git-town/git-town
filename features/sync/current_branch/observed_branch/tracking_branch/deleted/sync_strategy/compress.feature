@@ -12,6 +12,7 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
       | observed | local         | local commit | local_file |
     And the current branch is "observed"
     And origin deletes the "observed" branch
+    And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town sync"
 
   Scenario: result
