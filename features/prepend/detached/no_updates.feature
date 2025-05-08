@@ -1,4 +1,4 @@
-Feature: prepend a branch to a feature branch in detached mode
+Feature: prepend a branch to a feature branch in detached mode when there are no new commits
 
   Background:
     Given a Git repo with origin
