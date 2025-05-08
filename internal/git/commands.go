@@ -208,14 +208,6 @@ func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdo
 	return nil
 }
 
-func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) error {
-	return runner.Run("git", "checkout", "--ours", file)
-}
-
-func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string) error {
-	return runner.Run("git", "checkout", "--theirs", file)
-}
-
 func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) error {
 	return runner.Run("git", "cherry-pick", sha.String())
 }
@@ -831,6 +823,10 @@ func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdo
 func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
 	remote := branch.Remote()
 	return runner.Run("git", "push", "--force-with-lease", remote.String(), sha.String()+":"+branch.LocalBranchName().String())
+}
+
+func (self *Commands) ResolveConflict(runner gitdomain.Runner, file string, resolution gitdomain.ConflictResolution) error {
+	return runner.Run("git", "checkout", resolution.GitFlag(), file)
 }
 
 func (self *Commands) RevertCommit(runner gitdomain.Runner, sha gitdomain.SHA) error {
