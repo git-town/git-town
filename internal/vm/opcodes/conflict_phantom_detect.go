@@ -46,7 +46,8 @@ func (self *ConflictPhantomDetect) Run(args shared.RunArgs) error {
 	newOpcodes := make([]shared.Opcode, len(phantomMergeConflicts)+1)
 	for p, phantomMergeConflict := range phantomMergeConflicts {
 		newOpcodes[p] = &ConflictPhantomResolve{
-			FilePath: phantomMergeConflict.FilePath,
+			FilePath:   phantomMergeConflict.FilePath,
+			Resolution: gitdomain.ConflictResolutionOurs,
 		}
 	}
 	newOpcodes[len(phantomMergeConflicts)] = &ConflictPhantomFinalize{}

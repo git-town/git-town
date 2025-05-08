@@ -1,11 +1,13 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
 type ConflictPhantomResolve struct {
 	FilePath                string
+	Resolution              gitdomain.ConflictResolution
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -22,7 +24,7 @@ func (self *ConflictPhantomResolve) ContinueProgram() []shared.Opcode {
 }
 
 func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
-	err := args.Git.CheckoutOurVersion(args.Frontend, self.FilePath)
+	err := args.Git.ResolveConflict(args.Frontend, self.FilePath, self.Resolution)
 	if err != nil {
 		return err
 	}
