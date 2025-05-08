@@ -60,7 +60,7 @@ branch. You can enable these Git settings to prevent this problem:
 
 - `git config rerere.enabled true` enables Git's [rerere] feature
 - `git config rerere.autoupdate true` enables auto-staging of auto-resolved
-  files
+  conflicts
 
 ### config file
 
