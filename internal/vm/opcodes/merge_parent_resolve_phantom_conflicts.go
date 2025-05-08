@@ -17,9 +17,10 @@ type MergeParentResolvePhantomConflicts struct {
 func (self *MergeParentResolvePhantomConflicts) Run(args shared.RunArgs) error {
 	err := args.Git.MergeBranchNoEdit(args.Frontend, self.CurrentParent)
 	if err != nil {
-		args.PrependOpcodes(&ConflictPhantomDetect{
+		args.PrependOpcodes(&ConflictPhantomResolveAll{
 			ParentBranch: self.OriginalParentName,
 			ParentSHA:    self.OriginalParentSHA,
+			Resolution:   gitdomain.ConflictResolutionOurs,
 		})
 	}
 	return nil

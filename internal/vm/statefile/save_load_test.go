@@ -82,7 +82,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
-				&opcodes.ConflictPhantomDetect{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.ConflictPhantomResolveAll{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
@@ -394,9 +394,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "ParentBranch": "parent",
-        "ParentSHA": "123456"
+        "ParentSHA": "123456",
+        "Resolution": "ours"
       },
-      "type": "ConflictPhantomDetect"
+      "type": "ConflictPhantomResolveAll"
     },
     {
       "data": {},
