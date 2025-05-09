@@ -5,6 +5,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
   even if they coordinate to avoid concurrent updates
   and run "git town sync" before and after they make changes.
 
+  @this
   Scenario:
     Given a Git repo with origin
     And the committed configuration file:

@@ -47,8 +47,8 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			)
 		}
 	}
-	if len(opcodes) > 0 || len(commitsInBranch) > 1 {
-		firstCommitMessage := self.CommitMessage.GetOrElse("compressed commit")
+	commitMessage, hasCommitMessage := self.CommitMessage.Get()
+	if len(opcodes) > 0 || len(commitsInBranch) > 1 && hasCommitMessage {
 		opcodes = append(opcodes,
 			&BranchCurrentResetToParent{
 				CurrentBranch: self.CurrentBranch,
@@ -56,7 +56,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			&CommitWithMessage{
 				AuthorOverride: None[gitdomain.Author](),
 				CommitHook:     configdomain.CommitHookEnabled,
-				Message:        firstCommitMessage,
+				Message:        commitMessage,
 			},
 		)
 		if self.Offline.IsFalse() && self.TrackingBranch.IsSome() {
