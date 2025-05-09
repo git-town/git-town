@@ -22,7 +22,18 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
-	if parentName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+	if parentLocalName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
+		parentName := determineParentBranchName(parentLocalName, args.BranchInfos, args.Config.Value.NormalConfig.DevRemote)
+		if branchInfos, hasBranchInfos := args.BranchInfos.Get(); hasBranchInfos {
+			if parentInfo, hasParentInfo := branchInfos.FindByLocalName(parentLocalName).Get(); hasParentInfo {
+				parentName = parentInfo.GetLocalOrRemoteName()
+			} else {
+				parentRemoteName := parentLocalName.AtRemote(self.DevRemote)
+				if _, hasParentInfo := branchInfos.FindByRemoteName(parentRemoteName).Get(); hasParentInfo {
+					parentName = parentRemoteName.BranchName()
+				}
+			}
+		}
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
@@ -34,7 +45,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				OriginalParentSHA:  self.OriginalParentSHA,
 			})
 		}
-		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentName)
+		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentLocalName)
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
 		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, self.DevRemote)
@@ -65,4 +76,17 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	}
 	args.PrependOpcodes(opcodes...)
 	return nil
+}
+
+func determineParentBranchName(parentLocalName gitdomain.LocalBranchName, branchInfosOpt Option[gitdomain.BranchInfos], devRemote gitdomain.Remote) gitdomain.BranchName {
+	if branchInfos, hasBranchInfos := branchInfosOpt.Get(); hasBranchInfos {
+		if parentInfo, hasParentInfo := branchInfos.FindByLocalName(parentLocalName).Get(); hasParentInfo {
+			return parentInfo.GetLocalOrRemoteName()
+		}
+		parentRemoteName := parentLocalName.AtRemote(devRemote)
+		if _, hasParentInfo := branchInfos.FindByRemoteName(parentRemoteName).Get(); hasParentInfo {
+			return parentRemoteName.BranchName()
+		}
+	}
+	return parentLocalName.BranchName()
 }
