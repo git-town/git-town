@@ -40,22 +40,15 @@ type featureBranchArgs struct {
 
 func syncFeatureBranchCompress(args featureBranchArgs) {
 	args.program.Value.Add(
-		&opcodes.MergeParentsUntilLocal{
-			Branch:             args.localName,
-			OriginalParentName: args.originalParentName,
-			OriginalParentSHA:  args.originalParentSHA,
+		&opcodes.CompressMergeTrackingBranch{
+			CurrentBranch:  args.localName,
+			CommitMessage:  args.firstCommitMessage,
+			Offline:        args.offline,
+			ParentName:     args.originalParentName,
+			ParentSHA:      args.originalParentSHA,
+			TrackingBranch: args.trackingBranchName,
 		},
 	)
-	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
-		args.program.Value.Add(
-			&opcodes.CompressMergeTrackingBranch{
-				CurrentBranch:  args.localName,
-				CommitMessage:  args.firstCommitMessage,
-				Offline:        args.offline,
-				TrackingBranch: trackingBranch,
-			},
-		)
-	}
 }
 
 func syncFeatureBranchFFOnly(args featureBranchArgs) {

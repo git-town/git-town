@@ -12,24 +12,35 @@ type CompressMergeTrackingBranch struct {
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
 	Offline                 configdomain.Offline
-	TrackingBranch          gitdomain.RemoteBranchName
+	ParentName              Option[gitdomain.LocalBranchName]
+	ParentSHA               Option[gitdomain.SHA]
+	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CompressMergeTrackingBranch) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{
-		&MergeIntoCurrentBranch{BranchToMerge: self.TrackingBranch.BranchName()},
+		&MergeParentsUntilLocal{
+			Branch:             self.CurrentBranch,
+			OriginalParentName: self.ParentName,
+			OriginalParentSHA:  self.ParentSHA,
+		},
 	}
-	if firstCommitMessage, has := self.CommitMessage.Get(); has {
-		opcodes = append(opcodes, &BranchCurrentResetToParent{CurrentBranch: self.CurrentBranch})
-		opcodes = append(opcodes, &CommitWithMessage{
-			AuthorOverride: None[gitdomain.Author](),
-			CommitHook:     configdomain.CommitHookEnabled,
-			Message:        firstCommitMessage,
-		})
-	}
-	if self.Offline.IsFalse() {
-		opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
+	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
+		opcodes = append(opcodes,
+			&MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()},
+		)
+		if firstCommitMessage, has := self.CommitMessage.Get(); has {
+			opcodes = append(opcodes, &BranchCurrentResetToParent{CurrentBranch: self.CurrentBranch})
+			opcodes = append(opcodes, &CommitWithMessage{
+				AuthorOverride: None[gitdomain.Author](),
+				CommitHook:     configdomain.CommitHookEnabled,
+				Message:        firstCommitMessage,
+			})
+		}
+		if self.Offline.IsFalse() {
+			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
+		}
 	}
 	args.PrependOpcodes(opcodes...)
 	return nil
