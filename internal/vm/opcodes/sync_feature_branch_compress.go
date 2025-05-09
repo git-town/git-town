@@ -34,7 +34,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				InitialParentSHA:  self.InitialParentSHA,
 			})
 		}
-		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentLocalName)
+		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
 		}

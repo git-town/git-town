@@ -263,12 +263,12 @@ func (self *Commands) CommitStart(runner gitdomain.Runner) error {
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
-		return self.CommitsInFeatureBranch(querier, branch, parent)
+		return self.CommitsInFeatureBranch(querier, branch, parent.BranchName())
 	}
 	return self.CommitsInPerennialBranch(querier)
 }
 
-func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
+func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (gitdomain.Commits, error) {
 	output, err := querier.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
 	if err != nil {
 		return gitdomain.Commits{}, err

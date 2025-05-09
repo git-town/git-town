@@ -303,7 +303,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}
 	commitsToBeam := []gitdomain.Commit{}
 	if beam {
-		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor)
+		commitsInBranch, err := repo.Git.CommitsInFeatureBranch(repo.Backend, initialBranch, ancestor.BranchName())
 		if err != nil {
 			return data, false, err
 		}

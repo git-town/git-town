@@ -911,7 +911,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 				Message:  "commit 2\n\nbody line 2a\nbody line 2b",
 			})
-			commits, err := runtime.Git.CommitsInFeatureBranch(runtime.TestRunner, branch, gitdomain.NewLocalBranchName("initial"))
+			commits, err := runtime.Git.CommitsInFeatureBranch(runtime.TestRunner, branch, gitdomain.NewBranchName("initial"))
 			must.NoError(t, err)
 			haveMessages := commits.Messages()
 			// this method returns commit titles only, use CommitMessage() to get the full commit message for a particular commit
@@ -923,7 +923,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch1")
 			runtime.CreateBranch(branch, initial.BranchName())
-			commits, err := runtime.Git.CommitsInFeatureBranch(runtime, branch, gitdomain.NewLocalBranchName("initial"))
+			commits, err := runtime.Git.CommitsInFeatureBranch(runtime, branch, gitdomain.NewBranchName("initial"))
 			must.NoError(t, err)
 			must.EqOp(t, 0, len(commits))
 		})
