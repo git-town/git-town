@@ -1,4 +1,4 @@
-Feature: prepend a branch to a feature branch in a clean workspace using the "compress" sync strategy
+Feature: prepend a branch to a feature branch in a clean workspace using the "compress" sync strategy when there are new commits on main
 
   Background:
     Given a Git repo with origin
