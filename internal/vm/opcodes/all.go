@@ -47,7 +47,6 @@ func All() []shared.Opcode {
 		&CommitRevert{},
 		&CommitWithMessage{},
 		&Commit{},
-		&CompressMergeTrackingBranch{},
 		&ConfigRemove{},
 		&ConfigSet{},
 		&ConflictPhantomFinalize{},
@@ -100,6 +99,7 @@ func All() []shared.Opcode {
 		&StashOpenChanges{},
 		&StashPopIfNeeded{},
 		&StashPop{},
+		&SyncFeatureBranchCompress{},
 		&UndoLastCommit{},
 	} //exhaustruct:ignore
 }
