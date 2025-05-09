@@ -80,7 +80,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
-				&opcodes.CompressMergeTrackingBranch{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchCompressStrategy{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},

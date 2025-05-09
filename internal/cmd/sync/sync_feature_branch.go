@@ -40,7 +40,7 @@ type featureBranchArgs struct {
 
 func syncFeatureBranchCompress(args featureBranchArgs) {
 	args.program.Value.Add(
-		&opcodes.CompressMergeTrackingBranch{
+		&opcodes.SyncFeatureBranchCompressStrategy{
 			CurrentBranch:  args.localName,
 			CommitMessage:  args.firstCommitMessage,
 			Offline:        args.offline,
