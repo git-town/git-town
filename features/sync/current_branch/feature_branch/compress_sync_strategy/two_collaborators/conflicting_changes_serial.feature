@@ -12,7 +12,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       [branches]
       main = "main"
       perennials = []
-      
+
       [sync]
       feature-strategy = "compress"
       """
