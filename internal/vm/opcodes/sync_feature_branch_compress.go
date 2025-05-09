@@ -7,8 +7,8 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// SyncFeatureBranchCompressStrategy expands to all opcodes needed to sync a feature branch using the "compress" sync strategy.
-type SyncFeatureBranchCompressStrategy struct {
+// SyncFeatureBranchCompress expands to all opcodes needed to sync a feature branch using the "compress" sync strategy.
+type SyncFeatureBranchCompress struct {
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
 	Offline                 configdomain.Offline
@@ -18,7 +18,7 @@ type SyncFeatureBranchCompressStrategy struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *SyncFeatureBranchCompressStrategy) Run(args shared.RunArgs) error {
+func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{
 		&MergeParentsUntilLocal{
 			Branch:             self.CurrentBranch,
