@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
@@ -47,7 +49,10 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			)
 		}
 	}
-	if len(opcodes) > 0 || len(commitsInBranch) > 0 {
+	fmt.Println("1111111111111111111111111111111111")
+	fmt.Println(opcodes)
+	fmt.Println(commitsInBranch)
+	if len(opcodes) > 0 || len(commitsInBranch) > 1 {
 		firstCommitMessage := self.CommitMessage.GetOrElse("compressed commit")
 		opcodes = append(opcodes,
 			&BranchCurrentResetToParent{
