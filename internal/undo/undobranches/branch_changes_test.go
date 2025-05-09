@@ -22,26 +22,26 @@ func TestChanges(t *testing.T) {
 		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
-			Active:   Some(gitdomain.NewLocalBranchName("main")),
+			Active:   gitdomain.NewLocalBranchNameOption("main"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("branch-1")),
+			Active: gitdomain.NewLocalBranchNameOption("branch-1"),
 		}
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
 			undobranches.BranchSpan{
 				Before: None[gitdomain.BranchInfo](),
 				After: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
@@ -98,7 +98,7 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
@@ -106,33 +106,33 @@ func TestChanges(t *testing.T) {
 				},
 				// a feature branch
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -203,40 +203,40 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -295,18 +295,18 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("branch-1")),
+			Active: gitdomain.NewLocalBranchNameOption("branch-1"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
-			Active:   Some(gitdomain.NewLocalBranchName("main")),
+			Active:   gitdomain.NewLocalBranchNameOption("main"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -358,26 +358,26 @@ func TestChanges(t *testing.T) {
 		t.Parallel()
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
-			Active:   Some(gitdomain.NewLocalBranchName("main")),
+			Active:   gitdomain.NewLocalBranchNameOption("main"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -442,40 +442,40 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -546,40 +546,40 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("555555")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("666666")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -596,14 +596,14 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{
 				undodomain.InconsistentChange{
 					Before: gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+						LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 						LocalSHA:   Some(gitdomain.NewSHA("111111")),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 						RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 					},
 					After: gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+						LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 						LocalSHA:   Some(gitdomain.NewSHA("333333")),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
@@ -612,14 +612,14 @@ func TestChanges(t *testing.T) {
 				},
 				undodomain.InconsistentChange{
 					Before: gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+						LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 						LocalSHA:   Some(gitdomain.NewSHA("222222")),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 						RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 					},
 					After: gitdomain.BranchInfo{
-						LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+						LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 						LocalSHA:   Some(gitdomain.NewSHA("555555")),
 						SyncStatus: gitdomain.SyncStatusUpToDate,
 						RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
@@ -675,54 +675,54 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("main"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("main"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("555555")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("555555")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("666666")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("666666")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -795,21 +795,21 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
@@ -828,7 +828,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("main")),
+			Active: gitdomain.NewLocalBranchNameOption("main"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -889,53 +889,53 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
 			undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 				After: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
@@ -944,14 +944,14 @@ func TestChanges(t *testing.T) {
 			},
 			undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 				After: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					RemoteName: Some(gitdomain.RemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
@@ -1024,39 +1024,39 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("old")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("old"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("old")),
+			Active: gitdomain.NewLocalBranchNameOption("old"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("new")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("new"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("new")),
+			Active: gitdomain.NewLocalBranchNameOption("new"),
 		}
 		haveSpan := undobranches.NewBranchSpans(before, after)
 		wantSpan := undobranches.BranchSpans{
 			undobranches.BranchSpan{
 				Before: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("old")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("old"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 				}),
 				After: Some(gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("new")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("new"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/old")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
@@ -1122,40 +1122,40 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: None[gitdomain.RemoteBranchName](),
 					RemoteSHA:  None[gitdomain.SHA](),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1215,40 +1215,40 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("333333")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1319,40 +1319,40 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusNotInSync,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("444444")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1432,26 +1432,26 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("main")),
+			Active: gitdomain.NewLocalBranchNameOption("main"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("perennial-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("perennial-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/perennial-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("main")),
+			Active: gitdomain.NewLocalBranchNameOption("main"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1503,19 +1503,19 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("main"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("main")),
+			Active: gitdomain.NewLocalBranchNameOption("main"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("main"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
@@ -1529,7 +1529,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("222222")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
@@ -1589,14 +1589,14 @@ func TestChanges(t *testing.T) {
 		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("main"),
 					LocalSHA:   Some(gitdomain.NewSHA("111111")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
 					RemoteSHA:  Some(gitdomain.NewSHA("111111")),
 				},
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("feature-branch")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("feature-branch"),
 					LocalSHA:   Some(gitdomain.NewSHA("222222")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/feature-branch")),
@@ -1610,12 +1610,12 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("feature-branch")),
+			Active: gitdomain.NewLocalBranchNameOption("feature-branch"),
 		}
 		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
-					LocalName:  Some(gitdomain.NewLocalBranchName("main")),
+					LocalName:  gitdomain.NewLocalBranchNameOption("main"),
 					LocalSHA:   Some(gitdomain.NewSHA("444444")),
 					SyncStatus: gitdomain.SyncStatusUpToDate,
 					RemoteName: Some(gitdomain.NewRemoteBranchName("origin/main")),
@@ -1629,7 +1629,7 @@ func TestChanges(t *testing.T) {
 					RemoteSHA:  Some(gitdomain.NewSHA("333333")),
 				},
 			},
-			Active: Some(gitdomain.NewLocalBranchName("main")),
+			Active: gitdomain.NewLocalBranchNameOption("main"),
 		}
 		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
