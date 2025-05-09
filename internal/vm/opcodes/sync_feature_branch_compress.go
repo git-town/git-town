@@ -11,6 +11,7 @@ import (
 type SyncFeatureBranchCompress struct {
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
+	DevRemote               gitdomain.Remote
 	Offline                 configdomain.Offline
 	ParentName              Option[gitdomain.LocalBranchName]
 	ParentSHA               Option[gitdomain.SHA]
@@ -20,6 +21,7 @@ type SyncFeatureBranchCompress struct {
 
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
+	commitsInBranch := gitdomain.Commits{}
 	if parentName, hasParent := self.ParentName.Get(); hasParent {
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
@@ -32,13 +34,20 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				OriginalParentSHA:  self.ParentSHA,
 			})
 		}
+		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentName)
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		opcodes = append(opcodes,
-			&MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()},
-		)
+		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, self.DevRemote)
+		if err != nil {
+			return err
+		}
+		if !inSyncWithTracking {
+			opcodes = append(opcodes,
+				&MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()},
+			)
+		}
 	}
-	if len(opcodes) > 0 {
+	if len(opcodes) > 0 || len(commitsInBranch) > 0 {
 		firstCommitMessage := self.CommitMessage.GetOrElse("compressed commit")
 		opcodes = append(opcodes,
 			&BranchCurrentResetToParent{
