@@ -688,9 +688,9 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "CommitMessage": "commit message",
         "CurrentBranch": "branch",
+        "InitialParentName": "parent",
+        "InitialParentSHA": "111111",
         "Offline": true,
-        "ParentName": "parent",
-        "ParentSHA": "111111",
         "TrackingBranch": "origin/branch"
       },
       "type": "SyncFeatureBranchCompress"
