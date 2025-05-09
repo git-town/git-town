@@ -13,8 +13,8 @@ type SyncFeatureBranchCompress struct {
 	CurrentBranch           gitdomain.LocalBranchName
 	DevRemote               gitdomain.Remote
 	Offline                 configdomain.Offline
-	ParentName              Option[gitdomain.LocalBranchName]
-	ParentSHA               Option[gitdomain.SHA]
+	OriginalParentName      Option[gitdomain.LocalBranchName]
+	OriginalParentSHA       Option[gitdomain.SHA]
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -22,7 +22,7 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{}
 	commitsInBranch := gitdomain.Commits{}
-	if parentName, hasParent := self.ParentName.Get(); hasParent {
+	if parentName, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(self.CurrentBranch).Get(); hasParent {
 		inSyncWithParent, err := args.Git.BranchInSyncWithParent(args.Backend, self.CurrentBranch, parentName)
 		if err != nil {
 			return err
@@ -30,8 +30,8 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 		if !inSyncWithParent {
 			opcodes = append(opcodes, &MergeParentsUntilLocal{
 				Branch:             self.CurrentBranch,
-				OriginalParentName: self.ParentName,
-				OriginalParentSHA:  self.ParentSHA,
+				OriginalParentName: self.OriginalParentName,
+				OriginalParentSHA:  self.OriginalParentSHA,
 			})
 		}
 		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentName)

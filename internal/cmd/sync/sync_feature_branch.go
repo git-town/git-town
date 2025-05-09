@@ -42,13 +42,13 @@ type featureBranchArgs struct {
 func syncFeatureBranchCompress(args featureBranchArgs) {
 	args.program.Value.Add(
 		&opcodes.SyncFeatureBranchCompress{
-			CurrentBranch:  args.localName,
-			CommitMessage:  args.firstCommitMessage,
-			DevRemote:      args.devRemote,
-			Offline:        args.offline,
-			ParentName:     args.originalParentName,
-			ParentSHA:      args.originalParentSHA,
-			TrackingBranch: args.trackingBranchName,
+			CurrentBranch:      args.localName,
+			CommitMessage:      args.firstCommitMessage,
+			DevRemote:          args.devRemote,
+			Offline:            args.offline,
+			OriginalParentName: args.originalParentName,
+			OriginalParentSHA:  args.originalParentSHA,
+			TrackingBranch:     args.trackingBranchName,
 		},
 	)
 }

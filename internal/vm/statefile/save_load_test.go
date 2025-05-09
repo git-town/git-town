@@ -129,7 +129,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
-				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, ParentName: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, OriginalParentName: gitdomain.NewLocalBranchNameOption("parent"), OriginalParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
