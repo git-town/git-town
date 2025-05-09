@@ -69,9 +69,9 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git commit -m "compressed commit"       |
       |         | git push --force-with-lease             |
     And these commits exist now
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME | FILE CONTENT                         |
-      | feature | local            | the feature | file      | my content 1 \n\n coworker content 0 |
-      |         | coworker, origin | the feature | file      | my content 1 \n\n coworker content 1 |
+      | BRANCH  | LOCATION         | MESSAGE           | FILE NAME | FILE CONTENT                         |
+      | feature | local            | the feature       | file      | my content 1 \n\n coworker content 0 |
+      |         | coworker, origin | compressed commit | file      | my content 1 \n\n coworker content 1 |
     And all branches are now synchronized
     # I sync, make another change, and sync again
     Given wait 1 second to ensure new Git timestamps
