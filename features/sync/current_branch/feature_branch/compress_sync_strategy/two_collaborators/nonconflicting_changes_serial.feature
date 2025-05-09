@@ -80,9 +80,6 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
-      |         | git commit -m "compressed commit"       |
-      |         | git push --force-with-lease             |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -96,9 +93,9 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git commit -m "the feature" |
       |         | git push --force-with-lease |
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                         |
-      | feature | local, origin | the feature | file      | my content 1 \n\n coworker content 1 |
-      |         | coworker      | the feature | file      | my content 1 \n\n coworker content 1 |
+      | BRANCH  | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT                         |
+      | feature | local, origin | the feature       | file      | my content 1 \n\n coworker content 1 |
+      |         | coworker      | compressed commit | file      | my content 1 \n\n coworker content 1 |
     And all branches are now synchronized
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT                         |
@@ -108,15 +105,14 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
       |         | git push --force-with-lease             |
     And these commits exist now
-      | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                         |
-      | feature | local, origin | the feature | file      | my content 2 \n\n coworker content 1 |
-      |         | coworker      | the feature | file      | my content 1 \n\n coworker content 1 |
+      | BRANCH  | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT                         |
+      | feature | local, origin | the feature       | file      | my content 2 \n\n coworker content 1 |
+      |         | coworker      | compressed commit | file      | my content 1 \n\n coworker content 1 |
     And all branches are now synchronized
     # the coworker syncs, makes another change, and syncs again
     Given wait 1 second to ensure new Git timestamps
@@ -125,9 +121,6 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
-      |         | git commit -m "compressed commit"       |
-      |         | git push --force-with-lease             |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -135,15 +128,15 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     When the coworker resolves the conflict in "file" with "my content 2 \n\n coworker content 1"
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                     |
-      | feature | git commit --no-edit        |
-      |         | git reset --soft main       |
-      |         | git commit -m "the feature" |
-      |         | git push --force-with-lease |
+      | BRANCH  | COMMAND                           |
+      | feature | git commit --no-edit              |
+      |         | git reset --soft main             |
+      |         | git commit -m "compressed commit" |
+      |         | git push --force-with-lease       |
     And these commits exist now
-      | BRANCH  | LOCATION         | MESSAGE     |
-      | feature | local            | the feature |
-      |         | coworker, origin | the feature |
+      | BRANCH  | LOCATION         | MESSAGE           |
+      | feature | local            | the feature       |
+      |         | coworker, origin | compressed commit |
     And all branches are now synchronized
     Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME | FILE CONTENT                         |
@@ -153,13 +146,12 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
-      |         | git commit -m "the feature"             |
+      |         | git commit -m "compressed commit"       |
       |         | git push --force-with-lease             |
     And these commits exist now
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME | FILE CONTENT                         |
-      | feature | local            | the feature | file      | my content 2 \n\n coworker content 1 |
-      |         | coworker, origin | the feature | file      | my content 2 \n\n coworker content 2 |
+      | BRANCH  | LOCATION         | MESSAGE           | FILE NAME | FILE CONTENT                         |
+      | feature | local            | the feature       | file      | my content 2 \n\n coworker content 1 |
+      |         | coworker, origin | compressed commit | file      | my content 2 \n\n coworker content 2 |
     And all branches are now synchronized
