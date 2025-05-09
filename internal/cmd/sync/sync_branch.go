@@ -84,10 +84,10 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
-			localName:          localName,
-			offline:            args.Config.NormalConfig.Offline,
 			initialParentName:  initialParentName,
 			initialParentSHA:   initialParentSHA,
+			localName:          localName,
+			offline:            args.Config.NormalConfig.Offline,
 			parentLastRunSHA:   parentLastRunSHA,
 			program:            args.Program,
 			prune:              args.Prune,
@@ -99,10 +99,10 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
-			localName:          localName,
-			offline:            args.Config.NormalConfig.Offline,
 			initialParentName:  initialParentName,
 			initialParentSHA:   initialParentSHA,
+			localName:          localName,
+			offline:            args.Config.NormalConfig.Offline,
 			parentLastRunSHA:   parentLastRunSHA,
 			program:            args.Program,
 			prune:              args.Prune,
@@ -116,10 +116,10 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
 			firstCommitMessage: firstCommitMessage,
-			localName:          localName,
-			offline:            args.Config.NormalConfig.Offline,
 			initialParentName:  initialParentName,
 			initialParentSHA:   initialParentSHA,
+			localName:          localName,
+			offline:            args.Config.NormalConfig.Offline,
 			parentLastRunSHA:   parentLastRunSHA,
 			program:            args.Program,
 			prune:              args.Prune,
