@@ -1,4 +1,4 @@
-Feature: append a new feature branch in a clean workspace using the "compress" sync strategy with additional commits on the parent branch
+Feature: append a new feature branch in a clean workspace using the "compress" sync strategy with new commits on the parent branch
 
   Background:
     Given a Git repo with origin
