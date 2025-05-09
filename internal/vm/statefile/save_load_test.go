@@ -379,6 +379,16 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "CommitMessage": "commit message",
+        "CurrentBranch": "branch",
+        "DevRemote": "origin",
+        "Offline": true,
+        "TrackingBranch": "origin/branch"
+      },
+      "type": "CompressMergeTrackingBranch"
+    },
+    {
+      "data": {
         "Key": "git-town.offline",
         "Scope": "local"
       },
