@@ -18,6 +18,7 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | DIALOG                 | KEYS                             |
       | select commits 2 and 4 | down space down down space enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
@@ -45,10 +46,11 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | parent | main   |
     When I run "git town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | parent | git fetch --prune --tags      |
-      |        | git merge --no-edit --ff main |
-      |        | git push -u origin parent     |
+      | BRANCH | COMMAND                   |
+      | parent | git fetch --prune --tags  |
+      |        | git reset --soft main     |
+      |        | git commit -m "commit 2"  |
+      |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
