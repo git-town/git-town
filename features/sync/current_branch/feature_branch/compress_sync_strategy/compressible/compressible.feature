@@ -35,8 +35,6 @@ Feature: sync a feature branch with multiple commits
       |        | git push --force-with-lease           |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | main commit 1  |
-      |        |               | main commit 2  |
       | alpha  | local, origin | alpha commit 1 |
       | beta   | local, origin | beta commit 1  |
 
