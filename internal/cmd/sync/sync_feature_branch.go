@@ -29,10 +29,10 @@ type featureBranchArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	initialParentName  Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	initialParentSHA   Option[gitdomain.SHA]             // the parent when Git Town started
-	localName          gitdomain.LocalBranchName
-	offline            configdomain.Offline     // whether offline mode is enabled
-	parentLastRunSHA   Option[gitdomain.SHA]    // the parent at the end of the last Git Town command
-	program            Mutable[program.Program] // the program to update
+	localName          gitdomain.LocalBranchName         // name of the feature branch
+	offline            configdomain.Offline              // whether offline mode is enabled
+	parentLastRunSHA   Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
+	program            Mutable[program.Program]          // the program to update
 	prune              configdomain.Prune
 	pushBranches       configdomain.PushBranches
 	trackingBranchName Option[gitdomain.RemoteBranchName]
