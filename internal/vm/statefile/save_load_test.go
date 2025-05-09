@@ -97,8 +97,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeAbort{},
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParentsUntilLocal{Branch: "branch", OriginalParentName: gitdomain.NewLocalBranchNameOption("original-parent"), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
-				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: gitdomain.NewLocalBranchNameOption("original-parent"), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentsUntilLocal{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
@@ -129,7 +129,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
-				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, ParentName: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
@@ -492,16 +492,16 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "OriginalParentName": "original-parent",
-        "OriginalParentSHA": "123456"
+        "InitialParentName": "original-parent",
+        "InitialParentSHA": "123456"
       },
       "type": "MergeParentsUntilLocal"
     },
     {
       "data": {
         "CurrentParent": "parent",
-        "OriginalParentName": "original-parent",
-        "OriginalParentSHA": "123456"
+        "InitialParentName": "original-parent",
+        "InitialParentSHA": "123456"
       },
       "type": "MergeParentResolvePhantomConflicts"
     },
@@ -688,9 +688,9 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "CommitMessage": "commit message",
         "CurrentBranch": "branch",
+        "InitialParentName": "parent",
+        "InitialParentSHA": "111111",
         "Offline": true,
-        "ParentName": "parent",
-        "ParentSHA": "111111",
         "TrackingBranch": "origin/branch"
       },
       "type": "SyncFeatureBranchCompress"

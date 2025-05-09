@@ -27,10 +27,10 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 
 type featureBranchArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
-	localName          gitdomain.LocalBranchName
+	initialParentName  Option[gitdomain.LocalBranchName] // the parent when Git Town started
+	initialParentSHA   Option[gitdomain.SHA]             // the parent when Git Town started
+	localName          gitdomain.LocalBranchName         // name of the feature branch
 	offline            configdomain.Offline              // whether offline mode is enabled
-	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
-	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
 	parentLastRunSHA   Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
 	program            Mutable[program.Program]          // the program to update
 	prune              configdomain.Prune
@@ -41,12 +41,12 @@ type featureBranchArgs struct {
 func syncFeatureBranchCompress(args featureBranchArgs) {
 	args.program.Value.Add(
 		&opcodes.SyncFeatureBranchCompress{
-			CurrentBranch:  args.localName,
-			CommitMessage:  args.firstCommitMessage,
-			Offline:        args.offline,
-			ParentName:     args.originalParentName,
-			ParentSHA:      args.originalParentSHA,
-			TrackingBranch: args.trackingBranchName,
+			CurrentBranch:     args.localName,
+			CommitMessage:     args.firstCommitMessage,
+			Offline:           args.offline,
+			InitialParentName: args.initialParentName,
+			InitialParentSHA:  args.initialParentSHA,
+			TrackingBranch:    args.trackingBranchName,
 		},
 	)
 }
@@ -64,9 +64,9 @@ func syncFeatureBranchFFOnly(args featureBranchArgs) {
 func syncFeatureBranchMerge(args featureBranchArgs) {
 	args.program.Value.Add(
 		&opcodes.MergeParentsUntilLocal{
-			Branch:             args.localName,
-			OriginalParentName: args.originalParentName,
-			OriginalParentSHA:  args.originalParentSHA,
+			Branch:            args.localName,
+			InitialParentName: args.initialParentName,
+			InitialParentSHA:  args.initialParentSHA,
 		},
 	)
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
