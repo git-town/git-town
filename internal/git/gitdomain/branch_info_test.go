@@ -76,7 +76,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
 				RemoteName: None[gitdomain.RemoteBranchName](),
@@ -87,7 +87,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusUpToDate,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
@@ -135,7 +135,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
 				RemoteName: None[gitdomain.RemoteBranchName](),
@@ -146,7 +146,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusUpToDate,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
@@ -190,7 +190,7 @@ func TestBranchInfo(t *testing.T) {
 			branch1 := gitdomain.NewRemoteBranchName("origin/branch-1")
 			sha1 := gitdomain.NewSHA("111111")
 			branchInfo := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusUpToDate,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
@@ -204,7 +204,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
 			branchInfo := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
 				RemoteName: None[gitdomain.RemoteBranchName](),
@@ -232,7 +232,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has both branches", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusUpToDate,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),
@@ -243,7 +243,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("has local branch", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusLocalOnly,
 				RemoteName: None[gitdomain.RemoteBranchName](),
@@ -328,7 +328,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Run("not an omnibranch", func(t *testing.T) {
 			t.Parallel()
 			give := gitdomain.BranchInfo{
-				LocalName:  Some(gitdomain.NewLocalBranchName("branch-1")),
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch-1"),
 				LocalSHA:   Some(gitdomain.NewSHA("111111")),
 				SyncStatus: gitdomain.SyncStatusNotInSync,
 				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/branch-1")),

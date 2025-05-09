@@ -56,7 +56,11 @@ consists of only one commit.
 
 Please be aware that this sync strategy leads to more merge conflicts than the
 "merge" sync strategy when more than one Git user makes commits to the same
-branch.
+branch. You can enable these Git settings to prevent this problem:
+
+- `git config rerere.enabled true` enables Git's [rerere] feature
+- `git config rerere.autoupdate true` enables auto-staging of auto-resolved
+  conflicts
 
 ### config file
 

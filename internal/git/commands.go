@@ -75,7 +75,7 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 	return len(out) > 0, nil
 }
 
-func (self *Commands) BranchInSyncWithParent(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (bool, error) {
+func (self *Commands) BranchInSyncWithParent(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (bool, error) {
 	output, err := querier.QueryTrim("git", "log", "--no-merges", "--format=%H", parent.String(), "^"+branch.String())
 	return len(output) == 0, err
 }
@@ -159,7 +159,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), err
 			}
-			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA.String()))
+			currentBranchOpt = gitdomain.NewLocalBranchNameOption(headSHA.String())
 			// prepend to result
 			result = slices.Insert(result, 0, gitdomain.BranchInfo{
 				LocalName:  currentBranchOpt,
@@ -206,14 +206,6 @@ func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdo
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
 	return nil
-}
-
-func (self *Commands) CheckoutOurVersion(runner gitdomain.Runner, file string) error {
-	return runner.Run("git", "checkout", "--ours", file)
-}
-
-func (self *Commands) CheckoutTheirVersion(runner gitdomain.Runner, file string) error {
-	return runner.Run("git", "checkout", "--theirs", file)
 }
 
 func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) error {
@@ -271,12 +263,12 @@ func (self *Commands) CommitStart(runner gitdomain.Runner) error {
 
 func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent Option[gitdomain.LocalBranchName]) (gitdomain.Commits, error) {
 	if parent, hasParent := parent.Get(); hasParent {
-		return self.CommitsInFeatureBranch(querier, branch, parent)
+		return self.CommitsInFeatureBranch(querier, branch, parent.BranchName())
 	}
 	return self.CommitsInPerennialBranch(querier)
 }
 
-func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch, parent gitdomain.LocalBranchName) (gitdomain.Commits, error) {
+func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (gitdomain.Commits, error) {
 	output, err := querier.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
 	if err != nil {
 		return gitdomain.Commits{}, err
@@ -678,7 +670,7 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier gitdomain.Querier) Opti
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return Some(gitdomain.NewLocalBranchName(output))
+	return gitdomain.NewLocalBranchNameOption(output)
 }
 
 func (self *Commands) Pull(runner gitdomain.Runner) error {
@@ -831,6 +823,10 @@ func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdo
 func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
 	remote := branch.Remote()
 	return runner.Run("git", "push", "--force-with-lease", remote.String(), sha.String()+":"+branch.LocalBranchName().String())
+}
+
+func (self *Commands) ResolveConflict(runner gitdomain.Runner, file string, resolution gitdomain.ConflictResolution) error {
+	return runner.Run("git", "checkout", resolution.GitFlag(), file)
 }
 
 func (self *Commands) RevertCommit(runner gitdomain.Runner, sha gitdomain.SHA) error {

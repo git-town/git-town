@@ -17,7 +17,7 @@ Feature: rename an unsynced branch
       | old    | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      "old" is not in sync with its tracking branch, please sync the branches before renaming
+      branch "old" is not in sync with its parent, please run "git town sync" and try again
       """
 
   Scenario: unpushed local commits
@@ -30,5 +30,5 @@ Feature: rename an unsynced branch
       | old    | git fetch --prune --tags |
     And Git Town prints the error:
       """
-      "old" is not in sync with its tracking branch, please sync the branches before renaming
+      branch "old" is not in sync with its parent, please run "git town sync" and try again
       """

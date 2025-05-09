@@ -2,7 +2,7 @@ RTA_VERSION = 0.15.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-RELEASE_VERSION := "20.0.0"
+RELEASE_VERSION := "20.1.0"
 GO_TEST_ARGS = LANG=C GOGC=off BROWSER=
 
 cuke: install  # runs all end-to-end tests in a way that looks nice during development

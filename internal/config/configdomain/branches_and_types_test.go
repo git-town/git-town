@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v20/internal/config"
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,7 +17,7 @@ func TestBranchesAndTypes(t *testing.T) {
 		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := config.UnvalidatedConfig{
 			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
-				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
 			},
 		}
 		have.Add("main", &unvalidatedConfig)
@@ -33,7 +32,7 @@ func TestBranchesAndTypes(t *testing.T) {
 		have := configdomain.BranchesAndTypes{}
 		unvalidatedConfig := config.UnvalidatedConfig{
 			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
-				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{

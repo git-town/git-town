@@ -348,12 +348,12 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 		return err
 	}
 	// ensure all commits on parent branch are contained in the initial branch
-	inSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, data.initialBranch, data.parentBranch)
+	inSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, data.initialBranch, data.parentBranch.BranchName())
 	if err != nil {
 		return err
 	}
 	if !inSyncWithParent {
-		return fmt.Errorf(messages.MergeNotInSyncWithParent, data.initialBranch)
+		return fmt.Errorf(messages.BranchNotInSyncWithParent, data.initialBranch)
 	}
 	switch data.initialBranchInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly:
@@ -367,7 +367,7 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 	switch data.parentBranchInfo.SyncStatus {
 	case gitdomain.SyncStatusUpToDate, gitdomain.SyncStatusLocalOnly, gitdomain.SyncStatusRemoteOnly:
 	case gitdomain.SyncStatusAhead, gitdomain.SyncStatusBehind, gitdomain.SyncStatusNotInSync, gitdomain.SyncStatusDeletedAtRemote:
-		return fmt.Errorf(messages.MergeNotInSyncWithParent, data.parentBranch)
+		return fmt.Errorf(messages.BranchNotInSyncWithParent, data.parentBranch)
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.BranchOtherWorktree, data.parentBranch)
 	}

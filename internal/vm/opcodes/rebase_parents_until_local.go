@@ -7,13 +7,13 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-type RebaseParentIfNeeded struct {
+type RebaseParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
 	PreviousSHA             Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *RebaseParentIfNeeded) Run(args shared.RunArgs) error {
+func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {

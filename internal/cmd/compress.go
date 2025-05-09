@@ -118,6 +118,10 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 	if err != nil || exit {
 		return err
 	}
+	err = validateCompressBranchesData(data, repo)
+	if err != nil {
+		return err
+	}
 	runProgram := compressProgram(data, commitHook)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
@@ -329,7 +333,7 @@ func compressBranchProgram(prog Mutable[program.Program], data compressBranchDat
 		Message:        data.newCommitMessage,
 	})
 	if data.hasTracking && online.IsTrue() {
-		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true})
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: data.name, ForceIfIncludes: true})
 	}
 }
 
@@ -375,4 +379,19 @@ func validateBranchIsSynced(branchName gitdomain.LocalBranchName, syncStatus git
 		return fmt.Errorf(messages.CompressUnsynced, branchName)
 	}
 	panic("unhandled syncstatus: " + syncStatus.String())
+}
+
+func validateCompressBranchesData(data compressBranchesData, repo execute.OpenRepoResult) error {
+	for _, branch := range data.branchesToCompress {
+		if parent, hasParent := data.config.NormalConfig.Lineage.Parent(branch.name).Get(); hasParent {
+			isInSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, branch.name, parent.BranchName())
+			if err != nil {
+				return err
+			}
+			if !isInSyncWithParent {
+				return fmt.Errorf(messages.BranchNotInSyncWithParent, branch.name)
+			}
+		}
+	}
+	return nil
 }

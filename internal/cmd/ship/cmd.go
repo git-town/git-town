@@ -201,7 +201,7 @@ func validateSharedData(data sharedShipData, toParent configdomain.ShipIntoNonpe
 		gitdomain.SyncStatusNotInSync,
 		gitdomain.SyncStatusAhead,
 		gitdomain.SyncStatusBehind:
-		return fmt.Errorf(messages.ShipBranchNotInSync, data.branchNameToShip)
+		return fmt.Errorf(messages.BranchNotInSyncWithParent, data.branchNameToShip)
 	case gitdomain.SyncStatusOtherWorktree:
 		return fmt.Errorf(messages.ShipBranchIsInOtherWorktree, data.branchNameToShip)
 	case

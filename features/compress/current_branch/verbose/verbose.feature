@@ -33,6 +33,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
       |         | git cherry -v main feature                                                                                                                                                                                                                                                                                                                       |
       |         | git show --no-patch --format=%B {{ sha-before-run 'commit 1' }}                                                                                                                                                                                                                                                                                  |
+      |         | git log --no-merges --format=%H main ^feature                                                                                                                                                                                                                                                                                                    |
       | feature | git reset --soft main                                                                                                                                                                                                                                                                                                                            |
       |         | git commit -m "commit 1"                                                                                                                                                                                                                                                                                                                         |
       | (none)  | git rev-list --left-right feature...origin/feature                                                                                                                                                                                                                                                                                               |
@@ -43,7 +44,7 @@ Feature: compress the commits on a feature branch verbosely
       |         | git stash list                                                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 25 shell commands
+      Ran 26 shell commands
       """
     And all branches are now synchronized
     And these commits exist now

@@ -34,6 +34,7 @@ const (
 	BranchIsAlreadyParked              = "branch %q is already parked"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
+	BranchNotInSyncWithParent          = `branch %q is not in sync with its parent, please run "git town sync" and try again`
 	BranchOtherWorktree                = `branch %q is active in another worktree`
 	BranchParentChanged                = "branch %q is now a child of %q"
 	BranchTypeCannotDetermine          = "cannot determine type of branch %q"
@@ -150,7 +151,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MergeOpenChanges                      = "please commit or remove the open changes first"
 	MergeNoGrandParent                    = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                         = "cannot merge branch %q because it has no parent"
-	MergeNotInSyncWithParent              = `branch %q is not in sync with its parent, please run "git town sync" and try again`
 	MergeNotInSyncWithTracking            = `branch %q is not in sync with its tracking branch, please run "git town sync" and try again`
 	MergeWrongBranchType                  = "cannot merge %s branches"
 	ObservedBranchCannotPark              = "cannot park observed branches"
@@ -200,7 +200,6 @@ Please upgrade to the new format: share-new-branches = "push"`
 
 This command has been renamed to "git town rename"
 and will be removed in future versions of Git Town.`
-	RenameNotInSync                         = "%q is not in sync with its tracking branch, please sync the branches before renaming"
 	RenameMainBranch                        = "the main branch cannot be renamed"
 	RenamePerennialBranchWarning            = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 	RenameToSameName                        = "cannot rename branch to current name"
@@ -224,7 +223,6 @@ and will be removed in future versions of Git Town.`
 	SettingSunsetBranchList                 = "Inlining deprecated branch list %q"
 	ShareNewBranches                        = "Share new branches: %s\n"
 	ShipBranchIsInOtherWorktree             = "branch %q is checked out in another worktree, please ship from there"
-	ShipBranchNotInSync                     = "branch %q is not in sync"
 	ShipAbortedMergeError                   = "aborted because merge exited with error"
 	ShipAPIConnectorRequired                = "please configure API access to your forge, more info at https://www.git-town.com/configuration#access-tokens"
 	ShipAPIConnectorUnsupported             = "the Git Town driver for your forge does not support shipping via the API"

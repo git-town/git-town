@@ -217,7 +217,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		return data, false, errors.New(messages.RenameToSameName)
 	}
 	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
-		return data, false, fmt.Errorf(messages.RenameNotInSync, oldBranchName)
+		return data, false, fmt.Errorf(messages.BranchNotInSyncWithParent, oldBranchName)
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)

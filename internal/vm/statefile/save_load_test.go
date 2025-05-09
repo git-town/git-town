@@ -70,7 +70,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ChangesStage{},
 				&opcodes.ChangesUnstageAll{},
 				&opcodes.Checkout{Branch: "branch"},
-				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{Some(gitdomain.NewLocalBranchName("previous"))}},
+				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{gitdomain.NewLocalBranchNameOption("previous")}},
 				&opcodes.CheckoutIfNeeded{Branch: "branch"},
 				&opcodes.CheckoutUncached{Branch: "branch"},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
@@ -82,9 +82,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
-				&opcodes.ConflictPhantomDetect{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.ConflictPhantomResolveAll{ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
-				&opcodes.ConflictPhantomResolve{FilePath: "file"},
+				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
@@ -93,12 +93,12 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.LineageParentSetFirstExisting{Ancestors: gitdomain.NewLocalBranchNames("one", "two"), Branch: "branch"},
 				&opcodes.LineageParentSetIfExists{Branch: "branch", Parent: "parent"},
 				&opcodes.LineageParentSetToGrandParent{Branch: "branch"},
-				&opcodes.Merge{Branch: "branch"},
+				&opcodes.MergeIntoCurrentBranch{BranchToMerge: "branch"},
 				&opcodes.MergeAbort{},
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
-				&opcodes.MergeParentIfNeeded{Branch: "branch", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
-				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", OriginalParentName: Some(gitdomain.NewLocalBranchName("original-parent")), OriginalParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentsUntilLocal{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456"))},
+				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
@@ -109,7 +109,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
-				&opcodes.PushCurrentBranchForceIfNeeded{ForceIfIncludes: true},
+				&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "branch", ForceIfIncludes: true},
 				&opcodes.PushCurrentBranchForceIgnoreError{},
 				&opcodes.PushCurrentBranchIfLocal{CurrentBranch: "branch"},
 				&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "branch"},
@@ -119,8 +119,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.RebaseContinue{},
 				&opcodes.RebaseContinueIfNeeded{},
 				&opcodes.RebaseOntoKeepDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1"},
-				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: Some(gitdomain.NewLocalBranchName("upstream"))},
-				&opcodes.RebaseParentIfNeeded{Branch: "branch", PreviousSHA: Some(gitdomain.SHA("123456"))},
+				&opcodes.RebaseOntoRemoveDeleted{BranchToRebaseOnto: "branch-2", CommitsToRemove: "branch-1", Upstream: gitdomain.NewLocalBranchNameOption("upstream")},
+				&opcodes.RebaseParentsUntilLocal{Branch: "branch", PreviousSHA: Some(gitdomain.SHA("123456"))},
 				&opcodes.RebaseTrackingBranch{RemoteBranch: "origin/branch", PushBranches: true},
 				&opcodes.RegisterUndoablePerennialCommit{Parent: "parent"},
 				&opcodes.SnapshotInitialUpdateLocalSHA{Branch: "branch", SHA: "111111"},
@@ -129,6 +129,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
+				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
@@ -394,9 +395,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "ParentBranch": "parent",
-        "ParentSHA": "123456"
+        "ParentSHA": "123456",
+        "Resolution": "ours"
       },
-      "type": "ConflictPhantomDetect"
+      "type": "ConflictPhantomResolveAll"
     },
     {
       "data": {},
@@ -404,7 +406,8 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "FilePath": "file"
+        "FilePath": "file",
+        "Resolution": "ours"
       },
       "type": "ConflictPhantomResolve"
     },
@@ -467,9 +470,9 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "BranchToMerge": "branch"
       },
-      "type": "Merge"
+      "type": "MergeIntoCurrentBranch"
     },
     {
       "data": {},
@@ -489,16 +492,16 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "OriginalParentName": "original-parent",
-        "OriginalParentSHA": "123456"
+        "InitialParentName": "original-parent",
+        "InitialParentSHA": "123456"
       },
-      "type": "MergeParentIfNeeded"
+      "type": "MergeParentsUntilLocal"
     },
     {
       "data": {
         "CurrentParent": "parent",
-        "OriginalParentName": "original-parent",
-        "OriginalParentSHA": "123456"
+        "InitialParentName": "original-parent",
+        "InitialParentSHA": "123456"
       },
       "type": "MergeParentResolvePhantomConflicts"
     },
@@ -573,6 +576,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "CurrentBranch": "branch",
         "ForceIfIncludes": true
       },
       "type": "PushCurrentBranchForceIfNeeded"
@@ -636,7 +640,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "PreviousSHA": "123456"
       },
-      "type": "RebaseParentIfNeeded"
+      "type": "RebaseParentsUntilLocal"
     },
     {
       "data": {
@@ -679,6 +683,17 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashOpenChanges"
+    },
+    {
+      "data": {
+        "CommitMessage": "commit message",
+        "CurrentBranch": "branch",
+        "InitialParentName": "parent",
+        "InitialParentSHA": "111111",
+        "Offline": true,
+        "TrackingBranch": "origin/branch"
+      },
+      "type": "SyncFeatureBranchCompress"
     }
   ],
   "TouchedBranches": [

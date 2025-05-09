@@ -31,7 +31,6 @@ Feature: shipped the head branch of a synced stack with dependent changes
       |        | git checkout --ours file                          |
       |        | git add file                                      |
       |        | git commit --no-edit                              |
-      |        | git merge --no-edit --ff origin/beta              |
       |        | git reset --soft main                             |
       |        | git commit -m "beta commit"                       |
       |        | git push --force-with-lease                       |

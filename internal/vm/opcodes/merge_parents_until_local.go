@@ -7,21 +7,22 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// merges the branch that at runtime is the parent branch of the given branch into the given branch
-type MergeParentIfNeeded struct {
+// MergeParentsUntilLocal merges the parent branches of the given branch until a local parent is found.
+type MergeParentsUntilLocal struct {
 	Branch                  gitdomain.LocalBranchName
-	OriginalParentName      Option[gitdomain.LocalBranchName]
-	OriginalParentSHA       Option[gitdomain.SHA]
+	InitialParentName       Option[gitdomain.LocalBranchName]
+	InitialParentSHA        Option[gitdomain.SHA]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
+func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
 		panic(messages.BranchInfosNotProvided)
 	}
-	for branch := self.Branch; ; {
+	branch := self.Branch
+	for {
 		parent, hasParent := args.Config.Value.NormalConfig.Lineage.Parent(branch).Get()
 		if !hasParent {
 			break
@@ -36,18 +37,18 @@ func (self *MergeParentIfNeeded) Run(args shared.RunArgs) error {
 					parentToMerge = parent.BranchName()
 				}
 				program = append(program, &MergeParentResolvePhantomConflicts{
-					CurrentParent:      parentToMerge,
-					OriginalParentName: self.OriginalParentName,
-					OriginalParentSHA:  self.OriginalParentSHA,
+					CurrentParent:     parentToMerge,
+					InitialParentName: self.InitialParentName,
+					InitialParentSHA:  self.InitialParentSHA,
 				})
 				break
 			}
 			// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
 			if parentTrackingBranch, parentHasTrackingBranch := parentBranchInfo.RemoteName.Get(); parentHasTrackingBranch {
 				program = append(program, &MergeParentResolvePhantomConflicts{
-					CurrentParent:      parentTrackingBranch.BranchName(),
-					OriginalParentName: self.OriginalParentName,
-					OriginalParentSHA:  self.OriginalParentSHA,
+					CurrentParent:     parentTrackingBranch.BranchName(),
+					InitialParentName: self.InitialParentName,
+					InitialParentSHA:  self.InitialParentSHA,
 				})
 			}
 		}
