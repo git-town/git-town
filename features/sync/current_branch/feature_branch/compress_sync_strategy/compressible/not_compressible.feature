@@ -1,4 +1,4 @@
-Feature: sync a feature branch that is already compressed
+Feature: sync a feature branch that is already compressed using the "compress" sync strategy
 
   Background:
     Given a Git repo with origin

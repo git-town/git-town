@@ -1,4 +1,4 @@
-Feature: sync a feature branch with multiple commits
+Feature: sync a feature branch with multiple commits using the "compress" sync strategy
 
   Background:
     Given a Git repo with origin
@@ -15,7 +15,7 @@ Feature: sync a feature branch with multiple commits
     And wait 1 second to ensure new Git timestamps
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
-    When I run "git-town sync --detached"
+    When I run "git-town sync"
 
   Scenario: result
     Then Git Town runs the commands
