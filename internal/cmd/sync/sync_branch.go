@@ -83,7 +83,6 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), featureBranchArgs{
-			devRemote:          args.Config.NormalConfig.DevRemote,
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
@@ -99,7 +98,6 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		PerennialBranchProgram(branchInfo, args)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.Config.NormalConfig.SyncFeatureStrategy.SyncStrategy(), args.InitialBranch, featureBranchArgs{
-			devRemote:          args.Config.NormalConfig.DevRemote,
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,
@@ -117,7 +115,6 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 		ObservedBranchProgram(branchInfo, args.Program)
 	case configdomain.BranchTypePrototypeBranch:
 		FeatureBranchProgram(args.Config.NormalConfig.SyncPrototypeStrategy.SyncStrategy(), featureBranchArgs{
-			devRemote:          args.Config.NormalConfig.DevRemote,
 			firstCommitMessage: firstCommitMessage,
 			localName:          localName,
 			offline:            args.Config.NormalConfig.Offline,

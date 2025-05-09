@@ -26,7 +26,6 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 }
 
 type featureBranchArgs struct {
-	devRemote          gitdomain.Remote
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
 	offline            configdomain.Offline              // whether offline mode is enabled
@@ -44,7 +43,6 @@ func syncFeatureBranchCompress(args featureBranchArgs) {
 		&opcodes.SyncFeatureBranchCompress{
 			CurrentBranch:      args.localName,
 			CommitMessage:      args.firstCommitMessage,
-			DevRemote:          args.devRemote,
 			Offline:            args.offline,
 			OriginalParentName: args.originalParentName,
 			OriginalParentSHA:  args.originalParentSHA,
