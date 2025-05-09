@@ -11,17 +11,12 @@ import (
 type CompressMergeTrackingBranch struct {
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
-	DevRemote               gitdomain.Remote
 	Offline                 configdomain.Offline
 	TrackingBranch          gitdomain.RemoteBranchName
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *CompressMergeTrackingBranch) Run(args shared.RunArgs) error {
-	isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, self.DevRemote)
-	if err != nil || isInSync {
-		return err
-	}
 	opcodes := []shared.Opcode{
 		&MergeIntoCurrentBranch{BranchToMerge: self.TrackingBranch.BranchName()},
 	}

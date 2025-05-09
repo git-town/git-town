@@ -80,7 +80,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
-				&opcodes.CompressMergeTrackingBranch{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", DevRemote: "origin", Offline: true, TrackingBranch: "origin/branch"},
+				&opcodes.CompressMergeTrackingBranch{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, TrackingBranch: "origin/branch"},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
@@ -381,7 +381,6 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "CommitMessage": "commit message",
         "CurrentBranch": "branch",
-        "DevRemote": "origin",
         "Offline": true,
         "TrackingBranch": "origin/branch"
       },

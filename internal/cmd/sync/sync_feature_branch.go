@@ -79,7 +79,6 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 		args.Program.Value.Add(
 			&opcodes.CompressMergeTrackingBranch{
 				CurrentBranch:  args.LocalName,
-				DevRemote:      args.DevRemote,
 				CommitMessage:  args.FirstCommitMessage,
 				Offline:        args.Offline,
 				TrackingBranch: trackingBranch,
