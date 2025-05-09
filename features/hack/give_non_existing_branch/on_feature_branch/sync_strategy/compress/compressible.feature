@@ -14,7 +14,7 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
     When I run "git-town hack new"
 
   Scenario: result
-    # TODO: shouln't it compress the commits here
+    # TODO: shouln't it compress the commits here?
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
