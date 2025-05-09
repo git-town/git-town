@@ -1,5 +1,4 @@
 Feature: one person making a series of commits and syncs in between
-
   This scenario demonstrates that the "compress" strategy works
   as long as only one person contributes to a branch
   even if they change already committed content.
@@ -11,7 +10,7 @@ Feature: one person making a series of commits and syncs in between
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "compress"
       """
@@ -19,7 +18,6 @@ Feature: one person making a series of commits and syncs in between
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-
     # I make the first change and sync
     Given I add this commit to the current branch:
       | MESSAGE     | FILE NAME | FILE CONTENT | FILE NAME | FILE CONTENT |
@@ -29,7 +27,6 @@ Feature: one person making a series of commits and syncs in between
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
@@ -38,7 +35,6 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 1    |
     And all branches are now synchronized
-
     # I make another change and sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
@@ -48,7 +44,6 @@ Feature: one person making a series of commits and syncs in between
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
@@ -57,7 +52,6 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 2    |
     And all branches are now synchronized
-
     # I make a third change and sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
@@ -67,7 +61,6 @@ Feature: one person making a series of commits and syncs in between
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
