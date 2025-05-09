@@ -15,7 +15,6 @@ Feature: sync while the previous branch is checked out in another worktree
     And Git setting "git-town.sync-strategy" is "compress"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                    |
@@ -28,8 +27,9 @@ Feature: sync while the previous branch is checked out in another worktree
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                  |
-      | current | git push origin :current |
+      | BRANCH  | COMMAND                                |
+      | current | git reset --hard {{ sha 'current 2' }} |
+      |         | git push origin :current               |
     And the previous Git branch is still "previous"
     And the initial commits exist now
     And the initial branches and lineage exist now
