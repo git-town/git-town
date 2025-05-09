@@ -48,7 +48,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 		}
 	}
 	commitMessage, hasCommitMessage := self.CommitMessage.Get()
-	if len(opcodes) > 0 || len(commitsInBranch) > 1 && hasCommitMessage {
+	if hasCommitMessage && (len(opcodes) > 0 || len(commitsInBranch) > 1) {
 		opcodes = append(opcodes,
 			&BranchCurrentResetToParent{
 				CurrentBranch: self.CurrentBranch,

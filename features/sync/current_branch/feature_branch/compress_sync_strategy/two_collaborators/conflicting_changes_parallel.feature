@@ -1,5 +1,4 @@
 Feature: two people using the "compress" strategy make concurrent conflicting changes to a branch
-
   This feature spec demonstrates what happens
   when two people make concurrent changes to the same branch
   and run "git town sync" before and after they make changes.
@@ -14,7 +13,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "compress"
       """
@@ -26,7 +25,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
-
     # I make a commit and sync
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME        | FILE CONTENT |
@@ -36,7 +34,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "my first commit"         |
@@ -45,7 +42,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME        | FILE CONTENT |
       | feature | local, origin | my first commit | conflicting_file | my content 1 |
     And all branches are now synchronized
-
     # the coworker makes a conflicting local commit concurrently with me and syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME        | FILE CONTENT       |
@@ -55,7 +51,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
@@ -74,7 +69,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME        | FILE CONTENT                        |
       | feature | local            | my first commit       | conflicting_file | my content 1                        |
       |         | coworker, origin | coworker first commit | conflicting_file | my content 1 and coworker content 1 |
-
     # I add another conflicting commit locally and then sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME        | FILE CONTENT |
@@ -84,7 +78,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
@@ -103,7 +96,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME        | FILE CONTENT                        |
       | feature | local, origin | my first commit       | conflicting_file | my content 2 and coworker content 1 |
       |         | coworker      | coworker first commit | conflicting_file | my content 1 and coworker content 1 |
-
     # the coworker makes another conflicting local commit concurrently with me and syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE                | FILE NAME        | FILE CONTENT                        |
@@ -113,7 +105,6 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """

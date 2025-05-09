@@ -5,7 +5,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
   even if they coordinate to avoid concurrent updates
   and run "git town sync" before and after they make changes.
 
-  @this
   Scenario:
     Given a Git repo with origin
     And the committed configuration file:
@@ -49,9 +48,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | git merge --no-edit --ff origin/feature |
-      |         | git reset --soft main                   |
-      |         | git commit -m "compressed commit"       |
-      |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE     | FILE NAME        | FILE CONTENT |
       | feature | local, coworker, origin | the feature | conflicting_file | my content 1 |
@@ -64,7 +60,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
@@ -80,7 +75,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
@@ -107,7 +101,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
@@ -123,7 +116,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
@@ -150,7 +142,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
