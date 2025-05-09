@@ -5,12 +5,16 @@ Feature: sync a feature branch with new commits on the tracking branch
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
-      | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT |
       | alpha  | local, origin | alpha commit | alpha_file | content 1    |
-      | beta   | local, origin | beta commit  | beta_file  | content 2    |
-      | beta   | origin        | new commit   | beta_file  | content 3    |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | beta   | local, origin | beta commit | beta_file | content 2    |
+      | beta   | origin        | new commit  | beta_file | content 3    |
     And wait 1 second to ensure new Git timestamps
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
