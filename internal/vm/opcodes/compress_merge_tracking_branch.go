@@ -34,7 +34,7 @@ func (self *CompressMergeTrackingBranch) Run(args shared.RunArgs) error {
 		})
 	}
 	if self.Offline.IsFalse() {
-		opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{ForceIfIncludes: false})
+		opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
 	}
 	args.PrependOpcodes(opcodes...)
 	return nil

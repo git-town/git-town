@@ -99,6 +99,7 @@ func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syn
 					PreviousSHA: args.LastRunParentSHA,
 				},
 				&opcodes.PushCurrentBranchForceIfNeeded{
+					CurrentBranch:   args.LocalName,
 					ForceIfIncludes: true,
 				},
 			)
