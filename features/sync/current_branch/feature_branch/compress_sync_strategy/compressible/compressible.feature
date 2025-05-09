@@ -19,20 +19,17 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff main         |
-      |        | git merge --no-edit --ff origin/alpha |
-      |        | git reset --soft main                 |
-      |        | git commit -m "alpha commit 1"        |
-      |        | git push --force-with-lease           |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff alpha        |
-      |        | git merge --no-edit --ff origin/beta  |
-      |        | git reset --soft alpha                |
-      |        | git commit -m "beta commit 1"         |
-      |        | git push --force-with-lease           |
+      | BRANCH | COMMAND                        |
+      | beta   | git fetch --prune --tags       |
+      |        | git checkout alpha             |
+      | alpha  | git reset --soft main          |
+      |        | git commit -m "alpha commit 1" |
+      |        | git push --force-with-lease    |
+      |        | git checkout beta              |
+      | beta   | git merge --no-edit --ff alpha |
+      |        | git reset --soft alpha         |
+      |        | git commit -m "beta commit 1"  |
+      |        | git push --force-with-lease    |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME  | FILE CONTENT |
       | alpha  | local, origin | alpha commit 1 | alpha_file | content 2    |

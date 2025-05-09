@@ -45,19 +45,21 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | parent | main   |
     When I run "git town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | parent | git fetch --prune --tags      |
-      |        | git merge --no-edit --ff main |
-      |        | git push -u origin parent     |
+      | BRANCH | COMMAND                   |
+      | parent | git fetch --prune --tags  |
+      |        | git reset --soft main     |
+      |        | git commit -m "commit 2"  |
+      |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | commit 4                       |
+      |        |               | commit 2                       |
+      |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       | parent | local, origin | commit 2                       |
-      |        |               | commit 4                       |
 
   Scenario: undo
     When I run "git-town undo"

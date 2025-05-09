@@ -348,7 +348,7 @@ func validateMergeData(repo execute.OpenRepoResult, data mergeData) error {
 		return err
 	}
 	// ensure all commits on parent branch are contained in the initial branch
-	inSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, data.initialBranch, data.parentBranch)
+	inSyncWithParent, err := repo.Git.BranchInSyncWithParent(repo.Backend, data.initialBranch, data.parentBranch.BranchName())
 	if err != nil {
 		return err
 	}

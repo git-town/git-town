@@ -51,7 +51,7 @@ func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 	asserts.NoError(self.Git.CheckoutBranch(self.TestRunner, branch, false))
 }
 
-func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, branch, parent gitdomain.LocalBranchName) gitdomain.SHA {
+func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) gitdomain.SHA {
 	commits := asserts.NoError1(self.Git.CommitsInFeatureBranch(querier, branch, parent))
 	for _, commit := range commits {
 		if commit.Message.Parts().Subject == title {
