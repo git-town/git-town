@@ -11,9 +11,9 @@ import (
 type SyncFeatureBranchCompress struct {
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
+	InitialParentName       Option[gitdomain.LocalBranchName]
+	InitialParentSHA        Option[gitdomain.SHA]
 	Offline                 configdomain.Offline
-	ParentName              Option[gitdomain.LocalBranchName]
-	ParentSHA               Option[gitdomain.SHA]
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -21,9 +21,9 @@ type SyncFeatureBranchCompress struct {
 func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 	opcodes := []shared.Opcode{
 		&MergeParentsUntilLocal{
-			Branch:             self.CurrentBranch,
-			OriginalParentName: self.ParentName,
-			OriginalParentSHA:  self.ParentSHA,
+			Branch:            self.CurrentBranch,
+			InitialParentName: self.InitialParentName,
+			InitialParentSHA:  self.InitialParentSHA,
 		},
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
