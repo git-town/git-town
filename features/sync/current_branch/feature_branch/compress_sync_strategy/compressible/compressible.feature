@@ -7,11 +7,11 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       | alpha | feature | main   | local, origin |
       | beta  | feature | alpha  | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE        |
-      | alpha  | local, origin | alpha commit 1 |
-      |        |               | alpha commit 2 |
-      | beta   | local, origin | beta commit 1  |
-      |        |               | beta commit 2  |
+      | BRANCH | LOCATION      | MESSAGE        | FILE NAME  | FILE CONTENT |
+      | alpha  | local, origin | alpha commit 1 | alpha_file | content 1    |
+      |        |               | alpha commit 2 | alpha_file | content 2    |
+      | beta   | local, origin | beta commit 1  | beta_file  | content 3    |
+      |        |               | beta commit 2  | beta_file  | content 4    |
     And wait 1 second to ensure new Git timestamps
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
@@ -34,9 +34,9 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
       |        | git commit -m "beta commit 1"         |
       |        | git push --force-with-lease           |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE        |
-      | alpha  | local, origin | alpha commit 1 |
-      | beta   | local, origin | beta commit 1  |
+      | BRANCH | LOCATION      | MESSAGE        | FILE NAME  | FILE CONTENT |
+      | alpha  | local, origin | alpha commit 1 | alpha_file | content 2    |
+      | beta   | local, origin | beta commit 1  | beta_file  | content 4    |
 
   Scenario: undo
     When I run "git-town undo"
