@@ -52,8 +52,9 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       |         | git commit -m "compressed commit"       |
       |         | git push --force-with-lease             |
     And these commits exist now
-      | BRANCH  | LOCATION                | MESSAGE     | FILE NAME | FILE CONTENT                         |
-      | feature | local, coworker, origin | the feature | file      | my content 1 \n\n coworker content 0 |
+      | BRANCH  | LOCATION         | MESSAGE           | FILE NAME | FILE CONTENT                         |
+      | feature | local            | the feature       | file      | my content 1 \n\n coworker content 0 |
+      |         | coworker, origin | compressed commit | file      | my content 1 \n\n coworker content 0 |
     And all branches are now synchronized
     And the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME | FILE CONTENT                         |
