@@ -10,7 +10,7 @@ Feature: one person making a series of commits and syncs in between
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "compress"
       """
@@ -18,6 +18,7 @@ Feature: one person making a series of commits and syncs in between
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
+    #
     # I make the first change and sync
     Given I add this commit to the current branch:
       | MESSAGE     | FILE NAME | FILE CONTENT | FILE NAME | FILE CONTENT |
@@ -35,6 +36,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 1    |
     And all branches are now synchronized
+    #
     # I make another change and sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
@@ -52,6 +54,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 2    |
     And all branches are now synchronized
+    #
     # I make a third change and sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
