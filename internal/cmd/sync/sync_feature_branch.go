@@ -39,7 +39,6 @@ type featureBranchArgs struct {
 }
 
 func syncFeatureBranchCompress(args featureBranchArgs) {
-	// sync parent branch
 	args.program.Value.Add(
 		&opcodes.MergeParentsUntilLocal{
 			Branch:             args.localName,
@@ -47,7 +46,6 @@ func syncFeatureBranchCompress(args featureBranchArgs) {
 			OriginalParentSHA:  args.originalParentSHA,
 		},
 	)
-	// sync tracking branch
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
 		args.program.Value.Add(
 			&opcodes.CompressMergeTrackingBranch{
@@ -71,7 +69,6 @@ func syncFeatureBranchFFOnly(args featureBranchArgs) {
 }
 
 func syncFeatureBranchMerge(args featureBranchArgs) {
-	// sync parent branch
 	args.program.Value.Add(
 		&opcodes.MergeParentsUntilLocal{
 			Branch:             args.localName,
@@ -79,21 +76,18 @@ func syncFeatureBranchMerge(args featureBranchArgs) {
 			OriginalParentSHA:  args.originalParentSHA,
 		},
 	)
-	// sync tracking branch
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
 		args.program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
 	}
 }
 
 func syncFeatureBranchRebase(args featureBranchArgs) {
-	// sync parent branch
 	args.program.Value.Add(
 		&opcodes.RebaseParentsUntilLocal{
 			Branch:      args.localName,
 			PreviousSHA: args.parentLastRunSHA,
 		},
 	)
-	// sync tracking branch
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
 		if args.offline.IsFalse() {
 			args.program.Value.Add(
