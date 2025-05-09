@@ -8,8 +8,6 @@ Feature: sync a feature branch with multiple commits
       | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | main commit 1  |
-      |        |               | main commit 2  |
       | alpha  | local, origin | alpha commit 1 |
       |        |               | alpha commit 2 |
       | beta   | local, origin | beta commit 1  |
