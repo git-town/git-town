@@ -25,6 +25,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
+    #
     # I make a commit and sync
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME        | FILE CONTENT |
@@ -42,6 +43,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME        | FILE CONTENT |
       | feature | local, origin | my first commit | conflicting_file | my content 1 |
     And all branches are now synchronized
+    #
     # the coworker makes a conflicting local commit concurrently with me and syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME        | FILE CONTENT       |
@@ -69,6 +71,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME        | FILE CONTENT                        |
       | feature | local            | my first commit       | conflicting_file | my content 1                        |
       |         | coworker, origin | coworker first commit | conflicting_file | my content 1 and coworker content 1 |
+    #
     # I add another conflicting commit locally and then sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME        | FILE CONTENT |
@@ -96,6 +99,7 @@ Feature: two people using the "compress" strategy make concurrent conflicting ch
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME        | FILE CONTENT                        |
       | feature | local, origin | my first commit       | conflicting_file | my content 2 and coworker content 1 |
       |         | coworker      | coworker first commit | conflicting_file | my content 1 and coworker content 1 |
+    #
     # the coworker makes another conflicting local commit concurrently with me and syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE                | FILE NAME        | FILE CONTENT                        |
