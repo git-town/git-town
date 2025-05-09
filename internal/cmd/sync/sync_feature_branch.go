@@ -29,8 +29,8 @@ type featureBranchArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
 	localName          gitdomain.LocalBranchName
 	offline            configdomain.Offline              // whether offline mode is enabled
-	originalParentName Option[gitdomain.LocalBranchName] // the parent when Git Town started
-	originalParentSHA  Option[gitdomain.SHA]             // the parent when Git Town started
+	initialParentName  Option[gitdomain.LocalBranchName] // the parent when Git Town started
+	initialParentSHA   Option[gitdomain.SHA]             // the parent when Git Town started
 	parentLastRunSHA   Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
 	program            Mutable[program.Program]          // the program to update
 	prune              configdomain.Prune
@@ -44,8 +44,8 @@ func syncFeatureBranchCompress(args featureBranchArgs) {
 			CurrentBranch:     args.localName,
 			CommitMessage:     args.firstCommitMessage,
 			Offline:           args.offline,
-			InitialParentName: args.originalParentName,
-			InitialParentSHA:  args.originalParentSHA,
+			InitialParentName: args.initialParentName,
+			InitialParentSHA:  args.initialParentSHA,
 			TrackingBranch:    args.trackingBranchName,
 		},
 	)
@@ -65,8 +65,8 @@ func syncFeatureBranchMerge(args featureBranchArgs) {
 	args.program.Value.Add(
 		&opcodes.MergeParentsUntilLocal{
 			Branch:            args.localName,
-			InitialParentName: args.originalParentName,
-			InitialParentSHA:  args.originalParentSHA,
+			InitialParentName: args.initialParentName,
+			InitialParentSHA:  args.initialParentSHA,
 		},
 	)
 	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
