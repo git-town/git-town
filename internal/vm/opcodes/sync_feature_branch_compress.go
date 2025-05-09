@@ -11,9 +11,9 @@ import (
 type SyncFeatureBranchCompress struct {
 	CommitMessage           Option[gitdomain.CommitMessage]
 	CurrentBranch           gitdomain.LocalBranchName
-	Offline                 configdomain.Offline
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
+	Offline                 configdomain.Offline
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -35,6 +35,9 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			})
 		}
 		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentLocalName)
+		if err != nil {
+			return err
+		}
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
 		inSyncWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)

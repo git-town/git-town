@@ -27,12 +27,12 @@ func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBr
 
 type featureBranchArgs struct {
 	firstCommitMessage Option[gitdomain.CommitMessage]
-	localName          gitdomain.LocalBranchName
-	offline            configdomain.Offline              // whether offline mode is enabled
 	initialParentName  Option[gitdomain.LocalBranchName] // the parent when Git Town started
 	initialParentSHA   Option[gitdomain.SHA]             // the parent when Git Town started
-	parentLastRunSHA   Option[gitdomain.SHA]             // the parent at the end of the last Git Town command
-	program            Mutable[program.Program]          // the program to update
+	localName          gitdomain.LocalBranchName
+	offline            configdomain.Offline     // whether offline mode is enabled
+	parentLastRunSHA   Option[gitdomain.SHA]    // the parent at the end of the last Git Town command
+	program            Mutable[program.Program] // the program to update
 	prune              configdomain.Prune
 	pushBranches       configdomain.PushBranches
 	trackingBranchName Option[gitdomain.RemoteBranchName]
