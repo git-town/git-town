@@ -22,8 +22,8 @@ Feature: create a new top-level feature branch in a clean workspace using the "c
       |         | git checkout -b new                               |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE            |
-      | main    | local, origin | new commit         |
       | feature | local, origin | already compressed |
+      | main    | local, origin | new commit         |
     And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
