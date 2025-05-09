@@ -47,6 +47,7 @@ func All() []shared.Opcode {
 		&CommitRevert{},
 		&CommitWithMessage{},
 		&Commit{},
+		&CompressMergeTrackingBranch{},
 		&ConfigRemove{},
 		&ConfigSet{},
 		&ConflictPhantomFinalize{},

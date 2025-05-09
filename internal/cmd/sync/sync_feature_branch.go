@@ -74,18 +74,14 @@ func syncFeatureParentBranch(syncStrategy configdomain.SyncStrategy, args featur
 func FeatureTrackingBranchProgram(trackingBranch gitdomain.RemoteBranchName, syncStrategy configdomain.SyncStrategy, args FeatureTrackingArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
-		args.Program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
-		if firstCommitMessage, has := args.FirstCommitMessage.Get(); has {
-			args.Program.Value.Add(&opcodes.BranchCurrentResetToParent{CurrentBranch: args.LocalName})
-			args.Program.Value.Add(&opcodes.CommitWithMessage{
-				AuthorOverride: None[gitdomain.Author](),
-				CommitHook:     configdomain.CommitHookEnabled,
-				Message:        firstCommitMessage,
-			})
-		}
-		if args.Offline.IsFalse() {
-			args.Program.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: args.LocalName, ForceIfIncludes: false})
-		}
+		args.Program.Value.Add(
+			&opcodes.CompressMergeTrackingBranch{
+				CurrentBranch:  args.LocalName,
+				CommitMessage:  args.FirstCommitMessage,
+				Offline:        args.Offline,
+				TrackingBranch: trackingBranch,
+			},
+		)
 	case configdomain.SyncStrategyMerge:
 		args.Program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
 	case configdomain.SyncStrategyRebase:
