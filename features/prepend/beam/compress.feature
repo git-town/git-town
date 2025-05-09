@@ -18,7 +18,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | DIALOG                 | KEYS                             |
       | select commits 2 and 4 | down space down down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
@@ -57,9 +56,10 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        |               | commit 2                       |
       |        |               | commit 3                       |
       |        |               | commit 4                       |
+      |        |               | commit 2                       |
+      |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       | parent | local, origin | commit 2                       |
-      |        |               | commit 4                       |
 
   Scenario: undo
     When I run "git-town undo"
