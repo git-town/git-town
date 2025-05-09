@@ -1,4 +1,3 @@
-@smoke
 Feature: prepend a branch to a feature branch in a clean workspace using the "compress" sync strategy
 
   Background:
