@@ -14,6 +14,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
     And wait 1 second to ensure new Git timestamps
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                  |
