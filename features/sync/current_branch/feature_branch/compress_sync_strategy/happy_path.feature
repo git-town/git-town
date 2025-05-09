@@ -10,7 +10,7 @@ Feature: one person making a series of commits and syncs in between
       [branches]
       main = "main"
       perennials = []
-      
+
       [sync]
       feature-strategy = "compress"
       """
