@@ -24,6 +24,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
+    #
     # I add the first commit to the "feature" branch
     Given I add this commit to the current branch:
       | MESSAGE     | FILE NAME | FILE CONTENT | FILE NAME | FILE CONTENT                         |
@@ -41,6 +42,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT                         |
       | feature | local, origin | the feature | file      | my content 1 \n\n coworker content 0 |
     And all branches are now synchronized
+    #
     # my coworker syncs and adds a commit to the branch
     Given wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
@@ -69,6 +71,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | feature | local            | the feature | file      | my content 1 \n\n coworker content 0 |
       |         | coworker, origin | the feature | file      | my content 1 \n\n coworker content 1 |
     And all branches are now synchronized
+    #
     # I sync, make another change, and sync again
     Given wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
@@ -110,6 +113,7 @@ Feature: two people make alternating non-conflicting changes to the same branch 
       | feature | local, origin | the feature | file      | my content 2 \n\n coworker content 1 |
       |         | coworker      | the feature | file      | my content 1 \n\n coworker content 1 |
     And all branches are now synchronized
+    #
     # the coworker syncs, makes another change, and syncs again
     Given wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
