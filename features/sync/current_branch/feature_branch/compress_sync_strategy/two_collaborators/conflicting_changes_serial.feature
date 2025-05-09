@@ -1,5 +1,4 @@
 Feature: two people make alternating conflicting changes to the same branch using the "compress" strategy
-
   This feature spec demonstrates a limitation of the "compress" sync strategy:
   If two people make conflicting changes to the same branch,
   they'll have to re-resolve merge conflicts
@@ -13,7 +12,7 @@ Feature: two people make alternating conflicting changes to the same branch usin
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "compress"
       """
@@ -25,7 +24,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
-
     # I add the first commit to the "feature" branch
     Given I add this commit to the current branch:
       | MESSAGE     | FILE NAME        | FILE CONTENT |
@@ -35,7 +33,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git reset --soft main                   |
       |         | git commit -m "the feature"             |
@@ -44,15 +41,16 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME        | FILE CONTENT |
       | feature | local, origin | the feature | conflicting_file | my content 1 |
     And all branches are now synchronized
-
     # my coworker syncs and adds a commit to the branch
     Given wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
+      |         | git reset --soft main                   |
+      |         | git commit -m "compressed commit"       |
+      |         | git push --force-with-lease             |
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE     | FILE NAME        | FILE CONTENT |
       | feature | local, coworker, origin | the feature | conflicting_file | my content 1 |
@@ -75,7 +73,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | feature | local            | the feature | conflicting_file | my content 1                        |
       |         | coworker, origin | the feature | conflicting_file | my content 1 and coworker content 1 |
     And all branches are now synchronized
-
     # I sync, make another change, and sync again
     Given wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
@@ -119,7 +116,6 @@ Feature: two people make alternating conflicting changes to the same branch usin
       | feature | local, origin | the feature | conflicting_file | my content 2 and coworker content 1 |
       |         | coworker      | the feature | conflicting_file | my content 1 and coworker content 1 |
     And all branches are now synchronized
-
     # the coworker syncs, makes another change, and syncs again
     Given wait 1 second to ensure new Git timestamps
     When the coworker runs "git-town sync"
