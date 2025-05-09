@@ -80,7 +80,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CommitRevert{SHA: "123456"},
 				&opcodes.CommitRevertIfNeeded{SHA: "123456"},
 				&opcodes.CommitWithMessage{AuthorOverride: Some(gitdomain.Author("user@acme.com")), Message: "my message", CommitHook: configdomain.CommitHookEnabled},
-				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 				&opcodes.ConfigRemove{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal},
 				&opcodes.ConfigSet{Key: configdomain.KeyOffline, Scope: configdomain.ConfigScopeLocal, Value: "1"},
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: Some(gitdomain.NewLocalBranchName("parent")), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
@@ -130,6 +129,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPop{},
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
+				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, ParentName: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
@@ -376,15 +376,6 @@ func TestLoadSave(t *testing.T) {
         "Message": "my message"
       },
       "type": "CommitWithMessage"
-    },
-    {
-      "data": {
-        "CommitMessage": "commit message",
-        "CurrentBranch": "branch",
-        "Offline": true,
-        "TrackingBranch": "origin/branch"
-      },
-      "type": "CompressMergeTrackingBranch"
     },
     {
       "data": {
@@ -692,6 +683,17 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "StashOpenChanges"
+    },
+    {
+      "data": {
+        "CommitMessage": "commit message",
+        "CurrentBranch": "branch",
+        "Offline": true,
+        "ParentName": "parent",
+        "ParentSHA": "111111",
+        "TrackingBranch": "origin/branch"
+      },
+      "type": "SyncFeatureBranchCompress"
     }
   ],
   "TouchedBranches": [
