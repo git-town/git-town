@@ -9,9 +9,9 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
     And the commits
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |
-      | old    | local, origin | commit 2 |
-      | old    | local, origin | commit 3 |
-      | old    | local, origin | commit 4 |
+      |        |               | commit 2 |
+      |        |               | commit 3 |
+      |        |               | commit 4 |
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town prepend parent --beam" and enter into the dialog:
