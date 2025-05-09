@@ -159,7 +159,7 @@ func (self *Commands) BranchesSnapshot(querier gitdomain.Querier) (gitdomain.Bra
 			if err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), err
 			}
-			currentBranchOpt = Some(gitdomain.NewLocalBranchName(headSHA.String()))
+			currentBranchOpt = gitdomain.NewLocalBranchNameOption(headSHA.String())
 			// prepend to result
 			result = slices.Insert(result, 0, gitdomain.BranchInfo{
 				LocalName:  currentBranchOpt,
@@ -670,7 +670,7 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier gitdomain.Querier) Opti
 	if output == "" {
 		return None[gitdomain.LocalBranchName]()
 	}
-	return Some(gitdomain.NewLocalBranchName(output))
+	return gitdomain.NewLocalBranchNameOption(output)
 }
 
 func (self *Commands) Pull(runner gitdomain.Runner) error {

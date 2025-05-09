@@ -46,7 +46,7 @@ func TestSave(t *testing.T) {
 		t.Parallel()
 		give := config.UnvalidatedConfig{
 			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
-				MainBranch: Some(gitdomain.NewLocalBranchName("main")),
+				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
@@ -108,7 +108,7 @@ upstream = true
 		t.Parallel()
 		var gitAccess gitconfig.Access
 		config := config.DefaultUnvalidatedConfig(gitAccess, git.EmptyVersion())
-		config.UnvalidatedConfig.MainBranch = Some(gitdomain.NewLocalBranchName("main"))
+		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 		err := configfile.Save(&config)
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
