@@ -1,6 +1,8 @@
 package opcodes
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
@@ -13,6 +15,7 @@ type PushCurrentBranchForceIfNeeded struct {
 }
 
 func (self *PushCurrentBranchForceIfNeeded) Run(args shared.RunArgs) error {
+	fmt.Println("PushCurrentBranchForceIfNeeded")
 	inSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.CurrentBranch, args.Config.Value.NormalConfig.DevRemote)
 	if err != nil {
 		return err

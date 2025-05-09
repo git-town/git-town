@@ -15,12 +15,14 @@ Feature: sync while the previous branch is checked out in another worktree
     And Git setting "git-town.sync-strategy" is "compress"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                       |
-      | current | git fetch --prune --tags      |
-      |         | git merge --no-edit --ff main |
-      |         | git push -u origin current    |
+      | BRANCH  | COMMAND                    |
+      | current | git fetch --prune --tags   |
+      |         | git reset --soft main      |
+      |         | git commit -m "current 1"  |
+      |         | git push -u origin current |
     And the previous Git branch is still "previous"
 
   Scenario: undo

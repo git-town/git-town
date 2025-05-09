@@ -5,12 +5,16 @@ Feature: sync a feature branch with new commits on the tracking branch
     And the branches
       | NAME  | TYPE    | PARENT | LOCATIONS     |
       | alpha | feature | main   | local, origin |
-      | beta  | feature | alpha  | local, origin |
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT |
       | alpha  | local, origin | alpha commit | alpha_file | content 1    |
-      | beta   | local, origin | beta commit  | beta_file  | content 2    |
-      | beta   | origin        | new commit   | beta_file  | content 3    |
+    And the branches
+      | NAME | TYPE    | PARENT | LOCATIONS     |
+      | beta | feature | alpha  | local, origin |
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | beta   | local, origin | beta commit | beta_file | content 2    |
+      | beta   | origin        | new commit  | beta_file | content 3    |
     And wait 1 second to ensure new Git timestamps
     And Git setting "git-town.sync-feature-strategy" is "compress"
     And the current branch is "beta"
@@ -18,20 +22,14 @@ Feature: sync a feature branch with new commits on the tracking branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff main         |
-      |        | git merge --no-edit --ff origin/alpha |
-      |        | git reset --soft main                 |
-      |        | git commit -m "alpha commit"          |
-      |        | git push --force-with-lease           |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff alpha        |
-      |        | git merge --no-edit --ff origin/beta  |
-      |        | git reset --soft alpha                |
-      |        | git commit -m "beta commit"           |
-      |        | git push --force-with-lease           |
+      | BRANCH | COMMAND                              |
+      | beta   | git fetch --prune --tags             |
+      |        | git checkout alpha                   |
+      | alpha  | git checkout beta                    |
+      | beta   | git merge --no-edit --ff origin/beta |
+      |        | git reset --soft alpha               |
+      |        | git commit -m "beta commit"          |
+      |        | git push --force-with-lease          |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT |
       | alpha  | local, origin | alpha commit | alpha_file | content 1    |
@@ -41,10 +39,6 @@ Feature: sync a feature branch with new commits on the tracking branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                  |
-      | beta   | git checkout alpha                                                       |
-      | alpha  | git reset --hard {{ sha-before-run 'alpha commit' }}                     |
-      |        | git push --force-with-lease --force-if-includes                          |
-      |        | git checkout beta                                                        |
       | beta   | git reset --hard {{ sha-before-run 'beta commit' }}                      |
       |        | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:beta |
     And the initial commits exist now

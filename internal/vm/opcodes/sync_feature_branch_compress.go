@@ -59,7 +59,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Message:        firstCommitMessage,
 			},
 		)
-		if self.Offline.IsFalse() {
+		if self.Offline.IsFalse() && self.TrackingBranch.IsSome() {
 			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
 		}
 	}
