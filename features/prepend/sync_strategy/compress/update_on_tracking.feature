@@ -21,12 +21,7 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
       | BRANCH   | COMMAND                                  |
       | branch-2 | git fetch --prune --tags                 |
       |          | git checkout branch-1                    |
-      | branch-1 | git merge --no-edit --ff main            |
-      |          | git merge --no-edit --ff origin/branch-1 |
-      |          | git reset --soft main                    |
-      |          | git commit -m "branch-1 commit"          |
-      |          | git push --force-with-lease              |
-      |          | git checkout branch-2                    |
+      | branch-1 | git checkout branch-2                    |
       | branch-2 | git merge --no-edit --ff branch-1        |
       |          | git merge --no-edit --ff origin/branch-2 |
       |          | git reset --soft branch-1                |
@@ -47,10 +42,7 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                      |
-      | branch-1a | git checkout branch-1                                                        |
-      | branch-1  | git reset --hard {{ sha-before-run 'branch-1 commit' }}                      |
-      |           | git push --force-with-lease --force-if-includes                              |
-      |           | git checkout branch-2                                                        |
+      | branch-1a | git checkout branch-2                                                        |
       | branch-2  | git reset --hard {{ sha-before-run 'branch-2 commit' }}                      |
       |           | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:branch-2 |
       |           | git branch -D branch-1a                                                      |
