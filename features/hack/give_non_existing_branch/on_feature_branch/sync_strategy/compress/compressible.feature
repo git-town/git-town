@@ -1,4 +1,4 @@
-Feature: create a new top-level feature branch in a clean workspace using the "compress" sync strategy when everything is already compressed
+Feature: create a new top-level feature branch in a clean workspace using the "compress" sync strategy when the branch has compressible commits
 
   Background:
     Given a Git repo with origin
