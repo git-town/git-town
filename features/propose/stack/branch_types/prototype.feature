@@ -20,10 +20,8 @@ Feature: proposing a stack containing a prototype branch
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
       |        | git checkout parent                                                       |
-      | parent | git merge --no-edit --ff main                                             |
-      |        | git checkout child                                                        |
+      | parent | git checkout child                                                        |
       | child  | git merge --no-edit --ff parent                                           |
-      |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
       | (none) | open https://github.com/git-town/git-town/compare/parent?expand=1         |
       |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
