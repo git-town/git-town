@@ -66,7 +66,6 @@ func All() []shared.Opcode {
 		&MergeFastForward{},
 		&MergeIntoCurrentBranch{},
 		&MergeParentResolvePhantomConflicts{},
-		&MergeParentsUntilLocal{},
 		&MergeParent{},
 		&MergeSquashAutoUndo{},
 		&MergeSquashProgram{},
@@ -100,6 +99,7 @@ func All() []shared.Opcode {
 		&StashPopIfNeeded{},
 		&StashPop{},
 		&SyncFeatureBranchCompress{},
+		&SyncFeatureBranchMerge{},
 		&UndoLastCommit{},
 	} //exhaustruct:ignore
 }

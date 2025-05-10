@@ -7,15 +7,16 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// MergeParentsUntilLocal merges the parent branches of the given branch until a local parent is found.
-type MergeParentsUntilLocal struct {
+// SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
+type SyncFeatureBranchMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
+	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
+func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
@@ -53,6 +54,9 @@ func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
 			}
 		}
 		branch = parent
+	}
+	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
+		program = append(program, &MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
 	}
 	args.PrependOpcodes(program...)
 	return nil
