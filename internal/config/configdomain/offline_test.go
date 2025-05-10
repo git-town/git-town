@@ -10,16 +10,28 @@ import (
 func TestOffline(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ToOnline", func(t *testing.T) {
+	t.Run("IsOffline", func(t *testing.T) {
+		t.Parallel()
+		tests := map[bool]bool{
+			true:  true,
+			false: false,
+		}
+		for give, want := range tests {
+			offline := configdomain.Offline(give)
+			have := offline.IsOffline()
+			must.EqOp(t, want, have)
+		}
+	})
+
+	t.Run("IsOffline", func(t *testing.T) {
 		t.Parallel()
 		tests := map[bool]bool{
 			true:  false,
 			false: true,
 		}
-		for give, wantBool := range tests {
+		for give, want := range tests {
 			offline := configdomain.Offline(give)
-			have := offline.ToOnline()
-			want := configdomain.Online(wantBool)
+			have := offline.IsOnline()
 			must.EqOp(t, want, have)
 		}
 	})

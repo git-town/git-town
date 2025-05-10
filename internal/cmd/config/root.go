@@ -71,7 +71,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
 	fmt.Println()
 	print.Header("Configuration")
-	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsTrue()))
+	print.Entry("offline", format.Bool(config.NormalConfig.Offline.IsOffline()))
 	fmt.Println()
 	print.Header("Create")
 	print.Entry("new branch type", format.OptionalStringerSetting(config.NormalConfig.NewBranchType))

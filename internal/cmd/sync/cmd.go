@@ -148,7 +148,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		Branches:   finalBranchCandidates,
 		MainBranch: data.config.ValidatedConfigData.MainBranch,
 	})
-	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.IsOnline() {
+	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.shouldPushTags && data.config.NormalConfig.Offline.IsOnline() {
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{

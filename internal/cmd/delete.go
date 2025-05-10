@@ -298,7 +298,7 @@ func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runPro
 
 func deleteFeatureBranch(prog, finalUndoProgram Mutable[program.Program], data deleteData) {
 	trackingBranchToDelete, hasTrackingBranchToDelete := data.branchToDeleteInfo.RemoteName.Get()
-	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.IsOnline() {
+	if data.branchToDeleteInfo.SyncStatus != gitdomain.SyncStatusDeletedAtRemote && hasTrackingBranchToDelete && data.config.NormalConfig.Offline.IsOnline() {
 		ship.UpdateChildBranchProposalsToGrandParent(prog.Value, data.proposalsOfChildBranches)
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: trackingBranchToDelete})
 	}
