@@ -55,6 +55,7 @@ func syncDeletedFeatureBranchProgram(prog Mutable[program.Program], branch gitdo
 			previousParentSHA: parentLastRunSHA,
 			program:           prog,
 			syncStrategy:      args.Config.NormalConfig.SyncFeatureStrategy,
+			trackingBranch:    None[gitdomain.RemoteBranchName](),
 		})
 		prog.Value.Add(&opcodes.BranchWithRemoteGoneDeleteIfEmptyAtRuntime{Branch: branch})
 	}
