@@ -17,7 +17,6 @@ Feature: do not undo branches that were pulled in through "git fetch" while reso
     And Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
