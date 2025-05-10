@@ -296,7 +296,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsFalse() {
+	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsOnline() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
 		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
 		_, connectorCanUpdateSourceBranch := connector.UpdateProposalSourceFn().Get()
@@ -325,7 +325,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.parentBranch,
 	})
-	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsFalse() {
+	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
 			Branch: data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
 		})

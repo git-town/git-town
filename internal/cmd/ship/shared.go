@@ -166,7 +166,7 @@ func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forge
 	if !canFindProposal {
 		return []forgedomain.Proposal{}
 	}
-	if args.Offline.IsTrue() {
+	if args.Offline.IsOffline() {
 		return []forgedomain.Proposal{}
 	}
 	if !args.OldBranchHasTrackingBranch {

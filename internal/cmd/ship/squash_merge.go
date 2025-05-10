@@ -35,18 +35,18 @@ func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShip
 	if sharedData.initialBranch != sharedData.targetBranchName {
 		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: sharedData.targetBranchName})
 	}
-	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
+	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
 		UpdateChildBranchProposalsToGrandParent(prog.Value, sharedData.proposalsOfChildBranches)
 	}
 	prog.Value.Add(&opcodes.MergeSquashProgram{Authors: squashMergeData.authors, Branch: sharedData.branchNameToShip, CommitMessage: commitMessage, Parent: localTargetBranch})
-	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.IsOnline() {
+	if squashMergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
 	if !sharedData.dryRun {
 		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
 	}
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
-		if sharedData.config.NormalConfig.IsOnline() {
+		if sharedData.config.NormalConfig.Offline.IsOnline() {
 			if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
 				prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: branchToShipRemoteName})
 			}

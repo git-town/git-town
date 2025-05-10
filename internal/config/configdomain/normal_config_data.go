@@ -41,16 +41,8 @@ type NormalConfigData struct {
 	SyncUpstream             SyncUpstream
 }
 
-func (self *NormalConfigData) IsOnline() bool {
-	return self.Online().IsTrue()
-}
-
 func (self *NormalConfigData) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
-}
-
-func (self *NormalConfigData) Online() Online {
-	return self.Offline.ToOnline()
 }
 
 func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName) BranchType {
