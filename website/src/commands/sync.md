@@ -33,7 +33,7 @@ this branch and uses its parent branch. Otherwise it prompts you for the parent.
 ### Why does Git Town sometimes not sync the tracking or parent branch?
 
 Git Town detects whether there are any changes that need to be synced, and might
-skip unnecessary sync operations that wouldn't result in any changes.
+skip unnecessary sync operations that wouldn't produce any changes.
 
 ### Why does Git Town sometimes update a local branch whose tracking branch was deleted before deleting it?
 
