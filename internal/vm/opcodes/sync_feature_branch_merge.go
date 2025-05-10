@@ -7,15 +7,16 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// MergeParentsUntilLocal merges the parent branches of the given branch until a local parent is found.
-type MergeParentsUntilLocal struct {
+// SyncFeatureBranchMerge merges the parent branches of the given branch until a local parent is found.
+type SyncFeatureBranchMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
+	TrackingBranchName      Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
+func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
 	branchInfos, hasBranchInfos := args.BranchInfos.Get()
 	if !hasBranchInfos {
@@ -51,7 +52,7 @@ func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
 			}
 			// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
 			if parentTrackingBranch, parentHasTrackingBranch := parentBranchInfo.RemoteName.Get(); parentHasTrackingBranch {
-				isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentTrackingBranch.BranchName())
 				if err != nil {
 					return err
 				}
@@ -65,6 +66,10 @@ func (self *MergeParentsUntilLocal) Run(args shared.RunArgs) error {
 			}
 		}
 		branch = parent
+	}
+	if trackingBranch, hasTrackingBranch := self.TrackingBranchName.Get(); hasTrackingBranch {
+		isInSync, err := args.Gi
+		args.program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
 	}
 	args.PrependOpcodes(program...)
 	return nil

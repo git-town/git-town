@@ -28,7 +28,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			return err
 		}
 		if !inSyncWithParent {
-			opcodes = append(opcodes, &MergeParentsUntilLocal{
+			opcodes = append(opcodes, &SyncFeatureBranchMerge{
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
 				InitialParentSHA:  self.InitialParentSHA,

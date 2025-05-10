@@ -63,15 +63,12 @@ func syncFeatureBranchFFOnly(args featureBranchArgs) {
 
 func syncFeatureBranchMerge(args featureBranchArgs) {
 	args.program.Value.Add(
-		&opcodes.MergeParentsUntilLocal{
+		&opcodes.SyncFeatureBranchMerge{
 			Branch:            args.localName,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
 		},
 	)
-	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
-		args.program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
-	}
 }
 
 func syncFeatureBranchRebase(args featureBranchArgs) {
