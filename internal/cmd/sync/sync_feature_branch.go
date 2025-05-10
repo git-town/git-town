@@ -72,6 +72,7 @@ func syncFeatureBranchMerge(args featureBranchArgs) {
 	)
 }
 
+// TODO: inline all these helper functions since all they do now is add a single opcode
 func syncFeatureBranchRebase(args featureBranchArgs) {
 	args.program.Value.Add(
 		&opcodes.SyncFeatureBranchRebase{
