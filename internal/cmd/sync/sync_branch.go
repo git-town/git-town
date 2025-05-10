@@ -148,6 +148,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
+		// TODO: merge with variant the compress variant
 		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
 			Branch:            args.branch,
 			InitialParentName: args.initialParentName,
