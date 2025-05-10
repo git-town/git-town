@@ -24,7 +24,6 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout alpha                                |
       | alpha  | git merge --no-edit --ff main                     |
-      |        | git merge --no-edit --ff origin/alpha             |
       |        | git push                                          |
       |        | git checkout beta                                 |
       | beta   | git merge --no-edit --ff main                     |
