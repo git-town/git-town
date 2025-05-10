@@ -12,7 +12,7 @@ type SyncFeatureBranchMerge struct {
 	Branch                  gitdomain.LocalBranchName
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
-	TrackingBranchName      Option[gitdomain.RemoteBranchName]
+	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -67,9 +67,14 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 		}
 		branch = parent
 	}
-	if trackingBranch, hasTrackingBranch := self.TrackingBranchName.Get(); hasTrackingBranch {
-		isInSync, err := args.Gi
-		args.program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
+	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
+		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+		if err != nil {
+			return err
+		}
+		if !isInSync {
+			program = append(program, &MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
+		}
 	}
 	args.PrependOpcodes(program...)
 	return nil
