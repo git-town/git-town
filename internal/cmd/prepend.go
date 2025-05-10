@@ -462,25 +462,6 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	return optimizer.Optimize(prog.Immutable())
 }
 
-// provides the strategy to use to sync a branch after beaming some of its commits to its new parent branch
-func afterBeamToParentSyncStrategy(branchType configdomain.BranchType, config configdomain.NormalConfigData) Option[configdomain.SyncStrategy] {
-	switch branchType {
-	case
-		configdomain.BranchTypeContributionBranch,
-		configdomain.BranchTypeObservedBranch,
-		configdomain.BranchTypeMainBranch,
-		configdomain.BranchTypePerennialBranch:
-		return None[configdomain.SyncStrategy]()
-	case
-		configdomain.BranchTypeFeatureBranch,
-		configdomain.BranchTypeParkedBranch:
-		return Some(config.SyncFeatureStrategy.SyncStrategy())
-	case configdomain.BranchTypePrototypeBranch:
-		return Some(config.SyncPrototypeStrategy.SyncStrategy())
-	}
-	panic("unhandled branch type: " + branchType.String())
-}
-
 // provides the name of the youngest ancestor branch of the given branch that actually exists,
 // either locally or remotely.
 func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdomain.BranchInfos, lineage configdomain.Lineage) Option[gitdomain.LocalBranchName] {
@@ -500,45 +481,19 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 	if len(data.commitsToBeam) > 0 {
 		for _, commitToBeam := range data.commitsToBeam {
 			prog.Value.Add(
-				&opcodes.CherryPick{SHA: commitToBeam.SHA},
+				&opcodes.CherryPick{
+					SHA: commitToBeam.SHA,
+				},
+				&opcodes.Checkout{
+					Branch: data.initialBranch,
+				},
+				&opcodes.CommitRemove{
+					SHA: commitToBeam.SHA,
+				},
+				&opcodes.Checkout{
+					Branch: data.targetBranch,
+				},
 			)
-		}
-		// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.initialBranch},
-		)
-		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.targetBranch},
-		)
-	}
-}
-
-// basic sync of the current branch with its parent after beaming some commits into the parent
-func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBranchName, initialBranchInfo gitdomain.BranchInfo, initialBranchType configdomain.BranchType, config configdomain.NormalConfigData) {
-	if syncStrategy, hasSyncStrategy := afterBeamToParentSyncStrategy(initialBranchType, config).Get(); hasSyncStrategy {
-		switch syncStrategy {
-		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
-			prog.Value.Add(
-				&opcodes.MergeParent{Parent: parentName.BranchName()},
-			)
-			if initialBranchInfo.HasTrackingBranch() {
-				prog.Value.Add(
-					&opcodes.PushCurrentBranch{},
-				)
-			}
-		case configdomain.SyncStrategyRebase:
-			prog.Value.Add(
-				&opcodes.RebaseBranch{Branch: parentName.BranchName()},
-			)
-			if initialBranchInfo.HasTrackingBranch() {
-				prog.Value.Add(
-					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
-				)
-			}
-		case configdomain.SyncStrategyFFOnly:
-			// the ff-only sync strategy does not sync with the parent
 		}
 	}
 }
