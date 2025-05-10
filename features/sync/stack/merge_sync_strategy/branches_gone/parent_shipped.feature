@@ -23,7 +23,6 @@ Feature: syncing a branch whose parent was shipped
       |        | git branch -D parent                              |
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff main                     |
-      |        | git merge --no-edit --ff origin/child             |
       |        | git push                                          |
     And Git Town prints:
       """
