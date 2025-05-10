@@ -12,6 +12,7 @@ Feature: compatibility between different sync-feature-strategy settings
     And the coworker sets the "sync-feature-strategy" to "merge"
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
+    #
     # I make a commit and sync
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT |
@@ -28,6 +29,7 @@ Feature: compatibility between different sync-feature-strategy settings
       | feature | local, origin | my first commit | file.txt  | my content   |
     And no rebase is now in progress
     And all branches are now synchronized
+    #
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME | FILE CONTENT     |
@@ -54,6 +56,7 @@ Feature: compatibility between different sync-feature-strategy settings
       |         | coworker, origin        | coworker first commit                                      | file.txt  | coworker content        |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature | file.txt  | my and coworker content |
     And the coworkers workspace now contains file "file.txt" with content "my and coworker content"
+    #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
