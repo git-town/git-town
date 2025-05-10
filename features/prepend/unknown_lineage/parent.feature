@@ -11,11 +11,10 @@ Feature: ask for missing parent information
       | DIALOG               | KEYS  |
       | parent branch of old | enter |
     Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | old    | git fetch --prune --tags      |
-      |        | git merge --no-edit --ff main |
-      |        | git push -u origin old        |
-      |        | git checkout -b new main      |
+      | BRANCH | COMMAND                  |
+      | old    | git fetch --prune --tags |
+      |        | git push -u origin old   |
+      |        | git checkout -b new main |
     And this lineage exists now
       | BRANCH | PARENT |
       | new    | main   |

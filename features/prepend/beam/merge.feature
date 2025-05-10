@@ -45,10 +45,9 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | parent | main   |
     When I run "git town sync"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | parent | git fetch --prune --tags      |
-      |        | git merge --no-edit --ff main |
-      |        | git push -u origin parent     |
+      | BRANCH | COMMAND                   |
+      | parent | git fetch --prune --tags  |
+      |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
