@@ -147,8 +147,7 @@ func LocalBranchProgram(localName gitdomain.LocalBranchName, branchInfo gitdomai
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
 func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrentFeatureBranchOpcodeArgs) {
 	switch args.syncStrategy {
-	case configdomain.SyncFeatureStrategyMerge:
-		// TODO: merge with variant the compress variant
+	case configdomain.SyncFeatureStrategyMerge, configdomain.SyncFeatureStrategyCompress:
 		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
 			Branch:            args.branch,
 			InitialParentName: args.initialParentName,
@@ -159,13 +158,6 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(args pullParentBranchOfCurrent
 		args.program.Value.Add(&opcodes.RebaseParentsUntilLocal{
 			Branch:      args.branch,
 			PreviousSHA: args.previousParentSHA,
-		})
-	case configdomain.SyncFeatureStrategyCompress:
-		args.program.Value.Add(&opcodes.SyncFeatureBranchMerge{
-			Branch:            args.branch,
-			InitialParentName: args.initialParentName,
-			InitialParentSHA:  args.initialParentSHA,
-			TrackingBranch:    args.trackingBranch,
 		})
 	}
 }
