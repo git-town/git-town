@@ -25,8 +25,8 @@ Feature: self-hosted service
       | bitbucket | https://self-hosted/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain                                    |
       | github    | https://self-hosted/git-town/git-town/compare/feature?expand=1                                                                            |
       | gitlab    | https://self-hosted/git-town/git-town/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
-      # uncomment to test (creates online connection)
-      # | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
+# uncomment to test (creates online connection)
+# | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
