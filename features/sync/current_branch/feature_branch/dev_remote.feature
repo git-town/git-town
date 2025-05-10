@@ -15,10 +15,9 @@ Feature: sync a branch to a custom dev-remote
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | branch | git fetch --prune --tags      |
-      |        | git merge --no-edit --ff main |
-      |        | git push -u fork branch       |
+      | BRANCH | COMMAND                  |
+      | branch | git fetch --prune --tags |
+      |        | git push -u fork branch  |
     And all branches are now synchronized
     And these branches exist now
       | REPOSITORY  | BRANCHES     |
