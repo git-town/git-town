@@ -66,7 +66,7 @@ func All() []shared.Opcode {
 		&MergeFastForward{},
 		&MergeIntoCurrentBranch{},
 		&MergeParentResolvePhantomConflicts{},
-		&MergeParentsUntilLocal{},
+		&SyncFeatureBranchMerge{},
 		&MergeParent{},
 		&MergeSquashAutoUndo{},
 		&MergeSquashProgram{},
