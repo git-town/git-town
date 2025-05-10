@@ -18,10 +18,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
     When I run "git-town sync"
 
   Scenario: result
-    Then Git Town runs the commands
-      | BRANCH    | COMMAND                                   |
-      | feature-1 | git merge --no-edit --ff main             |
-      |           | git merge --no-edit --ff origin/feature-1 |
+    Then Git Town runs no commands
     And the initial branches and lineage exist now
 
   Scenario: undo

@@ -12,11 +12,9 @@ Feature: append a branch when the previous branch is active in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | current | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
-      |         | git merge --no-edit --ff origin/current |
-      |         | git checkout -b new                     |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
+      |         | git checkout -b new      |
     And the previous Git branch is now "current"
     And no commits exist now
 

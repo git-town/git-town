@@ -20,8 +20,7 @@ Feature: Create proposals for parked branches
       | BRANCH | COMMAND                                                           |
       | parked | git fetch --prune --tags                                          |
       | (none) | Looking for proposal online ... ok                                |
-      | parked | git merge --no-edit --ff main                                     |
-      |        | git merge --no-edit --ff origin/parked                            |
+      | parked | git merge --no-edit --ff origin/parked                            |
       |        | git push                                                          |
       | (none) | open https://github.com/git-town/git-town/compare/parked?expand=1 |
     And Git Town prints:

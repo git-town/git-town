@@ -14,11 +14,9 @@ Feature: prepend a new branch when prototype branches are configured via Git met
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                             |
-      | old    | git fetch --prune --tags            |
-      |        | git merge --no-edit --ff main       |
-      |        | git merge --no-edit --ff origin/old |
-      |        | git checkout -b parent main         |
+      | BRANCH | COMMAND                     |
+      | old    | git fetch --prune --tags    |
+      |        | git checkout -b parent main |
     And branch "parent" now has type "prototype"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |

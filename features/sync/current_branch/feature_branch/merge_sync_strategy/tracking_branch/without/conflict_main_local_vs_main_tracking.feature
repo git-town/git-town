@@ -67,7 +67,6 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                                  |
       |         | git checkout feature                      |
       | feature | git merge --no-edit --ff main             |
-      |         | git merge --no-edit --ff origin/feature   |
       |         | git push                                  |
     And no rebase is now in progress
     And all branches are now synchronized
@@ -81,12 +80,11 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | main    | git push                                |
-      |         | git checkout feature                    |
-      | feature | git merge --no-edit --ff main           |
-      |         | git merge --no-edit --ff origin/feature |
-      |         | git push                                |
+      | BRANCH  | COMMAND                       |
+      | main    | git push                      |
+      |         | git checkout feature          |
+      | feature | git merge --no-edit --ff main |
+      |         | git push                      |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

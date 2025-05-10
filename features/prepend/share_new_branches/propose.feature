@@ -18,8 +18,6 @@ Feature: auto-propose new branches
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                        |
       | old    | git fetch --prune --tags                                       |
-      |        | git merge --no-edit --ff main                                  |
-      |        | git merge --no-edit --ff origin/old                            |
       |        | git checkout -b new main                                       |
       | new    | git push -u origin new                                         |
       | (none) | open https://github.com/git-town/git-town/compare/new?expand=1 |

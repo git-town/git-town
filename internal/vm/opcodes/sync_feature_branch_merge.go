@@ -37,26 +37,44 @@ func (self *SyncFeatureBranchMerge) Run(args shared.RunArgs) error {
 				} else {
 					parentToMerge = parent.BranchName()
 				}
-				program = append(program, &MergeParentResolvePhantomConflicts{
-					CurrentParent:     parentToMerge,
-					InitialParentName: self.InitialParentName,
-					InitialParentSHA:  self.InitialParentSHA,
-				})
+				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentToMerge)
+				if err != nil {
+					return err
+				}
+				if !isInSync {
+					program = append(program, &MergeParentResolvePhantomConflicts{
+						CurrentParent:     parentToMerge,
+						InitialParentName: self.InitialParentName,
+						InitialParentSHA:  self.InitialParentSHA,
+					})
+				}
 				break
 			}
 			// here the parent isn't local --> sync with its tracking branch if it exists, then try again with the grandparent until we find a local ancestor
 			if parentTrackingBranch, parentHasTrackingBranch := parentBranchInfo.RemoteName.Get(); parentHasTrackingBranch {
-				program = append(program, &MergeParentResolvePhantomConflicts{
-					CurrentParent:     parentTrackingBranch.BranchName(),
-					InitialParentName: self.InitialParentName,
-					InitialParentSHA:  self.InitialParentSHA,
-				})
+				isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentTrackingBranch.BranchName())
+				if err != nil {
+					return err
+				}
+				if !isInSync {
+					program = append(program, &MergeParentResolvePhantomConflicts{
+						CurrentParent:     parentTrackingBranch.BranchName(),
+						InitialParentName: self.InitialParentName,
+						InitialParentSHA:  self.InitialParentSHA,
+					})
+				}
 			}
 		}
 		branch = parent
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
-		program = append(program, &MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
+		isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+		if err != nil {
+			return err
+		}
+		if !isInSync {
+			program = append(program, &MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
+		}
 	}
 	args.PrependOpcodes(program...)
 	return nil

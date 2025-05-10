@@ -17,7 +17,6 @@ Feature: collaborative feature branch syncing
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And these commits exist now
@@ -25,13 +24,11 @@ Feature: collaborative feature branch syncing
       | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
     And all branches are now synchronized
-
     Given the coworker is on the "feature" branch
     When the coworker runs "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
       |         | git push                                |
     And all branches are now synchronized
@@ -40,13 +37,11 @@ Feature: collaborative feature branch syncing
       | feature | local, coworker, origin | my commit                                                  |
       |         | coworker, origin        | coworker commit                                            |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
-
     Given the current branch is "feature"
     When I run "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And all branches are now synchronized
     And these commits exist now

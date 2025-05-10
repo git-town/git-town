@@ -18,8 +18,6 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git push                                          |
       |         | git checkout feature                              |
-      | feature | git merge --no-edit --ff main                     |
-      |         | git merge --no-edit --ff origin/feature           |
 
   Scenario: undo
     When I run "git-town undo"

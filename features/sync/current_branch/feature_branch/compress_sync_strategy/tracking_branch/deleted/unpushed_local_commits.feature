@@ -17,9 +17,8 @@ Feature: using the "compress" strategy, sync a branch with unmerged commits whos
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                       |
-      | branch-2 | git fetch --prune --tags      |
-      |          | git merge --no-edit --ff main |
+      | BRANCH   | COMMAND                  |
+      | branch-2 | git fetch --prune --tags |
     And Git Town prints:
       """
       Branch "branch-2" was deleted at the remote but the local branch contains unshipped changes.

@@ -14,10 +14,8 @@ Feature: offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                             |
-      | old    | git merge --no-edit --ff main       |
-      |        | git merge --no-edit --ff origin/old |
-      |        | git checkout -b new main            |
+      | BRANCH | COMMAND                  |
+      | old    | git checkout -b new main |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |

@@ -17,9 +17,7 @@ Feature: Bitbucket support
       | BRANCH  | COMMAND                                                                                                       |
       | feature | git fetch --prune --tags                                                                                      |
       | (none)  | Looking for proposal online ... ok                                                                            |
-      | feature | git merge --no-edit --ff main                                                                                 |
-      |         | git merge --no-edit --ff origin/feature                                                                       |
-      | (none)  | open https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain |
+      |         | open https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain |
 
     Examples:
       | ORIGIN                                               |
@@ -44,9 +42,7 @@ Feature: Bitbucket support
       | BRANCH  | COMMAND                                                                                                                             |
       | feature | git fetch --prune --tags                                                                                                            |
       | (none)  | Looking for proposal online ... ok                                                                                                  |
-      | feature | git merge --no-edit --ff main                                                                                                       |
-      |         | git merge --no-edit --ff origin/feature                                                                                             |
-      | (none)  | open https://bitbucket.org/git-town/git-town.github.com/pull-requests/new?source=feature&dest=git-town%2Fgit-town.github.com%3Amain |
+      |         | open https://bitbucket.org/git-town/git-town.github.com/pull-requests/new?source=feature&dest=git-town%2Fgit-town.github.com%3Amain |
 
     Examples:
       | ORIGIN                                                          |

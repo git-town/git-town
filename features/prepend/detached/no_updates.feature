@@ -13,11 +13,9 @@ Feature: prepend a branch to a feature branch in detached mode when there are no
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                |
-      | branch | git fetch --prune --tags               |
-      |        | git merge --no-edit --ff main          |
-      |        | git merge --no-edit --ff origin/branch |
-      |        | git checkout -b parent main            |
+      | BRANCH | COMMAND                     |
+      | branch | git fetch --prune --tags    |
+      |        | git checkout -b parent main |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | branch | local, origin | branch commit |

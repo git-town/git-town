@@ -21,8 +21,6 @@ Feature: proposing a branch whose parent was shipped and the local branch delete
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                          |
       | child  | git fetch --prune --tags                                         |
-      |        | git merge --no-edit --ff main                                    |
-      |        | git merge --no-edit --ff origin/child                            |
       | (none) | open https://github.com/git-town/git-town/compare/child?expand=1 |
     And the branches are now
       | REPOSITORY    | BRANCHES    |

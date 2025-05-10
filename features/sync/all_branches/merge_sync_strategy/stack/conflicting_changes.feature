@@ -27,12 +27,11 @@ Feature: sync a stack that makes conflicting changes
     When I resolve the conflict in "file" with "resolved alpha content"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | alpha  | git commit --no-edit                  |
-      |        | git merge --no-edit --ff origin/alpha |
-      |        | git push                              |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff alpha        |
+      | BRANCH | COMMAND                        |
+      | alpha  | git commit --no-edit           |
+      |        | git push                       |
+      |        | git checkout beta              |
+      | beta   | git merge --no-edit --ff alpha |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -41,12 +40,11 @@ Feature: sync a stack that makes conflicting changes
     When I resolve the conflict in "file" with "resolved beta content"
     And I run "git-town continue"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                              |
-      | beta   | git commit --no-edit                 |
-      |        | git merge --no-edit --ff origin/beta |
-      |        | git push                             |
-      |        | git checkout alpha                   |
-      | alpha  | git push --tags                      |
+      | BRANCH | COMMAND              |
+      | beta   | git commit --no-edit |
+      |        | git push             |
+      |        | git checkout alpha   |
+      | alpha  | git push --tags      |
     And no merge is in progress
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        | FILE NAME | FILE CONTENT           |

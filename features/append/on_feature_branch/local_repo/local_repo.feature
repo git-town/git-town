@@ -13,9 +13,8 @@ Feature: in a local repo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                       |
-      | existing | git merge --no-edit --ff main |
-      |          | git checkout -b new           |
+      | BRANCH   | COMMAND             |
+      | existing | git checkout -b new |
     And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |

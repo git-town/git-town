@@ -22,7 +22,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout parent                               |
       | parent | git merge --no-edit --ff main                     |
-      |        | git merge --no-edit --ff origin/parent            |
       |        | git push                                          |
       |        | git branch -D child                               |
       |        | git checkout -b new                               |

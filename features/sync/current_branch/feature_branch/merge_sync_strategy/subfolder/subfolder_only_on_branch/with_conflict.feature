@@ -54,7 +54,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git push                                |
       |         | git checkout other                      |
       | other   | git merge --no-edit --ff main           |
-      |         | git merge --no-edit --ff origin/other   |
       |         | git push                                |
       |         | git checkout current                    |
       | current | git push --tags                         |

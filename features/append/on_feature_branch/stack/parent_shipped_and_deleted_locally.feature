@@ -23,7 +23,6 @@ Feature: appending to a branch whose parent was shipped and the local branch del
       | main   | git -c rebase.updateRefs=false rebase origin/main |
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff main                     |
-      |        | git merge --no-edit --ff origin/child             |
       |        | git push                                          |
       |        | git checkout -b new                               |
     And the branches are now

@@ -12,10 +12,8 @@ Feature: sync a branch when the previous branch is active in another worktree
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                 |
-      | current | git fetch --prune --tags                |
-      |         | git merge --no-edit --ff main           |
-      |         | git merge --no-edit --ff origin/current |
+      | BRANCH  | COMMAND                  |
+      | current | git fetch --prune --tags |
     And no commits exist now
 
   Scenario: undo
