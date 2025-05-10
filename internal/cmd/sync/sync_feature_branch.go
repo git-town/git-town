@@ -54,7 +54,7 @@ func syncFeatureBranchCompress(args featureBranchArgs) {
 func syncFeatureBranchFFOnly(args featureBranchArgs) {
 	// The ff-only strategy does not sync with the parent branch.
 	// It is intended for perennial branches only.
-	if args.offline.IsFalse() {
+	if args.offline.IsOnline() {
 		if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
 			args.program.Value.Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
 		}
@@ -80,7 +80,7 @@ func syncFeatureBranchRebase(args featureBranchArgs) {
 		},
 	)
 	if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
-		if args.offline.IsFalse() {
+		if args.offline.IsOnline() {
 			args.program.Value.Add(
 				&opcodes.RebaseTrackingBranch{
 					RemoteBranch: trackingBranch,

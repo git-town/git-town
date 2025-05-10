@@ -292,7 +292,7 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 		prog.Value.Add(&opcodes.LineageParentSet{Branch: child, Parent: data.newBranch})
 	}
 	if oldTrackingBranch, hasOldTrackingBranch := data.oldBranch.RemoteName.Get(); hasOldTrackingBranch {
-		if data.oldBranch.HasTrackingBranch() && data.config.NormalConfig.IsOnline() {
+		if data.oldBranch.HasTrackingBranch() && data.config.NormalConfig.Offline.IsOnline() {
 			prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.newBranch})
 			updateChildBranchProposalsToBranch(prog.Value, data.proposalsOfChildBranches, data.newBranch)
 			proposal, hasProposal := data.proposal.Get()
