@@ -97,7 +97,6 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MergeAbort{},
 				&opcodes.MergeAlwaysProgram{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message"))},
 				&opcodes.MergeContinue{},
-				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeParentResolvePhantomConflicts{CurrentParent: "parent", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456"))},
 				&opcodes.MergeSquashProgram{Authors: []gitdomain.Author{"author 1 <one@acme.com>", "author 2 <two@acme.com>"}, Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Parent: "parent"},
 				&opcodes.MessageQueue{Message: "message"},
@@ -130,6 +129,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.StashPopIfNeeded{},
 				&opcodes.StashOpenChanges{},
 				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
+				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
 			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
@@ -491,14 +491,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
-        "InitialParentName": "original-parent",
-        "InitialParentSHA": "123456"
-      },
-      "type": "MergeParentsUntilLocal"
-    },
-    {
-      "data": {
         "CurrentParent": "parent",
         "InitialParentName": "original-parent",
         "InitialParentSHA": "123456"
@@ -694,6 +686,15 @@ func TestLoadSave(t *testing.T) {
         "TrackingBranch": "origin/branch"
       },
       "type": "SyncFeatureBranchCompress"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "InitialParentName": "original-parent",
+        "InitialParentSHA": "123456",
+        "TrackingBranch": "origin/branch"
+      },
+      "type": "SyncFeatureBranchMerge"
     }
   ],
   "TouchedBranches": [
