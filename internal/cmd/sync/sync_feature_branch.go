@@ -35,7 +35,7 @@ type featureBranchArgs struct {
 	program            Mutable[program.Program]          // the program to update
 	prune              configdomain.Prune
 	pushBranches       configdomain.PushBranches
-	trackingBranchName Option[gitdomain.RemoteBranchName]
+	trackingBranch     Option[gitdomain.RemoteBranchName]
 }
 
 func syncFeatureBranchCompress(args featureBranchArgs) {
@@ -46,7 +46,7 @@ func syncFeatureBranchCompress(args featureBranchArgs) {
 			Offline:           args.offline,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
-			TrackingBranch:    args.trackingBranchName,
+			TrackingBranch:    args.trackingBranch,
 		},
 	)
 }
@@ -55,7 +55,7 @@ func syncFeatureBranchFFOnly(args featureBranchArgs) {
 	// The ff-only strategy does not sync with the parent branch.
 	// It is intended for perennial branches only.
 	if args.offline.IsFalse() {
-		if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
+		if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
 			args.program.Value.Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
 		}
 	}
@@ -63,15 +63,13 @@ func syncFeatureBranchFFOnly(args featureBranchArgs) {
 
 func syncFeatureBranchMerge(args featureBranchArgs) {
 	args.program.Value.Add(
-		&opcodes.MergeParentsUntilLocal{
+		&opcodes.SyncFeatureBranchMerge{
 			Branch:            args.localName,
 			InitialParentName: args.initialParentName,
 			InitialParentSHA:  args.initialParentSHA,
+			TrackingBranch:    args.trackingBranch,
 		},
 	)
-	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
-		args.program.Value.Add(&opcodes.MergeIntoCurrentBranch{BranchToMerge: trackingBranch.BranchName()})
-	}
 }
 
 func syncFeatureBranchRebase(args featureBranchArgs) {
@@ -81,7 +79,7 @@ func syncFeatureBranchRebase(args featureBranchArgs) {
 			PreviousSHA: args.parentLastRunSHA,
 		},
 	)
-	if trackingBranch, hasTrackingBranch := args.trackingBranchName.Get(); hasTrackingBranch {
+	if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
 		if args.offline.IsFalse() {
 			args.program.Value.Add(
 				&opcodes.RebaseTrackingBranch{

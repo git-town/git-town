@@ -28,10 +28,14 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 			return err
 		}
 		if !inSyncWithParent {
-			opcodes = append(opcodes, &MergeParentsUntilLocal{
+			opcodes = append(opcodes, &SyncFeatureBranchMerge{
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
 				InitialParentSHA:  self.InitialParentSHA,
+				// we deal with the tracking branch below
+				// TODO: once merge also only runs if needed,
+				// set this to the real value and remove the block dealing with the tracking branch below?
+				TrackingBranch: None[gitdomain.RemoteBranchName](),
 			})
 		}
 		commitsInBranch, err = args.Git.CommitsInFeatureBranch(args.Backend, self.CurrentBranch, parentName)
