@@ -481,19 +481,20 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 	if len(data.commitsToBeam) > 0 {
 		for _, commitToBeam := range data.commitsToBeam {
 			prog.Value.Add(
-				&opcodes.CherryPick{
-					SHA: commitToBeam.SHA,
-				},
-				&opcodes.Checkout{
-					Branch: data.initialBranch,
-				},
-				&opcodes.CommitRemove{
-					SHA: commitToBeam.SHA,
-				},
-				&opcodes.Checkout{
-					Branch: data.targetBranch,
-				},
+				&opcodes.CherryPick{SHA: commitToBeam.SHA},
 			)
 		}
+		prog.Value.Add(
+			&opcodes.Checkout{Branch: data.initialBranch},
+		)
+		for _, commitToBeam := range data.commitsToBeam {
+			prog.Value.Add(
+				&opcodes.CommitRemove{SHA: commitToBeam.SHA},
+			)
+		}
+		prog.Value.Add(
+			&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
+			&opcodes.Checkout{Branch: data.targetBranch},
+		)
 	}
 }

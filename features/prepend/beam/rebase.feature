@@ -7,33 +7,35 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
-      | old    | local, origin | commit 2 |
-      | old    | local, origin | commit 3 |
-      | old    | local, origin | commit 4 |
+      | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | old    | local, origin | commit 1 | file_1    | content 1    |
+      | old    | local, origin | commit 2 | file_2    | content 2    |
+      | old    | local, origin | commit 3 | file_3    | content 3    |
+      | old    | local, origin | commit 4 | file_4    | content 4    |
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG                 | KEYS                             |
       | select commits 2 and 4 | down space down down space enter |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | old    | git checkout -b parent main                     |
-      | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
-      |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
-      |        | git checkout old                                |
-      | old    | git -c rebase.updateRefs=false rebase parent    |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout parent                             |
+      | BRANCH | COMMAND                                                                                                       |
+      | old    | git checkout -b parent main                                                                                   |
+      | parent | git cherry-pick {{ sha-before-run 'commit 2' }}                                                               |
+      |        | git cherry-pick {{ sha-before-run 'commit 4' }}                                                               |
+      |        | git checkout old                                                                                              |
+      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} |
+      |        | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} |
+      |        | git push --force-with-lease --force-if-includes                                                               |
+      |        | git checkout parent                                                                                           |
+    And inspect the repo
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |
+      |        |               | commit 2 |
       |        |               | commit 3 |
-      |        | origin        | commit 2 |
-      |        |               | commit 4 |
       | parent | local         | commit 2 |
       |        |               | commit 4 |
     And this lineage exists now
@@ -49,6 +51,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |
+      |        |               | commit 2 |
       |        |               | commit 3 |
       | parent | local, origin | commit 2 |
       |        |               | commit 4 |
