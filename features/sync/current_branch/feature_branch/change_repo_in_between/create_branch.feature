@@ -14,7 +14,6 @@ Feature: adding additional branches while resolving conflicts
     And Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | feature-1 | git fetch --prune --tags                  |
-      |           | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/feature-1 |
     And Git Town prints the error:
       """

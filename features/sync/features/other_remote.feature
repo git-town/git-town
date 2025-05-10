@@ -17,7 +17,6 @@ Feature: ignores other Git remotes
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                 |
       | feature | frontend | git fetch --prune --tags                |
-      |         | frontend | git merge --no-edit --ff main           |
       |         | frontend | git merge --no-edit --ff origin/feature |
       |         | frontend | git push                                |
 

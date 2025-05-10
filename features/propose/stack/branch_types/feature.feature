@@ -22,15 +22,11 @@ Feature: propose an entire stack
       | BRANCH   | COMMAND                                                                        |
       | branch-2 | git fetch --prune --tags                                                       |
       |          | git checkout branch-1                                                          |
-      | branch-1 | git merge --no-edit --ff main                                                  |
-      |          | git merge --no-edit --ff origin/branch-1                                       |
-      |          | git checkout branch-2                                                          |
+      | branch-1 | git checkout branch-2                                                          |
       | branch-2 | git merge --no-edit --ff branch-1                                              |
-      |          | git merge --no-edit --ff origin/branch-2                                       |
       |          | git push                                                                       |
       |          | git checkout branch-3                                                          |
       | branch-3 | git merge --no-edit --ff branch-2                                              |
-      |          | git merge --no-edit --ff origin/branch-3                                       |
       |          | git push                                                                       |
       | (none)   | open https://github.com/git-town/git-town/compare/branch-1?expand=1            |
       |          | open https://github.com/git-town/git-town/compare/branch-1...branch-2?expand=1 |

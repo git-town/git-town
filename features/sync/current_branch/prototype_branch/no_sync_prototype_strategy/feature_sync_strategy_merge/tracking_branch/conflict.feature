@@ -16,7 +16,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                   |
       | prototype | git fetch --prune --tags                  |
-      |           | git merge --no-edit --ff main             |
       |           | git merge --no-edit --ff origin/prototype |
     And Git Town prints the error:
       """

@@ -14,16 +14,14 @@ Feature: sync the current feature branch with a tracking branch in detached mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                               |
-      | beta   | git fetch --prune --tags              |
-      |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff main         |
-      |        | git merge --no-edit --ff origin/alpha |
-      |        | git push                              |
-      |        | git checkout beta                     |
-      | beta   | git merge --no-edit --ff alpha        |
-      |        | git merge --no-edit --ff origin/beta  |
-      |        | git push                              |
+      | BRANCH | COMMAND                        |
+      | beta   | git fetch --prune --tags       |
+      |        | git checkout alpha             |
+      | alpha  | git merge --no-edit --ff main  |
+      |        | git push                       |
+      |        | git checkout beta              |
+      | beta   | git merge --no-edit --ff alpha |
+      |        | git push                       |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

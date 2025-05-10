@@ -14,10 +14,8 @@ Feature: append in offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | existing | git merge --no-edit --ff main            |
-      |          | git merge --no-edit --ff origin/existing |
-      |          | git checkout -b new                      |
+      | BRANCH   | COMMAND             |
+      | existing | git checkout -b new |
     And the initial commits exist now
 
   Scenario: undo

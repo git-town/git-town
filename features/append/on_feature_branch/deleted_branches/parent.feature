@@ -23,7 +23,6 @@ Feature: append a branch to a branch whose parent was shipped on the remote
       |        | git branch -D parent                              |
       |        | git checkout child                                |
       | child  | git merge --no-edit --ff main                     |
-      |        | git merge --no-edit --ff origin/child             |
       |        | git push                                          |
       |        | git checkout -b new                               |
     And Git Town prints:

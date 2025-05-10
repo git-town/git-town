@@ -33,7 +33,6 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       |        | git checkout --ours file                          |
       |        | git add file                                      |
       |        | git commit --no-edit                              |
-      |        | git merge --no-edit --ff origin/beta              |
       |        | git push                                          |
     And all branches are now synchronized
     And these commits exist now

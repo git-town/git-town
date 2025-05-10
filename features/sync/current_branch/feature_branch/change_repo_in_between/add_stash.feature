@@ -17,7 +17,6 @@ Feature: adding additional stash entries while resolving conflicts
       | feature | git fetch --prune --tags                |
       |         | git add -A                              |
       |         | git stash -m "Git Town WIP"             |
-      |         | git merge --no-edit --ff main           |
       |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
