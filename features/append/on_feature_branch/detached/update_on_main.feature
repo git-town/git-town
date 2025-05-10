@@ -14,12 +14,11 @@ Feature: append a new feature branch to an existing feature branch in detached m
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | existing | git fetch --prune --tags                 |
-      |          | git merge --no-edit --ff main            |
-      |          | git merge --no-edit --ff origin/existing |
-      |          | git push                                 |
-      |          | git checkout -b new                      |
+      | BRANCH   | COMMAND                       |
+      | existing | git fetch --prune --tags      |
+      |          | git merge --no-edit --ff main |
+      |          | git push                      |
+      |          | git checkout -b new           |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                           |
       | main     | local, origin | main commit                       |

@@ -16,19 +16,15 @@ Feature: sync all feature branches in the presence of uncommitted changes
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                   |
-      | feature-1 | git fetch --prune --tags                  |
-      |           | git add -A                                |
-      |           | git stash -m "Git Town WIP"               |
-      |           | git merge --no-edit --ff main             |
-      |           | git merge --no-edit --ff origin/feature-1 |
-      |           | git checkout feature-2                    |
-      | feature-2 | git merge --no-edit --ff main             |
-      |           | git merge --no-edit --ff origin/feature-2 |
-      |           | git checkout feature-1                    |
-      | feature-1 | git push --tags                           |
-      |           | git stash pop                             |
-      |           | git restore --staged .                    |
+      | BRANCH    | COMMAND                     |
+      | feature-1 | git fetch --prune --tags    |
+      |           | git add -A                  |
+      |           | git stash -m "Git Town WIP" |
+      |           | git checkout feature-2      |
+      | feature-2 | git checkout feature-1      |
+      | feature-1 | git push --tags             |
+      |           | git stash pop               |
+      |           | git restore --staged .      |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, origin | feature 1 commit |

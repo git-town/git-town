@@ -34,11 +34,9 @@ Feature: sync all feature branches
       | main       | git -c rebase.updateRefs=false rebase origin/main       |
       |            | git checkout alpha                                      |
       | alpha      | git merge --no-edit --ff main                           |
-      |            | git merge --no-edit --ff origin/alpha                   |
       |            | git push                                                |
       |            | git checkout beta                                       |
       | beta       | git merge --no-edit --ff main                           |
-      |            | git merge --no-edit --ff origin/beta                    |
       |            | git push                                                |
       |            | git checkout observed                                   |
       | observed   | git -c rebase.updateRefs=false rebase origin/observed   |

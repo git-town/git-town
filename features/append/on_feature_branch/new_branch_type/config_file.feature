@@ -18,11 +18,9 @@ Feature: append a new branch when prototype branches are configured via the conf
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                  |
-      | existing | git fetch --prune --tags                 |
-      |          | git merge --no-edit --ff main            |
-      |          | git merge --no-edit --ff origin/existing |
-      |          | git checkout -b new                      |
+      | BRANCH   | COMMAND                  |
+      | existing | git fetch --prune --tags |
+      |          | git checkout -b new      |
     And branch "new" now has type "prototype"
     And the initial commits exist now
     And this lineage exists now

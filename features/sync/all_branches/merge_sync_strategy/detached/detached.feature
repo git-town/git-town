@@ -33,12 +33,8 @@ Feature: sync all feature branches
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                   |
       | alpha        | git fetch --prune --tags                                  |
-      |              | git merge --no-edit --ff main                             |
-      |              | git merge --no-edit --ff origin/alpha                     |
       |              | git checkout beta                                         |
-      | beta         | git merge --no-edit --ff main                             |
-      |              | git merge --no-edit --ff origin/beta                      |
-      |              | git checkout contribution                                 |
+      | beta         | git checkout contribution                                 |
       | contribution | git -c rebase.updateRefs=false rebase origin/contribution |
       |              | git push                                                  |
       |              | git checkout observed                                     |

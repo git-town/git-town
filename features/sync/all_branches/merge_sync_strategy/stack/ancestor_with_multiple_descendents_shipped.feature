@@ -34,11 +34,9 @@ Feature: shipped branch with multiple descendents
       |            | git branch -D feature-1                           |
       |            | git checkout feature-1a                           |
       | feature-1a | git merge --no-edit --ff main                     |
-      |            | git merge --no-edit --ff origin/feature-1a        |
       |            | git push                                          |
       |            | git checkout feature-1b                           |
       | feature-1b | git merge --no-edit --ff main                     |
-      |            | git merge --no-edit --ff origin/feature-1b        |
       |            | git push                                          |
       |            | git push --tags                                   |
     And Git Town prints:
