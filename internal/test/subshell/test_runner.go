@@ -270,6 +270,11 @@ func (self *TestRunner) Run(name string, arguments ...string) error {
 	return err
 }
 
+func (self *TestRunner) RunWithEnv(env []string, name string, arguments ...string) error {
+	_, err := self.QueryWith(&Options{Env: env, IgnoreOutput: true}, name, arguments...)
+	return err
+}
+
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
 func (self *TestRunner) SetProposalOverride(content string) {
 	self.ProposalOverride = Some(content)
