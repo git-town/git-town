@@ -42,7 +42,7 @@ func ParseGitStatusZ(output string) ([]FileStatus, error) {
 		}
 		path := entry[3:]
 		originalPath := None[string]()
-		if strings.Contains(status, "R") {
+		if strings.Contains(status, "R") || strings.Contains(status, "C") {
 			i++
 			if i >= len(entries) {
 				return nil, fmt.Errorf(messages.InvalidStatusOutput, entry)
