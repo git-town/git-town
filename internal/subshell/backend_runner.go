@@ -49,7 +49,7 @@ func (self BackendRunner) RunWithEnv(env []string, executable string, args ...st
 func (self BackendRunner) execute(env []string, executable string, args ...string) (string, error) {
 	self.CommandsCounter.Value.Inc()
 	if self.Verbose {
-		printHeader(executable, args...)
+		printHeader(env, executable, args...)
 	}
 	subProcess := exec.Command(executable, args...) // #nosec
 	subProcess.Env = append(subProcess.Environ(), env...)
@@ -100,9 +100,13 @@ func containsConcurrentGitAccess(text string) bool {
 	return strings.Contains(text, "fatal: Unable to create '") && strings.Contains(text, "index.lock': File exists.")
 }
 
-func printHeader(cmd string, args ...string) {
+func printHeader(env []string, cmd string, args ...string) {
 	quoted := stringslice.SurroundEmptyWith(args, `"`)
 	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
-	text := "\n(verbose) " + cmd + " " + strings.Join(quoted, " ")
+	text := "\n(verbose) "
+	if len(env) > 0 {
+		text += strings.Join(env, " ") + " "
+	}
+	text += cmd + " " + strings.Join(quoted, " ")
 	fmt.Println(colors.Bold().Styled(text))
 }

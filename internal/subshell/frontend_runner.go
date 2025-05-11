@@ -31,13 +31,15 @@ type FrontendRunner struct {
 
 type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, error)
 
-func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, executable string, args ...string) string {
-	var result string
+func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, env []string, executable string, args ...string) string {
+	result := ""
 	if executable == "git" && printBranch {
-		result = "[" + currentBranch.String() + "] git "
-	} else {
-		result = executable + " "
+		result += "[" + currentBranch.String() + "] "
 	}
+	if len(env) > 0 {
+		result += strings.Join(env, " ") + " "
+	}
+	result += executable + " "
 	quoted := stringslice.SurroundEmptyWith(args, `"`)
 	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
 	result += strings.Join(quoted, " ")
@@ -45,8 +47,8 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, ex
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, cmd string, args ...string) {
-	header := FormatCommand(branch, printBranch, cmd, args...)
+func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, env []string, cmd string, args ...string) {
+	header := FormatCommand(branch, printBranch, env, cmd, args...)
 	fmt.Println()
 	fmt.Println(colors.Bold().Styled(header))
 }
@@ -72,7 +74,7 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(branchName, self.PrintBranchNames, cmd, args...)
+		PrintCommand(branchName, self.PrintBranchNames, env, cmd, args...)
 	}
 	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)
