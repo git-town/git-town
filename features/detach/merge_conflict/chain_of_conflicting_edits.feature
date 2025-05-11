@@ -39,7 +39,7 @@ Feature: detaching a branch from a chain that edits the same file
       |          | git -c rebase.updateRefs=false rebase --onto main branch-1     |
       |          | git checkout --theirs file                                     |
       |          | git add file                                                   |
-      |          | git -c core.editor=true rebase --continue                      |
+      |          | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease --force-if-includes                |
       |          | git checkout branch-3                                          |
       | branch-3 | git pull                                                       |
@@ -50,7 +50,7 @@ Feature: detaching a branch from a chain that edits the same file
       |          | git -c rebase.updateRefs=false rebase --onto branch-3 branch-2 |
       |          | git checkout --theirs file                                     |
       |          | git add file                                                   |
-      |          | git -c core.editor=true rebase --continue                      |
+      |          | GIT_EDITOR=true git rebase --continue                          |
       |          | git push --force-with-lease                                    |
       |          | git checkout branch-2                                          |
     And these commits exist now

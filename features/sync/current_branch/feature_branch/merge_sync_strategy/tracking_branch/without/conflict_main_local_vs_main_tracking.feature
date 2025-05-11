@@ -62,12 +62,12 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                   |
-      | main    | git -c core.editor=true rebase --continue |
-      |         | git push                                  |
-      |         | git checkout feature                      |
-      | feature | git merge --no-edit --ff main             |
-      |         | git push                                  |
+      | BRANCH  | COMMAND                               |
+      | main    | GIT_EDITOR=true git rebase --continue |
+      |         | git push                              |
+      |         | git checkout feature                  |
+      | feature | git merge --no-edit --ff main         |
+      |         | git push                              |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now

@@ -54,7 +54,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git -c core.editor=true rebase --continue       |
+      | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
       |         | git -c rebase.updateRefs=false rebase main      |
     And no rebase is now in progress
@@ -69,7 +69,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git -c core.editor=true rebase --continue       |
+      | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git push --force-with-lease --force-if-includes |
       |         | git -c rebase.updateRefs=false rebase main      |
     And all branches are now synchronized
