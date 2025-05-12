@@ -27,8 +27,7 @@ Feature: sync before proposing
       | child  | git fetch --prune --tags                                                  |
       | (none) | Looking for proposal online ... ok                                        |
       | child  | git checkout parent                                                       |
-      | parent | git merge --no-edit --ff main                                             |
-      |        | git merge --no-edit --ff origin/parent                                    |
+      | parent | git merge --no-edit --ff origin/parent                                    |
       |        | git push                                                                  |
       |        | git checkout child                                                        |
       | child  | git merge --no-edit --ff parent                                           |
@@ -44,7 +43,5 @@ Feature: sync before proposing
       |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
       | parent | local, origin | local parent commit                                      |
-      |        |               | Merge branch 'main' into parent                          |
       |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        | origin        | local main commit                                        |
