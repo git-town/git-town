@@ -296,6 +296,8 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
+	case syncAllBranches.Enabled() && detached.IsTrue():
+		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case syncStack.Enabled():
@@ -332,7 +334,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	}
 	allBranchNamesToSync := validatedConfig.NormalConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	if detached {
-		allBranchNamesToSync = validatedConfig.RemovePerennials(allBranchNamesToSync)
+		allBranchNamesToSync = allBranchNamesToSync.Remove(perennialAndMain...)
 	}
 	branchInfosToSync, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, allBranchNamesToSync...)
 	branchesToSync, err := BranchesToSync(branchInfosToSync, branchesSnapshot.Branches, repo, validatedConfig.ValidatedConfigData.MainBranch)
