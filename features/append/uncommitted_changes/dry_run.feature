@@ -12,7 +12,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And an uncommitted file
     When I run "git-town append new --dry-run"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                     |
