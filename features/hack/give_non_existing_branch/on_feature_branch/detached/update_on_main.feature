@@ -6,9 +6,10 @@ Feature: on a feature branch with a clean workspace in detached mode with update
       | NAME     | TYPE    | PARENT | LOCATIONS     |
       | existing | feature | main   | local, origin |
     And the commits
-      | BRANCH   | LOCATION | MESSAGE         |
-      | main     | local    | main commit     |
-      | existing | local    | existing commit |
+      | BRANCH   | LOCATION | MESSAGE            |
+      | main     | local    | local main commit  |
+      |          | origin   | origin main commit |
+      | existing | local    | existing commit    |
     And the current branch is "existing"
     When I run "git-town hack new --detached"
 
