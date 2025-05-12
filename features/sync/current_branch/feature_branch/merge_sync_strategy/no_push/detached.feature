@@ -23,8 +23,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff main         |
-      |        | git merge --no-edit --ff origin/alpha |
+      | alpha  | git merge --no-edit --ff origin/alpha |
       |        | git checkout beta                     |
       | beta   | git merge --no-edit --ff alpha        |
       |        | git merge --no-edit --ff origin/beta  |
@@ -33,7 +32,6 @@ Feature: detached syncing a stacked feature branch using --no-push
       | main   | local         | local main commit                                      |
       |        | origin        | origin main commit                                     |
       | alpha  | local         | local alpha commit                                     |
-      |        |               | Merge branch 'main' into alpha                         |
       |        | local, origin | origin alpha commit                                    |
       |        | local         | Merge remote-tracking branch 'origin/alpha' into alpha |
       | beta   | local         | local beta commit                                      |
