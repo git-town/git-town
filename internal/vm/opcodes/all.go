@@ -97,6 +97,7 @@ func All() []shared.Opcode {
 		&StashDrop{},
 		&StashOpenChanges{},
 		&StashPopIfExists{},
+		&StashPopIfNeeded{},
 		&StashPop{},
 		&SyncFeatureBranchCompress{},
 		&SyncFeatureBranchMerge{},
