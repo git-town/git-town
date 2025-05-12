@@ -31,13 +31,15 @@ type FrontendRunner struct {
 
 type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, error)
 
-func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, executable string, args ...string) string {
-	var result string
+func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, env []string, executable string, args ...string) string {
+	result := ""
 	if executable == "git" && printBranch {
-		result = "[" + currentBranch.String() + "] git "
-	} else {
-		result = executable + " "
+		result += "[" + currentBranch.String() + "] "
 	}
+	if len(env) > 0 {
+		result += strings.Join(env, " ") + " "
+	}
+	result += executable + " "
 	quoted := stringslice.SurroundEmptyWith(args, `"`)
 	quoted = stringslice.SurroundSpacesWith(quoted, `"`)
 	result += strings.Join(quoted, " ")
@@ -45,14 +47,22 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, ex
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, cmd string, args ...string) {
-	header := FormatCommand(branch, printBranch, cmd, args...)
+func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, env []string, cmd string, args ...string) {
+	header := FormatCommand(branch, printBranch, env, cmd, args...)
 	fmt.Println()
 	fmt.Println(colors.Bold().Styled(header))
 }
 
-// Run runs the given command in this ShellRunner's directory.
-func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
+func (self *FrontendRunner) Run(cmd string, args ...string) error {
+	return self.execute([]string{}, cmd, args...)
+}
+
+func (self *FrontendRunner) RunWithEnv(env []string, cmd string, args ...string) error {
+	return self.execute(env, cmd, args...)
+}
+
+// runs the given command in this ShellRunner's directory.
+func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (err error) {
 	self.CommandsCounter.Value.Inc()
 	var branchName gitdomain.LocalBranchName
 	if self.PrintBranchNames {
@@ -62,7 +72,7 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(branchName, self.PrintBranchNames, cmd, args...)
+		PrintCommand(branchName, self.PrintBranchNames, env, cmd, args...)
 	}
 	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)
@@ -71,6 +81,7 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	concurrentGitRetriesLeft := concurrentGitRetries
 	for {
 		subProcess := exec.Command(cmd, args...)
+		subProcess.Env = append(subProcess.Environ(), env...)
 		var stderrBuffer bytes.Buffer // we only need to look at STDERR since that's where Git will print error messages
 		subProcess.Stderr = io.MultiWriter(os.Stderr, &stderrBuffer)
 		subProcess.Stdin = os.Stdin

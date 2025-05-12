@@ -18,8 +18,16 @@ type FrontendDryRunner struct {
 	PrintCommands    bool
 }
 
+func (self *FrontendDryRunner) Run(cmd string, args ...string) error {
+	return self.execute([]string{}, cmd, args...)
+}
+
+func (self *FrontendDryRunner) RunWithEnv(env []string, cmd string, args ...string) error {
+	return self.execute(env, cmd, args...)
+}
+
 // Run runs the given command in this ShellRunner's directory.
-func (self *FrontendDryRunner) Run(executable string, args ...string) error {
+func (self *FrontendDryRunner) execute(env []string, executable string, args ...string) error {
 	var currentBranch gitdomain.LocalBranchName
 	if self.PrintBranchNames {
 		var err error
@@ -29,7 +37,7 @@ func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 		}
 	}
 	if self.PrintCommands {
-		PrintCommand(currentBranch, self.PrintBranchNames, executable, args...)
+		PrintCommand(currentBranch, self.PrintBranchNames, env, executable, args...)
 		fmt.Println("(dry run)")
 	}
 	return nil

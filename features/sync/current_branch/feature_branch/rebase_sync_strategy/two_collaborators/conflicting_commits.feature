@@ -55,7 +55,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And the coworker runs "git town continue" and closes the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
-      | feature | git -c core.editor=true rebase --continue       |
+      | feature | GIT_EDITOR=true git rebase --continue           |
       |         | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
@@ -83,7 +83,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And I run "git town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                             |
-      | feature | git -c core.editor=true rebase --continue                                           |
+      | feature | GIT_EDITOR=true git rebase --continue                                               |
       |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'persisted config file' }} |
       |         | git push --force-with-lease --force-if-includes                                     |
     And all branches are now synchronized
