@@ -26,7 +26,7 @@ func NewStashDiff(before, after gitdomain.StashSize) StashDiff {
 func (self StashDiff) Program() program.Program {
 	result := program.Program{}
 	for ; self.EntriesAdded > 0; self.EntriesAdded-- {
-		result.Add(&opcodes.StashPopIfNeeded{})
+		result.Add(&opcodes.StashPopIfExists{})
 	}
 	return result
 }

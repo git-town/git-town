@@ -126,7 +126,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.SnapshotInitialUpdateLocalSHAIfNeeded{Branch: "branch"},
 				&opcodes.StashDrop{},
 				&opcodes.StashPop{},
-				&opcodes.StashPopIfNeeded{},
+				&opcodes.StashPopIfExists{},
 				&opcodes.StashOpenChanges{},
 				&opcodes.SyncFeatureBranchCompress{CommitMessage: Some(gitdomain.CommitMessage("commit message")), CurrentBranch: "branch", Offline: true, InitialParentName: gitdomain.NewLocalBranchNameOption("parent"), InitialParentSHA: Some(gitdomain.NewSHA("111111")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 				&opcodes.SyncFeatureBranchMerge{Branch: "branch", InitialParentName: gitdomain.NewLocalBranchNameOption("original-parent"), InitialParentSHA: Some(gitdomain.NewSHA("123456")), TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
