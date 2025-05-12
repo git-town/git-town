@@ -129,6 +129,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,

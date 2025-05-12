@@ -311,6 +311,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		commitsToBeam:             commitsToBeam,
 		config:                    validatedConfig,
 		connector:                 connector,
+		detached:                  detached,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
