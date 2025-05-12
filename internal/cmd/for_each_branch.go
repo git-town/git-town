@@ -7,18 +7,17 @@ import (
 
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v20/internal/cli/flags"
-	"github.com/git-town/git-town/v20/internal/cli/print"
 	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v20/internal/config"
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/execute"
-	"github.com/git-town/git-town/v20/internal/forge"
 	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/optimizer"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
@@ -31,6 +30,8 @@ const (
 	forEachDesc = "Executes the given shell command on each branch"
 	forEachHelp = `
 Executes the given shell command on each branch.
+Stops when the shell command exits with an error.
+You can continue and undo Git operations.
 
 Consider this stack:
 
@@ -52,8 +53,10 @@ it prints this output.
 )
 
 func forEachCommand() *cobra.Command {
-	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addAllFlag, readAllFlag := flags.All("sync all local branches")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     forEachCmd,
 		Args:    cobra.ArbitraryArgs,
@@ -61,7 +64,15 @@ func forEachCommand() *cobra.Command {
 		Short:   forEachDesc,
 		Long:    cmdhelpers.Long(forEachDesc, forEachHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			allBranches, err := readAllFlag(cmd)
+			if err != nil {
+				return err
+			}
 			dryRun, err := readDryRunFlag(cmd)
+			if err != nil {
+				return err
+			}
+			stack, err := readStackFlag(cmd)
 			if err != nil {
 				return err
 			}
@@ -69,15 +80,17 @@ func forEachCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeForEach(dryRun, verbose)
+			return executeForEach(dryRun, allBranches, stack, verbose)
 		},
 	}
+	addAllFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addStackFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeForEach(dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executeForEach(dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -89,7 +102,7 @@ func executeForEach(dryRun configdomain.DryRun, verbose configdomain.Verbose) er
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineForEachData(repo, verbose)
+	data, exit, err := determineForEachData(repo, allBranches, fullStack, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -133,35 +146,20 @@ func executeForEach(dryRun configdomain.DryRun, verbose configdomain.Verbose) er
 }
 
 type forEachData struct {
+	allBranches        configdomain.AllBranches
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
+	branchesToIterate  gitdomain.LocalBranchNames
 	config             config.ValidatedConfig
-	// connector                       Option[forgedomain.Connector]
-	dialogTestInputs components.TestInputs
-	// grandParentBranch               gitdomain.LocalBranchName
-	hasOpenChanges bool
-	initialBranch  gitdomain.LocalBranchName
-	// initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
-	// initialBranchInfo               gitdomain.BranchInfo
-	// initialBranchProposal           Option[forgedomain.Proposal]
-	// initialBranchType               configdomain.BranchType
-	// offline                         configdomain.Offline
-	// parentBranch                    gitdomain.LocalBranchName
-	// parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
-	// parentBranchInfo                gitdomain.BranchInfo
-	// parentBranchProposal            Option[forgedomain.Proposal]
-	// parentBranchType                configdomain.BranchType
-	// prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
-	previousBranch Option[gitdomain.LocalBranchName]
-	// remotes                         gitdomain.Remotes
-	stashSize gitdomain.StashSize
+	dialogTestInputs   components.TestInputs
+	hasOpenChanges     bool
+	initialBranch      gitdomain.LocalBranchName
+	previousBranch     Option[gitdomain.LocalBranchName]
+	fullStack          configdomain.FullStack
+	stashSize          gitdomain.StashSize
 }
 
-func determineForEachData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (forEachData, bool, error) {
-	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return forEachData{}, false, err
-	}
+func determineForEachData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (forEachData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -188,22 +186,19 @@ func determineForEachData(repo execute.OpenRepoResult, verbose configdomain.Verb
 	if err != nil || exit {
 		return forEachData{}, exit, err
 	}
+	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return forEachData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
-	if err != nil {
-		return forEachData{}, false, err
-	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		Connector:          connectorOpt,
+		Connector:          None[forgedomain.Connector](),
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -215,78 +210,32 @@ func determineForEachData(repo execute.OpenRepoResult, verbose configdomain.Verb
 	if err != nil || exit {
 		return forEachData{}, exit, err
 	}
-	parentBranch, hasParentBranch := validatedConfig.NormalConfig.Lineage.Parent(initialBranch).Get()
-	if !hasParentBranch {
-		return forEachData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
-	}
-	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
-	if !hasGrandParentBranch {
-		return forEachData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
-	}
-	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return forEachData{}, false, err
-	}
-	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
-	if !hasInitialBranchInfo {
-		return forEachData{}, false, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
-	}
-	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
-	if !hasParentBranchInfo {
-		return forEachData{}, false, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
-	}
-	initialBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, initialBranch.BranchName(), parentBranch.BranchName())
-	if err != nil {
-		return forEachData{}, false, err
-	}
-	initialBranchType := validatedConfig.BranchType(initialBranch)
-	parentBranchType := validatedConfig.BranchType(parentBranch)
-	parentBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, parentBranch.BranchName(), grandParentBranch.BranchName())
-	if err != nil {
-		return forEachData{}, false, err
-	}
-	initialBranchProposal := None[forgedomain.Proposal]()
-	parentBranchProposal := None[forgedomain.Proposal]()
-	if connector, hasConnector := connectorOpt.Get(); hasConnector {
-		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
-			initialBranchProposal, err = findProposal(initialBranch, parentBranch)
-			if err != nil {
-				print.Error(err)
-			}
-			parentBranchProposal, err = findProposal(initialBranch, parentBranch)
-			if err != nil {
-				print.Error(err)
-			}
-		}
+	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
+	branchesToIterate := gitdomain.LocalBranchNames{}
+	switch {
+	case all.Enabled():
+		branchesToIterate = localBranches
+	case stack.Enabled():
+		branchesToIterate = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
 	}
 	return forEachData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
+		branchesToIterate:  branchesToIterate,
 		config:             validatedConfig,
 		dialogTestInputs:   dialogTestInputs,
-		// grandParentBranch:               grandParentBranch,
-		hasOpenChanges: repoStatus.OpenChanges,
-		initialBranch:  initialBranch,
-		// initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
-		// initialBranchInfo:               *initialBranchInfo,
-		// initialBranchProposal:           initialBranchProposal,
-		// initialBranchType:               initialBranchType,
-		// offline:                         repo.IsOffline,
-		// parentBranch:                    parentBranch,
-		// parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
-		// parentBranchInfo:                *parentBranchInfo,
-		// parentBranchProposal:            parentBranchProposal,
-		// parentBranchType:                parentBranchType,
-		// prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
-		previousBranch: previousBranch,
-		// remotes:                         remotes,
-		stashSize: stashSize,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		previousBranch:     previousBranch,
+		stashSize:          stashSize,
 	}, false, err
 }
 
 func forEachProgram(data forEachData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
+	for _, branchToIterate := range data.branchesToIterate {
+		prog.Value.Add(&opcodes.ExecuteShellCommand{})
+	}
 
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
@@ -299,5 +248,11 @@ func forEachProgram(data forEachData, dryRun configdomain.DryRun) program.Progra
 }
 
 func validateForEachData(repo execute.OpenRepoResult, data forEachData) error {
+	if data.allBranches.Enabled() && data.fullStack.Enabled() {
+		return fmt.Errorf("Please don't enable both --all or --stack, just one of them")
+	}
+	if !data.allBranches.Enabled() && !data.fullStack.Enabled() {
+		return fmt.Errorf("Please enable either --all or --stack")
+	}
 	return nil
 }
