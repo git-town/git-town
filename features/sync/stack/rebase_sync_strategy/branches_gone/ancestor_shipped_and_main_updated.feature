@@ -14,12 +14,14 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | branch-2 | local, origin | commit 2 | file      | content 2    |
+    And wait 1 second to ensure new Git timestamps
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-3 | feature | branch-2 | local, origin |
     And the commits
       | BRANCH   | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | branch-3 | local, origin | commit 3 | file      | content 3    |
+    And wait 1 second to ensure new Git timestamps
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS     |
       | branch-4 | feature | branch-3 | local, origin |
