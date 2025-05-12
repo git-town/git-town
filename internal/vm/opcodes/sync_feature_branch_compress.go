@@ -29,7 +29,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 		}
 		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parentLocalName)
 		skipParent := args.Detached.IsTrue() && parentIsPerennial
-		if !inSyncWithParent || skipParent {
+		if !inSyncWithParent && !skipParent {
 			opcodes = append(opcodes, &SyncFeatureBranchMerge{
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
