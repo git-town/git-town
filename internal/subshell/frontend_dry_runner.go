@@ -19,13 +19,11 @@ type FrontendDryRunner struct {
 }
 
 func (self *FrontendDryRunner) Run(cmd string, args ...string) error {
-	err := self.execute([]string{}, cmd, args...)
-	return err
+	return self.execute([]string{}, cmd, args...)
 }
 
 func (self *FrontendDryRunner) RunWithEnv(env []string, cmd string, args ...string) error {
-	err := self.execute(env, cmd, args...)
-	return err
+	return self.execute(env, cmd, args...)
 }
 
 // Run runs the given command in this ShellRunner's directory.

@@ -54,13 +54,11 @@ func PrintCommand(branch gitdomain.LocalBranchName, printBranch bool, env []stri
 }
 
 func (self *FrontendRunner) Run(cmd string, args ...string) error {
-	err := self.execute([]string{}, cmd, args...)
-	return err
+	return self.execute([]string{}, cmd, args...)
 }
 
 func (self *FrontendRunner) RunWithEnv(env []string, cmd string, args ...string) error {
-	err := self.execute(env, cmd, args...)
-	return err
+	return self.execute(env, cmd, args...)
 }
 
 // runs the given command in this ShellRunner's directory.
