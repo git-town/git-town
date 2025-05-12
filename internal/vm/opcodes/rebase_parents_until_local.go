@@ -28,10 +28,16 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor
-			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote)
-			program = append(program, &RebaseBranch{
-				Branch: parentTrackingName.BranchName(),
-			})
+			parentTrackingName := parent.AtRemote(args.Config.Value.NormalConfig.DevRemote).BranchName()
+			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, parentTrackingName)
+			if err != nil {
+				return err
+			}
+			if !isInSync {
+				program = append(program, &RebaseBranch{
+					Branch: parentTrackingName,
+				})
+			}
 			branch = parent
 			continue
 		}
@@ -42,19 +48,23 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		} else {
 			branchToRebase = parent.BranchName()
 		}
-		var opcode shared.Opcode
 		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
-			opcode = &RebaseOntoKeepDeleted{
+			program = append(program, &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    previousParentSHA.Location(),
 				Upstream:           None[gitdomain.LocalBranchName](),
-			}
+			})
 		} else {
-			opcode = &RebaseBranch{
-				Branch: branchToRebase,
+			isInSync, err := args.Git.BranchInSyncWithParent(args.Backend, self.Branch, branchToRebase)
+			if err != nil {
+				return err
+			}
+			if !isInSync {
+				program = append(program, &RebaseBranch{
+					Branch: branchToRebase,
+				})
 			}
 		}
-		program = append(program, opcode)
 		break
 	}
 	args.PrependOpcodes(program...)

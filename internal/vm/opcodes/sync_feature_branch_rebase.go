@@ -27,20 +27,26 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	}
 	if trackingBranch, hasTrackingBranch := self.TrackingBranch.Get(); hasTrackingBranch {
 		if args.Config.Value.NormalConfig.Offline.IsOnline() {
-			program = append(program,
-				&RebaseTrackingBranch{
-					PushBranches: self.PushBranches,
-					RemoteBranch: trackingBranch,
-				},
-				&RebaseParentsUntilLocal{
-					Branch:      self.Branch,
-					PreviousSHA: self.ParentLastRunSHA,
-				},
-				&PushCurrentBranchForceIfNeeded{
-					CurrentBranch:   self.Branch,
-					ForceIfIncludes: true,
-				},
-			)
+			isInSync, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+			if err != nil {
+				return err
+			}
+			if !isInSync {
+				program = append(program,
+					&RebaseTrackingBranch{
+						PushBranches: self.PushBranches,
+						RemoteBranch: trackingBranch,
+					},
+					&RebaseParentsUntilLocal{
+						Branch:      self.Branch,
+						PreviousSHA: self.ParentLastRunSHA,
+					},
+					&PushCurrentBranchForceIfNeeded{
+						CurrentBranch:   self.Branch,
+						ForceIfIncludes: true,
+					},
+				)
+			}
 		}
 	}
 	args.PrependOpcodes(program...)

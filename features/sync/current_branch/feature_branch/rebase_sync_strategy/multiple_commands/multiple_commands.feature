@@ -27,12 +27,8 @@ Feature: running a sync after running another Git Town command
       | child  | git fetch --prune --tags                                                            |
       |        | git checkout parent                                                                 |
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha 'local main commit' }}     |
-      |        | git push --force-with-lease --force-if-includes                                     |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'local main commit' }}     |
       |        | git checkout child                                                                  |
       | child  | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'local parent commit' }} |
-      |        | git push --force-with-lease --force-if-includes                                     |
-      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'local parent commit' }} |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
