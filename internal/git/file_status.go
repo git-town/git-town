@@ -11,9 +11,9 @@ import (
 
 // information about each file reported by "git status -z"
 type FileStatus struct {
-	Path        string         // the path to the file
-	RenamedFrom Option[string] // if the file was renamed, the old path of the file
-	ShortStatus string         // a two-letter status code, explained at https://git-scm.com/docs/git-status#_short_format
+	OriginalPath Option[string] // if the file was renamed or copied, the old path of the file
+	Path         string         // the path to the file
+	ShortStatus  string         // a two-letter status code, explained at https://git-scm.com/docs/git-status#_short_format
 }
 
 func FileStatusIsUnmerged(status FileStatus) bool {
@@ -41,22 +41,22 @@ func ParseGitStatusZ(output string) ([]FileStatus, error) {
 			return nil, fmt.Errorf(messages.InvalidStatusOutput, entry)
 		}
 		path := entry[3:]
-		renamedFrom := None[string]()
-		if strings.Contains(status, "R") {
+		originalPath := None[string]()
+		if strings.Contains(status, "R") || strings.Contains(status, "C") {
 			i++
 			if i >= len(entries) {
 				return nil, fmt.Errorf(messages.InvalidStatusOutput, entry)
 			}
-			renamedFromString := entries[i]
-			if renamedFromString == "" {
+			originalPathString := entries[i]
+			if originalPathString == "" {
 				return nil, fmt.Errorf(messages.InvalidStatusOutput, entry)
 			}
-			renamedFrom = Some(renamedFromString)
+			originalPath = Some(originalPathString)
 		}
 		result = append(result, FileStatus{
-			Path:        path,
-			RenamedFrom: renamedFrom,
-			ShortStatus: status,
+			OriginalPath: originalPath,
+			Path:         path,
+			ShortStatus:  status,
 		})
 	}
 	return result, nil

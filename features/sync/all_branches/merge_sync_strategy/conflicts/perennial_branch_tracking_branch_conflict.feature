@@ -69,7 +69,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
-      | beta   | git -c core.editor=true rebase --continue         |
+      | beta   | GIT_EDITOR=true git rebase --continue             |
       |        | git push                                          |
       |        | git checkout main                                 |
       | main   | git -c rebase.updateRefs=false rebase origin/main |

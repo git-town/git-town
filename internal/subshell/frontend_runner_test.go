@@ -21,7 +21,7 @@ func TestFormat(t *testing.T) {
 		`git config perennial-branches ""`: {printBranch: false, branch: "branch", executable: "git", args: []string{"config", "perennial-branches", ""}},
 	}
 	for want, give := range tests {
-		have := subshell.FormatCommand(give.branch, give.printBranch, give.executable, give.args...)
+		have := subshell.FormatCommand(give.branch, give.printBranch, []string{}, give.executable, give.args...)
 		must.EqOp(t, want, have)
 	}
 }

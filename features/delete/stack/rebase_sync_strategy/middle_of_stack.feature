@@ -33,7 +33,7 @@ Feature: deleting a branch that conflicts with the main branch
       | feature-3 | git pull                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2 |
       |           | git rm file                                                 |
-      |           | git -c core.editor=true rebase --continue                   |
+      |           | GIT_EDITOR=true git rebase --continue                       |
       |           | git push --force-with-lease                                 |
       |           | git branch -D feature-2                                     |
     And the branches are now

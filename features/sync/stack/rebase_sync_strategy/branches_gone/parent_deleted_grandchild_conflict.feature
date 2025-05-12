@@ -28,7 +28,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git -c rebase.updateRefs=false rebase --onto main child |
       |            | git checkout --theirs conflicting_file                  |
       |            | git add conflicting_file                                |
-      |            | git -c core.editor=true rebase --continue               |
+      |            | GIT_EDITOR=true git rebase --continue                   |
       |            | git push --force-with-lease                             |
       |            | git branch -D child                                     |
       |            | git push --tags                                         |

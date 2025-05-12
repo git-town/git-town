@@ -55,7 +55,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | prototype | git -c core.editor=true rebase --continue       |
+      | prototype | GIT_EDITOR=true git rebase --continue           |
       |           | git -c rebase.updateRefs=false rebase main      |
       |           | git push --force-with-lease --force-if-includes |
     And these commits exist now

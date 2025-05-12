@@ -30,7 +30,7 @@ Feature: remove a branch from a stack
       | branch-3 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
       |          | git add file_1                                             |
-      |          | git -c core.editor=true rebase --continue                  |
+      |          | GIT_EDITOR=true git rebase --continue                      |
       |          | git push --force-with-lease --force-if-includes            |
     And Git Town prints:
       """

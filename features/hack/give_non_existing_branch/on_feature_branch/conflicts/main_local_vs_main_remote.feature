@@ -45,10 +45,10 @@ Feature: conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                   |
-      | main   | git -c core.editor=true rebase --continue |
-      |        | git push                                  |
-      |        | git checkout -b new                       |
+      | BRANCH | COMMAND                               |
+      | main   | GIT_EDITOR=true git rebase --continue |
+      |        | git push                              |
+      |        | git checkout -b new                   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |

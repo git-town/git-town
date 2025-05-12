@@ -11,6 +11,21 @@ import (
 func TestParseGitStatusZ(t *testing.T) {
 	t.Parallel()
 
+	t.Run("copied file", func(t *testing.T) {
+		t.Parallel()
+		give := "C  vendor/golang.org/x/mod/PATENTS\x00vendor/golang.org/x/exp/PATENTS\x00"
+		have, err := git.ParseGitStatusZ(give)
+		must.NoError(t, err)
+		want := []git.FileStatus{
+			{
+				OriginalPath: Some("vendor/golang.org/x/exp/PATENTS"),
+				Path:         "vendor/golang.org/x/mod/PATENTS",
+				ShortStatus:  "C ",
+			},
+		}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("one file", func(t *testing.T) {
 		t.Parallel()
 		give := " M internal/git/parse_git_status_z.go\x00"
@@ -18,9 +33,9 @@ func TestParseGitStatusZ(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileStatus{
 			{
-				ShortStatus: " M",
-				Path:        "internal/git/parse_git_status_z.go",
-				RenamedFrom: None[string](),
+				OriginalPath: None[string](),
+				Path:         "internal/git/parse_git_status_z.go",
+				ShortStatus:  " M",
 			},
 		}
 		must.Eq(t, want, have)
@@ -33,9 +48,9 @@ func TestParseGitStatusZ(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileStatus{
 			{
-				ShortStatus: "R ",
-				Path:        "internal/git/parse_git_status_z.go",
-				RenamedFrom: Some("internal/git/parse_git_status.go"),
+				OriginalPath: Some("internal/git/parse_git_status.go"),
+				Path:         "internal/git/parse_git_status_z.go",
+				ShortStatus:  "R ",
 			},
 		}
 		must.Eq(t, want, have)
@@ -48,14 +63,14 @@ func TestParseGitStatusZ(t *testing.T) {
 		must.NoError(t, err)
 		want := []git.FileStatus{
 			{
-				ShortStatus: " M",
-				Path:        "internal/git/parse_git_status_z.go",
-				RenamedFrom: None[string](),
+				OriginalPath: None[string](),
+				Path:         "internal/git/parse_git_status_z.go",
+				ShortStatus:  " M",
 			},
 			{
-				ShortStatus: " M",
-				Path:        "internal/git/parse_git_status_z_test.go",
-				RenamedFrom: None[string](),
+				OriginalPath: None[string](),
+				Path:         "internal/git/parse_git_status_z_test.go",
+				ShortStatus:  " M",
 			},
 		}
 		must.Eq(t, want, have)
