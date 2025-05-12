@@ -7,7 +7,7 @@ Feature: two people using rebase make conflicting changes to a branch
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "rebase"
       """
@@ -19,6 +19,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
+    #
     # I make a commit and sync
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT |
@@ -32,6 +33,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
       | feature | local, origin | my first commit | file.txt  | my content   |
     And all branches are now synchronized
+    #
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME | FILE CONTENT     |
@@ -57,6 +59,7 @@ Feature: two people using rebase make conflicting changes to a branch
       | BRANCH  | LOCATION                | MESSAGE               | FILE NAME | FILE CONTENT            |
       | feature | local, coworker, origin | my first commit       | file.txt  | my content              |
       |         | coworker, origin        | coworker first commit | file.txt  | my and coworker content |
+    #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |
