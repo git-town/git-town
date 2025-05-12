@@ -12,13 +12,42 @@ import (
 func FeatureBranchProgram(syncStrategy configdomain.SyncStrategy, args featureBranchArgs) {
 	switch syncStrategy {
 	case configdomain.SyncStrategyCompress:
-		syncFeatureBranchCompress(args)
+		args.program.Value.Add(
+			&opcodes.SyncFeatureBranchCompress{
+				CurrentBranch:     args.localName,
+				CommitMessage:     args.firstCommitMessage,
+				Offline:           args.offline,
+				InitialParentName: args.initialParentName,
+				InitialParentSHA:  args.initialParentSHA,
+				TrackingBranch:    args.trackingBranch,
+			},
+		)
 	case configdomain.SyncStrategyFFOnly:
-		syncFeatureBranchFFOnly(args)
+		// The ff-only strategy does not sync with the parent branch.
+		// It is intended for perennial branches only.
+		if args.offline.IsOnline() {
+			if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
+				args.program.Value.Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
+			}
+		}
 	case configdomain.SyncStrategyMerge:
-		syncFeatureBranchMerge(args)
+		args.program.Value.Add(
+			&opcodes.SyncFeatureBranchMerge{
+				Branch:            args.localName,
+				InitialParentName: args.initialParentName,
+				InitialParentSHA:  args.initialParentSHA,
+				TrackingBranch:    args.trackingBranch,
+			},
+		)
 	case configdomain.SyncStrategyRebase:
-		syncFeatureBranchRebase(args)
+		args.program.Value.Add(
+			&opcodes.SyncFeatureBranchRebase{
+				Branch:           args.localName,
+				ParentLastRunSHA: args.parentLastRunSHA,
+				PushBranches:     args.pushBranches,
+				TrackingBranch:   args.trackingBranch,
+			},
+		)
 	}
 	if args.prune {
 		args.program.Value.Add(&opcodes.BranchDeleteIfEmptyAtRuntime{Branch: args.localName})
@@ -36,50 +65,4 @@ type featureBranchArgs struct {
 	prune              configdomain.Prune
 	pushBranches       configdomain.PushBranches
 	trackingBranch     Option[gitdomain.RemoteBranchName]
-}
-
-func syncFeatureBranchCompress(args featureBranchArgs) {
-	args.program.Value.Add(
-		&opcodes.SyncFeatureBranchCompress{
-			CurrentBranch:     args.localName,
-			CommitMessage:     args.firstCommitMessage,
-			Offline:           args.offline,
-			InitialParentName: args.initialParentName,
-			InitialParentSHA:  args.initialParentSHA,
-			TrackingBranch:    args.trackingBranch,
-		},
-	)
-}
-
-func syncFeatureBranchFFOnly(args featureBranchArgs) {
-	// The ff-only strategy does not sync with the parent branch.
-	// It is intended for perennial branches only.
-	if args.offline.IsOnline() {
-		if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
-			args.program.Value.Add(&opcodes.MergeFastForward{Branch: trackingBranch.BranchName()})
-		}
-	}
-}
-
-func syncFeatureBranchMerge(args featureBranchArgs) {
-	args.program.Value.Add(
-		&opcodes.SyncFeatureBranchMerge{
-			Branch:            args.localName,
-			InitialParentName: args.initialParentName,
-			InitialParentSHA:  args.initialParentSHA,
-			TrackingBranch:    args.trackingBranch,
-		},
-	)
-}
-
-// TODO: inline all these helper functions since all they do now is add a single opcode
-func syncFeatureBranchRebase(args featureBranchArgs) {
-	args.program.Value.Add(
-		&opcodes.SyncFeatureBranchRebase{
-			Branch:           args.localName,
-			ParentLastRunSHA: args.parentLastRunSHA,
-			PushBranches:     args.pushBranches,
-			TrackingBranch:   args.trackingBranch,
-		},
-	)
 }
