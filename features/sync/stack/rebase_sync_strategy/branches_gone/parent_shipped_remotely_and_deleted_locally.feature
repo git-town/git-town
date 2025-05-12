@@ -25,7 +25,6 @@ Feature: syncing a branch whose parent was shipped and the local branch deleted 
       |        | git checkout child                                |
       | child  | git -c rebase.updateRefs=false rebase main        |
       |        | git push --force-with-lease --force-if-includes   |
-      |        | git -c rebase.updateRefs=false rebase main        |
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |

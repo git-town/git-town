@@ -19,7 +19,7 @@ Feature: two people using rebase make conflicting changes to a branch
     And the coworker fetches updates
     And the coworker is on the "feature" branch
     And the coworker sets the parent branch of "feature" as "main"
-
+    #
     # I make a commit and sync
     Given I add this commit to the current branch:
       | MESSAGE         | FILE NAME | FILE CONTENT |
@@ -28,14 +28,12 @@ Feature: two people using rebase make conflicting changes to a branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git -c rebase.updateRefs=false rebase main      |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME | FILE CONTENT |
       | feature | local, origin | my first commit | file.txt  | my content   |
     And all branches are now synchronized
-
+    #
     # coworker makes a conflicting local commit concurrently with me and then syncs
     Given the coworker adds this commit to their current branch:
       | MESSAGE               | FILE NAME | FILE CONTENT     |
@@ -44,7 +42,6 @@ Feature: two people using rebase make conflicting changes to a branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git -c rebase.updateRefs=false rebase main           |
       |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
     And Git Town prints the error:
@@ -56,14 +53,13 @@ Feature: two people using rebase make conflicting changes to a branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | GIT_EDITOR=true git rebase --continue           |
-      |         | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE               | FILE NAME | FILE CONTENT            |
       | feature | local, coworker, origin | my first commit       | file.txt  | my content              |
       |         | coworker, origin        | coworker first commit | file.txt  | my and coworker content |
-
+    #
     # I add a conflicting commit locally and then sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT   |

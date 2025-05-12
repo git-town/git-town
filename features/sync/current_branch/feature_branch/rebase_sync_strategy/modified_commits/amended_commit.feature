@@ -30,7 +30,6 @@ Feature: rebase a branch that contains amended commits
       |           | git checkout feature-2                                                                  |
       | feature-2 | git -c rebase.updateRefs=false rebase --onto feature-1 {{ sha-before-run 'commit 1a' }} |
       |           | git push --force-with-lease --force-if-includes                                         |
-      |           | git -c rebase.updateRefs=false rebase --onto feature-1 {{ sha-before-run 'commit 1a' }} |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT |
       | feature-1 | local, origin | commit 1b | file_1    | another one  |

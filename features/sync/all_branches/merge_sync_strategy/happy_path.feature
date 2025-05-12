@@ -75,11 +75,9 @@ Feature: sync all feature branches
       |            | git checkout alpha                                      |
       | alpha      | git -c rebase.updateRefs=false rebase main              |
       |            | git push --force-with-lease --force-if-includes         |
-      |            | git -c rebase.updateRefs=false rebase main              |
       |            | git checkout beta                                       |
       | beta       | git -c rebase.updateRefs=false rebase main              |
       |            | git push --force-with-lease --force-if-includes         |
-      |            | git -c rebase.updateRefs=false rebase main              |
       |            | git checkout observed                                   |
       | observed   | git -c rebase.updateRefs=false rebase origin/observed   |
       |            | git checkout production                                 |

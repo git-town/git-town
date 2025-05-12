@@ -17,7 +17,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                |
       | prototype | git fetch --prune --tags                               |
-      |           | git -c rebase.updateRefs=false rebase main             |
       |           | git push --force-with-lease --force-if-includes        |
       |           | git -c rebase.updateRefs=false rebase origin/prototype |
     And Git Town prints the error:
@@ -56,7 +55,6 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
       | prototype | GIT_EDITOR=true git rebase --continue           |
-      |           | git -c rebase.updateRefs=false rebase main      |
       |           | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
@@ -73,8 +71,7 @@ Feature: handle conflicts between the current prototype branch and its tracking 
     And I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                         |
-      | prototype | git -c rebase.updateRefs=false rebase main      |
-      |           | git push --force-with-lease --force-if-includes |
+      | prototype | git push --force-with-lease --force-if-includes |
     And these commits exist now
       | BRANCH    | LOCATION      | MESSAGE                   |
       | prototype | local, origin | conflicting origin commit |

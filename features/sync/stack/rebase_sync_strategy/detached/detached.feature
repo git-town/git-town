@@ -37,17 +37,12 @@ Feature: sync the entire stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
-      |        | git -c rebase.updateRefs=false rebase main      |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git -c rebase.updateRefs=false rebase main      |
       |        | git checkout beta                               |
       | beta   | git -c rebase.updateRefs=false rebase alpha     |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git -c rebase.updateRefs=false rebase alpha     |
       |        | git checkout gamma                              |
       | gamma  | git -c rebase.updateRefs=false rebase beta      |
       |        | git push --force-with-lease --force-if-includes |
-      |        | git -c rebase.updateRefs=false rebase beta      |
       |        | git checkout alpha                              |
     And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE                  |
