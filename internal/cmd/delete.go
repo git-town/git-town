@@ -129,7 +129,7 @@ func executeDelete(args []string, dryRun configdomain.DryRun, verbose configdoma
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
-		Detached:                true,
+		Detached:                false,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
