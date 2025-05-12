@@ -7,7 +7,7 @@ Feature: two people with rebase strategy sync changes made by them
       [branches]
       main = "main"
       perennials = []
-      
+
       [sync]
       feature-strategy = "rebase"
       """
