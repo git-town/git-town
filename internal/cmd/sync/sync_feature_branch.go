@@ -72,29 +72,14 @@ func syncFeatureBranchMerge(args featureBranchArgs) {
 	)
 }
 
+// TODO: inline all these helper functions since all they do now is add a single opcode
 func syncFeatureBranchRebase(args featureBranchArgs) {
 	args.program.Value.Add(
-		&opcodes.RebaseParentsUntilLocal{
-			Branch:      args.localName,
-			PreviousSHA: args.parentLastRunSHA,
+		&opcodes.SyncFeatureBranchRebase{
+			Branch:           args.localName,
+			ParentLastRunSHA: args.parentLastRunSHA,
+			PushBranches:     args.pushBranches,
+			TrackingBranch:   args.trackingBranch,
 		},
 	)
-	if trackingBranch, hasTrackingBranch := args.trackingBranch.Get(); hasTrackingBranch {
-		if args.offline.IsOnline() {
-			args.program.Value.Add(
-				&opcodes.RebaseTrackingBranch{
-					RemoteBranch: trackingBranch,
-					PushBranches: args.pushBranches,
-				},
-				&opcodes.RebaseParentsUntilLocal{
-					Branch:      args.localName,
-					PreviousSHA: args.parentLastRunSHA,
-				},
-				&opcodes.PushCurrentBranchForceIfNeeded{
-					CurrentBranch:   args.localName,
-					ForceIfIncludes: true,
-				},
-			)
-		}
-	}
 }

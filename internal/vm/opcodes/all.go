@@ -100,6 +100,7 @@ func All() []shared.Opcode {
 		&StashPop{},
 		&SyncFeatureBranchCompress{},
 		&SyncFeatureBranchMerge{},
+		&SyncFeatureBranchRebase{},
 		&UndoLastCommit{},
 	} //exhaustruct:ignore
 }
