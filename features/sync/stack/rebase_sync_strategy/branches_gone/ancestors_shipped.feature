@@ -49,7 +49,6 @@ Feature: shipped parent branches in a stacked change
       | feature-4 | git pull                                                    |
       |           | git -c rebase.updateRefs=false rebase --onto main feature-2 |
       |           | git push --force-with-lease                                 |
-      |           | git push --force-with-lease --force-if-includes             |
       |           | git branch -D feature-1                                     |
       |           | git branch -D feature-2                                     |
     And Git Town prints:

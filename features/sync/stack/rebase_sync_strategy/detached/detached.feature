@@ -37,7 +37,6 @@ Feature: sync the entire stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | alpha  | git fetch --prune --tags                        |
-      |        | git push --force-with-lease --force-if-includes |
       |        | git checkout beta                               |
       | beta   | git -c rebase.updateRefs=false rebase alpha     |
       |        | git push --force-with-lease --force-if-includes |
