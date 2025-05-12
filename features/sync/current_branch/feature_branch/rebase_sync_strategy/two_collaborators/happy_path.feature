@@ -7,7 +7,7 @@ Feature: two people with rebase strategy sync changes made by them
       [branches]
       main = "main"
       perennials = []
-
+      
       [sync]
       feature-strategy = "rebase"
       """
@@ -26,31 +26,25 @@ Feature: two people with rebase strategy sync changes made by them
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                         |
       | feature | git fetch --prune --tags                        |
-      |         | git -c rebase.updateRefs=false rebase main      |
       |         | git push --force-with-lease --force-if-includes |
-      |         | git -c rebase.updateRefs=false rebase main      |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
     And all branches are now synchronized
-
     Given the coworker is on the "feature" branch
     When the coworker runs "git-town sync"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git -c rebase.updateRefs=false rebase main           |
       |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
-      |         | git -c rebase.updateRefs=false rebase main           |
       |         | git push --force-with-lease --force-if-includes      |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | feature | local, coworker, origin | my commit       |
       |         | coworker, origin        | coworker commit |
-
     Given the current branch is "feature"
     When I run "git-town sync"
     Then Git Town runs the commands
