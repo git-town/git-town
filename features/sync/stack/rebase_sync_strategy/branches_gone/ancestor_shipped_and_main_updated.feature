@@ -50,9 +50,7 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
       | branch-4 | git pull                                                   |
       |          | git -c rebase.updateRefs=false rebase --onto main branch-2 |
       |          | git push --force-with-lease                                |
-      |          | git -c rebase.updateRefs=false rebase branch-3             |
       |          | git push --force-with-lease --force-if-includes            |
-      |          | git -c rebase.updateRefs=false rebase branch-3             |
       |          | git branch -D branch-1                                     |
       |          | git branch -D branch-2                                     |
     And all branches are now synchronized
