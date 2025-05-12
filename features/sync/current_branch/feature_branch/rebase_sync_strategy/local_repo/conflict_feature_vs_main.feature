@@ -45,8 +45,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and enter "resolved commit" for the commit message
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                   |
-      | feature | git -c core.editor=true rebase --continue |
+      | BRANCH  | COMMAND                               |
+      | feature | GIT_EDITOR=true git rebase --continue |
     And no rebase is now in progress
     And all branches are now synchronized
     And these committed files exist now
