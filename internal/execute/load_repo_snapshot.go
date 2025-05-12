@@ -33,6 +33,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
 			Connector:         None[forgedomain.Connector](),
+			Detached:          args.Detached,
 			DialogTestInputs:  args.DialogTestInputs,
 			FinalMessages:     args.Repo.FinalMessages,
 			Frontend:          args.Repo.Frontend,
@@ -80,6 +81,7 @@ type LoadRepoSnapshotArgs struct {
 	Backend               gitdomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
+	Detached              configdomain.Detached
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	FinalMessages         stringslice.Collector

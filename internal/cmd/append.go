@@ -160,6 +160,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
+		Detached:                detached,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -186,6 +187,7 @@ type appendFeatureData struct {
 	commitsToBeam             gitdomain.Commits
 	config                    config.ValidatedConfig
 	connector                 Option[forgedomain.Connector]
+	detached                  configdomain.Detached
 	dialogTestInputs          components.TestInputs
 	dryRun                    configdomain.DryRun
 	hasOpenChanges            bool
@@ -217,6 +219,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Detached:              detached,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
 		FinalMessages:         repo.FinalMessages,

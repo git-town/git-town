@@ -6,3 +6,7 @@ type Detached bool
 func (self Detached) IsTrue() bool {
 	return bool(self)
 }
+
+func (self Detached) IsFalse() bool {
+	return !self.IsTrue()
+}
