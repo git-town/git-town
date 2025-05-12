@@ -14,16 +14,13 @@ Feature: append a new feature branch to an existing feature branch in detached m
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                       |
-      | existing | git fetch --prune --tags      |
-      |          | git merge --no-edit --ff main |
-      |          | git push                      |
-      |          | git checkout -b new           |
+      | BRANCH   | COMMAND                  |
+      | existing | git fetch --prune --tags |
+      |          | git checkout -b new      |
     And these commits exist now
-      | BRANCH   | LOCATION      | MESSAGE                           |
-      | main     | local, origin | main commit                       |
-      | existing | local, origin | existing commit                   |
-      |          |               | Merge branch 'main' into existing |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | main     | local, origin | main commit     |
+      | existing | local, origin | existing commit |
     And this lineage exists now
       | BRANCH   | PARENT   |
       | existing | main     |
@@ -32,10 +29,8 @@ Feature: append a new feature branch to an existing feature branch in detached m
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                         |
-      | new      | git checkout existing                           |
-      | existing | git reset --hard {{ sha 'existing commit' }}    |
-      |          | git push --force-with-lease --force-if-includes |
-      |          | git branch -D new                               |
+      | BRANCH   | COMMAND               |
+      | new      | git checkout existing |
+      | existing | git branch -D new     |
     And the initial commits exist now
     And the initial lineage exists now

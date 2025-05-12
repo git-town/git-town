@@ -14,6 +14,7 @@ func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot git
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		BeginBranch:              beginBranchesSnapshot.Active.GetOrDefault(),
 		Config:                   validatedConfig,
+		Detached:                 true,
 		EndBranch:                endBranchesSnapshot.Active.GetOrDefault(),
 		FinalMessages:            finalMessages,
 		UndoAPIProgram:           undoAPIProgram,

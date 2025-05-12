@@ -345,6 +345,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Detached:              false,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,

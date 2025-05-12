@@ -177,6 +177,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               None[forgedomain.Connector](),
+		Detached:                detached,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,
@@ -224,6 +225,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Detached:              detached,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FinalMessages:         repo.FinalMessages,
@@ -296,6 +298,8 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 	perennialAndMain := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	var branchNamesToSync gitdomain.LocalBranchNames
 	switch {
+	case syncAllBranches.Enabled() && detached.IsTrue():
+		branchNamesToSync = localBranches.Remove(perennialAndMain...)
 	case syncAllBranches.Enabled():
 		branchNamesToSync = localBranches
 	case syncStack.Enabled():

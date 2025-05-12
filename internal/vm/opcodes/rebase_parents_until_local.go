@@ -25,6 +25,10 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 		if !hasParent {
 			break
 		}
+		parentIsPerennial := args.Config.Value.IsMainOrPerennialBranch(parent)
+		if args.Detached.IsTrue() && parentIsPerennial {
+			break
+		}
 		parentIsLocal := branchInfos.HasLocalBranch(parent)
 		if !parentIsLocal {
 			// here the parent isn't local --> sync with its tracking branch, then try again with the grandparent until we find a local ancestor

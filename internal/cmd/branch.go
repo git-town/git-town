@@ -74,6 +74,7 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,

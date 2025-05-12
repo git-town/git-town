@@ -28,6 +28,7 @@ func Execute(args ExecuteArgs) error {
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
+		Detached:      args.Detached,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,
@@ -43,6 +44,7 @@ func Execute(args ExecuteArgs) error {
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
 		Connector:               args.Connector,
+		Detached:                args.Detached,
 		DialogTestInputs:        args.TestInputs,
 		FinalMessages:           args.FinalMessages,
 		Frontend:                args.Frontend,
@@ -63,6 +65,7 @@ type ExecuteArgs struct {
 	CommandsCounter Mutable[gohacks.Counter]
 	Config          config.ValidatedConfig
 	Connector       Option[forgedomain.Connector]
+	Detached        configdomain.Detached
 	FinalMessages   stringslice.Collector
 	Frontend        gitdomain.Runner
 	Git             git.Commands
@@ -108,6 +111,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.InitialBranch,
 		Config:                   args.Config,
+		Detached:                 args.Detached,
 		EndBranch:                args.InitialBranch,
 		FinalMessages:            args.FinalMessages,
 		UndoAPIProgram:           args.RunState.UndoAPIProgram,
@@ -117,6 +121,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
+		Detached:      args.Detached,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,

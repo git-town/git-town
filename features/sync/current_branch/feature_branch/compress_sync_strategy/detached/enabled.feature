@@ -24,8 +24,7 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       | BRANCH | COMMAND                               |
       | beta   | git fetch --prune --tags              |
       |        | git checkout alpha                    |
-      | alpha  | git merge --no-edit --ff main         |
-      |        | git merge --no-edit --ff origin/alpha |
+      | alpha  | git merge --no-edit --ff origin/alpha |
       |        | git reset --soft main                 |
       |        | git commit -m "local alpha commit"    |
       |        | git push --force-with-lease           |
