@@ -12,7 +12,6 @@ Feature: sync the current feature branch with a tracking branch in detached mode
     And the current branch is "beta"
     When I run "git-town sync --detached"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                        |
