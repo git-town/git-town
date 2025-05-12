@@ -37,14 +37,10 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 						PushBranches: self.PushBranches,
 						RemoteBranch: trackingBranch,
 					},
-				)
-				program = append(program,
 					&RebaseParentsUntilLocal{
 						Branch:      self.Branch,
 						PreviousSHA: self.ParentLastRunSHA,
 					},
-				)
-				program = append(program,
 					&PushCurrentBranchForceIfNeeded{
 						CurrentBranch:   self.Branch,
 						ForceIfIncludes: true,
