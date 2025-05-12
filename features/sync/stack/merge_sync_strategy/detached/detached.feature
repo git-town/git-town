@@ -21,7 +21,6 @@ Feature: detached sync of the entire stack
     Then Git Town runs the commands
       | BRANCH | COMMAND                               |
       | alpha  | git fetch --prune --tags              |
-      |        | git merge --no-edit --ff main         |
       |        | git merge --no-edit --ff origin/alpha |
       |        | git push                              |
       |        | git checkout beta                     |
@@ -34,10 +33,8 @@ Feature: detached sync of the entire stack
       | main   | local         | local main commit                                      |
       |        | origin        | origin main commit                                     |
       | alpha  | local, origin | local alpha commit                                     |
-      |        |               | Merge branch 'main' into alpha                         |
       |        |               | origin alpha commit                                    |
       |        |               | Merge remote-tracking branch 'origin/alpha' into alpha |
-      |        | origin        | local main commit                                      |
       | beta   | local, origin | local beta commit                                      |
       |        |               | Merge branch 'alpha' into beta                         |
       |        |               | origin beta commit                                     |

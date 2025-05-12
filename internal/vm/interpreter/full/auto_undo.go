@@ -33,6 +33,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
+		Detached:      args.Detached,
 		FinalMessages: args.FinalMessages,
 		Frontend:      args.Frontend,
 		Git:           args.Git,

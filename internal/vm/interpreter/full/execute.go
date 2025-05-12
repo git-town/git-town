@@ -40,6 +40,7 @@ func Execute(args ExecuteArgs) error {
 			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
+			Detached:                        args.Detached,
 			DialogTestInputs:                args.DialogTestInputs,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
@@ -60,6 +61,7 @@ type ExecuteArgs struct {
 	CommandsCounter         Mutable[gohacks.Counter]
 	Config                  config.ValidatedConfig
 	Connector               Option[forgedomain.Connector]
+	Detached                configdomain.Detached
 	DialogTestInputs        components.TestInputs
 	FinalMessages           stringslice.Collector
 	Frontend                gitdomain.Runner

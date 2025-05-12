@@ -23,9 +23,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       | BRANCH | COMMAND                                            |
       | beta   | git fetch --prune --tags                           |
       |        | git checkout alpha                                 |
-      | alpha  | git -c rebase.updateRefs=false rebase main         |
-      |        | git -c rebase.updateRefs=false rebase origin/alpha |
-      |        | git -c rebase.updateRefs=false rebase main         |
+      | alpha  | git -c rebase.updateRefs=false rebase origin/alpha |
       |        | git push --force-with-lease --force-if-includes    |
       |        | git checkout beta                                  |
       | beta   | git -c rebase.updateRefs=false rebase alpha        |
@@ -38,7 +36,6 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | origin        | origin main commit  |
       | alpha  | local, origin | origin alpha commit |
       |        |               | local alpha commit  |
-      |        | origin        | local main commit   |
       | beta   | local, origin | origin beta commit  |
       |        |               | local beta commit   |
     And the initial branches and lineage exist now

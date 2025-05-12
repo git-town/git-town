@@ -1,4 +1,4 @@
-Feature: sync a feature branch with new commits on the main branch
+Feature: sync a feature branch with new commits on the main branch in detached mode
 
   Background:
     Given a Git repo with origin
@@ -21,11 +21,7 @@ Feature: sync a feature branch with new commits on the main branch
       | BRANCH | COMMAND                        |
       | beta   | git fetch --prune --tags       |
       |        | git checkout alpha             |
-      | alpha  | git merge --no-edit --ff main  |
-      |        | git reset --soft main          |
-      |        | git commit -m "alpha commit"   |
-      |        | git push --force-with-lease    |
-      |        | git checkout beta              |
+      | alpha  | git checkout beta              |
       | beta   | git merge --no-edit --ff alpha |
       |        | git reset --soft alpha         |
       |        | git commit -m "beta commit"    |
@@ -39,12 +35,8 @@ Feature: sync a feature branch with new commits on the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git checkout alpha                                   |
-      | alpha  | git reset --hard {{ sha-before-run 'alpha commit' }} |
-      |        | git push --force-with-lease --force-if-includes      |
-      |        | git checkout beta                                    |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
-      |        | git push --force-with-lease --force-if-includes      |
+      | BRANCH | COMMAND                                             |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }} |
+      |        | git push --force-with-lease --force-if-includes     |
     And the initial commits exist now
     And the initial branches and lineage exist now

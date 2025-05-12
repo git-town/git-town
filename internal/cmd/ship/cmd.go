@@ -155,6 +155,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  sharedData.config,
 		Connector:               sharedData.connector,
+		Detached:                false,
 		DialogTestInputs:        sharedData.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
 		Frontend:                repo.Frontend,

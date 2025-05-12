@@ -3,6 +3,7 @@ package shared
 import (
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
@@ -15,6 +16,7 @@ type RunArgs struct {
 	BranchInfos                     Option[gitdomain.BranchInfos]
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
+	Detached                        configdomain.Detached
 	DialogTestInputs                components.TestInputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        gitdomain.Runner

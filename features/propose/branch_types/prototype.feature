@@ -21,8 +21,7 @@ Feature: Create proposals for prototype branches
       | BRANCH    | COMMAND                                                              |
       | prototype | git fetch --prune --tags                                             |
       | (none)    | Looking for proposal online ... ok                                   |
-      | prototype | git merge --no-edit --ff main                                        |
-      |           | git push -u origin prototype                                         |
+      | prototype | git push -u origin prototype                                         |
       | (none)    | open https://github.com/git-town/git-town/compare/prototype?expand=1 |
     And Git Town prints:
       """
