@@ -14,12 +14,14 @@ Feature: shipped parent branches in a stacked change
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
+    And wait 1 second to ensure new Git timestamps
     And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-3 | feature | feature-2 | local, origin |
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-3 | local, origin | feature-3 commit | feature-3-file | feature 3 content |
+    And wait 1 second to ensure new Git timestamps
     And the branches
       | NAME      | TYPE    | PARENT    | LOCATIONS     |
       | feature-4 | feature | feature-3 | local, origin |
