@@ -1,8 +1,6 @@
 package opcodes
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
@@ -18,7 +16,6 @@ func (self *StashPopIfNeeded) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("11111111111111111111111111111111", stashSize, self.InitialStashSize)
 	if stashSize <= self.InitialStashSize && !args.Config.Value.NormalConfig.DryRun {
 		return nil
 	}
