@@ -32,6 +32,7 @@ Feature: two people with rebase strategy sync changes made by them
       | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
     And all branches are now synchronized
+    #
     Given the coworker is on the "feature" branch
     When the coworker runs "git-town sync"
     Then Git Town runs the commands
@@ -45,6 +46,7 @@ Feature: two people with rebase strategy sync changes made by them
       | BRANCH  | LOCATION                | MESSAGE         |
       | feature | local, coworker, origin | my commit       |
       |         | coworker, origin        | coworker commit |
+    #
     Given the current branch is "feature"
     When I run "git-town sync"
     Then Git Town runs the commands
