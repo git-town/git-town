@@ -5,6 +5,9 @@ import "github.com/git-town/git-town/v20/internal/git/gitdomain"
 // Proposal contains information about a change request on a forge.
 // Alternative names are "pull request" or "merge request".
 type Proposal struct {
+	// text of the body of the proposal
+	Body string
+
 	// whether this proposal can be merged via the API
 	MergeWithAPI bool
 
@@ -17,11 +20,8 @@ type Proposal struct {
 	// name of the target branch ("base") of this proposal
 	Target gitdomain.LocalBranchName
 
-	// textual title of the proposal
+	// text of the title of the proposal
 	Title string
-
-	// textual description of the proposal
-	Body string
 
 	// the URL of this proposal
 	URL string

@@ -109,12 +109,12 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
+		Body:         "body",
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
 		Target:       target,
 		Title:        "title",
-		Body:         "body",
 		URL:          proposalURLOverride,
 	}), nil
 }
