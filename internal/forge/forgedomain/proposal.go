@@ -5,35 +5,35 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// Proposal contains information about a change request on a forge.
+// Proposal provides information about a change request on a forge.
 // Alternative names are "pull request" or "merge request".
-type Proposal struct {
+type Proposal interface {
 	// text of the body of the proposal
 	// if Some, the string is guaranteed to be non-empty
-	Body Option[string]
+	Body() Option[string]
 
 	// whether this proposal can be merged via the API
-	MergeWithAPI bool
+	MergeWithAPI() bool
 
 	// the number used to identify the proposal on the forge
-	Number int
+	Number() int
 
 	// name of the source branch ("head") of this proposal
-	Source gitdomain.LocalBranchName
+	Source() gitdomain.LocalBranchName
 
 	// name of the target branch ("base") of this proposal
-	Target gitdomain.LocalBranchName
+	Target() gitdomain.LocalBranchName
 
 	// text of the title of the proposal
-	Title string
+	Title() string
 
 	// the URL of this proposal
-	URL string
+	URL() string
 }
 
-func (self Proposal) CommitBody(title string) string {
+func CommitBody(proposal Proposal, title string) string {
 	result := title
-	if body, has := self.Body.Get(); has {
+	if body, has := proposal.Body().Get(); has {
 		result += "\n\n"
 		result += body
 	}
