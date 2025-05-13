@@ -114,6 +114,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Source:       branch,
 		Target:       target,
 		Title:        "title",
+		Body:         "body",
 		URL:          proposalURLOverride,
 	}), nil
 }
@@ -229,6 +230,7 @@ func parsePullRequest(pullRequest *forgejo.PullRequest) forgedomain.Proposal {
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
+		Body:         pullRequest.Body,
 		URL:          pullRequest.HTMLURL,
 	}
 }

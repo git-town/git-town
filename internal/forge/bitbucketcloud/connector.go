@@ -172,6 +172,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Source:       branch,
 		Target:       target,
 		Title:        "title",
+		Body:         "body",
 		URL:          proposalURLOverride,
 	}), nil
 }
@@ -380,6 +381,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Pr
 		Source:       gitdomain.NewLocalBranchName(source6),
 		Target:       gitdomain.NewLocalBranchName(destination6),
 		Title:        title2,
+		Body:         "",
 		URL:          url6,
 	}, nil
 }

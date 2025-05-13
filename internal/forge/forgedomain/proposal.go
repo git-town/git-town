@@ -20,6 +20,9 @@ type Proposal struct {
 	// textual title of the proposal
 	Title string
 
+	// textual description of the proposal
+	Body string
+
 	// the URL of this proposal
 	URL string
 }

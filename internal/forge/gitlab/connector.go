@@ -98,6 +98,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Source:       branch,
 		Target:       target,
 		Title:        "title",
+		Body:         "body",
 		URL:          proposalURLOverride,
 	}), nil
 }
@@ -197,6 +198,7 @@ func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.Propo
 		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
 		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        mergeRequest.Title,
+		Body:         mergeRequest.Description,
 		URL:          mergeRequest.WebURL,
 	}
 }

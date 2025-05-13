@@ -30,7 +30,12 @@ type Connector struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	result := fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	if len(proposal.Body) > 0 {
+		result += "\n\n"
+		result += proposal.Body
+	}
+	return result
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -123,6 +128,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Source:       branch,
 		Target:       target,
 		Title:        "title",
+		Body:         "body",
 		URL:          proposalURLOverride,
 	}), nil
 }
@@ -220,6 +226,7 @@ func parsePullRequest(pullRequest *github.PullRequest) forgedomain.Proposal {
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:        pullRequest.GetTitle(),
+		Body:         pullRequest.GetBody(),
 		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
 		URL:          *pullRequest.HTMLURL,
 	}

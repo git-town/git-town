@@ -144,6 +144,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Source:       branch,
 		Target:       target,
 		Title:        "title",
+		Body:         "body",
 		URL:          proposalURLOverride,
 	}), nil
 }
@@ -188,6 +189,7 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Propo
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
 		Title:        pullRequest.Title,
+		Body:         pullRequest.Description,
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
 	}
 }
