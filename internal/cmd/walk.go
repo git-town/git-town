@@ -259,7 +259,7 @@ func walkProgram(data walkData, dryRun configdomain.DryRun) program.Program {
 
 func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
 	if all.Enabled() && stack.Enabled() {
-		return fmt.Errorf("Please don't enable both --all or --stack, just one of them")
+		return fmt.Errorf("Please provide either --all or --stack, not both of them")
 	}
 	if !all.Enabled() && !stack.Enabled() {
 		return fmt.Errorf("Please provide either --all or --stack")
