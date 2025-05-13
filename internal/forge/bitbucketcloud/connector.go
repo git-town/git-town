@@ -49,7 +49,7 @@ type NewConnectorArgs struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	return proposal.CommitBody(fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -167,6 +167,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
+		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -302,6 +303,14 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Pr
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
+	body1, has := pullRequest["description"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	body2, ok := body1.(string)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
 	destination1, has := pullRequest["destination"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -380,6 +389,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Pr
 		Source:       gitdomain.NewLocalBranchName(source6),
 		Target:       gitdomain.NewLocalBranchName(destination6),
 		Title:        title2,
+		Body:         NewOption(body2),
 		URL:          url6,
 	}, nil
 }
