@@ -28,7 +28,12 @@ type Connector struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	result := fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	if body, hasBody := proposal.Body.Get(); hasBody {
+		result += "\n\n"
+		result += body
+	}
+	return result
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -109,6 +114,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
+		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -232,6 +238,7 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.Proposal {
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
+		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
 }
