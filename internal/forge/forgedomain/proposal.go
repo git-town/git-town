@@ -9,7 +9,7 @@ import (
 // Alternative names are "pull request" or "merge request".
 type Proposal struct {
 	// text of the body of the proposal
-	// if Some, the string is guaranteed to contain something
+	// if Some, the string is guaranteed to be non-empty
 	Body Option[string]
 
 	// whether this proposal can be merged via the API
