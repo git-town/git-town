@@ -93,7 +93,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
-		Body:         "body",
+		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -198,7 +198,7 @@ func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.Propo
 		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
 		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        mergeRequest.Title,
-		Body:         mergeRequest.Description,
+		Body:         NewOption(mergeRequest.Description),
 		URL:          mergeRequest.WebURL,
 	}
 }

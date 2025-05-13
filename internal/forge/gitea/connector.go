@@ -29,9 +29,9 @@ type Connector struct {
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
 	result := fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
-	if len(proposal.Body) > 0 {
+	if body, hasBody := proposal.Body.Get(); hasBody {
 		result += "\n\n"
-		result += proposal.Body
+		result += body
 	}
 	return result
 }
@@ -114,7 +114,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
-		Body:         "body",
+		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -238,7 +238,7 @@ func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.Proposal {
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
-		Body:         pullRequest.Body,
+		Body:         NewOption(pullRequest.Body),
 		URL:          pullRequest.HTMLURL,
 	}
 }

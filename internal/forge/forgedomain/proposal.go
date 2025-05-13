@@ -1,12 +1,16 @@
 package forgedomain
 
-import "github.com/git-town/git-town/v20/internal/git/gitdomain"
+import (
+	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
+)
 
 // Proposal contains information about a change request on a forge.
 // Alternative names are "pull request" or "merge request".
 type Proposal struct {
 	// text of the body of the proposal
-	Body string
+	// if Some, the string is guaranteed to contain something
+	Body Option[string]
 
 	// whether this proposal can be merged via the API
 	MergeWithAPI bool

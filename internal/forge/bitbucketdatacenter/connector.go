@@ -49,9 +49,9 @@ type NewConnectorArgs struct {
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
 	result := fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
-	if len(proposal.Body) > 0 {
+	if body, hasBody := proposal.Body.Get(); hasBody {
 		result += "\n\n"
-		result += proposal.Body
+		result += body
 	}
 	return result
 }
@@ -144,7 +144,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
-		Body:         "body",
+		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
 		Source:       branch,
@@ -194,7 +194,7 @@ func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Propo
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
 		Title:        pullRequest.Title,
-		Body:         pullRequest.Description,
+		Body:         NewOption(pullRequest.Description),
 		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
 	}
 }

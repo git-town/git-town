@@ -17,9 +17,9 @@ type Data struct {
 
 func (self Data) DefaultProposalMessage(proposal forgedomain.Proposal) string {
 	result := fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
-	if len(proposal.Body) > 0 {
+	if body, hasBody := proposal.Body.Get(); hasBody {
 		result += "\n\n"
-		result += proposal.Body
+		result += body
 	}
 	return result
 }
