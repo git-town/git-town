@@ -49,7 +49,12 @@ type NewConnectorArgs struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	result := fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+	if len(proposal.Body) > 0 {
+		result += "\n\n"
+		result += proposal.Body
+	}
+	return result
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
