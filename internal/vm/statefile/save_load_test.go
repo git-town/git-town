@@ -419,7 +419,14 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "CommitMessage": "commit message",
         "ProposalMessage": "proposal message",
-        "ProposalNumber": 123
+        "Proposal": {
+        "Body": "proposal body",
+        "MergeWithAPI": true,
+        "Number": 123,
+        "Source": "source-branch",
+        "Target": "target-branch",
+        "Title": "proposal title",
+        "URL": "https://forge.com/prop/1"
       },
       "type": "ConnectorProposalMerge"
     },

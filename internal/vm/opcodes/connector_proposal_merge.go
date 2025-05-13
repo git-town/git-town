@@ -15,8 +15,7 @@ import (
 type ConnectorProposalMerge struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             Option[gitdomain.CommitMessage]
-	ProposalMessage           string
-	ProposalNumber            int
+	Proposal                  forgedomain.Proposal
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	undeclaredOpcodeMethods   `exhaustruct:"optional"`
@@ -46,7 +45,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		err = args.Git.CommentOutSquashCommitMessage(Some(self.ProposalMessage + "\n\n"))
+		err = args.Git.CommentOutSquashCommitMessage(Some(self.Proposal.Title + "\n\n"))
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
