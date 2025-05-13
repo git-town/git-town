@@ -69,15 +69,15 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
-	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	if self.APIToken.IsSome() {
 		return Some(self.updateProposalTarget)
 	}
-	return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+	return None[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -173,10 +173,10 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), forgejo.EditPullRequestOption{
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(proposal.Number), forgejo.EditPullRequestOption{
 		Base: targetName,
 	})
 	if err != nil {

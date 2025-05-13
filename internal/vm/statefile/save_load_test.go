@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
@@ -102,9 +103,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
-				&opcodes.ProposalUpdateSource{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Body: Some("proposal body"), MergeWithAPI: true, Number: 123, Source: "source-branch", Target: "target-branch", Title: "proposal title", URL: "https://forge.com/prop/1"}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},

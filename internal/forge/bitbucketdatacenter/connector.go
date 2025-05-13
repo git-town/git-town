@@ -84,12 +84,12 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) apiBaseURL() string {

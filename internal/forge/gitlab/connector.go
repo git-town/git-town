@@ -49,13 +49,13 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
-	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	if self.APIToken.IsNone() {
-		return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+		return None[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 	}
 	return Some(self.updateProposalTarget)
 }
@@ -147,9 +147,9 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, proposal.Number, target)
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), proposal.Number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {
