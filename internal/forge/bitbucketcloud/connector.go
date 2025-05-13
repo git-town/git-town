@@ -275,6 +275,7 @@ func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target
 		ID:                strconv.Itoa(proposal.Number),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
+		SourceBranch:      proposal.Source.String(),
 		DestinationBranch: target.String(),
 		Title:             proposal.Title,
 		Description:       proposal.Body.GetOrDefault(),
