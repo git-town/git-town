@@ -17,7 +17,6 @@ import (
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
-	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/optimizer"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
@@ -68,7 +67,7 @@ func walkCommand() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Short:   walkDesc,
 		Long:    cmdhelpers.Long(walkDesc, walkHelp),
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			allBranches, err := readAllFlag(cmd)
 			if err != nil {
 				return err
@@ -85,7 +84,7 @@ func walkCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeWalk(dryRun, allBranches, stack, verbose)
+			return executeWalk(args, dryRun, allBranches, stack, verbose)
 		},
 	}
 	addAllFlag(&cmd)
@@ -95,7 +94,8 @@ func walkCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeWalk(dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
+func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
+	fmt.Println("args:", args)
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -107,7 +107,7 @@ func executeWalk(dryRun configdomain.DryRun, allBranches configdomain.AllBranche
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(repo, allBranches, fullStack, verbose)
+	data, exit, err := determineWalkData(args, repo, allBranches, fullStack, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -154,7 +154,8 @@ type walkData struct {
 	allBranches        configdomain.AllBranches
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
-	branchesToIterate  gitdomain.LocalBranchNames
+	branchesToWalk     gitdomain.LocalBranchNames
+	commandToExecute   []string
 	config             config.ValidatedConfig
 	dialogTestInputs   components.TestInputs
 	hasOpenChanges     bool
@@ -164,7 +165,7 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+func determineWalkData(args []string, repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -216,17 +217,18 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 		return walkData{}, exit, err
 	}
 	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
-	branchesToIterate := gitdomain.LocalBranchNames{}
+	branchesToWalk := gitdomain.LocalBranchNames{}
 	switch {
 	case all.Enabled():
-		branchesToIterate = localBranches
+		branchesToWalk = localBranches
 	case stack.Enabled():
-		branchesToIterate = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
+		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
 	}
 	return walkData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
-		branchesToIterate:  branchesToIterate,
+		branchesToWalk:     branchesToWalk,
+		commandToExecute:   args,
 		config:             validatedConfig,
 		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
@@ -238,10 +240,9 @@ func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches
 
 func walkProgram(data walkData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	for _, branchToIterate := range data.branchesToIterate {
-		prog.Value.Add(&opcodes.ExecuteShellCommand{})
-	}
-
+	// for _, branchToWalk := range data.branchesToWalk {
+	// 	prog.Value.Add(&opcodes.ExecuteShellCommand{})
+	// }
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
