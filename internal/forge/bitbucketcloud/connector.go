@@ -277,6 +277,7 @@ func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target
 		RepoSlug:          self.Repository,
 		DestinationBranch: target.String(),
 		Title:             proposal.Title,
+		Description:       proposal.Body.GetOrDefault(),
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
