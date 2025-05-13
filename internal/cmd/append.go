@@ -406,6 +406,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.initialBranch), data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
+			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
 			StashOpenChanges:         data.hasOpenChanges,
 			PreviousBranchCandidates: previousBranchCandidates,

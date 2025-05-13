@@ -313,6 +313,7 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{Some(data.newBranch), data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
+		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: previousBranchCandidates,

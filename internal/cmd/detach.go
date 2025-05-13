@@ -357,6 +357,7 @@ func detachProgram(data detachData, finalMessages stringslice.Collector) program
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
+		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},

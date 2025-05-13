@@ -20,13 +20,14 @@ func Wrap(program Mutable[program.Program], options WrapOptions) {
 	}
 	if options.StashOpenChanges {
 		program.Value.Prepend(&opcodes.StashOpenChanges{})
-		program.Value.Add(&opcodes.StashPopIfNeeded{})
+		program.Value.Add(&opcodes.StashPopIfNeeded{InitialStashSize: options.InitialStashSize})
 	}
 }
 
 // WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
 	DryRun                   configdomain.DryRun
+	InitialStashSize         gitdomain.StashSize
 	PreviousBranchCandidates []Option[gitdomain.LocalBranchName]
 	RunInGitRoot             bool
 	StashOpenChanges         bool

@@ -83,6 +83,7 @@ func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, ap
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{sharedData.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   sharedData.dryRun,
+		InitialStashSize:         sharedData.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !sharedData.isShippingInitialBranch && sharedData.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
