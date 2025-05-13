@@ -16,12 +16,7 @@ type Data struct {
 }
 
 func (self Data) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	result := fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
-	if body, hasBody := proposal.Body.Get(); hasBody {
-		result += "\n\n"
-		result += body
-	}
-	return result
+	return proposal.CommitBody(fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number))
 }
 
 func (self Data) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {

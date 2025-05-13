@@ -30,3 +30,12 @@ type Proposal struct {
 	// the URL of this proposal
 	URL string
 }
+
+func (self Proposal) CommitBody(title string) string {
+	result := title
+	if body, has := self.Body.Get(); has {
+		result += "\n\n"
+		result += body
+	}
+	return result
+}
