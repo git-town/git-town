@@ -26,12 +26,17 @@ import (
 )
 
 const (
-	forEachCmd  = "for-each"
-	forEachDesc = "Executes the given shell command on each branch"
-	forEachHelp = `
-Executes the given shell command on each branch.
+	walkCmd  = "walk"
+	walkDesc = "Perform a shell operation on each branch"
+	walkHelp = `
+If a shell command is given, executes it on each branch.
 Stops when the shell command exits with an error.
-You can continue and undo Git operations.
+
+If no shell command is given, exits to the shell on each branch.
+
+You can run "git town continue", "git town skip", or "git town undo"
+to retry, ignore, or abort the iteration.
+
 
 Consider this stack:
 
@@ -41,28 +46,28 @@ main
    \
     branch-2
 
-When running "git town for-each --stack echo hello",
+When running "git town walk --stack echo hello",
 it prints this output.
 
 [main] hello
 
-[branch1] hello
+[branch-1] hello
 
-[branch2] hello
+[branch-2] hello
 `
 )
 
-func forEachCommand() *cobra.Command {
-	addAllFlag, readAllFlag := flags.All("sync all local branches")
+func walkCommand() *cobra.Command {
+	addAllFlag, readAllFlag := flags.All("iterate all local branches")
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addStackFlag, readStackFlag := flags.Stack("sync the stack that the current branch belongs to")
+	addStackFlag, readStackFlag := flags.Stack("iterate all branches in the current stack")
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     forEachCmd,
+		Use:     walkCmd,
 		Args:    cobra.ArbitraryArgs,
 		GroupID: cmdhelpers.GroupIDStack,
-		Short:   forEachDesc,
-		Long:    cmdhelpers.Long(forEachDesc, forEachHelp),
+		Short:   walkDesc,
+		Long:    cmdhelpers.Long(walkDesc, walkHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			allBranches, err := readAllFlag(cmd)
 			if err != nil {
@@ -80,7 +85,7 @@ func forEachCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeForEach(dryRun, allBranches, stack, verbose)
+			return executeWalk(dryRun, allBranches, stack, verbose)
 		},
 	}
 	addAllFlag(&cmd)
@@ -90,7 +95,7 @@ func forEachCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeForEach(dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
+func executeWalk(dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -102,20 +107,20 @@ func executeForEach(dryRun configdomain.DryRun, allBranches configdomain.AllBran
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineForEachData(repo, allBranches, fullStack, verbose)
+	data, exit, err := determineWalkData(repo, allBranches, fullStack, verbose)
 	if err != nil || exit {
 		return err
 	}
-	if err = validateForEachData(repo, data); err != nil {
+	if err = validateWalkData(repo, data); err != nil {
 		return err
 	}
-	runProgram := forEachProgram(data, dryRun)
+	runProgram := walkProgram(data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
-		Command:               forEachCmd,
+		Command:               walkCmd,
 		DryRun:                dryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
@@ -145,7 +150,7 @@ func executeForEach(dryRun configdomain.DryRun, allBranches configdomain.AllBran
 	})
 }
 
-type forEachData struct {
+type walkData struct {
 	allBranches        configdomain.AllBranches
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
@@ -159,11 +164,11 @@ type forEachData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineForEachData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (forEachData, bool, error) {
+func determineWalkData(repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
-		return forEachData{}, false, err
+		return walkData{}, false, err
 	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
@@ -184,12 +189,12 @@ func determineForEachData(repo execute.OpenRepoResult, all configdomain.AllBranc
 		Verbose:               verbose,
 	})
 	if err != nil || exit {
-		return forEachData{}, exit, err
+		return walkData{}, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
-		return forEachData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
+		return walkData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
@@ -208,7 +213,7 @@ func determineForEachData(repo execute.OpenRepoResult, all configdomain.AllBranc
 		Unvalidated:        NewMutable(&repo.UnvalidatedConfig),
 	})
 	if err != nil || exit {
-		return forEachData{}, exit, err
+		return walkData{}, exit, err
 	}
 	perennialBranchNames := branchesAndTypes.BranchesOfTypes(configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch)
 	branchesToIterate := gitdomain.LocalBranchNames{}
@@ -218,7 +223,7 @@ func determineForEachData(repo execute.OpenRepoResult, all configdomain.AllBranc
 	case stack.Enabled():
 		branchesToIterate = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
 	}
-	return forEachData{
+	return walkData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		branchesToIterate:  branchesToIterate,
@@ -231,7 +236,7 @@ func determineForEachData(repo execute.OpenRepoResult, all configdomain.AllBranc
 	}, false, err
 }
 
-func forEachProgram(data forEachData, dryRun configdomain.DryRun) program.Program {
+func walkProgram(data walkData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	for _, branchToIterate := range data.branchesToIterate {
 		prog.Value.Add(&opcodes.ExecuteShellCommand{})
@@ -247,7 +252,7 @@ func forEachProgram(data forEachData, dryRun configdomain.DryRun) program.Progra
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func validateForEachData(repo execute.OpenRepoResult, data forEachData) error {
+func validateWalkData(repo execute.OpenRepoResult, data walkData) error {
 	if data.allBranches.Enabled() && data.fullStack.Enabled() {
 		return fmt.Errorf("Please don't enable both --all or --stack, just one of them")
 	}
