@@ -45,7 +45,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		err = args.Git.CommentOutSquashCommitMessage(Some(self.Proposal.Title + "\n\n"))
+		err = args.Git.CommentOutSquashCommitMessage(Some(self.Proposal.CommitBody(self.Proposal.Title) + "\n\n"))
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
@@ -71,7 +71,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !canSquashMergeProposal {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	self.mergeError = squashMergeProposal(self.ProposalNumber, commitMessage)
+	self.mergeError = squashMergeProposal(self.Proposal.Number, commitMessage)
 	return self.mergeError
 }
 
