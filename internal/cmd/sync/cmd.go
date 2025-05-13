@@ -153,6 +153,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	}
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
+		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousbranchCandidates,

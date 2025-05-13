@@ -388,6 +388,7 @@ func swapProgram(data swapData, finalMessages stringslice.Collector) program.Pro
 	}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   data.dryRun,
+		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},

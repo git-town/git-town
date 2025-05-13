@@ -335,6 +335,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
+		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,
