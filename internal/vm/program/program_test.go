@@ -184,9 +184,9 @@ func TestProgram(t *testing.T) {
 		t.Run("prepend a populated list", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{&opcodes.MergeAbort{}}
-			other := program.Program{&opcodes.StashOpenChanges{}, &opcodes.StashPopIfNeeded{}}
+			other := program.Program{&opcodes.StashOpenChanges{}, &opcodes.StashPopIfExists{}}
 			give.PrependProgram(other)
-			want := []shared.Opcode{&opcodes.StashOpenChanges{}, &opcodes.StashPopIfNeeded{}, &opcodes.MergeAbort{}}
+			want := []shared.Opcode{&opcodes.StashOpenChanges{}, &opcodes.StashPopIfExists{}, &opcodes.MergeAbort{}}
 			must.Eq(t, want, give)
 		})
 		t.Run("prepend an empty list", func(t *testing.T) {

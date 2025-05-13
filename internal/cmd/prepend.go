@@ -456,6 +456,7 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 		cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 			DryRun:                   data.dryRun,
+			InitialStashSize:         data.stashSize,
 			RunInGitRoot:             true,
 			StashOpenChanges:         data.hasOpenChanges,
 			PreviousBranchCandidates: previousBranchCandidates,
