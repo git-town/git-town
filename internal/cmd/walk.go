@@ -95,6 +95,10 @@ func walkCommand() *cobra.Command {
 }
 
 func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
+	err := validateArgs(allBranches, fullStack)
+	if err != nil {
+		return err
+	}
 	fmt.Println("args:", args)
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
@@ -111,9 +115,9 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	if err != nil || exit {
 		return err
 	}
-	if err = validateWalkData(repo, data); err != nil {
-		return err
-	}
+	// if err = validateWalkData(repo, data); err != nil {
+	// 	return err
+	// }
 	runProgram := walkProgram(data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
@@ -253,12 +257,12 @@ func walkProgram(data walkData, dryRun configdomain.DryRun) program.Program {
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func validateWalkData(repo execute.OpenRepoResult, data walkData) error {
-	if data.allBranches.Enabled() && data.fullStack.Enabled() {
+func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
+	if all.Enabled() && stack.Enabled() {
 		return fmt.Errorf("Please don't enable both --all or --stack, just one of them")
 	}
-	if !data.allBranches.Enabled() && !data.fullStack.Enabled() {
-		return fmt.Errorf("Please enable either --all or --stack")
+	if !all.Enabled() && !stack.Enabled() {
+		return fmt.Errorf("Please provide either --all or --stack")
 	}
 	return nil
 }
