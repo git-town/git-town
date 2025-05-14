@@ -23,21 +23,27 @@ type TestProposal struct{}
 func (self TestProposal) Body() Option[string] {
 	return Some("body")
 }
+
 func (self TestProposal) MergeWithAPI() bool {
 	return true
 }
+
 func (self TestProposal) Number() int {
 	return 123
 }
+
 func (self TestProposal) Source() gitdomain.LocalBranchName {
 	return "source"
 }
+
 func (self TestProposal) Target() gitdomain.LocalBranchName {
 	return "target"
 }
+
 func (self TestProposal) Title() string {
 	return "title"
 }
+
 func (self TestProposal) URL() string {
 	return "url"
 }
