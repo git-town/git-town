@@ -45,10 +45,10 @@ func (self ProposalData) GetURL() string {
 
 type BitbucketCloudProposalData struct {
 	ProposalData
-	SourceRepository  string
-	DestinationCommit string
-	Message           string
 	CloseSourceBranch bool
-	Reviewers         []string
+	DestinationCommit string
 	Draft             bool
+	Message           string
+	Reviewers         []string
+	SourceRepository  string
 }
