@@ -147,10 +147,9 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalTarget(forgeProposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	proposal := forgeProposal.(Proposal)
-	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, proposal.number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), proposal.number, &gitlab.UpdateMergeRequestOptions{
+func (self Connector) updateProposalTarget(forgeProposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, forgeProposal.Data.GetNumber(), target)
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), forgeProposal.Data.GetNumber(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {
@@ -192,14 +191,14 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) Proposal {
-	return Proposal{
-		mergeWithAPI: true,
-		number:       mergeRequest.IID,
-		source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
-		target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
-		title:        mergeRequest.Title,
-		body:         NewOption(mergeRequest.Description),
-		url:          mergeRequest.WebURL,
+func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
+		MergeWithAPI: true,
+		Number:       mergeRequest.IID,
+		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),
+		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
+		Title:        mergeRequest.Title,
+		Body:         NewOption(mergeRequest.Description),
+		URL:          mergeRequest.WebURL,
 	}
 }

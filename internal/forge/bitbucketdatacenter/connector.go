@@ -47,9 +47,8 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.Proposal) string {
-	proposal := forgeProposal.(Proposal)
-	return forgedomain.CommitBody(forgeProposal, fmt.Sprintf("%s (#%d)", proposal.title, proposal.number))
+func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.ProposalData) string {
+	return forgedomain.CommitBody(forgeProposal, fmt.Sprintf("%s (#%d)", forgeProposal.Title, forgeProposal.Number))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -128,7 +127,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		return None[forgedomain.Proposal](), nil
 	}
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
-	self.log.Success(fmt.Sprintf("#%d", proposal.number))
+	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(forgedomain.Proposal(proposal)), nil
 }
 
@@ -139,14 +138,14 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	prop := Proposal{
-		body:         None[string](),
-		mergeWithAPI: true,
-		number:       123,
-		source:       branch,
-		target:       target,
-		title:        "title",
-		url:          proposalURLOverride,
+	prop := forgedomain.ProposalData{
+		Body:         None[string](),
+		MergeWithAPI: true,
+		Number:       123,
+		Source:       branch,
+		Target:       target,
+		Title:        "title",
+		URL:          proposalURLOverride,
 	}
 	return Some(forgedomain.Proposal(prop)), nil
 }
@@ -180,18 +179,18 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		return None[forgedomain.Proposal](), nil
 	}
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
-	self.log.Success(fmt.Sprintf("#%d", proposal.number))
+	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
 	return Some(forgedomain.Proposal(proposal)), nil
 }
 
-func parsePullRequest(pullRequest PullRequest, repoURL string) Proposal {
-	return Proposal{
-		mergeWithAPI: false,
-		number:       pullRequest.ID,
-		source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
-		target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
-		title:        pullRequest.Title,
-		body:         NewOption(pullRequest.Description),
-		url:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
+func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
+		MergeWithAPI: false,
+		Number:       pullRequest.ID,
+		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.ToRef.DisplayID),
+		Title:        pullRequest.Title,
+		Body:         NewOption(pullRequest.Description),
+		URL:          fmt.Sprintf("%s/pull-requests/%v/overview", repoURL, pullRequest.ID),
 	}
 }

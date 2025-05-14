@@ -3,7 +3,7 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v20/internal/forge"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
@@ -12,7 +12,7 @@ import (
 type ProposalUpdateTargetToGrandParent struct {
 	Branch                  gitdomain.LocalBranchName
 	OldTarget               gitdomain.LocalBranchName
-	Proposal                forgedomain.Proposal
+	Proposal                forge.SerializableProposal
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

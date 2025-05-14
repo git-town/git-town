@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
@@ -128,7 +129,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
 				&opcodes.ProposalUpdateTarget{Proposal: TestProposal{}, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: TestProposal{}, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forge.SerializableProposal{Data: TestProposal{}}, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{Proposal: TestProposal{}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
