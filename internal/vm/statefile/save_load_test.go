@@ -117,7 +117,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.SerializableProposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeGitHub}},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.SerializableProposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
@@ -476,7 +476,7 @@ func TestLoadSave(t *testing.T) {
             "CloseSourceBranch": false,
             "Draft": false
           },
-          "forge-type": "github"
+          "forge-type": "bitbucket"
         }
       },
       "type": "ConnectorProposalMerge"

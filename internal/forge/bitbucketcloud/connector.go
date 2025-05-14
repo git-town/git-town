@@ -49,7 +49,7 @@ type NewConnectorArgs struct {
 }
 
 func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.SerializableProposal) string {
-	proposal := forgeProposal.Data.(forgedomain.ProposalData)
+	proposal := forgeProposal.Data.(forgedomain.BitbucketCloudProposalData)
 	return forgedomain.CommitBody(proposal, fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
 }
 
@@ -167,14 +167,18 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.SerializableProposal](), nil
 	}
-	proposal := forgedomain.ProposalData{
-		Body:         None[string](),
-		MergeWithAPI: true,
-		Number:       123,
-		Source:       branch,
-		Target:       target,
-		Title:        "title",
-		URL:          proposalURLOverride,
+	proposal := forgedomain.BitbucketCloudProposalData{
+		ProposalData: forgedomain.ProposalData{
+			Body:         None[string](),
+			MergeWithAPI: true,
+			Number:       123,
+			Source:       branch,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		},
+		CloseSourceBranch: false,
+		Draft:             false,
 	}
 	return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
