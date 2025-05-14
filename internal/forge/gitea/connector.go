@@ -95,7 +95,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	case 1:
 		proposal := parsePullRequest(pullRequests[0])
 		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.SerializableProposal{Data: proposal}), nil
+		return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitea}), nil
 	default:
 		return None[forgedomain.SerializableProposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
@@ -108,15 +108,18 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.SerializableProposal](), nil
 	}
-	return Some(forgedomain.SerializableProposal{Data: forgedomain.ProposalData{
-		Body:         None[string](),
-		MergeWithAPI: true,
-		Number:       123,
-		Source:       branch,
-		Target:       target,
-		Title:        "title",
-		URL:          proposalURLOverride,
-	}}), nil
+	return Some(forgedomain.SerializableProposal{
+		Data: forgedomain.ProposalData{
+			Body:         None[string](),
+			MergeWithAPI: true,
+			Number:       123,
+			Source:       branch,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		},
+		ForgeType: forgedomain.ForgeTypeGitea,
+	}), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
