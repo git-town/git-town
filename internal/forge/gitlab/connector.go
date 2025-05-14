@@ -35,9 +35,9 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)]()
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
 	if self.APIToken.IsNone() {
-		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)]()
 	}
 	return Some(self.searchProposal)
 }
@@ -106,7 +106,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -115,18 +115,18 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return None[forgedomain.SerializableProposal](), err
 	}
 	switch len(mergeRequests) {
 	case 0:
 		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal(proposal)), nil
+		return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
 	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
+		return None[forgedomain.SerializableProposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
 }
 

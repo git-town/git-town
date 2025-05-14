@@ -50,11 +50,11 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
 	if self.APIToken.IsSome() {
 		return Some(self.searchProposal)
 	}
-	return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+	return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)]()
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error] {
@@ -119,7 +119,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
 		ListOptions: forgejo.ListOptions{
@@ -129,20 +129,20 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return None[forgedomain.SerializableProposal](), err
 	}
 	pullRequests := FilterPullRequests2(openPullRequests, branch)
 	switch len(pullRequests) {
 	case 0:
 		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	case 1:
 		pullRequest := pullRequests[0]
 		proposal := parsePullRequest(pullRequest)
 		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.Proposal(proposal)), nil
+		return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeCodeberg}), nil
 	default:
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
+		return None[forgedomain.SerializableProposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
 }
 

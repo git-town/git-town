@@ -15,8 +15,8 @@ type Data struct {
 	APIToken Option[configdomain.GitLabToken]
 }
 
-func (self Data) DefaultProposalMessage(proposal forgedomain.ProposalData) string {
-	return forgedomain.CommitBody(proposal, fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number))
+func (self Data) DefaultProposalMessage(proposal forgedomain.SerializableProposal) string {
+	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (!%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
 }
 
 func (self Data) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
