@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/forge"
 	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/messages"
@@ -15,12 +14,12 @@ import (
 type ProposalUpdateSource struct {
 	NewBranch               gitdomain.LocalBranchName
 	OldBranch               gitdomain.LocalBranchName
-	Proposal                forge.SerializableProposal
+	Proposal                forgedomain.SerializableProposal
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ProposalUpdateSource) AutomaticUndoError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Proposal().Number())
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Data.GetNumber())
 }
 
 func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
@@ -32,7 +31,7 @@ func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
 	if !canUpdateProposalSource {
 		return errors.New(messages.ProposalSourceCannotUpdate)
 	}
-	return updateProposalSource(self.Proposal.Proposal(), self.NewBranch, args.FinalMessages)
+	return updateProposalSource(self.Proposal, self.NewBranch, args.FinalMessages)
 }
 
 func (self *ProposalUpdateSource) ShouldUndoOnError() bool {
