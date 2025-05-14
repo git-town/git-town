@@ -90,7 +90,7 @@ type SerializableProposal struct {
 
 func (self SerializableProposal) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"forge-type": self.ForgeType,
+		"forge-type": self.ForgeType.String(),
 		"data":       self.Data,
 	})
 }
@@ -141,5 +141,6 @@ func (self *SerializableProposal) UnmarshalJSON(b []byte) error {
 		err = json.Unmarshal(mapping["data"], &data)
 		self.Data = data
 	}
+	self.ForgeType = forgeType
 	return err
 }
