@@ -20,7 +20,7 @@ func (self Proposal) MarshalJSON() ([]byte, error) {
 	})
 }
 
-// UnmarshalJSON is used when de-serializing JSON into a Location.
+// UnmarshalJSON is used when de-serializing a Proposal from JSON.
 func (self *Proposal) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
