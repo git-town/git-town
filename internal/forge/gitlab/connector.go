@@ -149,7 +149,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 
 func (self Connector) updateProposalTarget(forgeProposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	proposal := forgeProposal.(Proposal)
-	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, proposal.Number, target)
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, proposal.number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), proposal.number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})

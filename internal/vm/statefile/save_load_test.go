@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
@@ -17,6 +16,30 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
+
+type TestProposal struct{}
+
+func (self TestProposal) Body() Option[string] {
+	return Some("body")
+}
+func (self TestProposal) MergeWithAPI() bool {
+	return true
+}
+func (self TestProposal) Number() int {
+	return 123
+}
+func (self TestProposal) Source() gitdomain.LocalBranchName {
+	return "source"
+}
+func (self TestProposal) Target() gitdomain.LocalBranchName {
+	return "target"
+}
+func (self TestProposal) Title() string {
+	return "title"
+}
+func (self TestProposal) URL() string {
+	return "url"
+}
 
 func TestLoadSave(t *testing.T) {
 	t.Parallel()
@@ -36,6 +59,7 @@ func TestLoadSave(t *testing.T) {
 
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
+
 		runState := runstate.RunState{
 			AbortProgram:          program.Program{},
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
@@ -86,7 +110,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: TestProposal{}},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
@@ -103,9 +127,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Body: Some("proposal body"), MergeWithAPI: true, Number: 123, Source: "source-branch", Target: "target-branch", Title: "proposal title", URL: "https://forge.com/prop/1"}, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, OldTarget: "old-target"},
-				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: TestProposal{}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: TestProposal{}, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateSource{Proposal: TestProposal{}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
