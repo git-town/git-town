@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/config/configfile"
 	"github.com/git-town/git-town/v20/internal/config/gitconfig"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -53,7 +54,7 @@ func TestSave(t *testing.T) {
 					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
 					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
-					ForgeType:                None[configdomain.ForgeType](),
+					ForgeType:                None[forgedomain.ForgeType](),
 					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
 					Lineage:                  configdomain.NewLineage(),
 					NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),

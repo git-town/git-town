@@ -8,6 +8,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/messages"
@@ -47,7 +48,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var defaultBranchType Option[configdomain.BranchType]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
-	var forgeType Option[configdomain.ForgeType]
+	var forgeType Option[forgedomain.ForgeType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.BranchType]
@@ -153,7 +154,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			forgeType, err = configdomain.ParseForgeType(*data.Hosting.Platform)
+			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
@@ -162,7 +163,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.ForgeType != nil {
-			forgeType, err = configdomain.ParseForgeType(*data.Hosting.ForgeType)
+			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
