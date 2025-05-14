@@ -75,7 +75,7 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
 	return Some(self.searchProposal)
 }
 
@@ -179,7 +179,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
@@ -189,51 +189,50 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), err
+		return None[forgedomain.SerializableProposal](), err
 	}
 	response2, ok := response1.(map[string]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	size1, has := response2["size"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	size2, ok := size1.(float64)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	size3 := int(size2)
 	if size3 == 0 {
 		self.log.Success("none")
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	if size3 > 1 {
 		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	values1, has := response2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	values2, ok := values1.([]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	proposal1 := values2[0].(map[string]interface{})
 	proposal2, err := parsePullRequest(proposal1)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.Proposal](), nil
+		return None[forgedomain.SerializableProposal](), nil
 	}
 	self.log.Success(proposal2.Target.String())
-	var propInterface forgedomain.Proposal = proposal2
-	return Some(propInterface), nil
+	return Some(forgedomain.SerializableProposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
