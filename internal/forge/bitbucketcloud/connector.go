@@ -258,14 +258,19 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalSource(forgeProposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(forgeProposal.Data.GetNumber())), colors.BoldCyan().Styled(source.String()))
+func (self Connector) updateProposalSource(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:           strconv.Itoa(forgeProposal.Data.GetNumber()),
-		Owner:        self.Organization,
-		RepoSlug:     self.Repository,
-		SourceBranch: source.String(),
-		// TODO: add missing elements
+		ID:                strconv.Itoa(proposal.Data.GetNumber()),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		SourceBranch:      source.String(),
+		DestinationBranch: proposal.Data.GetTarget().String(),
+		Title:             proposal.Data.GetTitle(),
+		Description:       proposal.Data.GetBody().GetOrDefault(),
+		Draft:             bitbucketData.Draft,
+		CloseSourceBranch: bitbucketData.CloseSourceBranch,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
