@@ -54,7 +54,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 }
 
 //nolint:paralleltest  // mocks HTTP
-func TestGitea(t *testing.T) {
+func TestGitea(_ *testing.T) {
 	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
 	// WHICH MAKES IT SLOW AND FLAKY.
 	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
