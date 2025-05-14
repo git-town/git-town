@@ -16,6 +16,35 @@ import (
 func TestConnector(t *testing.T) {
 	t.Parallel()
 
+	t.Run("DefaultProposalMessage", func(t *testing.T) {
+		t.Parallel()
+		t.Run("without body", func(t *testing.T) {
+			connector := github.Connector{}
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 123,
+					Title:  "my title",
+				},
+			}
+			have := connector.DefaultProposalMessage(give)
+			want := "my title (#123)"
+			must.EqOp(t, want, have)
+		})
+		t.Run("with body", func(t *testing.T) {
+			connector := github.Connector{}
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 123,
+					Title:  "my title",
+					Body:   Some("body"),
+				},
+			}
+			have := connector.DefaultProposalMessage(give)
+			want := "my title (#123)\n\nbody"
+			must.EqOp(t, want, have)
+		})
+	})
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {
