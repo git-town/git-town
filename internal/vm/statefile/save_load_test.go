@@ -117,7 +117,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.SerializableProposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
@@ -134,10 +134,10 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.SerializableProposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.SerializableProposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
 				&opcodes.ProposalUpdateSource{
-					Proposal: forgedomain.SerializableProposal{
+					Proposal: forgedomain.Proposal{
 						Data: forgedomain.ProposalData{
 							Body:         None[string](),
 							MergeWithAPI: false,

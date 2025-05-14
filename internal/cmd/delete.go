@@ -159,7 +159,7 @@ type deleteData struct {
 	initialBranch            gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	previousBranch           Option[gitdomain.LocalBranchName]
-	proposalsOfChildBranches []forgedomain.SerializableProposal
+	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
 }
 

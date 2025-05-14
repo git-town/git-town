@@ -15,7 +15,7 @@ import (
 type ConnectorProposalMerge struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             Option[gitdomain.CommitMessage]
-	Proposal                  forgedomain.SerializableProposal
+	Proposal                  forgedomain.Proposal
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	undeclaredOpcodeMethods   `exhaustruct:"optional"`

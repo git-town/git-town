@@ -171,7 +171,7 @@ type detachData struct {
 type detachChildBranch struct {
 	info     *gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
-	proposal Option[forgedomain.SerializableProposal]
+	proposal Option[forgedomain.Proposal]
 }
 
 func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data detachData, exit bool, err error) {
@@ -252,7 +252,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToDetach)
 	children := make([]detachChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
-		proposal := None[forgedomain.SerializableProposal]()
+		proposal := None[forgedomain.Proposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
 			if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
 				proposal, err = findProposal(childBranch, initialBranch)
@@ -281,7 +281,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		descendents[d] = detachChildBranch{
 			info:     info,
 			name:     descendentName,
-			proposal: None[forgedomain.SerializableProposal](),
+			proposal: None[forgedomain.Proposal](),
 		}
 	}
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()

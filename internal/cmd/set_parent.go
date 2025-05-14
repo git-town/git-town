@@ -166,7 +166,7 @@ type setParentData struct {
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	mainBranch         gitdomain.LocalBranchName
-	proposal           Option[forgedomain.SerializableProposal]
+	proposal           Option[forgedomain.Proposal]
 	stashSize          gitdomain.StashSize
 }
 
@@ -233,7 +233,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	} else {
 		defaultChoice = mainBranch
 	}
-	proposalOpt := None[forgedomain.SerializableProposal]()
+	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	}

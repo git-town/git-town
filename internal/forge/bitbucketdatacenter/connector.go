@@ -47,11 +47,11 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.SerializableProposal) string {
+func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.Proposal) string {
 	return forgedomain.CommitBody(forgeProposal.Data, fmt.Sprintf("%s (#%d)", forgeProposal.Data.GetTitle(), forgeProposal.Data.GetNumber()))
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
 		return Some(self.findProposalViaOverride)
@@ -71,7 +71,7 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/projects/%s/repos/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	return Some(self.searchProposal)
 }
 
@@ -79,12 +79,12 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.SerializableProposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(proposal forgedomain.SerializableProposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(proposal forgedomain.SerializableProposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) apiBaseURL() string {
@@ -96,7 +96,7 @@ func (self Connector) apiBaseURL() string {
 	)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -109,11 +109,11 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		Fetch(ctx)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	if len(resp.Values) == 0 {
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	var needle *PullRequest
 	for _, pr := range resp.Values {
@@ -124,19 +124,19 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	}
 	if needle == nil {
 		self.log.Success("no PR found matching source and target branch")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	prop := forgedomain.ProposalData{
 		Body:         None[string](),
@@ -147,10 +147,10 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Title:        "title",
 		URL:          proposalURLOverride,
 	}
-	return Some(forgedomain.SerializableProposal{Data: prop, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	return Some(forgedomain.Proposal{Data: prop, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	ctx := context.TODO()
 	fromRefID := fmt.Sprintf("refs/heads/%v", branch)
@@ -161,11 +161,11 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		Fetch(ctx)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	if len(resp.Values) == 0 {
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	var needle *PullRequest
 	for _, pr := range resp.Values {
@@ -176,11 +176,11 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	}
 	if needle == nil {
 		self.log.Success("no PR found matching source branch")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
 func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {

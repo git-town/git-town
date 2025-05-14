@@ -12,7 +12,7 @@ import (
 type ProposalUpdateTargetToGrandParent struct {
 	Branch                  gitdomain.LocalBranchName
 	OldTarget               gitdomain.LocalBranchName
-	Proposal                forgedomain.SerializableProposal
+	Proposal                forgedomain.Proposal
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

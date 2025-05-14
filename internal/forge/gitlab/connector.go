@@ -25,19 +25,19 @@ type Connector struct {
 	log print.Logger
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return Some(self.findProposalViaOverride)
 	}
 	if self.Data.APIToken.IsSome() {
 		return Some(self.findProposalViaAPI)
 	}
-	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)]()
+	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if self.APIToken.IsNone() {
-		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)]()
+		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 	}
 	return Some(self.searchProposal)
 }
@@ -49,18 +49,18 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.SerializableProposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
-	return None[func(proposal forgedomain.SerializableProposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	if self.APIToken.IsNone() {
-		return None[func(proposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+		return None[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 	}
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -70,29 +70,29 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	switch len(mergeRequests) {
 	case 0:
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(strconv.Itoa(proposal.Number))
-		return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
 	default:
-		return None[forgedomain.SerializableProposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
 	}
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
-	return Some(forgedomain.SerializableProposal{
+	return Some(forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
 			Body:         None[string](),
 			MergeWithAPI: true,
@@ -106,7 +106,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
@@ -115,18 +115,18 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	switch len(mergeRequests) {
 	case 0:
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(proposal.Target.String())
-		return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
 	default:
-		return None[forgedomain.SerializableProposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
 }
 
@@ -150,7 +150,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalTarget(forgeProposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(forgeProposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, forgeProposal.Data.GetNumber(), target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), forgeProposal.Data.GetNumber(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),

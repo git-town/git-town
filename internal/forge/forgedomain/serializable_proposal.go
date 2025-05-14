@@ -7,13 +7,13 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 )
 
-// SerializableProposal is a wrapper type that makes the Proposal interface serializable to and from JSON.
-type SerializableProposal struct {
-	Data      Proposal
+// Proposal is a wrapper type that makes the Proposal interface serializable to and from JSON.
+type Proposal struct {
+	Data      ProposalInterface
 	ForgeType ForgeType
 }
 
-func (self SerializableProposal) MarshalJSON() ([]byte, error) {
+func (self Proposal) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"forge-type": self.ForgeType.String(),
 		"data":       self.Data,
@@ -21,7 +21,7 @@ func (self SerializableProposal) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
-func (self *SerializableProposal) UnmarshalJSON(b []byte) error {
+func (self *Proposal) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
 	if err != nil {
@@ -48,7 +48,7 @@ func (self *SerializableProposal) UnmarshalJSON(b []byte) error {
 	case ForgeTypeBitbucketDatacenter:
 		var data ProposalData
 		err = json.Unmarshal(mapping["data"], &data)
-		self.Data = Proposal(data)
+		self.Data = ProposalInterface(data)
 	case ForgeTypeCodeberg:
 		var data ProposalData
 		err = json.Unmarshal(mapping["data"], &data)

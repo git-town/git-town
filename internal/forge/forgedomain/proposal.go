@@ -5,9 +5,9 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// Proposal provides information about a change request on a forge.
+// ProposalInterface provides information about a change request on a forge.
 // Alternative names are "pull request" or "merge request".
-type Proposal interface {
+type ProposalInterface interface {
 	// text of the body of the proposal
 	// if Some, the string is guaranteed to be non-empty
 	GetBody() Option[string]
@@ -31,7 +31,7 @@ type Proposal interface {
 	GetURL() string
 }
 
-func CommitBody(proposal Proposal, title string) string {
+func CommitBody(proposal ProposalInterface, title string) string {
 	result := title
 	if body, has := proposal.GetBody().Get(); has {
 		result += "\n\n"

@@ -48,12 +48,12 @@ type NewConnectorArgs struct {
 	UserName    Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.SerializableProposal) string {
+func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.Proposal) string {
 	proposal := forgeProposal.Data.(forgedomain.BitbucketCloudProposalData)
 	return forgedomain.CommitBody(proposal, fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
 }
 
-func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
+func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	if len(proposalURLOverride) > 0 {
 		return Some(self.findProposalViaOverride)
@@ -75,7 +75,7 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	return Some(self.searchProposal)
 }
 
@@ -83,15 +83,15 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.SerializableProposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	return Some(self.updateProposalSource)
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
 	result1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -102,70 +102,70 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	if result1 == nil {
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	result2, ok := result1.(map[string]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	size1, has := result2["size"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	size2, ok := size1.(float64)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	size := int(size2)
 	if size == 0 {
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	if size > 1 {
 		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromToFound, size, branch, target))
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal1, has := result2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal2, ok := proposal1.([]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	if len(proposal2) == 0 {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal3, ok := proposal2[0].(map[string]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal4, err := parsePullRequest(proposal3)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	return Some(forgedomain.SerializableProposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
-func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	proposalURLOverride := forgedomain.ReadProposalOverride()
 	self.log.Ok()
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal := forgedomain.BitbucketCloudProposalData{
 		ProposalData: forgedomain.ProposalData{
@@ -180,10 +180,10 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		CloseSourceBranch: false,
 		Draft:             false,
 	}
-	return Some(forgedomain.SerializableProposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
-func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.SerializableProposal], error) {
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIParentBranchLookupStart, branch.String())
 	response1, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
@@ -193,50 +193,50 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), err
+		return None[forgedomain.Proposal](), err
 	}
 	response2, ok := response1.(map[string]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	size1, has := response2["size"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	size2, ok := size1.(float64)
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	size3 := int(size2)
 	if size3 == 0 {
 		self.log.Success("none")
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	if size3 > 1 {
 		self.log.Failed(fmt.Sprintf(messages.ProposalMultipleFromFound, size3, branch))
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	values1, has := response2["values"]
 	if !has {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	values2, ok := values1.([]interface{})
 	if !ok {
 		self.log.Failed(messages.APIUnexpectedResultDataStructure)
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	proposal1 := values2[0].(map[string]interface{})
 	proposal2, err := parsePullRequest(proposal1)
 	if err != nil {
 		self.log.Failed(err.Error())
-		return None[forgedomain.SerializableProposal](), nil
+		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Success(proposal2.Target.String())
-	return Some(forgedomain.SerializableProposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
+	return Some(forgedomain.Proposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
@@ -258,7 +258,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalSource(forgeProposal forgedomain.SerializableProposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalSource(forgeProposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(forgeProposal.Data.GetNumber())), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:           strconv.Itoa(forgeProposal.Data.GetNumber()),
@@ -275,7 +275,7 @@ func (self Connector) updateProposalSource(forgeProposal forgedomain.Serializabl
 	return nil
 }
 
-func (self Connector) updateProposalTarget(proposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(target.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{

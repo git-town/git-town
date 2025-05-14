@@ -13,7 +13,7 @@ import (
 type ProposalUpdateTarget struct {
 	NewBranch               gitdomain.LocalBranchName
 	OldBranch               gitdomain.LocalBranchName
-	Proposal                forgedomain.SerializableProposal
+	Proposal                forgedomain.Proposal
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

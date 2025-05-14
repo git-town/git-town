@@ -134,8 +134,8 @@ type renameData struct {
 	nonExistingBranches      gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	oldBranch                gitdomain.BranchInfo
 	previousBranch           Option[gitdomain.LocalBranchName]
-	proposal                 Option[forgedomain.SerializableProposal]
-	proposalsOfChildBranches []forgedomain.SerializableProposal
+	proposal                 Option[forgedomain.Proposal]
+	proposalsOfChildBranches []forgedomain.Proposal
 	stashSize                gitdomain.StashSize
 }
 
@@ -230,7 +230,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	parentOpt := validatedConfig.NormalConfig.Lineage.Parent(initialBranch)
 	lineageBranches := validatedConfig.NormalConfig.Lineage.BranchNames()
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
-	proposalOpt := None[forgedomain.SerializableProposal]()
+	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
 	}
@@ -321,7 +321,7 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 	return optimizer.Optimize(prog.Immutable())
 }
 
-func updateChildBranchProposalsToBranch(prog *program.Program, proposals []forgedomain.SerializableProposal, target gitdomain.LocalBranchName) {
+func updateChildBranchProposalsToBranch(prog *program.Program, proposals []forgedomain.Proposal, target gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: target,
