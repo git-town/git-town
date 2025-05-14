@@ -1,4 +1,4 @@
-package bitbucketcloud
+package codeberg
 
 import (
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"

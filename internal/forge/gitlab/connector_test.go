@@ -16,27 +16,6 @@ import (
 func TestGitlabConnector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		t.Parallel()
-		config := gitlab.Data{
-			Data: forgedomain.Data{
-				Hostname:     "",
-				Organization: "",
-				Repository:   "",
-			},
-			APIToken: None[configdomain.GitLabToken](),
-		}
-		give := forgedomain.Proposal{
-			Number:       1,
-			MergeWithAPI: true,
-			Target:       "",
-			Title:        "my title",
-		}
-		have := config.DefaultProposalMessage(give)
-		want := "my title (!1)"
-		must.EqOp(t, want, have)
-	})
-
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {

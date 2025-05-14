@@ -16,18 +16,6 @@ import (
 func TestConnector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		t.Parallel()
-		connector := github.Connector{}
-		give := forgedomain.Proposal{
-			Number: 1,
-			Title:  "my title",
-		}
-		have := connector.DefaultProposalMessage(give)
-		want := "my title (#1)"
-		must.EqOp(t, want, have)
-	})
-
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {

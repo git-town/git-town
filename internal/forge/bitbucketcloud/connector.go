@@ -155,9 +155,8 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		self.log.Failed(err.Error())
 		return None[forgedomain.Proposal](), nil
 	}
-	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	var iProposal forgedomain.Proposal = proposal4
-	return Some(iProposal), nil
+	self.log.Success(fmt.Sprintf("#%d", proposal4.number))
+	return Some(forgedomain.Proposal(proposal4)), nil
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -167,7 +166,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	proposal := BitbucketCloudProposal{
+	proposal := Proposal{
 		body:         None[string](),
 		mergeWithAPI: true,
 		number:       123,
@@ -176,8 +175,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		title:        "title",
 		url:          proposalURLOverride,
 	}
-	var propInterface forgedomain.Proposal = proposal
-	return Some(propInterface), nil
+	return Some(forgedomain.Proposal(proposal)), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -257,7 +255,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 }
 
 func (self Connector) updateProposalSource(forgeProposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	proposal := forgeProposal.(BitbucketCloudProposal)
+	proposal := forgeProposal.(Proposal)
 	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.number)), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:           strconv.Itoa(proposal.number),
@@ -275,7 +273,7 @@ func (self Connector) updateProposalSource(forgeProposal forgedomain.Proposal, s
 }
 
 func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	bitbucketProposal := proposal.(BitbucketCloudProposal)
+	bitbucketProposal := proposal.(Proposal)
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(bitbucketProposal.number)), colors.BoldCyan().Styled(target.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:                strconv.Itoa(proposal.Number()),
@@ -294,7 +292,7 @@ func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target
 	return nil
 }
 
-func parsePullRequest(pullRequest map[string]interface{}) (result BitbucketCloudProposal, err error) {
+func parsePullRequest(pullRequest map[string]interface{}) (result Proposal, err error) {
 	id1, has := pullRequest["id"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -392,7 +390,7 @@ func parsePullRequest(pullRequest map[string]interface{}) (result BitbucketCloud
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	return BitbucketCloudProposal{
+	return Proposal{
 		mergeWithAPI: false,
 		number:       number,
 		source:       gitdomain.NewLocalBranchName(source6),

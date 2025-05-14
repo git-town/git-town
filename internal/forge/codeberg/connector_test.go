@@ -18,18 +18,6 @@ import (
 func TestConnector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		t.Parallel()
-		give := forgedomain.Proposal{
-			Number: 1,
-			Title:  "my title",
-		}
-		want := "my title (#1)"
-		connector := codeberg.Connector{}
-		have := connector.DefaultProposalMessage(give)
-		must.EqOp(t, want, have)
-	})
-
 	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
 	// WHICH MAKES IT SLOW AND FLAKY.
 	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.

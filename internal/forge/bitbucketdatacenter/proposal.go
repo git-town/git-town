@@ -1,4 +1,4 @@
-package bitbucketcloud
+package bitbucketdatacenter
 
 import (
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"

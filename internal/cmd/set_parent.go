@@ -275,7 +275,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 		if hasProposal && hasConnector && connectorCanUpdateProposalTarget {
 			prog.Add(&opcodes.ProposalUpdateTarget{
 				NewBranch: selectedBranch,
-				OldBranch: proposal.Target,
+				OldBranch: proposal.Target(),
 				Proposal:  proposal,
 			})
 		}

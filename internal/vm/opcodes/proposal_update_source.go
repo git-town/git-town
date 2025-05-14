@@ -19,7 +19,7 @@ type ProposalUpdateSource struct {
 }
 
 func (self *ProposalUpdateSource) AutomaticUndoError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Number)
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Number())
 }
 
 func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {

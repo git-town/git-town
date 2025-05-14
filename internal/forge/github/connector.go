@@ -30,7 +30,7 @@ type Connector struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return proposal.CommitBody(fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
+	return forgedomain.CommitBody(proposal, fmt.Sprintf("%s (#%d)", proposal.Title(), proposal.Number()))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -106,8 +106,8 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
-	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), proposal.Title))
-	return Some(proposal), nil
+	self.log.Log(fmt.Sprintf("%s (%s)", colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.number)), proposal.Title))
+	return Some(forgedomain.Proposal(proposal)), nil
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -117,15 +117,16 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	return Some(forgedomain.Proposal{
-		Body:         None[string](),
-		MergeWithAPI: true,
-		Number:       123,
-		Source:       branch,
-		Target:       target,
-		Title:        "title",
-		URL:          proposalURLOverride,
-	}), nil
+	return Some(forgedomain.Proposal(
+		Proposal{
+			body:         None[string](),
+			mergeWithAPI: true,
+			number:       123,
+			source:       branch,
+			target:       target,
+			title:        "title",
+			url:          proposalURLOverride,
+		})), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -146,8 +147,8 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
 	proposal := parsePullRequest(pullRequests[0])
-	self.log.Success(proposal.Target.String())
-	return Some(proposal), nil
+	self.log.Success(proposal.target.String())
+	return Some(forgedomain.Proposal(proposal)), nil
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
@@ -166,10 +167,11 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(forgeProposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	proposal := forgeProposal.(Proposal)
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, proposal.Number, &github.PullRequest{
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.number)), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, proposal.number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},
@@ -215,14 +217,14 @@ type NewConnectorArgs struct {
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
-func parsePullRequest(pullRequest *github.PullRequest) forgedomain.Proposal {
-	return forgedomain.Proposal{
-		Number:       pullRequest.GetNumber(),
-		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),
-		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
-		Title:        pullRequest.GetTitle(),
-		Body:         NewOption(pullRequest.GetBody()),
-		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
-		URL:          *pullRequest.HTMLURL,
+func parsePullRequest(pullRequest *github.PullRequest) Proposal {
+	return Proposal{
+		number:       pullRequest.GetNumber(),
+		source:       gitdomain.NewLocalBranchName(pullRequest.Head.GetRef()),
+		target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
+		title:        pullRequest.GetTitle(),
+		body:         NewOption(pullRequest.GetBody()),
+		mergeWithAPI: pullRequest.GetMergeableState() == "clean",
+		url:          *pullRequest.HTMLURL,
 	}
 }
