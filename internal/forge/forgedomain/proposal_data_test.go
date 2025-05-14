@@ -46,7 +46,7 @@ func TestBitbucketCloudProposalData(t *testing.T) {
 		must.EqOp(t, want, string(serialized))
 
 		var data2 forgedomain.BitbucketCloudProposalData
-		json.Unmarshal(serialized, &data2)
+		must.NoError(t, json.Unmarshal(serialized, &data2))
 		must.Eq(t, data, data2)
 		must.True(t, data2.CloseSourceBranch)
 		must.True(t, data2.Draft)
