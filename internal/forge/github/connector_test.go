@@ -19,6 +19,7 @@ func TestConnector(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		t.Run("without body", func(t *testing.T) {
+			t.Parallel()
 			connector := github.Connector{}
 			give := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
@@ -31,6 +32,7 @@ func TestConnector(t *testing.T) {
 			must.EqOp(t, want, have)
 		})
 		t.Run("with body", func(t *testing.T) {
+			t.Parallel()
 			connector := github.Connector{}
 			give := forgedomain.Proposal{
 				Data: forgedomain.ProposalData{
