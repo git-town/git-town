@@ -138,7 +138,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	prop := forgedomain.ProposalData{
+	data := forgedomain.ProposalData{
 		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
@@ -147,7 +147,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Title:        "title",
 		URL:          proposalURLOverride,
 	}
-	return Some(forgedomain.Proposal{Data: prop, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
+	return Some(forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
