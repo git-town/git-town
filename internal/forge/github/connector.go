@@ -169,10 +169,10 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalTarget(forgeProposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(forgeProposal.Data.GetNumber())), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, forgeProposal.Data.GetNumber(), &github.PullRequest{
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, proposal.Data.GetNumber(), &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},

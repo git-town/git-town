@@ -150,9 +150,9 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalTarget(forgeProposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, forgeProposal.Data.GetNumber(), target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), forgeProposal.Data.GetNumber(), &gitlab.UpdateMergeRequestOptions{
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, proposal.Data.GetNumber(), target)
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), proposal.Data.GetNumber(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {

@@ -27,8 +27,8 @@ type Connector struct {
 	log      print.Logger
 }
 
-func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.Proposal) string {
-	return forgedomain.CommitBody(forgeProposal.Data, fmt.Sprintf("%s (#%d)", forgeProposal.Data.GetTitle(), forgeProposal.Data.GetNumber()))
+func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
+	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
