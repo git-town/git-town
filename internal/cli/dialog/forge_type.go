@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/messages"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
@@ -21,38 +21,38 @@ Only change this if your forge is hosted at a custom URL.
 `
 )
 
-func ForgeType(existingValue Option[configdomain.ForgeType], inputs components.TestInput) (Option[configdomain.ForgeType], bool, error) {
-	entries := list.Entries[Option[configdomain.ForgeType]]{
+func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.TestInput) (Option[forgedomain.ForgeType], bool, error) {
+	entries := list.Entries[Option[forgedomain.ForgeType]]{
 		{
-			Data: None[configdomain.ForgeType](),
+			Data: None[forgedomain.ForgeType](),
 			Text: "auto-detect",
 		},
 		{
-			Data: Some(configdomain.ForgeTypeBitbucket),
+			Data: Some(forgedomain.ForgeTypeBitbucket),
 			Text: "Bitbucket",
 		},
 		{
-			Data: Some(configdomain.ForgeTypeBitbucketDatacenter),
+			Data: Some(forgedomain.ForgeTypeBitbucketDatacenter),
 			Text: "Bitbucket Data Center",
 		},
 		{
-			Data: Some(configdomain.ForgeTypeCodeberg),
+			Data: Some(forgedomain.ForgeTypeCodeberg),
 			Text: "Codeberg",
 		},
 		{
-			Data: Some(configdomain.ForgeTypeGitea),
+			Data: Some(forgedomain.ForgeTypeGitea),
 			Text: "Gitea",
 		},
 		{
-			Data: Some(configdomain.ForgeTypeGitHub),
+			Data: Some(forgedomain.ForgeTypeGitHub),
 			Text: "GitHub",
 		},
 		{
-			Data: Some(configdomain.ForgeTypeGitLab),
+			Data: Some(forgedomain.ForgeTypeGitLab),
 			Text: "GitLab",
 		},
 	}
-	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[configdomain.ForgeType]) bool {
+	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
