@@ -8,6 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/forge"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
@@ -111,7 +112,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: TestProposal{}},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.SerializableProposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitHub}},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
