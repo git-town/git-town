@@ -3,8 +3,8 @@ package forge_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/forge"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/giturl"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -17,8 +17,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@bitbucket.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, None[configdomain.ForgeType]())
-		want := Some(configdomain.ForgeTypeBitbucket)
+		have := forge.Detect(url, None[forgedomain.ForgeType]())
+		want := Some(forgedomain.ForgeTypeBitbucket)
 		must.Eq(t, want, have)
 	})
 
@@ -26,8 +26,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@github.com:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, None[configdomain.ForgeType]())
-		want := Some(configdomain.ForgeTypeGitHub)
+		have := forge.Detect(url, None[forgedomain.ForgeType]())
+		want := Some(forgedomain.ForgeTypeGitHub)
 		must.Eq(t, want, have)
 	})
 
@@ -35,8 +35,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, err := giturl.Parse("username@gitlab.com:git-town/docs.git").Get()
 		must.True(t, err)
-		have := forge.Detect(url, None[configdomain.ForgeType]())
-		want := Some(configdomain.ForgeTypeGitLab)
+		have := forge.Detect(url, None[forgedomain.ForgeType]())
+		want := Some(forgedomain.ForgeTypeGitLab)
 		must.Eq(t, want, have)
 	})
 
@@ -44,8 +44,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@gitea.com:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, None[configdomain.ForgeType]())
-		want := Some(configdomain.ForgeTypeGitea)
+		have := forge.Detect(url, None[forgedomain.ForgeType]())
+		want := Some(forgedomain.ForgeTypeGitea)
 		must.Eq(t, want, have)
 	})
 
@@ -53,8 +53,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, Some(configdomain.ForgeTypeBitbucket))
-		want := Some(configdomain.ForgeTypeBitbucket)
+		have := forge.Detect(url, Some(forgedomain.ForgeTypeBitbucket))
+		want := Some(forgedomain.ForgeTypeBitbucket)
 		must.Eq(t, want, have)
 	})
 
@@ -62,8 +62,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, Some(configdomain.ForgeTypeBitbucketDatacenter))
-		want := Some(configdomain.ForgeTypeBitbucketDatacenter)
+		have := forge.Detect(url, Some(forgedomain.ForgeTypeBitbucketDatacenter))
+		want := Some(forgedomain.ForgeTypeBitbucketDatacenter)
 		must.Eq(t, want, have)
 	})
 
@@ -71,8 +71,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, Some(configdomain.ForgeTypeGitHub))
-		want := Some(configdomain.ForgeTypeGitHub)
+		have := forge.Detect(url, Some(forgedomain.ForgeTypeGitHub))
+		want := Some(forgedomain.ForgeTypeGitHub)
 		must.Eq(t, want, have)
 	})
 
@@ -80,8 +80,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, err := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, err)
-		have := forge.Detect(url, Some(configdomain.ForgeTypeGitLab))
-		want := Some(configdomain.ForgeTypeGitLab)
+		have := forge.Detect(url, Some(forgedomain.ForgeTypeGitLab))
+		want := Some(forgedomain.ForgeTypeGitLab)
 		must.Eq(t, want, have)
 	})
 
@@ -89,8 +89,8 @@ func TestDetect(t *testing.T) {
 		t.Parallel()
 		url, has := giturl.Parse("username@custom.org:git-town/docs.git").Get()
 		must.True(t, has)
-		have := forge.Detect(url, Some(configdomain.ForgeTypeGitea))
-		want := Some(configdomain.ForgeTypeGitea)
+		have := forge.Detect(url, Some(forgedomain.ForgeTypeGitea))
+		want := Some(forgedomain.ForgeTypeGitea)
 		must.Eq(t, want, have)
 	})
 }
