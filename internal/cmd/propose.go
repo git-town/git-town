@@ -281,7 +281,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 					print.Error(err)
 				}
 				if existingProposal, has := existingProposalOpt.Get(); has {
-					existingProposalURL = Some(existingProposal.URL())
+					existingProposalURL = Some(existingProposal.Data.GetURL())
 				}
 			}
 		}

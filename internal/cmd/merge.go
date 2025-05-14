@@ -153,13 +153,13 @@ type mergeData struct {
 	initialBranch                   gitdomain.LocalBranchName
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
-	initialBranchProposal           Option[forge.SerializableProposal]
+	initialBranchProposal           Option[forgedomain.SerializableProposal]
 	initialBranchType               configdomain.BranchType
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	parentBranchInfo                gitdomain.BranchInfo
-	parentBranchProposal            Option[forgedomain.Proposal]
+	parentBranchProposal            Option[forgedomain.SerializableProposal]
 	parentBranchType                configdomain.BranchType
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
@@ -256,8 +256,8 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if err != nil {
 		return mergeData{}, false, err
 	}
-	initialBranchProposal := None[forge.SerializableProposal]()
-	parentBranchProposal := None[forgedomain.Proposal]()
+	initialBranchProposal := None[forgedomain.SerializableProposal]()
+	parentBranchProposal := None[forgedomain.SerializableProposal]()
 	if connector, hasConnector := connectorOpt.Get(); hasConnector {
 		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
 			initialBranchProposal, err = findProposal(initialBranch, parentBranch)

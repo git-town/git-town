@@ -17,7 +17,7 @@ import (
 type shipDataAPI struct {
 	branchToShipRemoteName gitdomain.RemoteBranchName
 	connector              forgedomain.Connector
-	proposal               forgedomain.Proposal
+	proposal               forgedomain.SerializableProposal
 }
 
 func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error) {

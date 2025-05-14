@@ -34,7 +34,7 @@ type sharedShipData struct {
 	isShippingInitialBranch  bool
 	previousBranch           Option[gitdomain.LocalBranchName]
 	previousBranchInfos      Option[gitdomain.BranchInfos]
-	proposalsOfChildBranches []forgedomain.Proposal
+	proposalsOfChildBranches []forgedomain.SerializableProposal
 	stashSize                gitdomain.StashSize
 	targetBranch             gitdomain.BranchInfo
 	targetBranchName         gitdomain.LocalBranchName
@@ -158,23 +158,23 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	}, false, nil
 }
 
-func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forgedomain.Proposal {
+func LoadProposalsOfChildBranches(args LoadProposalsOfChildBranchesArgs) []forgedomain.SerializableProposal {
 	connector, hasConnector := args.ConnectorOpt.Get()
 	if !hasConnector {
-		return []forgedomain.Proposal{}
+		return []forgedomain.SerializableProposal{}
 	}
 	findProposal, canFindProposal := connector.FindProposalFn().Get()
 	if !canFindProposal {
-		return []forgedomain.Proposal{}
+		return []forgedomain.SerializableProposal{}
 	}
 	if args.Offline.IsOffline() {
-		return []forgedomain.Proposal{}
+		return []forgedomain.SerializableProposal{}
 	}
 	if !args.OldBranchHasTrackingBranch {
-		return []forgedomain.Proposal{}
+		return []forgedomain.SerializableProposal{}
 	}
 	childBranches := args.Lineage.Children(args.OldBranch)
-	result := make([]forgedomain.Proposal, 0, len(childBranches))
+	result := make([]forgedomain.SerializableProposal, 0, len(childBranches))
 	for _, childBranch := range childBranches {
 		childProposalOpt, err := findProposal(childBranch, args.OldBranch)
 		if err != nil {
@@ -198,23 +198,23 @@ type LoadProposalsOfChildBranchesArgs struct {
 	OldBranchHasTrackingBranch bool
 }
 
-func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[forgedomain.Proposal] {
+func FindProposal(connectorOpt Option[forgedomain.Connector], sourceBranch gitdomain.LocalBranchName, targetBranch Option[gitdomain.LocalBranchName]) Option[forgedomain.SerializableProposal] {
 	connector, hasConnector := connectorOpt.Get()
 	if !hasConnector {
-		return None[forgedomain.Proposal]()
+		return None[forgedomain.SerializableProposal]()
 	}
 	target, hasTarget := targetBranch.Get()
 	if !hasTarget {
-		return None[forgedomain.Proposal]()
+		return None[forgedomain.SerializableProposal]()
 	}
 	findProposal, canFindProposal := connector.FindProposalFn().Get()
 	if !canFindProposal {
-		return None[forgedomain.Proposal]()
+		return None[forgedomain.SerializableProposal]()
 	}
 	proposal, err := findProposal(sourceBranch, target)
 	if err != nil {
 		print.Error(err)
-		return None[forgedomain.Proposal]()
+		return None[forgedomain.SerializableProposal]()
 	}
 	return proposal
 }

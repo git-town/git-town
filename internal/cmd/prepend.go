@@ -216,7 +216,7 @@ type prependData struct {
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
-	proposal            Option[forgedomain.Proposal]
+	proposal            Option[forgedomain.SerializableProposal]
 	proposalBody        gitdomain.ProposalBody
 	proposalTitle       gitdomain.ProposalTitle
 	propose             configdomain.Propose
@@ -325,7 +325,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}
 	parentAndAncestors := validatedConfig.NormalConfig.Lineage.BranchAndAncestors(ancestor)
 	slices.Reverse(parentAndAncestors)
-	proposalOpt := None[forgedomain.Proposal]()
+	proposalOpt := None[forgedomain.SerializableProposal]()
 	if !repo.IsOffline {
 		proposalOpt = ship.FindProposal(connector, initialBranch, Some(ancestor))
 	}

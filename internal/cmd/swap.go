@@ -168,7 +168,7 @@ type swapData struct {
 type swapChildBranch struct {
 	info     gitdomain.BranchInfo
 	name     gitdomain.LocalBranchName
-	proposal Option[forgedomain.Proposal]
+	proposal Option[forgedomain.SerializableProposal]
 }
 
 func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data swapData, exit bool, err error) {
@@ -251,7 +251,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToSwap)
 	children := make([]swapChildBranch, len(childBranches))
 	for c, childBranch := range childBranches {
-		proposal := None[forgedomain.Proposal]()
+		proposal := None[forgedomain.SerializableProposal]()
 		if connector, hasConnector := connector.Get(); hasConnector {
 			if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
 				proposal, err = findProposal(childBranch, initialBranch)
