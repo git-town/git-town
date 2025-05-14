@@ -442,15 +442,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
-        "ProposalMessage": "proposal message",
-        "Proposal": {
-        "Body": "proposal body",
-        "MergeWithAPI": true,
-        "Number": 123,
-        "Source": "source-branch",
-        "Target": "target-branch",
-        "Title": "proposal title",
-        "URL": "https://forge.com/prop/1"
+        "Proposal": {}
       },
       "type": "ConnectorProposalMerge"
     },
@@ -566,7 +558,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "NewBranch": "new-target",
         "OldBranch": "old-target",
-        "ProposalNumber": 123
+        "Proposal": {}
       },
       "type": "ProposalUpdateTarget"
     },
@@ -574,7 +566,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch",
         "OldTarget": "old-target",
-        "ProposalNumber": 123
+        "Proposal": {}
       },
       "type": "ProposalUpdateTargetToGrandParent"
     },
@@ -582,7 +574,7 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "NewBranch": "new-target",
         "OldBranch": "old-target",
-        "ProposalNumber": 123
+        "Proposal": {}
       },
       "type": "ProposalUpdateSource"
     },

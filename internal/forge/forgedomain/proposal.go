@@ -39,3 +39,18 @@ func CommitBody(proposal Proposal, title string) string {
 	}
 	return result
 }
+
+type ProposalWrapper struct {
+	Type    ProposalType
+	Content interface{}
+}
+
+type ProposalType string
+
+const (
+	ProposalTypeGitHub ProposalType = "github"
+)
+
+func (self ProposalType) MarshalJSON() ([]byte, error) {
+	//
+}

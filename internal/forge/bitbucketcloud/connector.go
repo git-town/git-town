@@ -48,8 +48,9 @@ type NewConnectorArgs struct {
 	UserName    Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return forgedomain.CommitBody(proposal, fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
+func (self Connector) DefaultProposalMessage(forgeProposal forgedomain.Proposal) string {
+	proposal := forgeProposal.(Proposal)
+	return forgedomain.CommitBody(proposal, fmt.Sprintf("%s (#%d)", proposal.title, proposal.number))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
