@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/gohacks/cache"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
@@ -862,7 +863,7 @@ func (self *Commands) SetCodebergToken(runner gitdomain.Runner, value configdoma
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 
-func (self *Commands) SetForgeType(runner gitdomain.Runner, platform configdomain.ForgeType) error {
+func (self *Commands) SetForgeType(runner gitdomain.Runner, platform forgedomain.ForgeType) error {
 	return runner.Run("git", "config", configdomain.KeyForgeType.String(), platform.String())
 }
 
