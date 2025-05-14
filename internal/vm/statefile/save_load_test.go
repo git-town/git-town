@@ -36,7 +36,6 @@ func TestLoadSave(t *testing.T) {
 
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
-
 		runState := runstate.RunState{
 			AbortProgram:          program.Program{},
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
