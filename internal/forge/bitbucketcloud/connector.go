@@ -279,12 +279,9 @@ func (self Connector) updateProposalTarget(proposal forgedomain.SerializableProp
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
 		SourceBranch:      proposal.Data.GetSource().String(),
-		SourceRepository:  bitbucketData.SourceRepository,
 		DestinationBranch: target.String(),
-		DestinationCommit: bitbucketData.DestinationCommit,
 		Title:             proposal.Data.GetTitle(),
 		Description:       proposal.Data.GetBody().GetOrDefault(),
-		Message:           bitbucketData.Message,
 		Draft:             bitbucketData.Draft,
 		CloseSourceBranch: bitbucketData.CloseSourceBranch,
 	})
@@ -296,7 +293,7 @@ func (self Connector) updateProposalTarget(proposal forgedomain.SerializableProp
 	return nil
 }
 
-func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.ProposalData, err error) {
+func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.BitbucketCloudProposalData, err error) {
 	id1, has := pullRequest["id"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -394,13 +391,33 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Pr
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	return forgedomain.ProposalData{
-		MergeWithAPI: false,
-		Number:       number,
-		Source:       gitdomain.NewLocalBranchName(source6),
-		Target:       gitdomain.NewLocalBranchName(destination6),
-		Title:        title2,
-		Body:         NewOption(body2),
-		URL:          url6,
+	closeSourceBranch1, has := pullRequest["close_source_branch"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	closeSourceBranch2, ok := closeSourceBranch1.(bool)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	draft1, has := pullRequest["draft"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	draft2, ok := draft1.(bool)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	return forgedomain.BitbucketCloudProposalData{
+		ProposalData: forgedomain.ProposalData{
+			MergeWithAPI: false,
+			Number:       number,
+			Source:       gitdomain.NewLocalBranchName(source6),
+			Target:       gitdomain.NewLocalBranchName(destination6),
+			Title:        title2,
+			Body:         NewOption(body2),
+			URL:          url6,
+		},
+		CloseSourceBranch: closeSourceBranch2,
+		Draft:             draft2,
 	}, nil
 }
