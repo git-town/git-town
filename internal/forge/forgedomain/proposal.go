@@ -84,8 +84,8 @@ func (self ProposalData) GetURL() string {
 
 // SerializableProposal is a wrapper type that makes the Proposal interface serializable to and from JSON.
 type SerializableProposal struct {
-	ForgeType ForgeType
 	Data      Proposal
+	ForgeType ForgeType
 }
 
 func (self SerializableProposal) MarshalJSON() ([]byte, error) {
