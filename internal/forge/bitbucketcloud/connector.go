@@ -272,15 +272,21 @@ func (self Connector) updateProposalSource(forgeProposal forgedomain.Serializabl
 }
 
 func (self Connector) updateProposalTarget(proposal forgedomain.SerializableProposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
 	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(target.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
 		ID:                strconv.Itoa(proposal.Data.GetNumber()),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
 		SourceBranch:      proposal.Data.GetSource().String(),
+		SourceRepository:  bitbucketData.SourceRepository,
 		DestinationBranch: target.String(),
+		DestinationCommit: bitbucketData.DestinationCommit,
 		Title:             proposal.Data.GetTitle(),
 		Description:       proposal.Data.GetBody().GetOrDefault(),
+		Message:           bitbucketData.Message,
+		Draft:             bitbucketData.Draft,
+		CloseSourceBranch: bitbucketData.CloseSourceBranch,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
