@@ -15,8 +15,8 @@ type Proposal struct {
 
 func (self Proposal) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"forge-type": self.ForgeType.String(),
 		"data":       self.Data,
+		"forge-type": self.ForgeType.String(),
 	})
 }
 
