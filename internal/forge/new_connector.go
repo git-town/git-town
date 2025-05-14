@@ -3,6 +3,7 @@ package forge
 import (
 	"github.com/git-town/git-town/v20/internal/cli/print"
 	"github.com/git-town/git-town/v20/internal/config"
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v20/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v20/internal/forge/codeberg"
@@ -24,7 +25,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	}
 	var connector forgedomain.Connector
 	switch platform {
-	case forgedomain.ForgeTypeBitbucket:
+	case configdomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 			AppPassword: config.NormalConfig.BitbucketAppPassword,
 			ForgeType:   forgeType,
@@ -33,7 +34,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			UserName:    config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
-	case forgedomain.ForgeTypeBitbucketDatacenter:
+	case configdomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword:     config.NormalConfig.BitbucketAppPassword,
 			HostingPlatform: forgeType,
@@ -42,7 +43,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			UserName:        config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
-	case forgedomain.ForgeTypeCodeberg:
+	case configdomain.ForgeTypeCodeberg:
 		var err error
 		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
 			APIToken:  config.NormalConfig.CodebergToken,
@@ -50,14 +51,14 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
-	case forgedomain.ForgeTypeGitea:
+	case configdomain.ForgeTypeGitea:
 		connector = gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GiteaToken,
 			Log:       log,
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), nil
-	case forgedomain.ForgeTypeGitHub:
+	case configdomain.ForgeTypeGitHub:
 		var err error
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitHubToken,
@@ -65,7 +66,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 			RemoteURL: remoteURL,
 		})
 		return Some(connector), err
-	case forgedomain.ForgeTypeGitLab:
+	case configdomain.ForgeTypeGitLab:
 		var err error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitLabToken,

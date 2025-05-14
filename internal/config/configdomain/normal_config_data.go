@@ -3,7 +3,6 @@ package configdomain
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/git-town/git-town/v20/pkg/set"
@@ -20,7 +19,7 @@ type NormalConfigData struct {
 	DefaultBranchType        BranchType
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
-	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
+	ForgeType                Option[ForgeType] // Some = override by user, None = auto-detect
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
@@ -104,7 +103,7 @@ func DefaultNormalConfig() NormalConfigData {
 		DefaultBranchType:        BranchTypeFeatureBranch,
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
-		ForgeType:                None[forgedomain.ForgeType](),
+		ForgeType:                None[ForgeType](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),

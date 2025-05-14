@@ -3,6 +3,7 @@ package bitbucketdatacenter_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/giturl"
@@ -21,7 +22,7 @@ func TestBitbucketConnector(t *testing.T) {
 			url, has := giturl.Parse("ssh://git@custom-url.com:7999/git-town/docs.git").Get()
 			must.True(t, has)
 			have := bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-				HostingPlatform: Some(forgedomain.ForgeTypeBitbucketDatacenter),
+				HostingPlatform: Some(configdomain.ForgeTypeBitbucketDatacenter),
 				RemoteURL:       url,
 			})
 			wantConfig := forgedomain.Data{
@@ -38,7 +39,7 @@ func TestBitbucketConnector(t *testing.T) {
 		url, has := giturl.Parse("ssh://git@custom-url.com:7999/git-town/docs.git").Get()
 		must.True(t, has)
 		connector := bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			HostingPlatform: None[forgedomain.ForgeType](),
+			HostingPlatform: None[configdomain.ForgeType](),
 			RemoteURL:       url,
 		})
 		have, err := connector.NewProposalURL("branch", "parent-branch", "main", "", "")

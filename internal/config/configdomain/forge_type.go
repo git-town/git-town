@@ -1,4 +1,4 @@
-package forgedomain
+package configdomain
 
 import (
 	"fmt"
@@ -14,12 +14,12 @@ type ForgeType string
 func (self ForgeType) String() string { return string(self) }
 
 const (
-	ForgeTypeBitbucket           ForgeType = "bitbucket"
-	ForgeTypeBitbucketDatacenter ForgeType = "bitbucket-datacenter"
-	ForgeTypeCodeberg            ForgeType = "codeberg"
-	ForgeTypeGitHub              ForgeType = "github"
-	ForgeTypeGitLab              ForgeType = "gitlab"
-	ForgeTypeGitea               ForgeType = "gitea"
+	ForgeTypeBitbucket           = ForgeType("bitbucket")
+	ForgeTypeBitbucketDatacenter = ForgeType("bitbucket-datacenter")
+	ForgeTypeCodeberg            = ForgeType("codeberg")
+	ForgeTypeGitHub              = ForgeType("github")
+	ForgeTypeGitLab              = ForgeType("gitlab")
+	ForgeTypeGitea               = ForgeType("gitea")
 )
 
 // ParseForgeType provides the ForgeType enum matching the given text.

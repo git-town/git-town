@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/gohacks"
 	"github.com/git-town/git-town/v20/internal/gohacks/mapstools"
@@ -19,7 +18,7 @@ type PartialConfig struct {
 	DefaultBranchType        Option[BranchType]
 	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
-	ForgeType                Option[forgedomain.ForgeType]
+	ForgeType                Option[ForgeType]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -62,7 +61,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
-	forgeType, err := forgedomain.ParseForgeType(snapshot[KeyForgeType])
+	forgeType, err := ParseForgeType(snapshot[KeyForgeType])
 	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
