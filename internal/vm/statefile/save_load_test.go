@@ -472,7 +472,9 @@ func TestLoadSave(t *testing.T) {
             "Source": "source",
             "Target": "target",
             "Title": "title",
-            "URL": "url"
+            "URL": "url",
+            "CloseSourceBranch": false,
+            "Draft": false
           },
           "forge-type": "github"
         }
