@@ -4,7 +4,9 @@ import (
 	"testing"
 
 	giteasdk "code.gitea.io/sdk/gitea"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/forge/gitea"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -54,7 +56,37 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 }
 
 //nolint:paralleltest  // mocks HTTP
-func TestGitea(_ *testing.T) {
+func TestGitea(t *testing.T) {
+
+	t.Run("DefaultProposalMessage", func(t *testing.T) {
+		t.Run("without body", func(t *testing.T) {
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   None[string](),
+					Number: 123,
+					Title:  "my title",
+				},
+			}
+			want := "my title (#123)"
+			connector := gitea.Connector{}
+			have := connector.DefaultProposalMessage(give)
+			must.EqOp(t, want, have)
+		})
+		t.Run("with body", func(t *testing.T) {
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   Some("body"),
+					Number: 123,
+					Title:  "my title",
+				},
+			}
+			want := "my title (#123)\n\nbody"
+			connector := gitea.Connector{}
+			have := connector.DefaultProposalMessage(give)
+			must.EqOp(t, want, have)
+		})
+	})
+
 	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
 	// WHICH MAKES IT SLOW AND FLAKY.
 	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
