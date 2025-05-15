@@ -18,6 +18,10 @@
 - `git town propose` now always runs detached ([#4915](https://github.com/git-town/git-town/pull/4915)).
 - `git town sync` now more reliably skips the editor ([#4911](https://github.com/git-town/git-town/pull/4911)).
 
+#### Contributors
+
+Shoutout to @AmitJoki, @JCB-K, @blaggacao, @charlierudolph, @erik-rw, @fcurella, @kevgo, @legeana, @mw00120, @sheldonhull, @stephenwade for contributing code, feedback, and ideas to 59 shipped PRs and 13 resolved issues!
+
 ## 20.1.0 (2025-05-08)
 
 #### New Features
