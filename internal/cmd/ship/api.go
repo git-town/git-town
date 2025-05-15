@@ -18,7 +18,6 @@ type shipDataAPI struct {
 	branchToShipRemoteName gitdomain.RemoteBranchName
 	connector              forgedomain.Connector
 	proposal               forgedomain.Proposal
-	proposalMessage        string
 }
 
 func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error) {
@@ -42,12 +41,10 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 	if !hasProposal {
 		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchNameToShip)
 	}
-	proposalMessage := connector.DefaultProposalMessage(proposal)
 	return shipDataAPI{
 		branchToShipRemoteName: branchToShipRemoteName,
 		connector:              connector,
 		proposal:               proposal,
-		proposalMessage:        proposalMessage,
 	}, nil
 }
 
@@ -63,10 +60,9 @@ func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, ap
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
 	prog.Value.Add(&opcodes.ConnectorProposalMerge{
-		Branch:          branchToShipLocal,
-		ProposalNumber:  apiData.proposal.Number,
-		CommitMessage:   commitMessage,
-		ProposalMessage: apiData.proposalMessage,
+		Branch:        branchToShipLocal,
+		Proposal:      apiData.proposal,
+		CommitMessage: commitMessage,
 	})
 	if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: apiData.branchToShipRemoteName})

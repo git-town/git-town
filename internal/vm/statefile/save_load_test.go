@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
@@ -85,7 +86,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictPhantomResolveAll{ParentBranch: gitdomain.NewLocalBranchNameOption("parent"), ParentSHA: Some(gitdomain.NewSHA("123456")), Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
-				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), ProposalMessage: "proposal message", ProposalNumber: 123},
+				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
@@ -102,9 +103,9 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.MessageQueue{Message: "message"},
 				&opcodes.ProgramEndOfBranch{},
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
-				&opcodes.ProposalUpdateTarget{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
-				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", ProposalNumber: 123, OldTarget: "old-target"},
-				&opcodes.ProposalUpdateSource{ProposalNumber: 123, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
+				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
+				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeCodeberg}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
@@ -417,8 +418,20 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch",
         "CommitMessage": "commit message",
-        "ProposalMessage": "proposal message",
-        "ProposalNumber": 123
+        "Proposal": {
+          "data": {
+            "Body": "body",
+            "MergeWithAPI": true,
+            "Number": 123,
+            "Source": "source",
+            "Target": "target",
+            "Title": "title",
+            "URL": "url",
+            "CloseSourceBranch": false,
+            "Draft": false
+          },
+          "forge-type": "bitbucket"
+        }
       },
       "type": "ConnectorProposalMerge"
     },
@@ -534,7 +547,18 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "NewBranch": "new-target",
         "OldBranch": "old-target",
-        "ProposalNumber": 123
+        "Proposal": {
+          "data": {
+            "Body": "body",
+            "MergeWithAPI": true,
+            "Number": 123,
+            "Source": "source",
+            "Target": "target",
+            "Title": "title",
+            "URL": "url"
+          },
+          "forge-type": "gitlab"
+        }
       },
       "type": "ProposalUpdateTarget"
     },
@@ -542,7 +566,18 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "Branch": "branch",
         "OldTarget": "old-target",
-        "ProposalNumber": 123
+        "Proposal": {
+          "data": {
+            "Body": "body",
+            "MergeWithAPI": true,
+            "Number": 123,
+            "Source": "source",
+            "Target": "target",
+            "Title": "title",
+            "URL": "url"
+          },
+          "forge-type": "gitea"
+        }
       },
       "type": "ProposalUpdateTargetToGrandParent"
     },
@@ -550,7 +585,18 @@ func TestLoadSave(t *testing.T) {
       "data": {
         "NewBranch": "new-target",
         "OldBranch": "old-target",
-        "ProposalNumber": 123
+        "Proposal": {
+          "data": {
+            "Body": null,
+            "MergeWithAPI": false,
+            "Number": 123,
+            "Source": "source",
+            "Target": "target",
+            "Title": "title",
+            "URL": "url"
+          },
+          "forge-type": "codeberg"
+        }
       },
       "type": "ProposalUpdateSource"
     },

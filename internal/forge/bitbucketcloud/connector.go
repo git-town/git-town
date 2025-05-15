@@ -49,7 +49,7 @@ type NewConnectorArgs struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return proposal.CommitBody(fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
+	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -82,11 +82,11 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	return Some(self.updateProposalSource)
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	return Some(self.updateProposalTarget)
 }
 
@@ -156,7 +156,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Success(fmt.Sprintf("#%d", proposal4.Number))
-	return Some(proposal4), nil
+	return Some(forgedomain.Proposal{Data: proposal4, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -166,15 +166,20 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	return Some(forgedomain.Proposal{
-		Body:         None[string](),
-		MergeWithAPI: true,
-		Number:       123,
-		Source:       branch,
-		Target:       target,
-		Title:        "title",
-		URL:          proposalURLOverride,
-	}), nil
+	proposal := forgedomain.BitbucketCloudProposalData{
+		ProposalData: forgedomain.ProposalData{
+			Body:         None[string](),
+			MergeWithAPI: true,
+			Number:       123,
+			Source:       branch,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		},
+		CloseSourceBranch: false,
+		Draft:             false,
+	}
+	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -230,7 +235,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		return None[forgedomain.Proposal](), nil
 	}
 	self.log.Success(proposal2.Target.String())
-	return Some(proposal2), nil
+	return Some(forgedomain.Proposal{Data: proposal2, ForgeType: forgedomain.ForgeTypeBitbucket}), nil
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
@@ -252,30 +257,19 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalSource(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(source.String()))
+func (self Connector) updateProposalSource(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:           strconv.Itoa(number),
-		Owner:        self.Organization,
-		RepoSlug:     self.Repository,
-		SourceBranch: source.String(),
-	})
-	if err != nil {
-		self.log.Failed(err.Error())
-		return err
-	}
-	self.log.Ok()
-	return nil
-}
-
-func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(number),
+		ID:                strconv.Itoa(proposal.Data.GetNumber()),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
-		DestinationBranch: target.String(),
+		SourceBranch:      source.String(),
+		DestinationBranch: proposal.Data.GetTarget().String(),
+		Title:             proposal.Data.GetTitle(),
+		Description:       proposal.Data.GetBody().GetOrDefault(),
+		Draft:             bitbucketData.Draft,
+		CloseSourceBranch: bitbucketData.CloseSourceBranch,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -285,7 +279,29 @@ func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBra
 	return nil
 }
 
-func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Proposal, err error) {
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(target.String()))
+	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
+		ID:                strconv.Itoa(proposal.Data.GetNumber()),
+		Owner:             self.Organization,
+		RepoSlug:          self.Repository,
+		SourceBranch:      proposal.Data.GetSource().String(),
+		DestinationBranch: target.String(),
+		Title:             proposal.Data.GetTitle(),
+		Description:       proposal.Data.GetBody().GetOrDefault(),
+		Draft:             bitbucketData.Draft,
+		CloseSourceBranch: bitbucketData.CloseSourceBranch,
+	})
+	if err != nil {
+		self.log.Failed(err.Error())
+		return err
+	}
+	self.log.Ok()
+	return nil
+}
+
+func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.BitbucketCloudProposalData, err error) {
 	id1, has := pullRequest["id"]
 	if !has {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
@@ -383,13 +399,33 @@ func parsePullRequest(pullRequest map[string]interface{}) (result forgedomain.Pr
 	if !ok {
 		return result, errors.New(messages.APIUnexpectedResultDataStructure)
 	}
-	return forgedomain.Proposal{
-		MergeWithAPI: false,
-		Number:       number,
-		Source:       gitdomain.NewLocalBranchName(source6),
-		Target:       gitdomain.NewLocalBranchName(destination6),
-		Title:        title2,
-		Body:         NewOption(body2),
-		URL:          url6,
+	closeSourceBranch1, has := pullRequest["close_source_branch"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	closeSourceBranch2, ok := closeSourceBranch1.(bool)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	draft1, has := pullRequest["draft"]
+	if !has {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	draft2, ok := draft1.(bool)
+	if !ok {
+		return result, errors.New(messages.APIUnexpectedResultDataStructure)
+	}
+	return forgedomain.BitbucketCloudProposalData{
+		ProposalData: forgedomain.ProposalData{
+			MergeWithAPI: false,
+			Number:       number,
+			Source:       gitdomain.NewLocalBranchName(source6),
+			Target:       gitdomain.NewLocalBranchName(destination6),
+			Title:        title2,
+			Body:         NewOption(body2),
+			URL:          url6,
+		},
+		CloseSourceBranch: closeSourceBranch2,
+		Draft:             draft2,
 	}, nil
 }

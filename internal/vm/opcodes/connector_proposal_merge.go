@@ -15,8 +15,7 @@ import (
 type ConnectorProposalMerge struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             Option[gitdomain.CommitMessage]
-	ProposalMessage           string
-	ProposalNumber            int
+	Proposal                  forgedomain.Proposal
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	undeclaredOpcodeMethods   `exhaustruct:"optional"`
@@ -46,7 +45,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		err = args.Git.CommentOutSquashCommitMessage(Some(self.ProposalMessage + "\n\n"))
+		err = args.Git.CommentOutSquashCommitMessage(Some(forgedomain.CommitBody(self.Proposal.Data, self.Proposal.Data.GetTitle()) + "\n\n"))
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
@@ -72,7 +71,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !canSquashMergeProposal {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	self.mergeError = squashMergeProposal(self.ProposalNumber, commitMessage)
+	self.mergeError = squashMergeProposal(self.Proposal.Data.GetNumber(), commitMessage)
 	return self.mergeError
 }
 

@@ -3,6 +3,7 @@ package opcodes
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
@@ -11,7 +12,7 @@ import (
 type ProposalUpdateTargetToGrandParent struct {
 	Branch                  gitdomain.LocalBranchName
 	OldTarget               gitdomain.LocalBranchName
-	ProposalNumber          int
+	Proposal                forgedomain.Proposal
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -21,9 +22,9 @@ func (self *ProposalUpdateTargetToGrandParent) Run(args shared.RunArgs) error {
 		return fmt.Errorf("branch %q has no parent", self.Branch)
 	}
 	args.PrependOpcodes(&ProposalUpdateTarget{
-		NewBranch:      parent,
-		OldBranch:      self.OldTarget,
-		ProposalNumber: self.ProposalNumber,
+		NewBranch: parent,
+		OldBranch: self.OldTarget,
+		Proposal:  self.Proposal,
 	})
 	return nil
 }

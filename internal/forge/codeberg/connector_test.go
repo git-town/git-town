@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/forge/github"
 	"github.com/git-town/git-town/v20/internal/git/giturl"
 
-	// . "github.com/git-town/git-town/v20/pkg/prelude"
+	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -20,14 +20,36 @@ func TestConnector(t *testing.T) {
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		give := forgedomain.Proposal{
-			Number: 1,
-			Title:  "my title",
-		}
-		want := "my title (#1)"
-		connector := codeberg.Connector{}
-		have := connector.DefaultProposalMessage(give)
-		must.EqOp(t, want, have)
+		t.Run("with body", func(t *testing.T) {
+			t.Parallel()
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   Some("body"),
+					Number: 123,
+					Title:  "my title",
+				},
+				ForgeType: forgedomain.ForgeTypeCodeberg,
+			}
+			want := "my title (#123)\n\nbody"
+			connector := codeberg.Connector{}
+			have := connector.DefaultProposalMessage(give)
+			must.EqOp(t, want, have)
+		})
+		t.Run("without body", func(t *testing.T) {
+			t.Parallel()
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Body:   None[string](),
+					Number: 123,
+					Title:  "my title",
+				},
+				ForgeType: forgedomain.ForgeTypeCodeberg,
+			}
+			want := "my title (#123)"
+			connector := codeberg.Connector{}
+			have := connector.DefaultProposalMessage(give)
+			must.EqOp(t, want, have)
+		})
 	})
 
 	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,

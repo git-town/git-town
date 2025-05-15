@@ -1,41 +1,55 @@
 package forgedomain
 
 import (
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"encoding/json"
+	"fmt"
+
+	"github.com/git-town/git-town/v20/internal/messages"
 )
 
-// Proposal contains information about a change request on a forge.
-// Alternative names are "pull request" or "merge request".
+// Proposal is a wrapper type that makes the Proposal interface serializable to and from JSON.
 type Proposal struct {
-	// text of the body of the proposal
-	// if Some, the string is guaranteed to be non-empty
-	Body Option[string]
-
-	// whether this proposal can be merged via the API
-	MergeWithAPI bool
-
-	// the number used to identify the proposal on the forge
-	Number int
-
-	// name of the source branch ("head") of this proposal
-	Source gitdomain.LocalBranchName
-
-	// name of the target branch ("base") of this proposal
-	Target gitdomain.LocalBranchName
-
-	// text of the title of the proposal
-	Title string
-
-	// the URL of this proposal
-	URL string
+	Data      ProposalInterface
+	ForgeType ForgeType
 }
 
-func (self Proposal) CommitBody(title string) string {
-	result := title
-	if body, has := self.Body.Get(); has {
-		result += "\n\n"
-		result += body
+func (self Proposal) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"data":       self.Data,
+		"forge-type": self.ForgeType.String(),
+	})
+}
+
+// UnmarshalJSON is used when de-serializing a Proposal from JSON.
+func (self *Proposal) UnmarshalJSON(b []byte) error {
+	var mapping map[string]json.RawMessage
+	err := json.Unmarshal(b, &mapping)
+	if err != nil {
+		return err
 	}
-	return result
+	var forgeTypeName string
+	err = json.Unmarshal(mapping["forge-type"], &forgeTypeName)
+	if err != nil {
+		return err
+	}
+	forgeTypeOpt, err := ParseForgeType(forgeTypeName)
+	if err != nil {
+		return err
+	}
+	forgeType, hasForgeType := forgeTypeOpt.Get()
+	if !hasForgeType {
+		return fmt.Errorf(messages.ForgeTypeUnknown, forgeTypeName)
+	}
+	switch forgeType {
+	case ForgeTypeBitbucket:
+		var data BitbucketCloudProposalData
+		err = json.Unmarshal(mapping["data"], &data)
+		self.Data = data
+	case ForgeTypeBitbucketDatacenter, ForgeTypeCodeberg, ForgeTypeGitHub, ForgeTypeGitLab, ForgeTypeGitea:
+		var data ProposalData
+		err = json.Unmarshal(mapping["data"], &data)
+		self.Data = data
+	}
+	self.ForgeType = forgeType
+	return err
 }
