@@ -37,25 +37,25 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if self.APIToken.IsNone() {
-		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+		return None[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 	}
 	return Some(self.searchProposal)
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
 	if self.APIToken.IsNone() {
-		return None[func(number int, message gitdomain.CommitMessage) error]()
+		return None[func(int, gitdomain.CommitMessage) error]()
 	}
 	return Some(self.squashMergeProposal)
 }
 
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
-	return None[func(proposal forgedomain.ProposalInterface, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
 	if self.APIToken.IsNone() {
-		return None[func(proposal forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+		return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 	}
 	return Some(self.updateProposalTarget)
 }

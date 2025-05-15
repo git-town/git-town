@@ -54,25 +54,24 @@ func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) 
 	if self.APIToken.IsSome() {
 		return Some(self.searchProposal)
 	}
-	return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+	return None[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
 func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
 	if self.APIToken.IsSome() {
 		return Some(self.squashMergeProposal)
 	}
-	return None[func(number int, message gitdomain.CommitMessage) error]()
+	return None[func(int, gitdomain.CommitMessage) error]()
 }
 
 func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
-	return None[func(proposal forgedomain.ProposalInterface, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
 	if self.APIToken.IsSome() {
 		return Some(self.updateProposalTarget)
 	}
-	// TODO: remove the argument names from all "None[func" expressions
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
