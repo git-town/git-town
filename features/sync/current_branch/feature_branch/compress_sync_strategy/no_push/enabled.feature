@@ -28,22 +28,20 @@ Feature: sync the current feature branch using the "compress" strategy in no-pus
       |         | git merge --no-edit --ff origin/feature           |
       |         | git reset --soft main                             |
       |         | git commit -m "local feature commit 1"            |
-      |         | git push --force-with-lease                       |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
       |         | local         | local main commit      |
-      | feature | local, origin | local feature commit 1 |
-      |         | origin        | local main commit      |
+      | feature | local         | local feature commit 1 |
+      |         | origin        | origin feature commit  |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                                |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit 2' }}                         |
-      |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
-      |         | git checkout main                                                                      |
-      | main    | git reset --hard {{ sha 'local main commit' }}                                         |
-      |         | git checkout feature                                                                   |
+      | BRANCH  | COMMAND                                                        |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit 2' }} |
+      |         | git checkout main                                              |
+      | main    | git reset --hard {{ sha 'local main commit' }}                 |
+      |         | git checkout feature                                           |
     And the initial commits exist now
     And the initial branches and lineage exist now
