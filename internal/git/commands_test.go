@@ -207,7 +207,7 @@ func TestBackendCommands(t *testing.T) {
 			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
 			must.True(t, inSync)
 		})
-		t.Run("child has amended a commit from the parent", func(t *testing.T) {
+		t.Run("child amends a commit from the parent", func(t *testing.T) {
 			t.Parallel()
 			local := testruntime.Create(t)
 			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
@@ -219,6 +219,23 @@ func TestBackendCommands(t *testing.T) {
 			})
 			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "child"))
 			local.CreateFile("file", "child content")
+			local.StageFiles("file")
+			local.AmendCommit()
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
+			must.False(t, inSync)
+		})
+		t.Run("parent amends a commit", func(t *testing.T) {
+			t.Parallel()
+			local := testruntime.Create(t)
+			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "parent content",
+				FileName:    "file",
+				Message:     "parent adds file",
+			})
+			must.NoError(t, local.Git.CreateBranch(local.TestRunner, "child", "parent"))
+			local.CreateFile("file", "amended content")
 			local.StageFiles("file")
 			local.AmendCommit()
 			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
