@@ -105,22 +105,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ProposalCreate{Branch: "branch", MainBranch: "main"},
 				&opcodes.ProposalUpdateTarget{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitLab}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.ProposalUpdateTargetToGrandParent{Branch: "branch", Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeGitea}, OldTarget: "old-target"},
-				&opcodes.ProposalUpdateSource{
-					Proposal: forgedomain.Proposal{
-						Data: forgedomain.ProposalData{
-							Body:         None[string](),
-							MergeWithAPI: false,
-							Number:       123,
-							Source:       "source",
-							Target:       "target",
-							Title:        "title",
-							URL:          "url",
-						},
-						ForgeType: forgedomain.ForgeTypeCodeberg,
-					},
-					NewBranch: "new-target",
-					OldBranch: "old-target",
-				},
+				&opcodes.ProposalUpdateSource{Proposal: forgedomain.Proposal{Data: forgedomain.ProposalData{Body: None[string](), MergeWithAPI: false, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}, ForgeType: forgedomain.ForgeTypeCodeberg}, NewBranch: "new-target", OldBranch: "old-target"},
 				&opcodes.PullCurrentBranch{},
 				&opcodes.PushCurrentBranch{},
 				&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
