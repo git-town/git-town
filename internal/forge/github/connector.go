@@ -29,8 +29,8 @@ type Connector struct {
 	log      print.Logger
 }
 
-func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
+func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -80,9 +80,10 @@ func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.
 	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+// TODO: remove the argument names from all "Option[func" expressions
+func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
 	if self.APIToken.IsNone() {
-		return None[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+		return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 	}
 	return Some(self.updateProposalTarget)
 }
@@ -169,10 +170,11 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	data := proposalData.Data()
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, proposal.Data.GetNumber(), &github.PullRequest{
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, data.Number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},
