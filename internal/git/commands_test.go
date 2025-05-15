@@ -207,21 +207,46 @@ func TestBackendCommands(t *testing.T) {
 			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
 			must.True(t, inSync)
 		})
-		t.Run("child has amended parent commit", func(t *testing.T) {
+		t.Run("child has amended a commit from the parent", func(t *testing.T) {
 			t.Parallel()
 			local := testruntime.Create(t)
 			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
 			local.CreateCommit(testgit.Commit{
 				Branch:      "parent",
-				FileContent: "content",
-				FileName:    "parent_file",
-				Message:     "add parent file",
+				FileContent: "parent content",
+				FileName:    "file",
+				Message:     "parent adds file",
 			})
 			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "child"))
-			local.CreateFile("parent_file", "child content")
-			local.StageFiles("parent_file")
+			local.CreateFile("file", "child content")
+			local.StageFiles("file")
 			local.AmendCommit()
 			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
+			must.False(t, inSync)
+		})
+		t.Run("parent gets rebased", func(t *testing.T) {
+			t.Parallel()
+			local := testruntime.Create(t)
+			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "parent content",
+				FileName:    "parent_file",
+				Message:     "parent commit",
+			})
+			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "child"))
+			local.CreateCommit(testgit.Commit{
+				Branch:      "initial",
+				FileContent: "initial content",
+				FileName:    "initial_file",
+				Message:     "initial commit",
+			})
+			local.CheckoutBranch("parent")
+			local.RebaseAgainstBranch("initial")
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "parent", "initial"))
+			must.True(t, inSync)
+			local.CheckoutBranch("child")
+			inSync = asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
 			must.False(t, inSync)
 		})
 	})
