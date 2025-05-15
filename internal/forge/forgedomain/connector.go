@@ -14,7 +14,7 @@ import (
 type Connector interface {
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective forge type is prepopulated with.
-	DefaultProposalMessage(proposal Proposal) string
+	DefaultProposalMessage(proposal ProposalData) string
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -45,11 +45,11 @@ type Connector interface {
 	// calling this function returns a function that you can call
 	// to update the source branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalSourceFn() Option[func(proposal Proposal, newSource gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+	UpdateProposalSourceFn() Option[func(proposal ProposalInterface, newSource gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the target branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalTargetFn() Option[func(proposal Proposal, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 }

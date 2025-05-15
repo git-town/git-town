@@ -18,7 +18,7 @@ type ProposalUpdateTarget struct {
 }
 
 func (self *ProposalUpdateTarget) AutomaticUndoError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Data.GetNumber())
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Data.Data().Number)
 }
 
 func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
@@ -30,7 +30,7 @@ func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
 	if !canUpdateProposalTarget {
 		return forgedomain.UnsupportedServiceError()
 	}
-	return updateProposalTarget(self.Proposal, self.NewBranch, args.FinalMessages)
+	return updateProposalTarget(self.Proposal.Data, self.NewBranch, args.FinalMessages)
 }
 
 func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {
