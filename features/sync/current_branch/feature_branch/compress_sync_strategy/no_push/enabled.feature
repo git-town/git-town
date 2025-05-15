@@ -38,11 +38,10 @@ Feature: sync the current feature branch using the "compress" strategy in no-pus
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                                |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit 2' }}                         |
-      |         | git push --force-with-lease origin {{ sha-in-origin 'origin feature commit' }}:feature |
-      |         | git checkout main                                                                      |
-      | main    | git reset --hard {{ sha 'local main commit' }}                                         |
-      |         | git checkout feature                                                                   |
+      | BRANCH  | COMMAND                                                        |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit 2' }} |
+      |         | git checkout main                                              |
+      | main    | git reset --hard {{ sha 'local main commit' }}                 |
+      |         | git checkout feature                                           |
     And the initial commits exist now
     And the initial branches and lineage exist now
