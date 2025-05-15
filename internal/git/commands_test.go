@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/subshell"
 	"github.com/git-town/git-town/v20/internal/test/testgit"
 	"github.com/git-town/git-town/v20/internal/test/testruntime"
+	"github.com/git-town/git-town/v20/pkg/asserts"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -229,6 +230,23 @@ func TestBackendCommands(t *testing.T) {
 			inSync, err := local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent")
 			must.NoError(t, err)
 			must.True(t, inSync)
+		})
+		t.Run("child has amended parent commit", func(t *testing.T) {
+			t.Parallel()
+			local := testruntime.Create(t)
+			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
+			local.CreateCommit(testgit.Commit{
+				Branch:      "parent",
+				FileContent: "content",
+				FileName:    "parent_file",
+				Message:     "add parent file",
+			})
+			must.NoError(t, local.Git.CreateAndCheckoutBranch(local.TestRunner, "child"))
+			local.CreateFile("parent_file", "child content")
+			local.StageFiles("parent_file")
+			local.AmendCommit()
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
+			must.False(t, inSync)
 		})
 	})
 
