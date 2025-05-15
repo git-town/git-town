@@ -141,8 +141,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		t.Run("child has the same commits as parent", func(t *testing.T) {
 			t.Parallel()
-			origin := testruntime.Create(t)
-			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local := testruntime.Create(t)
 			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
 			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
@@ -159,8 +158,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("parent has extra commit", func(t *testing.T) {
 			t.Parallel()
-			origin := testruntime.Create(t)
-			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local := testruntime.Create(t)
 			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
 			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
@@ -183,8 +181,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("child has extra commit", func(t *testing.T) {
 			t.Parallel()
-			origin := testruntime.Create(t)
-			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local := testruntime.Create(t)
 			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
 			must.NoError(t, err)
 			local.CreateCommit(testgit.Commit{
@@ -207,8 +204,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("empty parent", func(t *testing.T) {
 			t.Parallel()
-			origin := testruntime.Create(t)
-			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local := testruntime.Create(t)
 			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
 			must.NoError(t, err)
 			err = local.Git.CreateAndCheckoutBranch(local.TestRunner, "child")
@@ -225,8 +221,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("both empty", func(t *testing.T) {
 			t.Parallel()
-			origin := testruntime.Create(t)
-			local := testruntime.Clone(origin.TestRunner, t.TempDir())
+			local := testruntime.Create(t)
 			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
 			must.NoError(t, err)
 			err = local.Git.CreateAndCheckoutBranch(local.TestRunner, "child")
