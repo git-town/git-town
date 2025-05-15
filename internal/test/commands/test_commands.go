@@ -46,6 +46,10 @@ func (self *TestCommands) AddWorktree(path string, branch gitdomain.LocalBranchN
 	self.MustRun("git", "worktree", "add", path, branch.String())
 }
 
+func (self *TestCommands) AmendCommit() {
+	self.MustRun("git", "commit", "--amend", "--no-edit")
+}
+
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 	asserts.NoError(self.Git.CheckoutBranch(self.TestRunner, branch, false))
