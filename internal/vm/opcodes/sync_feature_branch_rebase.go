@@ -41,11 +41,15 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 						Branch:      self.Branch,
 						PreviousSHA: self.ParentLastRunSHA,
 					},
-					&PushCurrentBranchForceIfNeeded{
-						CurrentBranch:   self.Branch,
-						ForceIfIncludes: true,
-					},
 				)
+				if self.PushBranches {
+					program = append(program,
+						&PushCurrentBranchForceIfNeeded{
+							CurrentBranch:   self.Branch,
+							ForceIfIncludes: true,
+						},
+					)
+				}
 			}
 		}
 	}
