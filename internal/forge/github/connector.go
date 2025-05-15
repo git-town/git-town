@@ -62,21 +62,21 @@ func (self Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self Connector) SearchProposalFn() Option[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if self.APIToken.IsNone() {
 		return None[func(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 	}
 	return Some(self.searchProposal)
 }
 
-func (self Connector) SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) (err error)] {
+func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) (err error)] {
 	if self.APIToken.IsNone() {
 		return None[func(number int, message gitdomain.CommitMessage) (err error)]()
 	}
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.ProposalInterface, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
 	return None[func(proposal forgedomain.ProposalInterface, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
