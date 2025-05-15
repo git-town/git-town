@@ -4,7 +4,7 @@
 
 #### New Features
 
-- `git town sync` now only executes the Git operations that are actually needed, i.e. skips Git operations that would do nothing ([#4913](https://github.com/git-town/git-town/pull/4913), [#4907](https://github.com/git-town/git-town/pull/4907)).
+- `git town sync` now only executes the Git operations that are actually needed, i.e. skips Git operations that would do nothing ([#4913](https://github.com/git-town/git-town/pull/4913), [#4907](https://github.com/git-town/git-town/pull/4907), [#4902](https://github.com/git-town/git-town/pull/4902)).
 - When shipping via the forge API, `git town ship` now pre-populates the commit message with the proposal title and description ([#2095](https://github.com/git-town/git-town/issues/2095)).
 - Git Town now supports detecting copied files via the `git config diff.renames copies` setting ([#4878](https://github.com/git-town/git-town/issues/4878)).
 
