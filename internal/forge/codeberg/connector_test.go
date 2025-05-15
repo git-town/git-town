@@ -22,13 +22,10 @@ func TestConnector(t *testing.T) {
 		t.Parallel()
 		t.Run("with body", func(t *testing.T) {
 			t.Parallel()
-			give := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   Some("body"),
-					Number: 123,
-					Title:  "my title",
-				},
-				ForgeType: forgedomain.ForgeTypeCodeberg,
+			give := forgedomain.ProposalData{
+				Body:   Some("body"),
+				Number: 123,
+				Title:  "my title",
 			}
 			want := "my title (#123)\n\nbody"
 			connector := codeberg.Connector{}
@@ -37,13 +34,10 @@ func TestConnector(t *testing.T) {
 		})
 		t.Run("without body", func(t *testing.T) {
 			t.Parallel()
-			give := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   None[string](),
-					Number: 123,
-					Title:  "my title",
-				},
-				ForgeType: forgedomain.ForgeTypeCodeberg,
+			give := forgedomain.ProposalData{
+				Body:   None[string](),
+				Number: 123,
+				Title:  "my title",
 			}
 			want := "my title (#123)"
 			connector := codeberg.Connector{}

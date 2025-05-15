@@ -47,8 +47,9 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
+func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
+	data := proposalData.Data()
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -79,12 +80,12 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.ProposalInterface, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.ProposalInterface, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.ProposalInterface, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) apiBaseURL() string {

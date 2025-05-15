@@ -325,7 +325,7 @@ func updateChildBranchProposalsToBranch(prog *program.Program, proposals []forge
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.ProposalUpdateTarget{
 			NewBranch: target,
-			OldBranch: childProposal.Data.GetTarget(),
+			OldBranch: childProposal.Data.Data().Target,
 			Proposal:  childProposal,
 		})
 	}

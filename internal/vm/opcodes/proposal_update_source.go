@@ -19,7 +19,7 @@ type ProposalUpdateSource struct {
 }
 
 func (self *ProposalUpdateSource) AutomaticUndoError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Data.GetNumber())
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Data.Data().Number)
 }
 
 func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
@@ -31,7 +31,7 @@ func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
 	if !canUpdateProposalSource {
 		return errors.New(messages.ProposalSourceCannotUpdate)
 	}
-	return updateProposalSource(self.Proposal, self.NewBranch, args.FinalMessages)
+	return updateProposalSource(self.Proposal.Data, self.NewBranch, args.FinalMessages)
 }
 
 func (self *ProposalUpdateSource) ShouldUndoOnError() bool {

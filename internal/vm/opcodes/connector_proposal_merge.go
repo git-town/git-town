@@ -37,6 +37,7 @@ func (self *ConnectorProposalMerge) AutomaticUndoError() error {
 
 func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	commitMessage, hasCommitMessage := self.CommitMessage.Get()
+	proposalData := self.Proposal.Data.Data()
 	if !hasCommitMessage {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
@@ -45,7 +46,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		err = args.Git.CommentOutSquashCommitMessage(Some(forgedomain.CommitBody(self.Proposal.Data, self.Proposal.Data.GetTitle()) + "\n\n"))
+		err = args.Git.CommentOutSquashCommitMessage(Some(forgedomain.CommitBody(proposalData, proposalData.Title) + "\n\n"))
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
@@ -71,7 +72,7 @@ func (self *ConnectorProposalMerge) Run(args shared.RunArgs) error {
 	if !canSquashMergeProposal {
 		return errors.New(messages.ShipAPIConnectorUnsupported)
 	}
-	self.mergeError = squashMergeProposal(self.Proposal.Data.GetNumber(), commitMessage)
+	self.mergeError = squashMergeProposal(proposalData.Number, commitMessage)
 	return self.mergeError
 }
 

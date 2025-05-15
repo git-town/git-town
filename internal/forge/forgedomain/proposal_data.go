@@ -15,36 +15,16 @@ type ProposalData struct {
 	URL          string
 }
 
-func (self ProposalData) GetBody() Option[string] {
-	return self.Body
-}
-
-func (self ProposalData) GetMergeWithAPI() bool {
-	return self.MergeWithAPI
-}
-
-func (self ProposalData) GetNumber() int {
-	return self.Number
-}
-
-func (self ProposalData) GetSource() gitdomain.LocalBranchName {
-	return self.Source
-}
-
-func (self ProposalData) GetTarget() gitdomain.LocalBranchName {
-	return self.Target
-}
-
-func (self ProposalData) GetTitle() string {
-	return self.Title
-}
-
-func (self ProposalData) GetURL() string {
-	return self.URL
+func (self ProposalData) Data() ProposalData {
+	return self
 }
 
 type BitbucketCloudProposalData struct {
 	ProposalData
 	CloseSourceBranch bool
 	Draft             bool
+}
+
+func (self BitbucketCloudProposalData) Data() ProposalData {
+	return self.ProposalData
 }
