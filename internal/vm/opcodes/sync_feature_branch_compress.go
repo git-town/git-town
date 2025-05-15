@@ -14,6 +14,7 @@ type SyncFeatureBranchCompress struct {
 	InitialParentName       Option[gitdomain.LocalBranchName]
 	InitialParentSHA        Option[gitdomain.SHA]
 	Offline                 configdomain.Offline
+	PushBranches            configdomain.PushBranches
 	TrackingBranch          Option[gitdomain.RemoteBranchName]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
@@ -68,7 +69,7 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Message:        commitMessage,
 			},
 		)
-		if self.Offline.IsOnline() && self.TrackingBranch.IsSome() {
+		if self.Offline.IsOnline() && self.TrackingBranch.IsSome() && self.PushBranches.IsTrue() {
 			opcodes = append(opcodes, &PushCurrentBranchForceIfNeeded{CurrentBranch: self.CurrentBranch, ForceIfIncludes: false})
 		}
 	}

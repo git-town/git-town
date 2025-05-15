@@ -27,24 +27,23 @@ Feature: syncing a top-level feature branch using --no-push
       | feature | git -c rebase.updateRefs=false rebase main           |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
       |         | git -c rebase.updateRefs=false rebase main           |
-      |         | git push --force-with-lease --force-if-includes      |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         | local         | local main commit     |
-      | feature | local, origin | origin feature commit |
+      | feature | local         | origin feature commit |
       |         |               | local feature commit  |
       |         | origin        | local main commit     |
+      |         |               | origin feature commit |
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                                           |
-      | feature | git reset --hard {{ sha 'local feature commit' }}                                                 |
-      |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |
-      |         | git checkout main                                                                                 |
-      | main    | git reset --hard {{ sha 'local main commit' }}                                                    |
-      |         | git checkout feature                                                                              |
+      | BRANCH  | COMMAND                                           |
+      | feature | git reset --hard {{ sha 'local feature commit' }} |
+      |         | git checkout main                                 |
+      | main    | git reset --hard {{ sha 'local main commit' }}    |
+      |         | git checkout feature                              |
     And the initial commits exist now
     And the initial branches and lineage exist now

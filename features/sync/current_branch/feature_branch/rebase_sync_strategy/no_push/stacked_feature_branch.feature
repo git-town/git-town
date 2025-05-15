@@ -28,34 +28,31 @@ Feature: syncing a stacked feature branch using --no-push
       | parent | git -c rebase.updateRefs=false rebase main          |
       |        | git -c rebase.updateRefs=false rebase origin/parent |
       |        | git -c rebase.updateRefs=false rebase main          |
-      |        | git push --force-with-lease --force-if-includes     |
       |        | git checkout child                                  |
       | child  | git -c rebase.updateRefs=false rebase parent        |
       |        | git -c rebase.updateRefs=false rebase origin/child  |
       |        | git -c rebase.updateRefs=false rebase parent        |
-      |        | git push --force-with-lease --force-if-includes     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
       |        | local         | local main commit    |
-      | child  | local, origin | origin child commit  |
+      | child  | local         | origin child commit  |
       |        |               | local child commit   |
-      | parent | local, origin | origin parent commit |
+      |        | origin        | origin child commit  |
+      | parent | local         | origin parent commit |
       |        |               | local parent commit  |
-      |        | origin        | local main commit    |
+      |        | origin        | origin parent commit |
     And the initial branches and lineage exist now
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                                         |
-      | child  | git reset --hard {{ sha 'local child commit' }}                                                 |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                             |
-      | parent | git reset --hard {{ sha 'local parent commit' }}                                                |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
-      |        | git checkout main                                                                               |
-      | main   | git reset --hard {{ sha 'local main commit' }}                                                  |
-      |        | git checkout child                                                                              |
+      | BRANCH | COMMAND                                          |
+      | child  | git reset --hard {{ sha 'local child commit' }}  |
+      |        | git checkout main                                |
+      | main   | git reset --hard {{ sha 'local main commit' }}   |
+      |        | git checkout parent                              |
+      | parent | git reset --hard {{ sha 'local parent commit' }} |
+      |        | git checkout child                               |
     And the initial commits exist now
     And the initial branches and lineage exist now
