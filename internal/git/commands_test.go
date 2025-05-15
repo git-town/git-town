@@ -223,10 +223,8 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("both empty", func(t *testing.T) {
 			t.Parallel()
 			local := testruntime.Create(t)
-			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
-			must.NoError(t, err)
-			err = local.Git.CreateAndCheckoutBranch(local.TestRunner, "child")
-			must.NoError(t, err)
+			asserts.NoError(local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
+			asserts.NoError(local.Git.CreateAndCheckoutBranch(local.TestRunner, "child"))
 			inSync, err := local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent")
 			must.NoError(t, err)
 			must.True(t, inSync)
