@@ -59,12 +59,10 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Run("without body", func(t *testing.T) {
-			give := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   None[string](),
-					Number: 123,
-					Title:  "my title",
-				},
+			give := forgedomain.ProposalData{
+				Body:   None[string](),
+				Number: 123,
+				Title:  "my title",
 			}
 			want := "my title (#123)"
 			connector := gitea.Connector{}
@@ -72,12 +70,10 @@ func TestGitea(t *testing.T) {
 			must.EqOp(t, want, have)
 		})
 		t.Run("with body", func(t *testing.T) {
-			give := forgedomain.Proposal{
-				Data: forgedomain.ProposalData{
-					Body:   Some("body"),
-					Number: 123,
-					Title:  "my title",
-				},
+			give := forgedomain.ProposalData{
+				Body:   Some("body"),
+				Number: 123,
+				Title:  "my title",
 			}
 			want := "my title (#123)\n\nbody"
 			connector := gitea.Connector{}

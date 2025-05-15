@@ -48,8 +48,8 @@ type NewConnectorArgs struct {
 	UserName    Option[configdomain.BitbucketUsername]
 }
 
-func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
+func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -82,11 +82,11 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.ProposalInterface, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	return Some(self.updateProposalSource)
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	return Some(self.updateProposalTarget)
 }
 
@@ -257,19 +257,19 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalSource(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(source.String()))
+func (self Connector) updateProposalSource(proposalData forgedomain.ProposalInterface, source gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	data := proposalData.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalSource, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(source.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(proposal.Data.GetNumber()),
+		ID:                strconv.Itoa(data.Number),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
 		SourceBranch:      source.String(),
-		DestinationBranch: proposal.Data.GetTarget().String(),
-		Title:             proposal.Data.GetTitle(),
-		Description:       proposal.Data.GetBody().GetOrDefault(),
-		Draft:             bitbucketData.Draft,
-		CloseSourceBranch: bitbucketData.CloseSourceBranch,
+		DestinationBranch: data.Target.String(),
+		Title:             data.Title,
+		Description:       data.Body.GetOrDefault(),
+		Draft:             data.Draft,
+		CloseSourceBranch: data.CloseSourceBranch,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
@@ -279,19 +279,19 @@ func (self Connector) updateProposalSource(proposal forgedomain.Proposal, source
 	return nil
 }
 
-func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	bitbucketData := proposal.Data.(forgedomain.BitbucketCloudProposalData)
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(target.String()))
+func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	data := proposalData.(forgedomain.BitbucketCloudProposalData)
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(data.Number)), colors.BoldCyan().Styled(target.String()))
 	_, err := self.client.Repositories.PullRequests.Update(&bitbucket.PullRequestsOptions{
-		ID:                strconv.Itoa(proposal.Data.GetNumber()),
+		ID:                strconv.Itoa(data.Number),
 		Owner:             self.Organization,
 		RepoSlug:          self.Repository,
-		SourceBranch:      proposal.Data.GetSource().String(),
+		SourceBranch:      data.Source.String(),
 		DestinationBranch: target.String(),
-		Title:             proposal.Data.GetTitle(),
-		Description:       proposal.Data.GetBody().GetOrDefault(),
-		Draft:             bitbucketData.Draft,
-		CloseSourceBranch: bitbucketData.CloseSourceBranch,
+		Title:             data.Title,
+		Description:       data.Body.GetOrDefault(),
+		Draft:             data.Draft,
+		CloseSourceBranch: data.CloseSourceBranch,
 	})
 	if err != nil {
 		self.log.Failed(err.Error())
