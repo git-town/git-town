@@ -259,7 +259,7 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "initial commit",
 			})
 			local.CheckoutBranch("parent")
-			local.RebaseAgainstBranch("initial")
+			asserts.NoError(local.RebaseAgainstBranch("initial"))
 			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "parent", "initial"))
 			must.True(t, inSync)
 			local.CheckoutBranch("child")
