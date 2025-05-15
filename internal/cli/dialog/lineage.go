@@ -41,7 +41,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			if searchProposals, canSearchProposals := connector.SearchProposalFn().Get(); canSearchProposals {
 				proposalOpt, _ := searchProposals(branchToVerify)
 				if proposal, hasProposal := proposalOpt.Get(); hasProposal {
-					parent := proposal.Target
+					parent := proposal.Data.GetTarget()
 					additionalLineage = additionalLineage.Set(branchToVerify, parent)
 					branchesToVerify = append(branchesToVerify, parent)
 					continue

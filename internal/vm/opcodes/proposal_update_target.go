@@ -13,12 +13,12 @@ import (
 type ProposalUpdateTarget struct {
 	NewBranch               gitdomain.LocalBranchName
 	OldBranch               gitdomain.LocalBranchName
-	ProposalNumber          int
+	Proposal                forgedomain.Proposal
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *ProposalUpdateTarget) AutomaticUndoError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.Proposal.Data.GetNumber())
 }
 
 func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
@@ -30,7 +30,7 @@ func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
 	if !canUpdateProposalTarget {
 		return forgedomain.UnsupportedServiceError()
 	}
-	return updateProposalTarget(self.ProposalNumber, self.NewBranch, args.FinalMessages)
+	return updateProposalTarget(self.Proposal, self.NewBranch, args.FinalMessages)
 }
 
 func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {
@@ -40,9 +40,9 @@ func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {
 func (self *ProposalUpdateTarget) UndoExternalChangesProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ProposalUpdateTarget{
-			NewBranch:      self.OldBranch,
-			OldBranch:      self.NewBranch,
-			ProposalNumber: self.ProposalNumber,
+			NewBranch: self.OldBranch,
+			OldBranch: self.NewBranch,
+			Proposal:  self.Proposal,
 		},
 	}
 }

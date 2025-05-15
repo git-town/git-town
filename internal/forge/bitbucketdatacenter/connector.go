@@ -48,7 +48,7 @@ type NewConnectorArgs struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return proposal.CommitBody(fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
+	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -79,12 +79,12 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
-	return None[func(number int, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, source gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) apiBaseURL() string {
@@ -128,7 +128,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	}
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(proposal), nil
+	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
 func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -138,7 +138,7 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 	if proposalURLOverride == forgedomain.OverrideNoProposal {
 		return None[forgedomain.Proposal](), nil
 	}
-	return Some(forgedomain.Proposal{
+	data := forgedomain.ProposalData{
 		Body:         None[string](),
 		MergeWithAPI: true,
 		Number:       123,
@@ -146,7 +146,8 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		Target:       target,
 		Title:        "title",
 		URL:          proposalURLOverride,
-	}), nil
+	}
+	return Some(forgedomain.Proposal{Data: data, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -179,11 +180,11 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	}
 	proposal := parsePullRequest(*needle, self.RepositoryURL())
 	self.log.Success(fmt.Sprintf("#%d", proposal.Number))
-	return Some(proposal), nil
+	return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeBitbucketDatacenter}), nil
 }
 
-func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.Proposal {
-	return forgedomain.Proposal{
+func parsePullRequest(pullRequest PullRequest, repoURL string) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
 		MergeWithAPI: false,
 		Number:       pullRequest.ID,
 		Source:       gitdomain.NewLocalBranchName(pullRequest.FromRef.DisplayID),

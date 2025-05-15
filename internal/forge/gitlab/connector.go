@@ -49,13 +49,13 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return Some(self.squashMergeProposal)
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
-	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	if self.APIToken.IsNone() {
-		return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+		return None[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 	}
 	return Some(self.updateProposalTarget)
 }
@@ -79,7 +79,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(strconv.Itoa(proposal.Number))
-		return Some(proposal), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(mergeRequests), branch, target)
 	}
@@ -93,13 +93,16 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
-		Body:         None[string](),
-		MergeWithAPI: true,
-		Number:       123,
-		Source:       branch,
-		Target:       target,
-		Title:        "title",
-		URL:          proposalURLOverride,
+		Data: forgedomain.ProposalData{
+			Body:         None[string](),
+			MergeWithAPI: true,
+			Number:       123,
+			Source:       branch,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		},
+		ForgeType: forgedomain.ForgeTypeGitLab,
 	}), nil
 }
 
@@ -121,7 +124,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	case 1:
 		proposal := parseMergeRequest(mergeRequests[0])
 		self.log.Success(proposal.Target.String())
-		return Some(proposal), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitLab}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(mergeRequests), branch)
 	}
@@ -147,9 +150,9 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return nil
 }
 
-func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, number, target)
-	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	self.log.Start(messages.ForgeGitlabUpdateMRViaAPI, proposal.Data.GetNumber(), target)
+	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), proposal.Data.GetNumber(), &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {
@@ -191,8 +194,8 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.Proposal {
-	return forgedomain.Proposal{
+func parseMergeRequest(mergeRequest *gitlab.BasicMergeRequest) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
 		MergeWithAPI: true,
 		Number:       mergeRequest.IID,
 		Source:       gitdomain.NewLocalBranchName(mergeRequest.SourceBranch),

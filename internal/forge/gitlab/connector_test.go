@@ -18,23 +18,33 @@ func TestGitlabConnector(t *testing.T) {
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		config := gitlab.Data{
-			Data: forgedomain.Data{
-				Hostname:     "",
-				Organization: "",
-				Repository:   "",
-			},
-			APIToken: None[configdomain.GitLabToken](),
-		}
-		give := forgedomain.Proposal{
-			Number:       1,
-			MergeWithAPI: true,
-			Target:       "",
-			Title:        "my title",
-		}
-		have := config.DefaultProposalMessage(give)
-		want := "my title (!1)"
-		must.EqOp(t, want, have)
+		t.Run("without body", func(t *testing.T) {
+			t.Parallel()
+			connector := gitlab.Connector{}
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 123,
+					Title:  "my title",
+				},
+			}
+			have := connector.DefaultProposalMessage(give)
+			want := "my title (!123)"
+			must.EqOp(t, want, have)
+		})
+		t.Run("with body", func(t *testing.T) {
+			t.Parallel()
+			connector := gitlab.Connector{}
+			give := forgedomain.Proposal{
+				Data: forgedomain.ProposalData{
+					Number: 123,
+					Title:  "my title",
+					Body:   Some("body"),
+				},
+			}
+			have := connector.DefaultProposalMessage(give)
+			want := "my title (!123)\n\nbody"
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
