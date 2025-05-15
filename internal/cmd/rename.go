@@ -302,9 +302,9 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 			connectorCanUpdateProposalSource := hasConnector && connector.UpdateProposalSourceFn().IsSome()
 			if hasProposal && hasConnector && connectorCanUpdateProposalSource {
 				prog.Value.Add(&opcodes.ProposalUpdateSource{
-					NewBranch:      data.newBranch,
-					OldBranch:      data.oldBranch.LocalBranchName(),
-					ProposalNumber: proposal.Number,
+					NewBranch: data.newBranch,
+					OldBranch: data.oldBranch.LocalBranchName(),
+					Proposal:  proposal,
 				})
 			}
 			prog.Value.Add(&opcodes.BranchTrackingDelete{Branch: oldTrackingBranch})
@@ -324,9 +324,9 @@ func renameProgram(data renameData, finalMessages stringslice.Collector) program
 func updateChildBranchProposalsToBranch(prog *program.Program, proposals []forgedomain.Proposal, target gitdomain.LocalBranchName) {
 	for _, childProposal := range proposals {
 		prog.Add(&opcodes.ProposalUpdateTarget{
-			NewBranch:      target,
-			OldBranch:      childProposal.Target,
-			ProposalNumber: childProposal.Number,
+			NewBranch: target,
+			OldBranch: childProposal.Data.GetTarget(),
+			Proposal:  childProposal,
 		})
 	}
 }

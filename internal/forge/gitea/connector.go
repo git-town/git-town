@@ -28,7 +28,7 @@ type Connector struct {
 }
 
 func (self Connector) DefaultProposalMessage(proposal forgedomain.Proposal) string {
-	return proposal.CommitBody(fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number))
+	return forgedomain.CommitBody(proposal.Data, fmt.Sprintf("%s (#%d)", proposal.Data.GetTitle(), proposal.Data.GetNumber()))
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -64,15 +64,15 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
-	return None[func(number int, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
+func (self Connector) UpdateProposalTargetFn() Option[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
 	if self.APIToken.IsSome() {
 		return Some(self.updateProposalTarget)
 	}
-	return None[func(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
+	return None[func(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error]()
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -95,7 +95,7 @@ func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchNam
 	case 1:
 		proposal := parsePullRequest(pullRequests[0])
 		self.log.Success(proposal.Target.String())
-		return Some(proposal), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitea}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(pullRequests), branch, target)
 	}
@@ -109,13 +109,16 @@ func (self Connector) findProposalViaOverride(branch, target gitdomain.LocalBran
 		return None[forgedomain.Proposal](), nil
 	}
 	return Some(forgedomain.Proposal{
-		Body:         None[string](),
-		MergeWithAPI: true,
-		Number:       123,
-		Source:       branch,
-		Target:       target,
-		Title:        "title",
-		URL:          proposalURLOverride,
+		Data: forgedomain.ProposalData{
+			Body:         None[string](),
+			MergeWithAPI: true,
+			Number:       123,
+			Source:       branch,
+			Target:       target,
+			Title:        "title",
+			URL:          proposalURLOverride,
+		},
+		ForgeType: forgedomain.ForgeTypeGitea,
 	}), nil
 }
 
@@ -140,7 +143,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 		pullRequest := pullRequests[0]
 		proposal := parsePullRequest(pullRequest)
 		self.log.Success(proposal.Target.String())
-		return Some(proposal), nil
+		return Some(forgedomain.Proposal{Data: proposal, ForgeType: forgedomain.ForgeTypeGitea}), nil
 	default:
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(pullRequests), branch)
 	}
@@ -168,10 +171,10 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	return err
 }
 
-func (self Connector) updateProposalTarget(number int, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+func (self Connector) updateProposalTarget(proposal forgedomain.Proposal, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	targetName := target.String()
-	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(number)), colors.BoldCyan().Styled(targetName))
-	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(number), gitea.EditPullRequestOption{
+	self.log.Start(messages.APIUpdateProposalTarget, colors.BoldGreen().Styled("#"+strconv.Itoa(proposal.Data.GetNumber())), colors.BoldCyan().Styled(targetName))
+	_, _, err := self.client.EditPullRequest(self.Organization, self.Repository, int64(proposal.Data.GetNumber()), gitea.EditPullRequestOption{
 		Base: targetName,
 	})
 	if err != nil {
@@ -226,8 +229,8 @@ type NewConnectorArgs struct {
 	RemoteURL giturl.Parts
 }
 
-func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.Proposal {
-	return forgedomain.Proposal{
+func parsePullRequest(pullRequest *gitea.PullRequest) forgedomain.ProposalData {
+	return forgedomain.ProposalData{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Source:       gitdomain.NewLocalBranchName(pullRequest.Head.Ref),

@@ -421,9 +421,9 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	connectorCanUpdateProposalTargets := hasConnector && connector.UpdateProposalTargetFn().IsSome()
 	if hasProposal && hasConnector && connectorCanUpdateProposalTargets {
 		prog.Value.Add(&opcodes.ProposalUpdateTarget{
-			NewBranch:      data.targetBranch,
-			OldBranch:      data.existingParent,
-			ProposalNumber: proposal.Number,
+			NewBranch: data.targetBranch,
+			OldBranch: data.existingParent,
+			Proposal:  proposal,
 		})
 	}
 	moveCommitsToPrependedBranch(prog, data)

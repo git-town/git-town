@@ -305,15 +305,15 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		_, connectorCanUpdateTargetBranch := connector.UpdateProposalTargetFn().Get()
 		if hasInitialBranchProposal && connectorCanUpdateTargetBranch {
 			prog.Value.Add(&opcodes.ProposalUpdateTarget{
-				NewBranch:      data.grandParentBranch,
-				OldBranch:      data.parentBranch,
-				ProposalNumber: initialBranchProposal.Number,
+				NewBranch: data.grandParentBranch,
+				OldBranch: data.parentBranch,
+				Proposal:  initialBranchProposal,
 			})
 		} else if hasParentBranchProposal && connectorCanUpdateSourceBranch {
 			prog.Value.Add(&opcodes.ProposalUpdateSource{
-				NewBranch:      data.initialBranch,
-				OldBranch:      data.parentBranch,
-				ProposalNumber: parentBranchProposal.Number,
+				NewBranch: data.initialBranch,
+				OldBranch: data.parentBranch,
+				Proposal:  parentBranchProposal,
 			})
 		}
 	}
