@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/subshell"
 	"github.com/git-town/git-town/v20/internal/test/testgit"
 	"github.com/git-town/git-town/v20/internal/test/testruntime"
+	"github.com/git-town/git-town/v20/pkg/asserts"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -48,8 +49,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
-			err := runtime.Git.CreateAndCheckoutBranch(runtime, branch1)
-			must.NoError(t, err)
+			asserts.NoError(runtime.Git.CreateAndCheckoutBranch(runtime, branch1))
 			runtime.CreateBranch(branch2, branch1.BranchName())
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch1,
@@ -58,26 +58,22 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "commit 1",
 			})
 			runtime.CheckoutBranch(branch2)
-			err = runtime.Git.MergeNoFastForward(runtime, configdomain.UseDefaultMessage(), branch1)
-			must.NoError(t, err)
-			have, err := runtime.Git.BranchContainsMerges(runtime, branch2, branch1)
-			must.NoError(t, err)
+			asserts.NoError(runtime.Git.MergeNoFastForward(runtime, configdomain.UseDefaultMessage(), branch1))
+			have := asserts.NoError1(runtime.Git.BranchContainsMerges(runtime, branch2, branch1))
 			must.True(t, have)
 		})
 		t.Run("branch has no merge commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
-			err := runtime.Git.CreateAndCheckoutBranch(runtime, branch1)
-			must.NoError(t, err)
+			asserts.NoError(runtime.Git.CreateAndCheckoutBranch(runtime, branch1))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch1,
 				FileContent: "content",
 				FileName:    "file1",
 				Message:     "commit 1",
 			})
-			have, err := runtime.Git.BranchContainsMerges(runtime, branch1, initial)
-			must.NoError(t, err)
+			have := asserts.NoError1(runtime.Git.BranchContainsMerges(runtime, branch1, initial))
 			must.False(t, have)
 		})
 	})
@@ -101,8 +97,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := gitdomain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial.BranchName())
-			have, err := runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
-			must.NoError(t, err)
+			have := asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
 			must.False(t, have)
 		})
 		t.Run("branch with commits", func(t *testing.T) {
@@ -122,8 +117,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				Message:     "commit 2",
 			})
-			have, err := runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
-			must.NoError(t, err)
+			have := asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
@@ -131,8 +125,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				Message:     "commit 3",
 			})
-			have, err = runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial)
-			must.NoError(t, err)
+			have = asserts.NoError1(runtime.Git.BranchHasUnmergedChanges(runtime.TestRunner, branch, initial))
 			must.False(t, have, must.Sprint("branch with commits that make no changes"))
 		})
 	})
@@ -142,18 +135,15 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("child has the same commits as parent", func(t *testing.T) {
 			t.Parallel()
 			local := testruntime.Create(t)
-			err := local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent")
-			must.NoError(t, err)
+			asserts.NoError(local.Git.CreateAndCheckoutBranch(local.TestRunner, "parent"))
 			local.CreateCommit(testgit.Commit{
 				Branch:      "parent",
 				FileContent: "content",
 				FileName:    "parent_file",
 				Message:     "add parent file",
 			})
-			err = local.Git.CreateAndCheckoutBranch(local.TestRunner, "child")
-			must.NoError(t, err)
-			inSync, err := local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent")
-			must.NoError(t, err)
+			asserts.NoError(local.Git.CreateAndCheckoutBranch(local.TestRunner, "child"))
+			inSync := asserts.NoError1(local.Git.BranchInSyncWithParent(local.TestRunner, "child", "parent"))
 			must.True(t, inSync)
 		})
 		t.Run("parent has extra commit", func(t *testing.T) {
