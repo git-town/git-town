@@ -55,7 +55,7 @@ main
  \
   branch-1
    \
-*   branch-3
+*   branch-2
      \
       branch-4
 `
@@ -300,36 +300,26 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsOnline() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
-		parentBranchProposal, hasParentBranchProposal := data.parentBranchProposal.Get()
 		_, connectorCanUpdateSourceBranch := connector.UpdateProposalSourceFn().Get()
-		_, connectorCanUpdateTargetBranch := connector.UpdateProposalTargetFn().Get()
-		if hasInitialBranchProposal && connectorCanUpdateTargetBranch {
+		if hasInitialBranchProposal && connectorCanUpdateSourceBranch {
 			prog.Value.Add(&opcodes.ProposalUpdateTarget{
-				NewBranch: data.grandParentBranch,
-				OldBranch: data.parentBranch,
+				NewBranch: data.parentBranch,
+				OldBranch: data.initialBranch,
 				Proposal:  initialBranchProposal,
-			})
-		} else if hasParentBranchProposal && connectorCanUpdateSourceBranch {
-			prog.Value.Add(&opcodes.ProposalUpdateSource{
-				NewBranch: data.initialBranch,
-				OldBranch: data.parentBranch,
-				Proposal:  parentBranchProposal,
 			})
 		}
 	}
-	prog.Value.Add(&opcodes.LineageParentSet{
-		Branch: data.initialBranch,
-		Parent: data.grandParentBranch,
-	})
+	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
 	prog.Value.Add(&opcodes.LineageParentRemove{
-		Branch: data.parentBranch,
+		Branch: data.initialBranch,
 	})
 	prog.Value.Add(&opcodes.BranchLocalDelete{
-		Branch: data.parentBranch,
+		Branch: data.initialBranch,
 	})
-	if data.parentBranchInfo.HasTrackingBranch() && data.offline.IsOnline() {
+	// TODO: destructure initialBranchInfo.RemoteBranch and use that data here
+	if data.initialBranchInfo.HasTrackingBranch() && data.offline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
-			Branch: data.parentBranch.AtRemote(data.config.NormalConfig.DevRemote),
+			Branch: data.initialBranch.AtRemote(data.config.NormalConfig.DevRemote),
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
