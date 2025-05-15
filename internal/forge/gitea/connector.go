@@ -27,8 +27,7 @@ type Connector struct {
 	log      print.Logger
 }
 
-func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalInterface) string {
-	data := proposalData.Data()
+func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
@@ -65,8 +64,8 @@ func (self Connector) SquashMergeProposalFn() Option[func(number int, message gi
 	return None[func(number int, message gitdomain.CommitMessage) error]()
 }
 
-func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
-	return None[func(proposal forgedomain.Proposal, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
+func (self Connector) UpdateProposalSourceFn() Option[func(proposal forgedomain.ProposalInterface, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error] {
+	return None[func(proposal forgedomain.ProposalInterface, _ gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]()
 }
 
 func (self Connector) UpdateProposalTargetFn() Option[func(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error] {
