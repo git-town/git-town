@@ -1,5 +1,27 @@
 # Git Town Changelog
 
+## 20.2.0 (2025-05-15)
+
+#### New Features
+
+- `git town sync` now only executes the Git operations that are actually needed, i.e. skips Git operations that would do nothing ([#4913](https://github.com/git-town/git-town/pull/4913), [#4907](https://github.com/git-town/git-town/pull/4907), [#4902](https://github.com/git-town/git-town/pull/4902)).
+- When shipping via the forge API, `git town ship` now pre-populates the commit message with the proposal title and description ([#2095](https://github.com/git-town/git-town/issues/2095)).
+- Git Town now supports detecting copied files via the `git config diff.renames copies` setting ([#4878](https://github.com/git-town/git-town/issues/4878)).
+
+#### Bug Fixes
+
+- Detached mode no longer pulls updates from the local main branch into feature branches ([#4890](https://github.com/git-town/git-town/issues/4890)).
+- Git Town no longer deletes details when updating pull requests on BitBucket Cloud ([#4900](https://github.com/git-town/git-town/issues/4900)).
+- `git town sync` with the `compress` strategy no longer re-creates commits if there are no changes ([#4342](https://github.com/git-town/git-town/issues/4342)).
+- `git town sync` now respects the `--no-push` setting when rebasing ([#4930](https://github.com/git-town/git-town/issues/4930)).
+- Git Town no longer unstashes if the initial stash command was ineffectual ([#1003](https://github.com/git-town/git-town/issues/1003)).
+- `git town propose` now always runs detached ([#4915](https://github.com/git-town/git-town/pull/4915)).
+- `git town sync` now more reliably skips the editor ([#4911](https://github.com/git-town/git-town/pull/4911)).
+
+#### Contributors
+
+Shoutout to @AmitJoki, @JCB-K, @blaggacao, @charlierudolph, @erik-rw, @fcurella, @kevgo, @legeana, @mw00120, @sheldonhull, @stephenwade for contributing code, feedback, and ideas to 59 shipped PRs and 13 resolved issues!
+
 ## 20.1.0 (2025-05-08)
 
 #### New Features
