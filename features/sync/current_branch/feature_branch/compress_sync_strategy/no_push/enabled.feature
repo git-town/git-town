@@ -28,13 +28,12 @@ Feature: sync the current feature branch using the "compress" strategy in no-pus
       |         | git merge --no-edit --ff origin/feature           |
       |         | git reset --soft main                             |
       |         | git commit -m "local feature commit 1"            |
-      |         | git push --force-with-lease                       |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                |
       | main    | local, origin | origin main commit     |
       |         | local         | local main commit      |
-      | feature | local, origin | local feature commit 1 |
-      |         | origin        | local main commit      |
+      | feature | local         | local feature commit 1 |
+      |         | origin        | origin feature commit  |
 
   Scenario: undo
     When I run "git-town undo"
