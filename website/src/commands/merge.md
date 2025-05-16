@@ -4,7 +4,7 @@
 git town merge [--dry-run] [-v | --verbose]
 ```
 
-The _merge_ command merges the current branch with the branch ahead of it in the
+The _merge_ command merges the current branch into the branch ahead of it in the
 current stack.
 
 Consider this stack:
@@ -22,7 +22,7 @@ main
 ```
 
 We are on the `branch-3` branch. After running `git town merge`, the stack looks
-like below, and the new `branch-3` branch contains the changes from the old
+like below, and the new `branch-2` branch contains the changes from the old
 `branch-2` and `branch-3` branches.
 
 ```
@@ -30,7 +30,7 @@ main
  \
   branch-1
    \
-*   branch-3
+*   branch-2
      \
       branch-4
 ```

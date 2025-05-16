@@ -53,6 +53,7 @@ func (self *RebaseParentsUntilLocal) Run(args shared.RunArgs) error {
 			branchToRebase = parent.BranchName()
 		}
 		if previousParentSHA, hasPreviousParentSHA := self.PreviousSHA.Get(); hasPreviousParentSHA {
+			// TODO: only perform this operation if really needed, i.e. if there are commits to remove?
 			program = append(program, &RebaseOntoKeepDeleted{
 				BranchToRebaseOnto: branchToRebase,
 				CommitsToRemove:    previousParentSHA.Location(),

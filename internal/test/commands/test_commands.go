@@ -463,6 +463,12 @@ func (self *TestCommands) RenameRemote(oldName, newName string) {
 	self.MustRun("git", "remote", "rename", oldName, newName)
 }
 
+// provides the SHA that the given branch points to
+func (self *TestCommands) SHAforBranch(branch gitdomain.LocalBranchName) gitdomain.SHA {
+	output := self.MustQuery("git", "rev-parse", branch.String())
+	return gitdomain.NewSHA(output)
+}
+
 // SHAForCommit provides the SHA for the commit with the given name.
 func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
 	output := self.MustQuery("git", "reflog", "--format=%H %s")
