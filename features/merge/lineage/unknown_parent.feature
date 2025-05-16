@@ -14,17 +14,19 @@ Feature: merging with missing lineage
     Then Git Town runs the commands
       | BRANCH | COMMAND                  |
       | beta   | git fetch --prune --tags |
-      |        | git branch -D alpha      |
+      |        | git checkout alpha       |
+      | alpha  | git branch -D beta       |
     And this lineage exists now
       | BRANCH | PARENT |
-      | beta   | main   |
+      | alpha  | main   |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                     |
-      | beta   | git branch alpha {{ sha 'initial commit' }} |
+      | BRANCH | COMMAND                                    |
+      | alpha  | git branch beta {{ sha 'initial commit' }} |
+      |        | git checkout beta                          |
     And the initial commits exist now
     And the initial lineage exists now

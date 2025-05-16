@@ -19,10 +19,12 @@ Feature: dry-run merging branches
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git branch -D alpha      |
-      |        | git push origin :alpha   |
+      | BRANCH | COMMAND                                  |
+      | beta   | git fetch --prune --tags                 |
+      |        | git checkout alpha                       |
+      | alpha  | git reset --hard {{ sha 'beta commit' }} |
+      |        | git branch -D beta                       |
+      |        | git push origin :beta                    |
     And the initial commits exist now
     And the initial branches exist now
 

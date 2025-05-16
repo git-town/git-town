@@ -20,23 +20,29 @@ Feature: merging a branch with disabled push-hook
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                  |
-      | beta   | git fetch --prune --tags |
-      |        | git branch -D alpha      |
-      |        | git push origin :alpha   |
+      | BRANCH | COMMAND                                                     |
+      | beta   | git fetch --prune --tags                                    |
+      |        | git checkout alpha                                          |
+      | alpha  | git reset --hard {{ sha 'beta commit' }}                    |
+      |        | git branch -D beta                                          |
+      |        | git push --force-with-lease --force-if-includes --no-verify |
+      |        | git push origin :beta                                       |
     And this lineage exists now
       | BRANCH | PARENT |
-      | beta   | main   |
+      | alpha  | main   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
-      | beta   | local, origin | alpha commit |
+      | alpha  | local, origin | alpha commit |
       |        |               | beta commit  |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git branch alpha {{ sha-before-run 'alpha commit' }} |
-      |        | git push --no-verify -u origin alpha                 |
+      | BRANCH | COMMAND                                                     |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }}                   |
+      |        | git push --force-with-lease --force-if-includes --no-verify |
+      |        | git branch beta {{ sha 'beta commit' }}                     |
+      |        | git push --no-verify -u origin beta                         |
+      |        | git checkout beta                                           |
     And the initial commits exist now
     And the initial lineage exists now

@@ -13,15 +13,17 @@ Feature: merging a feature branch with a parked branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | current | git fetch --prune --tags |
-      |         | git branch -D parent     |
+      |         | git checkout parent      |
+      | parent  | git branch -D current    |
     And this lineage exists now
-      | BRANCH  | PARENT |
-      | current | main   |
+      | BRANCH | PARENT |
+      | parent | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                      |
-      | current | git branch parent {{ sha 'initial commit' }} |
+      | BRANCH | COMMAND                                       |
+      | parent | git branch current {{ sha 'initial commit' }} |
+      |        | git checkout current                          |
     And the initial commits exist now
     And the initial lineage exists now
