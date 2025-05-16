@@ -1291,10 +1291,35 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("RebaseInProgress", func(t *testing.T) {
 		t.Parallel()
-		runtime := testruntime.Create(t)
-		have := asserts.NoError1(runtime.Git.RepoStatus(runtime))
-		must.False(t, have.RebaseInProgress)
-		// TODO: add more tests
+		t.Run("not in progress", func(t *testing.T) {
+			runtime := testruntime.Create(t)
+			repoStatus := asserts.NoError1(runtime.Git.RepoStatus(runtime))
+			must.False(t, repoStatus.RebaseInProgress)
+		})
+		t.Run("in progress", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := gitdomain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch1, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileContent: "content 1",
+				FileName:    "file",
+				Message:     "commit 1",
+			})
+			branch2 := gitdomain.NewLocalBranchName("branch2")
+			runtime.CreateBranch(branch2, initial.BranchName())
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch2,
+				FileContent: "content 2",
+				FileName:    "file",
+				Message:     "commit 2",
+			})
+			runtime.CheckoutBranch(branch2)
+			runtime.RebaseAgainstBranch(branch1)
+			repoStatus := asserts.NoError1(runtime.Git.RepoStatus(runtime))
+			must.True(t, repoStatus.RebaseInProgress)
+		})
 	})
 
 	t.Run("Remotes", func(t *testing.T) {
