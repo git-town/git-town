@@ -7,10 +7,10 @@ import (
 
 // BranchLocalSetToSHA sets the given local branch to the given SHA.
 type BranchLocalSetToSHA struct {
-	SetToSHA                gitdomain.SHA
+	SHA                     gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (self *BranchLocalSetToSHA) Run(args shared.RunArgs) error {
-	return args.Git.ResetCurrentBranchToSHA(args.Frontend, self.SetToSHA, true)
+	return args.Git.ResetCurrentBranchToSHA(args.Frontend, self.SHA, true)
 }
