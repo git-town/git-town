@@ -813,13 +813,8 @@ func (self *Commands) ResetBranch(runner gitdomain.Runner, target gitdomain.Bran
 }
 
 // TODO: remove the "hard" argument and always use true here
-func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdomain.SHA, hard bool) error {
-	args := []string{"reset"}
-	if hard {
-		args = append(args, "--hard")
-	}
-	args = append(args, sha.String())
-	return runner.Run("git", args...)
+func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdomain.SHA) error {
+	return runner.Run("git", "reset", "--hard", sha.String())
 }
 
 func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {

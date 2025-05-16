@@ -34,14 +34,12 @@ func TestRunState(t *testing.T) {
 				&opcodes.BranchCurrentResetToSHAIfNeeded{
 					MustHaveSHA: "222222",
 					SetToSHA:    "111111",
-					Hard:        false,
 				},
 			},
 			RunProgram: program.Program{
 				&opcodes.BranchCurrentResetToSHAIfNeeded{
 					MustHaveSHA: "222222",
 					SetToSHA:    "111111",
-					Hard:        false,
 				},
 			},
 			EndBranchesSnapshot: Some(gitdomain.BranchesSnapshot{
@@ -78,7 +76,6 @@ func TestRunState(t *testing.T) {
   "AbortProgram": [
     {
       "data": {
-        "Hard": false,
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
@@ -130,7 +127,6 @@ func TestRunState(t *testing.T) {
   "RunProgram": [
     {
       "data": {
-        "Hard": false,
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },

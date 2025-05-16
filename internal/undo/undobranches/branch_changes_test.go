@@ -185,13 +185,11 @@ func TestChanges(t *testing.T) {
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "444444",
 				SetToSHA:    "222222",
-				Hard:        true,
 			},
 			&opcodes.CheckoutIfNeeded{Branch: "perennial-branch"},
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "333333",
 				SetToSHA:    "111111",
-				Hard:        true,
 			},
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
@@ -528,13 +526,11 @@ func TestChanges(t *testing.T) {
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "444444",
 				SetToSHA:    "222222",
-				Hard:        true,
 			},
 			&opcodes.CheckoutIfNeeded{Branch: "perennial-branch"},
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "333333",
 				SetToSHA:    "111111",
-				Hard:        true,
 			},
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
@@ -658,7 +654,6 @@ func TestChanges(t *testing.T) {
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "555555",
 				SetToSHA:    "222222",
-				Hard:        true,
 			},
 			&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      "origin/feature-branch",
@@ -782,7 +777,7 @@ func TestChanges(t *testing.T) {
 			&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: "main"},
 			// reset the feature branch to the previous SHA
 			&opcodes.CheckoutIfNeeded{Branch: "feature-branch"},
-			&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "666666", SetToSHA: "333333", Hard: true},
+			&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "666666", SetToSHA: "333333"},
 			&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: "feature-branch", ForceIfIncludes: true},
 			// check out the initial branch
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
@@ -1301,13 +1296,11 @@ func TestChanges(t *testing.T) {
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "444444",
 				SetToSHA:    "333333",
-				Hard:        true,
 			},
 			&opcodes.CheckoutIfNeeded{Branch: "perennial-branch"},
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: "222222",
 				SetToSHA:    "111111",
-				Hard:        true,
 			},
 			&opcodes.CheckoutIfExists{Branch: "feature-branch"},
 		}
