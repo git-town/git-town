@@ -285,10 +285,10 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 			ForceIfIncludes: true,
 		})
 	}
-	// TODO: destructure initialBranchInfo.RemoteBranch and use that data here
-	if data.initialBranchInfo.HasTrackingBranch() && data.offline.IsOnline() {
+	initialTrackingBranch, initialHasTrackingBranch := data.initialBranchInfo.RemoteName.Get()
+	if initialHasTrackingBranch && data.offline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
-			Branch: data.initialBranch.AtRemote(data.config.NormalConfig.DevRemote),
+			Branch: initialTrackingBranch,
 		})
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
