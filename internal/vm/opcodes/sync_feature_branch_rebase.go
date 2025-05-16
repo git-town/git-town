@@ -20,7 +20,7 @@ type SyncFeatureBranchRebase struct {
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	program := []shared.Opcode{}
-	syncTracking, hasTrackingBranch, trackingBranch, err := self.shouldSyncWithTracking(args)
+	syncTracking, _, trackingBranch, err := self.shouldSyncWithTracking(args)
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 			PreviousSHA: self.ParentLastRunSHA,
 		},
 	)
-	syncTracking, hasTrackingBranch, trackingBranch, err = self.shouldSyncWithTracking(args)
+	syncTracking, hasTrackingBranch, _, err := self.shouldSyncWithTracking(args)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, hasTrackingBranch bool, trackingBranch gitdomain.RemoteBranchName, err error) {
+func (self *SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, hasTrackingBranch bool, trackingBranch gitdomain.RemoteBranchName, err error) {
 	trackingBranch, hasTrackingBranch = self.TrackingBranch.Get()
 	if !hasTrackingBranch || args.Config.Value.NormalConfig.Offline.IsOffline() {
 		return false, hasTrackingBranch, trackingBranch, nil
