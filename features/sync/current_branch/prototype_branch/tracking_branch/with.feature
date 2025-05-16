@@ -22,8 +22,7 @@ Feature: sync the current prototype branch that has a tracking branch
       | main      | git -c rebase.updateRefs=false rebase origin/main      |
       |           | git push                                               |
       |           | git checkout prototype                                 |
-      | prototype | git -c rebase.updateRefs=false rebase main             |
-      |           | git push --force-with-lease --force-if-includes        |
+      | prototype | git push --force-with-lease --force-if-includes        |
       |           | git -c rebase.updateRefs=false rebase origin/prototype |
       |           | git -c rebase.updateRefs=false rebase main             |
       |           | git push --force-with-lease --force-if-includes        |
