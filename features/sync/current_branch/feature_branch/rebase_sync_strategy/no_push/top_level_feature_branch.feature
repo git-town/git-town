@@ -24,8 +24,7 @@ Feature: syncing a top-level feature branch using --no-push
       |         | git checkout main                                    |
       | main    | git -c rebase.updateRefs=false rebase origin/main    |
       |         | git checkout feature                                 |
-      | feature | git -c rebase.updateRefs=false rebase main           |
-      |         | git -c rebase.updateRefs=false rebase origin/feature |
+      | feature | git -c rebase.updateRefs=false rebase origin/feature |
       |         | git -c rebase.updateRefs=false rebase main           |
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |

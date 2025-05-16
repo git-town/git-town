@@ -51,8 +51,19 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 			PreviousSHA: self.ParentLastRunSHA,
 		},
 	)
+	if !syncTracking {
+		if hasTrackingBranch {
+			if args.Config.Value.NormalConfig.Offline.IsOnline() {
+				syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+				if err != nil {
+					return err
+				}
+				syncTracking = !syncedWithTracking
+			}
+		}
+	}
 	// update the tracking branch
-	if self.PushBranches.IsTrue() && hasTrackingBranch {
+	if syncTracking && self.PushBranches.IsTrue() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
 		program = append(program,
 			&PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   self.Branch,
