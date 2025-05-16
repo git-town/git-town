@@ -61,8 +61,5 @@ func (self SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) 
 		return false, hasTrackingBranch, trackingBranch, nil
 	}
 	syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
-	if err != nil {
-		return false, hasTrackingBranch, trackingBranch, err
-	}
-	return !syncedWithTracking, true, trackingBranch, nil
+	return !syncedWithTracking, hasTrackingBranch, trackingBranch, err
 }
