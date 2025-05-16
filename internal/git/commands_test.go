@@ -1289,6 +1289,14 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, gitdomain.NewLocalBranchNameOption("feature1"), have)
 	})
 
+	t.Run("RebaseInProgress", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		have := asserts.NoError1(runtime.Git.RepoStatus(runtime))
+		must.False(t, have.RebaseInProgress)
+		// TODO: add more tests
+	})
+
 	t.Run("Remotes", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
@@ -1416,14 +1424,6 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
-	t.Run("RebaseInProgress", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.Create(t)
-		have := asserts.NoError1(runtime.Git.RepoStatus(runtime))
-		must.False(t, have.RebaseInProgress)
-		// TODO: add more tests
-	})
-
 	t.Run("ResetCurrentBranchToSHA", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
@@ -1447,7 +1447,7 @@ func TestBackendCommands(t *testing.T) {
 		branch2SHA := runtime.SHAforBranch(branch2)
 		must.NotEqOp(t, branch1SHA, branch2SHA)
 		runtime.CheckoutBranch(branch1)
-		runtime.Git.ResetCurrentBranchToSHA(runtime, branch2SHA, true)
+		asserts.NoError(runtime.Git.ResetCurrentBranchToSHA(runtime, branch2SHA, true))
 		newBranch1SHA := runtime.SHAforBranch(branch1)
 		must.EqOp(t, newBranch1SHA, branch2SHA)
 	})
