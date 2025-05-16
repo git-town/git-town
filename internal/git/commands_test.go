@@ -1423,6 +1423,34 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("ResetCurrentBranchToSHA", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		branch1 := gitdomain.NewLocalBranchName("branch1")
+		runtime.CreateBranch(branch1, initial.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch1,
+			FileContent: "file1",
+			FileName:    "file1",
+			Message:     "commit 1",
+		})
+		branch2 := gitdomain.NewLocalBranchName("branch2")
+		runtime.CreateBranch(branch2, branch1.BranchName())
+		runtime.CreateCommit(testgit.Commit{
+			Branch:      branch2,
+			FileContent: "file2",
+			FileName:    "file2",
+			Message:     "commit 2",
+		})
+		branch1SHA := runtime.SHAforBranch(branch1)
+		branch2SHA := runtime.SHAforBranch(branch2)
+		must.NotEqOp(t, branch1SHA, branch2SHA)
+		runtime.CheckoutBranch(branch1)
+		runtime.Git.ResetCurrentBranchToSHA(runtime, branch2SHA, true)
+		newBranch1SHA := runtime.SHAforBranch(branch1)
+		must.EqOp(t, newBranch1SHA, branch2SHA)
+	})
+
 	t.Run("RootDirectory", func(t *testing.T) {
 		t.Parallel()
 		t.Run("inside a Git repo", func(t *testing.T) {
