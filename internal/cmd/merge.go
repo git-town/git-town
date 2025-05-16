@@ -310,19 +310,11 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsOnline() {
-		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
-		_, hasParentBranchProposal := data.parentBranchProposal.Get()
-		_, connectorCanUpdateTargetBranch := connector.UpdateProposalTargetFn().Get()
-		if connectorCanUpdateTargetBranch && hasInitialBranchProposal && !hasParentBranchProposal {
-			// reuse the proposal of the initial branch for the merged branch
-			prog.Value.Add(&opcodes.ProposalUpdateTarget{
-				NewBranch: data.parentBranch,
-				OldBranch: data.initialBranch,
-				Proposal:  initialBranchProposal,
-			})
-		}
-	}
+	// there is no point in updating proposals:
+	// If the parent branch had a proposal, it doesn't need to change.
+	// The child branch proposal will get closed because the child branch gets deleted,
+	// and that's correct because it was from the child branch into the parent branch,
+	// and that doesn't make sense anymore because both branches are one now.
 	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
 	if data.initialBranchSHA != data.parentBranchSHA {
 		prog.Value.Add(&opcodes.BranchLocalSetToSHA{SetToSHA: data.initialBranchSHA})
