@@ -12,5 +12,5 @@ type BranchLocalSetToSHA struct {
 }
 
 func (self *BranchLocalSetToSHA) Run(args shared.RunArgs) error {
-	return args.Git.ResetCurrentBranchToSHA(args.Frontend, self.SHA, true)
+	return args.Git.ResetCurrentBranchToSHA(args.Frontend, self.SHA)
 }
