@@ -315,6 +315,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		_, hasParentBranchProposal := data.parentBranchProposal.Get()
 		_, connectorCanUpdateTargetBranch := connector.UpdateProposalTargetFn().Get()
 		if connectorCanUpdateTargetBranch && hasInitialBranchProposal && !hasParentBranchProposal {
+			// reuse the proposal of the initial branch for the merged branch
 			prog.Value.Add(&opcodes.ProposalUpdateTarget{
 				NewBranch: data.parentBranch,
 				OldBranch: data.initialBranch,
