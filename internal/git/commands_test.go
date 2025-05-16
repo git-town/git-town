@@ -1414,13 +1414,14 @@ func TestBackendCommands(t *testing.T) {
 				})
 			})
 		})
+	})
 
-		t.Run("RebaseInProgress", func(t *testing.T) {
-			t.Parallel()
-			runtime := testruntime.Create(t)
-			have := asserts.NoError1(runtime.Git.RepoStatus(runtime))
-			must.False(t, have.RebaseInProgress)
-		})
+	t.Run("RebaseInProgress", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		have := asserts.NoError1(runtime.Git.RepoStatus(runtime))
+		must.False(t, have.RebaseInProgress)
+		// TODO: add more tests
 	})
 
 	t.Run("ResetCurrentBranchToSHA", func(t *testing.T) {
