@@ -331,7 +331,7 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
-	if data.parentBranchInfo.RemoteName.IsSome() {
+	if data.parentBranchInfo.RemoteName.IsSome() && data.offline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
 			CurrentBranch:   data.parentBranch,
 			ForceIfIncludes: true,
