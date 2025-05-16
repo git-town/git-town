@@ -271,7 +271,6 @@ func TestProgram(t *testing.T) {
 [
 	{
 		"data": {
-			"Hard": false,
 			"MustHaveSHA": "abcdef",
 			"SetToSHA": "123456"
 		},
@@ -287,7 +286,6 @@ func TestProgram(t *testing.T) {
 		must.NoError(t, err)
 		want := program.Program{
 			&opcodes.BranchCurrentResetToSHAIfNeeded{
-				Hard:        false,
 				MustHaveSHA: "abcdef",
 				SetToSHA:    "123456",
 			},
