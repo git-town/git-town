@@ -57,14 +57,12 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 
 func (self SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, hasTrackingBranch bool, trackingBranch gitdomain.RemoteBranchName, err error) {
 	trackingBranch, hasTrackingBranch = self.TrackingBranch.Get()
-	if hasTrackingBranch {
-		if args.Config.Value.NormalConfig.Offline.IsOnline() {
-			syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
-			if err != nil {
-				return false, hasTrackingBranch, trackingBranch, err
-			}
-			return !syncedWithTracking, true, trackingBranch, nil
-		}
+	if !hasTrackingBranch || args.Config.Value.NormalConfig.Offline.IsOffline() {
+		return false, hasTrackingBranch, trackingBranch, nil
 	}
-	return false, hasTrackingBranch, trackingBranch, nil
+	syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+	if err != nil {
+		return false, hasTrackingBranch, trackingBranch, err
+	}
+	return !syncedWithTracking, true, trackingBranch, nil
 }
