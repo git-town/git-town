@@ -23,7 +23,8 @@ Feature: with upstream repo
       |         | git -c rebase.updateRefs=false rebase upstream/main |
       |         | git push                                            |
       |         | git checkout feature                                |
-      | feature | git -c rebase.updateRefs=false rebase main          |
+      | feature | git push --force-with-lease --force-if-includes     |
+      |         | git -c rebase.updateRefs=false rebase main          |
       |         | git push --force-with-lease --force-if-includes     |
     And all branches are now synchronized
     And these commits exist now
