@@ -52,7 +52,7 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 		},
 	)
 	// update the tracking branch
-	if self.PushBranches {
+	if self.PushBranches.IsTrue() && hasTrackingBranch {
 		program = append(program,
 			&PushCurrentBranchForceIfNeeded{
 				CurrentBranch:   self.Branch,
