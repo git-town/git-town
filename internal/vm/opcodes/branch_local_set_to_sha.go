@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
-// BranchRemoteSetToSHA sets the given local branch to the given SHA.
+// BranchLocalSetToSHA sets the given local branch to the given SHA.
 type BranchLocalSetToSHA struct {
 	SetToSHA                gitdomain.SHA
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
