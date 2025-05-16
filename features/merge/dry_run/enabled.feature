@@ -15,7 +15,6 @@ Feature: dry-run merging branches
       | BRANCH | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | beta   | local, origin | beta commit | beta-file | beta content |
     And the current branch is "beta"
-    And inspect the repo
     When I run "git-town merge --dry-run"
 
   Scenario: result
@@ -37,5 +36,9 @@ Feature: dry-run merging branches
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs no commands
-    And the initial commits exist now
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
+      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
+      | beta   | local, origin | alpha commit | alpha-file | alpha content |
+      |        |               | beta commit  | beta-file  | beta content  |
     And the initial branches exist now
