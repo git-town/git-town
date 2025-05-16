@@ -312,8 +312,9 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	if connector, hasConnector := data.connector.Get(); hasConnector && data.offline.IsOnline() {
 		initialBranchProposal, hasInitialBranchProposal := data.initialBranchProposal.Get()
-		_, connectorCanUpdateSourceBranch := connector.UpdateProposalSourceFn().Get()
-		if hasInitialBranchProposal && connectorCanUpdateSourceBranch {
+		_, hasParentBranchProposal := data.parentBranchProposal.Get()
+		_, connectorCanUpdateTargetBranch := connector.UpdateProposalTargetFn().Get()
+		if connectorCanUpdateTargetBranch && hasInitialBranchProposal && !hasParentBranchProposal {
 			prog.Value.Add(&opcodes.ProposalUpdateTarget{
 				NewBranch: data.parentBranch,
 				OldBranch: data.initialBranch,
