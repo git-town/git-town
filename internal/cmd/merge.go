@@ -265,7 +265,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
 	// there is no point in updating proposals:
-	// If the parent branch had a proposal, it doesn't need to change.
+	// If the parent branch has a proposal, it doesn't need to change.
 	// The child branch proposal will get closed because the child branch gets deleted,
 	// and that's correct because it was from the child branch into the parent branch,
 	// and that doesn't make sense anymore because both branches are one now.
