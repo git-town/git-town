@@ -25,8 +25,7 @@ Feature: detached syncing a stacked feature branch using --no-push
       |        | git checkout alpha                                 |
       | alpha  | git -c rebase.updateRefs=false rebase origin/alpha |
       |        | git checkout beta                                  |
-      | beta   | git -c rebase.updateRefs=false rebase alpha        |
-      |        | git -c rebase.updateRefs=false rebase origin/beta  |
+      | beta   | git -c rebase.updateRefs=false rebase origin/beta  |
       |        | git -c rebase.updateRefs=false rebase alpha        |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE             |

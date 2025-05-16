@@ -26,15 +26,12 @@ Feature: stacked changes where an ancestor branch isn't local
       | BRANCH | COMMAND                                            |
       | gamma  | git fetch --prune --tags                           |
       |        | git checkout alpha                                 |
-      | alpha  | git -c rebase.updateRefs=false rebase origin/main  |
-      |        | git push --force-with-lease --force-if-includes    |
+      | alpha  | git push --force-with-lease --force-if-includes    |
       |        | git -c rebase.updateRefs=false rebase origin/alpha |
       |        | git -c rebase.updateRefs=false rebase origin/main  |
       |        | git push --force-with-lease --force-if-includes    |
       |        | git checkout gamma                                 |
-      | gamma  | git -c rebase.updateRefs=false rebase origin/beta  |
-      |        | git -c rebase.updateRefs=false rebase alpha        |
-      |        | git push --force-with-lease --force-if-includes    |
+      | gamma  | git push --force-with-lease --force-if-includes    |
       |        | git -c rebase.updateRefs=false rebase origin/gamma |
       |        | git -c rebase.updateRefs=false rebase origin/beta  |
       |        | git -c rebase.updateRefs=false rebase alpha        |
