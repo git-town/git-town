@@ -25,20 +25,11 @@ Feature: dry-run merging branches
       | alpha  | git reset --hard {{ sha 'beta commit' }} |
       |        | git branch -D beta                       |
       |        | git push origin :beta                    |
-  # TODO: why does the alpha commit show up in the beta branch here?
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
-      | beta   | local, origin | alpha commit | alpha-file | alpha content |
-      |        |               | beta commit  | beta-file  | beta content  |
+    And the initial commits exist now
     And the initial branches exist now
 
   Scenario: undo
     When I run "git-town undo"
     And Git Town runs no commands
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME  | FILE CONTENT  |
-      | alpha  | local, origin | alpha commit | alpha-file | alpha content |
-      | beta   | local, origin | alpha commit | alpha-file | alpha content |
-      |        |               | beta commit  | beta-file  | beta content  |
+    And the initial commits exist now
     And the initial branches exist now
