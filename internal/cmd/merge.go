@@ -125,7 +125,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               data.connector,
+		Connector:               None[forgedomain.Connector](),
 		Detached:                true,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
@@ -143,37 +143,25 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 }
 
 type mergeData struct {
-	branchInfosLastRun              Option[gitdomain.BranchInfos]
-	branchesSnapshot                gitdomain.BranchesSnapshot
-	config                          config.ValidatedConfig
-	connector                       Option[forgedomain.Connector]
-	dialogTestInputs                components.TestInputs
-	grandParentBranch               gitdomain.LocalBranchName
-	hasOpenChanges                  bool
-	initialBranch                   gitdomain.LocalBranchName
-	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
-	initialBranchInfo               gitdomain.BranchInfo
-	initialBranchProposal           Option[forgedomain.Proposal]
-	initialBranchSHA                gitdomain.SHA
-	initialBranchType               configdomain.BranchType
-	offline                         configdomain.Offline
-	parentBranch                    gitdomain.LocalBranchName
-	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
-	parentBranchInfo                gitdomain.BranchInfo
-	parentBranchProposal            Option[forgedomain.Proposal]
-	parentBranchSHA                 gitdomain.SHA
-	parentBranchType                configdomain.BranchType
-	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
-	previousBranch                  Option[gitdomain.LocalBranchName]
-	remotes                         gitdomain.Remotes
-	stashSize                       gitdomain.StashSize
+	branchInfosLastRun Option[gitdomain.BranchInfos]
+	branchesSnapshot   gitdomain.BranchesSnapshot
+	config             config.ValidatedConfig
+	dialogTestInputs   components.TestInputs
+	hasOpenChanges     bool
+	initialBranch      gitdomain.LocalBranchName
+	initialBranchInfo  gitdomain.BranchInfo
+	initialBranchSHA   gitdomain.SHA
+	initialBranchType  configdomain.BranchType
+	offline            configdomain.Offline
+	parentBranch       gitdomain.LocalBranchName
+	parentBranchInfo   gitdomain.BranchInfo
+	parentBranchSHA    gitdomain.SHA
+	parentBranchType   configdomain.BranchType
+	previousBranch     Option[gitdomain.LocalBranchName]
+	stashSize          gitdomain.StashSize
 }
 
 func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (mergeData, bool, error) {
-	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
-	if err != nil {
-		return mergeData{}, false, err
-	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -231,15 +219,11 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if !hasParentBranch {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
 	}
-	grandParentBranch, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
+	_, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
 	if !hasGrandParentBranch {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes, err := repo.Git.Remotes(repo.Backend)
-	if err != nil {
-		return mergeData{}, false, err
-	}
 	initialBranchInfo, hasInitialBranchInfo := branchesSnapshot.Branches.FindByLocalName(initialBranch).Get()
 	if !hasInitialBranchInfo {
 		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
@@ -256,55 +240,25 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if !hasParentBranchSHA {
 		return mergeData{}, false, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
 	}
-	initialBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, initialBranch.BranchName(), parentBranch.BranchName())
-	if err != nil {
-		return mergeData{}, false, err
-	}
 	initialBranchType := validatedConfig.BranchType(initialBranch)
 	parentBranchType := validatedConfig.BranchType(parentBranch)
-	parentBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, parentBranch.BranchName(), grandParentBranch.BranchName())
-	if err != nil {
-		return mergeData{}, false, err
-	}
-	initialBranchProposal := None[forgedomain.Proposal]()
-	parentBranchProposal := None[forgedomain.Proposal]()
-	if connector, hasConnector := connectorOpt.Get(); hasConnector {
-		if findProposal, canFindProposal := connector.FindProposalFn().Get(); canFindProposal {
-			initialBranchProposal, err = findProposal(initialBranch, parentBranch)
-			if err != nil {
-				print.Error(err)
-			}
-			parentBranchProposal, err = findProposal(initialBranch, parentBranch)
-			if err != nil {
-				print.Error(err)
-			}
-		}
-	}
 	return mergeData{
-		branchInfosLastRun:              branchInfosLastRun,
-		branchesSnapshot:                branchesSnapshot,
-		config:                          validatedConfig,
-		connector:                       connectorOpt,
-		dialogTestInputs:                dialogTestInputs,
-		grandParentBranch:               grandParentBranch,
-		hasOpenChanges:                  repoStatus.OpenChanges,
-		initialBranch:                   initialBranch,
-		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
-		initialBranchInfo:               *initialBranchInfo,
-		initialBranchProposal:           initialBranchProposal,
-		initialBranchSHA:                initialBranchSHA,
-		initialBranchType:               initialBranchType,
-		offline:                         repo.IsOffline,
-		parentBranch:                    parentBranch,
-		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
-		parentBranchInfo:                *parentBranchInfo,
-		parentBranchProposal:            parentBranchProposal,
-		parentBranchSHA:                 parentBranchSHA,
-		parentBranchType:                parentBranchType,
-		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
-		previousBranch:                  previousBranch,
-		remotes:                         remotes,
-		stashSize:                       stashSize,
+		branchInfosLastRun: branchInfosLastRun,
+		branchesSnapshot:   branchesSnapshot,
+		config:             validatedConfig,
+		dialogTestInputs:   dialogTestInputs,
+		hasOpenChanges:     repoStatus.OpenChanges,
+		initialBranch:      initialBranch,
+		initialBranchInfo:  *initialBranchInfo,
+		initialBranchSHA:   initialBranchSHA,
+		initialBranchType:  initialBranchType,
+		offline:            repo.IsOffline,
+		parentBranch:       parentBranch,
+		parentBranchInfo:   *parentBranchInfo,
+		parentBranchSHA:    parentBranchSHA,
+		parentBranchType:   parentBranchType,
+		previousBranch:     previousBranch,
+		stashSize:          stashSize,
 	}, false, err
 }
 
