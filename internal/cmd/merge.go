@@ -154,12 +154,14 @@ type mergeData struct {
 	initialBranchFirstCommitMessage Option[gitdomain.CommitMessage]
 	initialBranchInfo               gitdomain.BranchInfo
 	initialBranchProposal           Option[forgedomain.Proposal]
+	initialBranchSHA                gitdomain.SHA
 	initialBranchType               configdomain.BranchType
 	offline                         configdomain.Offline
 	parentBranch                    gitdomain.LocalBranchName
 	parentBranchFirstCommitMessage  Option[gitdomain.CommitMessage]
 	parentBranchInfo                gitdomain.BranchInfo
 	parentBranchProposal            Option[forgedomain.Proposal]
+	parentBranchSHA                 gitdomain.SHA
 	parentBranchType                configdomain.BranchType
 	prefetchBranchesSnapshot        gitdomain.BranchesSnapshot
 	previousBranch                  Option[gitdomain.LocalBranchName]
@@ -242,9 +244,17 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if !hasInitialBranchInfo {
 		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, initialBranch)
 	}
+	initialBranchSHA, hasInitialBranchSHA := initialBranchInfo.LocalSHA.Get()
+	if !hasInitialBranchSHA {
+		return mergeData{}, false, fmt.Errorf(messages.MergeBranchNotLocal, initialBranch)
+	}
 	parentBranchInfo, hasParentBranchInfo := branchesSnapshot.Branches.FindByLocalName(parentBranch).Get()
 	if !hasParentBranchInfo {
 		return mergeData{}, false, fmt.Errorf(messages.BranchInfoNotFound, parentBranch)
+	}
+	parentBranchSHA, hasParentBranchSHA := parentBranchInfo.LocalSHA.Get()
+	if !hasParentBranchSHA {
+		return mergeData{}, false, fmt.Errorf(messages.MergeBranchNotLocal, parentBranch)
 	}
 	initialBranchFirstCommitMessage, err := repo.Git.FirstCommitMessageInBranch(repo.Backend, initialBranch.BranchName(), parentBranch.BranchName())
 	if err != nil {
@@ -282,12 +292,14 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		initialBranchFirstCommitMessage: initialBranchFirstCommitMessage,
 		initialBranchInfo:               *initialBranchInfo,
 		initialBranchProposal:           initialBranchProposal,
+		initialBranchSHA:                initialBranchSHA,
 		initialBranchType:               initialBranchType,
 		offline:                         repo.IsOffline,
 		parentBranch:                    parentBranch,
 		parentBranchFirstCommitMessage:  parentBranchFirstCommitMessage,
 		parentBranchInfo:                *parentBranchInfo,
 		parentBranchProposal:            parentBranchProposal,
+		parentBranchSHA:                 parentBranchSHA,
 		parentBranchType:                parentBranchType,
 		prefetchBranchesSnapshot:        preFetchBranchesSnapshot,
 		previousBranch:                  previousBranch,
@@ -310,12 +322,21 @@ func mergeProgram(data mergeData, dryRun configdomain.DryRun) program.Program {
 		}
 	}
 	prog.Value.Add(&opcodes.Checkout{Branch: data.parentBranch})
+	if data.initialBranchSHA != data.parentBranchSHA {
+		prog.Value.Add(&opcodes.BranchLocalSetToSHA{SetToSHA: data.initialBranchSHA})
+	}
 	prog.Value.Add(&opcodes.LineageParentRemove{
 		Branch: data.initialBranch,
 	})
 	prog.Value.Add(&opcodes.BranchLocalDelete{
 		Branch: data.initialBranch,
 	})
+	if data.parentBranchInfo.RemoteName.IsSome() {
+		prog.Value.Add(&opcodes.PushCurrentBranchForceIfNeeded{
+			CurrentBranch:   data.parentBranch,
+			ForceIfIncludes: true,
+		})
+	}
 	// TODO: destructure initialBranchInfo.RemoteBranch and use that data here
 	if data.initialBranchInfo.HasTrackingBranch() && data.offline.IsOnline() {
 		prog.Value.Add(&opcodes.BranchTrackingDelete{
