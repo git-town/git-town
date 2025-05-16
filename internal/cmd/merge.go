@@ -219,8 +219,8 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 	if !hasParentBranch {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoParent, initialBranch)
 	}
-	_, hasGrandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch).Get()
-	if !hasGrandParentBranch {
+	grandParentBranch := validatedConfig.NormalConfig.Lineage.Parent(parentBranch)
+	if grandParentBranch.IsNone() {
 		return mergeData{}, false, fmt.Errorf(messages.MergeNoGrandParent, initialBranch, parentBranch)
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
