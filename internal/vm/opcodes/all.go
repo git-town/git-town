@@ -19,6 +19,7 @@ func All() []shared.Opcode {
 		&BranchLocalDeleteContent{},
 		&BranchLocalDelete{},
 		&BranchLocalRename{},
+		&BranchLocalSetToSHA{},
 		&BranchRemoteCreate{},
 		&BranchRemoteSetToSHAIfNeeded{},
 		&BranchRemoteSetToSHA{},

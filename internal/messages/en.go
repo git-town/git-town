@@ -148,6 +148,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MainBranchCannotPropose               = "cannot propose the main branch"
 	MainBranchCannotPrototype             = "cannot prototype the main branch"
 	MainBranchCannotShip                  = "cannot ship the main branch"
+	MergeBranchNotLocal                   = "cannot merge: branch %q is not local"
 	MergeOpenChanges                      = "please commit or remove the open changes first"
 	MergeNoGrandParent                    = "cannot merge branch %q because its parent branch (%s) has no parent"
 	MergeNoParent                         = "cannot merge branch %q because it has no parent"

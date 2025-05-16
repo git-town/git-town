@@ -20,21 +20,26 @@ Feature: merging a branch in offline mode
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | beta   | git branch -D alpha |
+      | BRANCH | COMMAND                                  |
+      | beta   | git checkout alpha                       |
+      | alpha  | git reset --hard {{ sha 'beta commit' }} |
+      |        | git branch -D beta                       |
     And this lineage exists now
       | BRANCH | PARENT |
-      | beta   | main   |
+      | alpha  | main   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | origin        | alpha commit |
-      | beta   | local, origin | alpha commit |
+      | alpha  | local, origin | alpha commit |
+      |        | local         | beta commit  |
+      | beta   | origin        | alpha commit |
       |        |               | beta commit  |
 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git branch alpha {{ sha-before-run 'alpha commit' }} |
+      | BRANCH | COMMAND                                   |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }} |
+      |        | git branch beta {{ sha 'beta commit' }}   |
+      |        | git checkout beta                         |
     And the initial commits exist now
     And the initial lineage exists now
