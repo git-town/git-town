@@ -19,24 +19,11 @@ type SyncFeatureBranchRebase struct {
 }
 
 func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
-	// new sync workflow:
-	// 1. determine which branches need to be synced
-	//    - parent branch
-	//    - tracking branch
-	// 2. if either parent or tracking branch needs to be synced: sync both, then force-push to tracking
-
-	syncTracking := false
-	trackingBranch, hasTrackingBranch := self.TrackingBranch.Get()
-	if hasTrackingBranch {
-		if args.Config.Value.NormalConfig.Offline.IsOnline() {
-			syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
-			if err != nil {
-				return err
-			}
-			syncTracking = !syncedWithTracking
-		}
-	}
 	program := []shared.Opcode{}
+	syncTracking, hasTrackingBranch, trackingBranch, err := self.shouldSyncWithTracking(args)
+	if err != nil {
+		return err
+	}
 	if syncTracking {
 		program = append(program,
 			&RebaseTrackingBranch{
@@ -51,16 +38,9 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 			PreviousSHA: self.ParentLastRunSHA,
 		},
 	)
-	if !syncTracking {
-		if hasTrackingBranch {
-			if args.Config.Value.NormalConfig.Offline.IsOnline() {
-				syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
-				if err != nil {
-					return err
-				}
-				syncTracking = !syncedWithTracking
-			}
-		}
+	syncTracking, hasTrackingBranch, trackingBranch, err = self.shouldSyncWithTracking(args)
+	if err != nil {
+		return err
 	}
 	// update the tracking branch
 	if syncTracking && self.PushBranches.IsTrue() && hasTrackingBranch && args.Config.Value.NormalConfig.Offline.IsOnline() {
@@ -73,4 +53,18 @@ func (self *SyncFeatureBranchRebase) Run(args shared.RunArgs) error {
 	}
 	args.PrependOpcodes(program...)
 	return nil
+}
+
+func (self SyncFeatureBranchRebase) shouldSyncWithTracking(args shared.RunArgs) (shouldSync bool, hasTrackingBranch bool, trackingBranch gitdomain.RemoteBranchName, err error) {
+	trackingBranch, hasTrackingBranch = self.TrackingBranch.Get()
+	if hasTrackingBranch {
+		if args.Config.Value.NormalConfig.Offline.IsOnline() {
+			syncedWithTracking, err := args.Git.BranchInSyncWithTracking(args.Backend, self.Branch, args.Config.Value.NormalConfig.DevRemote)
+			if err != nil {
+				return false, hasTrackingBranch, trackingBranch, err
+			}
+			return !syncedWithTracking, true, trackingBranch, nil
+		}
+	}
+	return false, hasTrackingBranch, trackingBranch, nil
 }
