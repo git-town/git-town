@@ -79,7 +79,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range omniChangedFeatures.BranchNames() {
 		change := omniChangedFeatures[branch]
 		result.Add(&opcodes.CheckoutIfNeeded{Branch: branch})
-		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
 		result.Add(&opcodes.PushCurrentBranchForceIfNeeded{CurrentBranch: branch, ForceIfIncludes: true})
 	}
 
@@ -115,7 +115,6 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{
 				MustHaveSHA: afterLocalSHA,
 				SetToSHA:    beforeLocalSHA,
-				Hard:        true,
 			})
 			result.Add(&opcodes.BranchRemoteSetToSHAIfNeeded{
 				Branch:      beforeRemoteName,
@@ -139,7 +138,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, localBranch := range self.LocalChanged.BranchNames() {
 		change := self.LocalChanged[localBranch]
 		result.Add(&opcodes.CheckoutIfNeeded{Branch: localBranch})
-		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: change.After, SetToSHA: change.Before})
 	}
 
 	// re-create locally removed branches

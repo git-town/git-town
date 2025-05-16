@@ -1447,7 +1447,7 @@ func TestBackendCommands(t *testing.T) {
 		branch2SHA := runtime.SHAforBranch(branch2)
 		must.NotEqOp(t, branch1SHA, branch2SHA)
 		runtime.CheckoutBranch(branch1)
-		asserts.NoError(runtime.Git.ResetCurrentBranchToSHA(runtime, branch2SHA, true))
+		asserts.NoError(runtime.Git.ResetCurrentBranchToSHA(runtime, branch2SHA))
 		newBranch1SHA := runtime.SHAforBranch(branch1)
 		must.EqOp(t, newBranch1SHA, branch2SHA)
 	})

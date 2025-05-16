@@ -52,8 +52,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.BranchCreateAndCheckoutExistingParent{Ancestors: gitdomain.NewLocalBranchNames("one", "two", "three"), Branch: "branch"},
 				&opcodes.BranchCurrentReset{Base: "branch"},
 				&opcodes.BranchCurrentResetToParent{CurrentBranch: "branch"},
-				&opcodes.BranchCurrentResetToSHA{Hard: true, SetToSHA: "111111"},
-				&opcodes.BranchCurrentResetToSHAIfNeeded{Hard: true, MustHaveSHA: "222222", SetToSHA: "111111"},
+				&opcodes.BranchCurrentResetToSHA{SetToSHA: "111111"},
+				&opcodes.BranchCurrentResetToSHAIfNeeded{MustHaveSHA: "222222", SetToSHA: "111111"},
 				&opcodes.BranchEnsureShippableChanges{Branch: "branch", Parent: "parent"},
 				&opcodes.BranchLocalDelete{Branch: "branch"},
 				&opcodes.BranchLocalDeleteContent{BranchToDelete: "branch", BranchToRebaseOnto: "main"},
@@ -197,14 +197,12 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Hard": true,
         "SetToSHA": "111111"
       },
       "type": "BranchCurrentResetToSHA"
     },
     {
       "data": {
-        "Hard": true,
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
