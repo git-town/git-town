@@ -1316,7 +1316,8 @@ func TestBackendCommands(t *testing.T) {
 				Message:     "commit 2",
 			})
 			runtime.CheckoutBranch(branch2)
-			asserts.NoError(runtime.RebaseAgainstBranch(branch1))
+			err := runtime.RebaseAgainstBranch(branch1)
+			must.Error(t, err)
 			repoStatus := asserts.NoError1(runtime.Git.RepoStatus(runtime))
 			must.True(t, repoStatus.RebaseInProgress)
 		})
