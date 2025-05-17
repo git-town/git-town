@@ -66,11 +66,10 @@ Feature: two people using rebase make conflicting changes to a branch
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                             |
-      | feature | git fetch --prune --tags                                                            |
-      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'persisted config file' }} |
-      |         | git push --force-with-lease --force-if-includes                                     |
-      |         | git -c rebase.updateRefs=false rebase origin/feature                                |
+      | BRANCH  | COMMAND                                              |
+      | feature | git fetch --prune --tags                             |
+      |         | git push --force-with-lease --force-if-includes      |
+      |         | git -c rebase.updateRefs=false rebase origin/feature |
     And Git Town prints the error:
       """
       To continue after having resolved conflicts, run "git town continue".

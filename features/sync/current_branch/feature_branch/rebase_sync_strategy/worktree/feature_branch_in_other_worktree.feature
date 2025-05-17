@@ -20,7 +20,6 @@ Feature: Sync a feature branch that is in another worktree than the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                              |
       | feature | git fetch --prune --tags                             |
-      |         | git -c rebase.updateRefs=false rebase origin/main    |
       |         | git push --force-with-lease --force-if-includes      |
       |         | git -c rebase.updateRefs=false rebase origin/feature |
       |         | git -c rebase.updateRefs=false rebase origin/main    |

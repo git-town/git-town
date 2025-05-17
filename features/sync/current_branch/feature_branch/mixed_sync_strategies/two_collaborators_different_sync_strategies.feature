@@ -61,11 +61,10 @@ Feature: compatibility between different sync-feature-strategy settings
       | my second commit | file.txt  | my new content |
     When I run "git-town sync"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                      |
-      | feature | git fetch --prune --tags                                                     |
-      |         | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |         | git push --force-with-lease --force-if-includes                              |
-      |         | git -c rebase.updateRefs=false rebase origin/feature                         |
+      | BRANCH  | COMMAND                                              |
+      | feature | git fetch --prune --tags                             |
+      |         | git push --force-with-lease --force-if-includes      |
+      |         | git -c rebase.updateRefs=false rebase origin/feature |
     And Git Town prints the error:
       """
       CONFLICT (content): Merge conflict in file.txt
