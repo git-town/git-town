@@ -10,7 +10,7 @@ Short-lived branches typically exist to develop code. They are cut from a perenn
 
 Branches owned by you:
 - feature branch: a branch that you currently work on. Git Town keeps it up to date for you.
-- prototype branch: a feature branch at the early stage of development, before it is ready to be pushed to the development remote
+- prototype branch: a feature branch at the early stage of development, before it is ready to be pushed to the development remote.
 - parked branch: a feature branch that you own but don't actively develop and aren't interested in syncing
 
 Branches owned by somebody else:
@@ -21,3 +21,11 @@ Git Town offers powerful configuration settings to give each existing and new br
 
 You tell Git Town which of your branches are perennial by providing a simple list of branch names, or a regular expression, and all branches whose name matches it are considered perennial.
 The main branch is automatically marked perennial.
+
+You can provide regular expressions for contributions and observed branches, or mark specific branches as observed or contribution by running git town observe or git town contribute on it.
+
+You mark parked branches on an individual basis by running git town park on them.
+
+You can set the new-branch-type setting to `prototype` to make all new branches you create prototype branches, or run git town prototype on existing branches to make them prototype branches.
+
+You can override the type of each branch by running git town observe, contribute, prototype, hack on it.
