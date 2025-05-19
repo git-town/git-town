@@ -1,5 +1,5 @@
 @skipwindows
-Feature: if the given script returns an error, continue re-runs the failing script
+Feature: handle errors in the given script
 
   Background:
     Given a Git repo with origin
@@ -22,7 +22,7 @@ Feature: if the given script returns an error, continue re-runs the failing scri
       To go back to where you started, run "git town undo".
       """
 
-  Scenario: continue
+  Scenario: continue re-runs the failed script
     When I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND |
@@ -33,7 +33,7 @@ Feature: if the given script returns an error, continue re-runs the failing scri
       To go back to where you started, run "git town undo".
       """
 
-  Scenario: skip to the next branches
+  Scenario: skip runs the given script on the next branch
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
