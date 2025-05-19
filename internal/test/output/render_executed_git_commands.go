@@ -40,7 +40,7 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *godog.Table
 }
 
 func branchToDisplay(cmd ExecutedGitCommand, lastBranch string) string {
-	if cmd.Branch == "" || cmd.Branch == lastBranch {
+	if cmd.Branch == lastBranch {
 		return ""
 	}
 	return cmd.Branch
