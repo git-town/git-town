@@ -27,6 +27,11 @@ Feature: if the given script returns an error, continue re-runs the failing scri
     Then Git Town runs the commands
       | BRANCH   | COMMAND |
       | branch-1 | test    |
+    And Git Town prints the error:
+      """
+      To continue after having resolved conflicts, run "git town continue".
+      To go back to where you started, run "git town undo".
+      """
 
   Scenario: skip to the next branches
     When I run "git-town skip"

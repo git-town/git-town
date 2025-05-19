@@ -12,5 +12,5 @@ Feature: walk each branch of a stack in dry-run mode
   Scenario: result
     Then Git Town prints the error:
       """
-      Error: cannot dry-run manual iteration through all branches, please call with a shell command to run on each branch
+      Error: there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch
       """

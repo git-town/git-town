@@ -101,7 +101,7 @@ func walkCommand() *cobra.Command {
 
 func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
 	if len(args) == 0 && dryRun {
-		return errors.New("cannot dry-run manual iteration through all branches, please call with a shell command to run on each branch")
+		return errors.New("there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch")
 	}
 	err := validateArgs(allBranches, fullStack)
 	if err != nil {
