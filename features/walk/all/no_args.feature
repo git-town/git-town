@@ -58,9 +58,8 @@ Feature: walk all local branches
       Branch walk done.
       """
 
-  @debug @this
+  @this
   Scenario: skip the current branch
-    And inspect the repo
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
@@ -72,8 +71,8 @@ Feature: walk all local branches
     And the current branch is now "branch-2"
     When I run "git-town skip"
     Then Git Town runs the commands
-      | BRANCH | COMMAND |
-    # | branch-2 | git checkout branch-3 |
+      | BRANCH   | COMMAND               |
+      | branch-2 | git checkout branch-3 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.
