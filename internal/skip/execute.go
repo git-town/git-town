@@ -34,6 +34,7 @@ func Execute(args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          args.RunState.AbortProgram,
 	})
+	args.RunState.AbortProgram = program.Program{}
 	err := revertChangesToCurrentBranch(args)
 	if err != nil {
 		return err
@@ -82,7 +83,7 @@ func RemoveOpcodesForCurrentBranch(prog program.Program) program.Program {
 	result := make(program.Program, 0, len(prog)-1)
 	skipping := true
 	for _, opcode := range prog {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if shared.IsEndOfBranchProgramOpcode(opcode) && skipping {
 			skipping = false
 			continue
 		}
