@@ -17,5 +17,5 @@ Feature: displaying the repo in the middle of an ongoing sync merge conflict
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                   |
-      |        | open https://github.com/git-town/git-town |
+      | BRANCH  | COMMAND                                   |
+      | feature | open https://github.com/git-town/git-town |

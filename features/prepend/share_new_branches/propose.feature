@@ -20,7 +20,7 @@ Feature: auto-propose new branches
       | old    | git fetch --prune --tags                                       |
       |        | git checkout -b new main                                       |
       | new    | git push -u origin new                                         |
-      | (none) | open https://github.com/git-town/git-town/compare/new?expand=1 |
+      |        | open https://github.com/git-town/git-town/compare/new?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |

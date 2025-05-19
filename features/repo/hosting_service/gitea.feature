@@ -8,7 +8,7 @@ Feature: Gitea
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                  |
-      | (none) | frontend | open https://gitea.com/git-town/git-town |
+      | main   | frontend | open https://gitea.com/git-town/git-town |
 
     Examples:
       | ORIGIN                                    |

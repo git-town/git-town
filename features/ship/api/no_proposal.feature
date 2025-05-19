@@ -18,7 +18,7 @@ Feature: cannot ship a branch without proposal via API
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | (none)  | Looking for proposal online ... ok |
+      |         | Looking for proposal online ... ok |
     And Git Town prints the error:
       """
       cannot ship branch "feature" via API because it has no proposal

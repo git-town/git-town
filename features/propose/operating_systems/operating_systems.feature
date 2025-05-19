@@ -16,7 +16,7 @@ Feature: support many browsers and operating systems
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                              |
       | feature | git fetch --prune --tags                                             |
-      | (none)  | Looking for proposal online ... ok                                   |
+      |         | Looking for proposal online ... ok                                   |
       |         | <TOOL> https://github.com/git-town/git-town/compare/feature?expand=1 |
 
     Examples:
