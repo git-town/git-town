@@ -1,6 +1,5 @@
 Feature: walk each branch of a stack with arguments
 
-  @this
   Scenario: iterate the full stack
     Given a Git repo with origin
     And the branches
