@@ -58,8 +58,7 @@ Feature: walk all local branches
       Branch walk done.
       """
 
-  @this
-  Scenario: skip the current branch
+  Scenario: skip all remaining branches
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
