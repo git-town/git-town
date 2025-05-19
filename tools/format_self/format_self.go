@@ -62,7 +62,7 @@ func FormatLine(line string) string {
 	return strings.Replace(line, "("+matches[1], "(self", 1)
 }
 
-var instanceRE = regexp.MustCompile(`func \((\w+) (\*?\w+\).*)$`)
+var instanceRE = regexp.MustCompile(`func \((\w+) (\*?[\w\[\]]+\).*)$`)
 
 // IsGoFile indicates whether the given file path is a Go source code file.
 // Tests are not considered source code in the context of this source code formatter.

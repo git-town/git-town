@@ -11,34 +11,34 @@ type WithPrevious[T any] struct {
 }
 
 // Initialized indicates if we have a current branch.
-func (c *WithPrevious[T]) Initialized() bool {
-	return c.initialized
+func (self *WithPrevious[T]) Initialized() bool {
+	return self.initialized
 }
 
 // Invalidate removes the cached value.
-func (c *WithPrevious[T]) Invalidate() {
-	c.initialized = false
+func (self *WithPrevious[T]) Invalidate() {
+	self.initialized = false
 }
 
 // Previous provides the previous value.
-func (c *WithPrevious[T]) Previous() T {
-	if !c.initialized {
+func (self *WithPrevious[T]) Previous() T {
+	if !self.initialized {
 		panic(messages.CacheUnitialized)
 	}
-	return c.previous
+	return self.previous
 }
 
 // Set allows collaborators to signal when the current branch has changed.
-func (c *WithPrevious[T]) Set(newValue T) {
-	c.previous = c.value
-	c.value = newValue
-	c.initialized = true
+func (self *WithPrevious[T]) Set(newValue T) {
+	self.previous = self.value
+	self.value = newValue
+	self.initialized = true
 }
 
 // Value provides the current value.
-func (c *WithPrevious[T]) Value() T {
-	if !c.initialized {
+func (self *WithPrevious[T]) Value() T {
+	if !self.initialized {
 		panic(messages.CacheUnitialized)
 	}
-	return c.value
+	return self.value
 }
