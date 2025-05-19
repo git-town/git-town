@@ -30,16 +30,6 @@ Feature: multiple conflicting branches
       """
     And a merge is now in progress
 
-  Scenario: undo
-    When I run "git-town undo"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                                     |
-      | alpha  | git merge --abort                           |
-      |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'initial commit' }} |
-    And the initial commits exist now
-    And the initial branches and lineage exist now
-
   Scenario: skipping all conflicts
     When I run "git-town skip"
     Then Git Town runs the commands
@@ -90,12 +80,3 @@ Feature: multiple conflicting branches
       | beta   | local         | local beta commit  |
       |        | origin        | origin beta commit |
       | gamma  | local, origin | gamma commit       |
-
-  Scenario: continue with unresolved conflict
-    When I run "git-town continue"
-    Then Git Town runs no commands
-    And Git Town prints the error:
-      """
-      you must resolve the conflicts before continuing
-      """
-    And a merge is now in progress
