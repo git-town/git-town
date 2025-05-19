@@ -1,6 +1,5 @@
 Feature: walk each branch of a stack with arguments
 
-  @debug @this
   Scenario: iterate the full stack
     Given a Git repo with origin
     And the branches
@@ -12,15 +11,14 @@ Feature: walk each branch of a stack with arguments
     When I run "git-town walk --stack echo hello"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
-      | BRANCH   | COMMAND               |
       | branch-2 | git checkout branch-1 |
-      | (none)   | echo hello            |
-      | branch-1 | git checkout branch-2 |
-      | (none)   | echo hello            |
-      | branch-2 | git checkout branch-3 |
-      | (none)   | echo hello            |
-      | branch-3 | git checkout branch-2 |
+      | branch-1 | echo hello            |
+      |          | git checkout branch-2 |
+      | branch-2 | echo hello            |
+      |          | git checkout branch-3 |
+      | branch-3 | echo hello            |
+      |          | git checkout branch-2 |
     And Git Town prints:
       """
-      Run "git town continue" to go to the next branch.
+      Branch walk done.
       """
