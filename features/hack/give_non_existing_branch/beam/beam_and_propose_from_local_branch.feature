@@ -35,7 +35,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       |          | git checkout new                                                                                              |
       | new      | git push -u origin new                                                                                        |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                              |
-      | new      | git checkout existing                                                                                         |
+      |          | git checkout existing                                                                                         |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |

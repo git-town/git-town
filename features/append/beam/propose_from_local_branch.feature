@@ -35,7 +35,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new chi
       | new      | git -c rebase.updateRefs=false rebase existing                                                                |
       |          | git push -u origin new                                                                                        |
       |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted                   |
-      | new      | git checkout existing                                                                                         |
+      |          | git checkout existing                                                                                         |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
