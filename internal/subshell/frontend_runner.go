@@ -33,7 +33,7 @@ type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, er
 
 func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, env []string, executable string, args ...string) string {
 	result := ""
-	if executable == "git" && printBranch {
+	if printBranch {
 		result += "[" + currentBranch.String() + "] "
 	}
 	if len(env) > 0 {

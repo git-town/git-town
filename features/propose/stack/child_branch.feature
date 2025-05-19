@@ -23,7 +23,7 @@ Feature: proposing a child branch
       | parent | git checkout child                                                        |
       | child  | git merge --no-edit --ff parent                                           |
       |        | git push                                                                  |
-      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the initial branches exist now
     And the initial lineage exists now
 

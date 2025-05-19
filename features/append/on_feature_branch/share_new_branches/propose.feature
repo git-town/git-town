@@ -18,7 +18,7 @@ Feature: auto-propose new branches
       |        | git -c rebase.updateRefs=false rebase origin/main              |
       |        | git checkout -b new                                            |
       | new    | git push -u origin new                                         |
-      | (none) | open https://github.com/git-town/git-town/compare/new?expand=1 |
+      |        | open https://github.com/git-town/git-town/compare/new?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
