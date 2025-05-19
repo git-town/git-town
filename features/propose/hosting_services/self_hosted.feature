@@ -17,7 +17,7 @@ Feature: self-hosted service
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | (none)  | Looking for proposal online ... ok |
+      |         | Looking for proposal online ... ok |
       |         | open <PROPOSAL_URL>                |
 
     Examples:
@@ -36,5 +36,5 @@ Feature: self-hosted service
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                                              |
       | feature | git fetch --prune --tags                                                                                                             |
-      | (none)  | Looking for proposal online ... ok                                                                                                   |
+      |         | Looking for proposal online ... ok                                                                                                   |
       |         | open https://git.example.com/a/b/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |

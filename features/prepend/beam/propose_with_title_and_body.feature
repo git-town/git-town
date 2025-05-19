@@ -30,7 +30,7 @@ Feature: propose a newly prepended branch
       |          | git push --force-with-lease --force-if-includes                                                        |
       |          | git checkout new                                                                                       |
       | new      | git push -u origin new                                                                                 |
-      | (none)   | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body |
+      |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=proposal+title&body=proposal+body |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
       | existing | local, origin | existing commit  |

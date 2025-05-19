@@ -11,15 +11,15 @@ Feature: self hosted servie
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                                    |
-      | (none) | frontend | open https://self-hosted/git-town/git-town |
+      | main   | frontend | open https://self-hosted/git-town/git-town |
 
     Examples:
       | DRIVER    |
       | bitbucket |
       | github    |
-      # uncomment to test (makes online connection)
-      # | gitea     |
       | gitlab    |
+# uncomment to test (makes online connection)
+# | gitea     |
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
@@ -28,4 +28,4 @@ Feature: self hosted servie
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                          |
-      | (none) | frontend | open https://git.example.com/a/b |
+      | main   | frontend | open https://git.example.com/a/b |
