@@ -45,6 +45,23 @@ func (self *Foo) Bar() {
 }`
 			must.EqOp(t, want, have)
 		})
+		t.Run("unformatted, generic method", func(t *testing.T) {
+			t.Parallel()
+			give := `
+package main
+type WithPrevious struct{}
+func (c *WithPrevious[T]) Initialized() bool {
+        return c.initialized
+}`
+			have := formatSelf.FormatFileContent(give)
+			want := `
+package main
+type WithPrevious struct{}
+func (self *WithPrevious[T]) Initialized() bool {
+        return c.initialized
+}`
+			must.EqOp(t, want, have)
+		})
 		t.Run("already formatted", func(t *testing.T) {
 			t.Parallel()
 			give := `
