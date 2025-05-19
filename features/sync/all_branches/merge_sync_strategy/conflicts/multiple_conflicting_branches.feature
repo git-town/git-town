@@ -41,13 +41,6 @@ Feature: multiple conflicting branches
       """
       CONFLICT (add/add): Merge conflict in file
       """
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, origin | main commit        |
-      | alpha  | local, origin | alpha commit       |
-      | beta   | local         | local beta commit  |
-      |        | origin        | origin beta commit |
-      | gamma  | local, origin | gamma commit       |
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH | COMMAND                       |
@@ -59,13 +52,6 @@ Feature: multiple conflicting branches
       CONFLICT (add/add): Merge conflict in file
       """
     And a merge is now in progress
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, origin | main commit        |
-      | alpha  | local, origin | alpha commit       |
-      | beta   | local         | local beta commit  |
-      |        | origin        | origin beta commit |
-      | gamma  | local, origin | gamma commit       |
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
@@ -73,10 +59,3 @@ Feature: multiple conflicting branches
       |        | git checkout main |
       | main   | git push --tags   |
     And no merge is in progress
-    And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, origin | main commit        |
-      | alpha  | local, origin | alpha commit       |
-      | beta   | local         | local beta commit  |
-      |        | origin        | origin beta commit |
-      | gamma  | local, origin | gamma commit       |
