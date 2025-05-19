@@ -19,7 +19,11 @@ func main() {
 		if err != nil {
 			return err
 		}
-		newContent := FormatFileContent(string(content))
+		text := string(content)
+		newContent := FormatFileContent(text)
+		if newContent == text {
+			return nil
+		}
 		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
 	})
 	fmt.Println()
