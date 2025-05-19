@@ -4,7 +4,7 @@
 git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
 ```
 
-The _walk_ command ("walking the branch hierarchy") executes a given command for each branch.
+The _walk_ command ("walking the branch hierarchy") executes a given command for each feature branch.
 If you don't provide a command, it exits to the shell on each branch.
 In that case, run [git town continue](continue.md) to move to the next branch.
 
