@@ -251,11 +251,20 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 
 func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
+	hasCall, executable, callArgs := parseArgs(args)
 	for _, branchToWalk := range data.branchesToWalk {
-		if len(args) == 0 {
-			prog.Value.Add(&opcodes.ExitToShell{})
+		prog.Value.Add(&opcodes.Checkout{Branch: branchToWalk})
+		if hasCall {
+			prog.Value.Add(
+				&opcodes.ExecuteShellCommand{
+					Executable: executable,
+					Args:       callArgs,
+				},
+			)
 		} else {
-			prog.Value.Add(&opcodes.ExecuteShellCommand{})
+			prog.Value.Add(
+				&opcodes.ExitToShell{},
+			)
 		}
 	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -276,4 +285,11 @@ func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) er
 		return fmt.Errorf("Please provide either --all or --stack")
 	}
 	return nil
+}
+
+func parseArgs(args []string) (bool, string, []string) {
+	if len(args) == 0 {
+		return false, "", []string{}
+	}
+	return true, args[0], args[1:]
 }
