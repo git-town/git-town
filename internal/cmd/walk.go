@@ -156,7 +156,6 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 }
 
 type walkData struct {
-	allBranches        configdomain.AllBranches
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToWalk     gitdomain.LocalBranchNames
@@ -167,7 +166,6 @@ type walkData struct {
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
-	fullStack          configdomain.FullStack
 	stashSize          gitdomain.StashSize
 }
 
@@ -270,6 +268,7 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
+		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
 		PreviousBranchCandidates: previousBranchCandidates,

@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -51,7 +50,7 @@ func Execute(args ExecuteArgs) error {
 			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
-			if _, shouldExitToShell := err.(opcodes.ExitToShellSignal); shouldExitToShell {
+			if _, shouldExitToShell := err.(shared.ExitToShellSignal); shouldExitToShell {
 				return exitToShell(args)
 			}
 			return errored(nextStep, err, args)
