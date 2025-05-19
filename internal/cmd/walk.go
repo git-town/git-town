@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
@@ -116,9 +115,6 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	if err != nil || exit {
 		return err
 	}
-	// if err = validateWalkData(repo, data); err != nil {
-	// 	return err
-	// }
 	runProgram := walkProgram(args, data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
@@ -251,7 +247,7 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 	prog := NewMutable(&program.Program{})
 	hasCall, executable, callArgs := parseArgs(args)
 	for _, branchToWalk := range data.branchesToWalk {
-		prog.Value.Add(&opcodes.Checkout{Branch: branchToWalk})
+		prog.Value.Add(&opcodes.CheckoutIfNeeded{Branch: branchToWalk})
 		if hasCall {
 			prog.Value.Add(
 				&opcodes.ExecuteShellCommand{
@@ -265,7 +261,14 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 			)
 		}
 	}
-	fmt.Println(prog)
+	prog.Value.Add(
+		&opcodes.CheckoutIfNeeded{
+			Branch: data.initialBranch,
+		},
+		&opcodes.MessageQueue{
+			Message: "Branch walk done.",
+		},
+	)
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,

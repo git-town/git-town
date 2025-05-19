@@ -13,15 +13,34 @@ Feature: walk each branch of a stack
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | branch-2 | git checkout branch-1 |
+    And Git Town prints:
+      """
+      Run "git town continue" to go to the next branch.
+      """
     And the current branch is now "branch-1"
     When I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | branch-1 | git checkout branch-2 |
+    And Git Town prints:
+      """
+      Run "git town continue" to go to the next branch.
+      """
     And the current branch is now "branch-2"
     When I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | branch-2 | git checkout branch-3 |
+    And Git Town prints:
+      """
+      Run "git town continue" to go to the next branch.
+      """
     And the current branch is now "branch-3"
-    And the initial branches and lineage exist now
+    When I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND               |
+      | branch-3 | git checkout branch-2 |
+    And Git Town prints:
+      """
+      Branch walk done.
+      """
