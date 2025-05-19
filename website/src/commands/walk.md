@@ -5,8 +5,10 @@ git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command
 ```
 
 The _walk_ command ("walking the branch hierarchy") executes a given command for
-each feature branch. Stops if the shell command exits with an error. In this
-case, run
+each feature branch. It stops if the shell command exits with an error. In this
+case, run [git town continue](continue.md) to make Git Town re-run the failed
+command, or [git town skip](skip.md) to skip this branch and run the command on
+the next branch.
 
 If you don't provide a command, it exits to the shell on each branch. In that
 case, run [git town continue](continue.md) to move to the next branch.
