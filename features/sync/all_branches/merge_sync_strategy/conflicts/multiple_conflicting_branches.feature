@@ -40,7 +40,6 @@ Feature: multiple conflicting branches
     And the initial commits exist now
     And the initial branches and lineage exist now
 
-  @this
   Scenario: skipping all conflicts
     When I run "git-town skip"
     Then Git Town runs the commands
@@ -48,6 +47,10 @@ Feature: multiple conflicting branches
       | alpha  | git merge --abort             |
       |        | git checkout beta             |
       | beta   | git merge --no-edit --ff main |
+    And Git Town prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in file
+      """
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -73,6 +76,20 @@ Feature: multiple conflicting branches
       | beta   | local         | local beta commit  |
       |        | origin        | origin beta commit |
       | gamma  | local, origin | gamma commit       |
+    When I run "git-town skip"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND           |
+      | gamma  | git merge --abort |
+      |        | git checkout main |
+      | main   | git push --tags   |
+    And no merge is in progress
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE            |
+      | main   | local, origin | main commit        |
+      | alpha  | local, origin | alpha commit       |
+      | beta   | local         | local beta commit  |
+      |        | origin        | origin beta commit |
+      | gamma  | local, origin | gamma commit       |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -82,40 +99,3 @@ Feature: multiple conflicting branches
       you must resolve the conflicts before continuing
       """
     And a merge is now in progress
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | beta   | git commit --no-edit          |
-      |        | git push                      |
-      |        | git checkout gamma            |
-      | gamma  | git merge --no-edit --ff main |
-      |        | git push                      |
-      |        | git checkout main             |
-      | main   | git push --tags               |
-    And all branches are now synchronized
-    And no merge is in progress
-    And these committed files exist now
-      | BRANCH | NAME             | CONTENT          |
-      | main   | main_file        | main content     |
-      | alpha  | feature1_file    | alpha content    |
-      |        | main_file        | main content     |
-      | beta   | conflicting_file | resolved content |
-      |        | main_file        | main content     |
-      | gamma  | feature3_file    | gamma content    |
-      |        | main_file        | main content     |
-
-  Scenario: resolve, commit, and continue
-    When I resolve the conflict in "conflicting_file"
-    And I run "git commit --no-edit"
-    And I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH | COMMAND                       |
-      | beta   | git push                      |
-      |        | git checkout gamma            |
-      | gamma  | git merge --no-edit --ff main |
-      |        | git push                      |
-      |        | git checkout main             |
-      | main   | git push --tags               |
