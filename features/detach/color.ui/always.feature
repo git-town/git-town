@@ -34,7 +34,6 @@ Feature: detaching an omni-branch verbosely
     And local Git setting "color.ui" is "always"
     When I run "git-town detach --verbose"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                                                                                                                                                                                                                                                          |
