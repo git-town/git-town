@@ -73,7 +73,7 @@ Feature: walk all local branches
     When I run "git-town skip"
     Then Git Town runs the commands
       | BRANCH | COMMAND |
-      # | branch-2 | git checkout branch-3 |
+    # | branch-2 | git checkout branch-3 |
     And Git Town prints:
       """
       Run "git town continue" to go to the next branch.

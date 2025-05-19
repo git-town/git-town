@@ -26,28 +26,28 @@ Feature: walk each branch of a stack in dry-run mode
       """
       [branch-2] git checkout branch-1
       (dry run)
-      
+
       [branch-1] touch file
       (dry run)
-      
+
       [branch-1] git checkout branch-2
       (dry run)
-      
+
       [branch-2] touch file
       (dry run)
-      
+
       [branch-2] git checkout branch-3
       (dry run)
-      
+
       [branch-3] touch file
       (dry run)
-      
+
       [branch-3] git checkout branch-A
       (dry run)
-      
+
       [branch-A] touch file
       (dry run)
-      
+
       [branch-A] git checkout branch-2
       (dry run)
       """

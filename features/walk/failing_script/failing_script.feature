@@ -26,7 +26,7 @@ Feature: if the given script returns an error, continue re-runs the failing scri
     Then Git Town runs the commands
       | BRANCH   | COMMAND |
       | branch-1 | test    |
-  # @debug @this
+# @debug @this
 
   Scenario: skip to the next branch
     When I run "git-town skip"

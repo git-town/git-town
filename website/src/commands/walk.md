@@ -4,11 +4,12 @@
 git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
 ```
 
-The _walk_ command ("walking the branch hierarchy") executes a given command for each feature branch.
-Stops if the shell command exits with an error. In this case, run
+The _walk_ command ("walking the branch hierarchy") executes a given command for
+each feature branch. Stops if the shell command exits with an error. In this
+case, run
 
-If you don't provide a command, it exits to the shell on each branch.
-In that case, run [git town continue](continue.md) to move to the next branch.
+If you don't provide a command, it exits to the shell on each branch. In that
+case, run [git town continue](continue.md) to move to the next branch.
 
 ## Examples
 
@@ -45,12 +46,13 @@ Iterates through all local branches.
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` iterates through all branches of the stack that the current branch belongs to.
+The `--stack` aka `-s` iterates through all branches of the stack that the
+current branch belongs to.
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the commands
-that would be run but doesn't execute them.
+Use the `--dry-run` flag to test-drive this command. It prints the commands that
+would be run but doesn't execute them.
 
 #### `-v`<br>`--verbose`
 
