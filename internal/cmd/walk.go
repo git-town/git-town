@@ -19,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
 	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/optimizer"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
@@ -118,7 +119,7 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	// if err = validateWalkData(repo, data); err != nil {
 	// 	return err
 	// }
-	runProgram := walkProgram(data, dryRun)
+	runProgram := walkProgram(args, data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -248,11 +249,15 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 	}, false, err
 }
 
-func walkProgram(data walkData, dryRun configdomain.DryRun) program.Program {
+func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) program.Program {
 	prog := NewMutable(&program.Program{})
-	// for _, branchToWalk := range data.branchesToWalk {
-	// 	prog.Value.Add(&opcodes.ExecuteShellCommand{})
-	// }
+	for _, branchToWalk := range data.branchesToWalk {
+		if len(args) == 0 {
+			prog.Value.Add(&opcodes.ExitToShell{})
+		} else {
+			prog.Value.Add(&opcodes.ExecuteShellCommand{})
+		}
+	}
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
