@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
@@ -264,6 +265,7 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 			)
 		}
 	}
+	fmt.Println(prog)
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
