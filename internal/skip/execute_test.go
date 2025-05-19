@@ -35,4 +35,18 @@ func TestRemoveOpcodesForCurrentBranch(t *testing.T) {
 		}
 		must.Eq(t, want.String(), have.String())
 	})
+	t.Run("program contains no end of branch markers", func(t *testing.T) {
+		t.Parallel()
+		give := program.Program{
+			&opcodes.Checkout{Branch: "branch-1"},
+			&opcodes.PullCurrentBranch{},
+			&opcodes.Checkout{Branch: "branch-2"},
+			&opcodes.PullCurrentBranch{},
+			&opcodes.Checkout{Branch: "branch-3"},
+			&opcodes.PullCurrentBranch{},
+		}
+		have := skip.RemoveOpcodesForCurrentBranch(give)
+		want := program.Program{}
+		must.Eq(t, want.String(), have.String())
+	})
 }
