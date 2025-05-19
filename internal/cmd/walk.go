@@ -180,7 +180,7 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 		ConfigSnapshot:        repo.ConfigSnapshot,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
-		Fetch:                 true,
+		Fetch:                 false,
 		FinalMessages:         repo.FinalMessages,
 		Frontend:              repo.Frontend,
 		Git:                   repo.Git,
