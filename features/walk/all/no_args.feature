@@ -1,4 +1,4 @@
-Feature: walk each branch of a stack without arguments
+Feature: walk all local branches
 
   Scenario: action
     Given a Git repo with origin

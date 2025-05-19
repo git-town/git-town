@@ -1,12 +1,17 @@
 # git town walk
 
 ```command-summary
-git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose]
+git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
 ```
 
-The _walk_ command ("walking the branch hierarchy") executes the given command for multiple branches.
-With the `--all` flag, it executes the command for all local branches,
-with the `--stack` flag for all branches in the current branch stack.
+The _walk_ command ("walking the branch hierarchy") opens a shell for each local branch,
+allowing you to investigate the state of the repository on that branch.
+
+With the `--all` flag, it walks through all local branches,
+with the `--stack` flag it walks through all branches in the current branch stack.
+
+If you provide a command, it executes that command for each branch without opening a shell.
+
 
 ## Options
 

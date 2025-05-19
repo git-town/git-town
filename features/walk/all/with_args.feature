@@ -1,4 +1,4 @@
-Feature: walk each branch of a stack with arguments
+Feature: execute a script in all local branches
 
   Scenario: iterate the full stack
     Given a Git repo with origin
