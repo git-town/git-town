@@ -7,10 +7,12 @@ import (
 
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v20/internal/cli/flags"
+	"github.com/git-town/git-town/v20/internal/cli/print"
 	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v20/internal/config"
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
 	"github.com/git-town/git-town/v20/internal/execute"
+	"github.com/git-town/git-town/v20/internal/forge"
 	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/messages"
@@ -32,8 +34,7 @@ If a shell command is given, executes it on each branch.
 Stops when the shell command exits with an error.
 
 If no shell command is given, exits to the shell on each branch.
-
-You can run "git town continue", "git town skip", or "git town undo"
+In that case, you can run "git town continue", "git town skip", or "git town undo"
 to retry, ignore, or abort the iteration.
 
 
@@ -46,7 +47,7 @@ main
     branch-2
 
 When running "git town walk --stack echo hello",
-it prints this output.
+it prints this output:
 
 [main] hello
 
@@ -99,7 +100,6 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	if err != nil {
 		return err
 	}
-	fmt.Println("args:", args)
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -137,7 +137,7 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,
-		Connector:               None[forgedomain.Connector](),
+		Connector:               data.connector,
 		Detached:                true,
 		DialogTestInputs:        data.dialogTestInputs,
 		FinalMessages:           repo.FinalMessages,
@@ -161,6 +161,7 @@ type walkData struct {
 	branchesToWalk     gitdomain.LocalBranchNames
 	commandToExecute   []string
 	config             config.ValidatedConfig
+	connector          Option[forgedomain.Connector]
 	dialogTestInputs   components.TestInputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
@@ -201,6 +202,10 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 	if !hasInitialBranch {
 		return walkData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	if err != nil {
+		return walkData{}, false, err
+	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -208,7 +213,7 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{initialBranch},
-		Connector:          None[forgedomain.Connector](),
+		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -234,6 +239,7 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 		branchesToWalk:     branchesToWalk,
 		commandToExecute:   args,
 		config:             validatedConfig,
+		connector:          connector,
 		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
