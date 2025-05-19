@@ -1,4 +1,4 @@
-@skipwindows
+@skipWindows
 Feature: walk each branch of a stack in dry-run mode
 
   Scenario: iterate the full stack
