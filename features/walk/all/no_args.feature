@@ -9,7 +9,7 @@ Feature: walk each branch of a stack without arguments
       | branch-3 | feature | branch-2 | local     |
       | branch-A | feature | main     | local     |
     And the current branch is "branch-2"
-    When I run "git-town walk --stack"
+    When I run "git-town walk --all"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | branch-2 | git checkout branch-1 |
@@ -39,7 +39,16 @@ Feature: walk each branch of a stack without arguments
     When I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-2 |
+      | branch-3 | git checkout branch-A |
+    And Git Town prints:
+      """
+      Run "git town continue" to go to the next branch.
+      """
+    And the current branch is now "branch-A"
+    When I run "git-town continue"
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND               |
+      | branch-A | git checkout branch-2 |
     And Git Town prints:
       """
       Branch walk done.

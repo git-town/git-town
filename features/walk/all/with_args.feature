@@ -9,7 +9,7 @@ Feature: walk each branch of a stack with arguments
       | branch-3 | feature | branch-2 | local     |
       | branch-A | feature | main     | local     |
     And the current branch is "branch-2"
-    When I run "git-town walk --stack echo hello"
+    When I run "git-town walk --all echo hello"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
       | branch-2 | git checkout branch-1 |
@@ -18,6 +18,8 @@ Feature: walk each branch of a stack with arguments
       | branch-2 | echo hello            |
       |          | git checkout branch-3 |
       | branch-3 | echo hello            |
+      |          | git checkout branch-A |
+      | branch-A | echo hello            |
       |          | git checkout branch-2 |
     And Git Town prints:
       """

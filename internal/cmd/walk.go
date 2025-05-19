@@ -224,7 +224,7 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 	branchesToWalk := gitdomain.LocalBranchNames{}
 	switch {
 	case all.Enabled():
-		branchesToWalk = localBranches
+		branchesToWalk = localBranches.Remove(perennialBranchNames...)
 	case stack.Enabled():
 		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
 	}
