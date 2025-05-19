@@ -10,25 +10,25 @@ type Cache[T any] struct {
 }
 
 // Initialized indicates if we have a current branch.
-func (c *Cache[T]) Initialized() bool {
-	return c.initialized
+func (self *Cache[T]) Initialized() bool {
+	return self.initialized
 }
 
 // Invalidate removes the cached value.
-func (c *Cache[T]) Invalidate() {
-	c.initialized = false
+func (self *Cache[T]) Invalidate() {
+	self.initialized = false
 }
 
 // Set allows collaborators to signal when the current branch has changed.
-func (c *Cache[T]) Set(newValue *T) {
-	c.value = newValue
-	c.initialized = true
+func (self *Cache[T]) Set(newValue *T) {
+	self.value = newValue
+	self.initialized = true
 }
 
 // Value provides the current value.
-func (c *Cache[T]) Value() *T {
-	if !c.initialized {
+func (self *Cache[T]) Value() *T {
+	if !self.initialized {
 		panic(messages.CacheUnitialized)
 	}
-	return c.value
+	return self.value
 }
