@@ -16,7 +16,7 @@ Feature: print the URL when no browser installed
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | (none)  | Looking for proposal online ... ok |
+      |         | Looking for proposal online ... ok |
     And Git Town prints:
       """
       Please open in a browser: https://github.com/git-town/git-town/pull/123

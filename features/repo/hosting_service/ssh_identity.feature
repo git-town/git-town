@@ -9,12 +9,12 @@ Feature: use an SSH identity
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND         |
-      | (none) | frontend | open <REPO_URL> |
+      |        | frontend | open <REPO_URL> |
 
     Examples:
       | ORIGIN_HOSTNAME | REPO_URL                                |
       | bitbucket.org   | https://bitbucket.org/git-town/git-town |
       | github.com      | https://github.com/git-town/git-town    |
-      # uncomment to test (makes online connection)
-      # | gitea.com       | https://gitea.com/git-town/git-town     |
       | gitlab.com      | https://gitlab.com/git-town/git-town    |
+  # uncomment to test (makes online connection)
+  # | gitea.com       | https://gitea.com/git-town/git-town     |

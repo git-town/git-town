@@ -16,7 +16,7 @@ Feature: GitLab support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | (none)  | Looking for proposal online ... ok |
+      |         | Looking for proposal online ... ok |
       |         | open <BROWSER URL>                 |
 
     Examples:
@@ -36,7 +36,7 @@ Feature: GitLab support
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                                               |
       | child  | git fetch --prune --tags                                                                                                              |
-      | (none) | Looking for proposal online ... ok                                                                                                    |
+      |        | Looking for proposal online ... ok                                                                                                    |
       | child  | git checkout parent                                                                                                                   |
       | parent | git checkout child                                                                                                                    |
-      | (none) | open https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent |
+      |        | open https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent |

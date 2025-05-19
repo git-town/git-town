@@ -34,7 +34,7 @@ Feature: beam commits and uncommitted changes from a local branch onto a new fea
       |          | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} |
       |          | git checkout new                                                                                              |
       | new      | git push -u origin new                                                                                        |
-      | (none)   | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                              |
+      |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=uncommitted                              |
       | new      | git checkout existing                                                                                         |
     And no rebase is now in progress
     And these commits exist now

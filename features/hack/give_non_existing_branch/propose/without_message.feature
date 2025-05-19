@@ -22,7 +22,7 @@ Feature: proposing uncommitted changes via a separate top-level branch, let Git 
       | existing | git checkout -b new main                                       |
       | new      | git commit                                                     |
       |          | git push -u origin new                                         |
-      | (none)   | open https://github.com/git-town/git-town/compare/new?expand=1 |
+      |          | open https://github.com/git-town/git-town/compare/new?expand=1 |
       | new      | git checkout existing                                          |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
