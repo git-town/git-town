@@ -1,7 +1,6 @@
 @skipwindows
 Feature: if the given script returns an error, continue re-runs the failing script
 
-  @this
   Scenario: action
     Given a Git repo with origin
     And the branches
