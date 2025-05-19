@@ -23,7 +23,7 @@ Feature: proposing uncommitted changes via a separate top-level branch,  provide
       | new      | git commit -m unrelated                                                        |
       |          | git push -u origin new                                                         |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1&title=unrelated |
-      | new      | git checkout existing                                                          |
+      |          | git checkout existing                                                          |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |

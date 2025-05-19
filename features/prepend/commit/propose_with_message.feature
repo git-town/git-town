@@ -23,7 +23,7 @@ Feature: propose uncommitted changes via a separate parent branch with message
       | new      | git commit -m unrelated                                        |
       |          | git push -u origin new                                         |
       |          | open https://github.com/git-town/git-town/compare/new?expand=1 |
-      | new      | git checkout existing                                          |
+      |          | git checkout existing                                          |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |

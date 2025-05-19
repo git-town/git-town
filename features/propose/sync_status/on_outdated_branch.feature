@@ -26,7 +26,7 @@ Feature: sync before proposing
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
       |        | Looking for proposal online ... ok                                        |
-      | child  | git checkout parent                                                       |
+      |        | git checkout parent                                                       |
       | parent | git merge --no-edit --ff origin/parent                                    |
       |        | git push                                                                  |
       |        | git checkout child                                                        |

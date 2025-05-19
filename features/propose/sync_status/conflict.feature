@@ -21,7 +21,7 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                 |
       | feature | git fetch --prune --tags                |
       |         | Looking for proposal online ... ok      |
-      | feature | git merge --no-edit --ff origin/feature |
+      |         | git merge --no-edit --ff origin/feature |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file

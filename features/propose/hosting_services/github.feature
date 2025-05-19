@@ -90,6 +90,6 @@ Feature: GitHub support
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
       |        | Looking for proposal online ... ok                                        |
-      | child  | git checkout parent                                                       |
+      |        | git checkout parent                                                       |
       | parent | git checkout child                                                        |
-      |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      | child  | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |

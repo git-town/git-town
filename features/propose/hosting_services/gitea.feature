@@ -90,6 +90,6 @@ Feature: Gitea support
       | BRANCH | COMMAND                                                         |
       | child  | git fetch --prune --tags                                        |
       |        | Looking for proposal online ... ok                              |
-      | child  | git checkout parent                                             |
+      |        | git checkout parent                                             |
       | parent | git checkout child                                              |
-      |        | open https://gitea.com/git-town/git-town/compare/parent...child |
+      | child  | open https://gitea.com/git-town/git-town/compare/parent...child |

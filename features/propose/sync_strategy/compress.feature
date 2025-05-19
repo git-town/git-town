@@ -22,7 +22,7 @@ Feature: proposing using the "compress" sync strategy
       | BRANCH   | COMMAND                                                             |
       | existing | git fetch --prune --tags                                            |
       |          | Looking for proposal online ... ok                                  |
-      | existing | git merge --no-edit --ff origin/existing                            |
+      |          | git merge --no-edit --ff origin/existing                            |
       |          | git reset --soft main                                               |
       |          | git commit -m "local existing commit 1"                             |
       |          | git push --force-with-lease                                         |

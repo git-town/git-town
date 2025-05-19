@@ -8,7 +8,7 @@ Feature: GitLab
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                           |
-      |        | frontend | open https://gitlab.com/kadu/kadu |
+      | main   | frontend | open https://gitlab.com/kadu/kadu |
 
     Examples:
       | ORIGIN                           |

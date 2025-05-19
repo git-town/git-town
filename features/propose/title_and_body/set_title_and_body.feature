@@ -47,7 +47,7 @@ Feature: Prepopulate title and body
       | BRANCH  | COMMAND                                                                                           |
       | feature | git fetch --prune --tags                                                                          |
       |         | Looking for proposal online ... ok                                                                |
-      | feature | git add -A                                                                                        |
+      |         | git add -A                                                                                        |
       |         | git stash -m "Git Town WIP"                                                                       |
       |         | git stash pop                                                                                     |
       |         | git restore --staged .                                                                            |

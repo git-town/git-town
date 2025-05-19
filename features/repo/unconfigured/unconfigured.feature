@@ -9,4 +9,4 @@ Feature: ask for missing configuration
     When I run "git-town repo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                   |
-      |        | open https://github.com/git-town/git-town |
+      | main   | open https://github.com/git-town/git-town |
