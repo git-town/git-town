@@ -4,9 +4,9 @@
 git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
 ```
 
-The _walk_ command ("walking the branch hierarchy") executes a given shell command for each branch.
+The _walk_ command ("walking the branch hierarchy") executes a given command for each branch.
 If you don't provide a command, it exits to the shell on each branch.
-Run [git town continue](continue.md) to move to the next branch.
+In that case, run [git town continue](continue.md) to move to the next branch.
 
 ## Examples
 
@@ -26,13 +26,13 @@ If we run `git town walk --stack make lint` it prints this output:
 
 ```bash
 [branch-1] make lint
-# ... output of make lint
+# ... output of "make lint" for branch-1
 
 [branch-2] make lint
-# ... output of make lint
+# ... output of "make lint" for branch-2
 
 [branch-3] make lint
-# ... output of make lint
+# ... output of "make lint" for branch-3
 ```
 
 ## Options
