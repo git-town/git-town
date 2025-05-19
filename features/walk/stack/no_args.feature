@@ -1,7 +1,6 @@
-Feature: walk each branch of a stack
+Feature: walk each branch of a stack without arguments
 
-  @this
-  Scenario: iterate the full stack
+  Scenario: action
     Given a Git repo with origin
     And the branches
       | NAME     | TYPE    | PARENT   | LOCATIONS |
