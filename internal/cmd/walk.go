@@ -28,14 +28,17 @@ import (
 
 const (
 	walkCmd  = "walk"
-	walkDesc = "Run a shell command on each feature branch"
+	walkDesc = "Run a command on each feature branch"
 	walkHelp = `
-If a shell command is given, executes it on each branch.
-Stops when the shell command exits with an error.
+Executes the given command on each branch.
+Stops when the command exits with an error
+to give you a chance to investigate and
+then retry using "git town continue" or
+skip to the next branch using "git town skip".
 
 If no shell command is given, exits to the shell on each branch.
-In that case, you can run "git town continue", "git town skip", or "git town undo"
-to retry, ignore, or abort the iteration.
+In that case, you can run shell commands for the respective branch
+and go to the next branch by running "git town continue".
 
 Consider this stack:
 
