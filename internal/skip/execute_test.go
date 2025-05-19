@@ -1,0 +1,38 @@
+package skip_test
+
+import (
+	"testing"
+
+	"github.com/git-town/git-town/v20/internal/skip"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
+	"github.com/git-town/git-town/v20/internal/vm/program"
+	"github.com/shoenig/test/must"
+)
+
+func TestRemoveOpcodesForCurrentBranch(t *testing.T) {
+	t.Parallel()
+	t.Run("program contains multiple branches", func(t *testing.T) {
+		t.Parallel()
+		give := program.Program{
+			&opcodes.Checkout{Branch: "branch-1"},
+			&opcodes.ExitToShell{},
+			&opcodes.ProgramEndOfBranch{},
+			&opcodes.Checkout{Branch: "branch-2"},
+			&opcodes.ExitToShell{},
+			&opcodes.ProgramEndOfBranch{},
+			&opcodes.Checkout{Branch: "branch-3"},
+			&opcodes.ExitToShell{},
+			&opcodes.ProgramEndOfBranch{},
+		}
+		have := skip.RemoveOpcodesForCurrentBranch(give)
+		want := program.Program{
+			&opcodes.Checkout{Branch: "branch-2"},
+			&opcodes.ExitToShell{},
+			&opcodes.ProgramEndOfBranch{},
+			&opcodes.Checkout{Branch: "branch-3"},
+			&opcodes.ExitToShell{},
+			&opcodes.ProgramEndOfBranch{},
+		}
+		must.Eq(t, want.String(), give.String())
+	})
+}

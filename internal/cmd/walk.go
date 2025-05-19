@@ -28,7 +28,7 @@ import (
 
 const (
 	walkCmd  = "walk"
-	walkDesc = "Perform a shell operation on each branch"
+	walkDesc = "Run a shell command on each feature branch"
 	walkHelp = `
 If a shell command is given, executes it on each branch.
 Stops when the shell command exits with an error.
@@ -267,6 +267,9 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 				&opcodes.ExitToShell{},
 			)
 		}
+		prog.Value.Add(
+			&opcodes.ProgramEndOfBranch{},
+		)
 	}
 	prog.Value.Add(
 		&opcodes.CheckoutIfNeeded{

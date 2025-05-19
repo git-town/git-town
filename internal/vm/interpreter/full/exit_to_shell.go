@@ -54,6 +54,11 @@ func exitToShell(args ExecuteArgs) error {
 			unfinishedDetails.CanSkip = true
 		}
 	}
+	if args.RunState.Command == "walk" {
+		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+			unfinishedDetails.CanSkip = true
+		}
+	}
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
