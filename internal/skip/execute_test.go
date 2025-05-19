@@ -11,6 +11,7 @@ import (
 
 func TestRemoveOpcodesForCurrentBranch(t *testing.T) {
 	t.Parallel()
+
 	t.Run("program contains multiple branches", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
@@ -35,6 +36,7 @@ func TestRemoveOpcodesForCurrentBranch(t *testing.T) {
 		}
 		must.Eq(t, want.String(), have.String())
 	})
+
 	t.Run("program contains no end of branch markers", func(t *testing.T) {
 		t.Parallel()
 		give := program.Program{
