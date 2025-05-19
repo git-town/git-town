@@ -37,7 +37,6 @@ If no shell command is given, exits to the shell on each branch.
 In that case, you can run "git town continue", "git town skip", or "git town undo"
 to retry, ignore, or abort the iteration.
 
-
 Consider this stack:
 
 main
@@ -45,15 +44,20 @@ main
   branch-1
    \
     branch-2
+		 \
+		  branch-3
 
-When running "git town walk --stack echo hello",
+When running "git town walk --stack make lint",
 it prints this output:
 
-[main] hello
+[branch-1] make lint
+... output of make lint
 
-[branch-1] hello
+[branch-2] make lint
+... output of make lint
 
-[branch-2] hello
+[branch-3] make lint
+... output of make lint
 `
 )
 

@@ -4,14 +4,36 @@
 git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command and arguments>]
 ```
 
-The _walk_ command ("walking the branch hierarchy") opens a shell for each local branch,
-allowing you to investigate the state of the repository on that branch.
+The _walk_ command ("walking the branch hierarchy") executes a given shell command for each branch.
+If you don't provide a command, it exits to the shell on each branch.
+Run [git town continue](continue.md) to move to the next branch.
 
-With the `--all` flag, it walks through all local branches,
-with the `--stack` flag it walks through all branches in the current branch stack.
+## Examples
 
-If you provide a command, it executes that command for each branch without opening a shell.
+Consider this stack:
 
+```
+main
+ \
+  branch-1
+   \
+*   branch-2
+     \
+      branch-3
+```
+
+If we run `git town walk --stack make lint` it prints this output:
+
+```bash
+[branch-1] make lint
+# ... output of make lint
+
+[branch-2] make lint
+# ... output of make lint
+
+[branch-3] make lint
+# ... output of make lint
+```
 
 ## Options
 
@@ -21,8 +43,7 @@ Iterates through all local branches.
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` parameter makes Git Town sync all branches in the stack
-that the current branch belongs to.
+The `--stack` aka `-s` iterates through all branches of the stack that the current branch belongs to.
 
 #### `--dry-run`
 
