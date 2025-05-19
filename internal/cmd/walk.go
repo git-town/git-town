@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
@@ -278,10 +277,10 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 
 func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
 	if all.Enabled() && stack.Enabled() {
-		return fmt.Errorf("Please provide either --all or --stack, not both of them")
+		return errors.New("please provide either --all or --stack, not both of them")
 	}
 	if !all.Enabled() && !stack.Enabled() {
-		return fmt.Errorf("Please provide either --all or --stack")
+		return errors.New("please provide either --all or --stack")
 	}
 	return nil
 }

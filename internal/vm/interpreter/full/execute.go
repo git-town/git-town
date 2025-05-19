@@ -1,6 +1,8 @@
 package interpreter
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v20/internal/config"
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
@@ -50,7 +52,7 @@ func Execute(args ExecuteArgs) error {
 			UpdateInitialSnapshotLocalSHA:   args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
-			if _, shouldExitToShell := err.(shared.ExitToShellSignal); shouldExitToShell {
+			if errors.Is(err, shared.ErrExitToShell) {
 				return exitToShell(args)
 			}
 			return errored(nextStep, err, args)

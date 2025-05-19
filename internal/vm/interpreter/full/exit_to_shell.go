@@ -1,7 +1,6 @@
 package interpreter
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v20/internal/cli/print"
@@ -59,6 +58,7 @@ func exitToShell(args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
+	args.FinalMessages.Add(`run "git town continue" to go to the next branch`)
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return errors.New(`Run "git town continue" to go to the next branch.`)
+	return nil
 }

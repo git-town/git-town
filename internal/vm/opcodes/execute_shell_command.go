@@ -7,8 +7,8 @@ import (
 // FetchUpstream brings the Git history of the local repository
 // up to speed with activities that happened in the upstream remote.
 type ExecuteShellCommand struct {
-	Executable              string
 	Args                    []string
+	Executable              string
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

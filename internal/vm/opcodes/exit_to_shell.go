@@ -10,6 +10,6 @@ type ExitToShell struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (self *ExitToShell) Run(args shared.RunArgs) error {
-	return shared.ExitToShellSignal{}
+func (self *ExitToShell) Run(_ shared.RunArgs) error {
+	return shared.ErrExitToShell
 }
