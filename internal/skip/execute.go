@@ -38,7 +38,7 @@ func Execute(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
+	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
@@ -78,11 +78,11 @@ type ExecuteArgs struct {
 }
 
 // removes the remaining opcodes for the current branch from the given program
-func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
+func RemoveOpcodesForCurrentBranch(prog program.Program) program.Program {
 	result := make(program.Program, 0, len(prog)-1)
 	skipping := true
 	for _, opcode := range prog {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if shared.IsEndOfBranchProgramOpcode(opcode) && skipping {
 			skipping = false
 			continue
 		}
