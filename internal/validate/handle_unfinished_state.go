@@ -16,7 +16,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/skip"
 	"github.com/git-town/git-town/v20/internal/undo"
-	"github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/statefile"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -91,7 +91,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 	if err != nil || exit {
 		return exit, err
 	}
-	return true, full.Execute(full.ExecuteArgs{
+	return true, fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  validatedConfig,

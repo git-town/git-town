@@ -21,7 +21,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
-	"github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/optimizer"
 	"github.com/git-town/git-town/v20/internal/vm/program"
@@ -155,7 +155,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
-	return full.Execute(full.ExecuteArgs{
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,

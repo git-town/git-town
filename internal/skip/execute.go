@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
-	"github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/interpreter/light"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
@@ -40,7 +40,7 @@ func Execute(args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)
-	return full.Execute(full.ExecuteArgs{
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,

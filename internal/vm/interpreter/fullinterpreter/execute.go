@@ -1,4 +1,4 @@
-package full
+package fullinterpreter
 
 import (
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"

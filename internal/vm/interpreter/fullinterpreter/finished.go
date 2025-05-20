@@ -1,4 +1,4 @@
-package full
+package fullinterpreter
 
 import (
 	"fmt"
