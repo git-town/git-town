@@ -12,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// exitToShell is called when Git Town should exit to the shell
+// exitToShell is called when Git Town should exit to the shell without an error
 func exitToShell(args ExecuteArgs) error {
 	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
 	if err != nil {
