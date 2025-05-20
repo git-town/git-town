@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/messages"
-	lightInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/light"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/light"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/statefile"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -33,7 +33,7 @@ func Execute(args ExecuteArgs) error {
 		NoPushHook:     args.Config.NormalConfig.NoPushHook(),
 		RunState:       args.RunState,
 	})
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	light.Execute(light.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
