@@ -42,8 +42,11 @@ func (self BranchInfo) GetLocalOrRemoteName() BranchName {
 }
 
 func (self BranchInfo) GetLocalOrRemoteSHA() SHA {
+	if localSHA, has := self.LocalSHA.Get(); has {
+		return localSHA
+	}
 	// this can never panic because there is always either a local or remote SHA
-	return self.LocalSHA.GetOrElse(self.RemoteSHA.GetOrPanic())
+	return self.RemoteSHA.GetOrPanic()
 }
 
 // provides both the name and SHA of the remote branch
