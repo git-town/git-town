@@ -25,6 +25,17 @@ func (sbe SwitchBranchEntry) String() string {
 	return sbe.Indentation + sbe.Branch.String()
 }
 
+type SwitchBranchEntries []SwitchBranchEntry
+
+func (sbes SwitchBranchEntries) ContainsBranch(branch gitdomain.LocalBranchName) bool {
+	for _, entry := range sbes {
+		if entry.Branch == branch {
+			return true
+		}
+	}
+	return false
+}
+
 type SwitchModel struct {
 	list.List[SwitchBranchEntry]
 	DisplayBranchTypes configdomain.DisplayTypes

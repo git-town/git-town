@@ -21,7 +21,7 @@ func switchBranch() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			entries := make([]dialog.SwitchBranchEntry, amount)
+			entries := make(dialog.SwitchBranchEntries, amount)
 			for a := range amount {
 				entries[a] = dialog.SwitchBranchEntry{
 					Branch:        gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", a)),

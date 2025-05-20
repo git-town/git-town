@@ -120,7 +120,7 @@ type branchData struct {
 	lineage           configdomain.Lineage
 }
 
-func branchLayout(entries []dialog.SwitchBranchEntry, data branchData) string {
+func branchLayout(entries dialog.SwitchBranchEntries, data branchData) string {
 	s := strings.Builder{}
 	initialBranch, hasInitialBranch := data.initialBranchOpt.Get()
 	for _, entry := range entries {
