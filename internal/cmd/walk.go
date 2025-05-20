@@ -36,6 +36,8 @@ giving you a chance to investigate and fix the issue.
 
 * use "git town continue" to retry the command on the current branch
 * use "git town skip" to move on to the next branch
+* use "git town undo" to abort the iteration and undo all changes made
+* use "git town status reset" to abort the iteration and keep all changes made
 
 If no shell command is provided, drops you into an interactive shell for each branch.
 You can manually run any shell commands,
