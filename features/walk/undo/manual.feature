@@ -18,8 +18,6 @@ Feature: undo changes made manually
     And I add this commit to the current branch:
       | MESSAGE  | FILE NAME | FILE CONTENT |
       | commit 1 | file_1    | content 1    |
-
-  Scenario: continue through all remaining branches
     When I run "git-town continue"
     Then Git Town runs the commands
       | BRANCH   | COMMAND               |
@@ -29,66 +27,28 @@ Feature: undo changes made manually
       Run "git town continue" to go to the next branch.
       """
     And the current branch is now "branch-2"
+    And I add this commit to the current branch:
+      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | commit 2 | file_2    | content 2    |
     When I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-3 |
-    And Git Town prints:
-      """
-      Run "git town continue" to go to the next branch.
-      """
-    And the current branch is now "branch-3"
-    When I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-A |
-    And Git Town prints:
-      """
-      Run "git town continue" to go to the next branch.
-      """
-    And the current branch is now "branch-A"
-    When I run "git-town continue"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-A | git checkout branch-2 |
     And Git Town prints:
       """
       Branch walk done.
       """
 
-  Scenario: skip all remaining branches
-    When I run "git-town skip"
+  Scenario: result
+    Then these commits exist now
+      | BRANCH   | LOCATION | MESSAGE  |
+      | branch-1 | local    | commit 1 |
+      | branch-2 | local    | commit 2 |
+
+  Scenario: undo
+    When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-1 | git checkout branch-2 |
-    And Git Town prints:
-      """
-      Run "git town continue" to go to the next branch.
-      """
+      | BRANCH   | COMMAND                                     |
+      | branch-2 | git checkout branch-1                       |
+      | branch-1 | git reset --hard {{ sha 'initial commit' }} |
+      |          | git checkout branch-2                       |
+      | branch-2 | git reset --hard {{ sha 'initial commit' }} |
     And the current branch is now "branch-2"
-    When I run "git-town skip"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-2 | git checkout branch-3 |
-    And Git Town prints:
-      """
-      Run "git town continue" to go to the next branch.
-      """
-    And the current branch is now "branch-3"
-    When I run "git-town skip"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-3 | git checkout branch-A |
-    And Git Town prints:
-      """
-      Run "git town continue" to go to the next branch.
-      """
-    And the current branch is now "branch-A"
-    When I run "git-town skip"
-    Then Git Town runs the commands
-      | BRANCH   | COMMAND               |
-      | branch-A | git checkout branch-2 |
-    And Git Town prints:
-      """
-      Branch walk done.
-      """
+    And the initial commits exist now
