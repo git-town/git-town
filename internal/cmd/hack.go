@@ -23,7 +23,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
-	configInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/config"
+	interpreterConfig "github.com/git-town/git-town/v20/internal/vm/interpreter/configinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
@@ -408,7 +408,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 		}
 		fmt.Printf(messages.HackBranchIsNowFeature, branchName)
 	}
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	return interpreterConfig.Finished(interpreterConfig.FinishedArgs{
 		Backend:               args.repo.Backend,
 		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
