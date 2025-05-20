@@ -50,11 +50,11 @@ Running `git town walk --stack make lint` produces this output:
 
 #### `-a`<br>`--all`
 
-Iterates through all local branches.
+Iterate through all local branches.
 
 #### `-s`<br>`--stack`
 
-Iterates through all branches of the stack that the current branch belongs to.
+Iterate through all branches of the stack that the current branch belongs to.
 
 #### `--dry-run`
 
@@ -63,5 +63,5 @@ execute them.
 
 #### `-v`<br>`--verbose`
 
-Prints all Git commands executed under the hood to determine the repository
+Print all Git commands executed under the hood to determine the repository
 state.
