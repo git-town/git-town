@@ -1,5 +1,4 @@
 Feature: one person making a series of commits and syncs in between
-
   This scenario demonstrates that the "compress" strategy works
   as long as only one person contributes to a branch
   even if they change already committed content.
@@ -19,11 +18,11 @@ Feature: one person making a series of commits and syncs in between
       | NAME    | TYPE    | PARENT | LOCATIONS     |
       | feature | feature | main   | local, origin |
     And the current branch is "feature"
-
+    #
     # I make the first change and sync
     Given I add this commit to the current branch:
-      | MESSAGE     | FILE NAME | FILE CONTENT | FILE NAME | FILE CONTENT |
-      | the feature | my_file_1 | my content 1 | file      | content 1    |
+      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | the feature | file      | content 1    |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
     Then Git Town runs the commands
@@ -37,7 +36,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 1    |
     And all branches are now synchronized
-
+    #
     # I make another change and sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
@@ -55,7 +54,7 @@ Feature: one person making a series of commits and syncs in between
       | BRANCH  | LOCATION      | MESSAGE     | FILE NAME | FILE CONTENT |
       | feature | local, origin | the feature | file      | content 2    |
     And all branches are now synchronized
-
+    #
     # I make a third change and sync
     Given I add this commit to the current branch:
       | MESSAGE          | FILE NAME | FILE CONTENT |
