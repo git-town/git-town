@@ -87,6 +87,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.ConflictPhantomFinalize{},
 				&opcodes.ConflictPhantomResolve{FilePath: "file", Resolution: gitdomain.ConflictResolutionOurs},
 				&opcodes.ConnectorProposalMerge{Branch: "branch", CommitMessage: Some(gitdomain.CommitMessage("commit message")), Proposal: forgedomain.Proposal{Data: forgedomain.BitbucketCloudProposalData{ProposalData: forgedomain.ProposalData{Body: Some("body"), MergeWithAPI: true, Number: 123, Source: "source", Target: "target", Title: "title", URL: "url"}}, ForgeType: forgedomain.ForgeTypeBitbucket}},
+				&opcodes.ExecuteShellCommand{Args: []string{"arg1", "arg2"}, Executable: "executable"},
+				&opcodes.ExitToShell{},
 				&opcodes.FetchUpstream{Branch: "branch"},
 				&opcodes.LineageBranchRemove{Branch: "branch"},
 				&opcodes.LineageParentRemove{Branch: "branch"},
@@ -432,6 +434,20 @@ func TestLoadSave(t *testing.T) {
         }
       },
       "type": "ConnectorProposalMerge"
+    },
+    {
+      "data": {
+        "Args": [
+          "arg1",
+          "arg2"
+        ],
+        "Executable": "executable"
+      },
+      "type": "ExecuteShellCommand"
+    },
+    {
+      "data": {},
+      "type": "ExitToShell"
     },
     {
       "data": {

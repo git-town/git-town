@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -29,6 +30,9 @@ func Execute(args ExecuteArgs) error {
 				RunState:        args.RunState,
 				Verbose:         args.Verbose,
 			})
+		}
+		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
+			return exitToShell(args)
 		}
 		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
