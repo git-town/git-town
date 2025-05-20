@@ -14,17 +14,17 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
-	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
-	lightInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/light"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/lightinterpreter"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
@@ -34,12 +34,13 @@ func Execute(args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          args.RunState.AbortProgram,
 	})
+	args.RunState.AbortProgram = program.Program{}
 	err := revertChangesToCurrentBranch(args)
 	if err != nil {
 		return err
 	}
-	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
@@ -78,11 +79,11 @@ type ExecuteArgs struct {
 }
 
 // removes the remaining opcodes for the current branch from the given program
-func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
+func RemoveOpcodesForCurrentBranch(prog program.Program) program.Program {
 	result := make(program.Program, 0, len(prog)-1)
 	skipping := true
 	for _, opcode := range prog {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if opcodes.IsEndOfBranchProgramOpcode(opcode) && skipping {
 			skipping = false
 			continue
 		}
@@ -117,7 +118,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,

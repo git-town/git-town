@@ -1,4 +1,4 @@
-package interpreter
+package fullinterpreter
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/cli/print"
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo"
-	lightInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/light"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/lightinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 )
 
@@ -29,7 +29,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,

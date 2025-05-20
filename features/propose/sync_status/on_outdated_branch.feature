@@ -25,15 +25,15 @@ Feature: sync before proposing
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                   |
       | child  | git fetch --prune --tags                                                  |
-      | (none) | Looking for proposal online ... ok                                        |
-      | child  | git checkout parent                                                       |
+      |        | Looking for proposal online ... ok                                        |
+      |        | git checkout parent                                                       |
       | parent | git merge --no-edit --ff origin/parent                                    |
       |        | git push                                                                  |
       |        | git checkout child                                                        |
       | child  | git merge --no-edit --ff parent                                           |
       |        | git merge --no-edit --ff origin/child                                     |
       |        | git push                                                                  |
-      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local         | local main commit                                        |

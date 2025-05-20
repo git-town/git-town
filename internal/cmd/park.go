@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/execute"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/messages"
-	configInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/config"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -75,7 +75,7 @@ func executePark(args []string, verbose configdomain.Verbose) error {
 			return err
 		}
 	}
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	return configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               repo.Backend,
 		BeginBranchesSnapshot: Some(data.beginBranchesSnapshot),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,

@@ -16,7 +16,7 @@ Feature: Bitbucket support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                       |
       | feature | git fetch --prune --tags                                                                                      |
-      | (none)  | Looking for proposal online ... ok                                                                            |
+      |         | Looking for proposal online ... ok                                                                            |
       |         | open https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain |
 
     Examples:
@@ -41,7 +41,7 @@ Feature: Bitbucket support
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                                                                             |
       | feature | git fetch --prune --tags                                                                                                            |
-      | (none)  | Looking for proposal online ... ok                                                                                                  |
+      |         | Looking for proposal online ... ok                                                                                                  |
       |         | open https://bitbucket.org/git-town/git-town.github.com/pull-requests/new?source=feature&dest=git-town%2Fgit-town.github.com%3Amain |
 
     Examples:

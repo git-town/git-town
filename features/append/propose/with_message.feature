@@ -22,8 +22,8 @@ Feature: proposing uncommitted changes via a child branch and provide commit mes
       | existing | git checkout -b new                                                                       |
       | new      | git commit -m unrelated                                                                   |
       |          | git push -u origin new                                                                    |
-      | (none)   | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=unrelated |
-      | new      | git checkout existing                                                                     |
+      |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=unrelated |
+      |          | git checkout existing                                                                     |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | origin        | main commit     |

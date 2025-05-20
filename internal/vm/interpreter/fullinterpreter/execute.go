@@ -1,4 +1,4 @@
-package interpreter
+package fullinterpreter
 
 import (
 	"errors"
@@ -31,11 +31,6 @@ func Execute(args ExecuteArgs) error {
 				RunState:        args.RunState,
 				Verbose:         args.Verbose,
 			})
-		}
-		stepName := gohacks.TypeName(nextStep)
-		if stepName == "SkipCurrentBranchProgram" {
-			args.RunState.SkipCurrentBranchProgram()
-			continue
 		}
 		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,

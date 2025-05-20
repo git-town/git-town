@@ -7,4 +7,4 @@ Feature: display the repo at another remote
     When I run "git-town repo upstream"
     Then Git Town runs the commands
       | BRANCH | TYPE     | COMMAND                               |
-      | (none) | frontend | open https://github.com/upstream/repo |
+      | main   | frontend | open https://github.com/upstream/repo |

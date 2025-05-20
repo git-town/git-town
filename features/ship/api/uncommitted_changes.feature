@@ -18,7 +18,7 @@ Feature: cannot ship a branch with uncommitted changes
     Then Git Town runs no commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | (none)  | Looking for proposal online ... ok |
+      |         | Looking for proposal online ... ok |
     And Git Town prints the error:
       """
       you have uncommitted changes. Did you mean to commit them before shipping?

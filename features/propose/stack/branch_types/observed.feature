@@ -21,7 +21,7 @@ Feature: proposing a stack containing an observed branch
       | child  | git fetch --prune --tags                                                  |
       |        | git merge --no-edit --ff parent                                           |
       |        | git push                                                                  |
-      | (none) | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
+      |        | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
     And the initial branches exist now
     And the initial lineage exists now
 

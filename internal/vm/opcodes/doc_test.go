@@ -1,4 +1,4 @@
-package shared_test
+package opcodes_test
 
 import (
 	"testing"
@@ -18,7 +18,19 @@ func TestIsCheckout(t *testing.T) {
 		&opcodes.MergeAbort{}:                     false, // any other opcode doesn't match
 	}
 	for give, want := range tests {
-		have := shared.IsCheckoutOpcode(give)
+		have := opcodes.IsCheckoutOpcode(give)
+		must.Eq(t, want, have)
+	}
+}
+
+func TestIsEndOfBranchProgramOpcode(t *testing.T) {
+	t.Parallel()
+	tests := map[shared.Opcode]bool{
+		&opcodes.ProgramEndOfBranch{}: true,
+		&opcodes.MergeAbort{}:         false,
+	}
+	for give, want := range tests {
+		have := opcodes.IsEndOfBranchProgramOpcode(give)
 		must.Eq(t, want, have)
 	}
 }

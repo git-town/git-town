@@ -15,7 +15,7 @@ Feature: use a SSH identity
     Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | (none)  | Looking for proposal online ... ok |
+      |         | Looking for proposal online ... ok |
       |         | open <PROPOSAL_URL>                |
 
     Examples:
