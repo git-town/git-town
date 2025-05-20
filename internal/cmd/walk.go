@@ -281,13 +281,12 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 			Message: messages.WalkDone,
 		},
 	)
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return optimizer.Optimize(prog.Immutable())
 }
