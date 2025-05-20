@@ -51,4 +51,4 @@ Feature: undo changes made manually
       |          | git checkout branch-2                       |
       | branch-2 | git reset --hard {{ sha 'initial commit' }} |
     And the current branch is now "branch-2"
-    And the initial commits exist now
+    And no commits exist now
