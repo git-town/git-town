@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
 	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v20/internal/vm/interpreter/light"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/lightinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
@@ -24,7 +24,7 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	light.Execute(light.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
@@ -118,7 +118,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	light.Execute(light.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
