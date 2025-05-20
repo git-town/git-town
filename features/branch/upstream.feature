@@ -8,6 +8,7 @@ Feature: display the local branch hierarchy when there is an upstream
 
   Scenario: result
     Then Git Town runs no commands
+    # TODO: fix this
     And Git Town prints:
       """
       * main
