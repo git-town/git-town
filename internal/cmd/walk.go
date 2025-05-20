@@ -46,9 +46,12 @@ then proceed to the next branch with "git town continue".
 Consider this stack:
 
 main
- └─ branch-1
-     └─ branch-2
-         └─ branch-3
+	\
+   branch-1
+	 	\
+     branch-2
+		 	\
+       branch-3
 
 Running "git town walk --stack make lint" produces this output:
 

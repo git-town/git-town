@@ -5,13 +5,19 @@ git town walk [-a | --all] [-s | --stack] [--dry-run] [-v | --verbose] [<command
 ```
 
 The _walk_ command ("walking the branch hierarchy") executes a given command for
-each feature branch. It stops if the shell command exits with an error. In this
-case, run [git town continue](continue.md) to make Git Town re-run the failed
-command, or [git town skip](skip.md) to skip this branch and run the command on
-the next branch.
+each feature branch. It stops if the command exits with an error, giving you a
+chance to investigate and fix the issue.
 
-If you don't provide a command, it exits to the shell on each branch. In that
-case, run [git town continue](continue.md) to move to the next branch.
+- use [git town continue](continue.md) to retry the command on the current
+  branch
+- use [git town skip](skip.md) to move on to the next branch
+- use [git town undo](undo.md) to abort the iteration and undo all changes made
+- use [git town status reset](status-reset.md) to abort the iteration and keep
+  all changes made
+
+If no shell command is provided, drops you into an interactive shell for each
+branch. You can manually run any shell commands, then proceed to the next branch
+with [git town continue](continue.md)
 
 ## Examples
 
@@ -27,7 +33,7 @@ main
       branch-3
 ```
 
-If we run `git town walk --stack make lint` it prints this output:
+Running `git town walk --stack make lint` produces this output:
 
 ```bash
 [branch-1] make lint
