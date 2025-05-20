@@ -14,7 +14,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
-	cukemessages "github.com/cucumber/messages/go/v21"
+	messages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v20/internal/cli/print"
 	"github.com/git-town/git-town/v20/internal/config/configdomain"
@@ -92,7 +92,7 @@ func InitializeSuite(ctx *godog.TestSuiteContext) {
 func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^a brand-new Git repo$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
 		fixture := fixtureFactory.CreateEmptyFixture(scenarioName)
 		if helpers.HasTag(scenarioTags, "@debug") {
 			fixture.DevRepo.GetOrPanic().Verbose = true
@@ -130,7 +130,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a Git repo with origin$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
 		if helpers.HasTag(scenarioTags, "@debug") {
 			fixture.DevRepo.GetOrPanic().Verbose = true
@@ -168,7 +168,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^a local Git repo$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
-		scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
 		fixture := fixtureFactory.CreateFixture(scenarioName)
 		devRepo := fixture.DevRepo.GetOrPanic()
 		if helpers.HasTag(scenarioTags, "@debug") {
@@ -594,7 +594,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^I am outside a Git repo$`, func(ctx context.Context) (context.Context, error) {
 		scenarioName := ctx.Value(keyScenarioName).(string)
-		// scenarioTags := ctx.Value(keyScenarioTags).([]*cukemessages.PickleTag)
+		// scenarioTags := ctx.Value(keyScenarioTags).([]*messages.PickleTag)
 		envDirName := filesystem.FolderName(scenarioName) + "_" + fixtureFactory.Counter.NextAsString()
 		envPath := filepath.Join(fixtureFactory.Dir, envDirName)
 		asserts.NoError(os.Mkdir(envPath, 0o777))
