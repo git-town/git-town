@@ -31,8 +31,7 @@ func Execute(args ExecuteArgs) error {
 				Verbose:         args.Verbose,
 			})
 		}
-		switch nextStep.(type) {
-		case *opcodes.ExitToShell:
+		if _, ok := nextStep.(*opcodes.ExitToShell); ok {
 			return exitToShell(args)
 		}
 		err := nextStep.Run(shared.RunArgs{
