@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/program"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
@@ -45,7 +44,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(gitCommands git.Com
 	popped := program.Program{}
 	for {
 		nextOpcode := self.RunProgram.Peek()
-		if !shared.IsEndOfBranchProgramOpcode(nextOpcode) {
+		if !opcodes.IsEndOfBranchProgramOpcode(nextOpcode) {
 			popped.Add(self.RunProgram.Pop())
 		} else {
 			currentBranch, err := gitCommands.CurrentBranch(backend)
@@ -104,7 +103,7 @@ func (self *RunState) RegisterUndoablePerennialCommit(commit gitdomain.SHA) {
 func (self *RunState) SkipCurrentBranchProgram() {
 	for {
 		opcode := self.RunProgram.Peek()
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if opcodes.IsEndOfBranchProgramOpcode(opcode) {
 			break
 		}
 		self.RunProgram.Pop()

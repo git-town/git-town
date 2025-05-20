@@ -36,6 +36,20 @@ func (self *undeclaredOpcodeMethods) UndoExternalChangesProgram() []shared.Opcod
 	return []shared.Opcode{}
 }
 
+func IsCheckoutOpcode(opcode shared.Opcode) bool {
+	switch opcode.(type) {
+	case *Checkout, *CheckoutIfExists, *CheckoutIfNeeded:
+		return true
+	default:
+		return false
+	}
+}
+
+func IsEndOfBranchProgramOpcode(opcode shared.Opcode) bool {
+	_, ok := opcode.(*ProgramEndOfBranch)
+	return ok
+}
+
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	for _, opcode := range All() {
 		if gohacks.TypeName(opcode) == opcodeType {

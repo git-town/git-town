@@ -16,9 +16,9 @@ import (
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
 	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/interpreter/lightinterpreter"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
@@ -83,7 +83,7 @@ func RemoveOpcodesForCurrentBranch(prog program.Program) program.Program {
 	result := make(program.Program, 0, len(prog)-1)
 	skipping := true
 	for _, opcode := range prog {
-		if shared.IsEndOfBranchProgramOpcode(opcode) && skipping {
+		if opcodes.IsEndOfBranchProgramOpcode(opcode) && skipping {
 			skipping = false
 			continue
 		}
