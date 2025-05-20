@@ -292,10 +292,7 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 }
 
 func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
-	if all.Enabled() && stack.Enabled() {
-		return errors.New(messages.WalkAllOrStack)
-	}
-	if !all.Enabled() && !stack.Enabled() {
+	if all.Enabled() == stack.Enabled() {
 		return errors.New(messages.WalkAllOrStack)
 	}
 	return nil
