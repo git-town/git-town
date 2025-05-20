@@ -12,6 +12,33 @@ import (
 func TestSwitchBranch(t *testing.T) {
 	t.Parallel()
 
+	t.Run("SwitchBranchEntries", func(t *testing.T) {
+		t.Parallel()
+		t.Run("ContainsBranch", func(t *testing.T) {
+			t.Parallel()
+			t.Run("contains the branch", func(t *testing.T) {
+				t.Parallel()
+				entries := dialog.SwitchBranchEntries{
+					{Branch: "branch-1"},
+					{Branch: "branch-2"},
+				}
+				must.True(t, entries.ContainsBranch("branch-1"))
+			})
+			t.Run("does not contain the branch", func(t *testing.T) {
+				t.Parallel()
+				entries := dialog.SwitchBranchEntries{
+					{Branch: "branch-1"},
+				}
+				must.False(t, entries.ContainsBranch("branch-2"))
+			})
+			t.Run("empty", func(t *testing.T) {
+				t.Parallel()
+				entries := dialog.SwitchBranchEntries{}
+				must.False(t, entries.ContainsBranch("branch-2"))
+			})
+		})
+	})
+
 	t.Run("View", func(t *testing.T) {
 		t.Parallel()
 		t.Run("only the main branch exists", func(t *testing.T) {
@@ -19,7 +46,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
-					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries(dialog.SwitchBranchEntries{
 						{Branch: "main", Indentation: "", OtherWorktree: false},
 					}),
 					MaxDigits:    1,
@@ -43,7 +70,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
-					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries(dialog.SwitchBranchEntries{
 						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
 						{Branch: "one", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
 						{Branch: "two", Indentation: "", OtherWorktree: true, Type: configdomain.BranchTypeFeatureBranch},
@@ -74,7 +101,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
-					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries(dialog.SwitchBranchEntries{
 						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
 						{Branch: "alpha", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
 						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
@@ -113,7 +140,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
-					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries(dialog.SwitchBranchEntries{
 						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
 						{Branch: "alpha", Indentation: "  ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
 						{Branch: "alpha1", Indentation: "    ", OtherWorktree: false, Type: configdomain.BranchTypeFeatureBranch},
@@ -152,7 +179,7 @@ func TestSwitchBranch(t *testing.T) {
 			model := dialog.SwitchModel{
 				List: list.List[dialog.SwitchBranchEntry]{
 					Cursor: 0,
-					Entries: newSwitchBranchBubbleListEntries([]dialog.SwitchBranchEntry{
+					Entries: newSwitchBranchBubbleListEntries(dialog.SwitchBranchEntries{
 						{Branch: "main", Indentation: "", OtherWorktree: false, Type: configdomain.BranchTypeMainBranch},
 					}),
 					MaxDigits:    1,
@@ -178,7 +205,7 @@ func TestSwitchBranch(t *testing.T) {
 	})
 }
 
-func newSwitchBranchBubbleListEntries(entries []dialog.SwitchBranchEntry) []list.Entry[dialog.SwitchBranchEntry] {
+func newSwitchBranchBubbleListEntries(entries dialog.SwitchBranchEntries) []list.Entry[dialog.SwitchBranchEntry] {
 	result := make([]list.Entry[dialog.SwitchBranchEntry], len(entries))
 	for e, entry := range entries {
 		result[e] = list.Entry[dialog.SwitchBranchEntry]{
