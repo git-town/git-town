@@ -16,13 +16,26 @@ func TestSwitchBranch(t *testing.T) {
 		t.Parallel()
 		t.Run("ContainsBranch", func(t *testing.T) {
 			t.Parallel()
-			entries := dialog.SwitchBranchEntries{
-				{Branch: "branch-1"},
-				{Branch: "branch-2"},
-			}
-			must.True(t, entries.ContainsBranch("branch-1"))
-			must.True(t, entries.ContainsBranch("branch-2"))
-			must.False(t, entries.ContainsBranch("branch-3"))
+			t.Run("contains the branch", func(t *testing.T) {
+				t.Parallel()
+				entries := dialog.SwitchBranchEntries{
+					{Branch: "branch-1"},
+					{Branch: "branch-2"},
+				}
+				must.True(t, entries.ContainsBranch("branch-1"))
+			})
+			t.Run("does not contain the branch", func(t *testing.T) {
+				t.Parallel()
+				entries := dialog.SwitchBranchEntries{
+					{Branch: "branch-1"},
+				}
+				must.False(t, entries.ContainsBranch("branch-2"))
+			})
+			t.Run("empty", func(t *testing.T) {
+				t.Parallel()
+				entries := dialog.SwitchBranchEntries{}
+				must.False(t, entries.ContainsBranch("branch-2"))
+			})
 		})
 	})
 
