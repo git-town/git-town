@@ -38,11 +38,7 @@ func (self *undeclaredOpcodeMethods) UndoExternalChangesProgram() []shared.Opcod
 
 func IsCheckoutOpcode(opcode shared.Opcode) bool {
 	switch opcode.(type) {
-	case *Checkout:
-		return true
-	case *CheckoutIfExists:
-		return true
-	case *CheckoutIfNeeded:
+	case *Checkout, *CheckoutIfExists, *CheckoutIfNeeded:
 		return true
 	default:
 		return false
