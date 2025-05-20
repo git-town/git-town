@@ -109,25 +109,14 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	if err != nil {
 		return err
 	}
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-		Verbose:          verbose,
-	})
-	if err != nil {
-		return err
-	}
-	data, exit, err := determineWalkData(args, repo, allBranches, fullStack, verbose)
+	data, exit, err := determineWalkData(args, allBranches, dryRun, fullStack, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runProgram := walkProgram(args, data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginConfigSnapshot:   data.repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               walkCmd,
@@ -140,21 +129,21 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 		UndoAPIProgram:        program.Program{},
 	}
 	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
+		Backend:                 data.repo.Backend,
+		CommandsCounter:         data.repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
 		DialogTestInputs:        data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
+		FinalMessages:           data.repo.FinalMessages,
+		Frontend:                data.repo.Frontend,
+		Git:                     data.repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialConfigSnapshot:   data.repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
-		RootDir:                 repo.RootDir,
+		RootDir:                 data.repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -171,10 +160,22 @@ type walkData struct {
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
+	repo               execute.OpenRepoResult
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(args []string, repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+func determineWalkData(args []string, all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		DryRun:           dryRun,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
+	})
+	if err != nil {
+		return walkData{}, false, err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -248,6 +249,7 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		previousBranch:     previousBranch,
+		repo:               repo,
 		stashSize:          stashSize,
 	}, false, err
 }
