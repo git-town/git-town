@@ -32,9 +32,9 @@ const (
 	walkHelp = `
 Executes the given command on each local feature branch.
 Stops when the command exits with an error
-to give you a chance to investigate and
-then retry using "git town continue" or
-skip to the next branch using "git town skip".
+to give you a chance to investigate.
+"git town continue" retries the command on the current branch,
+"git town skip" skips this branch and goes to the next one.
 
 If no shell command is given, exits to the shell on each branch.
 In that case, you can run shell commands for the respective branch
