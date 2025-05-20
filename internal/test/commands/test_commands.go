@@ -347,7 +347,7 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	localSnapshot, _ := self.Config.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), false)
+	localSnapshot, _ := self.Config.NormalConfig.GitConfigAccess.Load(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
 	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	lineage := localGitConfig.Lineage
 	for _, entry := range lineage.Entries() {
