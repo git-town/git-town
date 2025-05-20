@@ -11,6 +11,68 @@ import (
 func TestBranchInfo(t *testing.T) {
 	t.Parallel()
 
+	t.Run("GetLocalOrRemoteName", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has local and remote name", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch"),
+				RemoteName: gitdomain.NewRemoteBranchNameOption("origin/branch"),
+			}
+			have := branchInfo.GetLocalOrRemoteName()
+			must.EqOp(t, "branch", have)
+		})
+		t.Run("has only local name", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  gitdomain.NewLocalBranchNameOption("branch"),
+				RemoteName: None[gitdomain.RemoteBranchName](),
+			}
+			have := branchInfo.GetLocalOrRemoteName()
+			must.EqOp(t, "branch", have)
+		})
+		t.Run("has only remote name", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  None[gitdomain.LocalBranchName](),
+				RemoteName: gitdomain.NewRemoteBranchNameOption("origin/branch"),
+			}
+			have := branchInfo.GetLocalOrRemoteName()
+			must.EqOp(t, "origin/branch", have)
+		})
+	})
+
+	t.Run("GetLocalOrRemoteSHA", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has local and remote SHA", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalSHA:  Some(gitdomain.NewSHA("111111")),
+				RemoteSHA: Some(gitdomain.NewSHA("111111")),
+			}
+			have := branchInfo.GetLocalOrRemoteSHA()
+			must.EqOp(t, "111111", have)
+		})
+		t.Run("has only local SHA", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalSHA:  Some(gitdomain.NewSHA("111111")),
+				RemoteSHA: None[gitdomain.SHA](),
+			}
+			have := branchInfo.GetLocalOrRemoteSHA()
+			must.EqOp(t, "111111", have)
+		})
+		t.Run("has only remote SHA", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalSHA:  None[gitdomain.SHA](),
+				RemoteSHA: Some(gitdomain.NewSHA("111111")),
+			}
+			have := branchInfo.GetLocalOrRemoteSHA()
+			must.EqOp(t, "111111", have)
+		})
+	})
+
 	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is a local branch", func(t *testing.T) {
@@ -304,6 +366,19 @@ func TestBranchInfo(t *testing.T) {
 			isLocal, haveBranchName := branchInfo.IsLocalOnlyBranch()
 			must.False(t, isLocal)
 			must.Eq(t, branchName, haveBranchName)
+		})
+		t.Run("remote-only branch", func(t *testing.T) {
+			t.Parallel()
+			branchInfo := gitdomain.BranchInfo{
+				LocalName:  None[gitdomain.LocalBranchName](),
+				LocalSHA:   None[gitdomain.SHA](),
+				RemoteName: Some(gitdomain.NewRemoteBranchName("origin/foo")),
+				RemoteSHA:  Some(gitdomain.SHA("111111")),
+				SyncStatus: gitdomain.SyncStatusUpToDate,
+			}
+			isLocal, haveBranchName := branchInfo.IsLocalOnlyBranch()
+			must.False(t, isLocal)
+			must.Eq(t, "", haveBranchName)
 		})
 	})
 
