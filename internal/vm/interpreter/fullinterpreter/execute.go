@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -30,12 +31,8 @@ func Execute(args ExecuteArgs) error {
 				Verbose:         args.Verbose,
 			})
 		}
-		stepName := gohacks.TypeName(nextStep)
-		if stepName == "SkipCurrentBranchProgram" {
-			args.RunState.SkipCurrentBranchProgram()
-			continue
-		}
-		if stepName == "ExitToShell" {
+		switch nextStep.(type) {
+		case *opcodes.ExitToShell:
 			return exitToShell(args)
 		}
 		err := nextStep.Run(shared.RunArgs{
