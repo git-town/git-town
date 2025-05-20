@@ -109,7 +109,7 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineWalkData(args, allBranches, dryRun, fullStack, verbose)
+	data, exit, err := determineWalkData(allBranches, dryRun, fullStack, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -153,7 +153,6 @@ type walkData struct {
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToWalk     gitdomain.LocalBranchNames
-	commandToExecute   []string
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	dialogTestInputs   components.TestInputs
@@ -164,7 +163,7 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(args []string, all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -242,7 +241,6 @@ func determineWalkData(args []string, all configdomain.AllBranches, dryRun confi
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		branchesToWalk:     branchesToWalk,
-		commandToExecute:   args,
 		config:             validatedConfig,
 		connector:          connector,
 		dialogTestInputs:   dialogTestInputs,
