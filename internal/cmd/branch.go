@@ -59,9 +59,7 @@ func executeBranch(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	fmt.Println(data.branchInfos)
 	entries := SwitchBranchEntries(data.branchInfos, []configdomain.BranchType{}, data.branchesAndTypes, data.lineage, data.defaultBranchType, false, []*regexp.Regexp{})
-	fmt.Println("22222222222222222", entries)
 	fmt.Print(branchLayout(entries, data))
 	return nil
 }

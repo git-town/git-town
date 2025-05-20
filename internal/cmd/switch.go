@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
@@ -189,11 +188,13 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 	branchesInLineage := lineage.BranchesWithParents()
 	for _, branchInfo := range branchInfos {
 		localBranch := branchInfo.LocalBranchName()
-		fmt.Println("1111111111111", localBranch)
 		if slices.Contains(roots, localBranch) {
 			continue
 		}
 		if slices.Contains(branchesInLineage, localBranch) {
+			continue
+		}
+		if entries.ContainsBranch(localBranch) {
 			continue
 		}
 		layoutBranches(&entries, localBranch, "", lineage, branchInfos, allBranches, branchTypes, branchesAndTypes, defaultBranchType, regexes)
