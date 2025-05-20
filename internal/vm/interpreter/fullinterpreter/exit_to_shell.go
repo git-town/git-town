@@ -41,24 +41,7 @@ func exitToShell(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	currentBranch, err := args.Git.CurrentBranch(args.Backend)
-	if err != nil {
-		return err
-	}
-	repoStatus, err := args.Git.RepoStatus(args.Backend)
-	if err != nil {
-		return err
-	}
-	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
-		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-			unfinishedDetails.CanSkip = true
-		}
-	}
-	if args.RunState.Command == "walk" {
-		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-			unfinishedDetails.CanSkip = true
-		}
-	}
+	args.RunState.UnfinishedDetails.Value.CanSkip = true
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
