@@ -3,9 +3,9 @@ Feature: undo changes made manually
   Background:
     Given a Git repo with origin
     And the branches
-      | NAME     | TYPE    | PARENT   | LOCATIONS |
-      | branch-1 | feature | main     | local     |
-      | branch-2 | feature | branch-1 | local     |
+      | NAME     | TYPE    | PARENT | LOCATIONS |
+      | branch-1 | feature | main   | local     |
+      | branch-2 | feature | main   | local     |
     And the current branch is "branch-2"
     When I run "git-town walk --all -- git commit --allow-empty -m commit"
     Then Git Town runs the commands
@@ -23,6 +23,7 @@ Feature: undo changes made manually
     Then these commits exist now
       | BRANCH   | LOCATION | MESSAGE |
       | branch-1 | local    | commit  |
+      | branch-2 | local    | commit  |
 
   Scenario: undo
     When I run "git-town undo"
