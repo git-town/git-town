@@ -16,7 +16,7 @@ func RemoveDuplicateCheckout(prog program.Program) program.Program {
 			lastOpcode = opcode
 			continue
 		}
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
+		if opcodes.IsEndOfBranchProgramOpcode(opcode) {
 			result = append(result, opcode)
 			continue
 		}

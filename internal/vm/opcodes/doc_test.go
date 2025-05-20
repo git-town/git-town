@@ -22,3 +22,15 @@ func TestIsCheckout(t *testing.T) {
 		must.Eq(t, want, have)
 	}
 }
+
+func TestIsEndOfBranchProgramOpcode(t *testing.T) {
+	t.Parallel()
+	tests := map[shared.Opcode]bool{
+		&opcodes.ProgramEndOfBranch{}: true,
+		&opcodes.MergeAbort{}:         false,
+	}
+	for give, want := range tests {
+		have := opcodes.IsEndOfBranchProgramOpcode(give)
+		must.Eq(t, want, have)
+	}
+}
