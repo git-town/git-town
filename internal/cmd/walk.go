@@ -28,9 +28,9 @@ import (
 
 const (
 	walkCmd  = "walk"
-	walkDesc = "Run a command on each feature branch"
+	walkDesc = "Run a command on each local feature branch"
 	walkHelp = `
-Executes the given command on each branch.
+Executes the given command on each local feature branch.
 Stops when the command exits with an error
 to give you a chance to investigate and
 then retry using "git town continue" or
