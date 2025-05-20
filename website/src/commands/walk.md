@@ -58,8 +58,8 @@ Iterates through all branches of the stack that the current branch belongs to.
 
 #### `--dry-run`
 
-Use the `--dry-run` flag to test-drive this command. It prints the commands that
-would be run but doesn't execute them.
+Test-drive this command: It prints the commands that would be run but doesn't
+execute them.
 
 #### `-v`<br>`--verbose`
 
