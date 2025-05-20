@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
@@ -167,7 +168,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 }
 
 // SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
-func SwitchBranchCursorPos(entries []dialog.SwitchBranchEntry, initialBranch gitdomain.LocalBranchName) int {
+func SwitchBranchCursorPos(entries dialog.SwitchBranchEntries, initialBranch gitdomain.LocalBranchName) int {
 	for e, entry := range entries {
 		if entry.Branch == initialBranch {
 			return e
@@ -177,8 +178,8 @@ func SwitchBranchCursorPos(entries []dialog.SwitchBranchEntry, initialBranch git
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" components.
-func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.BranchType, allBranches configdomain.AllBranches, regexes []*regexp.Regexp) []dialog.SwitchBranchEntry {
-	entries := make([]dialog.SwitchBranchEntry, 0, lineage.Len())
+func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, lineage configdomain.Lineage, defaultBranchType configdomain.BranchType, allBranches configdomain.AllBranches, regexes []*regexp.Regexp) dialog.SwitchBranchEntries {
+	entries := make(dialog.SwitchBranchEntries, 0, lineage.Len())
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
@@ -188,6 +189,7 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 	branchesInLineage := lineage.BranchesWithParents()
 	for _, branchInfo := range branchInfos {
 		localBranch := branchInfo.LocalBranchName()
+		fmt.Println("1111111111111", localBranch)
 		if slices.Contains(roots, localBranch) {
 			continue
 		}
@@ -201,7 +203,7 @@ func SwitchBranchEntries(branchInfos gitdomain.BranchInfos, branchTypes []config
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]dialog.SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.BranchType, regexes regexes.Regexes) {
+func layoutBranches(result *dialog.SwitchBranchEntries, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage, branchInfos gitdomain.BranchInfos, allBranches configdomain.AllBranches, branchTypes []configdomain.BranchType, branchesAndTypes configdomain.BranchesAndTypes, defaultBranchType configdomain.BranchType, regexes regexes.Regexes) {
 	if branchInfos.HasLocalBranch(branch) || allBranches.Enabled() {
 		var otherWorktree bool
 		if branchInfo, hasBranchInfo := branchInfos.FindByLocalName(branch).Get(); hasBranchInfo {
