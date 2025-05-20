@@ -24,7 +24,7 @@ type Access struct {
 	Runner
 }
 
-func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated bool) (configdomain.SingleSnapshot, error) {
+func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz"}
 	scope, hasScope := scopeOpt.Get()
@@ -42,7 +42,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
-		if updateOutdated && hasScope {
+		if updateOutdated.IsTrue() && hasScope {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
 				self.UpdateDeprecatedSetting(scope, configKey, newKey, value)
