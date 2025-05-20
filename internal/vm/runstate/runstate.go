@@ -79,13 +79,13 @@ func (self *RunState) MarkAsFinished(endBranchesSnapshot gitdomain.BranchesSnaps
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
-func (self *RunState) MarkAsUnfinished(gitCommands git.Commands, backend gitdomain.Querier) error {
+func (self *RunState) MarkAsUnfinished(gitCommands git.Commands, backend gitdomain.Querier, canSkip bool) error {
 	currentBranch, err := gitCommands.CurrentBranch(backend)
 	if err != nil {
 		return err
 	}
 	self.UnfinishedDetails = MutableSome(&UnfinishedRunStateDetails{
-		CanSkip:   false,
+		CanSkip:   canSkip,
 		EndBranch: currentBranch,
 		EndTime:   time.Now(),
 	})

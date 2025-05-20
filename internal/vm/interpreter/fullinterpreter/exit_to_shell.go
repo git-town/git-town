@@ -37,11 +37,10 @@ func exitToShell(args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
-	err = args.RunState.MarkAsUnfinished(args.Git, args.Backend)
+	err = args.RunState.MarkAsUnfinished(args.Git, args.Backend, true)
 	if err != nil {
 		return err
 	}
-	args.RunState.UnfinishedDetails.Value.CanSkip = true
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)

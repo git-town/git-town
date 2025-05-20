@@ -48,10 +48,6 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		continueProgram = []shared.Opcode{failedOpcode}
 	}
 	args.RunState.RunProgram.Prepend(continueProgram...)
-	err = args.RunState.MarkAsUnfinished(args.Git, args.Backend)
-	if err != nil {
-		return err
-	}
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return err
@@ -60,15 +56,16 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
+	canSkip := false
 	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
-		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-			unfinishedDetails.CanSkip = true
-		}
+		canSkip = true
 	}
 	if args.RunState.Command == "walk" {
-		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
-			unfinishedDetails.CanSkip = true
-		}
+		canSkip = true
+	}
+	err = args.RunState.MarkAsUnfinished(args.Git, args.Backend, canSkip)
+	if err != nil {
+		return err
 	}
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
