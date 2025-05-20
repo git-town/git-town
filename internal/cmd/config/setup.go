@@ -18,7 +18,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v20/internal/git"
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	configInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/configinterpreter"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -76,7 +76,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+	return configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               repo.Backend,
 		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
