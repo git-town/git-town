@@ -1,4 +1,4 @@
-@skipwindows
+@skipWindows
 Feature: handle errors in the given script
 
   Background:
