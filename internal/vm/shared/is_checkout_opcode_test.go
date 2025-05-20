@@ -18,7 +18,7 @@ func TestIsCheckout(t *testing.T) {
 		&opcodes.MergeAbort{}:                     false, // any other opcode doesn't match
 	}
 	for give, want := range tests {
-		have := shared.IsCheckoutOpcode(give)
+		have := opcodes.IsCheckoutOpcode(give)
 		must.Eq(t, want, have)
 	}
 }
