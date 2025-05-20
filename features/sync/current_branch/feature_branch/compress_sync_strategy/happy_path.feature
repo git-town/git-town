@@ -21,8 +21,8 @@ Feature: one person making a series of commits and syncs in between
     #
     # I make the first change and sync
     Given I add this commit to the current branch:
-      | MESSAGE     | FILE NAME | FILE CONTENT | FILE NAME | FILE CONTENT |
-      | the feature | my_file_1 | my content 1 | file      | content 1    |
+      | MESSAGE     | FILE NAME | FILE CONTENT |
+      | the feature | file      | content 1    |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
     Then Git Town runs the commands

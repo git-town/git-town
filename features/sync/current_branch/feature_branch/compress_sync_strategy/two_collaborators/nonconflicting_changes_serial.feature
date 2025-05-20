@@ -27,8 +27,8 @@ Feature: two people make alternating non-conflicting changes to the same branch 
     #
     # I add the first commit to the "feature" branch
     Given I add this commit to the current branch:
-      | MESSAGE     | FILE NAME | FILE CONTENT | FILE NAME | FILE CONTENT                         |
-      | the feature | my_file_1 | my content 1 | file      | my content 1 \n\n coworker content 0 |
+      | MESSAGE     | FILE NAME | FILE CONTENT                         |
+      | the feature | file      | my content 1 \n\n coworker content 0 |
     And wait 1 second to ensure new Git timestamps
     When I run "git-town sync"
     Then Git Town runs the commands
