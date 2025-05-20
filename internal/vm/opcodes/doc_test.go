@@ -1,4 +1,4 @@
-package shared_test
+package opcodes_test
 
 import (
 	"testing"
