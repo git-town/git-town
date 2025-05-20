@@ -277,4 +277,7 @@ and will be removed in future versions of Git Town.`
 	UnfinishedRunStateQuit                  = "Quit without running anything"
 	UnfinishedRunStateSkip                  = "Skip the current branch and continue the \"%s\" command on the next branch"
 	UnfinishedRunStateUndo                  = "Undo the previous \"%s\" command"
+	WalkAllOrStack                          = "please provide either --all or --stack"
+	WalkDone                                = "Branch walk done."
+	WalkNoDryRun                            = "there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch"
 )

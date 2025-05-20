@@ -7,6 +7,7 @@ Feature: walk each branch of a stack without arguments
       | branch-1 | feature | main     | local     |
       | branch-2 | feature | branch-1 | local     |
       | branch-3 | feature | branch-2 | local     |
+      | branch-A | feature | main     | local     |
     And the current branch is "branch-2"
     When I run "git-town walk --stack"
     Then Git Town runs the commands

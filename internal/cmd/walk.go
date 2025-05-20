@@ -17,7 +17,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/optimizer"
 	"github.com/git-town/git-town/v20/internal/vm/program"
@@ -28,32 +28,38 @@ import (
 
 const (
 	walkCmd  = "walk"
-	walkDesc = "Perform a shell operation on each branch"
+	walkDesc = "Run a command on each local feature branch"
 	walkHelp = `
-If a shell command is given, executes it on each branch.
-Stops when the shell command exits with an error.
+Executes the given command on each local feature branch in stack order.
+Stops if the command exits with an error,
+giving you a chance to investigate and fix the issue.
 
-If no shell command is given, exits to the shell on each branch.
-In that case, you can run "git town continue", "git town skip", or "git town undo"
-to retry, ignore, or abort the iteration.
+* use "git town continue" to retry the command on the current branch
+* use "git town skip" to move on to the next branch
+* use "git town undo" to abort the iteration and undo all changes made
+* use "git town status reset" to abort the iteration and keep all changes made
 
+If no shell command is provided, drops you into an interactive shell for each branch.
+You can manually run any shell commands,
+then proceed to the next branch with "git town continue".
 
 Consider this stack:
 
 main
- \
-  branch-1
-   \
-    branch-2
+ └─ branch-1
+     └─ branch-2
+         └─ branch-3
 
-When running "git town walk --stack echo hello",
-it prints this output:
+Running "git town walk --stack make lint" produces this output:
 
-[main] hello
+[branch-1] make lint
+... output of make lint
 
-[branch-1] hello
+[branch-2] make lint
+... output of make lint
 
-[branch-2] hello
+[branch-3] make lint
+... output of make lint
 `
 )
 
@@ -96,29 +102,21 @@ func walkCommand() *cobra.Command {
 }
 
 func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
+	if len(args) == 0 && dryRun {
+		return errors.New(messages.WalkNoDryRun)
+	}
 	err := validateArgs(allBranches, fullStack)
 	if err != nil {
 		return err
 	}
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
-		PrintBranchNames: true,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-		Verbose:          verbose,
-	})
-	if err != nil {
-		return err
-	}
-	data, exit, err := determineWalkData(args, repo, allBranches, fullStack, verbose)
+	data, exit, err := determineWalkData(allBranches, dryRun, fullStack, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runProgram := walkProgram(args, data, dryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
-		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginConfigSnapshot:   data.repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               walkCmd,
@@ -130,22 +128,22 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Backend:                 repo.Backend,
-		CommandsCounter:         repo.CommandsCounter,
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
+		Backend:                 data.repo.Backend,
+		CommandsCounter:         data.repo.CommandsCounter,
 		Config:                  data.config,
 		Connector:               data.connector,
 		Detached:                true,
 		DialogTestInputs:        data.dialogTestInputs,
-		FinalMessages:           repo.FinalMessages,
-		Frontend:                repo.Frontend,
-		Git:                     repo.Git,
+		FinalMessages:           data.repo.FinalMessages,
+		Frontend:                data.repo.Frontend,
+		Git:                     data.repo.Git,
 		HasOpenChanges:          data.hasOpenChanges,
 		InitialBranch:           data.initialBranch,
 		InitialBranchesSnapshot: data.branchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialConfigSnapshot:   data.repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
-		RootDir:                 repo.RootDir,
+		RootDir:                 data.repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
 	})
@@ -155,17 +153,28 @@ type walkData struct {
 	branchInfosLastRun Option[gitdomain.BranchInfos]
 	branchesSnapshot   gitdomain.BranchesSnapshot
 	branchesToWalk     gitdomain.LocalBranchNames
-	commandToExecute   []string
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
 	dialogTestInputs   components.TestInputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
+	repo               execute.OpenRepoResult
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(args []string, repo execute.OpenRepoResult, all configdomain.AllBranches, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		DryRun:           dryRun,
+		PrintBranchNames: true,
+		PrintCommands:    true,
+		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
+	})
+	if err != nil {
+		return walkData{}, false, err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -224,7 +233,7 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 	branchesToWalk := gitdomain.LocalBranchNames{}
 	switch {
 	case all.Enabled():
-		branchesToWalk = localBranches
+		branchesToWalk = localBranches.Remove(perennialBranchNames...)
 	case stack.Enabled():
 		branchesToWalk = validatedConfig.NormalConfig.Lineage.BranchLineageWithoutRoot(initialBranch, perennialBranchNames)
 	}
@@ -232,13 +241,13 @@ func determineWalkData(args []string, repo execute.OpenRepoResult, all configdom
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		branchesToWalk:     branchesToWalk,
-		commandToExecute:   args,
 		config:             validatedConfig,
 		connector:          connector,
 		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
 		initialBranch:      initialBranch,
 		previousBranch:     previousBranch,
+		repo:               repo,
 		stashSize:          stashSize,
 	}, false, err
 }
@@ -260,32 +269,31 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 				&opcodes.ExitToShell{},
 			)
 		}
+		prog.Value.Add(
+			&opcodes.ProgramEndOfBranch{},
+		)
 	}
 	prog.Value.Add(
 		&opcodes.CheckoutIfNeeded{
 			Branch: data.initialBranch,
 		},
 		&opcodes.MessageQueue{
-			Message: "Branch walk done.",
+			Message: messages.WalkDone,
 		},
 	)
-	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
 	cmdhelpers.Wrap(prog, cmdhelpers.WrapOptions{
 		DryRun:                   dryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
-		PreviousBranchCandidates: previousBranchCandidates,
+		PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{data.previousBranch},
 	})
 	return optimizer.Optimize(prog.Immutable())
 }
 
 func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
-	if all.Enabled() && stack.Enabled() {
-		return errors.New("please provide either --all or --stack, not both of them")
-	}
-	if !all.Enabled() && !stack.Enabled() {
-		return errors.New("please provide either --all or --stack")
+	if all.Enabled() == stack.Enabled() {
+		return errors.New(messages.WalkAllOrStack)
 	}
 	return nil
 }

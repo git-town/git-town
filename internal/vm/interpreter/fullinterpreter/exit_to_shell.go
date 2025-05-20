@@ -12,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
 
-// exitToShell is called when Git Town should exit to the shell
+// exitToShell is called when Git Town should exit to the shell without an error
 func exitToShell(args ExecuteArgs) error {
 	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
 	if err != nil {
@@ -50,6 +50,11 @@ func exitToShell(args ExecuteArgs) error {
 		return err
 	}
 	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Config.ValidatedConfigData.IsMainBranch(currentBranch)) {
+		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
+			unfinishedDetails.CanSkip = true
+		}
+	}
+	if args.RunState.Command == "walk" {
 		if unfinishedDetails, hasUnfinishedDetails := args.RunState.UnfinishedDetails.Get(); hasUnfinishedDetails {
 			unfinishedDetails.CanSkip = true
 		}
