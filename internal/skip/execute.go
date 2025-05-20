@@ -14,8 +14,8 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undobranches"
-	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
-	lightInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/light"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/fullinterpreter"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/lightinterpreter"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
@@ -24,7 +24,7 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
@@ -40,7 +40,7 @@ func Execute(args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+	return fullinterpreter.Execute(fullinterpreter.ExecuteArgs{
 		Backend:                 args.Backend,
 		CommandsCounter:         args.CommandsCounter,
 		Config:                  args.Config,
@@ -118,7 +118,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) error {
 		UndoAPIProgram:           args.RunState.UndoAPIProgram,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	lightInterpreter.Execute(lightInterpreter.ExecuteArgs{
+	lightinterpreter.Execute(lightinterpreter.ExecuteArgs{
 		Backend:       args.Backend,
 		Config:        args.Config,
 		Connector:     args.Connector,
