@@ -103,7 +103,7 @@ func walkCommand() *cobra.Command {
 
 func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdomain.AllBranches, fullStack configdomain.FullStack, verbose configdomain.Verbose) error {
 	if len(args) == 0 && dryRun {
-		return errors.New("there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch")
+		return errors.New(messages.WalkNoDryRun)
 	}
 	err := validateArgs(allBranches, fullStack)
 	if err != nil {
@@ -278,7 +278,7 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 			Branch: data.initialBranch,
 		},
 		&opcodes.MessageQueue{
-			Message: "Branch walk done.",
+			Message: messages.WalkDone,
 		},
 	)
 	previousBranchCandidates := []Option[gitdomain.LocalBranchName]{data.previousBranch}
@@ -294,10 +294,10 @@ func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) progr
 
 func validateArgs(all configdomain.AllBranches, stack configdomain.FullStack) error {
 	if all.Enabled() && stack.Enabled() {
-		return errors.New("please provide either --all or --stack, not both of them")
+		return errors.New(messages.WalkAllOrStack)
 	}
 	if !all.Enabled() && !stack.Enabled() {
-		return errors.New("please provide either --all or --stack")
+		return errors.New(messages.WalkAllOrStack)
 	}
 	return nil
 }
