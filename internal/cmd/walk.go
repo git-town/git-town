@@ -30,28 +30,25 @@ const (
 	walkCmd  = "walk"
 	walkDesc = "Run a command on each local feature branch"
 	walkHelp = `
-Executes the given command on each local feature branch.
-Stops when the command exits with an error
-to give you a chance to investigate.
-"git town continue" retries the command on the current branch,
-"git town skip" skips this branch and goes to the next one.
+Executes the given command on each local feature branch in stack order.
+Stops if the command exits with an error,
+giving you a chance to investigate and fix the issue.
 
-If no shell command is given, exits to the shell on each branch.
-In that case, you can run shell commands for the respective branch
-and go to the next branch by running "git town continue".
+* use "git town continue" to retry the command on the current branch
+* use "git town skip" to move on to the next branch
+
+If no shell command is provided, drops you into an interactive shell for each branch.
+You can manually run any shell commands,
+then proceed to the next branch with "git town continue".
 
 Consider this stack:
 
 main
- \
-  branch-1
-   \
-    branch-2
-		 \
-		  branch-3
+ └─ branch-1
+     └─ branch-2
+         └─ branch-3
 
-When running "git town walk --stack make lint",
-it prints this output:
+Running "git town walk --stack make lint" produces this output:
 
 [branch-1] make lint
 ... output of make lint
