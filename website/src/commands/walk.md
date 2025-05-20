@@ -63,5 +63,5 @@ execute them.
 
 #### `-v`<br>`--verbose`
 
-The `--verbose` aka `-v` flag prints all Git commands run under the hood to
-determine the repository state.
+Prints all Git commands executed under the hood to determine the repository
+state.
