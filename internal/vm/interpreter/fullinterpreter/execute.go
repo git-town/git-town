@@ -30,11 +30,6 @@ func Execute(args ExecuteArgs) error {
 				Verbose:         args.Verbose,
 			})
 		}
-		stepName := gohacks.TypeName(nextStep)
-		if stepName == "SkipCurrentBranchProgram" {
-			args.RunState.SkipCurrentBranchProgram()
-			continue
-		}
 		err := nextStep.Run(shared.RunArgs{
 			Backend:                         args.Backend,
 			BranchInfos:                     Some(args.InitialBranchesSnapshot.Branches),
