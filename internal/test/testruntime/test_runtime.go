@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/gohacks/cache"
 	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v20/internal/test/commands"
-	testshell "github.com/git-town/git-town/v20/internal/test/subshell"
+	"github.com/git-town/git-town/v20/internal/test/subshell"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -25,7 +25,7 @@ type TestRuntime struct {
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original *testshell.TestRunner, targetDir string) commands.TestCommands {
+func Clone(original *subshell.TestRunner, targetDir string) commands.TestCommands {
 	original.MustRun("git", "clone", original.WorkingDir, targetDir)
 	return New(targetDir, original.HomeDir, original.BinDir)
 }
@@ -81,7 +81,7 @@ func InitializeNoInitialCommit(workingDir, homeDir, binDir string) commands.Test
 // New provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) commands.TestCommands {
-	testRunner := testshell.TestRunner{
+	testRunner := subshell.TestRunner{
 		BinDir:           binDir,
 		HomeDir:          homeDir,
 		ProposalOverride: None[string](),

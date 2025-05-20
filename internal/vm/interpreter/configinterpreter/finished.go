@@ -1,4 +1,4 @@
-package config
+package configinterpreter
 
 import (
 	"github.com/git-town/git-town/v20/internal/cli/print"
