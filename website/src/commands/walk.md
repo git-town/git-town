@@ -54,8 +54,7 @@ Iterates through all local branches.
 
 #### `-s`<br>`--stack`
 
-The `--stack` aka `-s` iterates through all branches of the stack that the
-current branch belongs to.
+Iterates through all branches of the stack that the current branch belongs to.
 
 #### `--dry-run`
 
