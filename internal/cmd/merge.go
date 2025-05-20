@@ -18,7 +18,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/messages"
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
-	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v20/internal/vm/opcodes"
 	"github.com/git-town/git-town/v20/internal/vm/optimizer"
 	"github.com/git-town/git-town/v20/internal/vm/program"
@@ -121,7 +121,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+	return full.Execute(full.ExecuteArgs{
 		Backend:                 repo.Backend,
 		CommandsCounter:         repo.CommandsCounter,
 		Config:                  data.config,

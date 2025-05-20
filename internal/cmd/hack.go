@@ -24,7 +24,7 @@ import (
 	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v20/internal/validate"
 	configInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/config"
-	fullInterpreter "github.com/git-town/git-town/v20/internal/vm/interpreter/full"
+	"github.com/git-town/git-town/v20/internal/vm/interpreter/full"
 	"github.com/git-town/git-town/v20/internal/vm/program"
 	"github.com/git-town/git-town/v20/internal/vm/runstate"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
@@ -199,7 +199,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		TouchedBranches:       runProgram.TouchedBranches(),
 		UndoAPIProgram:        program.Program{},
 	}
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
+	return full.Execute(full.ExecuteArgs{
 		Backend:                 args.backend,
 		CommandsCounter:         args.commandsCounter,
 		Config:                  args.appendData.config,
