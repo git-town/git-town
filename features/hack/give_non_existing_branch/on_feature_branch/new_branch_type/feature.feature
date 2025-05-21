@@ -1,4 +1,4 @@
-Feature: create a new branch when prototype branches are configured via Git metadata
+Feature: create a new branch when default-branch-type is set and feature-regex is not
 
   Background:
     Given a Git repo with origin
