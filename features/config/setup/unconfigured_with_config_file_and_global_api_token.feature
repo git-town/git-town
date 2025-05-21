@@ -10,11 +10,11 @@ Feature: don't ask for information already provided by the config file
       [branches]
       main = "main"
       contribution-regex = "contribute-"
-      default-type = "observed"
       feature-regex = "feat-"
       observed-regex = "observed-"
       perennial-regex = "release-"
       perennials = ["staging"]
+      unknown-type = "observed"
 
       [create]
       new-branch-type = "feature"
@@ -53,7 +53,6 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.default-branch-type" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
@@ -66,3 +65,4 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.sync-tags" still doesn't exist
     And local Git setting "git-town.ship-strategy" still doesn't exist
     And local Git setting "git-town.ship-delete-tracking-branch" still doesn't exist
+    And local Git setting "git-town.unknown-branch-type" still doesn't exist

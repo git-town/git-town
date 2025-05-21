@@ -12,8 +12,8 @@ Feature: a global API token of another forge exists
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |

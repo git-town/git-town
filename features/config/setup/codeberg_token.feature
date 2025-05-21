@@ -13,8 +13,8 @@ Feature: enter the Codeberg API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
@@ -45,8 +45,8 @@ Feature: enter the Codeberg API token
       | main branch                 | enter                |                                             |
       | perennial branches          |                      | no input here since the dialog doesn't show |
       | perennial regex             | enter                |                                             |
-      | default branch type         | enter                |                                             |
       | feature regex               | enter                |                                             |
+      | unknown branch type         | enter                |                                             |
       | dev-remote                  | enter                |                                             |
       | forge type                  | down down down enter |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
@@ -79,8 +79,8 @@ Feature: enter the Codeberg API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | codeberg token              | 1 2 3 4 5 6 enter |                                             |
@@ -112,8 +112,8 @@ Feature: enter the Codeberg API token
       | main branch                 | enter                                     |                                             |
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
-      | default branch type         | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
+      | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | forge type: auto-detect     | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |

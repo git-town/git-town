@@ -24,7 +24,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-branches" is "qa"
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.feature-regex" is "user.*"
-    And local Git setting "git-town.default-branch-type" is "observed"
+    And local Git setting "git-town.unknown-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
@@ -44,8 +44,8 @@ Feature: remove existing configuration in Git metadata
       | keep the already configured main branch | enter                                                             |
       | change the perennial branches           | space down space enter                                            |
       | remove the perennial regex              | backspace backspace backspace backspace enter                     |
-      | default branch type                     | down enter                                                        |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
+      | unknown branch type                     | down enter                                                        |
       | dev-remote                              | enter                                                             |
       | remove hosting service override         | up up up up up enter                                              |
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |
@@ -101,7 +101,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.sync-tags" is now "false"
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.default-branch-type" is now "parked"
+    And local Git setting "git-town.unknown-branch-type" is now "parked"
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" is now "api"
@@ -127,7 +127,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.feature-regex" is now "user.*"
-    And local Git setting "git-town.default-branch-type" is now "observed"
+    And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"

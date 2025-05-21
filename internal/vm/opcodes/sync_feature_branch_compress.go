@@ -35,9 +35,8 @@ func (self *SyncFeatureBranchCompress) Run(args shared.RunArgs) error {
 				Branch:            self.CurrentBranch,
 				InitialParentName: self.InitialParentName,
 				InitialParentSHA:  self.InitialParentSHA,
-				// we deal with the tracking branch below
-				// TODO: once merge also only runs if needed,
-				// set this to the real value and remove the block dealing with the tracking branch below?
+				// We must sync with the tracking branch separately below,
+				// because this only runs if we aren't in sync with the parent.
 				TrackingBranch: None[gitdomain.RemoteBranchName](),
 			})
 		}

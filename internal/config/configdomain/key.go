@@ -58,12 +58,12 @@ const (
 	KeyBitbucketUsername                   = Key("git-town.bitbucket-username")
 	KeyCodebergToken                       = Key("git-town.codeberg-token")
 	KeyContributionRegex                   = Key("git-town.contribution-regex")
-	KeyDefaultBranchType                   = Key("git-town.default-branch-type")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
 	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
 	KeyDeprecatedContributionBranches      = Key("git-town.contribution-branches")
 	KeyDeprecatedCreatePrototypeBranches   = Key("git-town.create-prototype-branches")
+	KeyDeprecatedDefaultBranchType         = Key("git-town.default-branch-type")
 	KeyDeprecatedAliasKill                 = Key("alias.kill")
 	KeyDeprecatedAliasRenameBranch         = Key("alias.rename-branch")
 	KeyDeprecatedHostingPlatform           = Key("git-town.hosting-platform")
@@ -101,6 +101,7 @@ const (
 	KeySyncPrototypeStrategy               = Key("git-town.sync-prototype-strategy")
 	KeySyncTags                            = Key("git-town.sync-tags")
 	KeySyncUpstream                        = Key("git-town.sync-upstream")
+	KeyUnknownBranchType                   = Key("git-town.unknown-branch-type")
 	KeyGitUserEmail                        = Key("user.email")
 	KeyGitUserName                         = Key("user.name")
 )
@@ -111,7 +112,6 @@ var keys = []Key{
 	KeyBitbucketUsername,
 	KeyCodebergToken,
 	KeyContributionRegex,
-	KeyDefaultBranchType,
 	KeyDeprecatedAliasKill,
 	KeyDeprecatedAliasRenameBranch,
 	KeyDeprecatedCodeHostingDriver,
@@ -119,6 +119,7 @@ var keys = []Key{
 	KeyDeprecatedCodeHostingPlatform,
 	KeyDeprecatedContributionBranches,
 	KeyDeprecatedCreatePrototypeBranches,
+	KeyDeprecatedDefaultBranchType,
 	KeyDeprecatedHostingPlatform,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
@@ -155,6 +156,7 @@ var keys = []Key{
 	KeySyncPrototypeStrategy,
 	KeySyncTags,
 	KeySyncUpstream,
+	KeyUnknownBranchType,
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
@@ -189,6 +191,7 @@ var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedPushVerify:                KeyPushHook,
 	KeyDeprecatedShipDeleteRemoteBranch:    KeyShipDeleteTrackingBranch,
 	KeyDeprecatedSyncStrategy:              KeySyncFeatureStrategy,
+	KeyDeprecatedDefaultBranchType:         KeyUnknownBranchType,
 }
 
 // ObsoleteKeys defines the keys that are sunset and should get deleted

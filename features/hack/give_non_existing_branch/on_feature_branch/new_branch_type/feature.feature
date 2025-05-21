@@ -1,4 +1,4 @@
-Feature: create a new branch when default-branch-type is set and feature-regex is not
+Feature: create a new branch when unknown-branch-type is set and feature-regex is not
 
   Background:
     Given a Git repo with origin
@@ -11,7 +11,7 @@ Feature: create a new branch when default-branch-type is set and feature-regex i
       | existing | local    | existing commit |
     And the current branch is "existing"
     And Git setting "git-town.new-branch-type" is "feature"
-    And Git setting "git-town.default-branch-type" is "contribution"
+    And Git setting "git-town.unknown-branch-type" is "contribution"
     When I run "git-town hack new"
 
   Scenario: result

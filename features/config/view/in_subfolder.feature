@@ -15,7 +15,6 @@ Feature: show the configuration from a subfolder
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
-        default branch type: feature
         feature regex: (not set)
         main branch: main
         observed branches: (none)
@@ -24,6 +23,7 @@ Feature: show the configuration from a subfolder
         perennial branches: public
         perennial regex: (not set)
         prototype branches: (none)
+        unknown branch type: feature
 
       Configuration:
         offline: no
