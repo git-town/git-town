@@ -4,8 +4,7 @@ This setting defines the [type](../branch-types.md) for new branches created
 using the [git town hack](../commands/hack.md), [append](../commands/append.md),
 or [prepend](../commands/prepend.md) commands.
 
-Before setting this, try to configure the branch type using one of these more
-broadly applicable configuration entries:
+Before setting this, consider one of these more broadly applicable configuration entries:
 
 - [contribution-regex](contribution-regex.md)
 - [default-branch-type](default-branch-type.md)
@@ -15,6 +14,8 @@ broadly applicable configuration entries:
 - [perennial-regex](perennial-regex.md)
 
 ## values
+
+These values make sense for this setting:
 
 - `feature` (default)
 - `parked`
