@@ -25,6 +25,7 @@ type Branches struct {
 	ObservedRegex     *string  `toml:"observed-regex"`
 	PerennialRegex    *string  `toml:"perennial-regex"`
 	Perennials        []string `toml:"perennials"`
+	UnknownType       *string  `toml:"unknown-type"`
 }
 
 func (self Branches) IsEmpty() bool {

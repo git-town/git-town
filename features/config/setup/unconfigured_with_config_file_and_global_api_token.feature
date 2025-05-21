@@ -10,11 +10,11 @@ Feature: don't ask for information already provided by the config file
       [branches]
       main = "main"
       contribution-regex = "contribute-"
-      default-type = "observed"
       feature-regex = "feat-"
       observed-regex = "observed-"
       perennial-regex = "release-"
       perennials = ["staging"]
+      unknown-type = "observed"
       
       [create]
       new-branch-type = "feature"

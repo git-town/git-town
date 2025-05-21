@@ -133,6 +133,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
+		if data.Branches.UnknownType != nil {
+			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.UnknownType)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+		}
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {

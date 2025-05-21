@@ -79,10 +79,10 @@ Feature: show the configuration
       main = "main"
       perennials = [ "public", "staging" ]
       perennial-regex = "^release-"
-      default-type = "observed"
       feature-regex = "^user-.*$"
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
+      unknown-type = "observed"
       
       [create]
       share-new-branches = "push"

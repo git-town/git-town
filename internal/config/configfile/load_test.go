@@ -32,6 +32,7 @@ feature-regex = "^kg-"
 observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
+unknown-type = "prototype"
 
 [create]
 new-branch-type = "prototype"
@@ -70,6 +71,7 @@ prototype-branches = "compress"
 					ObservedRegex:     Ptr(`^dependabot\/`),
 					PerennialRegex:    Ptr("release-.*"),
 					Perennials:        []string{"public", "staging"},
+					UnknownType:       Ptr("prototype"),
 				},
 				Create: &configfile.Create{
 					NewBranchType:    Ptr("prototype"),
