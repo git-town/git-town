@@ -14,10 +14,7 @@ const (
 	newBranchTypeTitle = `New branch type`
 	NewBranchTypeHelp  = `
 This setting controls the type new branches that you create with git town hack, append, or prepend will have.
-
-If no type is explicitly set, Git Town determines the type for new branches like this:
-
-branches default to being feature branches.
+If no type is explicitly set, branches default to being feature branches.
 
 More details: https://www.git-town.com/preferences/new-branch-type.
 
@@ -26,6 +23,9 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 
 func NewBranchType(existingOpt Option[configdomain.BranchType], inputs components.TestInput) (Option[configdomain.BranchType], bool, error) {
 	entries := list.Entries[Option[configdomain.BranchType]]{
+		// TODO: remove the None option here.
+		// There is no useful behavior for None besides defaulting to "feature".
+		// So just default to "feature".
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
 			Text: "always create feature branches",
