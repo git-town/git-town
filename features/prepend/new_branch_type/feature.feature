@@ -18,7 +18,7 @@ Feature: append a new branch when feature branches are configured
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
       |          | git checkout -b new main |
-    And branch "new" now has type "contribution"
+    And branch "new" now has type "feature"
     And the initial commits exist now
     And this lineage exists now
       | BRANCH   | PARENT |
