@@ -11,19 +11,19 @@ Feature: append a new branch when feature branches are configured
     And the current branch is "existing"
     And Git setting "git-town.new-branch-type" is "feature"
     And Git setting "git-town.default-branch-type" is "contribution"
-    When I run "git-town append new"
+    When I run "git-town prepend new"
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                  |
       | existing | git fetch --prune --tags |
-      |          | git checkout -b new      |
+      |          | git checkout -b new main |
     And branch "new" now has type "contribution"
     And the initial commits exist now
     And this lineage exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
+      | BRANCH   | PARENT |
+      | existing | new    |
+      | new      | main   |
 
   Scenario: undo
     When I run "git-town undo"
