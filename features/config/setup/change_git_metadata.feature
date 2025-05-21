@@ -106,7 +106,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is now "main"
     And the perennial branches are now "qa"
-    And local Git setting "git-town.new-branch-type" now doesn't exist
+    And local Git setting "git-town.new-branch-type" is now "parked"
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
