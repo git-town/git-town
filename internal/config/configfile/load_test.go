@@ -27,7 +27,7 @@ sync-upstream = true
 [branches]
 main = "main"
 contribution-regex = "^gittown-"
-default-type = "prototype"
+default-type = "contribution"
 feature-regex = "^kg-"
 observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
@@ -65,7 +65,7 @@ prototype-branches = "compress"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
 					ContributionRegex: Ptr("^gittown-"),
-					DefaultType:       Ptr("prototype"),
+					DefaultType:       Ptr("contribution"),
 					FeatureRegex:      Ptr("^kg-"),
 					Main:              Ptr("main"),
 					ObservedRegex:     Ptr(`^dependabot\/`),
