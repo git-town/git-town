@@ -14,8 +14,7 @@ const (
 	unknownBranchTypeTitle = `Unknown branch type`
 	UnknownBranchTypeHelp  = `
 Select the type branches get if
-feature-regex, observed-regex, contribution-regex,
-perennial-regex, the perennial branch list, don't match.
+Git Town cannot determine their type any other way.
 
 If you set this to something other than "feature",
 consider also configuring the "feature-regex" setting
