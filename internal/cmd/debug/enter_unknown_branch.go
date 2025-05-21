@@ -9,12 +9,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func enterDefaultBranch() *cobra.Command {
+func enterUnknownBranch() *cobra.Command {
 	return &cobra.Command{
-		Use: "default-branch-type",
+		Use: "unknown-branch-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.DefaultBranchType(configdomain.BranchTypeFeatureBranch, dialogTestInputs.Next())
+			_, _, err := dialog.UnknownBranchType(configdomain.BranchTypeFeatureBranch, dialogTestInputs.Next())
 			return err
 		},
 	}

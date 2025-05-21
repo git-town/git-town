@@ -16,7 +16,7 @@ Feature: Accepting all default values leads to a working setup
       | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
-      | default branch type         | enter |
+      | unknown branch type         | enter |
       | feature regex               | enter |
       | dev-remote                  | enter |
       | forge type                  | enter |
@@ -41,7 +41,7 @@ Feature: Accepting all default values leads to a working setup
     And local Git setting "git-town.new-branch-type" still doesn't exist
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
-    And local Git setting "git-town.default-branch-type" still doesn't exist
+    And local Git setting "git-town.unknown-branch-type" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.share-new-branches" still doesn't exist

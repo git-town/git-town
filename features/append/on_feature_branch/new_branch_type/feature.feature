@@ -10,7 +10,7 @@ Feature: append a new branch when feature branches are configured
       | existing | local, origin | existing commit |
     And the current branch is "existing"
     And Git setting "git-town.new-branch-type" is "feature"
-    And Git setting "git-town.default-branch-type" is "contribution"
+    And Git setting "git-town.unknown-branch-type" is "contribution"
     When I run "git-town append new"
 
   Scenario: result

@@ -45,7 +45,7 @@ func Load(rootDir gitdomain.RepoRootDir, fileName string, finalMessages stringsl
 func Validate(data Data, finalMessages stringslice.Collector) (configdomain.PartialConfig, error) {
 	var err error
 	var contributionRegex Option[configdomain.ContributionRegex]
-	var defaultBranchType Option[configdomain.BranchType]
+	var unknownBranchType Option[configdomain.BranchType]
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
@@ -101,7 +101,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Branches.DefaultType != nil {
-			defaultBranchType, err = configdomain.ParseBranchType(*data.Branches.DefaultType)
+			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.DefaultType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
@@ -131,6 +131,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
+			}
+		}
+		if data.Branches.UnknownType != nil {
+			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.UnknownType)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
 			}
 		}
 	}
@@ -236,7 +242,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            None[configdomain.CodebergToken](),
 		ContributionRegex:        contributionRegex,
-		DefaultBranchType:        defaultBranchType,
+		UnknownBranchType:        unknownBranchType,
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,

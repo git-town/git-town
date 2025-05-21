@@ -172,13 +172,7 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 	return result.Err
 }
 
-// SetDefaultBranchTypeLocally updates the locally configured default branch type.
-func (self *NormalConfig) SetDefaultBranchTypeLocally(value configdomain.BranchType) error {
-	self.DefaultBranchType = value
-	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDefaultBranchType, value.String())
-}
-
-// SetDefaultBranchTypeLocally updates the locally configured default branch type.
+// SetDevRemote updates the locally configured development remote.
 func (self *NormalConfig) SetDevRemote(value gitdomain.Remote) error {
 	self.DevRemote = value
 	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
@@ -275,4 +269,10 @@ func (self *NormalConfig) SetSyncTags(value configdomain.SyncTags) error {
 func (self *NormalConfig) SetSyncUpstream(value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
 	self.SyncUpstream = value
 	return self.GitConfigAccess.SetConfigValue(scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+}
+
+// SetUnknownBranchTypeLocally updates the locally configured unknown branch type.
+func (self *NormalConfig) SetUnknownBranchTypeLocally(value configdomain.BranchType) error {
+	self.UnknownBranchType = value
+	return self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
 }

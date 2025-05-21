@@ -1,10 +1,9 @@
 Feature: end-to-end workflow of creating a prototype branch, shipping, and pruning it
-
   This test reproduces the bug in https://github.com/git-town/git-town/issues/4222.
 
   Background:
     Given a Git repo with origin
-    And Git setting "git-town.default-branch-type" is "prototype"
+    And Git setting "git-town.unknown-branch-type" is "prototype"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
     And I ran "git-town hack hooks"

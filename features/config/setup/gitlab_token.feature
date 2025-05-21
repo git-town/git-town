@@ -13,7 +13,7 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
@@ -45,7 +45,7 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type                  | up enter          |                                             |
@@ -79,7 +79,7 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type                  | enter             |                                             |
@@ -112,7 +112,7 @@ Feature: enter the GitLab API token
       | main branch                 | enter                                     |                                             |
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
-      | default branch type         | enter                                     |                                             |
+      | unknown branch type         | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |

@@ -27,11 +27,12 @@ sync-upstream = true
 [branches]
 main = "main"
 contribution-regex = "^gittown-"
-default-type = "prototype"
+default-type = "contribution"
 feature-regex = "^kg-"
 observed-regex = "^dependabot\\/"
 perennials = [ "public", "staging" ]
 perennial-regex = "release-.*"
+unknown-type = "prototype"
 
 [create]
 new-branch-type = "prototype"
@@ -64,12 +65,13 @@ prototype-branches = "compress"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
 					ContributionRegex: Ptr("^gittown-"),
-					DefaultType:       Ptr("prototype"),
+					DefaultType:       Ptr("contribution"),
 					FeatureRegex:      Ptr("^kg-"),
 					Main:              Ptr("main"),
 					ObservedRegex:     Ptr(`^dependabot\/`),
 					PerennialRegex:    Ptr("release-.*"),
 					Perennials:        []string{"public", "staging"},
+					UnknownType:       Ptr("prototype"),
 				},
 				Create: &configfile.Create{
 					NewBranchType:    Ptr("prototype"),

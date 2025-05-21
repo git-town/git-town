@@ -21,16 +21,15 @@ Feature: show the configuration
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-regex" is "^dependabot/"
-    And Git setting "git-town.default-branch-type" is "observed"
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config"
     Then Git Town prints:
       """
       Branches:
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
-        default branch type: observed
         feature regex: ^user-.*$
         main branch: main
         observed branches: observed-1, observed-2
@@ -39,6 +38,7 @@ Feature: show the configuration
         perennial branches: qa, staging
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
+        unknown branch type: observed
 
       Configuration:
         offline: no
@@ -78,10 +78,10 @@ Feature: show the configuration
       main = "main"
       perennials = [ "public", "staging" ]
       perennial-regex = "^release-"
-      default-type = "observed"
       feature-regex = "^user-.*$"
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
+      unknown-type = "observed"
 
       [create]
       share-new-branches = "push"
@@ -107,7 +107,6 @@ Feature: show the configuration
       Branches:
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
-        default branch type: observed
         feature regex: ^user-.*$
         main branch: main
         observed branches: observed-1, observed-2
@@ -116,6 +115,7 @@ Feature: show the configuration
         perennial branches: public, staging
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
+        unknown branch type: observed
 
       Configuration:
         offline: no
@@ -155,7 +155,6 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
-    And Git setting "git-town.default-branch-type" is "observed"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -164,16 +163,17 @@ Feature: show the configuration
     And Git setting "git-town.sync-perennial-strategy" is "ff-only"
     And Git setting "git-town.sync-feature-strategy" is "merge"
     And Git setting "git-town.sync-prototype-strategy" is "compress"
+    And Git setting "git-town.unknown-branch-type" is "observed"
     And the configuration file:
       """
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
       perennial-regex = "^config-perennial-"
-      default-type = "contribution"
       feature-regex = "^config-feature-.*$"
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
+      unknown-type = "contribution"
 
       [create]
       share-new-branches = "push"
@@ -199,7 +199,6 @@ Feature: show the configuration
       Branches:
         contribution branches: contribution-1, contribution-2
         contribution regex: ^git-contribution-regex
-        default branch type: observed
         feature regex: git-feature-.*
         main branch: git-main
         observed branches: observed-1, observed-2
@@ -208,6 +207,7 @@ Feature: show the configuration
         perennial branches: git-perennial-1, git-perennial-2, config-perennial-1, config-perennial-2
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
+        unknown branch type: observed
 
       Configuration:
         offline: no
@@ -255,7 +255,6 @@ Feature: show the configuration
       Branches:
         contribution branches: contribution-1, contribution-2
         contribution regex: (not set)
-        default branch type: feature
         feature regex: (not set)
         main branch: main
         observed branches: observed-1, observed-2
@@ -264,6 +263,7 @@ Feature: show the configuration
         perennial branches: qa
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
+        unknown branch type: feature
 
       Configuration:
         offline: no
@@ -317,7 +317,6 @@ Feature: show the configuration
       Branches:
         contribution branches: contribution-1, contribution-2
         contribution regex: (not set)
-        default branch type: feature
         feature regex: (not set)
         main branch: (not set)
         observed branches: observed-1, observed-2
@@ -326,6 +325,7 @@ Feature: show the configuration
         perennial branches: (none)
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
+        unknown branch type: feature
 
       Configuration:
         offline: no

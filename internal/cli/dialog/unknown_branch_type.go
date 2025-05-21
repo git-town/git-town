@@ -11,17 +11,19 @@ import (
 )
 
 const (
-	defaultBranchTypeTitle = `Default branch type`
-	DefaultBranchTypeHelp  = `
-Select the type Git Town should assume for new branches.
+	unknownBranchTypeTitle = `Unknown branch type`
+	UnknownBranchTypeHelp  = `
+Select the type branches get if
+Git Town cannot determine their type any other way.
 
-If you change this, consider also configuring
-the "feature-regex" setting on the next screen.
+If you set this to something other than "feature",
+consider also configuring the "feature-regex" setting
+on the next screen.
 
 `
 )
 
-func DefaultBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, bool, error) {
+func UnknownBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, bool, error) {
 	options := []configdomain.BranchType{
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,
@@ -30,7 +32,7 @@ func DefaultBranchType(existingValue configdomain.BranchType, inputs components.
 		configdomain.BranchTypePrototypeBranch,
 	}
 	cursor := slice.Index(options, existingValue).GetOrElse(0)
-	selection, aborted, err := components.RadioList(list.NewEntries(options...), cursor, defaultBranchTypeTitle, DefaultBranchTypeHelp, inputs)
-	fmt.Printf(messages.DefaultBranchType, components.FormattedSelection(selection.String(), aborted))
+	selection, aborted, err := components.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs)
+	fmt.Printf(messages.UnknownBranchType, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

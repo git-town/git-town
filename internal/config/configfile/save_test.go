@@ -51,7 +51,6 @@ func TestSave(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
 					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					ForgeType:                None[forgedomain.ForgeType](),
@@ -69,6 +68,7 @@ func TestSave(t *testing.T) {
 					SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
 					SyncTags:                 true,
 					SyncUpstream:             true,
+					UnknownBranchType:        configdomain.BranchTypeFeatureBranch,
 				},
 			},
 		}

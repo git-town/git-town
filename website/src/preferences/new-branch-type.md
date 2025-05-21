@@ -8,7 +8,7 @@ Before setting this, consider one of these more broadly applicable configuration
 entries:
 
 - [contribution-regex](contribution-regex.md)
-- [default-branch-type](default-branch-type.md)
+- [unknown-branch-type](unknown-branch-type.md)
 - [feature-regex](feature-regex.md)
 - [observed-regex](observed-regex.md)
 - [perennial-branches](perennial-branches.md)

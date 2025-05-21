@@ -16,7 +16,6 @@ type PartialConfig struct {
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
-	DefaultBranchType        Option[BranchType]
 	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
@@ -42,6 +41,7 @@ type PartialConfig struct {
 	SyncPrototypeStrategy    Option[SyncPrototypeStrategy]
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
+	UnknownBranchType        Option[BranchType]
 }
 
 func EmptyPartialConfig() PartialConfig {
@@ -57,8 +57,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	branchTypeOverrides, err := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
 	ec.Check(err)
 	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
-	ec.Check(err)
-	defaultBranchType, err := ParseBranchType(snapshot[KeyDefaultBranchType])
 	ec.Check(err)
 	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	ec.Check(err)
@@ -92,6 +90,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream)
 	ec.Check(err)
+	unknownBranchType, err := ParseBranchType(snapshot[KeyUnknownBranchType])
+	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
@@ -99,7 +99,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		BranchTypeOverrides:      branchTypeOverrides,
 		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
 		ContributionRegex:        contributionRegex,
-		DefaultBranchType:        defaultBranchType,
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
@@ -125,6 +124,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
+		UnknownBranchType:        unknownBranchType,
 	}, ec.Err
 }
 
@@ -140,7 +140,6 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		BranchTypeOverrides:      other.BranchTypeOverrides.Concat(self.BranchTypeOverrides),
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
-		DefaultBranchType:        other.DefaultBranchType.Or(self.DefaultBranchType),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
@@ -166,6 +165,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncPrototypeStrategy:    other.SyncPrototypeStrategy.Or(self.SyncPrototypeStrategy),
 		SyncTags:                 other.SyncTags.Or(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
+		UnknownBranchType:        other.UnknownBranchType.Or(self.UnknownBranchType),
 	}
 }
 
@@ -178,7 +178,6 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		BranchTypeOverrides:      self.BranchTypeOverrides,
 		CodebergToken:            self.CodebergToken,
 		ContributionRegex:        self.ContributionRegex,
-		DefaultBranchType:        self.DefaultBranchType.GetOrElse(BranchTypeFeatureBranch),
 		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
 		FeatureRegex:             self.FeatureRegex,
 		ForgeType:                self.ForgeType,
@@ -201,6 +200,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		SyncPrototypeStrategy:    self.SyncPrototypeStrategy.GetOrElse(NewSyncPrototypeStrategyFromSyncFeatureStrategy(syncFeatureStrategy)),
 		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
 		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
+		UnknownBranchType:        self.UnknownBranchType.GetOrElse(BranchTypeFeatureBranch),
 	}
 }
 
