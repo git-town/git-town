@@ -49,7 +49,7 @@ Feature: enter the Codeberg API token
       | unknown branch type         | enter                |                                             |
       | dev-remote                  | enter                |                                             |
       | forge type                  | down down down enter |                                             |
-      | codeberg token              |    1 2 3 4 5 6 enter |                                             |
+      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
       | token scope                 | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | sync-feature-strategy       | enter                |                                             |
