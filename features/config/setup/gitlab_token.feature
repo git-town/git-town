@@ -13,8 +13,8 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
@@ -45,8 +45,8 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type                  | up enter          |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
@@ -79,8 +79,8 @@ Feature: enter the GitLab API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type                  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
@@ -112,8 +112,8 @@ Feature: enter the GitLab API token
       | main branch                 | enter                                     |                                             |
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
-      | unknown branch type         | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
+      | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |

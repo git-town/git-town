@@ -44,8 +44,8 @@ Feature: remove existing configuration in Git metadata
       | keep the already configured main branch | enter                                                             |
       | change the perennial branches           | space down space enter                                            |
       | remove the perennial regex              | backspace backspace backspace backspace enter                     |
-      | unknown branch type                     | down enter                                                        |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
+      | unknown branch type                     | down enter                                                        |
       | dev-remote                              | enter                                                             |
       | remove hosting service override         | up up up up up enter                                              |
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |

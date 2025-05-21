@@ -10,8 +10,8 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
-      | unknown branch type         | enter |
       | feature regex               | enter |
+      | unknown branch type         | enter |
       | dev-remote                  | enter |
       | forge type                  | enter |
       | origin hostname             | enter |
@@ -49,25 +49,25 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-
+      
       [branches]
       main = "initial"
       perennials = []
       perennial-regex = ""
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
-
+      
       [hosting]
       dev-remote = "origin"
       # forge-type = ""
       # origin-hostname = ""
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
