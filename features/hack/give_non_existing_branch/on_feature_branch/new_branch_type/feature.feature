@@ -21,7 +21,7 @@ Feature: create a new branch when default-branch-type is set and feature-regex i
       |          | git checkout main                                 |
       | main     | git -c rebase.updateRefs=false rebase origin/main |
       |          | git checkout -b new                               |
-    And branch "new" now has type "contribution"
+    And branch "new" now has type "feature"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
