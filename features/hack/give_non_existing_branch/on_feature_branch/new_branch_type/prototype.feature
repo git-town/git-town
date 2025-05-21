@@ -1,4 +1,3 @@
-@smoke
 Feature: create a new branch when prototype branches are configured via Git metadata
 
   Background:
