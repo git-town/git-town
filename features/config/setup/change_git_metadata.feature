@@ -8,6 +8,7 @@ Feature: change existing information in Git metadata
       | qa         | perennial | local, origin |
       | production | (none)    | local, origin |
     And the main branch is "main"
+    And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.share-new-branches" is "no"
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.sync-tags" is "false"
@@ -17,12 +18,12 @@ Feature: change existing information in Git metadata
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | change the perennial branches             | space down space enter |
-      | enter a perennial regex                   | 3 3 6 6 enter          |
+      | enter a perennial regex                   |          3 3 6 6 enter |
       | unknown branch type                       | down enter             |
       | feature regex                             | u s e r enter          |
       | dev-remote                                | enter                  |
       | set forge type to "github"                | up up enter            |
-      | github token                              | 1 2 3 4 5 6 enter      |
+      | github token                              |      1 2 3 4 5 6 enter |
       | token scope                               | enter                  |
       | origin hostname                           | c o d e enter          |
       | sync-feature-strategy                     | down enter             |
@@ -32,11 +33,12 @@ Feature: change existing information in Git metadata
       | sync-tags                                 | down enter             |
       | enable share-new-branches                 | down enter             |
       | disable the push hook                     | down enter             |
-      | new-branch-type                           | down down enter        |
+      | new-branch-type                           | down enter             |
       | set ship-strategy to "fast-forward"       | down down enter        |
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -72,7 +74,7 @@ Feature: change existing information in Git metadata
     And the main branch is now "main"
     And local Git setting "git-town.perennial-branches" is now "production qa"
     And local Git setting "git-town.dev-remote" now doesn't exist
-    And local Git setting "git-town.new-branch-type" is now "parked"
+    And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
     And local Git setting "git-town.hosting-origin-hostname" is now "code"
