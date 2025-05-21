@@ -22,10 +22,6 @@ Possible values are:
 - `parked`
 - `prototype`
 
-If you set this to anything other than `feature`, you must also configure the
-[feature-regex](feature-regex.md) setting. Otherwise, there will be no feature
-branches.
-
 ## configuration via setup assistant
 
 A great way to configure this setting is through the setup assistant.
