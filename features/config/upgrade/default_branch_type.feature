@@ -1,0 +1,18 @@
+Feature: automatically upgrade outdated configuration
+
+  @this
+  Scenario Outline:
+    Given a Git repo with origin
+    And <LOCATION> Git setting "git-town.default-branch-type" is "observed"
+    When I run "git-town <COMMAND>"
+    Then Git Town prints:
+      """
+      Upgrading deprecated <LOCATION> setting "git-town.default-branch-type" to "git-town.unknown-branch-type".
+      """
+    And <LOCATION> Git setting "git-town.unknown-branch-type" is now "observed"
+    And <LOCATION> Git setting "git-town.default-branch-type" now doesn't exist
+
+    Examples:
+      | COMMAND  | LOCATION |
+      | hack foo | local    |
+      | hack foo | global   |

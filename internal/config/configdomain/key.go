@@ -191,6 +191,7 @@ var DeprecatedKeys = map[Key]Key{
 	KeyDeprecatedPushVerify:                KeyPushHook,
 	KeyDeprecatedShipDeleteRemoteBranch:    KeyShipDeleteTrackingBranch,
 	KeyDeprecatedSyncStrategy:              KeySyncFeatureStrategy,
+	KeyDeprecatedDefaultBranchType:         KeyUnknownBranchType,
 }
 
 // ObsoleteKeys defines the keys that are sunset and should get deleted
