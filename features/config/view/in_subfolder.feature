@@ -15,7 +15,6 @@ Feature: show the configuration from a subfolder
       Branches:
         contribution branches: (none)
         contribution regex: (not set)
-        default branch type: feature
         feature regex: (not set)
         main branch: main
         observed branches: (none)
@@ -24,14 +23,15 @@ Feature: show the configuration from a subfolder
         perennial branches: public
         perennial regex: (not set)
         prototype branches: (none)
-
+        unknown branch type: feature
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -42,11 +42,11 @@ Feature: show the configuration from a subfolder
         Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge

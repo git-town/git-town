@@ -32,20 +32,20 @@ A great way to configure this setting is through the setup assistant.
 
 ## configure in config file
 
-In the [config file](../configuration-file.md), the default branch type is
+In the [config file](../configuration-file.md), the unknown branch type is
 specified in the `[branches]` section:
 
 ```toml
 [branches]
-default-type = "feature"
+unknown-type = "feature"
 ```
 
 ## configure in Git metadata
 
-You can manually configure the default branch type using Git metadata:
+You can manually configure the unknown branch type using Git metadata:
 
 ```wrap
-git config [--global] git-town.default-branch-type "feature"
+git config [--global] git-town.unknown-branch-type "feature"
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on

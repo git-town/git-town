@@ -1,5 +1,5 @@
 @smoke
-Feature: a default branch type is set, the feature-regex matches
+Feature: a unknown branch type is set, the feature-regex matches
 
   Background:
     Given a Git repo with origin
@@ -14,7 +14,7 @@ Feature: a default branch type is set, the feature-regex matches
       |           | origin   | origin my-branch commit |
     And the current branch is "my-branch"
     And local Git setting "git-town.feature-regex" is "my-.*"
-    And local Git setting "git-town.default-branch-type" is "observed"
+    And local Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town sync"
 
   Scenario: result

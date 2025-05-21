@@ -18,9 +18,9 @@ Feature: show the configuration in Spanish
     And Git setting "git-town.perennial-regex" is "^release-"
     And Git setting "git-town.contribution-regex" is "^renovate/"
     And Git setting "git-town.observed-regex" is "^dependabot/"
-    And Git setting "git-town.default-branch-type" is "observed"
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And Git setting "git-town.unknown-branch-type" is "observed"
     When I run "git-town config" with these environment variables
       | LANG | es_ES.UTF-8 |
 
@@ -30,7 +30,6 @@ Feature: show the configuration in Spanish
       Branches:
         contribution branches: contribution-1, contribution-2
         contribution regex: ^renovate/
-        default branch type: observed
         feature regex: ^user-.*$
         main branch: main
         observed branches: observed-1, observed-2
@@ -39,14 +38,15 @@ Feature: show the configuration in Spanish
         perennial branches: qa, staging
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
-
+        unknown branch type: observed
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -57,11 +57,11 @@ Feature: show the configuration in Spanish
         Gitea token: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge

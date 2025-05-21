@@ -17,12 +17,12 @@ Feature: change existing information in Git metadata
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | change the perennial branches             | space down space enter |
-      | enter a perennial regex                   | 3 3 6 6 enter          |
-      | default branch type                       | down enter             |
+      | enter a perennial regex                   |          3 3 6 6 enter |
+      | unknown branch type                       | down enter             |
       | feature regex                             | u s e r enter          |
       | dev-remote                                | enter                  |
       | set forge type to "github"                | up up enter            |
-      | github token                              | 1 2 3 4 5 6 enter      |
+      | github token                              |      1 2 3 4 5 6 enter |
       | token scope                               | enter                  |
       | origin hostname                           | c o d e enter          |
       | sync-feature-strategy                     | down enter             |
@@ -83,7 +83,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.perennial-regex" is now "3366"
     And local Git setting "git-town.feature-regex" is now "user"
-    And local Git setting "git-town.default-branch-type" is now "observed"
+    And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
     And local Git setting "git-town.ship-strategy" is now "fast-forward"
@@ -114,7 +114,7 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
-    And local Git setting "git-town.default-branch-type" now doesn't exist
+    And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "false"
     And local Git setting "git-town.ship-strategy" now doesn't exist

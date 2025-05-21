@@ -11,7 +11,7 @@ Feature: override an existing Git alias
       | main branch                 | enter   |
       | perennial branches          | enter   |
       | perennial regex             | enter   |
-      | default branch type         | enter   |
+      | unknown branch type         | enter   |
       | feature regex               | enter   |
       | dev-remote                  | enter   |
       | forge type                  | enter   |

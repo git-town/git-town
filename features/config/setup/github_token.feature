@@ -13,7 +13,7 @@ Feature: enter the GitHub API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
@@ -45,11 +45,11 @@ Feature: enter the GitHub API token
       | main branch                 | enter                          |                                             |
       | perennial branches          |                                | no input here since the dialog doesn't show |
       | perennial regex             | enter                          |                                             |
-      | default branch type         | enter                          |                                             |
+      | unknown branch type         | enter                          |                                             |
       | feature regex               | enter                          |                                             |
       | dev-remote                  | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
-      | github token                | 1 2 3 4 5 6 enter              |                                             |
+      | github token                |              1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                          |                                             |
       | origin hostname             | enter                          |                                             |
       | sync-feature-strategy       | enter                          |                                             |
@@ -80,7 +80,7 @@ Feature: enter the GitHub API token
       | main branch                 | enter                               |                                             |
       | perennial branches          |                                     | no input here since the dialog doesn't show |
       | perennial regex             | enter                               |                                             |
-      | default branch type         | enter                               |                                             |
+      | unknown branch type         | enter                               |                                             |
       | feature regex               | enter                               |                                             |
       | dev-remote                  | enter                               |                                             |
       | forge type: auto-detect     | enter                               |                                             |
@@ -112,7 +112,7 @@ Feature: enter the GitHub API token
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type                  | enter             |                                             |
@@ -145,7 +145,7 @@ Feature: enter the GitHub API token
       | main branch                 | enter                                     |                                             |
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
-      | default branch type         | enter                                     |                                             |
+      | unknown branch type         | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |

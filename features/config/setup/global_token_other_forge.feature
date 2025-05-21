@@ -5,6 +5,7 @@ Feature: a global API token of another forge exists
     Given a Git repo with origin
     And my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     And global Git setting "git-town.gitlab-token" is "987654"
+    # TODO: move "unknown branch type" below "feature regex"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |
@@ -12,7 +13,7 @@ Feature: a global API token of another forge exists
       | main branch                 | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
-      | default branch type         | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
       | feature regex               | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
