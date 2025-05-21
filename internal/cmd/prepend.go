@@ -406,9 +406,9 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 				configdomain.BranchTypeContributionBranch,
 				configdomain.BranchTypeObservedBranch,
 				configdomain.BranchTypeParkedBranch,
-				configdomain.BranchTypePerennialBranch:
+				configdomain.BranchTypePerennialBranch,
+				configdomain.BranchTypeFeatureBranch:
 				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
-			case configdomain.BranchTypeFeatureBranch:
 			case configdomain.BranchTypeMainBranch:
 			}
 		}

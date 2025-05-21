@@ -368,9 +368,9 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 				configdomain.BranchTypeObservedBranch,
 				configdomain.BranchTypeParkedBranch,
 				configdomain.BranchTypePerennialBranch,
-				configdomain.BranchTypePrototypeBranch:
+				configdomain.BranchTypePrototypeBranch,
+				configdomain.BranchTypeFeatureBranch:
 				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
-			case configdomain.BranchTypeFeatureBranch:
 			case configdomain.BranchTypeMainBranch:
 			}
 		}
