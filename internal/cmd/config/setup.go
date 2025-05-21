@@ -154,14 +154,14 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
-	if configFile.UnknownBranchType.IsNone() {
-		data.userInput.config.NormalConfig.UnknownBranchType, aborted, err = dialog.UnknownBranchType(config.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
+	if configFile.FeatureRegex.IsNone() {
+		data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
-	if configFile.FeatureRegex.IsNone() {
-		data.userInput.config.NormalConfig.FeatureRegex, aborted, err = dialog.FeatureRegex(config.NormalConfig.FeatureRegex, data.dialogInputs.Next())
+	if configFile.UnknownBranchType.IsNone() {
+		data.userInput.config.NormalConfig.UnknownBranchType, aborted, err = dialog.UnknownBranchType(config.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
