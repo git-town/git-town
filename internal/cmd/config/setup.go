@@ -154,8 +154,8 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
-	if configFile.DefaultBranchType.IsNone() {
-		data.userInput.config.NormalConfig.DefaultBranchType, aborted, err = dialog.DefaultBranchType(config.NormalConfig.DefaultBranchType, data.dialogInputs.Next())
+	if configFile.UnknownBranchType.IsNone() {
+		data.userInput.config.NormalConfig.UnknownBranchType, aborted, err = dialog.UnknownBranchType(config.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
@@ -448,8 +448,8 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig))
 	}
-	if configFile.DefaultBranchType.IsNone() {
-		fc.Check(saveDefaultBranchType(oldConfig.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, oldConfig))
+	if configFile.UnknownBranchType.IsNone() {
+		fc.Check(saveUnknownBranchType(oldConfig.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, oldConfig))
 	}
 	if configFile.DevRemote.IsNone() {
 		fc.Check(saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig))
@@ -535,11 +535,11 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	return nil
 }
 
-func saveDefaultBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
+func saveUnknownBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetDefaultBranchTypeLocally(newValue)
+	return config.NormalConfig.SetUnknownBranchTypeLocally(newValue)
 }
 
 func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.UnvalidatedConfig) error {
@@ -733,7 +733,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveSyncPrototypeStrategy()
 	config.NormalConfig.RemoveSyncUpstream()
 	config.NormalConfig.RemoveSyncTags()
-	err = saveDefaultBranchType(config.NormalConfig.DefaultBranchType, userInput.config.NormalConfig.DefaultBranchType, config)
+	err = saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config)
 	if err != nil {
 		return err
 	}

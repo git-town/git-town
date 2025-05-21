@@ -17,7 +17,6 @@ type NormalConfigData struct {
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
-	DefaultBranchType        BranchType
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
@@ -40,6 +39,7 @@ type NormalConfigData struct {
 	SyncPrototypeStrategy    SyncPrototypeStrategy
 	SyncTags                 SyncTags
 	SyncUpstream             SyncUpstream
+	UnknownBranchType        BranchType
 }
 
 func (self *NormalConfigData) NoPushHook() NoPushHook {
@@ -68,8 +68,8 @@ func (self *NormalConfigData) PartialBranchType(branch gitdomain.LocalBranchName
 	if regex, has := self.PerennialRegex.Get(); has && regex.MatchesBranch(branch) {
 		return BranchTypePerennialBranch
 	}
-	// branch doesn't match any of the overrides --> default branch type
-	return self.DefaultBranchType
+	// branch doesn't match any of the overrides --> unknown branch type
+	return self.UnknownBranchType
 }
 
 func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdomain.LocalBranchNames {
@@ -101,7 +101,6 @@ func DefaultNormalConfig() NormalConfigData {
 		BranchTypeOverrides:      BranchTypeOverrides{},
 		CodebergToken:            None[CodebergToken](),
 		ContributionRegex:        None[ContributionRegex](),
-		DefaultBranchType:        BranchTypeFeatureBranch,
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
@@ -124,5 +123,6 @@ func DefaultNormalConfig() NormalConfigData {
 		SyncPrototypeStrategy:    SyncPrototypeStrategyRebase,
 		SyncTags:                 true,
 		SyncUpstream:             true,
+		UnknownBranchType:        BranchTypeFeatureBranch,
 	}
 }

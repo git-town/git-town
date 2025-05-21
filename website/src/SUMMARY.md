@@ -55,7 +55,7 @@
 - [Preferences](preferences.md)
   - [Branches]()
     - [Contribution regex](preferences/contribution-regex.md)
-    - [Default branch type](preferences/default-branch-type.md)
+    - [Default branch type](preferences/unknown-branch-type.md)
     - [Feature regex](preferences/feature-regex.md)
     - [Main branch](preferences/main-branch.md)
     - [Observed regex](preferences/observed-regex.md)

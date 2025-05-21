@@ -125,7 +125,7 @@ You can set the types of indivdiual branches with these commands:
 
 These preferences allow you to configure the types of larger groups of branches:
 
-- [default-branch-type](preferences/default-branch-type.md),
+- [default-branch-type](preferences/unknown-branch-type.md),
 - [feature-regex](preferences/feature-regex.md), and
 - [new-branch-type](preferences/new-branch-type.md),
 - [perennial-regex](preferences/perennial-regex.md) preferences.

@@ -51,7 +51,7 @@ func TestSave(t *testing.T) {
 			},
 			NormalConfig: config.NormalConfig{
 				NormalConfigData: configdomain.NormalConfigData{
-					DefaultBranchType:        configdomain.BranchTypeFeatureBranch,
+					UnknownBranchType:        configdomain.BranchTypeFeatureBranch,
 					DevRemote:                "fork",
 					FeatureRegex:             None[configdomain.FeatureRegex](),
 					ForgeType:                None[forgedomain.ForgeType](),

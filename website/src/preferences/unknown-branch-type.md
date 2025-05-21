@@ -1,9 +1,18 @@
-# Default branch type
+# Unknown branch type
 
-This setting defines the default branch type for Git Town when the branch type
-is unknown. It applies to branches not listed in [main-branch](main-branch.md),
-[perennial-branches](perennial-branches.md), contribution-branches,
-observed-branches, parked-branches, or prototype-branches.
+This setting defines the branch type to use when Git Town cannot determine the
+branch type using all other configuration settings:
+
+- [main-branch](main-branch.md),
+- [perennial-branches](perennial-branches.md)
+- [Feature regex](feature-regex.md)
+- [Contribution regex](contribution-regex.md)
+- [Observed regex](observed-regex.md)
+- or a manual branch type override set by [git town park](../commands/park.md),
+  [git town contribute](../commands/contribute.md),
+  [git town hack](../commands/hack.md),
+  [git town observe](../commands/observe.md),
+  [git town prototype](../commands/prototype.md)
 
 Possible values are:
 
