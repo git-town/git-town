@@ -27,10 +27,6 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 		// There is no useful behavior for None besides defaulting to "feature".
 		// So just default to "feature".
 		{
-			Data: None[configdomain.BranchType](),
-			Text: "auto: derive from other configuration entries",
-		},
-		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
 			Text: "always create feature branches",
 		},

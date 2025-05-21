@@ -40,7 +40,7 @@ Feature: Configure a different development remote
       perennial-regex = ""
 
       [create]
-      new-branch-type = ""
+      new-branch-type = "feature"
       share-new-branches = "no"
 
       [hosting]

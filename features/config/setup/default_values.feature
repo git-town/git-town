@@ -62,7 +62,7 @@ Feature: Accepting all default values leads to a working setup
       perennial-regex = ""
 
       [create]
-      new-branch-type = ""
+      new-branch-type = "feature"
       share-new-branches = "no"
 
       [hosting]
