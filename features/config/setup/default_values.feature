@@ -16,8 +16,8 @@ Feature: Accepting all default values leads to a working setup
       | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
-      | unknown branch type         | enter |
       | feature regex               | enter |
+      | unknown branch type         | enter |
       | dev-remote                  | enter |
       | forge type                  | enter |
       | origin hostname             | enter |

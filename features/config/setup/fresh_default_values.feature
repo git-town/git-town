@@ -10,8 +10,8 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | main branch                 | enter |
       | perennial branches          | enter |
       | perennial regex             | enter |
-      | unknown branch type         | enter |
       | feature regex               | enter |
+      | unknown branch type         | enter |
       | dev-remote                  | enter |
       | forge type                  | enter |
       | origin hostname             | enter |

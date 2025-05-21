@@ -11,8 +11,8 @@ Feature: remove an existing forge type override
       | main branch                 | down enter           |                                             |
       | perennial branches          |                      | no input here since the dialog doesn't show |
       | perennial regex             | enter                |                                             |
-      | unknown branch type         | enter                |                                             |
       | feature regex               | enter                |                                             |
+      | unknown branch type         | enter                |                                             |
       | dev-remote                  | enter                |                                             |
       | forge type                  | up up up up up enter |                                             |
       | origin hostname             | enter                |                                             |

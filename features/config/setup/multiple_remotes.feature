@@ -11,8 +11,8 @@ Feature: Configure a different development remote
       | main branch                 | enter    |
       | perennial branches          | enter    |
       | perennial regex             | enter    |
-      | unknown branch type         | enter    |
       | feature regex               | enter    |
+      | unknown branch type         | enter    |
       | dev-remote                  | up enter |
       | forge type                  | enter    |
       | origin hostname             | enter    |

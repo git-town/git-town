@@ -19,8 +19,8 @@ Feature: change existing information in Git metadata
       | accept the already configured main branch | enter                  |
       | change the perennial branches             | space down space enter |
       | enter a perennial regex                   | 3 3 6 6 enter          |
-      | unknown branch type                       | down enter             |
       | feature regex                             | u s e r enter          |
+      | unknown branch type                       | down enter             |
       | dev-remote                                | enter                  |
       | set forge type to "github"                | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
