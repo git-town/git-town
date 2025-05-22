@@ -2,6 +2,8 @@ package opcodes
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
@@ -29,6 +31,10 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
+	// wait here in tests
+	if len(os.Getenv("GIT_TOWN_TEST")) > 0 {
+		time.Sleep(1 * time.Second)
+	}
 	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream)
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
