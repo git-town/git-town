@@ -79,7 +79,7 @@ func Expand(text string, args ExpandArgs) string {
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-worktree-initial "):
-			commitName := match[31 : len(match)-4]
+			commitName := match[28 : len(match)-4]
 			initialWorktreeSHAs, has := args.InitialWorktreeSHAsOpt.Get()
 			if !has {
 				panic("no initial worktree SHAs recorded")
