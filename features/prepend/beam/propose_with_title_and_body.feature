@@ -24,7 +24,7 @@ Feature: propose a newly prepended branch
       | BRANCH   | COMMAND                                                                                                |
       |          | Looking for proposal online ... ok                                                                     |
       | existing | git checkout -b new main                                                                               |
-      | new      | git cherry-pick {{ sha-before-run 'unrelated commit' }}                                                |
+      | new      | git cherry-pick {{ sha-initial 'unrelated commit' }}                                                   |
       |          | git checkout existing                                                                                  |
       | existing | git -c rebase.updateRefs=false rebase new                                                              |
       |          | git push --force-with-lease --force-if-includes                                                        |

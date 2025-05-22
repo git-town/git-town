@@ -44,13 +44,13 @@ Feature: prepend a branch to a feature branch with compressible commits in a cle
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                                   |
-      | branch-1a | git checkout branch-1                                     |
-      | branch-1  | git reset --hard {{ sha-before-run 'branch-1 commit 2' }} |
-      |           | git push --force-with-lease --force-if-includes           |
-      |           | git checkout branch-2                                     |
-      | branch-2  | git reset --hard {{ sha-before-run 'branch-2 commit 2' }} |
-      |           | git push --force-with-lease --force-if-includes           |
-      |           | git branch -D branch-1a                                   |
+      | BRANCH    | COMMAND                                                |
+      | branch-1a | git checkout branch-1                                  |
+      | branch-1  | git reset --hard {{ sha-initial 'branch-1 commit 2' }} |
+      |           | git push --force-with-lease --force-if-includes        |
+      |           | git checkout branch-2                                  |
+      | branch-2  | git reset --hard {{ sha-initial 'branch-2 commit 2' }} |
+      |           | git push --force-with-lease --force-if-includes        |
+      |           | git branch -D branch-1a                                |
     And the initial commits exist now
     And the initial lineage exists now

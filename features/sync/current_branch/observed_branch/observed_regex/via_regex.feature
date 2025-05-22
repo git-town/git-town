@@ -28,7 +28,7 @@ Feature: sync the current branch that is observed via regex
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH     | COMMAND                                              |
-      | renovate/1 | git reset --hard {{ sha-before-run 'local commit' }} |
+      | BRANCH     | COMMAND                                           |
+      | renovate/1 | git reset --hard {{ sha-initial 'local commit' }} |
     And the initial commits exist now
     And the initial branches and lineage exist now

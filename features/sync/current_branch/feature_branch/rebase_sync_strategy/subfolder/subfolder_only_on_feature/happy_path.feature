@@ -40,12 +40,12 @@ Feature: sync inside a folder that doesn't exist on the main branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                               |
-      | alpha  | git reset --hard {{ sha-before-run 'folder commit' }} |
-      |        | git push --force-with-lease --force-if-includes       |
-      |        | git checkout beta                                     |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}   |
-      |        | git push --force-with-lease --force-if-includes       |
-      |        | git checkout alpha                                    |
+      | BRANCH | COMMAND                                            |
+      | alpha  | git reset --hard {{ sha-initial 'folder commit' }} |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git checkout beta                                  |
+      | beta   | git reset --hard {{ sha-initial 'beta commit' }}   |
+      |        | git push --force-with-lease --force-if-includes    |
+      |        | git checkout alpha                                 |
     And the initial commits exist now
     And the initial branches and lineage exist now

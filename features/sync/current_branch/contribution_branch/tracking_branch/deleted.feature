@@ -30,8 +30,8 @@ Feature: remove a contribution branch as soon as its tracking branch is gone, ev
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                     |
-      | main   | git branch contribution {{ sha-before-run 'local commit' }} |
-      |        | git checkout contribution                                   |
+      | BRANCH | COMMAND                                                  |
+      | main   | git branch contribution {{ sha-initial 'local commit' }} |
+      |        | git checkout contribution                                |
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -34,17 +34,23 @@ type ScenarioState struct {
 	// because the developer workspace hasn't fetched updates yet.
 	initialDevSHAs Option[map[string]gitdomain.SHA]
 
+	beforeRunDevSHAs Option[map[string]gitdomain.SHA]
+
 	// initialLineage describes the lineage before the WHEN steps ran.
 	initialLineage Option[datatable.DataTable]
 
 	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
 	initialOriginSHAs Option[map[string]gitdomain.SHA]
 
+	beforeRunOriginSHAs Option[map[string]gitdomain.SHA]
+
 	// initialTags describes the tags before the WHEN steps ran.
 	initialTags Option[datatable.DataTable]
 
 	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
 	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
+
+	beforeRunWorktreeSHAs Option[map[string]gitdomain.SHA]
 
 	// insideGitRepo indicates whether the developer workspace contains a Git repository
 	insideGitRepo bool

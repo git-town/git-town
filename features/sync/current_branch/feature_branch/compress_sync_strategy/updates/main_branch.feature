@@ -35,8 +35,8 @@ Feature: sync a feature branch with new commits on the main branch in detached m
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                             |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }} |
-      |        | git push --force-with-lease --force-if-includes     |
+      | BRANCH | COMMAND                                          |
+      | beta   | git reset --hard {{ sha-initial 'beta commit' }} |
+      |        | git push --force-with-lease --force-if-includes  |
     And the initial commits exist now
     And the initial branches and lineage exist now

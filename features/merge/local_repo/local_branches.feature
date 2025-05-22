@@ -35,9 +35,9 @@ Feature: merging local branches
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                            |
-      | alpha  | git reset --hard {{ sha 'alpha commit' }}          |
-      |        | git branch beta {{ sha-before-run 'beta commit' }} |
-      |        | git checkout beta                                  |
+      | BRANCH | COMMAND                                         |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }}       |
+      |        | git branch beta {{ sha-initial 'beta commit' }} |
+      |        | git checkout beta                               |
     And the initial commits exist now
     And the initial lineage exists now

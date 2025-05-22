@@ -1524,13 +1524,23 @@ func runCommand(ctx context.Context, command string) {
 
 func updateInitialSHAs(state *ScenarioState) {
 	devRepo := state.fixture.DevRepo.GetOrPanic()
+	devSHAs := devRepo.CommitSHAs()
 	if state.initialDevSHAs.IsNone() && state.insideGitRepo {
-		state.initialDevSHAs = Some(devRepo.CommitSHAs())
+		state.initialDevSHAs = Some(devSHAs)
 	}
-	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); state.initialOriginSHAs.IsNone() && state.insideGitRepo && hasOriginrepo {
-		state.initialOriginSHAs = Some(originRepo.CommitSHAs())
+	state.beforeRunDevSHAs = Some(devSHAs)
+	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); hasOriginrepo && state.insideGitRepo {
+		originSHAs := originRepo.CommitSHAs()
+		if state.initialOriginSHAs.IsNone() {
+			state.initialOriginSHAs = Some(originSHAs)
+		}
+		state.beforeRunOriginSHAs = Some(originSHAs)
 	}
-	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
-		state.initialWorktreeSHAs = Some(secondWorkTree.CommitSHAs())
+	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); hasSecondWorkTree && state.insideGitRepo {
+		workTreeSHAs := secondWorkTree.CommitSHAs()
+		if state.initialWorktreeSHAs.IsNone() {
+			state.initialWorktreeSHAs = Some(workTreeSHAs)
+		}
+		state.beforeRunWorktreeSHAs = Some(workTreeSHAs)
 	}
 }

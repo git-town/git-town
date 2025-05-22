@@ -39,7 +39,7 @@ Feature: "compress" sync with upstream repo
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                               |
-      | feature | git reset --hard {{ sha-before-run 'local commit' }}                  |
+      | feature | git reset --hard {{ sha-initial 'local commit' }}                     |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |

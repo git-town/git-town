@@ -22,8 +22,8 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
       | old    | git checkout -b parent main                     |
-      | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
-      |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
+      | parent | git cherry-pick {{ sha-initial 'commit 2' }}    |
+      |        | git cherry-pick {{ sha-initial 'commit 4' }}    |
       |        | git checkout old                                |
       | old    | git -c rebase.updateRefs=false rebase parent    |
       |        | git push --force-with-lease --force-if-includes |

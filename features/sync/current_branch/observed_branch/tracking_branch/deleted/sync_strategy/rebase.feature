@@ -32,8 +32,8 @@ Feature: remove an observed branch as soon as its tracking branch is gone, even 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                 |
-      | main   | git branch observed {{ sha-before-run 'local commit' }} |
-      |        | git checkout observed                                   |
+      | BRANCH | COMMAND                                              |
+      | main   | git branch observed {{ sha-initial 'local commit' }} |
+      |        | git checkout observed                                |
     And the initial commits exist now
     And the initial branches and lineage exist now

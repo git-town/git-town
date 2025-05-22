@@ -42,15 +42,16 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       |        | origin        | local main commit  |
       | beta   | local, origin | local beta commit  |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                                       |
-      | beta   | git checkout alpha                                                                            |
-      | alpha  | git reset --hard {{ sha-before-run 'local alpha commit' }}                                    |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin alpha commit' }}:alpha |
-      |        | git checkout beta                                                                             |
-      | beta   | git reset --hard {{ sha-before-run 'local beta commit' }}                                     |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin beta commit' }}:beta   |
+      | BRANCH | COMMAND                                                                                    |
+      | beta   | git checkout alpha                                                                         |
+      | alpha  | git reset --hard {{ sha-initial 'local alpha commit' }}                                    |
+      |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin alpha commit' }}:alpha |
+      |        | git checkout beta                                                                          |
+      | beta   | git reset --hard {{ sha-initial 'local beta commit' }}                                     |
+      |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin beta commit' }}:beta   |
     And the initial commits exist now
     And the initial branches and lineage exist now

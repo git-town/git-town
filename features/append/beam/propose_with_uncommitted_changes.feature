@@ -25,18 +25,18 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                                       |
-      | existing | git checkout -b new                                                                                           |
-      | new      | git commit -m uncommitted                                                                                     |
-      |          | git checkout existing                                                                                         |
-      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 4' }}^ {{ sha-before-run 'commit 4' }} |
-      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} |
-      |          | git push --force-with-lease --force-if-includes                                                               |
-      |          | git checkout new                                                                                              |
-      | new      | git -c rebase.updateRefs=false rebase existing                                                                |
-      |          | git push -u origin new                                                                                        |
-      |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted                   |
-      |          | git checkout existing                                                                                         |
+      | BRANCH   | COMMAND                                                                                                 |
+      | existing | git checkout -b new                                                                                     |
+      | new      | git commit -m uncommitted                                                                               |
+      |          | git checkout existing                                                                                   |
+      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
+      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+      |          | git push --force-with-lease --force-if-includes                                                         |
+      |          | git checkout new                                                                                        |
+      | new      | git -c rebase.updateRefs=false rebase existing                                                          |
+      |          | git push -u origin new                                                                                  |
+      |          | open https://github.com/git-town/git-town/compare/existing...new?expand=1&title=uncommitted             |
+      |          | git checkout existing                                                                                   |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
@@ -55,10 +55,10 @@ Feature: beam a commit and uncommitted changes onto a new child branch and propo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                          |
-      | existing | git reset --hard {{ sha-before-run 'commit 5' }} |
-      |          | git push --force-with-lease --force-if-includes  |
-      |          | git branch -D new                                |
-      |          | git push origin :new                             |
+      | BRANCH   | COMMAND                                         |
+      | existing | git reset --hard {{ sha-initial 'commit 5' }}   |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git branch -D new                               |
+      |          | git push origin :new                            |
     And the initial commits exist now
     And the initial branches and lineage exist now

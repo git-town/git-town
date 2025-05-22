@@ -34,10 +34,10 @@ Feature: ship an omni-branch via the always-merge strategy
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                  |
-      | main   | git branch feature {{ sha-before-run 'feature commit' }} |
-      |        | git push -u origin feature                               |
-      |        | git checkout feature                                     |
+      | BRANCH | COMMAND                                               |
+      | main   | git branch feature {{ sha-initial 'feature commit' }} |
+      |        | git push -u origin feature                            |
+      |        | git checkout feature                                  |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                |
       | main   | local, origin | feature commit         |
