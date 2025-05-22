@@ -7,11 +7,11 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
-      | old    | local, origin | commit 2 |
-      | old    | local, origin | commit 3 |
-      | old    | local, origin | commit 4 |
+      | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | old    | local, origin | commit 1 | file 1    | content 1    |
+      | old    | local, origin | commit 2 | file 2    | content 2    |
+      | old    | local, origin | commit 3 | file 3    | content 3    |
+      | old    | local, origin | commit 4 | file 4    | content 4    |
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "merge"
     When I run "git-town prepend parent --beam" and enter into the dialog:
