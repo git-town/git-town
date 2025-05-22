@@ -18,13 +18,13 @@ type ScenarioState struct {
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 
-	// initialBranches contains the local and remote branches before the WHEN steps run
+	// the local and remote branches before the end-to-end test executed the first subshell command
 	initialBranches Option[datatable.DataTable]
 
-	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
+	// the commits in this Git environment before the end-to-end test executed the first subshell command
 	initialCommits Option[datatable.DataTable]
 
-	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
+	// the branch that was checked out before the end-to-end test executed the first subshell command
 	initialCurrentBranch Option[gitdomain.LocalBranchName]
 
 	// initialDevSHAs is only for looking up SHAs that existed at the developer repo before the first Git Town command ran.
@@ -34,25 +34,28 @@ type ScenarioState struct {
 	// because the developer workspace hasn't fetched updates yet.
 	initialDevSHAs Option[map[string]gitdomain.SHA]
 
-	beforeRunDevSHAs Option[map[string]gitdomain.SHA]
-
-	// initialLineage describes the lineage before the WHEN steps ran.
+	// the lineage before the end-to-end test executed the first subshell command
 	initialLineage Option[datatable.DataTable]
 
-	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
+	// commits that existed at the origin repo before the end-to-end test executed the first subshell command
 	initialOriginSHAs Option[map[string]gitdomain.SHA]
 
-	beforeRunOriginSHAs Option[map[string]gitdomain.SHA]
-
-	// initialTags describes the tags before the WHEN steps ran.
+	// the Git tags before the end-to-end test executed the first subshell command
 	initialTags Option[datatable.DataTable]
 
-	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
+	// commits at the worktree repo before the end-to-end test executed the first subshell command
 	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
 
+	// commits before the end-to-end test executed the most recent subshell command
+	beforeRunDevSHAs Option[map[string]gitdomain.SHA]
+
+	// commits at the origin remote before the end-to-end test executed the most recent subshell command
+	beforeRunOriginSHAs Option[map[string]gitdomain.SHA]
+
+	// commits at the worktree-repo before the end-to-end test executed the most recent shell command
 	beforeRunWorktreeSHAs Option[map[string]gitdomain.SHA]
 
-	// insideGitRepo indicates whether the developer workspace contains a Git repository
+	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
 	// the error of the last run of Git Town
