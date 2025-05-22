@@ -46,10 +46,10 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
-      |        | git push --force-with-lease --force-if-includes      |
-      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
+      | BRANCH | COMMAND                                           |
+      | beta   | git reset --hard {{ sha-initial 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes   |
+      |        | git branch alpha {{ sha-initial 'alpha commit' }} |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT  |
       | main   | local, origin | alpha commit      | file      | alpha content |

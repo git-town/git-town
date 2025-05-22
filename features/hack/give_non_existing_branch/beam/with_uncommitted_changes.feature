@@ -21,14 +21,14 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                                                       |
-      | existing | git checkout -b new main                                                                                      |
-      | new      | git commit -m uncommitted                                                                                     |
-      |          | git cherry-pick {{ sha-before-run 'commit 2' }}                                                               |
-      |          | git checkout existing                                                                                         |
-      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-before-run 'commit 2' }}^ {{ sha-before-run 'commit 2' }} |
-      |          | git push --force-with-lease --force-if-includes                                                               |
-      |          | git checkout existing                                                                                         |
+      | BRANCH   | COMMAND                                                                                                 |
+      | existing | git checkout -b new main                                                                                |
+      | new      | git commit -m uncommitted                                                                               |
+      |          | git cherry-pick {{ sha-initial 'commit 2' }}                                                            |
+      |          | git checkout existing                                                                                   |
+      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+      |          | git push --force-with-lease --force-if-includes                                                         |
+      |          | git checkout existing                                                                                   |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
@@ -45,9 +45,9 @@ Feature: beam a commit and uncommitted changes onto a new feature branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                          |
-      | existing | git reset --hard {{ sha-before-run 'commit 3' }} |
-      |          | git push --force-with-lease --force-if-includes  |
-      |          | git branch -D new                                |
+      | BRANCH   | COMMAND                                         |
+      | existing | git reset --hard {{ sha-initial 'commit 3' }}   |
+      |          | git push --force-with-lease --force-if-includes |
+      |          | git branch -D new                               |
     And the initial commits exist now
     And the initial branches and lineage exist now

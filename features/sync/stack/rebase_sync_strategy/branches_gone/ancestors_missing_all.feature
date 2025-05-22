@@ -46,9 +46,9 @@ Feature: stacked changes where all ancestor branches aren't local
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                                       |
-      | gamma  | git reset --hard {{ sha-before-run 'local gamma commit' }}                                    |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin gamma commit' }}:gamma |
+      | BRANCH | COMMAND                                                                                    |
+      | gamma  | git reset --hard {{ sha-initial 'local gamma commit' }}                                    |
+      |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin gamma commit' }}:gamma |
     And the initial lineage exists now
     And the initial commits exist now
     And these branches exist now

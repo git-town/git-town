@@ -30,9 +30,9 @@ Feature: sync a branch in a "linked worktree" that has a merge conflict
   Scenario: undo
     When I run "git-town undo" in the other worktree
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                                          |
-      | feature | git rebase --abort                                                               |
-      |         | git push --force-with-lease origin {{ sha-before-run 'initial commit' }}:feature |
+      | BRANCH  | COMMAND                                                                       |
+      | feature | git rebase --abort                                                            |
+      |         | git push --force-with-lease origin {{ sha-initial 'initial commit' }}:feature |
     And the current branch in the other worktree is still "feature"
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |

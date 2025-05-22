@@ -29,7 +29,7 @@ Feature: sync the current contribution branch
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH       | COMMAND                                                                             |
-      | contribution | git reset --hard {{ sha-before-run 'local commit' }}                                |
+      | contribution | git reset --hard {{ sha-initial 'local commit' }}                                   |
       |              | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:contribution |
     And the initial commits exist now
     And the initial branches and lineage exist now

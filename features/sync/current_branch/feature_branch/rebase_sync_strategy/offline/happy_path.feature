@@ -33,7 +33,7 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                      |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit' }} |
+      | BRANCH  | COMMAND                                                   |
+      | feature | git reset --hard {{ sha-initial 'local feature commit' }} |
     And the initial commits exist now
     And the initial branches and lineage exist now

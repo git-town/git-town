@@ -30,11 +30,11 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                  |
-      | shipped | git checkout main                                        |
-      | main    | git reset --hard {{ sha 'initial commit' }}              |
-      |         | git checkout shipped                                     |
-      | shipped | git reset --hard {{ sha-before-run 'unshipped commit' }} |
+      | BRANCH  | COMMAND                                               |
+      | shipped | git checkout main                                     |
+      | main    | git reset --hard {{ sha 'initial commit' }}           |
+      |         | git checkout shipped                                  |
+      | shipped | git reset --hard {{ sha-initial 'unshipped commit' }} |
     And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |
