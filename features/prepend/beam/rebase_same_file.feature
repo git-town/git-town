@@ -18,9 +18,9 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | DIALOG          | KEYS             |
       | select commit 2 | down space enter |
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | old    | git checkout -b parent main                     |
-      | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
+      | BRANCH | COMMAND                                      |
+      | old    | git checkout -b parent main                  |
+      | parent | git cherry-pick {{ sha-initial 'commit 2' }} |
     And Git Town prints the error:
       """
       CONFLICT (modify/delete): file deleted in HEAD and modified in
@@ -109,16 +109,15 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | parent | local    | commit 2b | file_2    | amended content |
     And the current branch is "old"
     When I run "git town sync"
-    And inspect the commits
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                      |
-      | old    | git fetch --prune --tags                                                     |
-      |        | git checkout parent                                                          |
-      | parent | git push --force-with-lease --force-if-includes                              |
-      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
-      |        | git checkout old                                                             |
-      | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'commit 2' }}     |
-      |        | git push --force-with-lease --force-if-includes                              |
+      | BRANCH | COMMAND                                                                                       |
+      | old    | git fetch --prune --tags                                                                      |
+      |        | git checkout parent                                                                           |
+      | parent | git push --force-with-lease --force-if-includes                                               |
+      |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}                  |
+      |        | git checkout old                                                                              |
+      | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha-in-origin-before-run 'commit 2' }} |
+      |        | git push --force-with-lease --force-if-includes                                               |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   |
       | old    | local, origin | commit 1  |

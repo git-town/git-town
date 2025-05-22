@@ -58,6 +58,18 @@ func Expand(text string, args ExpandArgs) string {
 				panic("see error above")
 			}
 			text = strings.Replace(text, match, sha.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-before-run "):
+			commitName := match[19 : len(match)-4]
+			sha, found := args.BeforeRunDevSHAs[commitName]
+			if !found {
+				fmt.Printf("I cannot find the before-run dev commit %q.\n", commitName)
+				fmt.Printf("I have records about %d commits:\n", len(args.BeforeRunDevSHAs))
+				for key := range maps.Keys(args.BeforeRunDevSHAs) {
+					fmt.Println("  -", key)
+				}
+				panic("see error above")
+			}
+			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin-initial "):
 			initialOriginSHAs, has := args.InitialOriginSHAsOpt.Get()
 			if !has {
@@ -69,6 +81,22 @@ func Expand(text string, args ExpandArgs) string {
 				fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
 				fmt.Printf("I have records about %d commits:\n", len(initialOriginSHAs))
 				for key := range maps.Keys(initialOriginSHAs) {
+					fmt.Println("  -", key)
+				}
+			}
+			text = strings.Replace(text, match, sha.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
+			beforeRunOriginSHAs, has := args.BeforeRunOriginSHAsOpt.Get()
+			if !has {
+				panic("no origin SHAs recorded")
+			}
+			fmt.Println("1111111111111111111111111111111111111111111111111", beforeRunOriginSHAs)
+			commitName := match[29 : len(match)-4]
+			sha, found := beforeRunOriginSHAs[commitName]
+			if !found {
+				fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
+				fmt.Printf("I have records about %d commits:\n", len(beforeRunOriginSHAs))
+				for key := range maps.Keys(beforeRunOriginSHAs) {
 					fmt.Println("  -", key)
 				}
 			}
@@ -101,6 +129,8 @@ func Expand(text string, args ExpandArgs) string {
 }
 
 type ExpandArgs struct {
+	BeforeRunDevSHAs       map[string]gitdomain.SHA
+	BeforeRunOriginSHAsOpt Option[map[string]gitdomain.SHA]
 	InitialDevSHAs         map[string]gitdomain.SHA
 	InitialOriginSHAsOpt   Option[map[string]gitdomain.SHA]
 	InitialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]

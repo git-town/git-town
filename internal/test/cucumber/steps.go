@@ -98,24 +98,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fixture.DevRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
-			fixture:               fixture,
-			initialBranches:       None[datatable.DataTable](),
-			initialCommits:        None[datatable.DataTable](),
-			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
-			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
-			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
-			insideGitRepo:         true,
-			runExitCode:           None[int](),
-			runExitCodeChecked:    false,
-			runOutput:             None[string](),
-			uncommittedContent:    None[string](),
-			uncommittedFileName:   None[string](),
+			beforeRunDevSHAs:     None[map[string]gitdomain.SHA](),
+			beforeRunOriginSHAs:  None[map[string]gitdomain.SHA](),
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
 		}
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
@@ -140,24 +139,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fixture.OriginRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
-			fixture:               fixture,
-			initialBranches:       None[datatable.DataTable](),
-			initialCommits:        None[datatable.DataTable](),
-			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
-			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
-			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
-			insideGitRepo:         true,
-			runExitCode:           None[int](),
-			runExitCodeChecked:    false,
-			runOutput:             None[string](),
-			uncommittedContent:    None[string](),
-			uncommittedFileName:   None[string](),
+			beforeRunDevSHAs:     None[map[string]gitdomain.SHA](),
+			beforeRunOriginSHAs:  None[map[string]gitdomain.SHA](),
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
 		}
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
@@ -183,24 +181,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
 		fixture.OriginRepo = MutableNone[commands.TestCommands]()
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
-			fixture:               fixture,
-			initialBranches:       None[datatable.DataTable](),
-			initialCommits:        None[datatable.DataTable](),
-			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
-			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
-			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
-			insideGitRepo:         true,
-			runExitCode:           None[int](),
-			runExitCodeChecked:    false,
-			runOutput:             None[string](),
-			uncommittedContent:    None[string](),
-			uncommittedFileName:   None[string](),
+			beforeRunDevSHAs:     None[map[string]gitdomain.SHA](),
+			beforeRunOriginSHAs:  None[map[string]gitdomain.SHA](),
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
 		}
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
@@ -338,6 +335,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
 		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
+			BeforeRunDevSHAs:       state.beforeRunDevSHAs.GetOrPanic(),
+			BeforeRunOriginSHAsOpt: state.beforeRunOriginSHAs,
 			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
 			InitialOriginSHAsOpt:   state.initialOriginSHAs,
 			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
@@ -490,6 +489,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(handlebars.ExpandArgs{
+			BeforeRunDevSHAs:       state.beforeRunDevSHAs.GetOrPanic(),
+			BeforeRunOriginSHAsOpt: state.beforeRunOriginSHAs,
 			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
 			InitialOriginSHAsOpt:   state.initialOriginSHAs,
 			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
@@ -617,24 +618,23 @@ func defineSteps(sc *godog.ScenarioContext) {
 			UpstreamRepo:   MutableNone[commands.TestCommands](),
 		}
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
-			fixture:               fixture,
-			initialBranches:       None[datatable.DataTable](),
-			initialCommits:        None[datatable.DataTable](),
-			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
-			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
-			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
-			insideGitRepo:         true,
-			runExitCode:           None[int](),
-			runExitCodeChecked:    false,
-			runOutput:             None[string](),
-			uncommittedContent:    None[string](),
-			uncommittedFileName:   None[string](),
+			beforeRunDevSHAs:     None[map[string]gitdomain.SHA](),
+			beforeRunOriginSHAs:  None[map[string]gitdomain.SHA](),
+			fixture:              fixture,
+			initialBranches:      None[datatable.DataTable](),
+			initialCommits:       None[datatable.DataTable](),
+			initialCurrentBranch: None[gitdomain.LocalBranchName](),
+			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialLineage:       None[datatable.DataTable](),
+			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialTags:          None[datatable.DataTable](),
+			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			insideGitRepo:        true,
+			runExitCode:          None[int](),
+			runExitCodeChecked:   false,
+			runOutput:            None[string](),
+			uncommittedContent:   None[string](),
+			uncommittedFileName:  None[string](),
 		}
 		return context.WithValue(ctx, keyScenarioState, &state), nil
 	})
@@ -1553,6 +1553,5 @@ func updateInitialSHAs(state *ScenarioState) {
 		if state.initialWorktreeSHAs.IsNone() {
 			state.initialWorktreeSHAs = Some(workTreeSHAs)
 		}
-		state.beforeRunWorktreeSHAs = Some(workTreeSHAs)
 	}
 }
