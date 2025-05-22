@@ -2,8 +2,11 @@ package opcodes
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v20/internal/subshell"
 	"github.com/git-town/git-town/v20/internal/vm/shared"
 	. "github.com/git-town/git-town/v20/pkg/prelude"
 )
@@ -29,6 +32,12 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
+	// Fix for https://github.com/git-town/git-town/issues/4942.
+	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
+	// which avoids flaky end-to-end tests.
+	if len(os.Getenv(subshell.TestToken)) > 0 {
+		time.Sleep(1 * time.Second)
+	}
 	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream)
 	if err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)

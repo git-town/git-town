@@ -205,6 +205,8 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if gitEditor, hasGitEditor := self.gitEditor.Get(); hasGitEditor {
 		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, gitEditor))
 	}
+	// mark as test run
+	opts.Env = append(opts.Env, subshell.TestToken+"=1")
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
@@ -212,9 +214,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	if len(opts.Dir) > 0 {
 		subProcess.Dir = opts.Dir
 	}
-	if opts.Env != nil {
-		subProcess.Env = opts.Env
-	}
+	subProcess.Env = opts.Env
 	var outputBuf bytes.Buffer
 	subProcess.Stdout = &outputBuf
 	subProcess.Stderr = &outputBuf
