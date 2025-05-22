@@ -15,6 +15,15 @@ import (
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
 type ScenarioState struct {
+	// commits before the end-to-end test executed the most recent subshell command
+	beforeRunDevSHAs Option[map[string]gitdomain.SHA]
+
+	// commits at the origin remote before the end-to-end test executed the most recent subshell command
+	beforeRunOriginSHAs Option[map[string]gitdomain.SHA]
+
+	// commits at the worktree-repo before the end-to-end test executed the most recent shell command
+	beforeRunWorktreeSHAs Option[map[string]gitdomain.SHA]
+
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 
@@ -45,15 +54,6 @@ type ScenarioState struct {
 
 	// commits at the worktree repo before the end-to-end test executed the first subshell command
 	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
-
-	// commits before the end-to-end test executed the most recent subshell command
-	beforeRunDevSHAs Option[map[string]gitdomain.SHA]
-
-	// commits at the origin remote before the end-to-end test executed the most recent subshell command
-	beforeRunOriginSHAs Option[map[string]gitdomain.SHA]
-
-	// commits at the worktree-repo before the end-to-end test executed the most recent shell command
-	beforeRunWorktreeSHAs Option[map[string]gitdomain.SHA]
 
 	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
