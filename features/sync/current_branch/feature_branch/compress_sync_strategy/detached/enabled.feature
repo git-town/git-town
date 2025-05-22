@@ -42,7 +42,6 @@ Feature: detached sync a grandchild feature branch using the "compress" strategy
       |        | origin        | local main commit  |
       | beta   | local, origin | local beta commit  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
