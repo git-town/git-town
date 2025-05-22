@@ -20,14 +20,14 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | old    | git checkout -b parent main                     |
-      | parent | git cherry-pick {{ sha-before-run 'commit 2' }} |
-      |        | git cherry-pick {{ sha-before-run 'commit 4' }} |
-      |        | git checkout old                                |
-      | old    | git merge --no-edit --ff parent                 |
-      |        | git push                                        |
-      |        | git checkout parent                             |
+      | BRANCH | COMMAND                                      |
+      | old    | git checkout -b parent main                  |
+      | parent | git cherry-pick {{ sha-initial 'commit 2' }} |
+      |        | git cherry-pick {{ sha-initial 'commit 4' }} |
+      |        | git checkout old                             |
+      | old    | git merge --no-edit --ff parent              |
+      |        | git push                                     |
+      |        | git checkout parent                          |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |

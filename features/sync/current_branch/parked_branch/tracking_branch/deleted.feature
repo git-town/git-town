@@ -30,8 +30,8 @@ Feature: remove a parked branch as soon as the tracking branch is gone, even if 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                               |
-      | main   | git branch parked {{ sha-before-run 'local commit' }} |
-      |        | git checkout parked                                   |
+      | BRANCH | COMMAND                                            |
+      | main   | git branch parked {{ sha-initial 'local commit' }} |
+      |        | git checkout parked                                |
     And the initial commits exist now
     And the initial branches and lineage exist now

@@ -56,10 +56,10 @@ Feature: sync a stack that makes conflicting changes
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                               |
-      | alpha  | git reset --hard {{ sha-before-run 'alpha commit' }}  |
+      | alpha  | git reset --hard {{ sha-initial 'alpha commit' }}     |
       |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout beta                                     |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}   |
+      | beta   | git reset --hard {{ sha-initial 'beta commit' }}      |
       |        | git push --force-with-lease --force-if-includes       |
       |        | git checkout main                                     |
       | main   | git reset --hard {{ sha-in-origin 'initial commit' }} |

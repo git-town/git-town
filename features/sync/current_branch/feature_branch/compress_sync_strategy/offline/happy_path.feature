@@ -38,7 +38,7 @@ Feature: sync the current feature branch using the "compress" strategy in offlin
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND                                                        |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit 2' }} |
+      | BRANCH  | COMMAND                                                     |
+      | feature | git reset --hard {{ sha-initial 'local feature commit 2' }} |
     And the initial commits exist now
     And the initial branches and lineage exist now

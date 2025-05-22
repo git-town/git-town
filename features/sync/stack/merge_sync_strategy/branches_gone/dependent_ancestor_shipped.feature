@@ -44,13 +44,13 @@ Feature: shipped the head branch of a synced stack with dependent changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                              |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}  |
-      |        | git push --force-with-lease --force-if-includes      |
-      |        | git checkout main                                    |
-      | main   | git reset --hard {{ sha 'initial commit' }}          |
-      |        | git branch alpha {{ sha-before-run 'alpha commit' }} |
-      |        | git checkout beta                                    |
+      | BRANCH | COMMAND                                           |
+      | beta   | git reset --hard {{ sha-initial 'beta commit' }}  |
+      |        | git push --force-with-lease --force-if-includes   |
+      |        | git checkout main                                 |
+      | main   | git reset --hard {{ sha 'initial commit' }}       |
+      |        | git branch alpha {{ sha-initial 'alpha commit' }} |
+      |        | git checkout beta                                 |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME | FILE CONTENT  |
       | main   | origin        | alpha commit | file      | alpha content |

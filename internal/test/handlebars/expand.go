@@ -46,8 +46,8 @@ func Expand(text string, args ExpandArgs) string {
 			shas := args.RemoteRepo.SHAsForCommit(commitName)
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
-		case strings.HasPrefix(match, "{{ sha-before-run "):
-			commitName := match[19 : len(match)-4]
+		case strings.HasPrefix(match, "{{ sha-initial "):
+			commitName := match[16 : len(match)-4]
 			sha, found := args.InitialDevSHAs[commitName]
 			if !found {
 				fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
@@ -58,12 +58,12 @@ func Expand(text string, args ExpandArgs) string {
 				panic("see error above")
 			}
 			text = strings.Replace(text, match, sha.String(), 1)
-		case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
+		case strings.HasPrefix(match, "{{ sha-in-origin-initial "):
 			initialOriginSHAs, has := args.InitialOriginSHAsOpt.Get()
 			if !has {
 				panic("no origin SHAs recorded")
 			}
-			commitName := match[29 : len(match)-4]
+			commitName := match[26 : len(match)-4]
 			sha, found := initialOriginSHAs[commitName]
 			if !found {
 				fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
@@ -78,8 +78,8 @@ func Expand(text string, args ExpandArgs) string {
 			shas := args.WorktreeRepo.SHAsForCommit(commitName)
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
-		case strings.HasPrefix(match, "{{ sha-in-worktree-before-run "):
-			commitName := match[31 : len(match)-4]
+		case strings.HasPrefix(match, "{{ sha-in-worktree-initial "):
+			commitName := match[28 : len(match)-4]
 			initialWorktreeSHAs, has := args.InitialWorktreeSHAsOpt.Get()
 			if !has {
 				panic("no initial worktree SHAs recorded")

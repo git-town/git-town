@@ -36,7 +36,7 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                                                     |
       | new     | git checkout feature                                                        |
-      | feature | git reset --hard {{ sha-before-run 'already compressed' }}                  |
+      | feature | git reset --hard {{ sha-initial 'already compressed' }}                     |
       |         | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:feature |
       |         | git branch -D new                                                           |
     And the initial commits exist now
