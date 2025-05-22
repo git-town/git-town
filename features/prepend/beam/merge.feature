@@ -75,7 +75,6 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | parent | local    | commit 4b | file_4    | amended content |
     And the current branch is "old"
     When I run "git town sync"
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                         |
       | old    | git fetch --prune --tags        |
