@@ -10,8 +10,8 @@ import (
 func PrependPath(envVars []string, directory string) []string {
 	for e, envVar := range envVars {
 		if strings.HasPrefix(envVar, "PATH=") {
-			parts := strings.SplitN(envVar, "=", 2)
-			envVars[e] = "PATH=" + directory + string(os.PathListSeparator) + parts[1]
+			_, value, _ := strings.Cut(envVar, "=")
+			envVars[e] = "PATH=" + directory + string(os.PathListSeparator) + value
 			return envVars
 		}
 	}

@@ -72,9 +72,7 @@ func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
 		return result
 	}
 	for _, line := range strings.Split(output, "\n") {
-		parts := strings.SplitN(line, " ", 2)
-		sha := parts[0]
-		commitMessage := parts[1]
+		sha, commitMessage, _ := strings.Cut(line, " ")
 		result[commitMessage] = gitdomain.NewSHA(sha)
 	}
 	return result
