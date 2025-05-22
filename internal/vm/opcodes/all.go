@@ -41,6 +41,8 @@ func All() []shared.Opcode {
 		&CheckoutUncached{},
 		&Checkout{},
 		&CherryPick{},
+		&CherryPickAbort{},
+		&CherryPickContinue{},
 		&CommitAutoUndo{},
 		&CommitMessageCommentOut{},
 		&CommitRemove{},

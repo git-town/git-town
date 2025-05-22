@@ -213,6 +213,14 @@ func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) err
 	return runner.Run("git", "cherry-pick", sha.String())
 }
 
+func (self *Commands) CherryPickAbort(runner gitdomain.Runner) error {
+	return runner.Run("git", "cherry-pick", "--abort")
+}
+
+func (self *Commands) CherryPickContinue(runner gitdomain.Runner) error {
+	return runner.Run("git", "cherry-pick", "--continue")
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // If the given prefix has content, adds it together with a newline.
 func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error {
