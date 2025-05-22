@@ -1,4 +1,4 @@
-@messyoutput
+@this @messyoutput
 Feature: prepend a branch to a feature branch using the "rebase" sync strategy
 
   Background:
@@ -65,10 +65,10 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the initial lineage exists now
 
   Scenario: amend the beamed commit
-    Given the current branch is "old"
     And I amend this commit
-      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT  |
-      | old    | local    | commit 3b | file_3    | other content |
+      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | parent | local    | commit 4b | file_4    | amended content |
+    And the current branch is "old"
     When I run "git town sync"
     And inspect the commits
     Then Git Town runs the commands
@@ -78,11 +78,11 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
       |        | git push -u origin parent                                                    |
       |        | git checkout old                                                             |
-      | old    | git push --force-with-lease --force-if-includes                              |
-      |        | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'commit 4' }}     |
+      | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'commit 4' }}     |
+      |        | git push --force-with-lease --force-if-includes                              |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   |
       | old    | local, origin | commit 1  |
-      |        |               | commit 3b |
+      |        |               | commit 3  |
       | parent | local, origin | commit 2  |
-      |        |               | commit 4  |
+      |        |               | commit 4b |
