@@ -206,7 +206,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, gitEditor))
 	}
 	// mark as test run
-	opts.Env = append(opts.Env, "GIT_TOWN_TEST=1")
+	opts.Env = append(opts.Env, fmt.Sprintf("%s=1", subshell.TestToken))
 	// set the working dir
 	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
