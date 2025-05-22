@@ -32,7 +32,9 @@ func (self *RebaseOntoKeepDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
-	// wait here in tests
+	// Fix for https://github.com/git-town/git-town/issues/4942.
+	// Waiting here in end-to-end tests to ensure new timestamps for the rebased commits,
+	// which avoids flaky end-to-end tests.
 	if len(os.Getenv(subshell.TestToken)) > 0 {
 		time.Sleep(1 * time.Second)
 	}
