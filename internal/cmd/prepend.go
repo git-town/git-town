@@ -396,23 +396,15 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 		Branch: data.initialBranch,
 		Parent: data.targetBranch,
 	})
+	branchType := configdomain.BranchTypeFeatureBranch
 	if data.prototype {
-		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
+		branchType = configdomain.BranchTypePrototypeBranch
 	} else {
 		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-			switch newBranchType {
-			case
-				configdomain.BranchTypePrototypeBranch,
-				configdomain.BranchTypeContributionBranch,
-				configdomain.BranchTypeObservedBranch,
-				configdomain.BranchTypeParkedBranch,
-				configdomain.BranchTypePerennialBranch,
-				configdomain.BranchTypeFeatureBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
-			case configdomain.BranchTypeMainBranch:
-			}
+			branchType = newBranchType
 		}
 	}
+	prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: branchType})
 	proposal, hasProposal := data.proposal.Get()
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.Offline.IsOnline() && (data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush || hasProposal) {
 		prog.Value.Add(&opcodes.BranchTrackingCreate{Branch: data.targetBranch})
@@ -537,7 +529,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 			)
 			if initialBranchInfo.HasTrackingBranch() {
 				prog.Value.Add(
-					&opcodes.PushCurrentBranch{},
+					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}
 		case configdomain.SyncStrategyRebase:
