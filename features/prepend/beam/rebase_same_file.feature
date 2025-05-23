@@ -55,7 +55,11 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     When I resolve the conflict in "file" with "content 3"
     And I run "git add file"
     And I run "git town continue"
-    Then Git Town prints the error:
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                      |
+      | old    | GIT_EDITOR=true git rebase --continue        |
+      |        | git -c rebase.updateRefs=false rebase parent |
+    And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
       """
