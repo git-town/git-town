@@ -19,7 +19,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | select commits 2 and 4 | down space down down space enter |
 
   Scenario: result
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                 |
       | old    | git checkout -b parent main                                                                             |
