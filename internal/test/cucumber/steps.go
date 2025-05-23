@@ -338,12 +338,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
 		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
-			InitialDevCommits:         state.initialDevSHAs.GetOrPanic(),
-			InitialOriginCommitsOpt:   state.initialOriginSHAs,
-			InitialWorktreeCommitsOpt: state.initialWorktreeSHAs,
-			LocalRepo:                 devRepo,
-			RemoteRepo:                state.fixture.OriginRepo.Value,
-			WorktreeRepo:              state.fixture.SecondWorktree.Value,
+			InitialDevCommits:      state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommits:   state.initialOriginSHAs,
+			InitialWorktreeCommits: state.initialWorktreeSHAs,
+			LocalRepo:              devRepo,
+			RemoteRepo:             state.fixture.OriginRepo.Value,
+			WorktreeRepo:           state.fixture.SecondWorktree.Value,
 		})
 		if expectedText != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedText, actualContent)
@@ -490,12 +490,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(handlebars.ExpandArgs{
-			InitialDevCommits:         state.initialDevSHAs.GetOrPanic(),
-			InitialOriginCommitsOpt:   state.initialOriginSHAs,
-			InitialWorktreeCommitsOpt: state.initialWorktreeSHAs,
-			LocalRepo:                 devRepo,
-			RemoteRepo:                state.fixture.OriginRepo.Value,
-			WorktreeRepo:              state.fixture.SecondWorktree.Value,
+			InitialDevCommits:      state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommits:   state.initialOriginSHAs,
+			InitialWorktreeCommits: state.initialWorktreeSHAs,
+			LocalRepo:              devRepo,
+			RemoteRepo:             state.fixture.OriginRepo.Value,
+			WorktreeRepo:           state.fixture.SecondWorktree.Value,
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {

@@ -58,7 +58,7 @@ func Expand(text string, args ExpandArgs) string {
 			}
 			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin-initial "):
-			initialOriginCommits, has := args.InitialOriginCommitsOpt.Get()
+			initialOriginCommits, has := args.InitialOriginCommits.Get()
 			if !has {
 				panic("no origin SHAs recorded")
 			}
@@ -79,7 +79,7 @@ func Expand(text string, args ExpandArgs) string {
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-worktree-initial "):
 			commitMessage := gitdomain.CommitMessage(match[28 : len(match)-4])
-			initialWorktreeSHAs, has := args.InitialWorktreeCommitsOpt.Get()
+			initialWorktreeSHAs, has := args.InitialWorktreeCommits.Get()
 			if !has {
 				panic("no initial worktree SHAs recorded")
 			}
@@ -100,10 +100,10 @@ func Expand(text string, args ExpandArgs) string {
 }
 
 type ExpandArgs struct {
-	InitialDevCommits         gitdomain.Commits
-	InitialOriginCommitsOpt   Option[gitdomain.Commits]
-	InitialWorktreeCommitsOpt Option[gitdomain.Commits]
-	LocalRepo                 Runner
-	RemoteRepo                Runner
-	WorktreeRepo              Runner
+	InitialDevCommits      gitdomain.Commits
+	InitialOriginCommits   Option[gitdomain.Commits]
+	InitialWorktreeCommits Option[gitdomain.Commits]
+	LocalRepo              Runner
+	RemoteRepo             Runner
+	WorktreeRepo           Runner
 }
