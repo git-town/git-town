@@ -33,7 +33,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And I run "git town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                      |
-      | parent | git cherry-pick --continue                   |
+      | parent | GIT_EDITOR=true git cherry-pick --continue   |
       |        | git checkout old                             |
       | old    | git -c rebase.updateRefs=false rebase parent |
     And Git Town prints the error:
@@ -55,7 +55,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     When I resolve the conflict in "file" with "content 1"
     And I run "git town continue"
 
-  @debug
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |

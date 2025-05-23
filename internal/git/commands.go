@@ -218,7 +218,7 @@ func (self *Commands) CherryPickAbort(runner gitdomain.Runner) error {
 }
 
 func (self *Commands) CherryPickContinue(runner gitdomain.Runner) error {
-	return runner.Run("git", "cherry-pick", "--continue")
+	return runner.RunWithEnv([]string{"GIT_EDITOR=true"}, "git", "cherry-pick", "--continue")
 }
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
