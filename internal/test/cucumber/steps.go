@@ -654,13 +654,39 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CheckoutBranch(existingBranch)
 	})
 
-	sc.Step(`^inspect the commits$`, func(ctx context.Context) error {
+	sc.Step(`^inspect the commits$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fmt.Println("DEV")
-		output, err := devRepo.Query("git", "branch", "-vva")
-		fmt.Println(output)
-		return err
+		if SHAs, has := state.initialDevSHAs.Get(); has {
+			fmt.Println("\nsha-initial")
+			for _, commit := range SHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if SHAs, has := state.initialOriginSHAs.Get(); has {
+			fmt.Println("\nsha-in-origin-initial")
+			for _, commit := range SHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if SHAs, has := state.initialWorktreeSHAs.Get(); has {
+			fmt.Println("\nsha-in-worktree-initial")
+			for _, commit := range SHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if SHAs, has := state.beforeRunDevSHAs.Get(); has {
+			fmt.Println("\nsha-before-run")
+			for _, commit := range SHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if SHAs, has := state.beforeRunOriginSHAs.Get(); has {
+			fmt.Println("\nsha-in-origin-before-run")
+			for _, commit := range SHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		fmt.Println()
 	})
 
 	sc.Step(`^inspect the repo$`, func(ctx context.Context) {

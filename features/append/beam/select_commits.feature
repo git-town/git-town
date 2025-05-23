@@ -52,3 +52,29 @@ Feature: beam multiple commits onto a new child branch
       |          | git branch -D new                                                      |
     And the initial commits exist now
     And the initial branches and lineage exist now
+
+  @this
+  Scenario: amend the beamed commit
+    And I amend this commit
+      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | new    | local    | commit 4b | file_4    | amended content |
+    And the current branch is "new"
+    When I run "git town sync"
+    And inspect the commits
+    Then Git Town runs the commands
+      | BRANCH   | COMMAND                                                                      |
+      | new      | git fetch --prune --tags                                                     |
+      |          | git checkout main                                                            |
+      | main     | git -c rebase.updateRefs=false rebase origin/main                            |
+      |          | git checkout existing                                                        |
+      | existing | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |          | git push --force-with-lease --force-if-includes                              |
+      |          | git checkout new                                                             |
+      | new      | git -c rebase.updateRefs=false rebase --onto existing {{ sha 'commit 4' }}   |
+      |          | git push -u origin new                                                       |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE   |
+      | old    | local, origin | commit 1  |
+      |        |               | commit 3  |
+      | parent | local, origin | commit 2  |
+      |        |               | commit 4b |
