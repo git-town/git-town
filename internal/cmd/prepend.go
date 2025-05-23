@@ -488,22 +488,23 @@ func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdom
 }
 
 func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependData) {
-	if len(data.commitsToBeam) > 0 {
-		for _, commitToBeam := range data.commitsToBeam {
-			prog.Value.Add(
-				&opcodes.CherryPick{SHA: commitToBeam.SHA},
-			)
-		}
-		// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+	if len(data.commitsToBeam) == 0 {
+		return
+	}
+	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.initialBranch},
-		)
-		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.targetBranch},
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
 	}
+	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.initialBranch},
+	)
+	initialBranchType := data.config.BranchType(data.initialBranch)
+	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.targetBranch},
+	)
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
