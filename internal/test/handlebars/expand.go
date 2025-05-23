@@ -2,7 +2,6 @@ package handlebars
 
 import (
 	"fmt"
-	"maps"
 	"regexp"
 	"strings"
 	"sync"
@@ -12,7 +11,7 @@ import (
 )
 
 type Runner interface {
-	SHAsForCommit(name string) gitdomain.SHAs
+	SHAsForCommit(gitdomain.CommitMessage) gitdomain.SHAs
 }
 
 var (
@@ -26,73 +25,73 @@ func Expand(text string, args ExpandArgs) string {
 		match := templateRE.FindString(text)
 		switch {
 		case strings.HasPrefix(match, "{{ sha "):
-			commitName := match[8 : len(match)-4]
-			shas := args.LocalRepo.SHAsForCommit(commitName)
+			commitMessage := gitdomain.CommitMessage(match[8 : len(match)-4])
+			shas := args.LocalRepo.SHAsForCommit(commitMessage)
 			if len(shas) == 0 {
-				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
+				panic(fmt.Sprintf("test workspace has no commit %q", commitMessage))
 			}
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-short "):
-			commitName := match[14 : len(match)-4]
-			shas := args.LocalRepo.SHAsForCommit(commitName)
+			commitMessage := gitdomain.CommitMessage(match[14 : len(match)-4])
+			shas := args.LocalRepo.SHAsForCommit(commitMessage)
 			if len(shas) == 0 {
-				panic(fmt.Sprintf("test workspace has no commit %q", commitName))
+				panic(fmt.Sprintf("test workspace has no commit %q", commitMessage))
 			}
 			sha := shas.First().Truncate(7)
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin "):
-			commitName := match[18 : len(match)-4]
-			shas := args.RemoteRepo.SHAsForCommit(commitName)
+			commitMessage := gitdomain.CommitMessage(match[18 : len(match)-4])
+			shas := args.RemoteRepo.SHAsForCommit(commitMessage)
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-initial "):
-			commitName := match[16 : len(match)-4]
-			sha, found := args.InitialDevSHAs[commitName]
-			if !found {
-				fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
-				fmt.Printf("I have records about %d commits:\n", len(args.InitialDevSHAs))
-				for key := range maps.Keys(args.InitialDevSHAs) {
-					fmt.Println("  -", key)
+			commitMessage := gitdomain.CommitMessage(match[16 : len(match)-4])
+			commit, hasCommit := args.InitialDevCommits.FindByCommitMessage(commitMessage).Get()
+			if !hasCommit {
+				fmt.Printf("I cannot find the initial dev commit %q.\n", commitMessage)
+				fmt.Printf("I have records about %d commits:\n", len(args.InitialDevCommits))
+				for _, commit := range args.InitialDevCommits {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 				panic("see error above")
 			}
-			text = strings.Replace(text, match, sha.String(), 1)
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin-initial "):
-			initialOriginSHAs, has := args.InitialOriginSHAsOpt.Get()
+			initialOriginCommits, has := args.InitialOriginCommitsOpt.Get()
 			if !has {
 				panic("no origin SHAs recorded")
 			}
-			commitName := match[26 : len(match)-4]
-			sha, found := initialOriginSHAs[commitName]
-			if !found {
-				fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
-				fmt.Printf("I have records about %d commits:\n", len(initialOriginSHAs))
-				for key := range maps.Keys(initialOriginSHAs) {
-					fmt.Println("  -", key)
+			commitMessage := gitdomain.CommitMessage(match[26 : len(match)-4])
+			commit, hasCommit := initialOriginCommits.FindByCommitMessage(commitMessage).Get()
+			if !hasCommit {
+				fmt.Printf("I cannot find the initial origin commit %q.\n", commitMessage)
+				fmt.Printf("I have records about %d commits:\n", len(initialOriginCommits))
+				for _, commit := range initialOriginCommits {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 			}
-			text = strings.Replace(text, match, sha.String(), 1)
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-worktree "):
-			commitName := match[20 : len(match)-4]
-			shas := args.WorktreeRepo.SHAsForCommit(commitName)
+			commitMessage := gitdomain.CommitMessage(match[20 : len(match)-4])
+			shas := args.WorktreeRepo.SHAsForCommit(commitMessage)
 			sha := shas.First()
 			text = strings.Replace(text, match, sha.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-worktree-initial "):
-			commitName := match[28 : len(match)-4]
-			initialWorktreeSHAs, has := args.InitialWorktreeSHAsOpt.Get()
+			commitMessage := gitdomain.CommitMessage(match[28 : len(match)-4])
+			initialWorktreeSHAs, has := args.InitialWorktreeCommitsOpt.Get()
 			if !has {
 				panic("no initial worktree SHAs recorded")
 			}
-			sha, found := initialWorktreeSHAs[commitName]
-			if !found {
-				fmt.Printf("I cannot find the initial worktree commit %q.\n", commitName)
+			commit, hasCommit := initialWorktreeSHAs.FindByCommitMessage(commitMessage).Get()
+			if !hasCommit {
+				fmt.Printf("I cannot find the initial worktree commit %q.\n", commitMessage)
 				fmt.Printf("I have records about %d commits:\n", len(initialWorktreeSHAs))
-				for key := range maps.Keys(initialWorktreeSHAs) {
-					fmt.Println("  -", key)
+				for _, commit := range initialWorktreeSHAs {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 			}
-			text = strings.Replace(text, match, sha.String(), 1)
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		default:
 			panic(fmt.Sprintf("DataTable.Expand: unknown template expression %q", match))
 		}
@@ -101,10 +100,10 @@ func Expand(text string, args ExpandArgs) string {
 }
 
 type ExpandArgs struct {
-	InitialDevSHAs         map[string]gitdomain.SHA
-	InitialOriginSHAsOpt   Option[map[string]gitdomain.SHA]
-	InitialWorktreeSHAsOpt Option[map[string]gitdomain.SHA]
-	LocalRepo              Runner
-	RemoteRepo             Runner
-	WorktreeRepo           Runner
+	InitialDevCommits         gitdomain.Commits
+	InitialOriginCommitsOpt   Option[gitdomain.Commits]
+	InitialWorktreeCommitsOpt Option[gitdomain.Commits]
+	LocalRepo                 Runner
+	RemoteRepo                Runner
+	WorktreeRepo              Runner
 }

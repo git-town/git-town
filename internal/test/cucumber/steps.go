@@ -98,18 +98,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fixture.DevRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
+			beforeRunDevSHAs:      None[gitdomain.Commits](),
+			beforeRunOriginSHAs:   None[gitdomain.Commits](),
+			beforeRunWorktreeSHAs: None[gitdomain.Commits](),
 			fixture:               fixture,
 			initialBranches:       None[datatable.DataTable](),
 			initialCommits:        None[datatable.DataTable](),
 			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
+			initialDevSHAs:        None[gitdomain.Commits](),
 			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:     None[gitdomain.Commits](),
 			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:   None[gitdomain.Commits](),
 			insideGitRepo:         true,
 			runExitCode:           None[int](),
 			runExitCodeChecked:    false,
@@ -140,18 +140,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fixture.OriginRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
+			beforeRunDevSHAs:      None[gitdomain.Commits](),
+			beforeRunOriginSHAs:   None[gitdomain.Commits](),
+			beforeRunWorktreeSHAs: None[gitdomain.Commits](),
 			fixture:               fixture,
 			initialBranches:       None[datatable.DataTable](),
 			initialCommits:        None[datatable.DataTable](),
 			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
+			initialDevSHAs:        None[gitdomain.Commits](),
 			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:     None[gitdomain.Commits](),
 			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:   None[gitdomain.Commits](),
 			insideGitRepo:         true,
 			runExitCode:           None[int](),
 			runExitCodeChecked:    false,
@@ -183,18 +183,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
 		fixture.OriginRepo = MutableNone[commands.TestCommands]()
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
+			beforeRunDevSHAs:      None[gitdomain.Commits](),
+			beforeRunOriginSHAs:   None[gitdomain.Commits](),
+			beforeRunWorktreeSHAs: None[gitdomain.Commits](),
 			fixture:               fixture,
 			initialBranches:       None[datatable.DataTable](),
 			initialCommits:        None[datatable.DataTable](),
 			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
+			initialDevSHAs:        None[gitdomain.Commits](),
 			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:     None[gitdomain.Commits](),
 			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:   None[gitdomain.Commits](),
 			insideGitRepo:         true,
 			runExitCode:           None[int](),
 			runExitCodeChecked:    false,
@@ -338,12 +338,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
 		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
-			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
-			InitialOriginSHAsOpt:   state.initialOriginSHAs,
-			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
-			LocalRepo:              devRepo,
-			RemoteRepo:             state.fixture.OriginRepo.Value,
-			WorktreeRepo:           state.fixture.SecondWorktree.Value,
+			InitialDevCommits:         state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommitsOpt:   state.initialOriginSHAs,
+			InitialWorktreeCommitsOpt: state.initialWorktreeSHAs,
+			LocalRepo:                 devRepo,
+			RemoteRepo:                state.fixture.OriginRepo.Value,
+			WorktreeRepo:              state.fixture.SecondWorktree.Value,
 		})
 		if expectedText != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED:\n%q\n\nACTUAL:\n\n%q\n----------------------------", expectedText, actualContent)
@@ -490,12 +490,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(handlebars.ExpandArgs{
-			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
-			InitialOriginSHAsOpt:   state.initialOriginSHAs,
-			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
-			LocalRepo:              devRepo,
-			RemoteRepo:             state.fixture.OriginRepo.Value,
-			WorktreeRepo:           state.fixture.SecondWorktree.Value,
+			InitialDevCommits:         state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommitsOpt:   state.initialOriginSHAs,
+			InitialWorktreeCommitsOpt: state.initialWorktreeSHAs,
+			LocalRepo:                 devRepo,
+			RemoteRepo:                state.fixture.OriginRepo.Value,
+			WorktreeRepo:              state.fixture.SecondWorktree.Value,
 		})
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
@@ -617,18 +617,18 @@ func defineSteps(sc *godog.ScenarioContext) {
 			UpstreamRepo:   MutableNone[commands.TestCommands](),
 		}
 		state := ScenarioState{
-			beforeRunDevSHAs:      None[map[string]gitdomain.SHA](),
-			beforeRunOriginSHAs:   None[map[string]gitdomain.SHA](),
-			beforeRunWorktreeSHAs: None[map[string]gitdomain.SHA](),
+			beforeRunDevSHAs:      None[gitdomain.Commits](),
+			beforeRunOriginSHAs:   None[gitdomain.Commits](),
+			beforeRunWorktreeSHAs: None[gitdomain.Commits](),
 			fixture:               fixture,
 			initialBranches:       None[datatable.DataTable](),
 			initialCommits:        None[datatable.DataTable](),
 			initialCurrentBranch:  None[gitdomain.LocalBranchName](),
-			initialDevSHAs:        None[map[string]gitdomain.SHA](),
+			initialDevSHAs:        None[gitdomain.Commits](),
 			initialLineage:        None[datatable.DataTable](),
-			initialOriginSHAs:     None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:     None[gitdomain.Commits](),
 			initialTags:           None[datatable.DataTable](),
-			initialWorktreeSHAs:   None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:   None[gitdomain.Commits](),
 			insideGitRepo:         true,
 			runExitCode:           None[int](),
 			runExitCodeChecked:    false,
