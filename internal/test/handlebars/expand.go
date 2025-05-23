@@ -2,7 +2,6 @@ package handlebars
 
 import (
 	"fmt"
-	"maps"
 	"regexp"
 	"strings"
 	"sync"
@@ -57,15 +56,15 @@ func Expand(text string, args ExpandArgs) string {
 				}
 				panic("see error above")
 			}
-			text = strings.Replace(text, match, sha.String(), 1)
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-before-run "):
-			commitName := match[19 : len(match)-4]
-			sha, found := args.BeforeRunDevSHAs[commitName]
+			commitMessage := gitdomain.CommitMessage(match[19 : len(match)-4])
+			commit, found := args.BeforeRunDevSHAs.FindByCommitMessage(commitMessage).Get()
 			if !found {
-				fmt.Printf("I cannot find the before-run dev commit %q.\n", commitName)
+				fmt.Printf("I cannot find the before-run dev commit %q.\n", commitMessage)
 				fmt.Printf("I have records about %d commits:\n", len(args.BeforeRunDevSHAs))
-				for key := range maps.Keys(args.BeforeRunDevSHAs) {
-					fmt.Println("  -", key)
+				for _, commit := range args.BeforeRunDevSHAs {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 				panic("see error above")
 			}
@@ -84,20 +83,20 @@ func Expand(text string, args ExpandArgs) string {
 					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 			}
-			text = strings.Replace(text, match, sha.String(), 1)
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
 			beforeRunOriginSHAs, has := args.BeforeRunOriginSHAsOpt.Get()
 			if !has {
 				panic("no origin SHAs recorded")
 			}
 			fmt.Println("1111111111111111111111111111111111111111111111111", beforeRunOriginSHAs)
-			commitName := match[29 : len(match)-4]
-			sha, found := beforeRunOriginSHAs[commitName]
-			if !found {
-				fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
+			commitMessage := gitdomain.CommitMessage(match[29 : len(match)-4])
+			commit, hasCommit := beforeRunOriginSHAs.FindByCommitMessage(commitMessage).Get()
+			if !hasCommit {
+				fmt.Printf("I cannot find the initial origin commit %q.\n", commitMessage)
 				fmt.Printf("I have records about %d commits:\n", len(beforeRunOriginSHAs))
-				for key := range maps.Keys(beforeRunOriginSHAs) {
-					fmt.Println("  -", key)
+				for _, commit := range beforeRunOriginSHAs {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 			}
 			text = strings.Replace(text, match, commit.SHA.String(), 1)
