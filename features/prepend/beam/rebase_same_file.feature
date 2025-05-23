@@ -103,10 +103,9 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
   @this
   Scenario: sync and amend the beamed commit
     When I run "git town sync"
-    And inspect the commits
     And I amend this commit
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
-      | parent | local    | commit 2b | file_2    | amended content |
+      | parent | local    | commit 2b | file      | amended content |
     And the current branch is "old"
     When I run "git town sync"
     Then Git Town runs the commands
@@ -117,10 +116,13 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }}                  |
       |        | git checkout old                                                                              |
       | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha-in-origin-before-run 'commit 2' }} |
+      |        | git checkout --theirs file                                                                    |
+      |        | git add file                                                                                  |
+      |        | GIT_EDITOR=true git rebase --continue                                                         |
       |        | git push --force-with-lease --force-if-includes                                               |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE   |
-      | old    | local, origin | commit 1  |
-      |        |               | commit 2  |
-      |        |               | commit 3  |
-      | parent | local, origin | commit 2b |
+      | BRANCH | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | old    | local, origin | commit 1  | file      | content 1       |
+      |        |               | commit 2  | file      | content 2       |
+      |        |               | commit 3  | file      | content 3       |
+      | parent | local, origin | commit 2b | file      | amended content |

@@ -89,7 +89,6 @@ func Expand(text string, args ExpandArgs) string {
 			if !has {
 				panic("no origin SHAs recorded")
 			}
-			fmt.Println("1111111111111111111111111111111111111111111111111", beforeRunOriginSHAs)
 			commitMessage := gitdomain.CommitMessage(match[29 : len(match)-4])
 			commit, hasCommit := beforeRunOriginSHAs.FindByCommitMessage(commitMessage).Get()
 			if !hasCommit {
