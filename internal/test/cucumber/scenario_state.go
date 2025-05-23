@@ -21,9 +21,6 @@ type ScenarioState struct {
 	// commits at the origin remote before the end-to-end test executed the most recent subshell command
 	beforeRunOriginSHAs Option[gitdomain.Commits]
 
-	// commits at the worktree-repo before the end-to-end test executed the most recent shell command
-	beforeRunWorktreeSHAs Option[gitdomain.Commits]
-
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 
