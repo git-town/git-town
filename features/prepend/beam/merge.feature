@@ -20,20 +20,21 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                      |
-      | old    | git checkout -b parent main                  |
-      | parent | git cherry-pick {{ sha-initial 'commit 2' }} |
-      |        | git cherry-pick {{ sha-initial 'commit 4' }} |
-      |        | git checkout old                             |
-      | old    | git merge --no-edit --ff parent              |
-      |        | git push                                     |
-      |        | git checkout parent                          |
+      | BRANCH | COMMAND                                                                                                 |
+      | old    | git checkout -b parent main                                                                             |
+      | parent | git cherry-pick {{ sha-initial 'commit 2' }}                                                            |
+      |        | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
+      |        | git checkout old                                                                                        |
+      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+      |        | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
+      |        | git merge --no-edit --ff parent                                                                         |
+      |        | git push --force-with-lease --force-if-includes                                                         |
+      |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
-      |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       |        | origin        | commit 2                       |
       |        |               | commit 4                       |
@@ -53,7 +54,6 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
-      |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       | parent | local, origin | commit 2                       |
       |        |               | commit 4                       |
@@ -88,7 +88,6 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
-      |        |               | commit 4                       |
       |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
       |        |               | Merge branch 'parent' into old |

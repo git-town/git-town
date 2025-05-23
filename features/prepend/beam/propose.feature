@@ -22,16 +22,17 @@ Feature: propose a newly prepended branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                 |
-      |          | Looking for proposal online ... ok                                      |
-      | existing | git checkout -b new parent                                              |
-      | new      | git cherry-pick {{ sha-initial 'unrelated commit' }}                    |
-      |          | git checkout existing                                                   |
-      | existing | git -c rebase.updateRefs=false rebase new                               |
-      |          | git push --force-with-lease --force-if-includes                         |
-      |          | git checkout new                                                        |
-      | new      | git push -u origin new                                                  |
-      |          | open https://github.com/git-town/git-town/compare/parent...new?expand=1 |
+      | BRANCH   | COMMAND                                                                                                                 |
+      |          | Looking for proposal online ... ok                                                                                      |
+      | existing | git checkout -b new parent                                                                                              |
+      | new      | git cherry-pick {{ sha-initial 'unrelated commit' }}                                                                    |
+      |          | git checkout existing                                                                                                   |
+      | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'unrelated commit' }}^ {{ sha-initial 'unrelated commit' }} |
+      |          | git -c rebase.updateRefs=false rebase new                                                                               |
+      |          | git push --force-with-lease --force-if-includes                                                                         |
+      |          | git checkout new                                                                                                        |
+      | new      | git push -u origin new                                                                                                  |
+      |          | open https://github.com/git-town/git-town/compare/parent...new?expand=1                                                 |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE          |
       | existing | local, origin | existing commit  |

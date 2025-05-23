@@ -16,25 +16,27 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG                 | KEYS                             |
-      | select commits 2 and 4 | down space down down space enter |
+      | select commits 1 and 4 | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | old    | git checkout -b parent main                     |
-      | parent | git cherry-pick {{ sha-initial 'commit 2' }}    |
-      |        | git cherry-pick {{ sha-initial 'commit 4' }}    |
-      |        | git checkout old                                |
-      | old    | git -c rebase.updateRefs=false rebase parent    |
-      |        | git push --force-with-lease --force-if-includes |
-      |        | git checkout parent                             |
+      | BRANCH | COMMAND                                                                                                 |
+      | old    | git checkout -b parent main                                                                             |
+      | parent | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
+      |        | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
+      |        | git checkout old                                                                                        |
+      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
+      |        | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
+      |        | git -c rebase.updateRefs=false rebase parent                                                            |
+      |        | git push --force-with-lease --force-if-includes                                                         |
+      |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
+      | old    | local, origin | commit 2 |
       |        |               | commit 3 |
-      |        | origin        | commit 2 |
+      |        | origin        | commit 1 |
       |        |               | commit 4 |
-      | parent | local         | commit 2 |
+      | parent | local         | commit 1 |
       |        |               | commit 4 |
     And this lineage exists now
       | BRANCH | PARENT |
@@ -48,9 +50,9 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git push -u origin parent                                                    |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
+      | old    | local, origin | commit 2 |
       |        |               | commit 3 |
-      | parent | local, origin | commit 2 |
+      | parent | local, origin | commit 1 |
       |        |               | commit 4 |
 
   Scenario: undo
@@ -81,7 +83,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git push --force-with-lease --force-if-includes                              |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   |
-      | old    | local, origin | commit 1  |
+      | old    | local, origin | commit 2  |
       |        |               | commit 3  |
-      | parent | local, origin | commit 2  |
+      | parent | local, origin | commit 1  |
       |        |               | commit 4b |

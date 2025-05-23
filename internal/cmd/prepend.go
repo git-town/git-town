@@ -491,17 +491,25 @@ func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependDat
 	if len(data.commitsToBeam) == 0 {
 		return
 	}
+	// cherry-pick the commits into the new branch
 	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
 			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
 	}
-	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+	// manually delete the beamed commits from the old branch
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.initialBranch},
 	)
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CommitRemove{SHA: commitToBeam.SHA},
+		)
+	}
+	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
 	initialBranchType := data.config.BranchType(data.initialBranch)
 	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
+	// go back to the target branch
 	prog.Value.Add(
 		&opcodes.Checkout{Branch: data.targetBranch},
 	)
@@ -517,7 +525,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 			)
 			if initialBranchInfo.HasTrackingBranch() {
 				prog.Value.Add(
-					&opcodes.PushCurrentBranch{},
+					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}
 		case configdomain.SyncStrategyRebase:

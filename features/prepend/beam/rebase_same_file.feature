@@ -32,10 +32,33 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     When I run "git add file"
     And I run "git town continue"
     Then Git Town runs the commands
+      | BRANCH | COMMAND                                                                                                 |
+      | parent | GIT_EDITOR=true git cherry-pick --continue                                                              |
+      |        | git checkout old                                                                                        |
+      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+    And Git Town prints the error:
+      """
+      CONFLICT (content): Merge conflict in file
+      """
+    And Git Town prints something like:
+      """
+      error: could not apply .* commit 3
+      """
+    And file "file" now has content:
+      """
+      <<<<<<< HEAD
+      content 1
+      =======
+      content 3
+      >>>>>>> {{ sha-short "commit 3" }} (commit 3)
+      """
+    When I resolve the conflict in "file" with "content 3"
+    And I run "git add file"
+    And I run "git town continue"
+    Then Git Town runs the commands
       | BRANCH | COMMAND                                      |
-      | parent | GIT_EDITOR=true git cherry-pick --continue   |
-      |        | git checkout old                             |
-      | old    | git -c rebase.updateRefs=false rebase parent |
+      | old    | GIT_EDITOR=true git rebase --continue        |
+      |        | git -c rebase.updateRefs=false rebase parent |
     And Git Town prints the error:
       """
       CONFLICT (add/add): Merge conflict in file
@@ -53,6 +76,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       >>>>>>> {{ sha-short "commit 1" }} (commit 1)
       """
     When I resolve the conflict in "file" with "content 1"
+    And I run "git add file"
     And I run "git town continue"
 
   Scenario: result
@@ -64,7 +88,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
       | old    | local, origin | commit 1 | file      | content 1    |
-      |        |               | commit 2 | file      | content 2    |
       |        |               | commit 3 | file      | content 3    |
       |        | origin        | commit 2 | file      | content 2    |
       | parent | local         | commit 2 | file      | content 2    |
@@ -83,7 +106,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
       | old    | local, origin | commit 1 |
-      |        |               | commit 2 |
       |        |               | commit 3 |
       | parent | local, origin | commit 2 |
     And no uncommitted files exist now
@@ -122,6 +144,5 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   | FILE NAME | FILE CONTENT    |
       | old    | local, origin | commit 1  | file      | content 1       |
-      |        |               | commit 2  | file      | content 2       |
       |        |               | commit 3  | file      | content 3       |
       | parent | local, origin | commit 2b | file      | amended content |
