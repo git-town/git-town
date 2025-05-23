@@ -16,26 +16,26 @@ Feature: beam multiple commits onto a new feature branch
     And the current branch is "existing"
     When I run "git-town hack new --beam" and enter into the dialog:
       | DIALOG                 | KEYS                             |
-      | select commits 2 and 4 | down space down down space enter |
+      | select commits 1 and 4 | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                                                                 |
       | existing | git checkout -b new main                                                                                |
-      | new      | git cherry-pick {{ sha-initial 'commit 2' }}                                                            |
+      | new      | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
       |          | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
       |          | git checkout existing                                                                                   |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
-      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
       |          | git checkout new                                                                                        |
     And no rebase is now in progress
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
-      | existing | local, origin | commit 1    |
+      | existing | local, origin | commit 2    |
       |          |               | commit 3    |
-      | new      | local         | commit 2    |
+      | new      | local         | commit 1    |
       |          |               | commit 4    |
     And this lineage exists now
       | BRANCH   | PARENT |
@@ -70,8 +70,8 @@ Feature: beam multiple commits onto a new feature branch
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                      |
       | main     | local, origin | main commit                  |
-      | existing | local, origin | commit 1                     |
+      | existing | local, origin | commit 2                     |
       |          |               | commit 3                     |
-      | new      | local, origin | commit 2                     |
+      | new      | local, origin | commit 1                     |
       |          |               | commit 4b                    |
       |          |               | Merge branch 'main' into new |
