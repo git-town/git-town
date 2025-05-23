@@ -658,13 +658,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		if devRepo, hasDevRepo := state.fixture.DevRepo.Get(); hasDevRepo {
 			fmt.Println("\nsha")
-			output := asserts.NoError1(devRepo.Query("git", "branch", "-vva"))
-			fmt.Println(output)
+			fmt.Println(asserts.NoError1(devRepo.Query("git", "branch", "-vva")))
 		}
 		if originRepo, hasOriginRepo := state.fixture.OriginRepo.Get(); hasOriginRepo {
 			fmt.Println("\nsha-in-origin")
-			output := asserts.NoError1(originRepo.Query("git", "branch", "-vva"))
-			fmt.Println(output)
+			fmt.Println(asserts.NoError1(originRepo.Query("git", "branch", "-vva")))
 		}
 		if SHAs, has := state.initialDevSHAs.Get(); has {
 			fmt.Println("\nsha-initial")
@@ -680,8 +678,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		}
 		if worktreeRepo, hasWorktreeRepo := state.fixture.SecondWorktree.Get(); hasWorktreeRepo {
 			fmt.Println("\nsha-in-worktree")
-			output := asserts.NoError1(worktreeRepo.Query("git", "branch", "-vva"))
-			fmt.Println(output)
+			fmt.Println(asserts.NoError1(worktreeRepo.Query("git", "branch", "-vva")))
 		}
 		if SHAs, has := state.initialWorktreeSHAs.Get(); has {
 			fmt.Println("\nsha-in-worktree-initial")
