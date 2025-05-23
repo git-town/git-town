@@ -67,7 +67,7 @@ func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, bra
 
 func (self *TestCommands) CommitSHAs() gitdomain.Commits {
 	result := gitdomain.Commits{}
-	output := self.MustQuery("git", "log", "--reflog", "--format=%H %s")
+	output := self.MustQuery("git", "log", "--all", "--format=%H %s")
 	if output == "" {
 		return result
 	}
