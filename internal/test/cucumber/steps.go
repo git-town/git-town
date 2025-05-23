@@ -666,7 +666,6 @@ func defineSteps(sc *godog.ScenarioContext) {
 			output := asserts.NoError1(originRepo.Query("git", "branch", "-vva"))
 			fmt.Println(output)
 		}
-		fmt.Println("\nsha-initial")
 		if SHAs, has := state.initialDevSHAs.Get(); has {
 			fmt.Println("\nsha-initial")
 			for _, commit := range SHAs {
@@ -678,6 +677,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 			for _, commit := range SHAs {
 				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
 			}
+		}
+		if worktreeRepo, hasWorktreeRepo := state.fixture.SecondWorktree.Get(); hasWorktreeRepo {
+			fmt.Println("\nsha-in-worktree")
+			output := asserts.NoError1(worktreeRepo.Query("git", "branch", "-vva"))
+			fmt.Println(output)
 		}
 		if SHAs, has := state.initialWorktreeSHAs.Get(); has {
 			fmt.Println("\nsha-in-worktree-initial")
