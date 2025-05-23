@@ -18,7 +18,6 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | DIALOG                 | KEYS                             |
       | select commits 1 and 4 | space down down down space enter |
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                 |
