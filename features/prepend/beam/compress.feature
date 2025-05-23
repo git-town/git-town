@@ -89,9 +89,9 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        | git checkout old                |
       | old    | git merge --no-edit --ff parent |
       |        | git reset --soft parent         |
-      |        | git commit -m "commit 2"        |
+      |        | git commit -m "commit 1"        |
       |        | git push --force-with-lease     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 2 |
+      | old    | local, origin | commit 1 |
       | parent | local, origin | commit 1 |
