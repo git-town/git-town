@@ -55,6 +55,7 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     When I resolve the conflict in "file" with "content 1"
     And I run "git town continue"
 
+  @debug
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
