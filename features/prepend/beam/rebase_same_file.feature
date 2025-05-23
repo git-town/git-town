@@ -28,8 +28,8 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       """
       content 2
       """
-    When I run "git add file"
     And wait 1 second to ensure new Git timestamps
+    When I run "git add file"
     And I run "git town continue"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                      |
