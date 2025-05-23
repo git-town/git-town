@@ -11,7 +11,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       | old    | local, origin | commit 1 | file      | content 1    |
       | old    | local, origin | commit 2 | file      | content 2    |
       | old    | local, origin | commit 3 | file      | content 3    |
-    And inspect the commits
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     When I run "git-town prepend parent --beam" and enter into the dialog:

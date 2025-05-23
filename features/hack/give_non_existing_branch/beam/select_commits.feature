@@ -59,7 +59,6 @@ Feature: beam multiple commits onto a new feature branch
       | new    | local    | commit 4b | file_4    | amended content |
     And the current branch is "new"
     When I run "git town sync"
-    And inspect the commits
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
       | new    | git fetch --prune --tags                          |
