@@ -117,7 +117,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the initial commits exist now
     And the initial lineage exists now
 
-  @this
   Scenario: sync and amend the beamed commit
     When wait 1 second to ensure new Git timestamps
     And I run "git town sync"
