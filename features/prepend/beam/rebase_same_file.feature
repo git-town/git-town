@@ -121,5 +121,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE   |
       | old    | local, origin | commit 1  |
+      |        |               | commit 2  |
       |        |               | commit 3  |
       | parent | local, origin | commit 2b |
