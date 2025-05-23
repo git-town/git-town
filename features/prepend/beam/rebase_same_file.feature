@@ -100,13 +100,13 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And the initial lineage exists now
 
   Scenario: sync and amend the beamed commit
-    And wait 1 second to ensure new Git timestamps
-    When I run "git town sync"
+    When wait 1 second to ensure new Git timestamps
+    And I run "git town sync"
     And I amend this commit
       | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
       | parent | local    | commit 2b | file      | amended content |
     And the current branch is "old"
-    When I run "git town sync"
+    And I run "git town sync"
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                       |
       | old    | git fetch --prune --tags                                                                      |
