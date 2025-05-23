@@ -398,20 +398,8 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	})
 	if data.prototype {
 		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
-	} else {
-		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-			switch newBranchType {
-			case
-				configdomain.BranchTypePrototypeBranch,
-				configdomain.BranchTypeContributionBranch,
-				configdomain.BranchTypeObservedBranch,
-				configdomain.BranchTypeParkedBranch,
-				configdomain.BranchTypePerennialBranch,
-				configdomain.BranchTypeFeatureBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
-			case configdomain.BranchTypeMainBranch:
-			}
-		}
+	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
+		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
 	}
 	proposal, hasProposal := data.proposal.Get()
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.Offline.IsOnline() && (data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush || hasProposal) {
