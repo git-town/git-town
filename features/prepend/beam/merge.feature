@@ -7,11 +7,11 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
-      | old    | local, origin | commit 2 |
-      | old    | local, origin | commit 3 |
-      | old    | local, origin | commit 4 |
+      | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | old    | local, origin | commit 1 | file 1    | content 1    |
+      | old    | local, origin | commit 2 | file 2    | content 2    |
+      | old    | local, origin | commit 3 | file 3    | content 3    |
+      | old    | local, origin | commit 4 | file 4    | content 4    |
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "merge"
     When I run "git-town prepend parent --beam" and enter into the dialog:
@@ -68,3 +68,29 @@ Feature: prepend a branch to a feature branch using the "merge" sync strategy
       |        | git branch -D parent                            |
     And the initial commits exist now
     And the initial lineage exists now
+
+  Scenario: amend the beamed commit
+    And I amend this commit
+      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | parent | local    | commit 4b | file_4    | amended content |
+    And the current branch is "old"
+    When I run "git town sync"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                         |
+      | old    | git fetch --prune --tags        |
+      |        | git checkout parent             |
+      | parent | git push -u origin parent       |
+      |        | git checkout old                |
+      | old    | git merge --no-edit --ff parent |
+      |        | git push                        |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                        |
+      | old    | local, origin | commit 1                       |
+      |        |               | commit 2                       |
+      |        |               | commit 3                       |
+      |        |               | commit 4                       |
+      |        |               | commit 4                       |
+      |        |               | Merge branch 'parent' into old |
+      |        |               | Merge branch 'parent' into old |
+      | parent | local, origin | commit 2                       |
+      |        |               | commit 4b                      |

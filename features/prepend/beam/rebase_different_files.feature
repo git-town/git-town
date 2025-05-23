@@ -63,3 +63,25 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
       |        | git branch -D parent                            |
     And the initial commits exist now
     And the initial lineage exists now
+
+  Scenario: amend the beamed commit
+    And I amend this commit
+      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | parent | local    | commit 4b | file_4    | amended content |
+    And the current branch is "old"
+    When I run "git town sync"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                                                      |
+      | old    | git fetch --prune --tags                                                     |
+      |        | git checkout parent                                                          |
+      | parent | git -c rebase.updateRefs=false rebase --onto main {{ sha 'initial commit' }} |
+      |        | git push -u origin parent                                                    |
+      |        | git checkout old                                                             |
+      | old    | git -c rebase.updateRefs=false rebase --onto parent {{ sha 'commit 4' }}     |
+      |        | git push --force-with-lease --force-if-includes                              |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE   |
+      | old    | local, origin | commit 1  |
+      |        |               | commit 3  |
+      | parent | local, origin | commit 2  |
+      |        |               | commit 4b |

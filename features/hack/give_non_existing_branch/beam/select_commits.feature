@@ -52,3 +52,26 @@ Feature: beam multiple commits onto a new feature branch
       |          | git branch -D new                                                      |
     And the initial commits exist now
     And the initial branches and lineage exist now
+
+  Scenario: amend the beamed commit
+    And I amend this commit
+      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | new    | local    | commit 4b | file_4    | amended content |
+    And the current branch is "new"
+    When I run "git town sync"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                                           |
+      | new    | git fetch --prune --tags                          |
+      |        | git checkout main                                 |
+      | main   | git -c rebase.updateRefs=false rebase origin/main |
+      |        | git checkout new                                  |
+      | new    | git merge --no-edit --ff main                     |
+      |        | git push -u origin new                            |
+    And these commits exist now
+      | BRANCH   | LOCATION      | MESSAGE                      |
+      | main     | local, origin | main commit                  |
+      | existing | local, origin | commit 1                     |
+      |          |               | commit 3                     |
+      | new      | local, origin | commit 2                     |
+      |          |               | commit 4b                    |
+      |          |               | Merge branch 'main' into new |

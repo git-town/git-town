@@ -57,6 +57,18 @@ func Expand(text string, args ExpandArgs) string {
 				panic("see error above")
 			}
 			text = strings.Replace(text, match, commit.SHA.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-before-run "):
+			commitMessage := gitdomain.CommitMessage(match[19 : len(match)-4])
+			commit, found := args.BeforeRunDevSHAs.FindByCommitMessage(commitMessage).Get()
+			if !found {
+				fmt.Printf("I cannot find the before-run dev commit %q.\n", commitMessage)
+				fmt.Printf("I have records about %d commits:\n", len(args.BeforeRunDevSHAs))
+				for _, commit := range args.BeforeRunDevSHAs {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
+				}
+				panic("see error above")
+			}
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
 		case strings.HasPrefix(match, "{{ sha-in-origin-initial "):
 			initialOriginCommits, has := args.InitialOriginCommits.Get()
 			if !has {
@@ -68,6 +80,21 @@ func Expand(text string, args ExpandArgs) string {
 				fmt.Printf("I cannot find the initial origin commit %q.\n", commitMessage)
 				fmt.Printf("I have records about %d commits:\n", len(initialOriginCommits))
 				for _, commit := range initialOriginCommits {
+					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
+				}
+			}
+			text = strings.Replace(text, match, commit.SHA.String(), 1)
+		case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
+			beforeRunOriginSHAs, has := args.BeforeRunOriginSHAsOpt.Get()
+			if !has {
+				panic("no origin SHAs recorded")
+			}
+			commitMessage := gitdomain.CommitMessage(match[29 : len(match)-4])
+			commit, hasCommit := beforeRunOriginSHAs.FindByCommitMessage(commitMessage).Get()
+			if !hasCommit {
+				fmt.Printf("I cannot find the initial origin commit %q.\n", commitMessage)
+				fmt.Printf("I have records about %d commits:\n", len(beforeRunOriginSHAs))
+				for _, commit := range beforeRunOriginSHAs {
 					fmt.Printf("  - %q (%s)\n", commit.Message, commit.SHA)
 				}
 			}
@@ -100,6 +127,8 @@ func Expand(text string, args ExpandArgs) string {
 }
 
 type ExpandArgs struct {
+	BeforeRunDevSHAs       gitdomain.Commits
+	BeforeRunOriginSHAsOpt Option[gitdomain.Commits]
 	InitialDevCommits      gitdomain.Commits
 	InitialOriginCommits   Option[gitdomain.Commits]
 	InitialWorktreeCommits Option[gitdomain.Commits]

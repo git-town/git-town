@@ -59,11 +59,11 @@ func executeContinue(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineContinueData(repo, verbose)
+	runState, exit, err := determineContinueRunstate(repo)
 	if err != nil || exit {
 		return err
 	}
-	runState, exit, err := determineContinueRunstate(repo)
+	data, exit, err := determineContinueData(repo, verbose)
 	if err != nil || exit {
 		return err
 	}

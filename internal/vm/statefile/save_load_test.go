@@ -74,6 +74,8 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.CheckoutHistoryPreserve{PreviousBranchCandidates: []Option[gitdomain.LocalBranchName]{gitdomain.NewLocalBranchNameOption("previous")}},
 				&opcodes.CheckoutIfNeeded{Branch: "branch"},
 				&opcodes.CheckoutUncached{Branch: "branch"},
+				&opcodes.CherryPick{SHA: "123456"},
+				&opcodes.CherryPickContinue{},
 				&opcodes.Commit{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitAutoUndo{AuthorOverride: Some(gitdomain.Author("user@acme.com")), FallbackToDefaultCommitMessage: true, Message: Some(gitdomain.CommitMessage("my message"))},
 				&opcodes.CommitMessageCommentOut{},
@@ -333,6 +335,16 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "CheckoutUncached"
+    },
+    {
+      "data": {
+        "SHA": "123456"
+      },
+      "type": "CherryPick"
+    },
+    {
+      "data": {},
+      "type": "CherryPickContinue"
     },
     {
       "data": {

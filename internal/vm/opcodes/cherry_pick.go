@@ -11,6 +11,18 @@ type CherryPick struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
+func (self *CherryPick) AbortProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&CherryPickAbort{},
+	}
+}
+
+func (self *CherryPick) ContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		&CherryPickContinue{},
+	}
+}
+
 func (self *CherryPick) Run(args shared.RunArgs) error {
 	return args.Git.CherryPick(args.Frontend, self.SHA)
 }

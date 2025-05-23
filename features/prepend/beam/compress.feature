@@ -7,11 +7,11 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | NAME | TYPE    | PARENT | LOCATIONS     |
       | old  | feature | main   | local, origin |
     And the commits
-      | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
-      |        |               | commit 2 |
-      |        |               | commit 3 |
-      |        |               | commit 4 |
+      | BRANCH | LOCATION      | MESSAGE  | FILE NAME | FILE CONTENT |
+      | old    | local, origin | commit 1 | file 1    | content 1    |
+      | old    | local, origin | commit 2 | file 2    | content 2    |
+      | old    | local, origin | commit 3 | file 3    | content 3    |
+      | old    | local, origin | commit 4 | file 4    | content 4    |
     And the current branch is "old"
     And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town prepend parent --beam" and enter into the dialog:
@@ -71,3 +71,26 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       |        | git branch -D parent                            |
     And the initial commits exist now
     And the initial lineage exists now
+
+  Scenario: amend the beamed commit
+    And I amend this commit
+      | BRANCH | LOCATION | MESSAGE   | FILE NAME | FILE CONTENT    |
+      | parent | local    | commit 4b | file_4    | amended content |
+    And the current branch is "old"
+    When I run "git town sync"
+    Then Git Town runs the commands
+      | BRANCH | COMMAND                         |
+      | old    | git fetch --prune --tags        |
+      |        | git checkout parent             |
+      | parent | git reset --soft main           |
+      |        | git commit -m "commit 2"        |
+      |        | git push -u origin parent       |
+      |        | git checkout old                |
+      | old    | git merge --no-edit --ff parent |
+      |        | git reset --soft parent         |
+      |        | git commit -m "commit 1"        |
+      |        | git push --force-with-lease     |
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE  |
+      | old    | local, origin | commit 1 |
+      | parent | local, origin | commit 2 |
