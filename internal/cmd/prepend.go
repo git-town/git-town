@@ -398,11 +398,9 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	})
 	branchType := configdomain.BranchTypeFeatureBranch
 	if data.prototype {
-		branchType = configdomain.BranchTypePrototypeBranch
-	} else {
-		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-			branchType = newBranchType
-		}
+		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
+	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
+		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
 	}
 	prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: branchType})
 	proposal, hasProposal := data.proposal.Get()
