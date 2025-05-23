@@ -664,15 +664,15 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println("\nsha-in-origin")
 			fmt.Println(asserts.NoError1(originRepo.Query("git", "branch", "-vva")))
 		}
-		if SHAs, has := state.initialDevSHAs.Get(); has {
+		if initialSHAs, hasInitialSHAs := state.initialDevSHAs.Get(); hasInitialSHAs {
 			fmt.Println("\nsha-initial")
-			for _, commit := range SHAs {
+			for _, commit := range initialSHAs {
 				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
 			}
 		}
-		if SHAs, has := state.initialOriginSHAs.Get(); has {
+		if initialOriginSHAs, hasInitialOriginSHAs := state.initialOriginSHAs.Get(); hasInitialOriginSHAs {
 			fmt.Println("\nsha-in-origin-initial")
-			for _, commit := range SHAs {
+			for _, commit := range initialOriginSHAs {
 				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
 			}
 		}
@@ -680,21 +680,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fmt.Println("\nsha-in-worktree")
 			fmt.Println(asserts.NoError1(worktreeRepo.Query("git", "branch", "-vva")))
 		}
-		if SHAs, has := state.initialWorktreeSHAs.Get(); has {
+		if initialWorktreeSHAs, hasInitialWorktreeSHAs := state.initialWorktreeSHAs.Get(); hasInitialWorktreeSHAs {
 			fmt.Println("\nsha-in-worktree-initial")
-			for _, commit := range SHAs {
+			for _, commit := range initialWorktreeSHAs {
 				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
 			}
 		}
-		if SHAs, has := state.beforeRunDevSHAs.Get(); has {
+		if devBeforeRunSHAs, hasDevBeforeRunSHAs := state.beforeRunDevSHAs.Get(); hasDevBeforeRunSHAs {
 			fmt.Println("\nsha-before-run")
-			for _, commit := range SHAs {
+			for _, commit := range devBeforeRunSHAs {
 				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
 			}
 		}
-		if SHAs, has := state.beforeRunOriginSHAs.Get(); has {
+		if originBeforeRunSHAs, hasOriginBeforeRunSHAs := state.beforeRunOriginSHAs.Get(); hasOriginBeforeRunSHAs {
 			fmt.Println("\nsha-in-origin-before-run")
-			for _, commit := range SHAs {
+			for _, commit := range originBeforeRunSHAs {
 				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
 			}
 		}
