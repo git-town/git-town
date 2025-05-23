@@ -656,6 +656,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^inspect the commits$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		fmt.Println("\nsha-initial")
 		if SHAs, has := state.initialDevSHAs.Get(); has {
 			fmt.Println("\nsha-initial")
 			for _, commit := range SHAs {
