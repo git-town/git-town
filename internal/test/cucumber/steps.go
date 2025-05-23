@@ -656,6 +656,16 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^inspect the commits$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
+		if devRepo, hasDevRepo := state.fixture.DevRepo.Get(); hasDevRepo {
+			fmt.Println("\nsha")
+			output := asserts.NoError1(devRepo.Query("git", "branch", "-vva"))
+			fmt.Println(output)
+		}
+		if originRepo, hasOriginRepo := state.fixture.OriginRepo.Get(); hasOriginRepo {
+			fmt.Println("\nsha-in-origin")
+			output := asserts.NoError1(originRepo.Query("git", "branch", "-vva"))
+			fmt.Println(output)
+		}
 		fmt.Println("\nsha-initial")
 		if SHAs, has := state.initialDevSHAs.Get(); has {
 			fmt.Println("\nsha-initial")
