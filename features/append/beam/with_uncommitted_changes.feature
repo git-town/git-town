@@ -19,7 +19,7 @@ Feature: beam a commit and uncommitted changes onto a new child branch
     And I ran "git add ."
     When I run "git-town append new --beam --commit --message uncommitted" and enter into the dialog:
       | DIALOG                 | KEYS                             |
-      | select commits 2 and 4 | down space down down space enter |
+      | select commits 1 and 4 | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands
@@ -28,7 +28,7 @@ Feature: beam a commit and uncommitted changes onto a new child branch
       | new      | git commit -m uncommitted                                                                               |
       |          | git checkout existing                                                                                   |
       | existing | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
-      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+      |          | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |          | git push --force-with-lease --force-if-includes                                                         |
       |          | git checkout new                                                                                        |
       | new      | git -c rebase.updateRefs=false rebase existing                                                          |
@@ -37,10 +37,10 @@ Feature: beam a commit and uncommitted changes onto a new child branch
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE     |
       | main     | origin        | main commit |
-      | existing | local, origin | commit 1    |
+      | existing | local, origin | commit 2    |
       |          |               | commit 3    |
       |          |               | commit 5    |
-      | new      | local         | commit 2    |
+      | new      | local         | commit 1    |
       |          |               | commit 4    |
       |          |               | uncommitted |
     And this lineage exists now

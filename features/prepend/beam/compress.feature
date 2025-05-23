@@ -16,29 +16,28 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
     And Git setting "git-town.sync-feature-strategy" is "compress"
     When I run "git-town prepend parent --beam" and enter into the dialog:
       | DIALOG                 | KEYS                             |
-      | select commits 2 and 4 | down space down down space enter |
+      | select commits 1 and 4 | space down down down space enter |
 
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                                                                                 |
       | old    | git checkout -b parent main                                                                             |
-      | parent | git cherry-pick {{ sha-initial 'commit 2' }}                                                            |
+      | parent | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
       |        | git cherry-pick {{ sha-initial 'commit 4' }}                                                            |
       |        | git checkout old                                                                                        |
-      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 2' }}^ {{ sha-initial 'commit 2' }} |
+      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
       |        | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 4' }}^ {{ sha-initial 'commit 4' }} |
       |        | git merge --no-edit --ff parent                                                                         |
       |        | git push --force-with-lease --force-if-includes                                                         |
       |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
-      | old    | local, origin | commit 1                       |
-      |        |               | commit 2                       |
+      | old    | local, origin | commit 2                       |
       |        |               | commit 3                       |
       |        |               | Merge branch 'parent' into old |
-      |        | origin        | commit 2                       |
+      |        | origin        | commit 1                       |
       |        |               | commit 4                       |
-      | parent | local         | commit 2                       |
+      | parent | local         | commit 1                       |
       |        |               | commit 4                       |
     And this lineage exists now
       | BRANCH | PARENT |
@@ -49,17 +48,16 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | BRANCH | COMMAND                   |
       | parent | git fetch --prune --tags  |
       |        | git reset --soft main     |
-      |        | git commit -m "commit 2"  |
+      |        | git commit -m "commit 1"  |
       |        | git push -u origin parent |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | old    | local, origin | commit 1                       |
       |        |               | commit 2                       |
       |        |               | commit 3                       |
-      |        |               | commit 2                       |
       |        |               | commit 4                       |
       |        |               | Merge branch 'parent' into old |
-      | parent | local, origin | commit 2                       |
+      | parent | local, origin | commit 1                       |
 
   Scenario: undo
     When I run "git-town undo"
@@ -83,14 +81,14 @@ Feature: prepend a branch to a feature branch using the "compress" sync strategy
       | old    | git fetch --prune --tags        |
       |        | git checkout parent             |
       | parent | git reset --soft main           |
-      |        | git commit -m "commit 2"        |
+      |        | git commit -m "commit 1"        |
       |        | git push -u origin parent       |
       |        | git checkout old                |
       | old    | git merge --no-edit --ff parent |
       |        | git reset --soft parent         |
-      |        | git commit -m "commit 1"        |
+      |        | git commit -m "commit 2"        |
       |        | git push --force-with-lease     |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE  |
-      | old    | local, origin | commit 1 |
-      | parent | local, origin | commit 2 |
+      | old    | local, origin | commit 2 |
+      | parent | local, origin | commit 1 |
