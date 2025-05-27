@@ -19,6 +19,10 @@
 - uses a more robust way to determine the first commit in a branch ([#4980](https://github.com/git-town/git-town/issues/4980))
 - `git town branch` no longer displays branches multiple times when additional Git remotes are configured ([#4961](https://github.com/git-town/git-town/issues/4961)).
 
+#### Contributors
+
+Shoutout to @AmitJoki, @WhosNickDoglio, @jfmyers9, @kevgo, @mw00120, @ruudk, @stephenwade, @zodman for contributing code, feedback, and ideas to 52 shipped PRs and 13 resolved issues!
+
 ## 20.2.0 (2025-05-15)
 
 #### New Features
