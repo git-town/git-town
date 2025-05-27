@@ -52,6 +52,7 @@ Git Town offers powerful configuration settings to classify all local branches:
   create via commands like [git town hack](../commands/hack.md),
   [append](../commands/append.md), or [prepend](../commands/prepend.md)
 
+## Manually setting branch types
 You can also override the branch type for each branch using these commands:
 
 - [git town contribute](../commands/contribute.md) marks a branch as a
