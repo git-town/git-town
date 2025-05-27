@@ -33,7 +33,7 @@ const (
 	compressHelp    = `
 Compress is a more convenient way of running "git rebase --interactive"
 and choosing to fixup all commits.
-Branches must be fully synced before you compress them.
+Branches must be in sync to compress them, run "git sync" as needed.
 
 Provide the --stack switch to compress all branches in the stack.
 
