@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 )
 
 func FilePath(repoDir gitdomain.RepoRootDir) (string, error) {

@@ -3,11 +3,11 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/messages"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // CommitAutoUndo is a Commit that automatically aborts the Git Town command on failure.

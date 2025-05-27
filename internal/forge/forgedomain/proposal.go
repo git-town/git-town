@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v21/internal/messages"
 )
 
 // Proposal is a wrapper type that makes the Proposal interface serializable to and from JSON.

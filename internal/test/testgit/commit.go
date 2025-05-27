@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/test/helpers"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/test/helpers"
 )
 
 // Commit describes a Git commit.

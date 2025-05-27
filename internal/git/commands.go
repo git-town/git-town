@@ -10,13 +10,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks/cache"
-	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v20/internal/messages"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/cache"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Commands are Git commands that Git Town executes to determine which frontend commands to run.

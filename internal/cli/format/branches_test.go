@@ -3,8 +3,8 @@ package format_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/cli/format"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/cli/format"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 

@@ -3,10 +3,10 @@ package list_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

@@ -1,6 +1,6 @@
 package gitdomain
 
-import . "github.com/git-town/git-town/v20/pkg/prelude"
+import . "github.com/git-town/git-town/v21/pkg/prelude"
 
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,

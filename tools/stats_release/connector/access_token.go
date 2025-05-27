@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/git-town/git-town/v20/pkg"
+	"github.com/git-town/git-town/v21/pkg"
 )
 
 func loadAccessToken() string {

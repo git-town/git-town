@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/vm/opcodes"
-	"github.com/git-town/git-town/v20/internal/vm/program"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
+	"github.com/git-town/git-town/v21/internal/vm/opcodes"
+	"github.com/git-town/git-town/v21/internal/vm/program"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
 	"github.com/shoenig/test/must"
 )
 

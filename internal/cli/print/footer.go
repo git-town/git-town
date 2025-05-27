@@ -3,10 +3,10 @@ package print
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/cli/colors"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks"
-	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/messages"
 )
 
 func Footer(verbose configdomain.Verbose, commandsCount gohacks.Counter, finalMessages []string) {

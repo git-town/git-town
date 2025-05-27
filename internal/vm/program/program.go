@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks/slice"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
 // Program is a mutable collection of Opcodes.

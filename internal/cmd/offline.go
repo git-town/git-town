@@ -3,17 +3,17 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/cli/flags"
-	"github.com/git-town/git-town/v20/internal/cli/format"
-	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v20/internal/config"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/execute"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks"
-	"github.com/git-town/git-town/v20/internal/messages"
-	"github.com/git-town/git-town/v20/internal/vm/interpreter/configinterpreter"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/cli/flags"
+	"github.com/git-town/git-town/v21/internal/cli/format"
+	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/execute"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
