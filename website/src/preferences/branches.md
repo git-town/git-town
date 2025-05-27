@@ -15,12 +15,13 @@ Branches owned by somebody else:
 
 Git Town offers powerful configuration settings to give each existing and new branch the correct type.
 
+- [main-branch](main-branch.md): The main branch is automatically considered perennial.
 - [perennial-branches](perennial-branches.md) a list of branch names that are perennial
 - [perennial-regex](perennial-regex.md) all branches matching this regular expression are considered perennial
-- [main-branch](main-branch.md): The main branch is automatically considered perennial.
 - [contribution-regex](contribution-regex.md): all branches matching this regular expression are considered contribution branches
 - [observed-regex](observed-regex.md): all branches matching this regular expression are considered observed branches
-- [new-branch-type](new-branch-type.md): the type that new branches created by git town hack, append, or prepend should have
+- [new-branch-type](new-branch-type.md): the type that branches you create through [git town hack](../commands/hack.md), [append](../commands/append.md), [prepend](../commands/prepend.md)
+
 
 You can also override the branch type for each branch using these commands:
 
