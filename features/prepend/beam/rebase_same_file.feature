@@ -79,7 +79,6 @@ Feature: prepend a branch to a feature branch using the "rebase" sync strategy
     And I run "git add file"
     And I run "git town continue"
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                         |
