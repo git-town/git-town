@@ -4,13 +4,13 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v20/internal/cli/colors"
-	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks/slice"
-	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/slice"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/muesli/termenv"
 )
 

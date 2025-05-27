@@ -1,9 +1,9 @@
 package opcodes
 
 import (
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // MergeContinue finishes an ongoing merge conflict

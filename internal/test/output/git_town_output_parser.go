@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // ExecutedGitCommand describes a Git command that was executed by Git Town during testing.

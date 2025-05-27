@@ -10,13 +10,13 @@ This guide is for maintainers who make releases of Git Town.
     the README file
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
-    - triple-digits: `20.2.0`
-    - double-digits: `20.2`
+    - triple-digits: `21.0.0`
+    - double-digits: `21.0`
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
-    - update `github.com/git-town/git-town/v20/` everywhere in this repo
-    - update `github.com/git-town/git-town/v20` (without trailing slash)
+    - update `github.com/git-town/git-town/v21/` everywhere in this repo
+    - update `github.com/git-town/git-town/v21` (without trailing slash)
 - ship the branch
 - `git sync --all && git checkout public && git merge main && git push && git checkout main && git branch -d public`
 - wait for Netlify to publish the website:
@@ -24,7 +24,7 @@ This guide is for maintainers who make releases of Git Town.
 - in a new branch:
   - update the changelog with links to the website
   - ship the branch
-- `git sync --all && git checkout main && git tag v20.2.0 && git push --tags`
+- `git sync --all && git checkout main && git tag v21.0.0 && git push --tags`
 - wait for CI to finish the release:
   https://github.com/git-town/git-town/actions
 - edit the new unpublished release:

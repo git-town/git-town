@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v20/internal/cli/colors"
-	"github.com/git-town/git-town/v20/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
 )
 
 func TextDisplay(title, text string, inputs TestInput) (bool, error) {

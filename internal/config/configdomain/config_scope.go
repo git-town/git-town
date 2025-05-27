@@ -3,7 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v20/internal/messages"
+	"github.com/git-town/git-town/v21/internal/messages"
 )
 
 // defines the type of Git configuration used

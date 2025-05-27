@@ -3,8 +3,8 @@ package envconfig
 import (
 	"os"
 
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 func GithubAPIToken() Option[configdomain.GitHubToken] {

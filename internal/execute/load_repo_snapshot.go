@@ -1,18 +1,18 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v20/internal/config"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v20/internal/git"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks"
-	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v20/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v20/internal/validate"
-	"github.com/git-town/git-town/v20/internal/vm/statefile"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
+	"github.com/git-town/git-town/v21/internal/validate"
+	"github.com/git-town/git-town/v21/internal/vm/statefile"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.

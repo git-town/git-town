@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v20/pkg/asserts"
+	"github.com/git-town/git-town/v21/pkg/asserts"
 )
 
 // CopyDirectory copies all files in the given src directory into the given dst directory.

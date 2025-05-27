@@ -1,6 +1,6 @@
 package slice
 
-import . "github.com/git-town/git-town/v20/pkg/prelude"
+import . "github.com/git-town/git-town/v21/pkg/prelude"
 
 // returns a copy of given slice where all options are unwrapped and None options are removed
 func GetAll[T any](slice []Option[T]) []T {

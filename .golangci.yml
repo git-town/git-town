@@ -38,8 +38,8 @@ linters:
       allow:
         - error
         - stdlib
-        - github.com/git-town/git-town/v20/internal/git.FrontendRunner
-        - github.com/git-town/git-town/v20/internal/git.BackendRunner
+        - github.com/git-town/git-town/v21/internal/git.FrontendRunner
+        - github.com/git-town/git-town/v21/internal/git.BackendRunner
     tagliatelle:
       case:
         rules:
@@ -65,7 +65,7 @@ linters:
         text: Potential hardcoded credentials
       - linters:
           - ireturn
-        text: github.com/git-town/git-town/v20/internal/(hosting/hostingdomain.Connector|hosting.Connector)
+        text: github.com/git-town/git-town/v21/internal/(hosting/hostingdomain.Connector|hosting.Connector)
       - linters:
           - ireturn
         path: internal/gohacks/cache/cache.go

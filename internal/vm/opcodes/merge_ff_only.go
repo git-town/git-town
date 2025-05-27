@@ -3,9 +3,9 @@ package opcodes
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/messages"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
 // MergeFastForward fast-forwards the current branch to point to the commits on the given branch.

@@ -3,7 +3,7 @@ package filesystem_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/test/filesystem"
+	"github.com/git-town/git-town/v21/internal/test/filesystem"
 	"github.com/shoenig/test/must"
 )
 
