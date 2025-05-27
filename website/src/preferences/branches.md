@@ -40,16 +40,17 @@ you own vs those that you don't own.
 Git Town offers powerful configuration settings to classify all local branches:
 
 - [main-branch](main-branch.md): automatically treated as perennial
-- [perennial-branches](perennial-branches.md) explicit list of perennial branches
+- [perennial-branches](perennial-branches.md) explicit list of perennial
+  branches
 - [perennial-regex](perennial-regex.md) all branches matching this regular
   expression are considered perennial
 - [contribution-regex](contribution-regex.md): all branches matching this
   regular expression are considered contribution branches
 - [observed-regex](observed-regex.md): all branches matching this regular
   expression are considered observed branches
-- [new-branch-type](new-branch-type.md): the type that branches you create
-  through [git town hack](../commands/hack.md), [append](../commands/append.md),
-  [prepend](../commands/prepend.md)
+- [new-branch-type](new-branch-type.md) defines the type that branches you
+  create via commands like [git town hack](../commands/hack.md),
+  [append](../commands/append.md), or [prepend](../commands/prepend.md)
 
 You can also override the branch type for each branch using these commands:
 
