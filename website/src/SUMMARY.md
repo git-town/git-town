@@ -62,7 +62,6 @@
     - [Perennial regex](preferences/perennial-regex.md)
     - [Unknown branch type](preferences/unknown-branch-type.md)
   - [Create]()
-    - [Create prototype branches](preferences/create-prototype-branches.md)
     - [New branch type](preferences/new-branch-type.md)
     - [Share new branches](preferences/share-new-branches.md)
   - [Hosting]()
