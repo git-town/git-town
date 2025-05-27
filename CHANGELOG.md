@@ -1,5 +1,24 @@
 # Git Town Changelog
 
+## 12.0.0 (2025-05-27)
+
+#### BREAKING CHANGES
+
+- Configuration setting `default-branch-type` is now `unknown-branch-type`. This makes obvious that this setting applies to branches whose type isn't known otherwise, and distinguishes it better from [new-branch-type](https://www.git-town.com/preferences/new-branch-type.html).
+- [git town merge](https://www.git-town.com/commands/merge.html) now keeps the name of the parent branch, no longer the name of the child branch. This keeps the pull request of the parent branch alive ([#4938](https://github.com/git-town/git-town/issues/4938)).
+- When [create.new-branch-type](https://www.git-town.com/preferences/new-branch-type.html) is set to `feature`, Git Town now also assigns this branch type if configured ([#4946](https://github.com/git-town/git-town/issues/4946)).
+
+#### New Features
+
+- the new [walk]() command allows iterating all branches in a stack or in your local workspace, for example to determine which branch breaks a linter ([#4852](https://github.com/git-town/git-town/issues/4852)).
+- `git town sync` now skips Git operations that wouldn't perform any changes ([#4927](https://github.com/git-town/git-town/issues/4927)).
+
+#### Bug Fixes
+
+- Git Town now deletes beamed commits from their original locations in all cases ([#4895](https://github.com/git-town/git-town/issues/4895)).
+- uses a more robust way to determine the first commit in a branch ([#4980](https://github.com/git-town/git-town/issues/4980))
+- `git town branch` no longer displays branches multiple times when additional Git remotes are configured ([#4961](https://github.com/git-town/git-town/issues/4961)).
+
 ## 20.2.0 (2025-05-15)
 
 #### New Features
