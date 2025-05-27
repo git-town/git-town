@@ -5,23 +5,25 @@ At a high level, Git Town distinguishes long-lived from short-lived Git branches
 Short-lived branches typically exist to develop code. They are cut from a perennial branch and merged back into the same perennial branch. Git Town distinguishes short-lived branches that you own vs those that you don't own.
 
 Branches owned by you:
-- feature branch: a branch that you currently work on. Git Town keeps it up to date for you
-- prototype branch: a feature branch at an early stage of development, before it is ready to be pushed to the development remote
-- parked branch: a feature branch that you own but don't actively develop and aren't interested in syncing
+- **feature branch:** a branch that you currently work on. Git Town keeps it up to date for you
+- **prototype branch:** a feature branch at an early stage of development, before it is ready to be pushed to the development remote
+- **parked branch:** a feature branch that you own but don't actively work on, and aren't interested in syncing
 
 Branches owned by somebody else:
-- contribution branches: a feature branch owned by somebody else that you are contributing code to, but don't want to sync, ship, or delete
-- observed branches: a feature branch owned by somebody else that you just are reviewing, but aren't contributing code to
+- **contribution branches:** a feature branch owned by somebody else that you are contributing code to, but don't want to sync, ship, or delete
+- **observed branches:** a feature branch owned by somebody else that you are reviewing, but aren't contributing code to
 
 Git Town offers powerful configuration settings to give each existing and new branch the correct type.
 
-You tell Git Town which of your branches are perennial by providing a simple list of branch names, or a regular expression, and all branches whose name matches it are considered perennial.
-The main branch is automatically marked perennial.
+- perennial-branches: a list of branch names that are perennial
+- perennial-regex: all branches matching this regular expression are considered perennial
+- main-branch: The main branch is automatically considered perennial.
+- contribution-regex: all branches matching this regular expression are considered contribution branches
+- observed-regex: all branches matching this regular expression are considered observed branches
+- new-branch-type: the type that new branches created by git town hack, append, or prepend should have
 
-You can provide regular expressions for contributions and observed branches, or mark specific branches as observed or contribution by running git town observe or git town contribute on it.
-
-You mark parked branches on an individual basis by running git town park on them.
-
-You can set the new-branch-type setting to `prototype` to make all new branches you create prototype branches, or run git town prototype on existing branches to make them prototype branches.
-
-You can override the type of each branch by running git town observe, contribute, prototype, hack on it.
+- git town contribute: marks a branch as a contribution branch
+- git town observe: marks a branch as an observed branch
+- git town park: marks a branch as a parked branch
+- git town prototype: create a new prototype branch or mark an existing branch as a prototype branch
+- git town hack: create a new feature branch or mark an existing branch as a feature branch
