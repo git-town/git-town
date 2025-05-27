@@ -1,6 +1,6 @@
 # Git Town Changelog
 
-## 12.0.0 (2025-05-27)
+## 21.0.0 (2025-05-27)
 
 #### BREAKING CHANGES
 
