@@ -213,6 +213,14 @@ func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) err
 	return runner.Run("git", "cherry-pick", sha.String())
 }
 
+func (self *Commands) CherryPickAbort(runner gitdomain.Runner) error {
+	return runner.Run("git", "cherry-pick", "--abort")
+}
+
+func (self *Commands) CherryPickContinue(runner gitdomain.Runner) error {
+	return runner.RunWithEnv([]string{"GIT_EDITOR=true"}, "git", "cherry-pick", "--continue")
+}
+
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // If the given prefix has content, adds it together with a newline.
 func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error {
@@ -270,7 +278,7 @@ func (self *Commands) CommitsInBranch(querier gitdomain.Querier, branch gitdomai
 }
 
 func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (gitdomain.Commits, error) {
-	output, err := querier.QueryTrim("git", "cherry", "-v", parent.String(), branch.String())
+	output, err := querier.QueryTrim("git", "log", "--format=%H %s", fmt.Sprintf("%s..%s", parent.String(), branch.String()))
 	if err != nil {
 		return gitdomain.Commits{}, err
 	}
@@ -280,7 +288,7 @@ func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch g
 		if len(line) == 0 {
 			continue
 		}
-		sha, message, ok := strings.Cut(line[2:], " ")
+		sha, message, ok := strings.Cut(line, " ")
 		if !ok {
 			continue
 		}
@@ -289,6 +297,7 @@ func (self *Commands) CommitsInFeatureBranch(querier gitdomain.Querier, branch g
 			SHA:     gitdomain.NewSHA(sha),
 		})
 	}
+	slices.Reverse(result)
 	return result, nil
 }
 

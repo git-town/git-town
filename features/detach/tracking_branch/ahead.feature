@@ -82,18 +82,18 @@ Feature: detaching a branch that is ahead of its tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                                      |
-      | branch-2 | git checkout branch-3                                                        |
-      | branch-3 | git reset --hard {{ sha 'commit 3b' }}                                       |
-      |          | git push --force-with-lease --force-if-includes                              |
-      |          | git checkout branch-4                                                        |
-      | branch-4 | git reset --hard {{ sha 'commit 4b' }}                                       |
-      |          | git push --force-with-lease --force-if-includes                              |
-      |          | git checkout branch-5                                                        |
-      | branch-5 | git reset --hard {{ sha 'commit 5b' }}                                       |
-      |          | git push --force-with-lease --force-if-includes                              |
-      |          | git checkout branch-2                                                        |
-      | branch-2 | git reset --hard {{ sha 'commit 2b' }}                                       |
-      |          | git push --force-with-lease origin {{ sha-before-run 'commit 2a' }}:branch-2 |
+      | BRANCH   | COMMAND                                                                   |
+      | branch-2 | git checkout branch-3                                                     |
+      | branch-3 | git reset --hard {{ sha 'commit 3b' }}                                    |
+      |          | git push --force-with-lease --force-if-includes                           |
+      |          | git checkout branch-4                                                     |
+      | branch-4 | git reset --hard {{ sha 'commit 4b' }}                                    |
+      |          | git push --force-with-lease --force-if-includes                           |
+      |          | git checkout branch-5                                                     |
+      | branch-5 | git reset --hard {{ sha 'commit 5b' }}                                    |
+      |          | git push --force-with-lease --force-if-includes                           |
+      |          | git checkout branch-2                                                     |
+      | branch-2 | git reset --hard {{ sha 'commit 2b' }}                                    |
+      |          | git push --force-with-lease origin {{ sha-initial 'commit 2a' }}:branch-2 |
     And the initial commits exist now
     And the initial lineage exists now

@@ -43,13 +43,13 @@ Feature: stack that changes the same file in multiple commits per branch
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                |
-      | beta   | git reset --hard {{ sha 'beta commit 2' }}             |
-      |        | git push --force-with-lease --force-if-includes        |
-      |        | git checkout main                                      |
-      | main   | git reset --hard {{ sha 'initial commit' }}            |
-      |        | git branch alpha {{ sha-before-run 'alpha commit 2' }} |
-      |        | git checkout beta                                      |
+      | BRANCH | COMMAND                                             |
+      | beta   | git reset --hard {{ sha 'beta commit 2' }}          |
+      |        | git push --force-with-lease --force-if-includes     |
+      |        | git checkout main                                   |
+      | main   | git reset --hard {{ sha 'initial commit' }}         |
+      |        | git branch alpha {{ sha-initial 'alpha commit 2' }} |
+      |        | git checkout beta                                   |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        | FILE NAME      | FILE CONTENT |
       | main   | origin        | alpha commit 1 | favorite-fruit | peach        |

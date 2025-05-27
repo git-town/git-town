@@ -49,10 +49,10 @@ Feature: stacked changes
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                                                         |
-      | child  | git reset --hard {{ sha-before-run 'local child commit' }}                                      |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin child commit' }}:child   |
-      |        | git checkout parent                                                                             |
-      | parent | git reset --hard {{ sha-before-run 'local parent commit' }}                                     |
-      |        | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin parent commit' }}:parent |
-      |        | git checkout child                                                                              |
+      | BRANCH | COMMAND                                                                                      |
+      | child  | git reset --hard {{ sha-initial 'local child commit' }}                                      |
+      |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin child commit' }}:child   |
+      |        | git checkout parent                                                                          |
+      | parent | git reset --hard {{ sha-initial 'local parent commit' }}                                     |
+      |        | git push --force-with-lease origin {{ sha-in-origin-initial 'origin parent commit' }}:parent |
+      |        | git checkout child                                                                           |

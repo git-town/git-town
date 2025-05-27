@@ -15,16 +15,22 @@ import (
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
 type ScenarioState struct {
+	// commits before the end-to-end test executed the most recent subshell command
+	beforeRunDevSHAs Option[gitdomain.Commits]
+
+	// commits at the origin remote before the end-to-end test executed the most recent subshell command
+	beforeRunOriginSHAs Option[gitdomain.Commits]
+
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 
-	// initialBranches contains the local and remote branches before the WHEN steps run
+	// the local and remote branches before the end-to-end test executed the first subshell command
 	initialBranches Option[datatable.DataTable]
 
-	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
+	// the commits in this Git environment before the end-to-end test executed the first subshell command
 	initialCommits Option[datatable.DataTable]
 
-	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
+	// the branch that was checked out before the end-to-end test executed the first subshell command
 	initialCurrentBranch Option[gitdomain.LocalBranchName]
 
 	// initialDevSHAs is only for looking up SHAs that existed at the developer repo before the first Git Town command ran.
@@ -32,21 +38,21 @@ type ScenarioState struct {
 	// because it might contain non-existing remote branches or miss existing remote branches.
 	// An example is when origin removes a branch. initialDevSHAs will still list it
 	// because the developer workspace hasn't fetched updates yet.
-	initialDevSHAs Option[map[string]gitdomain.SHA]
+	initialDevSHAs Option[gitdomain.Commits]
 
-	// initialLineage describes the lineage before the WHEN steps ran.
+	// the lineage before the end-to-end test executed the first subshell command
 	initialLineage Option[datatable.DataTable]
 
-	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
-	initialOriginSHAs Option[map[string]gitdomain.SHA]
+	// commits that existed at the origin repo before the end-to-end test executed the first subshell command
+	initialOriginSHAs Option[gitdomain.Commits]
 
-	// initialTags describes the tags before the WHEN steps ran.
+	// the Git tags before the end-to-end test executed the first subshell command
 	initialTags Option[datatable.DataTable]
 
-	// initialWorktreeSHAs is only for looking up SHAs that existed at the worktree repo before the first Git Town command was run.
-	initialWorktreeSHAs Option[map[string]gitdomain.SHA]
+	// commits at the worktree repo before the end-to-end test executed the first subshell command
+	initialWorktreeSHAs Option[gitdomain.Commits]
 
-	// insideGitRepo indicates whether the developer workspace contains a Git repository
+	// whether the developer workspace contains a Git repository
 	insideGitRepo bool
 
 	// the error of the last run of Git Town

@@ -398,20 +398,8 @@ func prependProgram(data prependData, finalMessages stringslice.Collector) progr
 	})
 	if data.prototype {
 		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: configdomain.BranchTypePrototypeBranch})
-	} else {
-		if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
-			switch newBranchType {
-			case
-				configdomain.BranchTypePrototypeBranch,
-				configdomain.BranchTypeContributionBranch,
-				configdomain.BranchTypeObservedBranch,
-				configdomain.BranchTypeParkedBranch,
-				configdomain.BranchTypePerennialBranch,
-				configdomain.BranchTypeFeatureBranch:
-				prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
-			case configdomain.BranchTypeMainBranch:
-			}
-		}
+	} else if newBranchType, hasNewBranchType := data.config.NormalConfig.NewBranchType.Get(); hasNewBranchType {
+		prog.Value.Add(&opcodes.BranchTypeOverrideSet{Branch: data.targetBranch, BranchType: newBranchType})
 	}
 	proposal, hasProposal := data.proposal.Get()
 	if data.remotes.HasRemote(data.config.NormalConfig.DevRemote) && data.config.NormalConfig.Offline.IsOnline() && (data.config.NormalConfig.ShareNewBranches == configdomain.ShareNewBranchesPush || hasProposal) {
@@ -500,22 +488,31 @@ func latestExistingAncestor(branch gitdomain.LocalBranchName, branchInfos gitdom
 }
 
 func moveCommitsToPrependedBranch(prog Mutable[program.Program], data prependData) {
-	if len(data.commitsToBeam) > 0 {
-		for _, commitToBeam := range data.commitsToBeam {
-			prog.Value.Add(
-				&opcodes.CherryPick{SHA: commitToBeam.SHA},
-			)
-		}
-		// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+	if len(data.commitsToBeam) == 0 {
+		return
+	}
+	// cherry-pick the commits into the new branch
+	for _, commitToBeam := range data.commitsToBeam {
 		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.initialBranch},
-		)
-		initialBranchType := data.config.BranchType(data.initialBranch)
-		syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
-		prog.Value.Add(
-			&opcodes.Checkout{Branch: data.targetBranch},
+			&opcodes.CherryPick{SHA: commitToBeam.SHA},
 		)
 	}
+	// manually delete the beamed commits from the old branch
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.initialBranch},
+	)
+	for _, commitToBeam := range data.commitsToBeam {
+		prog.Value.Add(
+			&opcodes.CommitRemove{SHA: commitToBeam.SHA},
+		)
+	}
+	// sync the initial branch with the new parent branch to remove the moved commits from the initial branch
+	initialBranchType := data.config.BranchType(data.initialBranch)
+	syncWithParent(prog, data.targetBranch, data.initialBranchInfo, initialBranchType, data.config.NormalConfig.NormalConfigData)
+	// go back to the target branch
+	prog.Value.Add(
+		&opcodes.Checkout{Branch: data.targetBranch},
+	)
 }
 
 // basic sync of the current branch with its parent after beaming some commits into the parent
@@ -528,7 +525,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 			)
 			if initialBranchInfo.HasTrackingBranch() {
 				prog.Value.Add(
-					&opcodes.PushCurrentBranch{},
+					&opcodes.PushCurrentBranchForce{ForceIfIncludes: true},
 				)
 			}
 		case configdomain.SyncStrategyRebase:

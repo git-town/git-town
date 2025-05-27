@@ -43,7 +43,7 @@ Feature: prepend a branch to a feature branch with remote updates in a clean wor
     Then Git Town runs the commands
       | BRANCH    | COMMAND                                                                      |
       | branch-1a | git checkout branch-2                                                        |
-      | branch-2  | git reset --hard {{ sha-before-run 'branch-2 commit' }}                      |
+      | branch-2  | git reset --hard {{ sha-initial 'branch-2 commit' }}                         |
       |           | git push --force-with-lease origin {{ sha-in-origin 'new commit' }}:branch-2 |
       |           | git branch -D branch-1a                                                      |
     And the initial commits exist now

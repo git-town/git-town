@@ -65,17 +65,18 @@ func (self *TestCommands) CommitSHA(querier gitdomain.Querier, title string, bra
 	panic(fmt.Errorf("no commit with title %q found", title))
 }
 
-func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
-	result := map[string]gitdomain.SHA{}
+func (self *TestCommands) CommitSHAs() gitdomain.Commits {
+	result := gitdomain.Commits{}
 	output := self.MustQuery("git", "log", "--all", "--format=%H %s")
 	if output == "" {
 		return result
 	}
 	for _, line := range strings.Split(output, "\n") {
-		parts := strings.SplitN(line, " ", 2)
-		sha := parts[0]
-		commitMessage := parts[1]
-		result[commitMessage] = gitdomain.NewSHA(sha)
+		sha, commitMessage, _ := strings.Cut(line, " ")
+		result = append(result, gitdomain.Commit{
+			Message: gitdomain.CommitMessage(commitMessage),
+			SHA:     gitdomain.NewSHA(sha),
+		})
 	}
 	return result
 }
@@ -470,15 +471,15 @@ func (self *TestCommands) SHAforBranch(branch gitdomain.LocalBranchName) gitdoma
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.
-func (self *TestCommands) SHAsForCommit(name string) gitdomain.SHAs {
+func (self *TestCommands) SHAsForCommit(message gitdomain.CommitMessage) gitdomain.SHAs {
 	output := self.MustQuery("git", "reflog", "--format=%H %s")
 	if output == "" {
-		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
+		panic(fmt.Sprintf("cannot find the SHA of commit %q", message))
 	}
 	shasWithMessage := make(gitdomain.SHAs, 0, 1)
 	for _, text := range strings.Split(output, "\n") {
 		shaText, commitMessage, found := strings.Cut(text, " ")
-		if found && commitMessage == name {
+		if found && commitMessage == message.String() {
 			sha := gitdomain.NewSHA(shaText)
 			shasWithMessage = append(shasWithMessage, sha)
 		}

@@ -13,12 +13,7 @@ type CommitMessageParts struct {
 
 // Parts separates the parts of the given commit message.
 func (self CommitMessage) Parts() CommitMessageParts {
-	parts := strings.SplitN(self.String(), "\n", 2)
-	title := parts[0]
-	body := ""
-	if len(parts) == 2 {
-		body = parts[1]
-	}
+	title, body, _ := strings.Cut(self.String(), "\n")
 	for strings.HasPrefix(body, "\n") {
 		body = body[1:]
 	}

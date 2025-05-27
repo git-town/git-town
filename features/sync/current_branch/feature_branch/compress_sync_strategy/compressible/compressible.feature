@@ -38,12 +38,12 @@ Feature: sync a feature branch with multiple commits using the "compress" sync s
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                                |
-      | beta   | git checkout alpha                                     |
-      | alpha  | git reset --hard {{ sha-before-run 'alpha commit 2' }} |
-      |        | git push --force-with-lease --force-if-includes        |
-      |        | git checkout beta                                      |
-      | beta   | git reset --hard {{ sha-before-run 'beta commit 2' }}  |
-      |        | git push --force-with-lease --force-if-includes        |
+      | BRANCH | COMMAND                                             |
+      | beta   | git checkout alpha                                  |
+      | alpha  | git reset --hard {{ sha-initial 'alpha commit 2' }} |
+      |        | git push --force-with-lease --force-if-includes     |
+      |        | git checkout beta                                   |
+      | beta   | git reset --hard {{ sha-initial 'beta commit 2' }}  |
+      |        | git push --force-with-lease --force-if-includes     |
     And the initial commits exist now
     And the initial branches and lineage exist now

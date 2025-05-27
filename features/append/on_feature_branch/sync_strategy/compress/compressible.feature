@@ -33,10 +33,10 @@ Feature: append a new feature branch in a clean workspace using the "compress" s
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                                   |
-      | new      | git checkout existing                                     |
-      | existing | git reset --hard {{ sha-before-run 'existing commit 2' }} |
-      |          | git push --force-with-lease --force-if-includes           |
-      |          | git branch -D new                                         |
+      | BRANCH   | COMMAND                                                |
+      | new      | git checkout existing                                  |
+      | existing | git reset --hard {{ sha-initial 'existing commit 2' }} |
+      |          | git push --force-with-lease --force-if-includes        |
+      |          | git branch -D new                                      |
     And the initial commits exist now
     And the initial lineage exists now

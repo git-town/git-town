@@ -19,12 +19,13 @@ Feature: prepend a branch to a local feature branch using the "rebase" sync stra
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH | COMMAND                                         |
-      | old    | git checkout -b parent main                     |
-      | parent | git cherry-pick {{ sha-before-run 'commit 1' }} |
-      |        | git checkout old                                |
-      | old    | git -c rebase.updateRefs=false rebase parent    |
-      |        | git checkout parent                             |
+      | BRANCH | COMMAND                                                                                                 |
+      | old    | git checkout -b parent main                                                                             |
+      | parent | git cherry-pick {{ sha-initial 'commit 1' }}                                                            |
+      |        | git checkout old                                                                                        |
+      | old    | git -c rebase.updateRefs=false rebase --onto {{ sha-initial 'commit 1' }}^ {{ sha-initial 'commit 1' }} |
+      |        | git -c rebase.updateRefs=false rebase parent                                                            |
+      |        | git checkout parent                                                                                     |
     And these commits exist now
       | BRANCH | LOCATION | MESSAGE  |
       | old    | local    | commit 2 |

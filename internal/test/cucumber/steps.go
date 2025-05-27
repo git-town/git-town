@@ -98,15 +98,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fixture.DevRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
+			beforeRunDevSHAs:     None[gitdomain.Commits](),
+			beforeRunOriginSHAs:  None[gitdomain.Commits](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
@@ -137,15 +139,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 			fixture.OriginRepo.GetOrPanic().Verbose = true
 		}
 		state := ScenarioState{
+			beforeRunDevSHAs:     None[gitdomain.Commits](),
+			beforeRunOriginSHAs:  None[gitdomain.Commits](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
@@ -177,15 +181,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.RemoveRemote(gitdomain.RemoteOrigin)
 		fixture.OriginRepo = MutableNone[commands.TestCommands]()
 		state := ScenarioState{
+			beforeRunDevSHAs:     None[gitdomain.Commits](),
+			beforeRunOriginSHAs:  None[gitdomain.Commits](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
@@ -329,9 +335,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		actualContent := strings.TrimSpace(devRepo.FileContent(file))
 		expectedText := handlebars.Expand(expectedContent.Content, handlebars.ExpandArgs{
-			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
-			InitialOriginSHAsOpt:   state.initialOriginSHAs,
-			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
+			BeforeRunDevSHAs:       state.beforeRunDevSHAs.GetOrPanic(),
+			BeforeRunOriginSHAsOpt: state.beforeRunOriginSHAs,
+			InitialDevCommits:      state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommits:   state.initialOriginSHAs,
+			InitialWorktreeCommits: state.initialWorktreeSHAs,
 			LocalRepo:              devRepo,
 			RemoteRepo:             state.fixture.OriginRepo.Value,
 			WorktreeRepo:           state.fixture.SecondWorktree.Value,
@@ -481,9 +489,11 @@ func defineSteps(sc *godog.ScenarioContext) {
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(handlebars.ExpandArgs{
-			InitialDevSHAs:         state.initialDevSHAs.GetOrPanic(),
-			InitialOriginSHAsOpt:   state.initialOriginSHAs,
-			InitialWorktreeSHAsOpt: state.initialWorktreeSHAs,
+			BeforeRunDevSHAs:       state.beforeRunDevSHAs.GetOrPanic(),
+			BeforeRunOriginSHAsOpt: state.beforeRunOriginSHAs,
+			InitialDevCommits:      state.initialDevSHAs.GetOrPanic(),
+			InitialOriginCommits:   state.initialOriginSHAs,
+			InitialWorktreeCommits: state.initialWorktreeSHAs,
 			LocalRepo:              devRepo,
 			RemoteRepo:             state.fixture.OriginRepo.Value,
 			WorktreeRepo:           state.fixture.SecondWorktree.Value,
@@ -608,15 +618,17 @@ func defineSteps(sc *godog.ScenarioContext) {
 			UpstreamRepo:   MutableNone[commands.TestCommands](),
 		}
 		state := ScenarioState{
+			beforeRunDevSHAs:     None[gitdomain.Commits](),
+			beforeRunOriginSHAs:  None[gitdomain.Commits](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
 			initialCurrentBranch: None[gitdomain.LocalBranchName](),
-			initialDevSHAs:       None[map[string]gitdomain.SHA](),
+			initialDevSHAs:       None[gitdomain.Commits](),
 			initialLineage:       None[datatable.DataTable](),
-			initialOriginSHAs:    None[map[string]gitdomain.SHA](),
+			initialOriginSHAs:    None[gitdomain.Commits](),
 			initialTags:          None[datatable.DataTable](),
-			initialWorktreeSHAs:  None[map[string]gitdomain.SHA](),
+			initialWorktreeSHAs:  None[gitdomain.Commits](),
 			insideGitRepo:        true,
 			runExitCode:          None[int](),
 			runExitCodeChecked:   false,
@@ -642,13 +654,51 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.CheckoutBranch(existingBranch)
 	})
 
-	sc.Step(`^inspect the commits$`, func(ctx context.Context) error {
+	sc.Step(`^inspect the commits$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		fmt.Println("DEV")
-		output, err := devRepo.Query("git", "branch", "-vva")
-		fmt.Println(output)
-		return err
+		if devRepo, hasDevRepo := state.fixture.DevRepo.Get(); hasDevRepo {
+			fmt.Println("\nsha")
+			fmt.Println(asserts.NoError1(devRepo.Query("git", "branch", "-vva")))
+		}
+		if originRepo, hasOriginRepo := state.fixture.OriginRepo.Get(); hasOriginRepo {
+			fmt.Println("\nsha-in-origin")
+			fmt.Println(asserts.NoError1(originRepo.Query("git", "branch", "-vva")))
+		}
+		if initialSHAs, hasInitialSHAs := state.initialDevSHAs.Get(); hasInitialSHAs {
+			fmt.Println("\nsha-initial")
+			for _, commit := range initialSHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if initialOriginSHAs, hasInitialOriginSHAs := state.initialOriginSHAs.Get(); hasInitialOriginSHAs {
+			fmt.Println("\nsha-in-origin-initial")
+			for _, commit := range initialOriginSHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if worktreeRepo, hasWorktreeRepo := state.fixture.SecondWorktree.Get(); hasWorktreeRepo {
+			fmt.Println("\nsha-in-worktree")
+			fmt.Println(asserts.NoError1(worktreeRepo.Query("git", "branch", "-vva")))
+		}
+		if initialWorktreeSHAs, hasInitialWorktreeSHAs := state.initialWorktreeSHAs.Get(); hasInitialWorktreeSHAs {
+			fmt.Println("\nsha-in-worktree-initial")
+			for _, commit := range initialWorktreeSHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if devBeforeRunSHAs, hasDevBeforeRunSHAs := state.beforeRunDevSHAs.Get(); hasDevBeforeRunSHAs {
+			fmt.Println("\nsha-before-run")
+			for _, commit := range devBeforeRunSHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		if originBeforeRunSHAs, hasOriginBeforeRunSHAs := state.beforeRunOriginSHAs.Get(); hasOriginBeforeRunSHAs {
+			fmt.Println("\nsha-in-origin-before-run")
+			for _, commit := range originBeforeRunSHAs {
+				fmt.Printf("- %s (%s)\n", commit.SHA.Truncate(7), commit.Message)
+			}
+		}
+		fmt.Println()
 	})
 
 	sc.Step(`^inspect the repo$`, func(ctx context.Context) {
@@ -1524,13 +1574,22 @@ func runCommand(ctx context.Context, command string) {
 
 func updateInitialSHAs(state *ScenarioState) {
 	devRepo := state.fixture.DevRepo.GetOrPanic()
+	devSHAs := devRepo.CommitSHAs()
 	if state.initialDevSHAs.IsNone() && state.insideGitRepo {
-		state.initialDevSHAs = Some(devRepo.CommitSHAs())
+		state.initialDevSHAs = Some(devSHAs)
 	}
-	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); state.initialOriginSHAs.IsNone() && state.insideGitRepo && hasOriginrepo {
-		state.initialOriginSHAs = Some(originRepo.CommitSHAs())
+	state.beforeRunDevSHAs = Some(devSHAs)
+	if originRepo, hasOriginrepo := state.fixture.OriginRepo.Get(); hasOriginrepo && state.insideGitRepo {
+		originSHAs := originRepo.CommitSHAs()
+		if state.initialOriginSHAs.IsNone() {
+			state.initialOriginSHAs = Some(originSHAs)
+		}
+		state.beforeRunOriginSHAs = Some(originSHAs)
 	}
-	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); state.initialWorktreeSHAs.IsNone() && state.insideGitRepo && hasSecondWorkTree {
-		state.initialWorktreeSHAs = Some(secondWorkTree.CommitSHAs())
+	if secondWorkTree, hasSecondWorkTree := state.fixture.SecondWorktree.Get(); hasSecondWorkTree && state.insideGitRepo {
+		workTreeSHAs := secondWorkTree.CommitSHAs()
+		if state.initialWorktreeSHAs.IsNone() {
+			state.initialWorktreeSHAs = Some(workTreeSHAs)
+		}
 	}
 }

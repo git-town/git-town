@@ -70,15 +70,15 @@ Feature: shipped the head branch of a synced stack with dependent changes while 
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH   | COMMAND                                             |
-      | branch-4 | git checkout branch-3                               |
-      | branch-3 | git reset --hard {{ sha-before-run 'commit 3' }}    |
-      |          | git push --force-with-lease --force-if-includes     |
-      |          | git checkout branch-4                               |
-      | branch-4 | git reset --hard {{ sha-before-run 'commit 4' }}    |
-      |          | git push --force-with-lease --force-if-includes     |
-      |          | git branch branch-1 {{ sha-before-run 'commit 1' }} |
-      |          | git branch branch-2 {{ sha-before-run 'commit 2' }} |
+      | BRANCH   | COMMAND                                          |
+      | branch-4 | git checkout branch-3                            |
+      | branch-3 | git reset --hard {{ sha-initial 'commit 3' }}    |
+      |          | git push --force-with-lease --force-if-includes  |
+      |          | git checkout branch-4                            |
+      | branch-4 | git reset --hard {{ sha-initial 'commit 4' }}    |
+      |          | git push --force-with-lease --force-if-includes  |
+      |          | git branch branch-1 {{ sha-initial 'commit 1' }} |
+      |          | git branch branch-2 {{ sha-initial 'commit 2' }} |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE           | FILE NAME | FILE CONTENT |
       | main     | local, origin | commit 1          | file      | content 1    |

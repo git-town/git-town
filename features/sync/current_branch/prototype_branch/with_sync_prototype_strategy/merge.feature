@@ -29,7 +29,7 @@ Feature: sync the current prototype branch in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then Git Town runs the commands
-      | BRANCH    | COMMAND                                              |
-      | prototype | git reset --hard {{ sha-before-run 'local commit' }} |
+      | BRANCH    | COMMAND                                           |
+      | prototype | git reset --hard {{ sha-initial 'local commit' }} |
     And the initial commits exist now
     And the initial branches and lineage exist now

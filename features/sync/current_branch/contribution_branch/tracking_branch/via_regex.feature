@@ -30,7 +30,7 @@ Feature: sync the current branch that is contribution via regex
     When I run "git-town undo"
     Then Git Town runs the commands
       | BRANCH     | COMMAND                                                                           |
-      | renovate/1 | git reset --hard {{ sha-before-run 'local commit' }}                              |
+      | renovate/1 | git reset --hard {{ sha-initial 'local commit' }}                                 |
       |            | git push --force-with-lease origin {{ sha-in-origin 'origin commit' }}:renovate/1 |
     And the initial commits exist now
     And the initial branches and lineage exist now
