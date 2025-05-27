@@ -53,14 +53,14 @@ Git Town offers powerful configuration settings to classify all local branches:
   [append](../commands/append.md), or [prepend](../commands/prepend.md)
 
 ## Manually setting branch types
-You can also override the branch type for each branch using these commands:
 
-- [git town contribute](../commands/contribute.md) marks a branch as a
+You can override the branch type for each branch using one of these commands:
+
+- [git town contribute](../commands/contribute.md): mark a branch as a
   contribution branch
-- [git town observe](../commands/observe.md) marks a branch as an observed
+- [git town observe](../commands/observe.md): mark a branch as observed
+- [git town park](../commands/park.md): mark a branch as parked
+- [git town prototype](../commands/prototype.md): create or convert a branch to
+  a prototype branch
+- [git town hack](../commands/hack.md): create or convert a branch to a feature
   branch
-- [git town park](../commands/park.md) marks a branch as a parked branch
-- [git town prototype](../commands/prototype.md) creates a new prototype branch
-  or mark an existing branch as a prototype branch
-- [git town hack](../commands/hack.md) creates a new feature branch or mark an
-  existing branch as a feature branch
