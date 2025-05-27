@@ -4,13 +4,13 @@
 
 #### BREAKING CHANGES
 
-- **Configuration setting `default-branch-type` is now [unknown-branch-type]().** This better reflects that this setting applies to branches without a known type, and helps differentiate it from [new-branch-type](https://www.git-town.com/preferences/new-branch-type.html). Existing configs continue to work indefinitely. Git-based configuration gets updated automatically, updating this in the config file is recommended ([#4964](https://github.com/git-town/git-town/issues/4964)).
+- **Configuration setting `default-branch-type` is now [unknown-branch-type](https://www.git-town.com/preferences/unknown-branch-type.html).** This better reflects that this setting applies to branches without a known type, and helps differentiate it from [new-branch-type](https://www.git-town.com/preferences/new-branch-type.html). Existing configs continue to work indefinitely. Git-based configuration gets updated automatically, updating this in the config file is recommended ([#4964](https://github.com/git-town/git-town/issues/4964)).
 - **Updated branch name during merge.** When [merging](https://www.git-town.com/commands/merge.html) two branches, Git Town now uses the parent branch for the name of the merged branch instead of the child branch. This keeps the pull request of the parent branch intact and generally aligns better with typical usage of this command ([#4938](https://github.com/git-town/git-town/issues/4938)).
 - **[create.new-branch-type](https://www.git-town.com/preferences/new-branch-type.html) is now always respected.** Previously, if this config option was set to `feature`, Git Town didn't apply it. Now it always assigns the configured branch type ([#4946](https://github.com/git-town/git-town/issues/4946)).
 
 #### New Features
 
-- **New [walk]() command:** Execute a shell command on all branches in a stack or your workspace. Without a command it exits to the shell for each branch. Great for applying automated changes to all branches or debugging issues like which branch breaks a linter ([#4852](https://github.com/git-town/git-town/issues/4852)).
+- **New [walk](https://www.git-town.com/commands/walk.html) command:** Execute a shell command on all branches in a stack or your workspace. Without a command it exits to the shell for each branch. Great for applying automated changes to all branches or debugging issues like which branch breaks a linter ([#4852](https://github.com/git-town/git-town/issues/4852)).
 - **Smarter syncing:** `git town sync` now skips Git operations that wouldn't result in any changes. This speeds things up and avoids unnecessary Git noise ([#4927](https://github.com/git-town/git-town/issues/4927)).
 
 #### Bug Fixes
