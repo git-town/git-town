@@ -4,24 +4,24 @@
 
 #### BREAKING CHANGES
 
-- Configuration setting `default-branch-type` is now [unknown-branch-type](). This makes obvious that this setting applies to branches whose type isn't known otherwise, and distinguishes it better from [new-branch-type](https://www.git-town.com/preferences/new-branch-type.html). Git configuration gets update automatically, the old setting in the config file keeps working but updating is advised ([#4964](https://github.com/git-town/git-town/issues/4964)).
-- When [merging](https://www.git-town.com/commands/merge.html) two branches, the merged branch now has the name of the parent branch and no longer the name of the child branch. This generally makes more sense and keeps the pull request of the parent branch alive ([#4938](https://github.com/git-town/git-town/issues/4938)).
-- Previously Git Town didn't assign the branch type configured in [create.new-branch-type](https://www.git-town.com/preferences/new-branch-type.html) when it is set to `feature`. Now it always assigns the configured branch type ([#4946](https://github.com/git-town/git-town/issues/4946)).
+- **Configuration setting `default-branch-type` is now [unknown-branch-type]().** This better reflects that this setting applies to branches without a known type, and helps differentiate it from [new-branch-type](https://www.git-town.com/preferences/new-branch-type.html). Existing configs continue to work indefinitely. Git-based configuration gets updated automatically, updating this in the config file is recommended ([#4964](https://github.com/git-town/git-town/issues/4964)).
+- **Updated branch name during merge.** When [merging](https://www.git-town.com/commands/merge.html) two branches, Git Town now uses the parent branch for the name of the merged branch instead of the child branch name. This keeps the pull request of the parent branch intact and generally aligns better with typical usage of this command ([#4938](https://github.com/git-town/git-town/issues/4938)).
+- **[create.new-branch-type](https://www.git-town.com/preferences/new-branch-type.html) is now always respected.** Previously, if this config option was set to `feature`, Git Town didn't apply it. Now it always assigns the configured branch type ([#4946](https://github.com/git-town/git-town/issues/4946)).
 
 #### New Features
 
-- the new [walk]() command allows iterating all branches in a stack or in your local workspace, for example to determine which branch breaks a linter ([#4852](https://github.com/git-town/git-town/issues/4852)).
-- `git town sync` now skips Git operations that wouldn't perform any changes ([#4927](https://github.com/git-town/git-town/issues/4927)).
+- **New [walk]() command:** Execute a shell command on all branches in a stack or your workspace. Without a command it exits to the shell for each branch. Great for applying automated changes to all branches or debugging issues like which branch breaks a linter ([#4852](https://github.com/git-town/git-town/issues/4852)).
+- **Smarter syncing:** `git town sync` now skips Git operations that wouldn't result in any changes. This speeds things up and avoids unnecessary Git noise ([#4927](https://github.com/git-town/git-town/issues/4927)).
 
 #### Bug Fixes
 
-- Git Town now deletes beamed commits from their original locations in all cases ([#4895](https://github.com/git-town/git-town/issues/4895)).
-- uses a more robust way to determine the first commit in a branch ([#4980](https://github.com/git-town/git-town/issues/4980))
-- `git town branch` no longer displays branches multiple times when additional Git remotes are configured ([#4961](https://github.com/git-town/git-town/issues/4961)).
+- Beamed commits are now always removed from their original location after being moved ([#4895](https://github.com/git-town/git-town/issues/4895)).
+- More reliable detection of the first commit in a branch, reducing edge case failures ([#4980](https://github.com/git-town/git-town/issues/4980))
+- `git town branch` no longer shows duplicate branches when multiple Git remotes are present ([#4961](https://github.com/git-town/git-town/issues/4961)).
 
 #### Contributors
 
-Shoutout to @AmitJoki, @WhosNickDoglio, @jfmyers9, @kevgo, @mw00120, @ruudk, @stephenwade, @zodman for contributing code, feedback, and ideas to 52 shipped PRs and 13 resolved issues!
+Huge thanks to @AmitJoki, @WhosNickDoglio, @jfmyers9, @kevgo, @mw00120, @ruudk, @stephenwade, @zodman for moving Git Town forward by contributing code, feedback, and ideas to 52 shipped PRs and 13 resolved issues!
 
 ## 20.2.0 (2025-05-15)
 
