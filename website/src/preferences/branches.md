@@ -25,7 +25,7 @@ Git Town offers powerful configuration settings to give each existing and new br
 You can also override the branch type for each branch using these commands:
 
 - [git town contribute](../commands/contribute.md) marks a branch as a contribution branch
-- [git town observe](): marks a branch as an observed branch
-- git town park: marks a branch as a parked branch
-- git town prototype: create a new prototype branch or mark an existing branch as a prototype branch
-- git town hack: create a new feature branch or mark an existing branch as a feature branch
+- [git town observe](../commands/observe.md) marks a branch as an observed branch
+- [git town park](../commands/park.md) marks a branch as a parked branch
+- [git town prototype](../commands/prototype.md) creates a new prototype branch or mark an existing branch as a prototype branch
+- [git town hack](../commands/hack.md) creates a new feature branch or mark an existing branch as a feature branch
