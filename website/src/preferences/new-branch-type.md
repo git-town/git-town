@@ -29,6 +29,7 @@ To configure the type of new branches in the
 [configuration file](../configuration-file.md):
 
 ```toml
+[create]
 new-branch-type = "feature"
 ```
 
