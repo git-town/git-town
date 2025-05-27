@@ -4,11 +4,11 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/git-town/git-town/v20/internal/cli/dialog"
-	"github.com/git-town/git-town/v20/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v20/internal/execute"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/pkg/asserts"
+	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/execute"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/pkg/asserts"
 	"github.com/spf13/cobra"
 )
 

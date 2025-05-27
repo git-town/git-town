@@ -4,7 +4,7 @@ package giturl
 import (
 	"regexp"
 
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Parts contains recognized parts of a Git URL.

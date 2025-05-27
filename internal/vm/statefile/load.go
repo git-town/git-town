@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/messages"
-	"github.com/git-town/git-town/v20/internal/vm/runstate"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Load loads the run state for the given Git repo from disk.

@@ -1,7 +1,7 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 )
 
 // ConfigSnapshot is a snapshot of the entire Git configuration at a particular point in time.

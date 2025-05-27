@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/shoenig/test/must"
 )
 

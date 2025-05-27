@@ -2,7 +2,7 @@ package output
 
 import (
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v20/internal/test/datatable"
+	"github.com/git-town/git-town/v21/internal/test/datatable"
 )
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.

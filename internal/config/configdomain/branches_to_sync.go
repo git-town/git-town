@@ -1,6 +1,6 @@
 package configdomain
 
-import "github.com/git-town/git-town/v20/internal/git/gitdomain"
+import "github.com/git-town/git-town/v21/internal/git/gitdomain"
 
 type BranchesToSync []BranchToSync
 

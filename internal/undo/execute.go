@@ -3,19 +3,19 @@ package undo
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/cli/print"
-	"github.com/git-town/git-town/v20/internal/config"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v20/internal/git"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/gohacks"
-	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v20/internal/messages"
-	"github.com/git-town/git-town/v20/internal/vm/interpreter/lightinterpreter"
-	"github.com/git-town/git-town/v20/internal/vm/runstate"
-	"github.com/git-town/git-town/v20/internal/vm/statefile"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/cli/print"
+	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/interpreter/lightinterpreter"
+	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/statefile"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // undoes the persisted runstate

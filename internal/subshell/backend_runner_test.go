@@ -5,9 +5,9 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/gohacks"
-	"github.com/git-town/git-town/v20/internal/subshell"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/subshell"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 

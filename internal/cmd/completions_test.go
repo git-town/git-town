@@ -3,7 +3,7 @@ package cmd_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/cmd"
+	"github.com/git-town/git-town/v21/internal/cmd"
 	"github.com/shoenig/test/must"
 )
 

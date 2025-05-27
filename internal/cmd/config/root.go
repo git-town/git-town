@@ -4,13 +4,13 @@ package config
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/cli/flags"
-	"github.com/git-town/git-town/v20/internal/cli/format"
-	"github.com/git-town/git-town/v20/internal/cli/print"
-	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v20/internal/config"
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/execute"
+	"github.com/git-town/git-town/v21/internal/cli/flags"
+	"github.com/git-town/git-town/v21/internal/cli/format"
+	"github.com/git-town/git-town/v21/internal/cli/print"
+	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/spf13/cobra"
 )
 

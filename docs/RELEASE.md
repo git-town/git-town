@@ -15,7 +15,7 @@ This guide is for maintainers who make releases of Git Town.
     - its best to do this manually so that you don't change unrelated version
       numbers in CHANGELOG.md, lockfiles, and data files
   - if bumping the major version:
-    - update `github.com/git-town/git-town/v20/` everywhere in this repo
+    - update `github.com/git-town/git-town/v21/` everywhere in this repo
     - update `github.com/git-town/git-town/v20` (without trailing slash)
 - ship the branch
 - `git sync --all && git checkout public && git merge main && git push && git checkout main && git branch -d public`

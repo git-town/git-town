@@ -3,8 +3,8 @@ package github_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v20/internal/forge/github"
-	"github.com/git-town/git-town/v20/internal/git/giturl"
+	"github.com/git-town/git-town/v21/internal/forge/github"
+	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/shoenig/test/must"
 )
 

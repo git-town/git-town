@@ -1,7 +1,7 @@
 package data
 
 import (
-	"github.com/git-town/git-town/v20/pkg/set"
+	"github.com/git-town/git-town/v21/pkg/set"
 )
 
 // collection of unique GitHub usernames

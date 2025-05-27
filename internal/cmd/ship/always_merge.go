@@ -1,11 +1,11 @@
 package ship
 
 import (
-	"github.com/git-town/git-town/v20/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/vm/opcodes"
-	"github.com/git-town/git-town/v20/internal/vm/program"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/vm/opcodes"
+	"github.com/git-town/git-town/v21/internal/vm/program"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 func shipProgramAlwaysMerge(prog Mutable[program.Program], sharedData sharedShipData, mergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) {

@@ -11,13 +11,13 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v20/internal/config/configdomain"
-	"github.com/git-town/git-town/v20/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v20/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v20/internal/subshell"
-	"github.com/git-town/git-town/v20/internal/test/envvars"
-	"github.com/git-town/git-town/v20/pkg/asserts"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell"
+	"github.com/git-town/git-town/v21/internal/test/envvars"
+	"github.com/git-town/git-town/v21/pkg/asserts"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/kballard/go-shellquote"
 )
 

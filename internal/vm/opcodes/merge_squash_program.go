@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v20/internal/cli/dialog"
-	"github.com/git-town/git-town/v20/internal/git/gitdomain"
-	"github.com/git-town/git-town/v20/internal/messages"
-	"github.com/git-town/git-town/v20/internal/vm/shared"
-	. "github.com/git-town/git-town/v20/pkg/prelude"
+	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // MergeSquashProgram prepends the opcodes to squash merge the branch with the given name into the current branch.
