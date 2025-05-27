@@ -6,7 +6,7 @@
 
 - Configuration setting `default-branch-type` is now `unknown-branch-type`. This makes obvious that this setting applies to branches whose type isn't known otherwise, and distinguishes it better from [new-branch-type](https://www.git-town.com/preferences/new-branch-type.html). Git configuration gets update automatically, the old setting in the config file keeps working but updating is advised ([#4964](https://github.com/git-town/git-town/issues/4964)).
 - When [merging](https://www.git-town.com/commands/merge.html) two branches, the merged branch now has the name of the parent branch and no longer the name of the child branch. This generally makes more sense and keeps the pull request of the parent branch alive ([#4938](https://github.com/git-town/git-town/issues/4938)).
-- When [create.new-branch-type](https://www.git-town.com/preferences/new-branch-type.html) is set to `feature`, Git Town now also assigns this branch type if configured ([#4946](https://github.com/git-town/git-town/issues/4946)).
+- Previously Git Town didn't assign the branch type configured in [create.new-branch-type](https://www.git-town.com/preferences/new-branch-type.html) when it is set to `feature`. Now it always assigns the configured branch type ([#4946](https://github.com/git-town/git-town/issues/4946)).
 
 #### New Features
 
