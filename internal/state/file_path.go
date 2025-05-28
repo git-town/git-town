@@ -15,6 +15,6 @@ func FilePath(repoDir gitdomain.RepoRootDir, fileType FileType) (string, error) 
 		return "", fmt.Errorf(messages.RunstatePathProblem, err)
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", fileType.String())
-	filePath := SanitizePath(repoDir)
-	return filepath.Join(persistenceDir, filePath+".json"), err
+	filename := SanitizePath(repoDir)
+	return filepath.Join(persistenceDir, filename+".json"), err
 }
