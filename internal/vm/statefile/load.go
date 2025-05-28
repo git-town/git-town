@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -14,7 +15,7 @@ import (
 // Load loads the run state for the given Git repo from disk.
 // Returns None if there is no saved runstate.
 func Load(repoDir gitdomain.RepoRootDir) (Option[runstate.RunState], error) {
-	filename, err := FilePath(repoDir)
+	filename, err := state.FilePath(repoDir, state.FileTypeRunstate)
 	if err != nil {
 		return None[runstate.RunState](), err
 	}

@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
@@ -29,7 +30,7 @@ func TestLoadSave(t *testing.T) {
 		}
 		for give, want := range tests {
 			rootDir := gitdomain.NewRepoRootDir(give)
-			have := statefile.SanitizePath(rootDir)
+			have := state.SanitizePath(rootDir)
 			must.EqOp(t, want, have)
 		}
 	})
@@ -803,7 +804,7 @@ func TestLoadSave(t *testing.T) {
 		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
 		err := statefile.Save(runState, repoRoot)
 		must.NoError(t, err)
-		filepath, err := statefile.FilePath(repoRoot)
+		filepath, err := state.FilePath(repoRoot, state.FileTypeRunstate)
 		must.NoError(t, err)
 		content, err := os.ReadFile(filepath)
 		must.NoError(t, err)

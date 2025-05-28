@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
 	"github.com/git-town/git-town/v21/internal/vm/statefile"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -79,7 +80,7 @@ type displayStatusData struct {
 }
 
 func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusData, err error) {
-	filepath, err := statefile.FilePath(rootDir)
+	filepath, err := state.FilePath(rootDir, state.FileTypeRunstate)
 	if err != nil {
 		return result, err
 	}

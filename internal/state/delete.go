@@ -1,4 +1,4 @@
-package statefile
+package state
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 )
 
 // Delete removes the stored run state from disk.
-func Delete(repoDir gitdomain.RepoRootDir) (existed bool, err error) {
-	filename, err := FilePath(repoDir)
+func Delete(repoDir gitdomain.RepoRootDir, fileType FileType) (existed bool, err error) {
+	filename, err := FilePath(repoDir, fileType)
 	if err != nil {
 		return false, err
 	}

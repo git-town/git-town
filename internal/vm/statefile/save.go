@@ -8,6 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
 )
 
@@ -17,7 +18,7 @@ func Save(runState runstate.RunState, repoDir gitdomain.RepoRootDir) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSerializeProblem, err)
 	}
-	persistencePath, err := FilePath(repoDir)
+	persistencePath, err := state.FilePath(repoDir, state.FileTypeRunstate)
 	if err != nil {
 		return err
 	}
