@@ -14,8 +14,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/skip"
+	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/statefile"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )

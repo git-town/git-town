@@ -9,9 +9,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
-	"github.com/git-town/git-town/v21/internal/vm/statefile"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 

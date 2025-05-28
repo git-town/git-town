@@ -16,11 +16,11 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
-	"github.com/git-town/git-town/v21/internal/vm/statefile"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
