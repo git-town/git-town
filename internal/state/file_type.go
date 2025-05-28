@@ -4,7 +4,7 @@ package state
 type FileType string
 
 const (
-	FileTypeRunstate FileType = "runstate"
+	FileTypeRunstate FileType = "runstate" // the runstate file
 )
 
 func (self FileType) String() string {
