@@ -1,10 +1,10 @@
-package statefile_test
+package state_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/vm/statefile"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/shoenig/test/must"
 )
 
@@ -19,7 +19,7 @@ func TestSanitizePath(t *testing.T) {
 		}
 		for give, want := range tests {
 			rootDir := gitdomain.NewRepoRootDir(give)
-			have := statefile.SanitizePath(rootDir)
+			have := state.SanitizePath(rootDir)
 			must.EqOp(t, want, have)
 		}
 	})

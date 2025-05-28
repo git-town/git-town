@@ -12,8 +12,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/subshell"
-	"github.com/git-town/git-town/v21/internal/vm/statefile"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -54,7 +54,7 @@ func executeStatusReset(verbose configdomain.Verbose) error {
 	if !hasRootDir {
 		return errors.New(messages.RepoOutside)
 	}
-	existed, err := statefile.Delete(rootDir)
+	existed, err := state.Delete(rootDir, state.FileTypeRunstate)
 	if err != nil {
 		return err
 	}

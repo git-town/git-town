@@ -12,9 +12,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/lightinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
-	"github.com/git-town/git-town/v21/internal/vm/statefile"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -43,7 +43,7 @@ func Execute(args ExecuteArgs) error {
 		Git:           args.Git,
 		Prog:          program,
 	})
-	_, err := statefile.Delete(args.RootDir)
+	_, err := state.Delete(args.RootDir, state.FileTypeRunstate)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
