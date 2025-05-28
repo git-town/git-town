@@ -92,6 +92,8 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ContinueUnresolvedConflicts         = "you must resolve the conflicts before continuing"
 	ContinueUntrackedChanges            = "please stage or commit the untracked changes first"
 	CurrentBranchCannotDetermine        = "cannot determine the current branch"
+	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
+	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
 	DialogUnexpectedResponse            = "unexpected response: %s"
 	DiffParentNoFeatureBranch           = "you can only diff-parent feature branches"
 	DiffProblem                         = "cannot list diff of %q and %q: %w"
@@ -135,8 +137,6 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	InvalidStatusOutput                 = `invalid "git status -z" output: %q`
-	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
-	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
 	KillDeprecation                     = `DEPRECATION NOTICE
 
 	This command has been renamed to "git town delete"
