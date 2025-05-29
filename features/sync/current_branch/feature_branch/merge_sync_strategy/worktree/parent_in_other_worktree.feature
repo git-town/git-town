@@ -18,7 +18,6 @@ Feature: sync a branch whose parent is active in another worktree
     And the current branch is "child"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
