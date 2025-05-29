@@ -7,10 +7,10 @@ Feature: sync a branch that contains a file with the same name
       | feature | feature | main   | local, origin |
     And the commits
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
-      | main    | local    | local main commit     | local main file     |
-      |         | origin   | origin main commit    | origin main file    |
+      | main    | local    | local main commit     | main                |
+      |         | origin   | origin main commit    | remote main file    |
       | feature | local    | local feature commit  | feature             |
-      |         | origin   | origin feature commit | origin feature file |
+      |         | origin   | origin feature commit | remote feature file |
     And the current branch is "feature"
     When I run "git-town sync"
 

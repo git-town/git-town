@@ -109,9 +109,9 @@ func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.BranchNa
 func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, parentOpt Option[gitdomain.BranchName], fields []string) []testgit.Commit {
 	args := []string{"log", "--format=%H%x00%s%x00%an <%ae>", "--topo-order", "--reverse"}
 	if parent, hasParent := parentOpt.Get(); hasParent {
-		args = append(args, fmt.Sprintf("%s..%s", parent, branch))
+		args = append(args, fmt.Sprintf("%s..%s", parent.RefName(), branch.RefName()))
 	} else {
-		args = append(args, branch.String())
+		args = append(args, branch.RefName())
 	}
 	output := self.MustQuery("git", args...)
 	lines := strings.Split(output, "\n")
