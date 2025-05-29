@@ -64,10 +64,13 @@ func TestBranchName(t *testing.T) {
 
 	t.Run("RefName", func(t *testing.T) {
 		t.Parallel()
-		t.Run("remote name", func(t *testing.T) {
-			branchName := gitdomain.NewBranchName("origin/main")
-			must.EqOp(t, "origin/main", branchName.RefName())
-		})
+		tests := map[gitdomain.BranchName]string{
+			"origin/main": "origin/main",
+			"main":        "refs/heads/main",
+		}
+		for give, want := range tests {
+			must.EqOp(t, want, give.RefName())
+		}
 	})
 
 	t.Run("RemoteName", func(t *testing.T) {
