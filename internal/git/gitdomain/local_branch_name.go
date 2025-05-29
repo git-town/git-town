@@ -40,6 +40,11 @@ func (self LocalBranchName) Location() Location {
 	return NewLocation(string(self))
 }
 
+// RefName provides the fully qualified reference name for this branch.
+func (self LocalBranchName) RefName() string {
+	return "refs/heads/" + self.String()
+}
+
 // Implementation of the fmt.Stringer interface.
 func (self LocalBranchName) String() string { return string(self) }
 
