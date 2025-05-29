@@ -77,7 +77,7 @@ func (self *Commands) BranchHasUnmergedChanges(querier gitdomain.Querier, branch
 }
 
 func (self *Commands) BranchInSyncWithParent(querier gitdomain.Querier, branch gitdomain.LocalBranchName, parent gitdomain.BranchName) (bool, error) {
-	output, err := querier.QueryTrim("git", "log", "--no-merges", "--format=%H", parent.String(), "^"+branch.String())
+	output, err := querier.QueryTrim("git", "log", "--no-merges", "--format=%H", "refs/heads/"+parent.String(), "^refs/heads/"+branch.String())
 	return len(output) == 0, err
 }
 

@@ -12,10 +12,8 @@ Feature: sync a branch that contains a file with the same name
       | feature | local    | local feature commit  | feature             |
       |         | origin   | origin feature commit | origin feature file |
     And the current branch is "feature"
-    And inspect the repo
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | COMMAND                                           |
@@ -24,14 +22,9 @@ Feature: sync a branch that contains a file with the same name
       | main    | git -c rebase.updateRefs=false rebase origin/main |
       |         | git push                                          |
       |         | git checkout feature                              |
-    And Git Town prints the error:
-      """
-      git log --no-merges --format=%H main ^feature
-      """
-    And Git Town prints the error:
-      """
-      ambiguous argument 'feature': both revision and filename
-      """
+      | feature | git merge --no-edit --ff main                     |
+      |         | git merge --no-edit --ff origin/feature           |
+      |         | git push                                          |
     And all branches are now synchronized
     And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
