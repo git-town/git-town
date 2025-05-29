@@ -29,6 +29,14 @@ func (self BranchName) Location() Location {
 	return NewLocation(self.String())
 }
 
+// RefName provides the fully qualified reference name for this branch.
+func (self BranchName) RefName() string {
+	if self.IsLocal() {
+		return "refs/heads/" + self.String()
+	}
+	return self.String()
+}
+
 // RemoteName provides the remote version of this branch name.
 func (self BranchName) RemoteName() RemoteBranchName {
 	if strings.HasPrefix(string(self), "origin/") {
