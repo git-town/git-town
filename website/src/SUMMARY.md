@@ -22,6 +22,7 @@
     - [status](commands/status.md)
     - [status.reset](commands/status-reset.md)
     - [status.show](commands/status-show.md)
+    - [status.runlog](commands/status-runlog.md)
     - [undo](commands/undo.md)
   - [Stacked changes](stacked-changes.md)
     - [append](commands/append.md)
