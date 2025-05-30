@@ -16,12 +16,12 @@ import (
 )
 
 const (
-	runLogDesc = "Displays the repository state before and after all executed Git Town commands"
+	runLogDesc = "Displays the repo state before and after previous Git Town commands"
 	runLogHelp = `
-Git Town logs the repository state
+Git Town logs the SHA that all local and remote branches point to
 before and after each Git Town command executes.
-This is an additional safety net.
-It allows you to manually undo a Git Town command
+This is an additional safety net
+to allow you to manually undo a Git Town command
 in case "git town undo" isn't enough.
 `
 )
@@ -58,16 +58,16 @@ func executeRunLog(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	data, err := loadRunlogData(repo.RootDir)
+	data, err := loadRunLogData(repo.RootDir)
 	if err != nil {
 		return err
 	}
-	err = showRunlog(data)
+	err = showRunLog(data)
 	print.Footer(verbose, *repo.CommandsCounter.Value, []string{})
 	return nil
 }
 
-func showRunlog(data runLogData) error {
+func showRunLog(data runLogData) error {
 	fmt.Printf(messages.RunlogDisplaying, data.filepath)
 	fmt.Println()
 	content, err := os.ReadFile(data.filepath)
@@ -83,7 +83,7 @@ type runLogData struct {
 	filepath string // filepath of the runstate file
 }
 
-func loadRunlogData(rootDir gitdomain.RepoRootDir) (runLogData, error) {
+func loadRunLogData(rootDir gitdomain.RepoRootDir) (runLogData, error) {
 	filepath, err := state.FilePath(rootDir, state.FileTypeRunlog)
 	return runLogData{
 		filepath: filepath,
