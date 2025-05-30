@@ -5,7 +5,7 @@ git town runlog [-v | --verbose]
 ```
 
 Git Town records the SHA of all local and remote branches before and after each
-command runs into an immutable, append-only log file.
+command runs into an immutable, append-only log file called the runlog.
 
 This runlog provides an extra layer of safety, making it easier to manually roll
 back changes if [git town undo](undo.md) doesn’t fully undo the changes the last

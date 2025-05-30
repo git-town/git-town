@@ -20,9 +20,9 @@ const (
 	runLogHelp = `
 Git Town records the SHA of all local and remote branches
 before and after each command runs
-into an immutable, append-only log file.
+into an immutable, append-only log file called the runlog.
 
-This provides an extra layer of safety,
+The runlog provides an extra layer of safety,
 making it easier to manually roll back changes
 if git town undo doesn't fully undo the last command.
 `
