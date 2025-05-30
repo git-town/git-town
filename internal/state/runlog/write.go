@@ -22,6 +22,7 @@ func Write(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option
 	if err != nil {
 		return fmt.Errorf(messages.RunLogSerializeProblem, err)
 	}
+	content = append(content, []byte("\n\n")...)
 	persistencePath, err := state.FilePath(repoDir, state.FileTypeRunlog)
 	if err != nil {
 		return err
