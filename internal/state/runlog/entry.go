@@ -15,7 +15,7 @@ type Entry struct {
 	Command        string                                 // the command through which the user called Git Town via the CLI
 	Event          Event                                  // whether this event happens at the beginning or end of the Git Town command
 	PendingCommand Option[string]                         // the currently pending Git Town command
-	Time           time.Time
+	Time           time.Time                              // the time when this event happened
 }
 
 func NewEntry(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) Entry {
