@@ -6,11 +6,11 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/undo/undobranches"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/undo/undostash"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
 )
 
 // create the program to undo a currently running Git Town command

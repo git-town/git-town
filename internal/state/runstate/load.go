@@ -1,4 +1,4 @@
-package statefile
+package runstate
 
 import (
 	"encoding/json"
@@ -8,32 +8,31 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Load loads the run state for the given Git repo from disk.
 // Returns None if there is no saved runstate.
-func Load(repoDir gitdomain.RepoRootDir) (Option[runstate.RunState], error) {
+func Load(repoDir gitdomain.RepoRootDir) (Option[RunState], error) {
 	filename, err := state.FilePath(repoDir, state.FileTypeRunstate)
 	if err != nil {
-		return None[runstate.RunState](), err
+		return None[RunState](), err
 	}
 	_, err = os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return None[runstate.RunState](), nil
+			return None[RunState](), nil
 		}
-		return None[runstate.RunState](), fmt.Errorf(messages.FileStatProblem, filename, err)
+		return None[RunState](), fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
 	content, err := os.ReadFile(filename)
 	if err != nil {
-		return None[runstate.RunState](), fmt.Errorf(messages.FileReadProblem, filename, err)
+		return None[RunState](), fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
-	var runState runstate.RunState
+	var runState RunState
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
-		return None[runstate.RunState](), fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
+		return None[RunState](), fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
 	}
 	return Some(runState), nil
 }

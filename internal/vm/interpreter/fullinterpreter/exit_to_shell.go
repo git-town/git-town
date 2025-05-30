@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
-	"github.com/git-town/git-town/v21/internal/state/statefile"
+	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -46,7 +46,7 @@ func exitToShell(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	err = statefile.Save(args.RunState, args.RootDir)
+	err = runstate.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
