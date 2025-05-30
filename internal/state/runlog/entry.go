@@ -2,10 +2,10 @@ package runlog
 
 import (
 	"os"
-	"strings"
 	"time"
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -30,7 +30,7 @@ func NewEntry(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Opt
 	}
 	return Entry{
 		Branches:       branches,
-		Command:        strings.Join(os.Args, " "),
+		Command:        stringslice.JoinArgs(os.Args),
 		Event:          event,
 		PendingCommand: pendingCommand,
 		Time:           time.Now(),
