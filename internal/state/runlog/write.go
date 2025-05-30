@@ -13,9 +13,6 @@ import (
 )
 
 // Append writes the given entry to the end of the runlog for this repo.
-// TODO:
-// - fullinterpreter.Execute receives a receipt that the initial runlog was written
-// - it writes the final runlog on exit
 func Write(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string], repoDir gitdomain.RepoRootDir) error {
 	entry := NewEntry(event, branchInfos, pendingCommand)
 	content, err := json.MarshalIndent(entry, "", "  ")
