@@ -1,4 +1,4 @@
-package status
+package cmd
 
 import (
 	"fmt"
@@ -15,15 +15,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const showRunlogDesc = "Displays the repository state before and after all executed Git Town commands"
+const (
+	runlogDesc = "Displays the repository state before and after all executed Git Town commands"
+	runlogHelp = `
+Git Town logs the repository state
+before and after each Git Town command executes.
+This is an additional safety net.
+It allows you to manually undo a Git Town command
+in case "git town undo" isn't enough.
+`
+)
 
-func showRunlogCommand() *cobra.Command {
+func runlogCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "runlog",
-		Args:  cobra.NoArgs,
-		Short: showRunlogDesc,
-		Long:  cmdhelpers.Long(showRunlogDesc),
+		Use:     "runlog",
+		Args:    cobra.NoArgs,
+		GroupID: cmdhelpers.GroupIDErrors,
+		Short:   runlogDesc,
+		Long:    cmdhelpers.Long(runlogDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {

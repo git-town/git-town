@@ -45,7 +45,6 @@ func RootCommand() *cobra.Command {
 	addVerboseFlag(&cmd)
 	cmd.AddCommand(resetRunstateCommand())
 	cmd.AddCommand(showRunstateCommand())
-	cmd.AddCommand(showRunlogCommand())
 	return &cmd
 }
 

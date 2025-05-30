@@ -1,7 +1,7 @@
-# git town status runlog
+# git town runlog
 
 ```command-summary
-git town status runlog [-v | --verbose]
+git town runlog [-v | --verbose]
 ```
 
 Git Town logs the repository state before and after each Git Town command
