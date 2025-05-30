@@ -4,9 +4,9 @@
 git town runlog [-v | --verbose]
 ```
 
-Git Town logs the repository state before and after each Git Town command
-executes. This is an additional safety net, which allows you to manually undo a
-Git Town command in case [git town undo](undo.md) doesn't work fully.
+Git Town records the SHA of all local and remote branches before and after each
+command runs. This provides an extra layer of safety, making it easier to
+manually roll back changes if git town undo doesn’t fully undo the last command.
 
 ## Options
 
