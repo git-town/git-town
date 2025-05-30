@@ -13,8 +13,8 @@ import (
 type Entry struct {
 	Branches       map[gitdomain.BranchName]gitdomain.SHA // branches at this state
 	Command        string                                 // the command through which the user called Git Town via the CLI
-	Event          Event
-	PendingCommand Option[string] // the currently pending Git Town command
+	Event          Event                                  // whether this event happens at the beginning or end of the Git Town command
+	PendingCommand Option[string]                         // the currently pending Git Town command
 	Time           time.Time
 }
 
