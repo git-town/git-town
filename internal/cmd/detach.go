@@ -142,6 +142,7 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,

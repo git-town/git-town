@@ -214,6 +214,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 		InitialBranchesSnapshot: args.beginBranchesSnapshot,
 		InitialConfigSnapshot:   args.beginConfigSnapshot,
 		InitialStashSize:        args.beginStashSize,
+		PendingCommand:          None[string](),
 		RootDir:                 args.rootDir,
 		RunState:                runState,
 		Verbose:                 args.verbose,

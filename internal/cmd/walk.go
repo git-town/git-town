@@ -146,6 +146,7 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   data.repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		PendingCommand:          None[string](),
 		RootDir:                 data.repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,
