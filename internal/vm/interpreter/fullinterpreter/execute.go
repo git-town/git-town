@@ -19,7 +19,7 @@ import (
 
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
-	err := runlog.Write(args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RootDir)
+	err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RootDir)
 	if err != nil {
 		return err
 	}

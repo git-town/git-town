@@ -18,7 +18,7 @@ type Entry struct {
 	Time           time.Time
 }
 
-func NewEntry(branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) Entry {
+func NewEntry(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) Entry {
 	branches := map[gitdomain.BranchName]gitdomain.SHA{}
 	for _, branchInfo := range branchInfos {
 		if hasLocalBranch, localName, localSHA := branchInfo.GetLocal(); hasLocalBranch {
@@ -31,7 +31,7 @@ func NewEntry(branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) 
 	return Entry{
 		Branches:       branches,
 		Command:        strings.Join(os.Args, " "),
-		Event:          EventStart,
+		Event:          event,
 		PendingCommand: pendingCommand,
 		Time:           time.Now(),
 	}

@@ -19,7 +19,7 @@ func exitToShell(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	runlog.Write(endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
+	runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)

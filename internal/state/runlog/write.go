@@ -16,8 +16,8 @@ import (
 // TODO:
 // - fullinterpreter.Execute receives a receipt that the initial runlog was written
 // - it writes the final runlog on exit
-func Write(branchInfos gitdomain.BranchInfos, pendingCommand Option[string], repoDir gitdomain.RepoRootDir) error {
-	entry := NewEntry(branchInfos, pendingCommand)
+func Write(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option[string], repoDir gitdomain.RepoRootDir) error {
+	entry := NewEntry(event, branchInfos, pendingCommand)
 	content, err := json.MarshalIndent(entry, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunLogSerializeProblem, err)
