@@ -5,6 +5,7 @@ type FileType string
 
 const (
 	FileTypeRunstate FileType = "runstate" // the runstate file
+	FileTypeRunlog   FileType = "runlog"   // the runlog file
 )
 
 func (self FileType) String() string {
