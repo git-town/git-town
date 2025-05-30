@@ -27,7 +27,7 @@ func TestEntry(t *testing.T) {
 			Command:        "git town sync",
 			Event:          runlog.EventStart,
 			Time:           time.Date(2025, 0o5, 28, 20, 34, 58, 123456789, time.UTC),
-			PendingCommand: None[string](),
+			PendingCommand: Some("sync"),
 		}
 		have := asserts.NoError1(json.MarshalIndent(entry, "", "  "))
 		want := `
@@ -40,7 +40,7 @@ func TestEntry(t *testing.T) {
   },
   "Command": "git town sync",
   "Event": "start",
-  "PendingCommand": null,
+  "PendingCommand": "sync",
   "Time": "2025-05-28T20:34:58.123456789Z"
 }`[1:]
 		must.EqOp(t, want, string(have))
