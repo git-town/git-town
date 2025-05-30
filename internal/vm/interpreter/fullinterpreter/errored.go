@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -20,6 +21,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
+	runlog.Write(endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)

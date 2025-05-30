@@ -18,7 +18,7 @@ type Entry struct {
 	Time           time.Time
 }
 
-func NewEntryFromBranchInfos(branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) Entry {
+func NewEntry(branchInfos gitdomain.BranchInfos, pendingCommand Option[string]) Entry {
 	branches := map[gitdomain.BranchName]gitdomain.SHA{}
 	for _, branchInfo := range branchInfos {
 		if hasLocalBranch, localName, localSHA := branchInfo.GetLocal(); hasLocalBranch {

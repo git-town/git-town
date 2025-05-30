@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
@@ -23,6 +24,7 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
+	runlog.Write(endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
 	configGitAccess := gitconfig.Access{Runner: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {

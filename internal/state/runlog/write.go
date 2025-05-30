@@ -9,13 +9,15 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Append writes the given entry to the end of the runlog for this repo.
 // TODO:
 // - fullinterpreter.Execute receives a receipt that the initial runlog was written
 // - it writes the final runlog on exit
-func Write(entry Entry, repoDir gitdomain.RepoRootDir) error {
+func Write(branchInfos gitdomain.BranchInfos, pendingCommand Option[string], repoDir gitdomain.RepoRootDir) error {
+	entry := NewEntry(branchInfos, pendingCommand)
 	content, err := json.MarshalIndent(entry, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunLogSerializeProblem, err)
