@@ -12,9 +12,8 @@ import (
 func FilePath(repoDir gitdomain.RepoRootDir, fileType FileType) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
-		return "", fmt.Errorf(messages.RunstatePathProblem, err)
+		return "", fmt.Errorf(messages.RunstateCannotDetermineUserDir, err)
 	}
-	persistenceDir := filepath.Join(configDir, "git-town", fileType.String())
-	filename := SanitizePath(repoDir)
-	return filepath.Join(persistenceDir, filename+".json"), err
+	sanitizedRepo := SanitizePath(repoDir)
+	return filepath.Join(configDir, "git-town", sanitizedRepo, fileType.String()+".json"), nil
 }

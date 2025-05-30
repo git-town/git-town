@@ -212,7 +212,7 @@ and will be removed in future versions of Git Town.`
 	RunstateDeleteProblem                   = "cannot delete previous run state: %w"
 	RunstateLoadProblem                     = "cannot load previous run state: %w"
 	RunstateSerializeProblem                = "cannot encode run-state: %w"
-	RunstatePathProblem                     = "cannot determine the runstate file path: %w"
+	RunstateCannotDetermineUserDir          = "cannot determine the user configuration directory: %w"
 	RunstateSaveProblem                     = "cannot save run state: %w"
 	SetParentNoFeatureBranch                = "the branch %q is not a feature branch. Only feature branches can have parent branches"
 	SettingDeprecatedMessage                = "Upgrading deprecated %s setting %q to %q."
