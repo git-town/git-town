@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
@@ -18,6 +19,10 @@ import (
 
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
+	err := runlog.Write(runlog.EventStart, args.InitialBranchesSnapshot.Branches, args.PendingCommand, args.RootDir)
+	if err != nil {
+		return err
+	}
 	for {
 		nextStep := args.RunState.RunProgram.Pop()
 		if nextStep == nil {
@@ -70,6 +75,7 @@ type ExecuteArgs struct {
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
+	PendingCommand          Option[string]
 	RootDir                 gitdomain.RepoRootDir
 	RunState                runstate.RunState
 	Verbose                 configdomain.Verbose

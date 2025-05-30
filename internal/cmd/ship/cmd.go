@@ -165,6 +165,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		InitialBranchesSnapshot: sharedData.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        sharedData.stashSize,
+		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,

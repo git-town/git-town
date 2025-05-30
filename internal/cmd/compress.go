@@ -152,6 +152,7 @@ func executeCompress(dryRun configdomain.DryRun, verbose configdomain.Verbose, m
 		InitialBranchesSnapshot: data.branchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        data.stashSize,
+		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
 		Verbose:                 verbose,

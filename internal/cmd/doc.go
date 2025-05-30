@@ -34,6 +34,7 @@ func Execute() error {
 	rootCmd.AddCommand(prototypeCmd())
 	rootCmd.AddCommand(renameCommand())
 	rootCmd.AddCommand(repoCommand())
+	rootCmd.AddCommand(runLogCommand())
 	rootCmd.AddCommand(status.RootCommand())
 	rootCmd.AddCommand(setParentCommand())
 	rootCmd.AddCommand(ship.Cmd())

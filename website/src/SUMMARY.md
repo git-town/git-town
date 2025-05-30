@@ -18,6 +18,7 @@
     - [propose](commands/propose.md)
   - [Dealing with errors](error-commands.md)
     - [continue](commands/continue.md)
+    - [runlog](commands/runlog.md)
     - [skip](commands/skip.md)
     - [status](commands/status.md)
     - [status.reset](commands/status-reset.md)

@@ -106,6 +106,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (boo
 		InitialBranchesSnapshot: runState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   runState.BeginConfigSnapshot,
 		InitialStashSize:        runState.BeginStashSize,
+		PendingCommand:          Some(runState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                runState,
 		Verbose:                 args.Verbose,

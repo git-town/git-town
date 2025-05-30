@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
@@ -20,6 +21,10 @@ import (
 // finished is called when executing all steps has successfully finished.
 func finished(args finishedArgs) error {
 	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
+	if err != nil {
+		return err
+	}
+	err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
 	if err != nil {
 		return err
 	}

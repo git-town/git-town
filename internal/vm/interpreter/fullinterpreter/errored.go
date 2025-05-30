@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
@@ -17,6 +18,10 @@ import (
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	endBranchesSnapshot, err := args.Git.BranchesSnapshot(args.Backend)
+	if err != nil {
+		return err
+	}
+	err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
 	if err != nil {
 		return err
 	}

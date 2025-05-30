@@ -55,6 +55,7 @@ func Execute(args ExecuteArgs) error {
 		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
 		InitialStashSize:        args.RunState.BeginStashSize,
+		PendingCommand:          Some(args.RunState.Command),
 		RootDir:                 args.RootDir,
 		RunState:                args.RunState,
 		Verbose:                 args.Verbose,
