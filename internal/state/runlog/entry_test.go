@@ -17,7 +17,6 @@ func TestEntry(t *testing.T) {
 
 	t.Run("serialize", func(t *testing.T) {
 		t.Parallel()
-		now := time.Date(2025, 0o5, 28, 20, 34, 58, 123456789, time.UTC)
 		entry := runlog.Entry{
 			Branches: map[gitdomain.BranchName]gitdomain.SHA{
 				"main":            "111111",
@@ -27,7 +26,7 @@ func TestEntry(t *testing.T) {
 			},
 			Command:        "git town sync",
 			Event:          runlog.EventStart,
-			Time:           now,
+			Time:           time.Date(2025, 0o5, 28, 20, 34, 58, 123456789, time.UTC),
 			PendingCommand: None[string](),
 		}
 		have := asserts.NoError1(json.MarshalIndent(entry, "", "  "))
