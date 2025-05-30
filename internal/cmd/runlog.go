@@ -67,7 +67,7 @@ func executeRunLog(verbose configdomain.Verbose) error {
 	return nil
 }
 
-func showRunlog(data runlogData) error {
+func showRunlog(data runLogData) error {
 	fmt.Printf(messages.RunlogDisplaying, data.filepath)
 	fmt.Println()
 	content, err := os.ReadFile(data.filepath)
@@ -79,13 +79,13 @@ func showRunlog(data runlogData) error {
 	return nil
 }
 
-type runlogData struct {
+type runLogData struct {
 	filepath string // filepath of the runstate file
 }
 
-func loadRunlogData(rootDir gitdomain.RepoRootDir) (runlogData, error) {
+func loadRunlogData(rootDir gitdomain.RepoRootDir) (runLogData, error) {
 	filepath, err := state.FilePath(rootDir, state.FileTypeRunlog)
-	return runlogData{
+	return runLogData{
 		filepath: filepath,
 	}, err
 }
