@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	runlogDesc = "Displays the repository state before and after all executed Git Town commands"
-	runlogHelp = `
+	runLogDesc = "Displays the repository state before and after all executed Git Town commands"
+	runLogHelp = `
 Git Town logs the repository state
 before and after each Git Town command executes.
 This is an additional safety net.
@@ -26,27 +26,27 @@ in case "git town undo" isn't enough.
 `
 )
 
-func runlogCommand() *cobra.Command {
+func runLogCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "runlog",
 		Args:    cobra.NoArgs,
 		GroupID: cmdhelpers.GroupIDErrors,
-		Short:   runlogDesc,
-		Long:    cmdhelpers.Long(runlogDesc),
+		Short:   runLogDesc,
+		Long:    cmdhelpers.Long(runLogDesc, runLogHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verbose, err := readVerboseFlag(cmd)
 			if err != nil {
 				return err
 			}
-			return executeRunlogShow(verbose)
+			return executeRunLog(verbose)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRunlogShow(verbose configdomain.Verbose) error {
+func executeRunLog(verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		PrintBranchNames: true,
