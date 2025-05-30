@@ -80,7 +80,7 @@ func showRunLog(data runLogData) error {
 }
 
 type runLogData struct {
-	filepath string // filepath of the runstate file
+	filepath string // filepath of the runlog file
 }
 
 func loadRunLogData(rootDir gitdomain.RepoRootDir) (runLogData, error) {
