@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/lightinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -63,6 +63,6 @@ type ExecuteArgs struct {
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir
-	RunState         runstate.RunState
+	RunState         vmstate.Data
 	Verbose          configdomain.Verbose
 }

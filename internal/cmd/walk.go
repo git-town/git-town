@@ -21,7 +21,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/optimizer"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -117,7 +117,7 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 		return err
 	}
 	runProgram := walkProgram(args, data, dryRun)
-	runState := runstate.RunState{
+	runState := vmstate.Data{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   data.repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,

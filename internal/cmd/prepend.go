@@ -27,7 +27,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/optimizer"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/git-town/git-town/v21/pkg/set"
 	"github.com/spf13/cobra"
@@ -160,7 +160,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomai
 		return err
 	}
 	runProgram := prependProgram(data, repo.FinalMessages)
-	runState := runstate.RunState{
+	runState := vmstate.Data{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,

@@ -20,7 +20,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -169,15 +169,15 @@ type continueData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, bool, error) {
+func determineContinueRunstate(repo execute.OpenRepoResult) (vmstate.Data, bool, error) {
 	runStateOpt, err := statefile.Load(repo.RootDir)
 	if err != nil {
-		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return vmstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	runState, hasRunState := runStateOpt.Get()
 	if !hasRunState || runState.IsFinished() {
 		fmt.Println(messages.ContinueNothingToDo)
-		return runstate.EmptyRunState(), true, nil
+		return vmstate.EmptyRunState(), true, nil
 	}
 	runState.AbortProgram = program.Program{}
 	return runState, false, nil

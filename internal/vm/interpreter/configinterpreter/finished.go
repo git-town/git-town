@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -38,7 +38,7 @@ func Finished(args FinishedArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	runState := runstate.RunState{
+	runState := vmstate.Data{
 		AbortProgram:             program.Program{},
 		BeginBranchesSnapshot:    args.BeginBranchesSnapshot.GetOrDefault(),
 		BeginConfigSnapshot:      args.BeginConfigSnapshot,
@@ -54,7 +54,7 @@ func Finished(args FinishedArgs) error {
 		TouchedBranches:          args.TouchedBranches,
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UndoAPIProgram:           program.Program{},
-		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
+		UnfinishedDetails:        MutableNone[vmstate.UnfinishedData](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
 	return statefile.Save(runState, args.RootDir)

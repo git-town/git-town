@@ -1,4 +1,4 @@
-package runstate
+package vmstate
 
 import (
 	"fmt"
@@ -8,14 +8,14 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 )
 
-// UnfinishedRunStateDetails has details about an unfinished run state.
-type UnfinishedRunStateDetails struct {
+// UnfinishedData has details about an unfinished run state.
+type UnfinishedData struct {
 	CanSkip   bool
 	EndBranch gitdomain.LocalBranchName
 	EndTime   time.Time
 }
 
-func (self UnfinishedRunStateDetails) String() string {
+func (self UnfinishedData) String() string {
 	result := strings.Builder{}
 	result.WriteString("UnfinishedRunStateDetails {\n")
 	result.WriteString("  CanSkip: ")

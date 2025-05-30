@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/statefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -56,6 +56,6 @@ type finishedArgs struct {
 	FinalMessages   stringslice.Collector
 	Git             git.Commands
 	RootDir         gitdomain.RepoRootDir
-	RunState        runstate.RunState
+	RunState        vmstate.Data
 	Verbose         configdomain.Verbose
 }

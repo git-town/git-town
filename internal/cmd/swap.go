@@ -23,7 +23,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -108,7 +108,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 		return err
 	}
 	runProgram := swapProgram(data, repo.FinalMessages)
-	runState := runstate.RunState{
+	runState := vmstate.Data{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,

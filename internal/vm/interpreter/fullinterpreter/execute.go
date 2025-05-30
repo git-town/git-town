@@ -11,8 +11,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -71,6 +71,6 @@ type ExecuteArgs struct {
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
 	RootDir                 gitdomain.RepoRootDir
-	RunState                runstate.RunState
+	RunState                vmstate.Data
 	Verbose                 configdomain.Verbose
 }

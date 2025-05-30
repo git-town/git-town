@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/undo/undostash"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 )
 
 // create the program to undo a currently running Git Town command
@@ -39,5 +39,5 @@ type CreateUndoProgramArgs struct {
 	Git            git.Commands
 	HasOpenChanges bool
 	NoPushHook     configdomain.NoPushHook
-	RunState       runstate.RunState
+	RunState       vmstate.Data
 }

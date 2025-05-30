@@ -18,7 +18,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/undo"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -73,12 +73,12 @@ type UnfinishedStateArgs struct {
 	PushHook          configdomain.PushHook
 	RepoStatus        gitdomain.RepoStatus
 	RootDir           gitdomain.RepoRootDir
-	RunState          Option[runstate.RunState]
+	RunState          Option[vmstate.Data]
 	UnvalidatedConfig config.UnvalidatedConfig
 	Verbose           configdomain.Verbose
 }
 
-func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+func continueRunstate(runState vmstate.Data, args UnfinishedStateArgs) (bool, error) {
 	if args.RepoStatus.Conflicts {
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
@@ -151,7 +151,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 	}, false, nil
 }
 
-func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, error) {
+func skipRunstate(args UnfinishedStateArgs, runState vmstate.Data) (bool, error) {
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return false, err
@@ -183,7 +183,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (bool, e
 	})
 }
 
-func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (bool, error) {
+func undoRunState(args UnfinishedStateArgs, runState vmstate.Data) (bool, error) {
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:      args.Backend,
 		dialogInputs: args.DialogTestInputs,

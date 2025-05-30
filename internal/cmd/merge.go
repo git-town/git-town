@@ -22,7 +22,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/optimizer"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -107,7 +107,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		return err
 	}
 	runProgram := mergeProgram(data, dryRun)
-	runState := runstate.RunState{
+	runState := vmstate.Data{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,

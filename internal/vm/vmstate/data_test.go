@@ -1,4 +1,4 @@
-package runstate_test
+package vmstate_test
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -18,7 +18,7 @@ func TestRunState(t *testing.T) {
 
 	t.Run("Marshal and Unmarshal", func(t *testing.T) {
 		t.Parallel()
-		runState := &runstate.RunState{
+		runState := &vmstate.Data{
 			BranchInfosLastRun: Some(gitdomain.BranchInfos{
 				{
 					LocalName:  gitdomain.NewLocalBranchNameOption("branch"),
@@ -142,7 +142,7 @@ func TestRunState(t *testing.T) {
   "UnfinishedDetails": null
 }`[1:]
 		must.EqOp(t, want, string(encoded))
-		newRunState := runstate.EmptyRunState()
+		newRunState := vmstate.EmptyRunState()
 		err = json.Unmarshal(encoded, &newRunState)
 		must.NoError(t, err)
 		must.Eq(t, runState, &newRunState)

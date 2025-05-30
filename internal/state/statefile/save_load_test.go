@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -37,7 +37,7 @@ func TestLoadSave(t *testing.T) {
 
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
-		runState := runstate.RunState{
+		runState := vmstate.Data{
 			AbortProgram:          program.Program{},
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
 			BeginConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
@@ -140,7 +140,7 @@ func TestLoadSave(t *testing.T) {
 				&opcodes.SyncFeatureBranchRebase{Branch: "branch", ParentLastRunSHA: Some(gitdomain.NewSHA("111111")), PushBranches: true, TrackingBranch: Some(gitdomain.NewRemoteBranchName("origin/branch"))},
 			},
 			TouchedBranches: []gitdomain.BranchName{"branch-1", "branch-2"},
-			UnfinishedDetails: MutableSome(&runstate.UnfinishedRunStateDetails{
+			UnfinishedDetails: MutableSome(&vmstate.UnfinishedData{
 				CanSkip:   true,
 				EndBranch: "end-branch",
 				EndTime:   time.Time{},
@@ -809,7 +809,7 @@ func TestLoadSave(t *testing.T) {
 		content, err := os.ReadFile(filepath)
 		must.NoError(t, err)
 		must.EqOp(t, wantJSON, string(content))
-		var newState runstate.RunState
+		var newState vmstate.Data
 		err = json.Unmarshal(content, &newState)
 		must.NoError(t, err)
 		// NOTE: comparing runState and newState directly leads to incorrect test failures

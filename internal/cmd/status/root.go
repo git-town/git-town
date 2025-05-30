@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/state/statefile"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -75,8 +75,8 @@ func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) e
 }
 
 type displayStatusData struct {
-	filepath string                    // filepath of the runstate file
-	state    Option[runstate.RunState] // content of the runstate file
+	filepath string               // filepath of the runstate file
+	state    Option[vmstate.Data] // content of the runstate file
 }
 
 func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusData, err error) {
@@ -109,7 +109,7 @@ func displayStatus(data displayStatusData, pending configdomain.Pending) {
 	}
 }
 
-func displayUnfinishedStatus(state runstate.RunState, pending configdomain.Pending) {
+func displayUnfinishedStatus(state vmstate.Data, pending configdomain.Pending) {
 	unfinishedDetails, hasUnfinishedDetails := state.UnfinishedDetails.Get()
 	if pending {
 		if hasUnfinishedDetails {
@@ -132,7 +132,7 @@ func displayUnfinishedStatus(state runstate.RunState, pending configdomain.Pendi
 	}
 }
 
-func displayFinishedStatus(state runstate.RunState, pending configdomain.Pending) {
+func displayFinishedStatus(state vmstate.Data, pending configdomain.Pending) {
 	if !pending {
 		fmt.Printf(messages.PreviousCommandFinished, state.Command)
 		fmt.Println(messages.UndoMessage)

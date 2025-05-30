@@ -18,7 +18,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/lightinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -73,7 +73,7 @@ type ExecuteArgs struct {
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
 	RootDir         gitdomain.RepoRootDir
-	RunState        runstate.RunState
+	RunState        vmstate.Data
 	TestInputs      components.TestInputs
 	Verbose         configdomain.Verbose
 }

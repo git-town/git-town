@@ -26,7 +26,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/program"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
+	"github.com/git-town/git-town/v21/internal/vm/vmstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
@@ -185,7 +185,7 @@ type convertToFeatureData struct {
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
 	runProgram := appendProgram(args.appendData, args.finalMessages, true)
-	runState := runstate.RunState{
+	runState := vmstate.Data{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
 		BeginStashSize:        args.beginStashSize,
