@@ -1,4 +1,4 @@
-package statefile
+package runstatefile
 
 import (
 	"encoding/json"

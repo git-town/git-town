@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state"
-	"github.com/git-town/git-town/v21/internal/state/statefile"
+	"github.com/git-town/git-town/v21/internal/state/runstatefile"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -84,7 +84,7 @@ func loadDisplayStatusData(rootDir gitdomain.RepoRootDir) (result displayStatusD
 	if err != nil {
 		return result, err
 	}
-	state, err := statefile.Load(rootDir)
+	state, err := runstatefile.Load(rootDir)
 	if err != nil {
 		return result, err
 	}

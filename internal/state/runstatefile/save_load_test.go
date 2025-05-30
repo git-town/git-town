@@ -1,4 +1,4 @@
-package statefile_test
+package runstatefile_test
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/state"
-	"github.com/git-town/git-town/v21/internal/state/statefile"
+	"github.com/git-town/git-town/v21/internal/state/runstatefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/opcodes"
 	"github.com/git-town/git-town/v21/internal/vm/program"
@@ -802,7 +802,7 @@ func TestLoadSave(t *testing.T) {
 }`[1:]
 
 		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
-		err := statefile.Save(runState, repoRoot)
+		err := runstatefile.Save(runState, repoRoot)
 		must.NoError(t, err)
 		filepath, err := state.FilePath(repoRoot, state.FileTypeRunstate)
 		must.NoError(t, err)

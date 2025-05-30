@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
-	"github.com/git-town/git-town/v21/internal/state/statefile"
+	"github.com/git-town/git-town/v21/internal/state/runstatefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -72,7 +72,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	err = statefile.Save(args.RunState, args.RootDir)
+	err = runstatefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}

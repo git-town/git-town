@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/state/statefile"
+	"github.com/git-town/git-town/v21/internal/state/runstatefile"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/runstate"
@@ -57,7 +57,7 @@ func Finished(args FinishedArgs) error {
 		UnfinishedDetails:        MutableNone[runstate.UnfinishedRunStateDetails](),
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
-	return statefile.Save(runState, args.RootDir)
+	return runstatefile.Save(runState, args.RootDir)
 }
 
 type FinishedArgs struct {

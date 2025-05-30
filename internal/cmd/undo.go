@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/state/statefile"
+	"github.com/git-town/git-town/v21/internal/state/runstatefile"
 	"github.com/git-town/git-town/v21/internal/undo"
 	"github.com/git-town/git-town/v21/internal/validate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -60,7 +60,7 @@ func executeUndo(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	runStateOpt, err := statefile.Load(repo.RootDir)
+	runStateOpt, err := runstatefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
