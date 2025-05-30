@@ -63,5 +63,14 @@ func executeStatusReset(verbose configdomain.Verbose) error {
 	} else {
 		fmt.Println(messages.RunstateDoesntExist)
 	}
+	existed, err = state.Delete(rootDir, state.FileTypeRunlog)
+	if err != nil {
+		return err
+	}
+	if existed {
+		fmt.Println(messages.RunLogDeleted)
+	} else {
+		fmt.Println(messages.RunLogDoesntExist)
+	}
 	return nil
 }
