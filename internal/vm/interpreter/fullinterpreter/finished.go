@@ -12,9 +12,8 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
-	"github.com/git-town/git-town/v21/internal/state/runstatefile"
+	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -47,7 +46,7 @@ func finished(args finishedArgs) error {
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.MarkAsFinished(endBranchesSnapshot)
-	err = runstatefile.Save(args.RunState, args.RootDir)
+	err = runstate.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}

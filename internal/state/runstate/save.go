@@ -1,4 +1,4 @@
-package runstatefile
+package runstate
 
 import (
 	"encoding/json"
@@ -9,11 +9,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state"
-	"github.com/git-town/git-town/v21/internal/vm/runstate"
 )
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState runstate.RunState, repoDir gitdomain.RepoRootDir) error {
+func Save(runState RunState, repoDir gitdomain.RepoRootDir) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSerializeProblem, err)

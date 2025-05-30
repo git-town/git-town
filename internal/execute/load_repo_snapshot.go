@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
-	"github.com/git-town/git-town/v21/internal/state/runstatefile"
+	"github.com/git-town/git-town/v21/internal/state/runstate"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -17,7 +17,7 @@ import (
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
 func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], bool, error) {
-	runStateOpt, err := runstatefile.Load(args.RootDir)
+	runStateOpt, err := runstate.Load(args.RootDir)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err
 	}
