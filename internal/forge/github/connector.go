@@ -30,6 +30,10 @@ type Connector struct {
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return DefaultProposalMessage(data)
+}
+
+func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
@@ -44,6 +48,10 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 }
 
 func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
+	return NewProposalURL(branch, parentBranch, mainBranch, proposalTitle, proposalBody)
+}
+
+func NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != mainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()

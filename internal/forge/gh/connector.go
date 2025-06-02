@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -24,7 +25,7 @@ type Runner interface {
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
+	return github.DefaultProposalMessage(data)
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -71,4 +72,8 @@ type ghData struct {
 	Number      int    `json:"number"`
 	Title       string `json:"title"`
 	URL         string `json:"url"`
+}
+
+func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
+	githubConnector := github.DefaultProposalMessage(u)
 }
