@@ -13,7 +13,6 @@ Feature: compress the commits on a feature branch verbosely
     And the current branch is "feature"
     When I run "git-town compress --verbose" and enter "compressed commit" for the commit message
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                                                                                                                                                                                                                                                                                                                          |
