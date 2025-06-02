@@ -51,7 +51,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	proposal := forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
 			Body:         NewOption(pr.Body),
-			MergeWithAPI: pr.MergeStateStatus == "",
+			MergeWithAPI: pr.Mergeable == "MERGEABLE",
 			Number:       pr.Number,
 			Source:       gitdomain.NewLocalBranchName(pr.HeadRefName),
 			Target:       gitdomain.NewLocalBranchName(pr.BaseRefName),
@@ -64,12 +64,11 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 }
 
 type ghData struct {
-	BaseRefName      string `json:"baseRefName"`
-	Body             string `json:"body"`
-	HeadRefName      string `json:"headRefName"`
-	MergeStateStatus string `json:"mergeStateStatus"`
-	Mergeable        string `json:"mergeable"`
-	Number           int    `json:"number"`
-	Title            string `json:"title"`
-	URL              string `json:"url"`
+	BaseRefName string `json:"baseRefName"`
+	Body        string `json:"body"`
+	HeadRefName string `json:"headRefName"`
+	Mergeable   string `json:"mergeable"`
+	Number      int    `json:"number"`
+	Title       string `json:"title"`
+	URL         string `json:"url"`
 }
