@@ -12,7 +12,6 @@ Feature: display all executed Git commands when using the fast-forward strategy
     And Git setting "git-town.ship-strategy" is "fast-forward"
     When I run "git-town ship --verbose"
 
-  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH  | TYPE     | COMMAND                                                                                                                                                                                                                                                                                                                                          |
