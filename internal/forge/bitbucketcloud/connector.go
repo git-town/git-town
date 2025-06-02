@@ -60,13 +60,13 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return Some(self.findProposalViaAPI)
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
+func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
 	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 			self.RepositoryURL(),
-			url.QueryEscape(branch.String()),
+			url.QueryEscape(data.Branch.String()),
 			url.QueryEscape(self.Organization),
 			url.QueryEscape(self.Repository),
-			url.QueryEscape(parentBranch.String())),
+			url.QueryEscape(data.ParentBranch.String())),
 		nil
 }
 

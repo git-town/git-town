@@ -41,8 +41,8 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
-	toCompare := parentBranch.String() + "..." + branch.String()
+func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
 	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 

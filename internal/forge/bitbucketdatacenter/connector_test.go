@@ -41,7 +41,13 @@ func TestBitbucketConnector(t *testing.T) {
 			HostingPlatform: None[forgedomain.ForgeType](),
 			RemoteURL:       url,
 		})
-		have, err := connector.NewProposalURL("branch", "parent-branch", "main", "", "")
+		have, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
+			Branch:        "branch",
+			MainBranch:    "main",
+			ParentBranch:  "parent-branch",
+			ProposalBody:  "",
+			ProposalTitle: "",
+		})
 		must.NoError(t, err)
 		want := "https://custom-url.com/projects/git-town/repos/docs/pull-requests?create&sourceBranch=branch&targetBranch=parent-branch"
 		must.EqOp(t, want, have)
