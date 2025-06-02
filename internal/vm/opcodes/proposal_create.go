@@ -28,7 +28,13 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	prURL, err := connector.NewProposalURL(self.Branch, parentBranch, self.MainBranch, self.ProposalTitle, self.ProposalBody)
+	prURL, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
+		Branch:        self.Branch,
+		ParentBranch:  parentBranch,
+		MainBranch:    self.MainBranch,
+		ProposalTitle: self.ProposalTitle,
+		ProposalBody:  self.ProposalBody,
+	})
 	if err != nil {
 		return err
 	}
