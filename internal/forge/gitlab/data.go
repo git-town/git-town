@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -19,10 +18,10 @@ func (self Data) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (!%d)", data.Title, data.Number))
 }
 
-func (self Data) NewProposalURL(branch, parentBranch, _ gitdomain.LocalBranchName, _ gitdomain.ProposalTitle, _ gitdomain.ProposalBody) (string, error) {
+func (self Data) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
 	query := url.Values{}
-	query.Add("merge_request[source_branch]", branch.String())
-	query.Add("merge_request[target_branch]", parentBranch.String())
+	query.Add("merge_request[source_branch]", data.Branch.String())
+	query.Add("merge_request[target_branch]", data.ParentBranch.String())
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode()), nil
 }
 

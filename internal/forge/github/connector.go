@@ -47,21 +47,21 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
-	return NewProposalURL(branch, parentBranch, mainBranch, proposalTitle, proposalBody)
+func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+	return NewProposalURL(data)
 }
 
-func NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
-	toCompare := branch.String()
-	if parentBranch != mainBranch {
-		toCompare = parentBranch.String() + "..." + branch.String()
+func NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+	toCompare := data.Branch.String()
+	if data.ParentBranch != data.MainBranch {
+		toCompare = data.ParentBranch.String() + "..." + data.Branch.String()
 	}
 	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
-	if len(proposalTitle) > 0 {
-		result += "&title=" + url.QueryEscape(proposalTitle.String())
+	if len(data.ProposalTitle) > 0 {
+		result += "&title=" + url.QueryEscape(data.ProposalTitle.String())
 	}
-	if len(proposalBody) > 0 {
-		result += "&body=" + url.QueryEscape(proposalBody.String())
+	if len(data.ProposalBody) > 0 {
+		result += "&body=" + url.QueryEscape(data.ProposalBody.String())
 	}
 	return result, nil
 }

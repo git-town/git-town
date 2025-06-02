@@ -36,7 +36,7 @@ type Connector interface {
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
-	NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error)
+	NewProposalURL(NewProposalURLData) (string, error)
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
@@ -52,4 +52,12 @@ type Connector interface {
 	// to update the target branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
 	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+}
+
+type NewProposalURLData struct {
+	Branch        gitdomain.LocalBranchName
+	MainBranch    gitdomain.LocalBranchName
+	ParentBranch  gitdomain.LocalBranchName
+	ProposalBody  gitdomain.ProposalBody
+	ProposalTitle gitdomain.ProposalTitle
 }
