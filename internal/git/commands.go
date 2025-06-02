@@ -90,7 +90,7 @@ func (self *Commands) BranchInSyncWithTracking(querier gitdomain.Querier, branch
 	}
 	lines := strings.Split(out, "\n")
 	if len(lines) != 2 {
-		return false, fmt.Errorf("Got %d lines: " + strings.Join(lines, ", "))
+		return false, fmt.Errorf("Unexpected output of git rev-parse: expected 2 lines, got %d: " + strings.Join(lines, ", "))
 	}
 	branchSHA := strings.TrimSpace(lines[0])
 	trackingSHA := strings.TrimSpace(lines[1])
