@@ -80,10 +80,10 @@ func TestGitlabConnector(t *testing.T) {
 				}
 				have, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
 					Branch:        tt.branch,
-					ParentBranch:  tt.parent,
 					MainBranch:    "main",
-					ProposalTitle: "",
+					ParentBranch:  tt.parent,
 					ProposalBody:  "",
+					ProposalTitle: "",
 				})
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)

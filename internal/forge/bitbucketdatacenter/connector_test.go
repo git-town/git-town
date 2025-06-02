@@ -43,10 +43,10 @@ func TestBitbucketConnector(t *testing.T) {
 		})
 		have, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
 			Branch:        "branch",
-			ParentBranch:  "parent-branch",
 			MainBranch:    "main",
-			ProposalTitle: "",
+			ParentBranch:  "parent-branch",
 			ProposalBody:  "",
+			ProposalTitle: "",
 		})
 		must.NoError(t, err)
 		want := "https://custom-url.com/projects/git-town/repos/docs/pull-requests?create&sourceBranch=branch&targetBranch=parent-branch"

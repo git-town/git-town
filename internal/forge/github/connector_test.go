@@ -107,10 +107,10 @@ func TestConnector(t *testing.T) {
 				}
 				have, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
 					Branch:        tt.branch,
-					ParentBranch:  tt.parent,
 					MainBranch:    "main",
-					ProposalTitle: tt.title,
+					ParentBranch:  tt.parent,
 					ProposalBody:  tt.body,
+					ProposalTitle: tt.title,
 				})
 				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)

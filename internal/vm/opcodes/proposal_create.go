@@ -30,10 +30,10 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	}
 	prURL, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
 		Branch:        self.Branch,
-		ParentBranch:  parentBranch,
 		MainBranch:    self.MainBranch,
-		ProposalTitle: self.ProposalTitle,
+		ParentBranch:  parentBranch,
 		ProposalBody:  self.ProposalBody,
+		ProposalTitle: self.ProposalTitle,
 	})
 	if err != nil {
 		return err

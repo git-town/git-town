@@ -56,8 +56,8 @@ type Connector interface {
 
 type NewProposalURLData struct {
 	Branch        gitdomain.LocalBranchName
-	ParentBranch  gitdomain.LocalBranchName
 	MainBranch    gitdomain.LocalBranchName
-	ProposalTitle gitdomain.ProposalTitle
+	ParentBranch  gitdomain.LocalBranchName
 	ProposalBody  gitdomain.ProposalBody
+	ProposalTitle gitdomain.ProposalTitle
 }
