@@ -48,15 +48,15 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 }
 
 func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
-	return NewProposalURL(data)
+	return NewProposalURL(data, self.RepositoryURL())
 }
 
-func NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+func NewProposalURL(data forgedomain.NewProposalURLData, repoURL string) (string, error) {
 	toCompare := data.Branch.String()
 	if data.ParentBranch != data.MainBranch {
 		toCompare = data.ParentBranch.String() + "..." + data.Branch.String()
 	}
-	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
+	result := fmt.Sprintf("%s/compare/%s?expand=1", repoURL, url.PathEscape(toCompare))
 	if len(data.ProposalTitle) > 0 {
 		result += "&title=" + url.QueryEscape(data.ProposalTitle.String())
 	}
