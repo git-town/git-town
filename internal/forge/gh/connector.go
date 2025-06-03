@@ -77,3 +77,7 @@ type ghData struct {
 func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
 	return github.NewProposalURL(data, self.RepositoryURL())
 }
+
+func (self Connector) RepositoryURL() string {
+	return github.RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}

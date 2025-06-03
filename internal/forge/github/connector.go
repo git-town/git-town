@@ -67,7 +67,11 @@ func NewProposalURL(data forgedomain.NewProposalURLData, repoURL string) (string
 }
 
 func (self Connector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
+	return RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}
+
+func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
+	return fmt.Sprintf("https://%s/%s/%s", hostNameWithStandardPort, organization, repository)
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
