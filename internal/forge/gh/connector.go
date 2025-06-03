@@ -74,6 +74,6 @@ type ghData struct {
 	URL         string `json:"url"`
 }
 
-func (self Connector) NewProposalURL(branch, parentBranch, mainBranch gitdomain.LocalBranchName, proposalTitle gitdomain.ProposalTitle, proposalBody gitdomain.ProposalBody) (string, error) {
-	githubConnector := github.DefaultProposalMessage(u)
+func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+	return github.NewProposalURL(data, self.RepositoryURL())
 }
