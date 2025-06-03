@@ -1,9 +1,9 @@
 package gh
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
+	"os/exec"
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
-	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -27,25 +26,19 @@ type Connector struct {
 // NewConnector provides a fully configured gh.Connector instance
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	githubClient := github.NewClient(httpClient)
-	if args.RemoteURL.Host != "github.com" {
-		url := "https://" + args.RemoteURL.Host
-		var err error
-		githubClient, err = githubClient.WithEnterpriseURLs(url, url)
-		if err != nil {
-			return Connector{}, fmt.Errorf(messages.GitHubEnterpriseInitializeError, err)
-		}
+	// detect gh executable
+	ghPath, err := exec.LookPath("gh")
+	if err != nil {
+		return nil, nil
 	}
+	// check if the gh executable can deal with this repo
 	return Connector{
-		APIToken: args.APIToken,
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		client: githubClient,
+		ghPath: ghPath,
 		log:    args.Log,
 	}, nil
 }
