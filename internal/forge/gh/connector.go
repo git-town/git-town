@@ -3,7 +3,7 @@ package gh
 import (
 	"encoding/json"
 	"fmt"
-	"os/exec"
+	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
+	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -26,19 +27,14 @@ type Connector struct {
 // NewConnector provides a fully configured gh.Connector instance
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
-	// detect gh executable
-	ghPath, err := exec.LookPath("gh")
-	if err != nil {
-		return nil, nil
-	}
-	// check if the gh executable can deal with this repo
 	return Connector{
 		Data: forgedomain.Data{
 			Hostname:     args.RemoteURL.Host,
 			Organization: args.RemoteURL.Org,
 			Repository:   args.RemoteURL.Repo,
 		},
-		ghPath: ghPath,
+		ghPath: args.GhPath,
+		runner: args.Runner,
 		log:    args.Log,
 	}, nil
 }
@@ -47,10 +43,13 @@ type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GitHubToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
+	Runner    Runner
+	GhPath    string
 }
 
 type Runner interface {
 	Query(executable string, args ...string) (string, error)
+	Run(executable string, args ...string) error
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
@@ -109,4 +108,52 @@ func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (strin
 
 func (self Connector) RepositoryURL() string {
 	return github.RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}
+
+func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+	return Some(self.searchProposal)
+}
+
+func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
+	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
+}
+
+func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
+	return Some(self.updateProposalTarget)
+}
+
+func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	out, err := self.runner.Query(self.ghPath, "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
+	var parsed []ghData
+	err = json.Unmarshal([]byte(out), &parsed)
+	if err != nil {
+		return None[forgedomain.Proposal](), err
+	}
+	if len(parsed) == 0 {
+		return None[forgedomain.Proposal](), nil
+	}
+	if len(parsed) > 1 {
+		return None[forgedomain.Proposal](), fmt.Errorf("found more than one pull request: %d", len(parsed))
+	}
+	pr := parsed[0]
+	proposal := forgedomain.Proposal{
+		Data: forgedomain.ProposalData{
+			Body:         NewOption(pr.Body),
+			MergeWithAPI: pr.Mergeable == "MERGEABLE",
+			Number:       pr.Number,
+			Source:       gitdomain.NewLocalBranchName(pr.HeadRefName),
+			Target:       gitdomain.NewLocalBranchName(pr.BaseRefName),
+			Title:        pr.Title,
+			URL:          pr.URL,
+		},
+		ForgeType: forgedomain.ForgeTypeGitHub,
+	}
+	return Some(proposal), nil
+}
+
+func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
+	return self.runner.Run(self.ghPath, "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
