@@ -55,7 +55,9 @@ matching your CPU architecture and run
 rpm -i git-town_linux_intel_64.rpm
 ```
 
-On Arch Linux, install the [git-town](https://archlinux.org/packages/extra/x86_64/git-town/) package from official package repositories:
+On Arch Linux, install the
+[git-town](https://archlinux.org/packages/extra/x86_64/git-town/) package from
+official package repositories:
 
 ```
 pacman -S git-town
