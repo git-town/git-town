@@ -62,7 +62,8 @@ development. Supports mono-repos and stacked changes. Check out
 
 - [continue](https://www.git-town.com/commands/continue.html) - resume the last
   run Git Town command after having resolved conflicts
-- [runlog](https://www.git-town.com/commands/runlog.html) - display the repo state before and after previous Git Town commands
+- [runlog](https://www.git-town.com/commands/runlog.html) - display the repo
+  state before and after previous Git Town commands
 - [skip](https://www.git-town.com/commands/skip.html) - resume the last run Git
   Town command by skipping the current branch
 - [status](https://www.git-town.com/commands/status.html) - displays or resets
