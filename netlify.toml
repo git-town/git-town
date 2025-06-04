@@ -1,5 +1,0 @@
-[build]
-  base = "website/"
-  publish = "book/html"
-  command = "sudo apt remove mise && make build"
-  ignore = "/bin/false"
