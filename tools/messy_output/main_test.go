@@ -9,7 +9,6 @@ import (
 )
 
 func TestMessyOutput(t *testing.T) {
-
 	t.Run("feature has tag but no steps", func(t *testing.T) {
 		text := `
 @messyoutput
