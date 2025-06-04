@@ -11,6 +11,10 @@
 - Git Town now supports the situation where a file has the same name as a branch ([#5001](https://github.com/git-town/git-town/issues/5001)).
 - Fixes a bug where `git town sync` sometimes doesn't push local changes ([#5007](https://github.com/git-town/git-town/issues/5007)).
 
+#### Contributors
+
+Shoutout to @AmitJoki, @SmolPandaDev, @kevgo, @legeana, @niklashigi, @stephenwade, @tobiaseisenschenk, @towry, @tranhl for contributing valuable code, feedback, and ideas to 19 shipped PRs and 6 resolved issues!
+
 ## 21.0.0 (2025-05-27)
 
 #### BREAKING CHANGES
