@@ -6,5 +6,5 @@ Feature: show the version of the current Git Town installation
     When I run "git-town --version"
     Then Git Town prints:
       """
-      Git Town 21.0.0
+      Git Town 21.1.0
       """
