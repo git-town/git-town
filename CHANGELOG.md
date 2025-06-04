@@ -1,5 +1,16 @@
 # Git Town Changelog
 
+## 21.1.0 (2025-06-04)
+
+#### New Features
+
+- Git Town now keeps an immutable, append-only log of the repository state before and after each Git Town operation. This is a safety net in case `git town undo` cannot undo all changes. The new `git town runlog` command prints the log as well as its file path.
+
+#### Bug Fixes
+
+- Git Town now supports the situation where a file has the same name as a branch ([#5001](https://github.com/git-town/git-town/issues/5001)).
+- Fixes a bug where `git town sync` sometimes doesn't push local changes ([#5007](https://github.com/git-town/git-town/issues/5007)).
+
 ## 21.0.0 (2025-05-27)
 
 #### BREAKING CHANGES
