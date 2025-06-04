@@ -101,5 +101,5 @@ on a Windows machine using PowerShell.
   [core formulae](https://formulae.brew.sh/formula/git-town)
 - Scoop: Git Town is in the auto-updating
   [core manifests](https://github.com/ScoopInstaller/Main/blob/master/bucket/git-town.json)
-- Arch Linux: the [AUR package](https://aur.archlinux.org/packages/git-town)
-  auto-updates
+- Arch Linux: [official packaging](https://archlinux.org/packages/extra/x86_64/git-town/)
+  uses nvchecker to alert maintainers about updates
