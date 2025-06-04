@@ -56,11 +56,11 @@ rpm -i git-town_linux_intel_64.rpm
 ```
 
 On Arch Linux, install the
-[git-town](https://aur.archlinux.org/packages/git-town) package from the AUR. Or
-download the matching `.pkg.tar.zst` file for your architecture and run:
+[git-town](https://archlinux.org/packages/extra/x86_64/git-town/) package from
+official package repositories:
 
 ```
-sudo pacman -U <filename>
+pacman -S git-town
 ```
 
 You can also install Git Town on Linux via
