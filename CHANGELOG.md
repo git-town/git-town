@@ -4,7 +4,7 @@
 
 #### New Features
 
-- Git Town now keeps an immutable, append-only log of the repository state before and after each Git Town operation. This is a safety net in case `git town undo` cannot undo all changes. The new `git town runlog` command prints the log as well as its file path.
+- Git Town now keeps an immutable, append-only log of the repository state before and after each Git Town operation. This is a safety net in case `git town undo` cannot undo all changes. The new `git town runlog` command prints the log as well as its file path ([#4456](https://github.com/git-town/git-town/issues/4456)).
 
 #### Bug Fixes
 
