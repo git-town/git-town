@@ -30,6 +30,10 @@ type Connector struct {
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return DefaultProposalMessage(data)
+}
+
+func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
@@ -44,11 +48,15 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 }
 
 func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+	return NewProposalURL(data, self.RepositoryURL())
+}
+
+func NewProposalURL(data forgedomain.NewProposalURLData, repoURL string) (string, error) {
 	toCompare := data.Branch.String()
 	if data.ParentBranch != data.MainBranch {
 		toCompare = data.ParentBranch.String() + "..." + data.Branch.String()
 	}
-	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
+	result := fmt.Sprintf("%s/compare/%s?expand=1", repoURL, url.PathEscape(toCompare))
 	if len(data.ProposalTitle) > 0 {
 		result += "&title=" + url.QueryEscape(data.ProposalTitle.String())
 	}
@@ -59,7 +67,11 @@ func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (strin
 }
 
 func (self Connector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
+	return RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
+}
+
+func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
+	return fmt.Sprintf("https://%s/%s/%s", hostNameWithStandardPort, organization, repository)
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
