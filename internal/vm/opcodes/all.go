@@ -66,7 +66,6 @@ func All() []shared.Opcode {
 		&LineageParentSetFirstExisting{},
 		&LineageParentSetIfExists{},
 		&LineageParentSetToGrandParent{},
-		&Merge{},
 		&MergeAbort{},
 		&MergeAlwaysProgram{},
 		&MergeContinue{},
