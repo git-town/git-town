@@ -227,7 +227,6 @@ func (self Connector) getProposalComments(number int, configurations ...forgedom
 			PerPage: defaultQueryOptions.Limit(),
 		},
 	})
-
 	if err != nil {
 		return None[[]gitdomain.Comment](), err
 	}

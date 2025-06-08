@@ -5,8 +5,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const proposalLineageLong = "lineage" // long form of the "lineage" CLI flag
-const proposalLineageShort = "l"      // short form of the "lineage" CLI flag
+const (
+	proposalLineageLong  = "lineage" // long form of the "lineage" CLI flag
+	proposalLineageShort = "l"       // short form of the "lineage" CLI flag
+)
 
 // type-safe access to the CLI arguments of type bool
 func ProposalLineage(desc string, enabledAction configdomain.ProposalLineage) (AddFunc, ReadProposalLineageFlagFunc) {

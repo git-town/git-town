@@ -1,7 +1,6 @@
 package forgedomain
 
-type ProposalCommentSearchOptions struct {
-}
+type ProposalCommentSearchOptions struct{}
 
 type ProposalCommentSortBy string
 
