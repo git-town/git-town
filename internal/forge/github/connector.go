@@ -219,7 +219,7 @@ func (self Connector) getProposalComments(number int, configurations ...forgedom
 
 	comments, _, err := self.client.Issues.ListComments(context.Background(), self.Organization, self.Repository, number, &github.IssueListCommentsOptions{
 		Sort: func() *string {
-			s := proposalCommentOptionsSortByToGithubSortBy(defaultQueryOptions.SortBy())
+			s := "createdAt"
 			return &s
 		}(),
 		ListOptions: github.ListOptions{
@@ -305,16 +305,5 @@ func parsePullRequest(pullRequest *github.PullRequest) forgedomain.ProposalData 
 		Title:        pullRequest.GetTitle(),
 		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
 		URL:          *pullRequest.HTMLURL,
-	}
-}
-
-func proposalCommentOptionsSortByToGithubSortBy(sortBy forgedomain.ProposalCommentSortBy) string {
-	switch sortBy {
-	case forgedomain.ProposalCommentSortByCreatedAt:
-		return "created"
-	case forgedomain.ProposalCommentSortByUpdatedAt:
-		return "updated"
-	default:
-		panic("unknown sort type")
 	}
 }
