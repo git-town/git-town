@@ -90,8 +90,8 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) GetProposalCommentsFn() Option[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)] {
-	return None[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)]()
+func (self Connector) GetProposalCommentsFn() Option[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)] {
+	return None[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)]()
 }
 
 func (self Connector) UpdateProposalCommentFn() Option[func(number int, commentID int, comment gitdomain.Comment) error] {

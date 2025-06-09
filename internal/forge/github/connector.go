@@ -87,9 +87,9 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) GetProposalCommentsFn() Option[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)] {
+func (self Connector) GetProposalCommentsFn() Option[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)] {
 	if self.APIToken.IsNone() {
-		return None[func(number int, cfgs ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error)]()
+		return None[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)]()
 	}
 	return Some(self.getProposalComments)
 }
@@ -207,24 +207,15 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
-func (self Connector) getProposalComments(number int, configurations ...forgedomain.ConfigureProposalCommentQueryOptions) (Option[[]gitdomain.Comment], error) {
-	if number <= 0 {
-		return None[[]gitdomain.Comment](), errors.New(messages.ProposalNoNumberGiven)
-	}
-
-	defaultQueryOptions := forgedomain.NewProposalCommentQueryOptions()
-	for _, cfg := range configurations {
-		cfg(defaultQueryOptions)
-	}
-
-	comments, _, err := self.client.Issues.ListComments(context.Background(), self.Organization, self.Repository, number, &github.IssueListCommentsOptions{
+func (self Connector) getProposalComments(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error) {
+	comments, _, err := self.client.Issues.ListComments(context.Background(), self.Organization, self.Repository, proposalID.ToInt(), &github.IssueListCommentsOptions{
 		Sort: func() *string {
 			s := "createdAt"
 			return &s
 		}(),
 		ListOptions: github.ListOptions{
 			Page:    1,
-			PerPage: defaultQueryOptions.Limit(),
+			PerPage: 25,
 		},
 	})
 	if err != nil {
