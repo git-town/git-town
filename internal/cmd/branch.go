@@ -20,7 +20,7 @@ import (
 
 const (
 	branchDesc = `
-Display hierarchy either for local branches or an existing proposal of stack.
+Display hierarchy either for local branches or an existing stack of proposals.
 	`
 	branchHelp = `
 Git Town's equivalent of the "git branch" command.`
