@@ -30,7 +30,7 @@ func (self *MergeAlwaysProgram) AutomaticUndoError() error {
 func (self *MergeAlwaysProgram) Run(args shared.RunArgs) error {
 	// Reverting parent is intentionally not supported due to potential confusion
 	// caused by reverted merge commit. See
-	// <https://github.com/git/git/blob/master/Documentation/howto/revert-a-faulty-merge.txt>
+	// <https://github.com/git/git/blob/master/Documentation/howto/revert-a-faulty-merge.adoc>
 	// for more information.
 	useMessage := configdomain.UseCustomMessageOr(self.CommitMessage, configdomain.EditDefaultMessage())
 	return args.Git.MergeNoFastForward(args.Frontend, useMessage, self.Branch)
