@@ -87,6 +87,27 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
+func (self Connector) GetProposalCommentsFn() Option[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)] {
+	if self.APIToken.IsNone() {
+		return None[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)]()
+	}
+	return Some(self.getProposalComments)
+}
+
+func (self Connector) UpdateProposalCommentFn() Option[func(number int, commentID int, comment gitdomain.Comment) error] {
+	if self.APIToken.IsNone() {
+		return None[func(number int, commentID int, comment gitdomain.Comment) error]()
+	}
+	return Some(self.updateProposalComment)
+}
+
+func (self Connector) CreateProposalCommentFn() Option[func(number int, comment gitdomain.Comment) error] {
+	if self.APIToken.IsNone() {
+		return None[func(number int, comment gitdomain.Comment) error]()
+	}
+	return Some(self.createProposalComment)
+}
+
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
@@ -184,6 +205,53 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	}
 	self.log.Ok()
 	return nil
+}
+
+func (self Connector) getProposalComments(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error) {
+	comments, _, err := self.client.Issues.ListComments(context.Background(), self.Organization, self.Repository, proposalID.ToInt(), &github.IssueListCommentsOptions{
+		Sort: func() *string {
+			s := "createdAt"
+			return &s
+		}(),
+		ListOptions: github.ListOptions{
+			Page:    1,
+			PerPage: 25,
+		},
+	})
+	if err != nil {
+		return None[[]gitdomain.Comment](), err
+	}
+
+	proposalComments := make([]gitdomain.Comment, len(comments))
+	for idx, c := range comments {
+		proposalComments[idx] = gitdomain.Comment{
+			Body: gitdomain.CommentBody(*c.Body),
+			Id:   int(*c.ID),
+		}
+	}
+
+	return Some(proposalComments), nil
+}
+
+func (self Connector) updateProposalComment(number int, commentId int, comment gitdomain.Comment) error {
+	_, _, err := self.client.Issues.EditComment(context.Background(), self.Organization, self.Repository, int64(commentId), &github.IssueComment{
+		Body: func() *string {
+			s := comment.Body.String()
+			return &s
+		}(),
+	})
+	return err
+}
+
+func (self Connector) createProposalComment(number int, comment gitdomain.Comment) error {
+	_, _, err := self.client.Issues.CreateComment(context.Background(), self.Organization, self.Repository, number, &github.IssueComment{
+		Body: func() *string {
+			s := comment.Body.String()
+			return &s
+		}(),
+	})
+
+	return err
 }
 
 // NewConnector provides a fully configured GithubConnector instance
