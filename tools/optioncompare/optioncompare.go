@@ -92,8 +92,10 @@ func isOptionType(typ types.Type) bool {
 	}
 
 	// Double-check the origin's name and package for robustness
-	if origin.Obj() == nil || origin.Obj().Name() != typeName ||
-		origin.Obj().Pkg() == nil || origin.Obj().Pkg().Path() != packagePath {
+	if origin.Obj() == nil ||
+		origin.Obj().Name() != typeName ||
+		origin.Obj().Pkg() == nil ||
+		origin.Obj().Pkg().Path() != packagePath {
 		return false
 	}
 
