@@ -15,6 +15,7 @@ func TestTestsSorted(t *testing.T) {
 	t.Run("LintFile", func(t *testing.T) {
 		t.Parallel()
 		t.Run("unsorted subtests", func(t *testing.T) {
+			t.Parallel()
 			fileContents := `
 package main
 

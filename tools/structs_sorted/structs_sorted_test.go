@@ -16,6 +16,7 @@ func TestStructsSorted(t *testing.T) {
 	t.Run("LintFile", func(t *testing.T) {
 		t.Parallel()
 		t.Run("unsorted definition", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {
@@ -37,6 +38,7 @@ field2
 		})
 
 		t.Run("definition without fields", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {}
@@ -49,6 +51,7 @@ type MyStruct struct {}
 		})
 
 		t.Run("ignored definition", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Change struct {
@@ -64,6 +67,7 @@ type Change struct {
 		})
 
 		t.Run("unsorted instantiation", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {
@@ -91,6 +95,7 @@ field2
 		})
 
 		t.Run("instantiation without fields", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {}
@@ -106,6 +111,7 @@ func main() {
 		})
 
 		t.Run("ignored instantiation", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Change struct {
