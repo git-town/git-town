@@ -23,11 +23,11 @@ import (
 
 type (
 	GroupProtectedEnvironmentsServiceInterface interface {
-		ListGroupProtectedEnvironments(gid interface{}, opt *ListGroupProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*GroupProtectedEnvironment, *Response, error)
-		GetGroupProtectedEnvironment(gid interface{}, environment string, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error)
-		ProtectGroupEnvironment(gid interface{}, opt *ProtectGroupEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error)
-		UpdateGroupProtectedEnvironment(gid interface{}, environment string, opt *UpdateGroupProtectedEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error)
-		UnprotectGroupEnvironment(gid interface{}, environment string, options ...RequestOptionFunc) (*Response, error)
+		ListGroupProtectedEnvironments(gid any, opt *ListGroupProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*GroupProtectedEnvironment, *Response, error)
+		GetGroupProtectedEnvironment(gid any, environment string, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error)
+		ProtectGroupEnvironment(gid any, opt *ProtectGroupEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error)
+		UpdateGroupProtectedEnvironment(gid any, environment string, opt *UpdateGroupProtectedEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error)
+		UnprotectGroupEnvironment(gid any, environment string, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// GroupProtectedEnvironmentsService handles communication with the group-level
@@ -94,7 +94,7 @@ type ListGroupProtectedEnvironmentsOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#list-group-level-protected-environments
-func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid interface{}, opt *ListGroupProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*GroupProtectedEnvironment, *Response, error) {
+func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid any, opt *ListGroupProtectedEnvironmentsOptions, options ...RequestOptionFunc) ([]*GroupProtectedEnvironment, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -120,7 +120,7 @@ func (s *GroupProtectedEnvironmentsService) ListGroupProtectedEnvironments(gid i
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#get-a-single-protected-environment
-func (s *GroupProtectedEnvironmentsService) GetGroupProtectedEnvironment(gid interface{}, environment string, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
+func (s *GroupProtectedEnvironmentsService) GetGroupProtectedEnvironment(gid any, environment string, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -183,7 +183,7 @@ type GroupEnvironmentApprovalRuleOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#protect-a-single-environment
-func (s *GroupProtectedEnvironmentsService) ProtectGroupEnvironment(gid interface{}, opt *ProtectGroupEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
+func (s *GroupProtectedEnvironmentsService) ProtectGroupEnvironment(gid any, opt *ProtectGroupEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -251,7 +251,7 @@ type UpdateGroupEnvironmentApprovalRuleOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#update-a-protected-environment
-func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid interface{}, environment string, opt *UpdateGroupProtectedEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
+func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid any, environment string, opt *UpdateGroupProtectedEnvironmentOptions, options ...RequestOptionFunc) (*GroupProtectedEnvironment, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -277,7 +277,7 @@ func (s *GroupProtectedEnvironmentsService) UpdateGroupProtectedEnvironment(gid 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_protected_environments/#unprotect-a-single-environment
-func (s *GroupProtectedEnvironmentsService) UnprotectGroupEnvironment(gid interface{}, environment string, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupProtectedEnvironmentsService) UnprotectGroupEnvironment(gid any, environment string, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err

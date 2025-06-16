@@ -24,13 +24,13 @@ import (
 
 type (
 	RepositorySubmodulesServiceInterface interface {
-		UpdateSubmodule(pid interface{}, submodule string, opt *UpdateSubmoduleOptions, options ...RequestOptionFunc) (*SubmoduleCommit, *Response, error)
+		UpdateSubmodule(pid any, submodule string, opt *UpdateSubmoduleOptions, options ...RequestOptionFunc) (*SubmoduleCommit, *Response, error)
 	}
 
 	// RepositorySubmodulesService handles communication with the repository
 	// submodules related methods of the GitLab API.
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/repository_submodules.html
+	// GitLab API docs: https://docs.gitlab.com/api/repository_submodules/
 	RepositorySubmodulesService struct {
 		client *Client
 	}
@@ -40,7 +40,7 @@ var _ RepositorySubmodulesServiceInterface = (*RepositorySubmodulesService)(nil)
 
 // SubmoduleCommit represents a GitLab submodule commit.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/repository_submodules.html
+// GitLab API docs: https://docs.gitlab.com/api/repository_submodules/
 type SubmoduleCommit struct {
 	ID             string           `json:"id"`
 	ShortID        string           `json:"short_id"`
@@ -64,7 +64,7 @@ func (r SubmoduleCommit) String() string {
 // UpdateSubmoduleOptions represents the available UpdateSubmodule() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/repository_submodules.html#update-existing-submodule-reference-in-repository
+// https://docs.gitlab.com/api/repository_submodules/#update-existing-submodule-reference-in-repository
 type UpdateSubmoduleOptions struct {
 	Branch        *string `url:"branch,omitempty" json:"branch,omitempty"`
 	CommitSHA     *string `url:"commit_sha,omitempty" json:"commit_sha,omitempty"`
@@ -74,8 +74,8 @@ type UpdateSubmoduleOptions struct {
 // UpdateSubmodule updates an existing submodule reference.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/repository_submodules.html#update-existing-submodule-reference-in-repository
-func (s *RepositorySubmodulesService) UpdateSubmodule(pid interface{}, submodule string, opt *UpdateSubmoduleOptions, options ...RequestOptionFunc) (*SubmoduleCommit, *Response, error) {
+// https://docs.gitlab.com/api/repository_submodules/#update-existing-submodule-reference-in-repository
+func (s *RepositorySubmodulesService) UpdateSubmodule(pid any, submodule string, opt *UpdateSubmoduleOptions, options ...RequestOptionFunc) (*SubmoduleCommit, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

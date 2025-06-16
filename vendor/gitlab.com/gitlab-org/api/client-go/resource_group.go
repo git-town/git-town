@@ -24,17 +24,17 @@ import (
 
 type (
 	ResourceGroupServiceInterface interface {
-		GetAllResourceGroupsForAProject(pid interface{}, options ...RequestOptionFunc) ([]*ResourceGroup, *Response, error)
-		GetASpecificResourceGroup(pid interface{}, key string, options ...RequestOptionFunc) (*ResourceGroup, *Response, error)
-		ListUpcomingJobsForASpecificResourceGroup(pid interface{}, key string, options ...RequestOptionFunc) ([]*Job, *Response, error)
-		EditAnExistingResourceGroup(pid interface{}, key string, opts *EditAnExistingResourceGroupOptions, options ...RequestOptionFunc) (*ResourceGroup, *Response, error)
+		GetAllResourceGroupsForAProject(pid any, options ...RequestOptionFunc) ([]*ResourceGroup, *Response, error)
+		GetASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) (*ResourceGroup, *Response, error)
+		ListUpcomingJobsForASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) ([]*Job, *Response, error)
+		EditAnExistingResourceGroup(pid any, key string, opts *EditAnExistingResourceGroupOptions, options ...RequestOptionFunc) (*ResourceGroup, *Response, error)
 	}
 
 	// ResourceGroupService handles communication with the resource
 	// group related methods of the GitLab API.
 	//
 	// GitLab API docs:
-	// https://docs.gitlab.com/ee/api/resource_groups.html
+	// https://docs.gitlab.com/api/resource_groups/
 	ResourceGroupService struct {
 		client *Client
 	}
@@ -45,7 +45,7 @@ var _ ResourceGroupServiceInterface = (*ResourceGroupService)(nil)
 // ResourceGrouop represents a GitLab Project Resource Group.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html
+// https://docs.gitlab.com/api/resource_groups/
 type ResourceGroup struct {
 	ID          int        `json:"id"`
 	Key         string     `json:"key"`
@@ -57,7 +57,7 @@ type ResourceGroup struct {
 // Gets a string representation of a ResourceGroup
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html
+// https://docs.gitlab.com/api/resource_groups/
 func (rg ResourceGroup) String() string {
 	return Stringify(rg)
 }
@@ -66,8 +66,8 @@ func (rg ResourceGroup) String() string {
 // groups associated with a given project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html#get-all-resource-groups-for-a-project
-func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid interface{}, options ...RequestOptionFunc) ([]*ResourceGroup, *Response, error) {
+// https://docs.gitlab.com/api/resource_groups/#get-all-resource-groups-for-a-project
+func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid any, options ...RequestOptionFunc) ([]*ResourceGroup, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -92,8 +92,8 @@ func (s *ResourceGroupService) GetAllResourceGroupsForAProject(pid interface{}, 
 // resource group for a given project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html#get-a-specific-resource-group
-func (s *ResourceGroupService) GetASpecificResourceGroup(pid interface{}, key string, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
+// https://docs.gitlab.com/api/resource_groups/#get-a-specific-resource-group
+func (s *ResourceGroupService) GetASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -118,8 +118,8 @@ func (s *ResourceGroupService) GetASpecificResourceGroup(pid interface{}, key st
 // upcoming jobs for a specific resource group for a given project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html#list-upcoming-jobs-for-a-specific-resource-group
-func (s *ResourceGroupService) ListUpcomingJobsForASpecificResourceGroup(pid interface{}, key string, options ...RequestOptionFunc) ([]*Job, *Response, error) {
+// https://docs.gitlab.com/api/resource_groups/#list-upcoming-jobs-for-a-specific-resource-group
+func (s *ResourceGroupService) ListUpcomingJobsForASpecificResourceGroup(pid any, key string, options ...RequestOptionFunc) ([]*Job, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -144,7 +144,7 @@ func (s *ResourceGroupService) ListUpcomingJobsForASpecificResourceGroup(pid int
 // EditAnExistingResourceGroup options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html#edit-an-existing-resource-group
+// https://docs.gitlab.com/api/resource_groups/#edit-an-existing-resource-group
 type EditAnExistingResourceGroupOptions struct {
 	ProcessMode *ResourceGroupProcessMode `url:"process_mode,omitempty" json:"process_mode,omitempty"`
 }
@@ -153,8 +153,8 @@ type EditAnExistingResourceGroupOptions struct {
 // resource group for a given project
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/resource_groups.html#edit-an-existing-resource-group
-func (s *ResourceGroupService) EditAnExistingResourceGroup(pid interface{}, key string, opts *EditAnExistingResourceGroupOptions, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
+// https://docs.gitlab.com/api/resource_groups/#edit-an-existing-resource-group
+func (s *ResourceGroupService) EditAnExistingResourceGroup(pid any, key string, opts *EditAnExistingResourceGroupOptions, options ...RequestOptionFunc) (*ResourceGroup, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

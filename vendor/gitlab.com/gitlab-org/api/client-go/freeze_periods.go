@@ -29,11 +29,11 @@ import (
 type (
 	// FreezePeriodsServiceInterface defines all the API methods for the FreezePeriodsService
 	FreezePeriodsServiceInterface interface {
-		ListFreezePeriods(pid interface{}, opt *ListFreezePeriodsOptions, options ...RequestOptionFunc) ([]*FreezePeriod, *Response, error)
-		GetFreezePeriod(pid interface{}, freezePeriod int, options ...RequestOptionFunc) (*FreezePeriod, *Response, error)
-		CreateFreezePeriodOptions(pid interface{}, opt *CreateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error)
-		UpdateFreezePeriodOptions(pid interface{}, freezePeriod int, opt *UpdateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error)
-		DeleteFreezePeriod(pid interface{}, freezePeriod int, options ...RequestOptionFunc) (*Response, error)
+		ListFreezePeriods(pid any, opt *ListFreezePeriodsOptions, options ...RequestOptionFunc) ([]*FreezePeriod, *Response, error)
+		GetFreezePeriod(pid any, freezePeriod int, options ...RequestOptionFunc) (*FreezePeriod, *Response, error)
+		CreateFreezePeriodOptions(pid any, opt *CreateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error)
+		UpdateFreezePeriodOptions(pid any, freezePeriod int, opt *UpdateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error)
+		DeleteFreezePeriod(pid any, freezePeriod int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// FreezePeriodsService handles the communication with the freeze periods
@@ -71,7 +71,7 @@ type ListFreezePeriodsOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/freeze_periods/#list-freeze-periods
-func (s *FreezePeriodsService) ListFreezePeriods(pid interface{}, opt *ListFreezePeriodsOptions, options ...RequestOptionFunc) ([]*FreezePeriod, *Response, error) {
+func (s *FreezePeriodsService) ListFreezePeriods(pid any, opt *ListFreezePeriodsOptions, options ...RequestOptionFunc) ([]*FreezePeriod, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -96,7 +96,7 @@ func (s *FreezePeriodsService) ListFreezePeriods(pid interface{}, opt *ListFreez
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/freeze_periods/#get-a-freeze-period-by-a-freeze_period_id
-func (s *FreezePeriodsService) GetFreezePeriod(pid interface{}, freezePeriod int, options ...RequestOptionFunc) (*FreezePeriod, *Response, error) {
+func (s *FreezePeriodsService) GetFreezePeriod(pid any, freezePeriod int, options ...RequestOptionFunc) (*FreezePeriod, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -132,7 +132,7 @@ type CreateFreezePeriodOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/freeze_periods/#create-a-freeze-period
-func (s *FreezePeriodsService) CreateFreezePeriodOptions(pid interface{}, opt *CreateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error) {
+func (s *FreezePeriodsService) CreateFreezePeriodOptions(pid any, opt *CreateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -168,7 +168,7 @@ type UpdateFreezePeriodOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/freeze_periods/#update-a-freeze-period
-func (s *FreezePeriodsService) UpdateFreezePeriodOptions(pid interface{}, freezePeriod int, opt *UpdateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error) {
+func (s *FreezePeriodsService) UpdateFreezePeriodOptions(pid any, freezePeriod int, opt *UpdateFreezePeriodOptions, options ...RequestOptionFunc) (*FreezePeriod, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -195,7 +195,7 @@ func (s *FreezePeriodsService) UpdateFreezePeriodOptions(pid interface{}, freeze
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/freeze_periods/#delete-a-freeze-period
-func (s *FreezePeriodsService) DeleteFreezePeriod(pid interface{}, freezePeriod int, options ...RequestOptionFunc) (*Response, error) {
+func (s *FreezePeriodsService) DeleteFreezePeriod(pid any, freezePeriod int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

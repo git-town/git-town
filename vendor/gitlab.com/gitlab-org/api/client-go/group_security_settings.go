@@ -22,7 +22,7 @@ import (
 
 type (
 	GroupSecuritySettingsServiceInterface interface {
-		UpdateSecretPushProtectionEnabledSetting(gid interface{}, opt UpdateGroupSecuritySettingsOptions, options ...RequestOptionFunc) (*GroupSecuritySettings, *Response, error)
+		UpdateSecretPushProtectionEnabledSetting(gid any, opt UpdateGroupSecuritySettingsOptions, options ...RequestOptionFunc) (*GroupSecuritySettings, *Response, error)
 	}
 
 	// GroupSecuritySettingsService handles communication with the Group Security Settings
@@ -69,7 +69,7 @@ type UpdateGroupSecuritySettingsOptions struct {
 //
 // GitLab API Docs:
 // https://docs.gitlab.com/api/group_security_settings/#update-secret_push_protection_enabled-setting
-func (s *GroupSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(gid interface{}, opt UpdateGroupSecuritySettingsOptions, options ...RequestOptionFunc) (*GroupSecuritySettings, *Response, error) {
+func (s *GroupSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(gid any, opt UpdateGroupSecuritySettingsOptions, options ...RequestOptionFunc) (*GroupSecuritySettings, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err

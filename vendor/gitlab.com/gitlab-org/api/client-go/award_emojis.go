@@ -24,30 +24,30 @@ import (
 
 type (
 	AwardEmojiServiceInterface interface {
-		ListMergeRequestAwardEmoji(pid interface{}, mergeRequestIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
-		ListIssueAwardEmoji(pid interface{}, issueIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
-		ListSnippetAwardEmoji(pid interface{}, snippetID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
-		GetMergeRequestAwardEmoji(pid interface{}, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		GetIssueAwardEmoji(pid interface{}, issueIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		GetSnippetAwardEmoji(pid interface{}, snippetID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		CreateMergeRequestAwardEmoji(pid interface{}, mergeRequestIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		CreateIssueAwardEmoji(pid interface{}, issueIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		CreateSnippetAwardEmoji(pid interface{}, snippetID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		DeleteIssueAwardEmoji(pid interface{}, issueIID, awardID int, options ...RequestOptionFunc) (*Response, error)
-		DeleteMergeRequestAwardEmoji(pid interface{}, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*Response, error)
-		DeleteSnippetAwardEmoji(pid interface{}, snippetID, awardID int, options ...RequestOptionFunc) (*Response, error)
-		ListIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
-		ListMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
-		ListSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
-		GetIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		GetMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		GetSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		CreateIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		CreateMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		CreateSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
-		DeleteIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error)
-		DeleteMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error)
-		DeleteSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error)
+		ListMergeRequestAwardEmoji(pid any, mergeRequestIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
+		ListIssueAwardEmoji(pid any, issueIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
+		ListSnippetAwardEmoji(pid any, snippetID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
+		GetMergeRequestAwardEmoji(pid any, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		GetIssueAwardEmoji(pid any, issueIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		GetSnippetAwardEmoji(pid any, snippetID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		CreateMergeRequestAwardEmoji(pid any, mergeRequestIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		CreateIssueAwardEmoji(pid any, issueIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		CreateSnippetAwardEmoji(pid any, snippetID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		DeleteIssueAwardEmoji(pid any, issueIID, awardID int, options ...RequestOptionFunc) (*Response, error)
+		DeleteMergeRequestAwardEmoji(pid any, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*Response, error)
+		DeleteSnippetAwardEmoji(pid any, snippetID, awardID int, options ...RequestOptionFunc) (*Response, error)
+		ListIssuesAwardEmojiOnNote(pid any, issueID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
+		ListMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
+		ListSnippetAwardEmojiOnNote(pid any, snippetIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error)
+		GetIssuesAwardEmojiOnNote(pid any, issueID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		GetMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		GetSnippetAwardEmojiOnNote(pid any, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		CreateIssuesAwardEmojiOnNote(pid any, issueID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		CreateMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		CreateSnippetAwardEmojiOnNote(pid any, snippetIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error)
+		DeleteIssuesAwardEmojiOnNote(pid any, issueID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error)
+		DeleteMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error)
+		DeleteSnippetAwardEmojiOnNote(pid any, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// AwardEmojiService handles communication with the emoji awards related methods
@@ -88,7 +88,7 @@ const (
 )
 
 // ListAwardEmojiOptions represents the available options for listing emoji
-// for each resources
+// for each resource
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/
@@ -98,7 +98,7 @@ type ListAwardEmojiOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#list-an-awardables-emoji-reactions
-func (s *AwardEmojiService) ListMergeRequestAwardEmoji(pid interface{}, mergeRequestIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) ListMergeRequestAwardEmoji(pid any, mergeRequestIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	return s.listAwardEmoji(pid, awardMergeRequest, mergeRequestIID, opt, options...)
 }
 
@@ -106,7 +106,7 @@ func (s *AwardEmojiService) ListMergeRequestAwardEmoji(pid interface{}, mergeReq
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#list-an-awardables-emoji-reactions
-func (s *AwardEmojiService) ListIssueAwardEmoji(pid interface{}, issueIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) ListIssueAwardEmoji(pid any, issueIID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	return s.listAwardEmoji(pid, awardIssue, issueIID, opt, options...)
 }
 
@@ -114,11 +114,11 @@ func (s *AwardEmojiService) ListIssueAwardEmoji(pid interface{}, issueIID int, o
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#list-an-awardables-emoji-reactions
-func (s *AwardEmojiService) ListSnippetAwardEmoji(pid interface{}, snippetID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) ListSnippetAwardEmoji(pid any, snippetID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	return s.listAwardEmoji(pid, awardSnippets, snippetID, opt, options...)
 }
 
-func (s *AwardEmojiService) listAwardEmoji(pid interface{}, resource string, resourceID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) listAwardEmoji(pid any, resource string, resourceID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -147,7 +147,7 @@ func (s *AwardEmojiService) listAwardEmoji(pid interface{}, resource string, res
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#get-single-emoji-reaction
-func (s *AwardEmojiService) GetMergeRequestAwardEmoji(pid interface{}, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) GetMergeRequestAwardEmoji(pid any, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.getAwardEmoji(pid, awardMergeRequest, mergeRequestIID, awardID, options...)
 }
 
@@ -155,7 +155,7 @@ func (s *AwardEmojiService) GetMergeRequestAwardEmoji(pid interface{}, mergeRequ
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#get-single-emoji-reaction
-func (s *AwardEmojiService) GetIssueAwardEmoji(pid interface{}, issueIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) GetIssueAwardEmoji(pid any, issueIID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.getAwardEmoji(pid, awardIssue, issueIID, awardID, options...)
 }
 
@@ -163,11 +163,11 @@ func (s *AwardEmojiService) GetIssueAwardEmoji(pid interface{}, issueIID, awardI
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#get-single-emoji-reaction
-func (s *AwardEmojiService) GetSnippetAwardEmoji(pid interface{}, snippetID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) GetSnippetAwardEmoji(pid any, snippetID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.getAwardEmoji(pid, awardSnippets, snippetID, awardID, options...)
 }
 
-func (s *AwardEmojiService) getAwardEmoji(pid interface{}, resource string, resourceID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) getAwardEmoji(pid any, resource string, resourceID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -206,7 +206,7 @@ type CreateAwardEmojiOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction
-func (s *AwardEmojiService) CreateMergeRequestAwardEmoji(pid interface{}, mergeRequestIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) CreateMergeRequestAwardEmoji(pid any, mergeRequestIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.createAwardEmoji(pid, awardMergeRequest, mergeRequestIID, opt, options...)
 }
 
@@ -214,7 +214,7 @@ func (s *AwardEmojiService) CreateMergeRequestAwardEmoji(pid interface{}, mergeR
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction
-func (s *AwardEmojiService) CreateIssueAwardEmoji(pid interface{}, issueIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) CreateIssueAwardEmoji(pid any, issueIID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.createAwardEmoji(pid, awardIssue, issueIID, opt, options...)
 }
 
@@ -222,11 +222,11 @@ func (s *AwardEmojiService) CreateIssueAwardEmoji(pid interface{}, issueIID int,
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction
-func (s *AwardEmojiService) CreateSnippetAwardEmoji(pid interface{}, snippetID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) CreateSnippetAwardEmoji(pid any, snippetID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.createAwardEmoji(pid, awardSnippets, snippetID, opt, options...)
 }
 
-func (s *AwardEmojiService) createAwardEmoji(pid interface{}, resource string, resourceID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) createAwardEmoji(pid any, resource string, resourceID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -255,7 +255,7 @@ func (s *AwardEmojiService) createAwardEmoji(pid interface{}, resource string, r
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction
-func (s *AwardEmojiService) DeleteIssueAwardEmoji(pid interface{}, issueIID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) DeleteIssueAwardEmoji(pid any, issueIID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteAwardEmoji(pid, awardIssue, issueIID, awardID, options...)
 }
 
@@ -263,7 +263,7 @@ func (s *AwardEmojiService) DeleteIssueAwardEmoji(pid interface{}, issueIID, awa
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction
-func (s *AwardEmojiService) DeleteMergeRequestAwardEmoji(pid interface{}, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) DeleteMergeRequestAwardEmoji(pid any, mergeRequestIID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteAwardEmoji(pid, awardMergeRequest, mergeRequestIID, awardID, options...)
 }
 
@@ -271,7 +271,7 @@ func (s *AwardEmojiService) DeleteMergeRequestAwardEmoji(pid interface{}, mergeR
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction
-func (s *AwardEmojiService) DeleteSnippetAwardEmoji(pid interface{}, snippetID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) DeleteSnippetAwardEmoji(pid any, snippetID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteAwardEmoji(pid, awardSnippets, snippetID, awardID, options...)
 }
 
@@ -279,7 +279,7 @@ func (s *AwardEmojiService) DeleteSnippetAwardEmoji(pid interface{}, snippetID, 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction
-func (s *AwardEmojiService) deleteAwardEmoji(pid interface{}, resource string, resourceID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) deleteAwardEmoji(pid any, resource string, resourceID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -299,7 +299,7 @@ func (s *AwardEmojiService) deleteAwardEmoji(pid interface{}, resource string, r
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#list-a-comments-emoji-reactions
-func (s *AwardEmojiService) ListIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) ListIssuesAwardEmojiOnNote(pid any, issueID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	return s.listAwardEmojiOnNote(pid, awardIssue, issueID, noteID, opt, options...)
 }
 
@@ -308,7 +308,7 @@ func (s *AwardEmojiService) ListIssuesAwardEmojiOnNote(pid interface{}, issueID,
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#list-a-comments-emoji-reactions
-func (s *AwardEmojiService) ListMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) ListMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	return s.listAwardEmojiOnNote(pid, awardMergeRequest, mergeRequestIID, noteID, opt, options...)
 }
 
@@ -317,11 +317,11 @@ func (s *AwardEmojiService) ListMergeRequestAwardEmojiOnNote(pid interface{}, me
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#list-a-comments-emoji-reactions
-func (s *AwardEmojiService) ListSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) ListSnippetAwardEmojiOnNote(pid any, snippetIID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	return s.listAwardEmojiOnNote(pid, awardSnippets, snippetIID, noteID, opt, options...)
 }
 
-func (s *AwardEmojiService) listAwardEmojiOnNote(pid interface{}, resources string, ressourceID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) listAwardEmojiOnNote(pid any, resources string, ressourceID, noteID int, opt *ListAwardEmojiOptions, options ...RequestOptionFunc) ([]*AwardEmoji, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -347,7 +347,7 @@ func (s *AwardEmojiService) listAwardEmojiOnNote(pid interface{}, resources stri
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#get-an-emoji-reaction-for-a-comment
-func (s *AwardEmojiService) GetIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) GetIssuesAwardEmojiOnNote(pid any, issueID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.getSingleNoteAwardEmoji(pid, awardIssue, issueID, noteID, awardID, options...)
 }
 
@@ -356,7 +356,7 @@ func (s *AwardEmojiService) GetIssuesAwardEmojiOnNote(pid interface{}, issueID, 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#get-an-emoji-reaction-for-a-comment
-func (s *AwardEmojiService) GetMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) GetMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.getSingleNoteAwardEmoji(pid, awardMergeRequest, mergeRequestIID, noteID, awardID,
 		options...)
 }
@@ -365,11 +365,11 @@ func (s *AwardEmojiService) GetMergeRequestAwardEmojiOnNote(pid interface{}, mer
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#get-an-emoji-reaction-for-a-comment
-func (s *AwardEmojiService) GetSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) GetSnippetAwardEmojiOnNote(pid any, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.getSingleNoteAwardEmoji(pid, awardSnippets, snippetIID, noteID, awardID, options...)
 }
 
-func (s *AwardEmojiService) getSingleNoteAwardEmoji(pid interface{}, ressource string, resourceID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) getSingleNoteAwardEmoji(pid any, ressource string, resourceID, noteID, awardID int, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -400,7 +400,7 @@ func (s *AwardEmojiService) getSingleNoteAwardEmoji(pid interface{}, ressource s
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction-to-a-comment
-func (s *AwardEmojiService) CreateIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) CreateIssuesAwardEmojiOnNote(pid any, issueID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.createAwardEmojiOnNote(pid, awardIssue, issueID, noteID, opt, options...)
 }
 
@@ -409,7 +409,7 @@ func (s *AwardEmojiService) CreateIssuesAwardEmojiOnNote(pid interface{}, issueI
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction-to-a-comment
-func (s *AwardEmojiService) CreateMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) CreateMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.createAwardEmojiOnNote(pid, awardMergeRequest, mergeRequestIID, noteID, opt, options...)
 }
 
@@ -417,7 +417,7 @@ func (s *AwardEmojiService) CreateMergeRequestAwardEmojiOnNote(pid interface{}, 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction-to-a-comment
-func (s *AwardEmojiService) CreateSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) CreateSnippetAwardEmojiOnNote(pid any, snippetIID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	return s.createAwardEmojiOnNote(pid, awardSnippets, snippetIID, noteID, opt, options...)
 }
 
@@ -425,7 +425,7 @@ func (s *AwardEmojiService) CreateSnippetAwardEmojiOnNote(pid interface{}, snipp
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#add-a-new-emoji-reaction-to-a-comment
-func (s *AwardEmojiService) createAwardEmojiOnNote(pid interface{}, resource string, resourceID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
+func (s *AwardEmojiService) createAwardEmojiOnNote(pid any, resource string, resourceID, noteID int, opt *CreateAwardEmojiOptions, options ...RequestOptionFunc) (*AwardEmoji, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -455,7 +455,7 @@ func (s *AwardEmojiService) createAwardEmojiOnNote(pid interface{}, resource str
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction-from-a-comment
-func (s *AwardEmojiService) DeleteIssuesAwardEmojiOnNote(pid interface{}, issueID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) DeleteIssuesAwardEmojiOnNote(pid any, issueID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteAwardEmojiOnNote(pid, awardIssue, issueID, noteID, awardID, options...)
 }
 
@@ -464,7 +464,7 @@ func (s *AwardEmojiService) DeleteIssuesAwardEmojiOnNote(pid interface{}, issueI
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction-from-a-comment
-func (s *AwardEmojiService) DeleteMergeRequestAwardEmojiOnNote(pid interface{}, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) DeleteMergeRequestAwardEmojiOnNote(pid any, mergeRequestIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteAwardEmojiOnNote(pid, awardMergeRequest, mergeRequestIID, noteID, awardID,
 		options...)
 }
@@ -473,11 +473,11 @@ func (s *AwardEmojiService) DeleteMergeRequestAwardEmojiOnNote(pid interface{}, 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/emoji_reactions/#delete-an-emoji-reaction-from-a-comment
-func (s *AwardEmojiService) DeleteSnippetAwardEmojiOnNote(pid interface{}, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) DeleteSnippetAwardEmojiOnNote(pid any, snippetIID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteAwardEmojiOnNote(pid, awardSnippets, snippetIID, noteID, awardID, options...)
 }
 
-func (s *AwardEmojiService) deleteAwardEmojiOnNote(pid interface{}, resource string, resourceID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *AwardEmojiService) deleteAwardEmojiOnNote(pid any, resource string, resourceID, noteID, awardID int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

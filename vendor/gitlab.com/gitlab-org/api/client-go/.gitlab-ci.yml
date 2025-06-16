@@ -34,14 +34,13 @@ stages:
   parallel:
     matrix:
       - GOLANG_IMAGE_VERSION:
-        - '1.22'
         - '1.23'
         - '1.24'
 
 .go:base:
   extends:
     - .go:runner-tags
-  # From: https://docs.gitlab.com/ee/ci/caching/#cache-go-dependencies
+  # From: https://docs.gitlab.com/ci/caching/#cache-go-dependencies
   variables:
     GOPATH: $CI_PROJECT_DIR/.go
     GOLANGCI_LINT_CACHE: $CI_PROJECT_DIR/.golangci-lint
@@ -75,9 +74,9 @@ golangci-lint:
   needs: []
   variables:
     REPORT_FILENAME: 'gl-code-quality-report.json'
-  image: golangci/golangci-lint:v1.64.8
+  image: golangci/golangci-lint:v2.1.6
   script:
-    - golangci-lint run --print-issued-lines=false --out-format code-climate:$REPORT_FILENAME,line-number
+    - golangci-lint run
   artifacts:
     reports:
       codequality: $REPORT_FILENAME
@@ -101,6 +100,17 @@ verify-generated-code:
         echo "Run \"make generate\" and try again";
         exit 1;
       }
+
+commitlint:
+  stage: lint
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  image:
+    name: commitlint/commitlint:19.8.1
+    entrypoint: [""]
+  script:
+    - commitlint --from ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --to ${CI_COMMIT_SHA}
 
 tests:unit:
   extends:
@@ -136,45 +146,20 @@ tests:unit:
         coverage_format: cobertura
     when: always
 
-generate-release-notes:
-  stage: deploy
-  needs: []
-  image: alpine:3.21.3
-  before_script:
-    - apk add --update jq curl git
-  script:
-    - |
-      if [ -z "$CI_COMMIT_TAG" ]; then
-        last_stable_version_sha="$(git tag | grep -E '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$' | sort -Vr | head -n1)"
-        version="${last_stable_version_sha}+${CI_COMMIT_SHA}"
-      else
-        version="$CI_COMMIT_TAG"
-      fi
-      urlencoded_version="$(jq -rn --arg x "${version}" '$x|@uri')"
-    - echo "Generating release notes for ${version} (urlencoded=${urlencoded_version}) ..."
-    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/changelog?version=${urlencoded_version}" | jq -r .notes > release-notes.md'
-    - cat release-notes.md
-  artifacts:
-    paths:
-    - release-notes.md
-
 release:
+  image: node:24-bookworm-slim
   stage: deploy
-  rules:
-    - if: $CI_COMMIT_TAG
-  needs:
-    - golangci-lint
-    - tests:unit
-    - job: generate-release-notes
-      artifacts: true
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
+    - npm install -g semantic-release @semantic-release/gitlab @semantic-release/git @semantic-release/changelog
   script:
-    - echo "Create release for $CI_COMMIT_TAG"
-  release:
-    tag_name: '$CI_COMMIT_TAG'
-    tag_message: 'Version $CI_COMMIT_TAG'
-    name: '$CI_COMMIT_TAG'
-    description: release-notes.md
+    - semantic-release
+  rules:
+    - if: '$CI_SERVER_HOST != "gitlab.com" || $CI_PROJECT_PATH != "gitlab-org/api/client-go"'
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 # Update rules on SAST to ensure the jobs show up in the pipeline
 # this prevents forks that don't have `ultimate` from skipping SAST scans

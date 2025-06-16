@@ -31,7 +31,7 @@ type (
 	// CI YML templates related methods of the GitLab API.
 	//
 	// GitLab API docs:
-	// https://docs.gitlab.com/ee/api/templates/gitlab_ci_ymls.html
+	// https://docs.gitlab.com/api/templates/gitlab_ci_ymls/
 	CIYMLTemplatesService struct {
 		client *Client
 	}
@@ -42,7 +42,7 @@ var _ CIYMLTemplatesServiceInterface = (*CIYMLTemplatesService)(nil)
 // CIYMLTemplate represents a GitLab CI YML template.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/gitlab_ci_ymls.html
+// https://docs.gitlab.com/api/templates/gitlab_ci_ymls/
 type CIYMLTemplate struct {
 	Name    string `json:"name"`
 	Content string `json:"content"`
@@ -51,7 +51,7 @@ type CIYMLTemplate struct {
 // CIYMLTemplateListItem represents a GitLab CI YML template from the list.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/gitlab_ci_ymls.html
+// https://docs.gitlab.com/api/templates/gitlab_ci_ymls/
 type CIYMLTemplateListItem struct {
 	Key  string `json:"key"`
 	Name string `json:"name"`
@@ -60,13 +60,13 @@ type CIYMLTemplateListItem struct {
 // ListCIYMLTemplatesOptions represents the available ListAllTemplates() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/gitlab_ci_ymls.html#list-gitlab-ci-yaml-templates
+// https://docs.gitlab.com/api/templates/gitlab_ci_ymls/#list-gitlab-ci-yaml-templates
 type ListCIYMLTemplatesOptions ListOptions
 
 // ListAllTemplates get all GitLab CI YML templates.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/gitlab_ci_ymls.html#list-gitlab-ci-yaml-templates
+// https://docs.gitlab.com/api/templates/gitlab_ci_ymls/#list-gitlab-ci-yaml-templates
 func (s *CIYMLTemplatesService) ListAllTemplates(opt *ListCIYMLTemplatesOptions, options ...RequestOptionFunc) ([]*CIYMLTemplateListItem, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "templates/gitlab_ci_ymls", opt, options)
 	if err != nil {
@@ -85,7 +85,7 @@ func (s *CIYMLTemplatesService) ListAllTemplates(opt *ListCIYMLTemplatesOptions,
 // GetTemplate get a single GitLab CI YML template.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/gitlab_ci_ymls.html#single-gitlab-ci-yaml-template
+// https://docs.gitlab.com/api/templates/gitlab_ci_ymls/#single-gitlab-ci-yaml-template
 func (s *CIYMLTemplatesService) GetTemplate(key string, options ...RequestOptionFunc) (*CIYMLTemplate, *Response, error) {
 	u := fmt.Sprintf("templates/gitlab_ci_ymls/%s", PathEscape(key))
 

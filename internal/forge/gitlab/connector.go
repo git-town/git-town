@@ -3,7 +3,6 @@ package gitlab
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -175,9 +174,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 			Repository:   args.RemoteURL.Repo,
 		},
 	}
-	clientOptFunc := gitlab.WithBaseURL(gitlabData.baseURL())
-	httpClient := gitlab.WithHTTPClient(&http.Client{}) //exhaustruct:ignore
-	client, err := gitlab.NewOAuthClient(gitlabData.APIToken.String(), httpClient, clientOptFunc)
+	client, err := gitlab.NewClient(gitlabData.APIToken.String(), gitlab.WithBaseURL(gitlabData.baseURL()))
 	if err != nil {
 		return Connector{}, err
 	}

@@ -107,7 +107,7 @@ func (c *Client) DeleteAccessToken(value interface{}) (*Response, error) {
 		return nil, fmt.Errorf("\"username\" not set: only BasicAuth allowed")
 	}
 
-	token := ""
+	var token string
 
 	switch reflect.ValueOf(value).Kind() {
 	case reflect.Int64:

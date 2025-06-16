@@ -9,9 +9,9 @@ import (
 type (
 	// GroupSSHCertificatesServiceInterface defines methods for the GroupSSHCertificatesService.
 	GroupSSHCertificatesServiceInterface interface {
-		ListGroupSSHCertificates(gid interface{}, options ...RequestOptionFunc) ([]*GroupSSHCertificate, *Response, error)
-		CreateGroupSSHCertificate(gid interface{}, opt *CreateGroupSSHCertificateOptions, options ...RequestOptionFunc) (*GroupSSHCertificate, *Response, error)
-		DeleteGroupSSHCertificate(gid interface{}, cert int, options ...RequestOptionFunc) (*Response, error)
+		ListGroupSSHCertificates(gid any, options ...RequestOptionFunc) ([]*GroupSSHCertificate, *Response, error)
+		CreateGroupSSHCertificate(gid any, opt *CreateGroupSSHCertificateOptions, options ...RequestOptionFunc) (*GroupSSHCertificate, *Response, error)
+		DeleteGroupSSHCertificate(gid any, cert int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// GroupSSHCertificatesService handles communication with the group
@@ -40,7 +40,7 @@ type GroupSSHCertificate struct {
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#get-all-ssh-certificates-for-a-particular-group
-func (s *GroupSSHCertificatesService) ListGroupSSHCertificates(gid interface{}, options ...RequestOptionFunc) ([]*GroupSSHCertificate, *Response, error) {
+func (s *GroupSSHCertificatesService) ListGroupSSHCertificates(gid any, options ...RequestOptionFunc) ([]*GroupSSHCertificate, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -75,7 +75,7 @@ type CreateGroupSSHCertificateOptions struct {
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#create-ssh-certificate
-func (s *GroupSSHCertificatesService) CreateGroupSSHCertificate(gid interface{}, opt *CreateGroupSSHCertificateOptions, options ...RequestOptionFunc) (*GroupSSHCertificate, *Response, error) {
+func (s *GroupSSHCertificatesService) CreateGroupSSHCertificate(gid any, opt *CreateGroupSSHCertificateOptions, options ...RequestOptionFunc) (*GroupSSHCertificate, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -100,7 +100,7 @@ func (s *GroupSSHCertificatesService) CreateGroupSSHCertificate(gid interface{},
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/group_ssh_certificates/#delete-group-ssh-certificate
-func (s *GroupSSHCertificatesService) DeleteGroupSSHCertificate(gid interface{}, cert int, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupSSHCertificatesService) DeleteGroupSSHCertificate(gid any, cert int, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err
