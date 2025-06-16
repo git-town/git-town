@@ -1,60 +1,70 @@
-# This file contains all available configuration options
-# with their default values.
+version: "2"
 
 # Options for analysis running
 run:
   concurrency: 4
-  timeout: 10m
   issues-exit-code: 1
   tests: true
 
 # Output configuration options
 output:
   formats:
-    - format: line-number
-
-# All available settings of specific linters
-linters-settings:
-  misspell:
-    locale: US
-    ignore-words:
-    - noteable
-  revive:
-    enable-all-rules: false
-    rules:
-      - name: deep-exit
-
+    text:
+      path: stdout
+      colors: false
+      print-issued-lines: false
+    code-climate:
+      path: gl-code-quality-report.json
 linters:
   enable:
     - asciicheck
     - dogsled
     - errorlint
     - goconst
-    - gosimple
-    - gofumpt
-    - govet
-    - ineffassign
     - misspell
     - nakedret
     - nolintlint
     - revive
-    - staticcheck
-    - typecheck
     - unconvert
-    - unused
     - whitespace
   disable:
     - errcheck
-  disable-all: false
-  fast: false
-
-issues:
+  settings:
+    misspell:
+      locale: US
+      ignore-rules:
+        - noteable
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: deep-exit
+  
   # List of regexps of issue texts to exclude.
-  exclude:
-    - "^.*, make it a constant$"
-
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: (.+)\.go$
+        text: ^.*, make it a constant$
+    paths:
+      - third_party$
+      - builtin$
+      - examples/*
+issues:
   # Maximum issues count per one linter (set to 0 to disable)
   max-issues-per-linter: 0
-
-  # Maximum count of issues with the same text (set to 0 to disable)
+  # Maximum count of issues with the same text (set to 0 to disable)  
   max-same-issues: 0
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

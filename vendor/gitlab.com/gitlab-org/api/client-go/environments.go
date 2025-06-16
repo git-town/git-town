@@ -25,12 +25,12 @@ import (
 type (
 	// EnvironmentsServiceInterface defines all the API methods for the EnvironmentsService
 	EnvironmentsServiceInterface interface {
-		ListEnvironments(pid interface{}, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error)
-		GetEnvironment(pid interface{}, environment int, options ...RequestOptionFunc) (*Environment, *Response, error)
-		CreateEnvironment(pid interface{}, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
-		EditEnvironment(pid interface{}, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
-		DeleteEnvironment(pid interface{}, environment int, options ...RequestOptionFunc) (*Response, error)
-		StopEnvironment(pid interface{}, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+		ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error)
+		GetEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Environment, *Response, error)
+		CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+		EditEnvironment(pid any, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
+		DeleteEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Response, error)
+		StopEnvironment(pid any, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error)
 	}
 
 	// EnvironmentsService handles communication with the environment related methods
@@ -86,7 +86,7 @@ type ListEnvironmentsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/environments/#list-environments
-func (s *EnvironmentsService) ListEnvironments(pid interface{}, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error) {
+func (s *EnvironmentsService) ListEnvironments(pid any, opts *ListEnvironmentsOptions, options ...RequestOptionFunc) ([]*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -111,7 +111,7 @@ func (s *EnvironmentsService) ListEnvironments(pid interface{}, opts *ListEnviro
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/environments/#get-a-specific-environment
-func (s *EnvironmentsService) GetEnvironment(pid interface{}, environment int, options ...RequestOptionFunc) (*Environment, *Response, error) {
+func (s *EnvironmentsService) GetEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -147,14 +147,13 @@ type CreateEnvironmentOptions struct {
 	AutoStopSetting     *string `url:"auto_stop_setting,omitempty" json:"auto_stop_setting,omitempty"`
 }
 
-// CreateEnvironment adds an environment to a project. This is an idempotent
-// method and can be called multiple times with the same parameters. Createing
-// an environment that is already a environment does not affect the
-// existing environmentship.
+// CreateEnvironment adds an environment to a project. This method is idempotent
+// and can be called multiple times with the same parameters. Creating an environment
+// that already exists does not affect the existing association.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/environments/#create-a-new-environment
-func (s *EnvironmentsService) CreateEnvironment(pid interface{}, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
+func (s *EnvironmentsService) CreateEnvironment(pid any, opt *CreateEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -194,7 +193,7 @@ type EditEnvironmentOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/environments/#update-an-existing-environment
-func (s *EnvironmentsService) EditEnvironment(pid interface{}, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
+func (s *EnvironmentsService) EditEnvironment(pid any, environment int, opt *EditEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -219,7 +218,7 @@ func (s *EnvironmentsService) EditEnvironment(pid interface{}, environment int, 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/environments/#delete-an-environment
-func (s *EnvironmentsService) DeleteEnvironment(pid interface{}, environment int, options ...RequestOptionFunc) (*Response, error) {
+func (s *EnvironmentsService) DeleteEnvironment(pid any, environment int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -246,7 +245,7 @@ type StopEnvironmentOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/environments/#stop-an-environment
-func (s *EnvironmentsService) StopEnvironment(pid interface{}, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
+func (s *EnvironmentsService) StopEnvironment(pid any, environmentID int, opt *StopEnvironmentOptions, options ...RequestOptionFunc) (*Environment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

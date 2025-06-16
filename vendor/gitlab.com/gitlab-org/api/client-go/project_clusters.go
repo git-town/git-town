@@ -23,29 +23,38 @@ import (
 )
 
 type (
+	// Deprecated: in GitLab 14.5, to be removed in 19.0
 	ProjectClustersServiceInterface interface {
-		ListClusters(pid interface{}, options ...RequestOptionFunc) ([]*ProjectCluster, *Response, error)
-		GetCluster(pid interface{}, cluster int, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
-		AddCluster(pid interface{}, opt *AddClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
-		EditCluster(pid interface{}, cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
-		DeleteCluster(pid interface{}, cluster int, options ...RequestOptionFunc) (*Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
+		ListClusters(pid any, options ...RequestOptionFunc) ([]*ProjectCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
+		GetCluster(pid any, cluster int, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
+		AddCluster(pid any, opt *AddClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
+		EditCluster(pid any, cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
+		DeleteCluster(pid any, cluster int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ProjectClustersService handles communication with the
 	// project clusters related methods of the GitLab API.
+	// Deprecated: in GitLab 14.5, to be removed in 19.0
 	//
 	// GitLab API docs:
-	// https://docs.gitlab.com/ee/api/project_clusters.html
+	// https://docs.gitlab.com/api/project_clusters/
 	ProjectClustersService struct {
 		client *Client
 	}
 )
 
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 var _ ProjectClustersServiceInterface = (*ProjectClustersService)(nil)
 
 // ProjectCluster represents a GitLab Project Cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/project_clusters.html
+// GitLab API docs: https://docs.gitlab.com/api/project_clusters/
 type ProjectCluster struct {
 	ID                 int                 `json:"id"`
 	Name               string              `json:"name"`
@@ -61,11 +70,13 @@ type ProjectCluster struct {
 	Project            *Project            `json:"project"`
 }
 
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 func (v ProjectCluster) String() string {
 	return Stringify(v)
 }
 
 // PlatformKubernetes represents a GitLab Project Cluster PlatformKubernetes.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 type PlatformKubernetes struct {
 	APIURL            string `json:"api_url"`
 	Token             string `json:"token"`
@@ -75,6 +86,7 @@ type PlatformKubernetes struct {
 }
 
 // ManagementProject represents a GitLab Project Cluster management_project.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 type ManagementProject struct {
 	ID                int        `json:"id"`
 	Description       string     `json:"description"`
@@ -86,10 +98,11 @@ type ManagementProject struct {
 }
 
 // ListClusters gets a list of all clusters in a project.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#list-project-clusters
-func (s *ProjectClustersService) ListClusters(pid interface{}, options ...RequestOptionFunc) ([]*ProjectCluster, *Response, error) {
+// https://docs.gitlab.com/api/project_clusters/#list-project-clusters
+func (s *ProjectClustersService) ListClusters(pid any, options ...RequestOptionFunc) ([]*ProjectCluster, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -111,10 +124,11 @@ func (s *ProjectClustersService) ListClusters(pid interface{}, options ...Reques
 }
 
 // GetCluster gets a cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#get-a-single-project-cluster
-func (s *ProjectClustersService) GetCluster(pid interface{}, cluster int, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
+// https://docs.gitlab.com/api/project_clusters/#get-a-single-project-cluster
+func (s *ProjectClustersService) GetCluster(pid any, cluster int, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -136,9 +150,10 @@ func (s *ProjectClustersService) GetCluster(pid interface{}, cluster int, option
 }
 
 // AddClusterOptions represents the available AddCluster() options.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#add-existing-cluster-to-project
+// https://docs.gitlab.com/api/project_clusters/#add-existing-cluster-to-project
 type AddClusterOptions struct {
 	Name                *string                       `url:"name,omitempty" json:"name,omitempty"`
 	Domain              *string                       `url:"domain,omitempty" json:"domain,omitempty"`
@@ -150,6 +165,7 @@ type AddClusterOptions struct {
 }
 
 // AddPlatformKubernetesOptions represents the available PlatformKubernetes options for adding.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 type AddPlatformKubernetesOptions struct {
 	APIURL            *string `url:"api_url,omitempty" json:"api_url,omitempty"`
 	Token             *string `url:"token,omitempty" json:"token,omitempty"`
@@ -159,10 +175,11 @@ type AddPlatformKubernetesOptions struct {
 }
 
 // AddCluster adds an existing cluster to the project.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#add-existing-cluster-to-project
-func (s *ProjectClustersService) AddCluster(pid interface{}, opt *AddClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
+// https://docs.gitlab.com/api/project_clusters/#add-existing-cluster-to-project
+func (s *ProjectClustersService) AddCluster(pid any, opt *AddClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -184,9 +201,10 @@ func (s *ProjectClustersService) AddCluster(pid interface{}, opt *AddClusterOpti
 }
 
 // EditClusterOptions represents the available EditCluster() options.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#edit-project-cluster
+// https://docs.gitlab.com/api/project_clusters/#edit-project-cluster
 type EditClusterOptions struct {
 	Name                *string                        `url:"name,omitempty" json:"name,omitempty"`
 	Domain              *string                        `url:"domain,omitempty" json:"domain,omitempty"`
@@ -196,6 +214,7 @@ type EditClusterOptions struct {
 }
 
 // EditPlatformKubernetesOptions represents the available PlatformKubernetes options for editing.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 type EditPlatformKubernetesOptions struct {
 	APIURL    *string `url:"api_url,omitempty" json:"api_url,omitempty"`
 	Token     *string `url:"token,omitempty" json:"token,omitempty"`
@@ -204,10 +223,11 @@ type EditPlatformKubernetesOptions struct {
 }
 
 // EditCluster updates an existing project cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#edit-project-cluster
-func (s *ProjectClustersService) EditCluster(pid interface{}, cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
+// https://docs.gitlab.com/api/project_clusters/#edit-project-cluster
+func (s *ProjectClustersService) EditCluster(pid any, cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*ProjectCluster, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -229,10 +249,11 @@ func (s *ProjectClustersService) EditCluster(pid interface{}, cluster int, opt *
 }
 
 // DeleteCluster deletes an existing project cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_clusters.html#delete-project-cluster
-func (s *ProjectClustersService) DeleteCluster(pid interface{}, cluster int, options ...RequestOptionFunc) (*Response, error) {
+// https://docs.gitlab.com/api/project_clusters/#delete-project-cluster
+func (s *ProjectClustersService) DeleteCluster(pid any, cluster int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

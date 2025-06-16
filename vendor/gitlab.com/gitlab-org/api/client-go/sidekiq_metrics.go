@@ -31,7 +31,7 @@ type (
 
 	// SidekiqService handles communication with the sidekiq service
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/sidekiq_metrics.html
+	// GitLab API docs: https://docs.gitlab.com/api/sidekiq_metrics/
 	SidekiqService struct {
 		client *Client
 	}
@@ -42,7 +42,7 @@ var _ SidekiqServiceInterface = (*SidekiqService)(nil)
 // QueueMetrics represents the GitLab sidekiq queue metrics.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-the-current-queue-metrics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-queue-metrics
 type QueueMetrics struct {
 	Queues map[string]struct {
 		Backlog int `json:"backlog"`
@@ -54,7 +54,7 @@ type QueueMetrics struct {
 // their backlog and their latency.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-the-current-queue-metrics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-queue-metrics
 func (s *SidekiqService) GetQueueMetrics(options ...RequestOptionFunc) (*QueueMetrics, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/queue_metrics", nil, options)
 	if err != nil {
@@ -73,7 +73,7 @@ func (s *SidekiqService) GetQueueMetrics(options ...RequestOptionFunc) (*QueueMe
 // ProcessMetrics represents the GitLab sidekiq process metrics.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-the-current-process-metrics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-process-metrics
 type ProcessMetrics struct {
 	Processes []struct {
 		Hostname    string     `json:"hostname"`
@@ -91,7 +91,7 @@ type ProcessMetrics struct {
 // to process your queues.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-the-current-process-metrics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-process-metrics
 func (s *SidekiqService) GetProcessMetrics(options ...RequestOptionFunc) (*ProcessMetrics, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/process_metrics", nil, options)
 	if err != nil {
@@ -110,7 +110,7 @@ func (s *SidekiqService) GetProcessMetrics(options ...RequestOptionFunc) (*Proce
 // JobStats represents the GitLab sidekiq job stats.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-the-current-job-statistics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-job-statistics
 type JobStats struct {
 	Jobs struct {
 		Processed int `json:"processed"`
@@ -122,7 +122,7 @@ type JobStats struct {
 // GetJobStats list information about the jobs that Sidekiq has performed.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-the-current-job-statistics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-the-current-job-statistics
 func (s *SidekiqService) GetJobStats(options ...RequestOptionFunc) (*JobStats, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/job_stats", nil, options)
 	if err != nil {
@@ -141,7 +141,7 @@ func (s *SidekiqService) GetJobStats(options ...RequestOptionFunc) (*JobStats, *
 // CompoundMetrics represents the GitLab sidekiq compounded stats.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-a-compound-response-of-all-the-previously-mentioned-metrics
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-a-compound-response-of-all-the-previously-mentioned-metrics
 type CompoundMetrics struct {
 	QueueMetrics
 	ProcessMetrics
@@ -151,7 +151,8 @@ type CompoundMetrics struct {
 // GetCompoundMetrics lists all the currently available information about Sidekiq.
 // Get a compound response of all the previously mentioned metrics
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/sidekiq_metrics.html#get-a-compound-response-of-all-the-previously-mentioned-metrics
+// GitLab API docs:
+// https://docs.gitlab.com/api/sidekiq_metrics/#get-a-compound-response-of-all-the-previously-mentioned-metrics
 func (s *SidekiqService) GetCompoundMetrics(options ...RequestOptionFunc) (*CompoundMetrics, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "/sidekiq/compound_metrics", nil, options)
 	if err != nil {

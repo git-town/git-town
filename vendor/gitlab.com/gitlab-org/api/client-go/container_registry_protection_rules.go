@@ -21,10 +21,10 @@ import (
 
 type (
 	ContainerRegistryProtectionRulesServiceInterface interface {
-		ListContainerRegistryProtectionRules(pid interface{}, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error)
-		CreateContainerRegistryProtectionRule(pid interface{}, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
-		UpdateContainerRegistryProtectionRule(pid interface{}, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
-		DeleteContainerRegistryProtectionRule(pid interface{}, ruleID int, options ...RequestOptionFunc) (*Response, error)
+		ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error)
+		CreateContainerRegistryProtectionRule(pid any, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
+		UpdateContainerRegistryProtectionRule(pid any, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error)
+		DeleteContainerRegistryProtectionRule(pid any, ruleID int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ContainerRegistryProtectionRulesService handles communication with
@@ -62,7 +62,7 @@ func (s ContainerRegistryProtectionRule) String() string {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/container_repository_protection_rules/#list-container-repository-protection-rules
-func (s *ContainerRegistryProtectionRulesService) ListContainerRegistryProtectionRules(pid interface{}, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error) {
+func (s *ContainerRegistryProtectionRulesService) ListContainerRegistryProtectionRules(pid any, options ...RequestOptionFunc) ([]*ContainerRegistryProtectionRule, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -99,7 +99,7 @@ type CreateContainerRegistryProtectionRuleOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/container_repository_protection_rules/#create-a-container-repository-protection-rule
-func (s *ContainerRegistryProtectionRulesService) CreateContainerRegistryProtectionRule(pid interface{}, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
+func (s *ContainerRegistryProtectionRulesService) CreateContainerRegistryProtectionRule(pid any, opt *CreateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -136,7 +136,7 @@ type UpdateContainerRegistryProtectionRuleOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/container_repository_protection_rules/#update-a-container-repository-protection-rule
-func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtectionRule(pid interface{}, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
+func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtectionRule(pid any, ruleID int, opt *UpdateContainerRegistryProtectionRuleOptions, options ...RequestOptionFunc) (*ContainerRegistryProtectionRule, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -162,7 +162,7 @@ func (s *ContainerRegistryProtectionRulesService) UpdateContainerRegistryProtect
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/container_repository_protection_rules/#delete-a-container-repository-protection-rule
-func (s *ContainerRegistryProtectionRulesService) DeleteContainerRegistryProtectionRule(pid interface{}, ruleID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *ContainerRegistryProtectionRulesService) DeleteContainerRegistryProtectionRule(pid any, ruleID int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

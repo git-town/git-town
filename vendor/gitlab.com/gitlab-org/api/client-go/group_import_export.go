@@ -29,8 +29,8 @@ import (
 
 type (
 	GroupImportExportServiceInterface interface {
-		ScheduleExport(gid interface{}, options ...RequestOptionFunc) (*Response, error)
-		ExportDownload(gid interface{}, options ...RequestOptionFunc) (*bytes.Reader, *Response, error)
+		ScheduleExport(gid any, options ...RequestOptionFunc) (*Response, error)
+		ExportDownload(gid any, options ...RequestOptionFunc) (*bytes.Reader, *Response, error)
 		ImportFile(opt *GroupImportFileOptions, options ...RequestOptionFunc) (*Response, error)
 	}
 
@@ -49,7 +49,7 @@ var _ GroupImportExportServiceInterface = (*GroupImportExportService)(nil)
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_import_export/#schedule-new-export
-func (s *GroupImportExportService) ScheduleExport(gid interface{}, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupImportExportService) ScheduleExport(gid any, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (s *GroupImportExportService) ScheduleExport(gid interface{}, options ...Re
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_import_export/#export-download
-func (s *GroupImportExportService) ExportDownload(gid interface{}, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
+func (s *GroupImportExportService) ExportDownload(gid any, options ...RequestOptionFunc) (*bytes.Reader, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -107,13 +107,13 @@ type GroupImportFileOptions struct {
 func (s *GroupImportExportService) ImportFile(opt *GroupImportFileOptions, options ...RequestOptionFunc) (*Response, error) {
 	// First check if we got all required options.
 	if opt.Name == nil || *opt.Name == "" {
-		return nil, fmt.Errorf("Missing required option: Name")
+		return nil, fmt.Errorf("missing required option: Name")
 	}
 	if opt.Path == nil || *opt.Path == "" {
-		return nil, fmt.Errorf("Missing required option: Path")
+		return nil, fmt.Errorf("missing required option: Path")
 	}
 	if opt.File == nil || *opt.File == "" {
-		return nil, fmt.Errorf("Missing required option: File")
+		return nil, fmt.Errorf("missing required option: File")
 	}
 
 	f, err := os.Open(*opt.File)

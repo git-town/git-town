@@ -25,11 +25,11 @@ import (
 type (
 	// GroupVariablesServiceInterface defines methods for the GroupVariablesService.
 	GroupVariablesServiceInterface interface {
-		ListVariables(gid interface{}, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error)
-		GetVariable(gid interface{}, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
-		CreateVariable(gid interface{}, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
-		UpdateVariable(gid interface{}, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
-		RemoveVariable(gid interface{}, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error)
+		ListVariables(gid any, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error)
+		GetVariable(gid any, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
+		CreateVariable(gid any, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
+		UpdateVariable(gid any, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error)
+		RemoveVariable(gid any, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// GroupVariablesService handles communication with the
@@ -75,7 +75,7 @@ type ListGroupVariablesOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_level_variables/#list-group-variables
-func (s *GroupVariablesService) ListVariables(gid interface{}, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error) {
+func (s *GroupVariablesService) ListVariables(gid any, opt *ListGroupVariablesOptions, options ...RequestOptionFunc) ([]*GroupVariable, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -109,7 +109,7 @@ type GetGroupVariableOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_level_variables/#show-variable-details
-func (s *GroupVariablesService) GetVariable(gid interface{}, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
+func (s *GroupVariablesService) GetVariable(gid any, key string, opt *GetGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -151,7 +151,7 @@ type CreateGroupVariableOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_level_variables/#create-variable
-func (s *GroupVariablesService) CreateVariable(gid interface{}, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
+func (s *GroupVariablesService) CreateVariable(gid any, opt *CreateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -193,7 +193,7 @@ type UpdateGroupVariableOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_level_variables/#update-variable
-func (s *GroupVariablesService) UpdateVariable(gid interface{}, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
+func (s *GroupVariablesService) UpdateVariable(gid any, key string, opt *UpdateGroupVariableOptions, options ...RequestOptionFunc) (*GroupVariable, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -227,7 +227,7 @@ type RemoveGroupVariableOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_level_variables/#remove-variable
-func (s *GroupVariablesService) RemoveVariable(gid interface{}, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupVariablesService) RemoveVariable(gid any, key string, opt *RemoveGroupVariableOptions, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err

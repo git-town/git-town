@@ -24,13 +24,11 @@ import (
 
 type (
 	BranchesServiceInterface interface {
-		ListBranches(pid interface{}, opts *ListBranchesOptions, options ...RequestOptionFunc) ([]*Branch, *Response, error)
-		GetBranch(pid interface{}, branch string, options ...RequestOptionFunc) (*Branch, *Response, error)
-		ProtectBranch(pid interface{}, branch string, opts *ProtectBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error)
-		UnprotectBranch(pid interface{}, branch string, options ...RequestOptionFunc) (*Branch, *Response, error)
-		CreateBranch(pid interface{}, opt *CreateBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error)
-		DeleteBranch(pid interface{}, branch string, options ...RequestOptionFunc) (*Response, error)
-		DeleteMergedBranches(pid interface{}, options ...RequestOptionFunc) (*Response, error)
+		ListBranches(pid any, opts *ListBranchesOptions, options ...RequestOptionFunc) ([]*Branch, *Response, error)
+		GetBranch(pid any, branch string, options ...RequestOptionFunc) (*Branch, *Response, error)
+		CreateBranch(pid any, opt *CreateBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error)
+		DeleteBranch(pid any, branch string, options ...RequestOptionFunc) (*Response, error)
+		DeleteMergedBranches(pid any, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// BranchesService handles communication with the branch related methods
@@ -78,7 +76,7 @@ type ListBranchesOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/branches/#list-repository-branches
-func (s *BranchesService) ListBranches(pid interface{}, opts *ListBranchesOptions, options ...RequestOptionFunc) ([]*Branch, *Response, error) {
+func (s *BranchesService) ListBranches(pid any, opts *ListBranchesOptions, options ...RequestOptionFunc) ([]*Branch, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -103,7 +101,7 @@ func (s *BranchesService) ListBranches(pid interface{}, opts *ListBranchesOption
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/branches/#get-single-repository-branch
-func (s *BranchesService) GetBranch(pid interface{}, branch string, options ...RequestOptionFunc) (*Branch, *Response, error) {
+func (s *BranchesService) GetBranch(pid any, branch string, options ...RequestOptionFunc) (*Branch, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -111,75 +109,6 @@ func (s *BranchesService) GetBranch(pid interface{}, branch string, options ...R
 	u := fmt.Sprintf("projects/%s/repository/branches/%s", PathEscape(project), url.PathEscape(branch))
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	b := new(Branch)
-	resp, err := s.client.Do(req, b)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return b, resp, nil
-}
-
-// ProtectBranchOptions represents the available ProtectBranch() options.
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/branches/#protect-repository-branch
-type ProtectBranchOptions struct {
-	DevelopersCanPush  *bool `url:"developers_can_push,omitempty" json:"developers_can_push,omitempty"`
-	DevelopersCanMerge *bool `url:"developers_can_merge,omitempty" json:"developers_can_merge,omitempty"`
-}
-
-// ProtectBranch protects a single project repository branch. This is an
-// idempotent function, protecting an already protected repository branch
-// still returns a 200 OK status code.
-//
-// Deprecated: This endpoint has been replaced by
-// ProtectedBranchesService.ProtectRepositoryBranches()
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/branches/#protect-repository-branch
-func (s *BranchesService) ProtectBranch(pid interface{}, branch string, opts *ProtectBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/branches/%s/protect", PathEscape(project), url.PathEscape(branch))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, opts, options)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	b := new(Branch)
-	resp, err := s.client.Do(req, b)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return b, resp, nil
-}
-
-// UnprotectBranch unprotects a single project repository branch. This is an
-// idempotent function, unprotecting an already unprotected repository branch
-// still returns a 200 OK status code.
-//
-// Deprecated: This endpoint has been replaced by
-// ProtectedBranchesService.UnprotectRepositoryBranches()
-//
-// GitLab API docs:
-// https://docs.gitlab.com/api/branches/#unprotect-repository-branch
-func (s *BranchesService) UnprotectBranch(pid interface{}, branch string, options ...RequestOptionFunc) (*Branch, *Response, error) {
-	project, err := parseID(pid)
-	if err != nil {
-		return nil, nil, err
-	}
-	u := fmt.Sprintf("projects/%s/repository/branches/%s/unprotect", PathEscape(project), url.PathEscape(branch))
-
-	req, err := s.client.NewRequest(http.MethodPut, u, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -206,7 +135,7 @@ type CreateBranchOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/branches/#create-repository-branch
-func (s *BranchesService) CreateBranch(pid interface{}, opt *CreateBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error) {
+func (s *BranchesService) CreateBranch(pid any, opt *CreateBranchOptions, options ...RequestOptionFunc) (*Branch, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -231,7 +160,7 @@ func (s *BranchesService) CreateBranch(pid interface{}, opt *CreateBranchOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/branches/#delete-repository-branch
-func (s *BranchesService) DeleteBranch(pid interface{}, branch string, options ...RequestOptionFunc) (*Response, error) {
+func (s *BranchesService) DeleteBranch(pid any, branch string, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -250,7 +179,7 @@ func (s *BranchesService) DeleteBranch(pid interface{}, branch string, options .
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/branches/#delete-merged-branches
-func (s *BranchesService) DeleteMergedBranches(pid interface{}, options ...RequestOptionFunc) (*Response, error) {
+func (s *BranchesService) DeleteMergedBranches(pid any, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
