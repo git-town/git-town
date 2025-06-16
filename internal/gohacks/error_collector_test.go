@@ -14,6 +14,7 @@ func TestErrorCollector(t *testing.T) {
 	t.Run("Check", func(t *testing.T) {
 		t.Parallel()
 		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
 			fc := gohacks.ErrorCollector{}
 			fc.Check(nil)
 			must.Nil(t, fc.Err)
@@ -22,6 +23,7 @@ func TestErrorCollector(t *testing.T) {
 			must.ErrorContains(t, fc.Err, "first")
 		})
 		t.Run("indicates whether it received an error", func(t *testing.T) {
+			t.Parallel()
 			fc := gohacks.ErrorCollector{}
 			must.False(t, fc.Check(nil))
 			must.True(t, fc.Check(errors.New("")))

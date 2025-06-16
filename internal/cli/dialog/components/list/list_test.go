@@ -14,6 +14,7 @@ func TestList(t *testing.T) {
 	t.Run("MoveCursorDown", func(t *testing.T) {
 		t.Parallel()
 		t.Run("entry below is enabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: false},
@@ -24,6 +25,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 1, l.Cursor)
 		})
 		t.Run("at end of list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: false},
@@ -34,6 +36,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 0, l.Cursor)
 		})
 		t.Run("first and second entry below are disabled, the next one is enabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -45,6 +48,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 3, l.Cursor)
 		})
 		t.Run("all entries below are disabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: false},
@@ -56,6 +60,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 0, l.Cursor)
 		})
 		t.Run("only one enabled entry in list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -66,6 +71,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 0, l.Cursor)
 		})
 		t.Run("no enabled entries in list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: true},
 				{Disabled: true},
@@ -80,6 +86,7 @@ func TestList(t *testing.T) {
 	t.Run("MoveCursorUp", func(t *testing.T) {
 		t.Parallel()
 		t.Run("entry above is enabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: false},
@@ -90,6 +97,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 1, l.Cursor)
 		})
 		t.Run("at beginning of list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: false},
@@ -100,6 +108,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 2, l.Cursor)
 		})
 		t.Run("first and second entry above are disabled, the next one is enabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -111,6 +120,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 0, l.Cursor)
 		})
 		t.Run("all entries above are disabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: true},
 				{Disabled: true},
@@ -122,6 +132,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 3, l.Cursor)
 		})
 		t.Run("only one enabled entry in list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -132,6 +143,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 0, l.Cursor)
 		})
 		t.Run("no enabled entries in list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: true},
 				{Disabled: true},
@@ -202,6 +214,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, end, l.Cursor)
 		})
 		t.Run("first and second entry below are disabled, the next ones are enabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -224,6 +237,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 10, l.Cursor)
 		})
 		t.Run("all entries below are disabled except the next one", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -245,6 +259,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, end, l.Cursor)
 		})
 		t.Run("all entries below are disabled", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: false},
@@ -272,6 +287,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 1, l.Cursor)
 		})
 		t.Run("only one enabled entry in list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: false},
 				{Disabled: true},
@@ -286,6 +302,7 @@ func TestList(t *testing.T) {
 			must.EqOp(t, 0, l.Cursor)
 		})
 		t.Run("no enabled entries in list", func(t *testing.T) {
+			t.Parallel()
 			entries := list.Entries[configdomain.HostingOriginHostname]{
 				{Disabled: true},
 				{Disabled: true},

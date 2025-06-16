@@ -382,6 +382,7 @@ func TestBranchInfos(t *testing.T) {
 	t.Run("LookupLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("local branch with matching name", func(t *testing.T) {
+			t.Parallel()
 			branchOne := gitdomain.NewLocalBranchName("one")
 			branchInfos := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -397,6 +398,7 @@ func TestBranchInfos(t *testing.T) {
 			must.EqOp(t, branchOne, branchInfo.LocalName.GetOrPanic())
 		})
 		t.Run("remote branch with matching name", func(t *testing.T) {
+			t.Parallel()
 			branchInfos := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  None[gitdomain.LocalBranchName](),
