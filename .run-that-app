@@ -4,6 +4,7 @@ deadcode 0.28.0
 depth 1.2.1
 dprint 0.50.0
 exhaustruct 3.3.1
+funcorder 0.5.0
 ireturn 0.4.0
 ghokin 3.8.0
 gofumpt 0.7.0

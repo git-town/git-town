@@ -1,4 +1,4 @@
-RTA_VERSION = 0.17.0  # run-that-app version to use
+RTA_VERSION = 0.18.0  # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -43,6 +43,9 @@ fix: tools/rta@${RTA_VERSION}  # runs all linters and auto-fixes
 	tools/rta ghokin fmt replace features/
 	tools/generate_opcodes_all.sh
 
+funcorder: tools/rta@${RTA_VERSION}
+	tools/rta funcorder -constructor=false -struct-method=true -alphabetical=true ./...
+
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
@@ -52,6 +55,7 @@ install:  # builds for the current platform
 lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-directory lint-smoke
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
+	make --no-print-directory funcorder
 	make --no-print-directory deadcode
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
