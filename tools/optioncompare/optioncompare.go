@@ -21,7 +21,7 @@ func main() {
 	singlechecker.Main(&analysis.Analyzer{
 		Name:     "optioncompare",
 		Doc:      "Ensures no == comparison between Option types",
-		Requires: []*analysis.Analyzer{},
+		Requires: []*analysis.Analyzer{inspect.Analyzer},
 		Run:      run,
 		Flags:    *&flag.FlagSet{},
 	})
