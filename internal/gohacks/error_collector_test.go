@@ -34,6 +34,7 @@ func TestErrorCollector(t *testing.T) {
 	t.Run("Fail", func(t *testing.T) {
 		t.Parallel()
 		t.Run("registers the given error", func(t *testing.T) {
+			t.Parallel()
 			fc := gohacks.ErrorCollector{}
 			fc.Fail("failed %s", "reason")
 			must.ErrorContains(t, fc.Err, "failed reason")

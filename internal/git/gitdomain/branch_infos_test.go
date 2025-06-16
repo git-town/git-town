@@ -446,6 +446,7 @@ func TestBranchInfos(t *testing.T) {
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the removed element", func(t *testing.T) {
+			t.Parallel()
 			bs := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchNameOption("one"),
