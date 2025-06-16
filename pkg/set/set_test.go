@@ -55,12 +55,14 @@ func TestSet(t *testing.T) {
 		t.Parallel()
 
 		t.Run("no values", func(t *testing.T) {
+			t.Parallel()
 			set := set.New[int]()
 			have := set.Values()
 			must.Len(t, 0, have)
 		})
 
 		t.Run("with values", func(t *testing.T) {
+			t.Parallel()
 			set := set.New(1, 2)
 			have := set.Values()
 			want := []int{1, 2}

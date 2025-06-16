@@ -14,6 +14,7 @@ func TestParseBool(t *testing.T) {
 	t.Run("ParseBool", func(t *testing.T) {
 		t.Parallel()
 		t.Run("valid inputs", func(t *testing.T) {
+			t.Parallel()
 			tests := map[string]bool{
 				"y":        true,
 				"Y":        true,
