@@ -24,7 +24,7 @@ create.share-new-branches = "push|propose"
 To enable pushing new branches in Git, run this command:
 
 ```wrap
-git config [--global] share-new-branches <push|propose>
+git config [--global] git-town.share-new-branches <push|propose>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
