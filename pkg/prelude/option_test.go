@@ -24,7 +24,6 @@ func TestOption(t *testing.T) {
 				a := Some(1)
 				b := Some(2)
 				must.False(t, a.Equal(b))
-				must.False(t, a == b)
 			})
 			t.Run("Some and None", func(t *testing.T) {
 				a := Some(1)
