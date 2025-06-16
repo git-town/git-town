@@ -23,7 +23,7 @@ func main() {
 		Doc:      "Ensures no == comparison between Option types",
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 		Run:      run,
-		Flags:    *&flag.FlagSet{},
+		Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError),
 	})
 }
 
