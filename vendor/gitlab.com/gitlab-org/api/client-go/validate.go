@@ -23,8 +23,8 @@ import (
 
 type (
 	ValidateServiceInterface interface {
-		ProjectNamespaceLint(pid interface{}, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error)
-		ProjectLint(pid interface{}, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error)
+		ProjectNamespaceLint(pid any, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error)
+		ProjectLint(pid any, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error)
 	}
 
 	// ValidateService handles communication with the validation related methods of
@@ -66,13 +66,13 @@ type ProjectLintResult struct {
 // Reference can be found at the lint API endpoint in the openapi yaml:
 // https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/openapi/openapi_v2.yaml
 type Include struct {
-	Type           string                 `json:"type"`
-	Location       string                 `json:"location"`
-	Blob           string                 `json:"blob"`
-	Raw            string                 `json:"raw"`
-	Extra          map[string]interface{} `json:"extra"`
-	ContextProject string                 `json:"context_project"`
-	ContextSHA     string                 `json:"context_sha"`
+	Type           string         `json:"type"`
+	Location       string         `json:"location"`
+	Blob           string         `json:"blob"`
+	Raw            string         `json:"raw"`
+	Extra          map[string]any `json:"extra"`
+	ContextProject string         `json:"context_project"`
+	ContextSHA     string         `json:"context_sha"`
 }
 
 // ProjectNamespaceLintOptions represents the available ProjectNamespaceLint() options.
@@ -90,7 +90,7 @@ type ProjectNamespaceLintOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/lint/#validate-sample-cicd-configuration
-func (s *ValidateService) ProjectNamespaceLint(pid interface{}, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
+func (s *ValidateService) ProjectNamespaceLint(pid any, opt *ProjectNamespaceLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -127,7 +127,7 @@ type ProjectLintOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/lint/#validate-a-projects-cicd-configuration
-func (s *ValidateService) ProjectLint(pid interface{}, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
+func (s *ValidateService) ProjectLint(pid any, opt *ProjectLintOptions, options ...RequestOptionFunc) (*ProjectLintResult, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

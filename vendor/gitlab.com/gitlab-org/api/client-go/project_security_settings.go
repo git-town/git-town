@@ -23,15 +23,15 @@ import (
 
 type (
 	ProjectSecuritySettingsServiceInterface interface {
-		ListProjectSecuritySettings(pid interface{}, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error)
-		UpdateSecretPushProtectionEnabledSetting(pid interface{}, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error)
+		ListProjectSecuritySettings(pid any, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error)
+		UpdateSecretPushProtectionEnabledSetting(pid any, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error)
 	}
 
 	// ProjectSecuritySettingsService handles communication with the Project Security Settings
 	// related methods of the GitLab API.
 	//
 	// Gitlab API docs:
-	// https://docs.gitlab.com/ee/api/project_security_settings.html
+	// https://docs.gitlab.com/api/project_security_settings/
 	ProjectSecuritySettingsService struct {
 		client *Client
 	}
@@ -42,7 +42,7 @@ var _ ProjectSecuritySettingsServiceInterface = (*ProjectSecuritySettingsService
 // ProjectSecuritySettings represents the project security settings data.
 //
 // Gitlab API docs:
-// https://docs.gitlab.com/ee/api/project_security_settings.html
+// https://docs.gitlab.com/api/project_security_settings/
 type ProjectSecuritySettings struct {
 	ProjectID                           int64      `json:"project_id"`
 	CreatedAt                           *time.Time `json:"created_at"`
@@ -59,7 +59,7 @@ type ProjectSecuritySettings struct {
 // Gets a string representation of the ProjectSecuritySettings data.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_security_settings.html
+// https://docs.gitlab.com/api/project_security_settings/
 func (s ProjectSecuritySettings) String() string {
 	return Stringify(s)
 }
@@ -67,8 +67,8 @@ func (s ProjectSecuritySettings) String() string {
 // ListProjectSecuritySettings lists all of a project's security settings.
 //
 // GitLab API Docs:
-// https://docs.gitlab.com/ee/api/project_security_settings.html#list-project-security-settings
-func (s *ProjectSecuritySettingsService) ListProjectSecuritySettings(pid interface{}, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
+// https://docs.gitlab.com/api/project_security_settings/#list-project-security-settings
+func (s *ProjectSecuritySettingsService) ListProjectSecuritySettings(pid any, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -92,7 +92,7 @@ func (s *ProjectSecuritySettingsService) ListProjectSecuritySettings(pid interfa
 // the project security settings.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_security_settings.html#update-secret_push_protection_enabled-setting
+// https://docs.gitlab.com/api/project_security_settings/#update-secret_push_protection_enabled-setting
 type UpdateProjectSecuritySettingsOptions struct {
 	SecretPushProtectionEnabled *bool `url:"secret_push_protection_enabled,omitempty" json:"secret_push_protection_enabled,omitempty"`
 }
@@ -101,8 +101,8 @@ type UpdateProjectSecuritySettingsOptions struct {
 // setting for the all projects in a project to the provided value.
 //
 // GitLab API Docs:
-// https://docs.gitlab.com/ee/api/project_security_settings.html#update-secret_push_protection_enabled-setting
-func (s *ProjectSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(pid interface{}, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
+// https://docs.gitlab.com/api/project_security_settings/#update-secret_push_protection_enabled-setting
+func (s *ProjectSecuritySettingsService) UpdateSecretPushProtectionEnabledSetting(pid any, opt UpdateProjectSecuritySettingsOptions, options ...RequestOptionFunc) (*ProjectSecuritySettings, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

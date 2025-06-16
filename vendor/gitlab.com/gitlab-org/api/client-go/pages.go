@@ -24,15 +24,15 @@ import (
 
 type (
 	PagesServiceInterface interface {
-		UnpublishPages(gid interface{}, options ...RequestOptionFunc) (*Response, error)
-		GetPages(gid interface{}, options ...RequestOptionFunc) (*Pages, *Response, error)
-		UpdatePages(pid interface{}, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error)
+		UnpublishPages(gid any, options ...RequestOptionFunc) (*Response, error)
+		GetPages(gid any, options ...RequestOptionFunc) (*Pages, *Response, error)
+		UpdatePages(pid any, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error)
 	}
 
 	// PagesService handles communication with the pages related methods
 	// of the GitLab API.
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/pages.html
+	// GitLab API docs: https://docs.gitlab.com/api/pages/
 	PagesService struct {
 		client *Client
 	}
@@ -42,7 +42,7 @@ var _ PagesServiceInterface = (*PagesService)(nil)
 
 // Pages represents the Pages of a project.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/pages.html
+// GitLab API docs: https://docs.gitlab.com/api/pages/
 type Pages struct {
 	URL                   string             `json:"url"`
 	IsUniqueDomainEnabled bool               `json:"is_unique_domain_enabled"`
@@ -52,7 +52,7 @@ type Pages struct {
 
 // PagesDeployment represents a Pages deployment.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/pages.html
+// GitLab API docs: https://docs.gitlab.com/api/pages/
 type PagesDeployment struct {
 	CreatedAt     time.Time `json:"created_at"`
 	URL           string    `json:"url"`
@@ -63,8 +63,8 @@ type PagesDeployment struct {
 // UnpublishPages unpublished pages. The user must have admin privileges.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/pages.html#unpublish-pages
-func (s *PagesService) UnpublishPages(gid interface{}, options ...RequestOptionFunc) (*Response, error) {
+// https://docs.gitlab.com/api/pages/#unpublish-pages
+func (s *PagesService) UnpublishPages(gid any, options ...RequestOptionFunc) (*Response, error) {
 	page, err := parseID(gid)
 	if err != nil {
 		return nil, err
@@ -83,8 +83,8 @@ func (s *PagesService) UnpublishPages(gid interface{}, options ...RequestOptionF
 // maintainer privileges.
 //
 // GitLab API Docs:
-// https://docs.gitlab.com/ee/api/pages.html#get-pages-settings-for-a-project
-func (s *PagesService) GetPages(gid interface{}, options ...RequestOptionFunc) (*Pages, *Response, error) {
+// https://docs.gitlab.com/api/pages/#get-pages-settings-for-a-project
+func (s *PagesService) GetPages(gid any, options ...RequestOptionFunc) (*Pages, *Response, error) {
 	project, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -108,7 +108,7 @@ func (s *PagesService) GetPages(gid interface{}, options ...RequestOptionFunc) (
 // UpdatePages represents the available UpdatePages() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/pages.html#update-pages-settings-for-a-project
+// https://docs.gitlab.com/api/pages/#update-pages-settings-for-a-project
 type UpdatePagesOptions struct {
 	PagesUniqueDomainEnabled *bool `url:"pages_unique_domain_enabled,omitempty" json:"pages_unique_domain_enabled,omitempty"`
 	PagesHTTPSOnly           *bool `url:"pages_https_only,omitempty" json:"pages_https_only,omitempty"`
@@ -118,8 +118,8 @@ type UpdatePagesOptions struct {
 // administrator privileges.
 //
 // GitLab API Docs:
-// https://docs.gitlab.com/ee/api/pages.html#update-pages-settings-for-a-project
-func (s *PagesService) UpdatePages(pid interface{}, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error) {
+// https://docs.gitlab.com/api/pages/#update-pages-settings-for-a-project
+func (s *PagesService) UpdatePages(pid any, opt UpdatePagesOptions, options ...RequestOptionFunc) (*Pages, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

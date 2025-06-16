@@ -24,10 +24,10 @@ import (
 
 type (
 	InvitesServiceInterface interface {
-		ListPendingGroupInvitations(gid interface{}, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error)
-		ListPendingProjectInvitations(pid interface{}, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error)
-		GroupInvites(gid interface{}, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error)
-		ProjectInvites(pid interface{}, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error)
+		ListPendingGroupInvitations(gid any, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error)
+		ListPendingProjectInvitations(pid any, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error)
+		GroupInvites(gid any, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error)
+		ProjectInvites(pid any, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error)
 	}
 
 	// InvitesService handles communication with the invitation related
@@ -68,7 +68,7 @@ type ListPendingInvitationsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#list-all-invitations-pending-for-a-group-or-project
-func (s *InvitesService) ListPendingGroupInvitations(gid interface{}, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error) {
+func (s *InvitesService) ListPendingGroupInvitations(gid any, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -93,7 +93,7 @@ func (s *InvitesService) ListPendingGroupInvitations(gid interface{}, opt *ListP
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#list-all-invitations-pending-for-a-group-or-project
-func (s *InvitesService) ListPendingProjectInvitations(pid interface{}, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error) {
+func (s *InvitesService) ListPendingProjectInvitations(pid any, opt *ListPendingInvitationsOptions, options ...RequestOptionFunc) ([]*PendingInvite, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -120,9 +120,9 @@ func (s *InvitesService) ListPendingProjectInvitations(pid interface{}, opt *Lis
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#add-a-member-to-a-group-or-project
 type InvitesOptions struct {
-	ID          interface{}       `url:"id,omitempty" json:"id,omitempty"`
+	ID          any               `url:"id,omitempty" json:"id,omitempty"`
 	Email       *string           `url:"email,omitempty" json:"email,omitempty"`
-	UserID      interface{}       `url:"user_id,omitempty" json:"user_id,omitempty"`
+	UserID      any               `url:"user_id,omitempty" json:"user_id,omitempty"`
 	AccessLevel *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
 	ExpiresAt   *ISOTime          `url:"expires_at,omitempty" json:"expires_at,omitempty"`
 }
@@ -140,7 +140,7 @@ type InvitesResult struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#add-a-member-to-a-group-or-project
-func (s *InvitesService) GroupInvites(gid interface{}, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error) {
+func (s *InvitesService) GroupInvites(gid any, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -165,7 +165,7 @@ func (s *InvitesService) GroupInvites(gid interface{}, opt *InvitesOptions, opti
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/invitations/#add-a-member-to-a-group-or-project
-func (s *InvitesService) ProjectInvites(pid interface{}, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error) {
+func (s *InvitesService) ProjectInvites(pid any, opt *InvitesOptions, options ...RequestOptionFunc) (*InvitesResult, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

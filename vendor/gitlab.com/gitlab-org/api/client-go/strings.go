@@ -25,7 +25,7 @@ import (
 // Stringify attempts to create a reasonable string representation of types in
 // the Gitlab library.  It does things like resolve pointers to their values
 // and omits struct fields with nil values.
-func Stringify(message interface{}) string {
+func Stringify(message any) string {
 	var buf bytes.Buffer
 	v := reflect.ValueOf(message)
 	stringifyValue(&buf, v)
@@ -46,7 +46,7 @@ func stringifyValue(buf *bytes.Buffer, val reflect.Value) {
 		fmt.Fprintf(buf, `"%s"`, v)
 	case reflect.Slice:
 		buf.WriteByte('[')
-		for i := 0; i < v.Len(); i++ {
+		for i := range v.Len() {
 			if i > 0 {
 				buf.WriteByte(' ')
 			}
@@ -64,7 +64,7 @@ func stringifyValue(buf *bytes.Buffer, val reflect.Value) {
 		buf.WriteByte('{')
 
 		var sep bool
-		for i := 0; i < v.NumField(); i++ {
+		for i := range v.NumField() {
 			fv := v.Field(i)
 			if fv.Kind() == reflect.Ptr && fv.IsNil() {
 				continue

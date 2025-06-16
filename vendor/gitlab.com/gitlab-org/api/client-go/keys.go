@@ -32,7 +32,7 @@ type (
 	// keys related methods of the GitLab API.
 	//
 	// GitLab API docs:
-	// https://docs.gitlab.com/ee/api/keys.html
+	// https://docs.gitlab.com/api/keys/
 	KeysService struct {
 		client *Client
 	}
@@ -43,7 +43,7 @@ var _ KeysServiceInterface = (*KeysService)(nil)
 // Key represents a GitLab user's SSH key.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/keys.html
+// https://docs.gitlab.com/api/keys/
 type Key struct {
 	ID        int        `json:"id"`
 	Title     string     `json:"title"`
@@ -56,7 +56,7 @@ type Key struct {
 // user information.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/keys.html#get-ssh-key-with-user-by-id-of-an-ssh-key
+// https://docs.gitlab.com/api/keys/#get-ssh-key-with-user-by-id-of-an-ssh-key
 func (s *KeysService) GetKeyWithUser(key int, options ...RequestOptionFunc) (*Key, *Response, error) {
 	u := fmt.Sprintf("keys/%d", key)
 
@@ -78,8 +78,8 @@ func (s *KeysService) GetKeyWithUser(key int, options ...RequestOptionFunc) (*Ke
 // options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/keys.html#get-user-by-fingerprint-of-ssh-key
-// https://docs.gitlab.com/ee/api/keys.html#get-user-by-deploy-key-fingerprint
+// https://docs.gitlab.com/api/keys/#get-user-by-fingerprint-of-ssh-key
+// https://docs.gitlab.com/api/keys/#get-user-by-deploy-key-fingerprint
 type GetKeyByFingerprintOptions struct {
 	Fingerprint string `url:"fingerprint" json:"fingerprint"`
 }
@@ -88,8 +88,8 @@ type GetKeyByFingerprintOptions struct {
 // along with the associated user information.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/keys.html#get-user-by-fingerprint-of-ssh-key
-// https://docs.gitlab.com/ee/api/keys.html#get-user-by-deploy-key-fingerprint
+// https://docs.gitlab.com/api/keys/#get-user-by-fingerprint-of-ssh-key
+// https://docs.gitlab.com/api/keys/#get-user-by-deploy-key-fingerprint
 func (s *KeysService) GetKeyByFingerprint(opt *GetKeyByFingerprintOptions, options ...RequestOptionFunc) (*Key, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "keys", opt, options)
 	if err != nil {

@@ -58,7 +58,7 @@ func SetForgejoVersion(v string) ClientOption {
 		c.getVersionOnce.Do(func() {
 			c.serverVersion, err = version.NewVersion(v)
 		})
-		return
+		return //nolint
 	}
 }
 
@@ -128,5 +128,5 @@ func (c *Client) loadServerVersion() (err error) {
 			return
 		}
 	})
-	return
+	return //nolint
 }

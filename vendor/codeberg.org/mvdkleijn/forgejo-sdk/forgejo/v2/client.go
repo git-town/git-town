@@ -22,7 +22,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hashicorp/go-version"
+	version "github.com/hashicorp/go-version"
 )
 
 var jsonHeader = http.Header{"content-type": []string{"application/json"}}
@@ -88,7 +88,7 @@ func NewClient(url string, options ...ClientOption) (*Client, error) {
 }
 
 // NewClientWithHTTP creates an API client with a custom http client
-// Deprecated use SetHTTPClient option
+// Deprecated: use SetHTTPClient option
 func NewClientWithHTTP(url string, httpClient *http.Client) *Client {
 	client, _ := NewClient(url, SetHTTPClient(httpClient))
 	return client

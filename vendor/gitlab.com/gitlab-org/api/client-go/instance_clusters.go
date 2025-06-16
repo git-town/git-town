@@ -23,16 +23,23 @@ import (
 )
 
 type (
+	// Deprecated: in GitLab 14.5, to be removed in 19.0
 	InstanceClustersServiceInterface interface {
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		ListClusters(options ...RequestOptionFunc) ([]*InstanceCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		GetCluster(cluster int, options ...RequestOptionFunc) (*InstanceCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		AddCluster(opt *AddClusterOptions, options ...RequestOptionFunc) (*InstanceCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		EditCluster(cluster int, opt *EditClusterOptions, options ...RequestOptionFunc) (*InstanceCluster, *Response, error)
+		// Deprecated: in GitLab 14.5, to be removed in 19.0
 		DeleteCluster(cluster int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// InstanceClustersService handles communication with the
 	// instance clusters related methods of the GitLab API.
+	// Deprecated: in GitLab 14.5, to be removed in 19.0
 	//
 	// GitLab API docs:
 	// https://docs.gitlab.com/api/instance_clusters/
@@ -41,9 +48,11 @@ type (
 	}
 )
 
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 var _ InstanceClustersServiceInterface = (*InstanceClustersService)(nil)
 
 // InstanceCluster represents a GitLab Instance Cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs: https://docs.gitlab.com/api/instance_clusters/
 type InstanceCluster struct {
@@ -61,11 +70,13 @@ type InstanceCluster struct {
 	ManagementProject  *ManagementProject  `json:"management_project"`
 }
 
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 func (v InstanceCluster) String() string {
 	return Stringify(v)
 }
 
 // ListClusters gets a list of all instance clusters.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#list-instance-clusters
@@ -87,6 +98,7 @@ func (s *InstanceClustersService) ListClusters(options ...RequestOptionFunc) ([]
 }
 
 // GetCluster gets an instance cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#get-a-single-instance-cluster
@@ -108,6 +120,7 @@ func (s *InstanceClustersService) GetCluster(cluster int, options ...RequestOpti
 }
 
 // AddCluster adds an existing cluster to the instance.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#add-existing-instance-cluster
@@ -129,6 +142,7 @@ func (s *InstanceClustersService) AddCluster(opt *AddClusterOptions, options ...
 }
 
 // EditCluster updates an existing instance cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#edit-instance-cluster
@@ -150,6 +164,7 @@ func (s *InstanceClustersService) EditCluster(cluster int, opt *EditClusterOptio
 }
 
 // DeleteCluster deletes an existing instance cluster.
+// Deprecated: in GitLab 14.5, to be removed in 19.0
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/instance_clusters/#delete-instance-cluster
