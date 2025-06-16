@@ -24,11 +24,11 @@ import (
 type (
 	// ErrorTrackingServiceInterface defines all the API methods for the ErrorTrackingService
 	ErrorTrackingServiceInterface interface {
-		GetErrorTrackingSettings(pid interface{}, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error)
-		EnableDisableErrorTracking(pid interface{}, opt *EnableDisableErrorTrackingOptions, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error)
-		ListClientKeys(pid interface{}, opt *ListClientKeysOptions, options ...RequestOptionFunc) ([]*ErrorTrackingClientKey, *Response, error)
-		CreateClientKey(pid interface{}, options ...RequestOptionFunc) (*ErrorTrackingClientKey, *Response, error)
-		DeleteClientKey(pid interface{}, keyID int, options ...RequestOptionFunc) (*Response, error)
+		GetErrorTrackingSettings(pid any, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error)
+		EnableDisableErrorTracking(pid any, opt *EnableDisableErrorTrackingOptions, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error)
+		ListClientKeys(pid any, opt *ListClientKeysOptions, options ...RequestOptionFunc) ([]*ErrorTrackingClientKey, *Response, error)
+		CreateClientKey(pid any, options ...RequestOptionFunc) (*ErrorTrackingClientKey, *Response, error)
+		DeleteClientKey(pid any, keyID int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ErrorTrackingService handles communication with the error tracking
@@ -76,7 +76,7 @@ func (p ErrorTrackingSettings) String() string {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/error_tracking/#get-error-tracking-settings
-func (s *ErrorTrackingService) GetErrorTrackingSettings(pid interface{}, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error) {
+func (s *ErrorTrackingService) GetErrorTrackingSettings(pid any, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -112,7 +112,7 @@ type EnableDisableErrorTrackingOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/error_tracking/#enable-or-disable-the-error-tracking-project-settings
-func (s *ErrorTrackingService) EnableDisableErrorTracking(pid interface{}, opt *EnableDisableErrorTrackingOptions, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error) {
+func (s *ErrorTrackingService) EnableDisableErrorTracking(pid any, opt *EnableDisableErrorTrackingOptions, options ...RequestOptionFunc) (*ErrorTrackingSettings, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -143,7 +143,7 @@ type ListClientKeysOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/error_tracking/#list-project-client-keys
-func (s *ErrorTrackingService) ListClientKeys(pid interface{}, opt *ListClientKeysOptions, options ...RequestOptionFunc) ([]*ErrorTrackingClientKey, *Response, error) {
+func (s *ErrorTrackingService) ListClientKeys(pid any, opt *ListClientKeysOptions, options ...RequestOptionFunc) ([]*ErrorTrackingClientKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -168,7 +168,7 @@ func (s *ErrorTrackingService) ListClientKeys(pid interface{}, opt *ListClientKe
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/error_tracking/#create-a-client-key
-func (s *ErrorTrackingService) CreateClientKey(pid interface{}, options ...RequestOptionFunc) (*ErrorTrackingClientKey, *Response, error) {
+func (s *ErrorTrackingService) CreateClientKey(pid any, options ...RequestOptionFunc) (*ErrorTrackingClientKey, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -193,7 +193,7 @@ func (s *ErrorTrackingService) CreateClientKey(pid interface{}, options ...Reque
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/error_tracking/#delete-a-client-key
-func (s *ErrorTrackingService) DeleteClientKey(pid interface{}, keyID int, options ...RequestOptionFunc) (*Response, error) {
+func (s *ErrorTrackingService) DeleteClientKey(pid any, keyID int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
