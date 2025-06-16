@@ -18,16 +18,18 @@ package gitlab
 
 import (
 	"fmt"
+	"math/big"
 	"net/http"
 	"net/url"
 )
 
 type (
 	TagsServiceInterface interface {
-		ListTags(pid interface{}, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error)
-		GetTag(pid interface{}, tag string, options ...RequestOptionFunc) (*Tag, *Response, error)
-		CreateTag(pid interface{}, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error)
-		DeleteTag(pid interface{}, tag string, options ...RequestOptionFunc) (*Response, error)
+		ListTags(pid any, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error)
+		GetTag(pid any, tag string, options ...RequestOptionFunc) (*Tag, *Response, error)
+		GetTagSignature(pid any, tag string, options ...RequestOptionFunc) (*X509Signature, *Response, error)
+		CreateTag(pid any, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error)
+		DeleteTag(pid any, tag string, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// TagsService handles communication with the tags related methods
@@ -51,6 +53,32 @@ type Tag struct {
 	Message   string       `json:"message"`
 	Protected bool         `json:"protected"`
 	Target    string       `json:"target"`
+}
+
+// X509Signature represents a GitLab Tag Signature object.
+//
+// GitLab API docs: https://docs.gitlab.com/api/tags/#get-x509-signature-of-a-tag
+type X509Signature struct {
+	SignatureType      string          `json:"signature_type"`
+	VerificationStatus string          `json:"verification_status"`
+	X509Certificate    X509Certificate `json:"x509_certificate"`
+}
+
+type X509Certificate struct {
+	ID                   int        `json:"id"`
+	Subject              string     `json:"subject"`
+	SubjectKeyIdentifier string     `json:"subject_key_identifier"`
+	Email                string     `json:"email"`
+	SerialNumber         *big.Int   `json:"serial_number"`
+	CertificateStatus    string     `json:"certificate_status"`
+	X509Issuer           X509Issuer `json:"x509_issuer"`
+}
+
+type X509Issuer struct {
+	ID                   int    `json:"id"`
+	Subject              string `json:"subject"`
+	SubjectKeyIdentifier string `json:"subject_key_identifier"`
+	CrlUrl               string `json:"crl_url"`
 }
 
 // ReleaseNote represents a GitLab version release.
@@ -81,7 +109,7 @@ type ListTagsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/tags/#list-project-repository-tags
-func (s *TagsService) ListTags(pid interface{}, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error) {
+func (s *TagsService) ListTags(pid any, opt *ListTagsOptions, options ...RequestOptionFunc) ([]*Tag, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -107,7 +135,7 @@ func (s *TagsService) ListTags(pid interface{}, opt *ListTagsOptions, options ..
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/tags/#get-a-single-repository-tag
-func (s *TagsService) GetTag(pid interface{}, tag string, options ...RequestOptionFunc) (*Tag, *Response, error) {
+func (s *TagsService) GetTag(pid any, tag string, options ...RequestOptionFunc) (*Tag, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -128,6 +156,32 @@ func (s *TagsService) GetTag(pid interface{}, tag string, options ...RequestOpti
 	return t, resp, nil
 }
 
+// GetTagSignature a specific repository tag determined by its name. It returns 200 together
+// with the signature if the tag exists. It returns 404 if the tag does not exist.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/api/tags/#get-x509-signature-of-a-tag
+func (s *TagsService) GetTagSignature(pid any, tag string, options ...RequestOptionFunc) (*X509Signature, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("projects/%s/repository/tags/%s/signature", PathEscape(project), url.PathEscape(tag))
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var sig *X509Signature
+	resp, err := s.client.Do(req, &sig)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return sig, resp, nil
+}
+
 // CreateTagOptions represents the available CreateTag() options.
 //
 // GitLab API docs:
@@ -142,7 +196,7 @@ type CreateTagOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/tags/#create-a-new-tag
-func (s *TagsService) CreateTag(pid interface{}, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error) {
+func (s *TagsService) CreateTag(pid any, opt *CreateTagOptions, options ...RequestOptionFunc) (*Tag, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -167,7 +221,7 @@ func (s *TagsService) CreateTag(pid interface{}, opt *CreateTagOptions, options 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/tags/#delete-a-tag
-func (s *TagsService) DeleteTag(pid interface{}, tag string, options ...RequestOptionFunc) (*Response, error) {
+func (s *TagsService) DeleteTag(pid any, tag string, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

@@ -315,6 +315,7 @@ type PullRequestsOptions struct {
 	Query             string   `json:"query"`
 	Sort              string   `json:"sort"`
 	Draft             bool     `json:"draft"`
+	Commit            string   `json:"commit"`
 	ctx               context.Context
 }
 

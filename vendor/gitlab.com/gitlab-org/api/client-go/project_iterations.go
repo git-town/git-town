@@ -24,13 +24,13 @@ import (
 
 type (
 	ProjectIterationsServiceInterface interface {
-		ListProjectIterations(pid interface{}, opt *ListProjectIterationsOptions, options ...RequestOptionFunc) ([]*ProjectIteration, *Response, error)
+		ListProjectIterations(pid any, opt *ListProjectIterationsOptions, options ...RequestOptionFunc) ([]*ProjectIteration, *Response, error)
 	}
 
 	// ProjectIterationsService handles communication with the project iterations related
 	// methods of the GitLab API
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/iterations.html
+	// GitLab API docs: https://docs.gitlab.com/api/iterations/
 	ProjectIterationsService struct {
 		client *Client
 	}
@@ -40,7 +40,7 @@ var _ ProjectIterationsServiceInterface = (*ProjectIterationsService)(nil)
 
 // ProjectIteration represents a GitLab project iteration.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/iterations.html
+// GitLab API docs: https://docs.gitlab.com/api/iterations/
 type ProjectIteration struct {
 	ID          int        `json:"id"`
 	IID         int        `json:"iid"`
@@ -64,7 +64,7 @@ func (i ProjectIteration) String() string {
 // options
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/iterations.html#list-project-iterations
+// https://docs.gitlab.com/api/iterations/#list-project-iterations
 type ListProjectIterationsOptions struct {
 	ListOptions
 	State            *string `url:"state,omitempty" json:"state,omitempty"`
@@ -75,8 +75,8 @@ type ListProjectIterationsOptions struct {
 // ListProjectIterations returns a list of projects iterations.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/iterations.html#list-project-iterations
-func (i *ProjectIterationsService) ListProjectIterations(pid interface{}, opt *ListProjectIterationsOptions, options ...RequestOptionFunc) ([]*ProjectIteration, *Response, error) {
+// https://docs.gitlab.com/api/iterations/#list-project-iterations
+func (i *ProjectIterationsService) ListProjectIterations(pid any, opt *ListProjectIterationsOptions, options ...RequestOptionFunc) ([]*ProjectIteration, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

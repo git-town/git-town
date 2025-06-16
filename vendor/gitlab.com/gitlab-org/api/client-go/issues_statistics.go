@@ -25,8 +25,8 @@ import (
 type (
 	IssuesStatisticsServiceInterface interface {
 		GetIssuesStatistics(opt *GetIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error)
-		GetGroupIssuesStatistics(gid interface{}, opt *GetGroupIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error)
-		GetProjectIssuesStatistics(pid interface{}, opt *GetProjectIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error)
+		GetGroupIssuesStatistics(gid any, opt *GetGroupIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error)
+		GetProjectIssuesStatistics(pid any, opt *GetProjectIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error)
 	}
 
 	// IssuesStatisticsService handles communication with the issues statistics
@@ -127,7 +127,7 @@ type GetGroupIssuesStatisticsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues_statistics/#get-group-issues-statistics
-func (s *IssuesStatisticsService) GetGroupIssuesStatistics(gid interface{}, opt *GetGroupIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
+func (s *IssuesStatisticsService) GetGroupIssuesStatistics(gid any, opt *GetGroupIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -175,7 +175,7 @@ type GetProjectIssuesStatisticsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/issues_statistics/#get-project-issues-statistics
-func (s *IssuesStatisticsService) GetProjectIssuesStatistics(pid interface{}, opt *GetProjectIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
+func (s *IssuesStatisticsService) GetProjectIssuesStatistics(pid any, opt *GetProjectIssuesStatisticsOptions, options ...RequestOptionFunc) (*IssuesStatistics, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

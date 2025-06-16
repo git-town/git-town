@@ -21,10 +21,10 @@ import (
 
 type (
 	MergeRequestApprovalSettingsServiceInterface interface {
-		GetGroupMergeRequestApprovalSettings(gid interface{}, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
-		UpdateGroupMergeRequestApprovalSettings(gid interface{}, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
-		GetProjectMergeRequestApprovalSettings(pid interface{}, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
-		UpdateProjectMergeRequestApprovalSettings(pid interface{}, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
+		GetGroupMergeRequestApprovalSettings(gid any, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
+		UpdateGroupMergeRequestApprovalSettings(gid any, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
+		GetProjectMergeRequestApprovalSettings(pid any, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
+		UpdateProjectMergeRequestApprovalSettings(pid any, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error)
 	}
 
 	// MergeRequestApprovalSettingsService handles communication with the merge
@@ -69,7 +69,7 @@ type MergeRequestApprovalSetting struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#get-group-mr-approval-settings
-func (s *MergeRequestApprovalSettingsService) GetGroupMergeRequestApprovalSettings(gid interface{}, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
+func (s *MergeRequestApprovalSettingsService) GetGroupMergeRequestApprovalSettings(gid any, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -111,7 +111,7 @@ type UpdateMergeRequestApprovalSettingsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#update-group-mr-approval-settings
-func (s *MergeRequestApprovalSettingsService) UpdateGroupMergeRequestApprovalSettings(gid interface{}, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
+func (s *MergeRequestApprovalSettingsService) UpdateGroupMergeRequestApprovalSettings(gid any, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -137,7 +137,7 @@ func (s *MergeRequestApprovalSettingsService) UpdateGroupMergeRequestApprovalSet
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#get-project-mr-approval-settings
-func (s *MergeRequestApprovalSettingsService) GetProjectMergeRequestApprovalSettings(pid interface{}, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
+func (s *MergeRequestApprovalSettingsService) GetProjectMergeRequestApprovalSettings(pid any, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -163,7 +163,7 @@ func (s *MergeRequestApprovalSettingsService) GetProjectMergeRequestApprovalSett
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/merge_request_approval_settings/#update-project-mr-approval-settings
-func (s *MergeRequestApprovalSettingsService) UpdateProjectMergeRequestApprovalSettings(pid interface{}, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
+func (s *MergeRequestApprovalSettingsService) UpdateProjectMergeRequestApprovalSettings(pid any, opt *UpdateMergeRequestApprovalSettingsOptions, options ...RequestOptionFunc) (*MergeRequestApprovalSettings, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
