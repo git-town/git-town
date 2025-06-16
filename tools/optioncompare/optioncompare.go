@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"go/ast"
 	"go/token"
 	"go/types"
@@ -18,16 +17,14 @@ const (
 	typeName    = "Option"
 )
 
-var Analyzer = &analysis.Analyzer{
-	Name:     "optioncompare",
-	Doc:      fmt.Sprintf("Checks for direct == comparisons between Option types"),
-	Requires: []*analysis.Analyzer{inspect.Analyzer},
-	Run:      run,
-	Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError), // Include flags for configuration
-}
-
 func main() {
-	singlechecker.Main(Analyzer)
+	singlechecker.Main(&analysis.Analyzer{
+		Name:     "optioncompare",
+		Doc:      "Ensures no == comparison between Option types",
+		Requires: []*analysis.Analyzer{},
+		Run:      run,
+		Flags:    *flag.NewFlagSet("optioncompare", flag.ExitOnError), // Include flags for configuration
+	})
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
