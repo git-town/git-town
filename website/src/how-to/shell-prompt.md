@@ -1,8 +1,8 @@
 # Display the currently pending Git Town command in your shell prompt
 
-You can configure your shell prompt to display a reminder for when a Git Town
-command was interrupted in the middle and is waiting to be continued. This helps
-you remember to run `git town continue` before moving on.
+`git town status --pending` displays the name of the currently pending Git Town
+command. This allows you to have your shell prompt display a reminder when you
+need to run [git town continue](../commands/continue.md).
 
 <img width="108" height="31" src="shell_prompt_example.gif">
 

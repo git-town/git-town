@@ -26,7 +26,7 @@ may aid in understanding project history in certain situations.
 It is not generally recommended to revert merge commits, so `git town undo` will
 not create a merge reversal commit if the merge commit has been pushed already.
 See
-[howto/revert-a-faulty-merge.txt](https://github.com/git/git/blob/master/Documentation/howto/revert-a-faulty-merge.txt)
+[howto/revert-a-faulty-merge.adoc](https://github.com/git/git/blob/master/Documentation/howto/revert-a-faulty-merge.adoc)
 in the official Git documentation for more information.
 
 ### fast-forward
