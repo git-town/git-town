@@ -13,6 +13,7 @@ func TestFormatSelf(t *testing.T) {
 	t.Run("FormatFileContent", func(t *testing.T) {
 		t.Parallel()
 		t.Run("unformatted, non-pointer receiver", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Foo struct{}

@@ -6,8 +6,8 @@ dprint 0.50.0
 exhaustruct 3.3.1
 ireturn 0.4.0
 ghokin 3.8.0
-gofumpt 0.7.0
-golangci-lint 2.0.2
+gofumpt 0.8.0
+golangci-lint 2.1.6
 goreleaser 1.26.2
 govulncheck 1.1.4
 mdbook 0.4.51

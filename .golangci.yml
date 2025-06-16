@@ -34,6 +34,14 @@ linters:
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
   settings:
+    funcorder:
+      # Checks that constructors are placed after the structure declaration.
+      # Enabling this is incompatible with alphavet.
+      constructor: false
+      # Checks if the exported methods of a structure are placed before the unexported ones.
+      struct-method: true
+      # Checks if the constructors and/or structure methods are sorted alphabetically.
+      alphabetical: true
     ireturn:
       allow:
         - error

@@ -61,6 +61,7 @@ func TestUseMessage(t *testing.T) {
 	t.Run("UseCustomMessageOr", func(t *testing.T) {
 		t.Parallel()
 		t.Run("WithSome", func(t *testing.T) {
+			t.Parallel()
 			want := gitdomain.CommitMessage("foo")
 
 			m := configdomain.UseCustomMessageOr(Some(want), configdomain.EditDefaultMessage())
@@ -133,6 +134,7 @@ func TestUseMessage(t *testing.T) {
 			},
 		} {
 			t.Run(tc.desc, func(t *testing.T) {
+				t.Parallel()
 				m := configdomain.UseMessageWithFallbackToDefault(tc.message, tc.fallbackToDefault)
 
 				message, isCustom := m.GetCustomMessage()
