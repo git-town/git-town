@@ -157,6 +157,7 @@ unit-race: install  # runs all the unit tests with race detector
 
 update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...
+	(cd tools/optioncompare && go get -u ./...)
 	go mod tidy
 	go work vendor
 	rm -rf tools/node_modules package-lock.json
