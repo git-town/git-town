@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
+	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -15,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
+	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -182,6 +184,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+		EnterBitbucketCredentials:
 			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, tokenScope, None[forgedomain.ForgeType](), err
@@ -189,6 +192,24 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
 			if err != nil || aborted {
 				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+			}
+			// TODO: test the credentials here
+			connector := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+				AppPassword: data.config.NormalConfig.BitbucketAppPassword,
+				ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
+				Log:         print.Logger{},
+				RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
+				UserName:    data.config.NormalConfig.BitbucketUsername,
+			})
+			if !connector.VerifyConnection() {
+				// display dialog that says the credentials don't work
+				// and lets the user choose whether to enter them again or ignore the problem.
+				goto EnterBitbucketCredentials
+			}
+			if !connector.VerifyReadProposalPermission() {
+				// display dialog that says the credentials don't permit read access to proposals
+				// and lets the user choose whether to enter them again or ignore the problem.
+				goto EnterBitbucketCredentials
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
 				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {

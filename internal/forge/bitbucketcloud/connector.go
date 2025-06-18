@@ -90,6 +90,10 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
+func (self Connector) VerifyConnection() bool {
+	self.client.User.
+}
+
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
