@@ -125,6 +125,3 @@ To remove Git Town from your system:
    `git town config remove`
 2. If your operating system or package manager provides an uninstaller for Git
    Town, run it. If you installed Git Town manually, delete the binary.
-
-```
-```
