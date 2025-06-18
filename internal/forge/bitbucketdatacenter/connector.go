@@ -88,8 +88,8 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
-func (self Connector) VerifyConnection() error {
-	return nil
+func (self Connector) VerifyConnection() (string, error) {
+	return "", nil
 }
 
 func (self Connector) VerifyReadProposalPermission() error {

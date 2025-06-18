@@ -90,9 +90,12 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() error {
-	_, err := self.client.User.Profile()
-	return err
+func (self Connector) VerifyConnection() (string, error) {
+	user, err := self.client.User.Profile()
+	if err != nil {
+		return "", err
+	}
+	return user.Username, nil
 }
 
 func (self Connector) VerifyReadProposalPermission() error {

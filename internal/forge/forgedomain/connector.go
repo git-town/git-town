@@ -54,7 +54,7 @@ type Connector interface {
 	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
-	VerifyConnection() error
+	VerifyConnection() (userName string, err error)
 
 	// VerifyProposalAccess checks whether this connector has authorization to read proposals at the forge.
 	VerifyReadProposalPermission() error
