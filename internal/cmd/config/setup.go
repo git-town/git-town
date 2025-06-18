@@ -260,73 +260,83 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+			aborted, tokenScope, err := enterBitbucketToken(config, data, tokenScope)
 			if err != nil || aborted {
-				return aborted, tokenScope, None[forgedomain.ForgeType](), err
-			}
-			data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, None[forgedomain.ForgeType](), err
-			}
-			if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
-				showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
-				scope := determineScope(config.NormalConfig.GitConfig.BitbucketAppPassword)
-				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
-				if err != nil || aborted {
-					return aborted, tokenScope, None[forgedomain.ForgeType](), err
-				}
+				return aborted, tokenScope, forgeTypeOpt, err
 			}
 		case forgedomain.ForgeTypeCodeberg:
 			data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+				return aborted, tokenScope, forgeTypeOpt, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
 				scope := determineScope(config.NormalConfig.GitConfig.CodebergToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, None[forgedomain.ForgeType](), err
+					return aborted, tokenScope, forgeTypeOpt, err
 				}
 			}
 		case forgedomain.ForgeTypeGitea:
 			data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+				return aborted, tokenScope, forgeTypeOpt, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
 				scope := determineScope(config.NormalConfig.GitConfig.GiteaToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, None[forgedomain.ForgeType](), err
+					return aborted, tokenScope, forgeTypeOpt, err
 				}
 			}
 		case forgedomain.ForgeTypeGitHub:
 			data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+				return aborted, tokenScope, forgeTypeOpt, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
 				scope := determineScope(config.NormalConfig.GitConfig.GitHubToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, None[forgedomain.ForgeType](), err
+					return aborted, tokenScope, forgeTypeOpt, err
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
 			data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
 			if err != nil || aborted {
-				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+				return aborted, tokenScope, forgeTypeOpt, err
 			}
 			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
 				scope := determineScope(config.NormalConfig.GitConfig.GitLabToken)
 				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 				if err != nil || aborted {
-					return aborted, tokenScope, None[forgedomain.ForgeType](), err
+					return aborted, tokenScope, forgeTypeOpt, err
 				}
 			}
 		}
 	}
 	return false, tokenScope, forgeTypeOpt, nil
+}
+
+func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+	aborted := false
+	var err error = nil
+	data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
+		showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
+		scope := determineScope(config.NormalConfig.GitConfig.BitbucketAppPassword)
+		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+	}
+	return false, tokenScope, nil
 }
 
 type option interface {
