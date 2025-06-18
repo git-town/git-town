@@ -270,11 +270,8 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 		case forgedomain.ForgeTypeGitLab:
 			aborted, tokenScope, err = enterGitlabToken(config, data, tokenScope)
 		}
-		if err != nil || aborted {
-			return aborted, tokenScope, forgeTypeOpt, err
-		}
 	}
-	return false, tokenScope, forgeTypeOpt, nil
+	return aborted, tokenScope, forgeTypeOpt, err
 }
 
 func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
