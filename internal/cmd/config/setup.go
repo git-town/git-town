@@ -260,30 +260,18 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			aborted, tokenScope, err := enterBitbucketToken(config, data, tokenScope)
-			if err != nil || aborted {
-				return aborted, tokenScope, forgeTypeOpt, err
-			}
+			aborted, tokenScope, err = enterBitbucketToken(config, data, tokenScope)
 		case forgedomain.ForgeTypeCodeberg:
-			aborted, tokenScope, err := enterCodebergToken(config, data, tokenScope)
-			if err != nil || aborted {
-				return aborted, tokenScope, forgeTypeOpt, err
-			}
+			aborted, tokenScope, err = enterCodebergToken(config, data, tokenScope)
 		case forgedomain.ForgeTypeGitea:
-			aborted, tokenScope, err := enterGiteaToken(config, data, tokenScope)
-			if err != nil || aborted {
-				return aborted, tokenScope, forgeTypeOpt, err
-			}
+			aborted, tokenScope, err = enterGiteaToken(config, data, tokenScope)
 		case forgedomain.ForgeTypeGitHub:
-			aborted, tokenScope, err := enterGithubToken(config, data, tokenScope)
-			if err != nil || aborted {
-				return aborted, tokenScope, forgeTypeOpt, err
-			}
+			aborted, tokenScope, err = enterGithubToken(config, data, tokenScope)
 		case forgedomain.ForgeTypeGitLab:
-			aborted, tokenScope, err := enterGitlabToken(config, data, tokenScope)
-			if err != nil || aborted {
-				return aborted, tokenScope, forgeTypeOpt, err
-			}
+			aborted, tokenScope, err = enterGitlabToken(config, data, tokenScope)
+		}
+		if err != nil || aborted {
+			return aborted, tokenScope, forgeTypeOpt, err
 		}
 	}
 	return false, tokenScope, forgeTypeOpt, nil
