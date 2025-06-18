@@ -392,6 +392,63 @@ func enterGitlabToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 	return false, tokenScope, nil
 }
 
+func enterBitBucketToken(data *setupData, config config.UnvalidatedConfig, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+	aborted := false
+	var err error = nil
+	for {
+		data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		connector := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+			AppPassword: data.config.NormalConfig.BitbucketAppPassword,
+			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
+			Log:         print.Logger{},
+			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
+			UserName:    data.config.NormalConfig.BitbucketUsername,
+		})
+		userName, err := connector.VerifyConnection()
+		if err != nil {
+			choice, aborted, err := dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, tokenScope, err
+			}
+			switch choice {
+			case dialog.CredentialsNoAccessChoiceRetry:
+				continue
+			case dialog.CredentialsNoAccessChoiceIgnore:
+			}
+		}
+		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
+		err = connector.VerifyReadProposalPermission()
+		if err != nil {
+			choice, aborted, err := dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, tokenScope, err
+			}
+			switch choice {
+			case dialog.CredentialsNoAccessChoiceRetry:
+				continue
+			case dialog.CredentialsNoAccessChoiceIgnore:
+			}
+		}
+		break
+	}
+	if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
+		showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
+		scope := determineScope(config.NormalConfig.GitConfig.BitbucketAppPassword)
+		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+	}
+	return false, tokenScope, nil
+}
+
 type option interface {
 	IsSome() bool
 }
