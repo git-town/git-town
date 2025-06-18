@@ -65,7 +65,7 @@ pacman -S git-town
 
 On openSUSE Tumbleweed, install the
 [git-town](https://build.opensuse.org/package/show/openSUSE:Factory/git-town)
-package from official package repositories:
+package from the official package repositories:
 
 ```
 sudo zypper in git-town
