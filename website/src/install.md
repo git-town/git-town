@@ -71,7 +71,7 @@ package from the official package repositories:
 sudo zypper in git-town
 ```
 
-For the shell completions, there are separate packages called
+There are separate packages for the shell completions called
 `git-town-bash-completion`, `git-town-zsh-completion`, and
 `git-town-fish-completion`.
 
