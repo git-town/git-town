@@ -63,6 +63,18 @@ official package repositories:
 pacman -S git-town
 ```
 
+On openSUSE Tumbleweed, install the
+[git-town](https://build.opensuse.org/package/show/openSUSE:Factory/git-town)
+package from the official package repositories:
+
+```
+sudo zypper in git-town
+```
+
+There are separate packages for the shell completions called
+`git-town-bash-completion`, `git-town-zsh-completion`, and
+`git-town-fish-completion`.
+
 You can also install Git Town on Linux via
 [Homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
 

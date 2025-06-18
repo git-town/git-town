@@ -97,6 +97,7 @@ func TestConnector(t *testing.T) {
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
+				t.Parallel()
 				connector := github.Connector{
 					Data: forgedomain.Data{
 						Hostname:     "github.com",

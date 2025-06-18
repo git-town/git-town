@@ -58,9 +58,6 @@ type BroadcastMessage struct {
 	BroadcastType      string             `json:"broadcast_type"`
 	Dismissable        bool               `json:"dismissable"`
 	Theme              string             `json:"theme"`
-
-	// Deprecated: This parameter was removed in GitLab 15.6.
-	Color string `json:"color"`
 }
 
 // ListBroadcastMessagesOptions represents the available ListBroadcastMessages()
@@ -125,9 +122,6 @@ type CreateBroadcastMessageOptions struct {
 	BroadcastType      *string            `url:"broadcast_type,omitempty" json:"broadcast_type,omitempty"`
 	Dismissable        *bool              `url:"dismissable,omitempty" json:"dismissable,omitempty"`
 	Theme              *string            `url:"theme,omitempty" json:"theme,omitempty"`
-
-	// Deprecated: This parameter was removed in GitLab 15.6.
-	Color *string `url:"color,omitempty" json:"color,omitempty"`
 }
 
 // CreateBroadcastMessage creates a message to broadcast.
@@ -164,9 +158,6 @@ type UpdateBroadcastMessageOptions struct {
 	BroadcastType      *string            `url:"broadcast_type,omitempty" json:"broadcast_type,omitempty"`
 	Dismissable        *bool              `url:"dismissable,omitempty" json:"dismissable,omitempty"`
 	Theme              *string            `url:"theme,omitempty" json:"theme,omitempty"`
-
-	// Deprecated: This parameter was removed in GitLab 15.6.
-	Color *string `url:"color,omitempty" json:"color,omitempty"`
 }
 
 // UpdateBroadcastMessage update a broadcasted message.

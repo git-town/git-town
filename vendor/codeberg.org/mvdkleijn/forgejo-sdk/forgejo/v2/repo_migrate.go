@@ -36,7 +36,7 @@ const (
 type MigrateRepoOption struct {
 	RepoName  string `json:"repo_name"`
 	RepoOwner string `json:"repo_owner"`
-	// deprecated use RepoOwner
+	// Deprecated: use RepoOwner
 	RepoOwnerID    int64          `json:"uid"`
 	CloneAddr      string         `json:"clone_addr"`
 	Service        GitServiceType `json:"service"`

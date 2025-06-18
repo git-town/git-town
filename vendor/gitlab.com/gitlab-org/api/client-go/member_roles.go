@@ -10,9 +10,9 @@ type (
 		ListInstanceMemberRoles(options ...RequestOptionFunc) ([]*MemberRole, *Response, error)
 		CreateInstanceMemberRole(opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error)
 		DeleteInstanceMemberRole(memberRoleID int, options ...RequestOptionFunc) (*Response, error)
-		ListMemberRoles(gid interface{}, options ...RequestOptionFunc) ([]*MemberRole, *Response, error)
-		CreateMemberRole(gid interface{}, opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error)
-		DeleteMemberRole(gid interface{}, memberRole int, options ...RequestOptionFunc) (*Response, error)
+		ListMemberRoles(gid any, options ...RequestOptionFunc) ([]*MemberRole, *Response, error)
+		CreateMemberRole(gid any, opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error)
+		DeleteMemberRole(gid any, memberRole int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// MemberRolesService handles communication with the member roles related
@@ -149,7 +149,7 @@ func (s *MemberRolesService) DeleteInstanceMemberRole(memberRoleID int, options 
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/member_roles/#get-all-group-member-roles
-func (s *MemberRolesService) ListMemberRoles(gid interface{}, options ...RequestOptionFunc) ([]*MemberRole, *Response, error) {
+func (s *MemberRolesService) ListMemberRoles(gid any, options ...RequestOptionFunc) ([]*MemberRole, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -174,7 +174,7 @@ func (s *MemberRolesService) ListMemberRoles(gid interface{}, options ...Request
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/member_roles/#add-a-member-role-to-a-group
-func (s *MemberRolesService) CreateMemberRole(gid interface{}, opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error) {
+func (s *MemberRolesService) CreateMemberRole(gid any, opt *CreateMemberRoleOptions, options ...RequestOptionFunc) (*MemberRole, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -199,7 +199,7 @@ func (s *MemberRolesService) CreateMemberRole(gid interface{}, opt *CreateMember
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/member_roles/#remove-member-role-of-a-group
-func (s *MemberRolesService) DeleteMemberRole(gid interface{}, memberRole int, options ...RequestOptionFunc) (*Response, error) {
+func (s *MemberRolesService) DeleteMemberRole(gid any, memberRole int, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err

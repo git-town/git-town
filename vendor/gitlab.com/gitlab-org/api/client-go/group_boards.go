@@ -23,16 +23,16 @@ import (
 
 type (
 	GroupIssueBoardsServiceInterface interface {
-		ListGroupIssueBoards(gid interface{}, opt *ListGroupIssueBoardsOptions, options ...RequestOptionFunc) ([]*GroupIssueBoard, *Response, error)
-		CreateGroupIssueBoard(gid interface{}, opt *CreateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error)
-		GetGroupIssueBoard(gid interface{}, board int, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error)
-		UpdateIssueBoard(gid interface{}, board int, opt *UpdateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error)
-		DeleteIssueBoard(gid interface{}, board int, options ...RequestOptionFunc) (*Response, error)
-		ListGroupIssueBoardLists(gid interface{}, board int, opt *ListGroupIssueBoardListsOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error)
-		GetGroupIssueBoardList(gid interface{}, board, list int, options ...RequestOptionFunc) (*BoardList, *Response, error)
-		CreateGroupIssueBoardList(gid interface{}, board int, opt *CreateGroupIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error)
-		UpdateIssueBoardList(gid interface{}, board, list int, opt *UpdateGroupIssueBoardListOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error)
-		DeleteGroupIssueBoardList(gid interface{}, board, list int, options ...RequestOptionFunc) (*Response, error)
+		ListGroupIssueBoards(gid any, opt *ListGroupIssueBoardsOptions, options ...RequestOptionFunc) ([]*GroupIssueBoard, *Response, error)
+		CreateGroupIssueBoard(gid any, opt *CreateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error)
+		GetGroupIssueBoard(gid any, board int, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error)
+		UpdateIssueBoard(gid any, board int, opt *UpdateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error)
+		DeleteIssueBoard(gid any, board int, options ...RequestOptionFunc) (*Response, error)
+		ListGroupIssueBoardLists(gid any, board int, opt *ListGroupIssueBoardListsOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error)
+		GetGroupIssueBoardList(gid any, board, list int, options ...RequestOptionFunc) (*BoardList, *Response, error)
+		CreateGroupIssueBoardList(gid any, board int, opt *CreateGroupIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error)
+		UpdateIssueBoardList(gid any, board, list int, opt *UpdateGroupIssueBoardListOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error)
+		DeleteGroupIssueBoardList(gid any, board, list int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// GroupIssueBoardsService handles communication with the group issue board
@@ -75,7 +75,7 @@ type ListGroupIssueBoardsOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#list-all-group-issue-boards-in-a-group
-func (s *GroupIssueBoardsService) ListGroupIssueBoards(gid interface{}, opt *ListGroupIssueBoardsOptions, options ...RequestOptionFunc) ([]*GroupIssueBoard, *Response, error) {
+func (s *GroupIssueBoardsService) ListGroupIssueBoards(gid any, opt *ListGroupIssueBoardsOptions, options ...RequestOptionFunc) ([]*GroupIssueBoard, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -109,7 +109,7 @@ type CreateGroupIssueBoardOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#create-a-group-issue-board
-func (s *GroupIssueBoardsService) CreateGroupIssueBoard(gid interface{}, opt *CreateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
+func (s *GroupIssueBoardsService) CreateGroupIssueBoard(gid any, opt *CreateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -134,7 +134,7 @@ func (s *GroupIssueBoardsService) CreateGroupIssueBoard(gid interface{}, opt *Cr
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#single-group-issue-board
-func (s *GroupIssueBoardsService) GetGroupIssueBoard(gid interface{}, board int, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
+func (s *GroupIssueBoardsService) GetGroupIssueBoard(gid any, board int, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -171,7 +171,7 @@ type UpdateGroupIssueBoardOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#update-a-group-issue-board
-func (s *GroupIssueBoardsService) UpdateIssueBoard(gid interface{}, board int, opt *UpdateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
+func (s *GroupIssueBoardsService) UpdateIssueBoard(gid any, board int, opt *UpdateGroupIssueBoardOptions, options ...RequestOptionFunc) (*GroupIssueBoard, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -196,7 +196,7 @@ func (s *GroupIssueBoardsService) UpdateIssueBoard(gid interface{}, board int, o
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#delete-a-group-issue-board
-func (s *GroupIssueBoardsService) DeleteIssueBoard(gid interface{}, board int, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupIssueBoardsService) DeleteIssueBoard(gid any, board int, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err
@@ -222,7 +222,7 @@ type ListGroupIssueBoardListsOptions ListOptions
 // backlog and closed lists.
 //
 // GitLab API docs: https://docs.gitlab.com/api/group_boards/#list-group-issue-board-lists
-func (s *GroupIssueBoardsService) ListGroupIssueBoardLists(gid interface{}, board int, opt *ListGroupIssueBoardListsOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
+func (s *GroupIssueBoardsService) ListGroupIssueBoardLists(gid any, board int, opt *ListGroupIssueBoardListsOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -247,7 +247,7 @@ func (s *GroupIssueBoardsService) ListGroupIssueBoardLists(gid interface{}, boar
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#single-group-issue-board-list
-func (s *GroupIssueBoardsService) GetGroupIssueBoardList(gid interface{}, board, list int, options ...RequestOptionFunc) (*BoardList, *Response, error) {
+func (s *GroupIssueBoardsService) GetGroupIssueBoardList(gid any, board, list int, options ...RequestOptionFunc) (*BoardList, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -285,7 +285,7 @@ type CreateGroupIssueBoardListOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#new-group-issue-board-list
-func (s *GroupIssueBoardsService) CreateGroupIssueBoardList(gid interface{}, board int, opt *CreateGroupIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error) {
+func (s *GroupIssueBoardsService) CreateGroupIssueBoardList(gid any, board int, opt *CreateGroupIssueBoardListOptions, options ...RequestOptionFunc) (*BoardList, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -320,7 +320,7 @@ type UpdateGroupIssueBoardListOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#edit-group-issue-board-list
-func (s *GroupIssueBoardsService) UpdateIssueBoardList(gid interface{}, board, list int, opt *UpdateGroupIssueBoardListOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
+func (s *GroupIssueBoardsService) UpdateIssueBoardList(gid any, board, list int, opt *UpdateGroupIssueBoardListOptions, options ...RequestOptionFunc) ([]*BoardList, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -350,7 +350,7 @@ func (s *GroupIssueBoardsService) UpdateIssueBoardList(gid interface{}, board, l
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_boards/#delete-a-group-issue-board-list
-func (s *GroupIssueBoardsService) DeleteGroupIssueBoardList(gid interface{}, board, list int, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupIssueBoardsService) DeleteGroupIssueBoardList(gid any, board, list int, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err

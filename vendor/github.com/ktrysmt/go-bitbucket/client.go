@@ -62,6 +62,7 @@ type auth struct {
 }
 
 type Response struct {
+	*http.Response `json:"-"`
 	Size     int           `json:"size"`
 	Page     int           `json:"page"`
 	Pagelen  int           `json:"pagelen"`
@@ -193,7 +194,7 @@ func injectClient(a *auth) *Client {
 	}
 	c.Users = &Users{
 		c: c,
-		SSHKeys:  &SSHKeys{c: c},
+		SSHKeys: &SSHKeys{c: c},
 	}
 	c.User = &User{c: c}
 	c.Teams = &Teams{c: c}

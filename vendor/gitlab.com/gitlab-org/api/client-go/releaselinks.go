@@ -23,17 +23,17 @@ import (
 
 type (
 	ReleaseLinksServiceInterface interface {
-		ListReleaseLinks(pid interface{}, tagName string, opt *ListReleaseLinksOptions, options ...RequestOptionFunc) ([]*ReleaseLink, *Response, error)
-		GetReleaseLink(pid interface{}, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
-		CreateReleaseLink(pid interface{}, tagName string, opt *CreateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
-		UpdateReleaseLink(pid interface{}, tagName string, link int, opt *UpdateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
-		DeleteReleaseLink(pid interface{}, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
+		ListReleaseLinks(pid any, tagName string, opt *ListReleaseLinksOptions, options ...RequestOptionFunc) ([]*ReleaseLink, *Response, error)
+		GetReleaseLink(pid any, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
+		CreateReleaseLink(pid any, tagName string, opt *CreateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
+		UpdateReleaseLink(pid any, tagName string, link int, opt *UpdateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
+		DeleteReleaseLink(pid any, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error)
 	}
 
 	// ReleaseLinksService handles communication with the release link methods
 	// of the GitLab API.
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html
+	// GitLab API docs: https://docs.gitlab.com/api/releases/links/
 	ReleaseLinksService struct {
 		client *Client
 	}
@@ -43,7 +43,7 @@ var _ ReleaseLinksServiceInterface = (*ReleaseLinksService)(nil)
 
 // ReleaseLink represents a release link.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/
 type ReleaseLink struct {
 	ID             int           `json:"id"`
 	Name           string        `json:"name"`
@@ -55,13 +55,13 @@ type ReleaseLink struct {
 
 // ListReleaseLinksOptions represents ListReleaseLinks() options.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#list-links-of-a-release
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#list-links-of-a-release
 type ListReleaseLinksOptions ListOptions
 
 // ListReleaseLinks gets assets as links from a Release.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#list-links-of-a-release
-func (s *ReleaseLinksService) ListReleaseLinks(pid interface{}, tagName string, opt *ListReleaseLinksOptions, options ...RequestOptionFunc) ([]*ReleaseLink, *Response, error) {
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#list-links-of-a-release
+func (s *ReleaseLinksService) ListReleaseLinks(pid any, tagName string, opt *ListReleaseLinksOptions, options ...RequestOptionFunc) ([]*ReleaseLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -84,8 +84,8 @@ func (s *ReleaseLinksService) ListReleaseLinks(pid interface{}, tagName string, 
 
 // GetReleaseLink returns a link from release assets.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#get-a-release-link
-func (s *ReleaseLinksService) GetReleaseLink(pid interface{}, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#get-a-release-link
+func (s *ReleaseLinksService) GetReleaseLink(pid any, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -111,7 +111,7 @@ func (s *ReleaseLinksService) GetReleaseLink(pid interface{}, tagName string, li
 
 // CreateReleaseLinkOptions represents CreateReleaseLink() options.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#create-a-release-link
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#create-a-release-link
 type CreateReleaseLinkOptions struct {
 	Name            *string        `url:"name,omitempty" json:"name,omitempty"`
 	URL             *string        `url:"url,omitempty" json:"url,omitempty"`
@@ -122,8 +122,8 @@ type CreateReleaseLinkOptions struct {
 
 // CreateReleaseLink creates a link.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#create-a-release-link
-func (s *ReleaseLinksService) CreateReleaseLink(pid interface{}, tagName string, opt *CreateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#create-a-release-link
+func (s *ReleaseLinksService) CreateReleaseLink(pid any, tagName string, opt *CreateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -148,7 +148,7 @@ func (s *ReleaseLinksService) CreateReleaseLink(pid interface{}, tagName string,
 //
 // You have to specify at least one of Name of URL.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#update-a-release-link
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#update-a-release-link
 type UpdateReleaseLinkOptions struct {
 	Name            *string        `url:"name,omitempty" json:"name,omitempty"`
 	URL             *string        `url:"url,omitempty" json:"url,omitempty"`
@@ -159,8 +159,8 @@ type UpdateReleaseLinkOptions struct {
 
 // UpdateReleaseLink updates an asset link.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#update-a-release-link
-func (s *ReleaseLinksService) UpdateReleaseLink(pid interface{}, tagName string, link int, opt *UpdateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#update-a-release-link
+func (s *ReleaseLinksService) UpdateReleaseLink(pid any, tagName string, link int, opt *UpdateReleaseLinkOptions, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -186,8 +186,8 @@ func (s *ReleaseLinksService) UpdateReleaseLink(pid interface{}, tagName string,
 
 // DeleteReleaseLink deletes a link from release.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/releases/links.html#delete-a-release-link
-func (s *ReleaseLinksService) DeleteReleaseLink(pid interface{}, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
+// GitLab API docs: https://docs.gitlab.com/api/releases/links/#delete-a-release-link
+func (s *ReleaseLinksService) DeleteReleaseLink(pid any, tagName string, link int, options ...RequestOptionFunc) (*ReleaseLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

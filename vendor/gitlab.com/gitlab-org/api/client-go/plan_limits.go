@@ -27,7 +27,7 @@ type (
 	// PlanLimitsService handles communication with the repositories related
 	// methods of the GitLab API.
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/plan_limits.html
+	// GitLab API docs: https://docs.gitlab.com/api/plan_limits/
 	PlanLimitsService struct {
 		client *Client
 	}
@@ -37,7 +37,7 @@ var _ PlanLimitsServiceInterface = (*PlanLimitsService)(nil)
 
 // PlanLimit represents a GitLab pipeline.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/plan_limits.html
+// GitLab API docs: https://docs.gitlab.com/api/plan_limits/
 type PlanLimit struct {
 	ConanMaxFileSize           int `json:"conan_max_file_size,omitempty"`
 	GenericPackagesMaxFileSize int `json:"generic_packages_max_file_size,omitempty"`
@@ -53,7 +53,7 @@ type PlanLimit struct {
 // options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/plan_limits.html#get-current-plan-limits
+// https://docs.gitlab.com/api/plan_limits/#get-current-plan-limits
 type GetCurrentPlanLimitsOptions struct {
 	PlanName *string `url:"plan_name,omitempty" json:"plan_name,omitempty"`
 }
@@ -61,7 +61,7 @@ type GetCurrentPlanLimitsOptions struct {
 // List the current limits of a plan on the GitLab instance.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/plan_limits.html#get-current-plan-limits
+// https://docs.gitlab.com/api/plan_limits/#get-current-plan-limits
 func (s *PlanLimitsService) GetCurrentPlanLimits(opt *GetCurrentPlanLimitsOptions, options ...RequestOptionFunc) (*PlanLimit, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "application/plan_limits", opt, options)
 	if err != nil {
@@ -80,7 +80,7 @@ func (s *PlanLimitsService) GetCurrentPlanLimits(opt *GetCurrentPlanLimitsOption
 // ChangePlanLimitOptions represents the available ChangePlanLimits() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/plan_limits.html#change-plan-limits
+// https://docs.gitlab.com/api/plan_limits/#change-plan-limits
 type ChangePlanLimitOptions struct {
 	PlanName                   *string `url:"plan_name,omitempty" json:"plan_name,omitempty"`
 	ConanMaxFileSize           *int    `url:"conan_max_file_size,omitempty" json:"conan_max_file_size,omitempty"`
@@ -96,7 +96,7 @@ type ChangePlanLimitOptions struct {
 // ChangePlanLimits modifies the limits of a plan on the GitLab instance.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/plan_limits.html#change-plan-limits
+// https://docs.gitlab.com/api/plan_limits/#change-plan-limits
 func (s *PlanLimitsService) ChangePlanLimits(opt *ChangePlanLimitOptions, options ...RequestOptionFunc) (*PlanLimit, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodPut, "application/plan_limits", opt, options)
 	if err != nil {

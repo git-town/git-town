@@ -6,29 +6,29 @@ Example lazygit configuration file to integrate Git Town:
 customCommands:
   - key: "Y"
     context: "global"
-    description: "Git-Town sYnc"
-    command: "git-town sync --all"
+    description: "Git Town sYnc"
+    command: "git town sync --all"
     stream: true
     loadingText: "Syncing"
   - key: "U"
     context: "global"
-    description: "Git-Town Undo (undo the last git-town command)"
+    description: "Git Town Undo (undo the last Git Town command)"
     command: "git-town undo"
     prompts:
       - type: "confirm"
         title: "Undo Last Command"
-        body: "Are you sure you want to Undo the last git-town command?"
+        body: "Are you sure you want to Undo the last Git Town command?"
     stream: true
-    loadingText: "Undoing Git-Town Command"
+    loadingText: "Undoing Git Town Command"
   - key: "!"
     context: "global"
-    description: "Git-Town Repo (opens the repo link)"
+    description: "Git Town Repo (opens the repo link)"
     command: "git-town repo"
     stream: true
     loadingText: "Opening Repo Link"
   - key: "a"
     context: "localBranches"
-    description: "Git-Town Append"
+    description: "Git Town Append"
     prompts:
       - type: "input"
         title: "Enter name of new child branch. Branches off of '{{.CheckedOutBranch.Name}}'"
@@ -38,7 +38,7 @@ customCommands:
     loadingText: "Appending"
   - key: "h"
     context: "localBranches"
-    description: "Git-Town Hack (creates a new branch)"
+    description: "Git Town Hack (creates a new branch)"
     prompts:
       - type: "input"
         title: "Enter name of new branch. Branches off of 'Main'"
@@ -48,7 +48,7 @@ customCommands:
     loadingText: "Hacking"
   - key: "K"
     context: "localBranches"
-    description: "Git-Town Delete (deletes the current feature branch and sYnc)"
+    description: "Git Town Delete (deletes the current feature branch and sYnc)"
     command: "git-town delete"
     prompts:
       - type: "confirm"
@@ -58,13 +58,13 @@ customCommands:
     loadingText: "Deleting Feature Branch"
   - key: "p"
     context: "localBranches"
-    description: "Git-Town Propose (creates a pull request)"
+    description: "Git Town Propose (creates a pull request)"
     command: "git-town propose"
     stream: true
     loadingText: "Creating pull request"
   - key: "P"
     context: "localBranches"
-    description: "Git-Town Prepend (creates a branch between the curent branch and its parent)"
+    description: "Git Town Prepend (creates a branch between the curent branch and its parent)"
     prompts:
       - type: "input"
         title: "Enter name of the for child branch between '{{.CheckedOutBranch.Name}}' and its parent"
@@ -74,13 +74,13 @@ customCommands:
     loadingText: "Prepending"
   - key: "S"
     context: "localBranches"
-    description: "Git-Town Skip (skip branch with merge conflicts when syncing)"
+    description: "Git Town Skip (skip branch with merge conflicts when syncing)"
     command: "git-town skip"
     stream: true
     loadingText: "Skiping"
   - key: "G"
     context: "files"
-    description: "Git-Town GO aka:continue (continue after resolving merge conflicts)"
+    description: "Git Town GO aka:continue (continue after resolving merge conflicts)"
     command: "git-town continue"
     stream: true
     loadingText: "Continuing"

@@ -68,6 +68,7 @@ func TestGitlabConnector(t *testing.T) {
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
+				t.Parallel()
 				connector := gitlab.Connector{
 					Data: gitlab.Data{
 						APIToken: None[configdomain.GitLabToken](),

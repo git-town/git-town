@@ -103,7 +103,7 @@ func HookEventType(r *http.Request) EventType {
 //	    ...
 //	    }
 //	}
-func ParseHook(eventType EventType, payload []byte) (event interface{}, err error) {
+func ParseHook(eventType EventType, payload []byte) (event any, err error) {
 	switch eventType {
 	case EventTypeSystemHook:
 		return ParseSystemhook(payload)
@@ -131,7 +131,7 @@ func ParseHook(eventType EventType, payload []byte) (event interface{}, err erro
 //	    ...
 //	    }
 //	}
-func ParseSystemhook(payload []byte) (event interface{}, err error) {
+func ParseSystemhook(payload []byte) (event any, err error) {
 	e := &systemHookEvent{}
 	err = json.Unmarshal(payload, e)
 	if err != nil {
@@ -215,7 +215,7 @@ func WebhookEventType(r *http.Request) EventType {
 //	    ...
 //	    }
 //	}
-func ParseWebhook(eventType EventType, payload []byte) (event interface{}, err error) {
+func ParseWebhook(eventType EventType, payload []byte) (event any, err error) {
 	switch eventType {
 	case EventTypeBuild:
 		event = &BuildEvent{}
@@ -261,7 +261,7 @@ func ParseWebhook(eventType EventType, payload []byte) (event interface{}, err e
 	case EventTypeRelease:
 		event = &ReleaseEvent{}
 	case EventTypeResourceAccessToken:
-		data := map[string]interface{}{}
+		data := map[string]any{}
 		err := json.Unmarshal(payload, &data)
 		if err != nil {
 			return nil, err

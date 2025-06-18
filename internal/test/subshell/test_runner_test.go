@@ -91,6 +91,7 @@ func TestMockingRunner(t *testing.T) {
 	t.Run("QueryWithCode", func(t *testing.T) {
 		t.Parallel()
 		t.Run("exit code 0", func(t *testing.T) {
+			t.Parallel()
 			r := subshell.TestRunner{
 				BinDir:     "",
 				Verbose:    false,
@@ -103,6 +104,7 @@ func TestMockingRunner(t *testing.T) {
 			must.NoError(t, err)
 		})
 		t.Run("exit code 1", func(t *testing.T) {
+			t.Parallel()
 			r := subshell.TestRunner{
 				BinDir:     "",
 				Verbose:    false,

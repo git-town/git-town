@@ -24,12 +24,12 @@ import (
 
 type (
 	WikisServiceInterface interface {
-		ListWikis(pid interface{}, opt *ListWikisOptions, options ...RequestOptionFunc) ([]*Wiki, *Response, error)
-		GetWikiPage(pid interface{}, slug string, opt *GetWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error)
-		CreateWikiPage(pid interface{}, opt *CreateWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error)
-		EditWikiPage(pid interface{}, slug string, opt *EditWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error)
-		DeleteWikiPage(pid interface{}, slug string, options ...RequestOptionFunc) (*Response, error)
-		UploadWikiAttachment(pid interface{}, content io.Reader, filename string, opt *UploadWikiAttachmentOptions, options ...RequestOptionFunc) (*WikiAttachment, *Response, error)
+		ListWikis(pid any, opt *ListWikisOptions, options ...RequestOptionFunc) ([]*Wiki, *Response, error)
+		GetWikiPage(pid any, slug string, opt *GetWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error)
+		CreateWikiPage(pid any, opt *CreateWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error)
+		EditWikiPage(pid any, slug string, opt *EditWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error)
+		DeleteWikiPage(pid any, slug string, options ...RequestOptionFunc) (*Response, error)
+		UploadWikiAttachment(pid any, content io.Reader, filename string, opt *UploadWikiAttachmentOptions, options ...RequestOptionFunc) (*WikiAttachment, *Response, error)
 	}
 
 	// WikisService handles communication with the wikis related methods of
@@ -97,7 +97,7 @@ type ListWikisOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/wikis/#list-wiki-pages
-func (s *WikisService) ListWikis(pid interface{}, opt *ListWikisOptions, options ...RequestOptionFunc) ([]*Wiki, *Response, error) {
+func (s *WikisService) ListWikis(pid any, opt *ListWikisOptions, options ...RequestOptionFunc) ([]*Wiki, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -131,7 +131,7 @@ type GetWikiPageOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/wikis/#get-a-wiki-page
-func (s *WikisService) GetWikiPage(pid interface{}, slug string, opt *GetWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
+func (s *WikisService) GetWikiPage(pid any, slug string, opt *GetWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -167,7 +167,7 @@ type CreateWikiPageOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/wikis/#create-a-new-wiki-page
-func (s *WikisService) CreateWikiPage(pid interface{}, opt *CreateWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
+func (s *WikisService) CreateWikiPage(pid any, opt *CreateWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -203,7 +203,7 @@ type EditWikiPageOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/wikis/#edit-an-existing-wiki-page
-func (s *WikisService) EditWikiPage(pid interface{}, slug string, opt *EditWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
+func (s *WikisService) EditWikiPage(pid any, slug string, opt *EditWikiPageOptions, options ...RequestOptionFunc) (*Wiki, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -228,7 +228,7 @@ func (s *WikisService) EditWikiPage(pid interface{}, slug string, opt *EditWikiP
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/wikis/#delete-a-wiki-page
-func (s *WikisService) DeleteWikiPage(pid interface{}, slug string, options ...RequestOptionFunc) (*Response, error) {
+func (s *WikisService) DeleteWikiPage(pid any, slug string, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -255,7 +255,7 @@ type UploadWikiAttachmentOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/wikis/#upload-an-attachment-to-the-wiki-repository
-func (s *WikisService) UploadWikiAttachment(pid interface{}, content io.Reader, filename string, opt *UploadWikiAttachmentOptions, options ...RequestOptionFunc) (*WikiAttachment, *Response, error) {
+func (s *WikisService) UploadWikiAttachment(pid any, content io.Reader, filename string, opt *UploadWikiAttachmentOptions, options ...RequestOptionFunc) (*WikiAttachment, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

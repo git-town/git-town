@@ -23,25 +23,31 @@ import (
 )
 
 type (
+	// Deprecated: use GraphQL Query.vulnerabilities instead
 	ProjectVulnerabilitiesServiceInterface interface {
-		ListProjectVulnerabilities(pid interface{}, opt *ListProjectVulnerabilitiesOptions, options ...RequestOptionFunc) ([]*ProjectVulnerability, *Response, error)
-		CreateVulnerability(pid interface{}, opt *CreateVulnerabilityOptions, options ...RequestOptionFunc) (*ProjectVulnerability, *Response, error)
+		// Deprecated: use GraphQL Query.vulnerabilities instead
+		ListProjectVulnerabilities(pid any, opt *ListProjectVulnerabilitiesOptions, options ...RequestOptionFunc) ([]*ProjectVulnerability, *Response, error)
+		// Deprecated: use GraphQL Query.vulnerabilities instead
+		CreateVulnerability(pid any, opt *CreateVulnerabilityOptions, options ...RequestOptionFunc) (*ProjectVulnerability, *Response, error)
 	}
 
 	// ProjectVulnerabilitiesService handles communication with the projects
 	// vulnerabilities related methods of the GitLab API.
+	// Deprecated: use GraphQL Query.vulnerabilities instead
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/project_vulnerabilities.html
+	// GitLab API docs: https://docs.gitlab.com/api/project_vulnerabilities/
 	ProjectVulnerabilitiesService struct {
 		client *Client
 	}
 )
 
+// Deprecated: use GraphQL Query.vulnerabilities instead
 var _ ProjectVulnerabilitiesServiceInterface = (*ProjectVulnerabilitiesService)(nil)
 
 // Project represents a GitLab project vulnerability.
+// Deprecated: use GraphQL Query.vulnerabilities instead
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/project_vulnerabilities.html
+// GitLab API docs: https://docs.gitlab.com/api/project_vulnerabilities/
 type ProjectVulnerability struct {
 	AuthorID                int        `json:"author_id"`
 	Confidence              string     `json:"confidence"`
@@ -69,8 +75,9 @@ type ProjectVulnerability struct {
 }
 
 // Project represents a GitLab project vulnerability finding.
+// Deprecated: use GraphQL Query.vulnerabilities instead
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/project_vulnerabilities.html
+// GitLab API docs: https://docs.gitlab.com/api/project_vulnerabilities/
 type Finding struct {
 	Confidence          string     `json:"confidence"`
 	CreatedAt           *time.Time `json:"created_at"`
@@ -92,18 +99,20 @@ type Finding struct {
 
 // ListProjectVulnerabilitiesOptions represents the available
 // ListProjectVulnerabilities() options.
+// Deprecated: use GraphQL Query.vulnerabilities instead
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_vulnerabilities.html#list-project-vulnerabilities
+// https://docs.gitlab.com/api/project_vulnerabilities/#list-project-vulnerabilities
 type ListProjectVulnerabilitiesOptions struct {
 	ListOptions
 }
 
 // ListProjectVulnerabilities gets a list of all project vulnerabilities.
+// Deprecated: use GraphQL Query.vulnerabilities instead
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_vulnerabilities.html#list-project-vulnerabilities
-func (s *ProjectVulnerabilitiesService) ListProjectVulnerabilities(pid interface{}, opt *ListProjectVulnerabilitiesOptions, options ...RequestOptionFunc) ([]*ProjectVulnerability, *Response, error) {
+// https://docs.gitlab.com/api/project_vulnerabilities/#list-project-vulnerabilities
+func (s *ProjectVulnerabilitiesService) ListProjectVulnerabilities(pid any, opt *ListProjectVulnerabilitiesOptions, options ...RequestOptionFunc) ([]*ProjectVulnerability, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -126,18 +135,20 @@ func (s *ProjectVulnerabilitiesService) ListProjectVulnerabilities(pid interface
 
 // CreateVulnerabilityOptions represents the available CreateVulnerability()
 // options.
+// Deprecated: use GraphQL Query.vulnerabilities instead
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_vulnerabilities.html#new-vulnerability
+// https://docs.gitlab.com/api/project_vulnerabilities/#new-vulnerability
 type CreateVulnerabilityOptions struct {
 	FindingID *int `url:"finding_id,omitempty" json:"finding_id,omitempty"`
 }
 
 // CreateVulnerability creates a new vulnerability on the selected project.
+// Deprecated: use GraphQL Query.vulnerabilities instead
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/project_vulnerabilities.html#new-vulnerability
-func (s *ProjectVulnerabilitiesService) CreateVulnerability(pid interface{}, opt *CreateVulnerabilityOptions, options ...RequestOptionFunc) (*ProjectVulnerability, *Response, error) {
+// https://docs.gitlab.com/api/project_vulnerabilities/#new-vulnerability
+func (s *ProjectVulnerabilitiesService) CreateVulnerability(pid any, opt *CreateVulnerabilityOptions, options ...RequestOptionFunc) (*ProjectVulnerability, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

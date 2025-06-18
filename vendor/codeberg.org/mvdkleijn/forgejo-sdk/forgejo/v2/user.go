@@ -28,6 +28,8 @@ type User struct {
 	// the user's full name
 	FullName string `json:"full_name"`
 	Email    string `json:"email"`
+	// URL to the user's page
+	HTMLURL string `json:"html_url"`
 	// URL to the user's avatar
 	AvatarURL string `json:"avatar_url"`
 	// User locale

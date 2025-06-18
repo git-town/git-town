@@ -9,13 +9,13 @@ import (
 type (
 	// ExternalStatusChecksServiceInterface defines all the API methods for the ExternalStatusChecksService
 	ExternalStatusChecksServiceInterface interface {
-		ListMergeStatusChecks(pid interface{}, mr int, opt *ListOptions, options ...RequestOptionFunc) ([]*MergeStatusCheck, *Response, error)
-		SetExternalStatusCheckStatus(pid interface{}, mergeRequest int, opt *SetExternalStatusCheckStatusOptions, options ...RequestOptionFunc) (*Response, error)
-		ListProjectStatusChecks(pid interface{}, opt *ListOptions, options ...RequestOptionFunc) ([]*ProjectStatusCheck, *Response, error)
-		CreateExternalStatusCheck(pid interface{}, opt *CreateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error)
-		DeleteExternalStatusCheck(pid interface{}, check int, options ...RequestOptionFunc) (*Response, error)
-		UpdateExternalStatusCheck(pid interface{}, check int, opt *UpdateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error)
-		RetryFailedStatusCheckForAMergeRequest(pid interface{}, mergeRequest int, externalStatusCheck int, options ...RequestOptionFunc) (*Response, error)
+		ListMergeStatusChecks(pid any, mr int, opt *ListOptions, options ...RequestOptionFunc) ([]*MergeStatusCheck, *Response, error)
+		SetExternalStatusCheckStatus(pid any, mergeRequest int, opt *SetExternalStatusCheckStatusOptions, options ...RequestOptionFunc) (*Response, error)
+		ListProjectStatusChecks(pid any, opt *ListOptions, options ...RequestOptionFunc) ([]*ProjectStatusCheck, *Response, error)
+		CreateExternalStatusCheck(pid any, opt *CreateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error)
+		DeleteExternalStatusCheck(pid any, check int, options ...RequestOptionFunc) (*Response, error)
+		UpdateExternalStatusCheck(pid any, check int, opt *UpdateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error)
+		RetryFailedStatusCheckForAMergeRequest(pid any, mergeRequest int, externalStatusCheck int, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// ExternalStatusChecksService handles communication with the external
@@ -58,7 +58,7 @@ type StatusCheckProtectedBranch struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/status_checks/#list-status-checks-for-a-merge-request
-func (s *ExternalStatusChecksService) ListMergeStatusChecks(pid interface{}, mr int, opt *ListOptions, options ...RequestOptionFunc) ([]*MergeStatusCheck, *Response, error) {
+func (s *ExternalStatusChecksService) ListMergeStatusChecks(pid any, mr int, opt *ListOptions, options ...RequestOptionFunc) ([]*MergeStatusCheck, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -94,7 +94,7 @@ type SetExternalStatusCheckStatusOptions struct {
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/status_checks/#set-status-of-an-external-status-check
-func (s *ExternalStatusChecksService) SetExternalStatusCheckStatus(pid interface{}, mergeRequest int, opt *SetExternalStatusCheckStatusOptions, options ...RequestOptionFunc) (*Response, error) {
+func (s *ExternalStatusChecksService) SetExternalStatusCheckStatus(pid any, mergeRequest int, opt *SetExternalStatusCheckStatusOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -113,7 +113,7 @@ func (s *ExternalStatusChecksService) SetExternalStatusCheckStatus(pid interface
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/status_checks/#get-project-external-status-check-services
-func (s *ExternalStatusChecksService) ListProjectStatusChecks(pid interface{}, opt *ListOptions, options ...RequestOptionFunc) ([]*ProjectStatusCheck, *Response, error) {
+func (s *ExternalStatusChecksService) ListProjectStatusChecks(pid any, opt *ListOptions, options ...RequestOptionFunc) ([]*ProjectStatusCheck, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -149,7 +149,7 @@ type CreateExternalStatusCheckOptions struct {
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/status_checks/#create-external-status-check-service
-func (s *ExternalStatusChecksService) CreateExternalStatusCheck(pid interface{}, opt *CreateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error) {
+func (s *ExternalStatusChecksService) CreateExternalStatusCheck(pid any, opt *CreateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -168,7 +168,7 @@ func (s *ExternalStatusChecksService) CreateExternalStatusCheck(pid interface{},
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/status_checks/#delete-external-status-check-service
-func (s *ExternalStatusChecksService) DeleteExternalStatusCheck(pid interface{}, check int, options ...RequestOptionFunc) (*Response, error) {
+func (s *ExternalStatusChecksService) DeleteExternalStatusCheck(pid any, check int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -198,7 +198,7 @@ type UpdateExternalStatusCheckOptions struct {
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/status_checks/#update-external-status-check-service
-func (s *ExternalStatusChecksService) UpdateExternalStatusCheck(pid interface{}, check int, opt *UpdateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error) {
+func (s *ExternalStatusChecksService) UpdateExternalStatusCheck(pid any, check int, opt *UpdateExternalStatusCheckOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -217,7 +217,7 @@ func (s *ExternalStatusChecksService) UpdateExternalStatusCheck(pid interface{},
 //
 // Gitlab API docs:
 // https://docs.gitlab.com/api/status_checks/#retry-failed-status-check-for-a-merge-request
-func (s *ExternalStatusChecksService) RetryFailedStatusCheckForAMergeRequest(pid interface{}, mergeRequest int, externalStatusCheck int, options ...RequestOptionFunc) (*Response, error) {
+func (s *ExternalStatusChecksService) RetryFailedStatusCheckForAMergeRequest(pid any, mergeRequest int, externalStatusCheck int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

@@ -40,7 +40,7 @@ type (
 	// CustomAttributesService handles communication with the group, project and
 	// user custom attributes related methods of the GitLab API.
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/custom_attributes.html
+	// GitLab API docs: https://docs.gitlab.com/api/custom_attributes/
 	CustomAttributesService struct {
 		client *Client
 	}
@@ -50,7 +50,7 @@ var _ CustomAttributesServiceInterface = (*CustomAttributesService)(nil)
 
 // CustomAttribute struct is used to unmarshal response to api calls.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/custom_attributes.html
+// GitLab API docs: https://docs.gitlab.com/api/custom_attributes/
 type CustomAttribute struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
@@ -59,7 +59,7 @@ type CustomAttribute struct {
 // ListCustomUserAttributes lists the custom attributes of the specified user.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#list-custom-attributes
+// https://docs.gitlab.com/api/custom_attributes/#list-custom-attributes
 func (s *CustomAttributesService) ListCustomUserAttributes(user int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
 	return s.listCustomAttributes("users", user, options...)
 }
@@ -67,7 +67,7 @@ func (s *CustomAttributesService) ListCustomUserAttributes(user int, options ...
 // ListCustomGroupAttributes lists the custom attributes of the specified group.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#list-custom-attributes
+// https://docs.gitlab.com/api/custom_attributes/#list-custom-attributes
 func (s *CustomAttributesService) ListCustomGroupAttributes(group int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
 	return s.listCustomAttributes("groups", group, options...)
 }
@@ -75,7 +75,7 @@ func (s *CustomAttributesService) ListCustomGroupAttributes(group int, options .
 // ListCustomProjectAttributes lists the custom attributes of the specified project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#list-custom-attributes
+// https://docs.gitlab.com/api/custom_attributes/#list-custom-attributes
 func (s *CustomAttributesService) ListCustomProjectAttributes(project int, options ...RequestOptionFunc) ([]*CustomAttribute, *Response, error) {
 	return s.listCustomAttributes("projects", project, options...)
 }
@@ -95,26 +95,26 @@ func (s *CustomAttributesService) listCustomAttributes(resource string, id int, 
 	return cas, resp, nil
 }
 
-// GetCustomUserAttribute returns the user attribute with a speciifc key.
+// GetCustomUserAttribute returns the user attribute with a specific key.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#single-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#single-custom-attribute
 func (s *CustomAttributesService) GetCustomUserAttribute(user int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.getCustomAttribute("users", user, key, options...)
 }
 
-// GetCustomGroupAttribute returns the group attribute with a speciifc key.
+// GetCustomGroupAttribute returns the group attribute with a specific key.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#single-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#single-custom-attribute
 func (s *CustomAttributesService) GetCustomGroupAttribute(group int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.getCustomAttribute("groups", group, key, options...)
 }
 
-// GetCustomProjectAttribute returns the project attribute with a speciifc key.
+// GetCustomProjectAttribute returns the project attribute with a specific key.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#single-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#single-custom-attribute
 func (s *CustomAttributesService) GetCustomProjectAttribute(project int, key string, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.getCustomAttribute("projects", project, key, options...)
 }
@@ -137,7 +137,7 @@ func (s *CustomAttributesService) getCustomAttribute(resource string, id int, ke
 // SetCustomUserAttribute sets the custom attributes of the specified user.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#set-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#set-custom-attribute
 func (s *CustomAttributesService) SetCustomUserAttribute(user int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.setCustomAttribute("users", user, c, options...)
 }
@@ -145,7 +145,7 @@ func (s *CustomAttributesService) SetCustomUserAttribute(user int, c CustomAttri
 // SetCustomGroupAttribute sets the custom attributes of the specified group.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#set-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#set-custom-attribute
 func (s *CustomAttributesService) SetCustomGroupAttribute(group int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.setCustomAttribute("groups", group, c, options...)
 }
@@ -153,7 +153,7 @@ func (s *CustomAttributesService) SetCustomGroupAttribute(group int, c CustomAtt
 // SetCustomProjectAttribute sets the custom attributes of the specified project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#set-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#set-custom-attribute
 func (s *CustomAttributesService) SetCustomProjectAttribute(project int, c CustomAttribute, options ...RequestOptionFunc) (*CustomAttribute, *Response, error) {
 	return s.setCustomAttribute("projects", project, c, options...)
 }
@@ -176,7 +176,7 @@ func (s *CustomAttributesService) setCustomAttribute(resource string, id int, c 
 // DeleteCustomUserAttribute removes the custom attribute of the specified user.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#delete-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#delete-custom-attribute
 func (s *CustomAttributesService) DeleteCustomUserAttribute(user int, key string, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteCustomAttribute("users", user, key, options...)
 }
@@ -184,7 +184,7 @@ func (s *CustomAttributesService) DeleteCustomUserAttribute(user int, key string
 // DeleteCustomGroupAttribute removes the custom attribute of the specified group.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#delete-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#delete-custom-attribute
 func (s *CustomAttributesService) DeleteCustomGroupAttribute(group int, key string, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteCustomAttribute("groups", group, key, options...)
 }
@@ -192,7 +192,7 @@ func (s *CustomAttributesService) DeleteCustomGroupAttribute(group int, key stri
 // DeleteCustomProjectAttribute removes the custom attribute of the specified project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/custom_attributes.html#delete-custom-attribute
+// https://docs.gitlab.com/api/custom_attributes/#delete-custom-attribute
 func (s *CustomAttributesService) DeleteCustomProjectAttribute(project int, key string, options ...RequestOptionFunc) (*Response, error) {
 	return s.deleteCustomAttribute("projects", project, key, options...)
 }

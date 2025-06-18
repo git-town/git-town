@@ -24,11 +24,11 @@ import (
 type (
 	// GroupWikisServiceInterface defines methods for the GroupWikisService.
 	GroupWikisServiceInterface interface {
-		ListGroupWikis(gid interface{}, opt *ListGroupWikisOptions, options ...RequestOptionFunc) ([]*GroupWiki, *Response, error)
-		GetGroupWikiPage(gid interface{}, slug string, opt *GetGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error)
-		CreateGroupWikiPage(gid interface{}, opt *CreateGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error)
-		EditGroupWikiPage(gid interface{}, slug string, opt *EditGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error)
-		DeleteGroupWikiPage(gid interface{}, slug string, options ...RequestOptionFunc) (*Response, error)
+		ListGroupWikis(gid any, opt *ListGroupWikisOptions, options ...RequestOptionFunc) ([]*GroupWiki, *Response, error)
+		GetGroupWikiPage(gid any, slug string, opt *GetGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error)
+		CreateGroupWikiPage(gid any, opt *CreateGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error)
+		EditGroupWikiPage(gid any, slug string, opt *EditGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error)
+		DeleteGroupWikiPage(gid any, slug string, options ...RequestOptionFunc) (*Response, error)
 	}
 
 	// GroupWikisService handles communication with the group wikis related methods of
@@ -70,7 +70,7 @@ type ListGroupWikisOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#list-wiki-pages
-func (s *GroupWikisService) ListGroupWikis(gid interface{}, opt *ListGroupWikisOptions, options ...RequestOptionFunc) ([]*GroupWiki, *Response, error) {
+func (s *GroupWikisService) ListGroupWikis(gid any, opt *ListGroupWikisOptions, options ...RequestOptionFunc) ([]*GroupWiki, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -104,7 +104,7 @@ type GetGroupWikiPageOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#get-a-wiki-page
-func (s *GroupWikisService) GetGroupWikiPage(gid interface{}, slug string, opt *GetGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
+func (s *GroupWikisService) GetGroupWikiPage(gid any, slug string, opt *GetGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -140,7 +140,7 @@ type CreateGroupWikiPageOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#create-a-new-wiki-page
-func (s *GroupWikisService) CreateGroupWikiPage(gid interface{}, opt *CreateGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
+func (s *GroupWikisService) CreateGroupWikiPage(gid any, opt *CreateGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -176,7 +176,7 @@ type EditGroupWikiPageOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#edit-an-existing-wiki-page
-func (s *GroupWikisService) EditGroupWikiPage(gid interface{}, slug string, opt *EditGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
+func (s *GroupWikisService) EditGroupWikiPage(gid any, slug string, opt *EditGroupWikiPageOptions, options ...RequestOptionFunc) (*GroupWiki, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -201,7 +201,7 @@ func (s *GroupWikisService) EditGroupWikiPage(gid interface{}, slug string, opt 
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_wikis/#delete-a-wiki-page
-func (s *GroupWikisService) DeleteGroupWikiPage(gid interface{}, slug string, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupWikisService) DeleteGroupWikiPage(gid any, slug string, options ...RequestOptionFunc) (*Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, err

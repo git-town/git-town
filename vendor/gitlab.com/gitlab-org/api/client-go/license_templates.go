@@ -24,7 +24,7 @@ import (
 // LicenseTemplate represents a license template.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/licenses.html
+// https://docs.gitlab.com/api/templates/licenses/
 type LicenseTemplate struct {
 	Key         string   `json:"key"`
 	Name        string   `json:"name"`
@@ -48,7 +48,7 @@ type (
 	// LicenseTemplatesService handles communication with the license templates
 	// related methods of the GitLab API.
 	//
-	// GitLab API docs: https://docs.gitlab.com/ee/api/templates/licenses.html
+	// GitLab API docs: https://docs.gitlab.com/api/templates/licenses/
 	LicenseTemplatesService struct {
 		client *Client
 	}
@@ -60,7 +60,7 @@ var _ LicenseTemplatesServiceInterface = (*LicenseTemplatesService)(nil)
 // ListLicenseTemplates() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/licenses.html#list-license-templates
+// https://docs.gitlab.com/api/templates/licenses/#list-license-templates
 type ListLicenseTemplatesOptions struct {
 	ListOptions
 	Popular *bool `url:"popular,omitempty" json:"popular,omitempty"`
@@ -69,7 +69,7 @@ type ListLicenseTemplatesOptions struct {
 // ListLicenseTemplates get all license templates.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/licenses.html#list-license-templates
+// https://docs.gitlab.com/api/templates/licenses/#list-license-templates
 func (s *LicenseTemplatesService) ListLicenseTemplates(opt *ListLicenseTemplatesOptions, options ...RequestOptionFunc) ([]*LicenseTemplate, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodGet, "templates/licenses", opt, options)
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *LicenseTemplatesService) ListLicenseTemplates(opt *ListLicenseTemplates
 // GetLicenseTemplate() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/licenses.html#single-license-template
+// https://docs.gitlab.com/api/templates/licenses/#single-license-template
 type GetLicenseTemplateOptions struct {
 	Project  *string `url:"project,omitempty" json:"project,omitempty"`
 	Fullname *string `url:"fullname,omitempty" json:"fullname,omitempty"`
@@ -99,7 +99,7 @@ type GetLicenseTemplateOptions struct {
 // to replace the license placeholder.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/templates/licenses.html#single-license-template
+// https://docs.gitlab.com/api/templates/licenses/#single-license-template
 func (s *LicenseTemplatesService) GetLicenseTemplate(template string, opt *GetLicenseTemplateOptions, options ...RequestOptionFunc) (*LicenseTemplate, *Response, error) {
 	u := fmt.Sprintf("templates/licenses/%s", template)
 
