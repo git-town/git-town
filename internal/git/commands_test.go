@@ -1292,6 +1292,7 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("RebaseInProgress", func(t *testing.T) {
 		t.Parallel()
 		t.Run("not in progress", func(t *testing.T) {
+			t.Parallel()
 			runtime := testruntime.Create(t)
 			repoStatus := asserts.NoError1(runtime.Git.RepoStatus(runtime))
 			must.False(t, repoStatus.RebaseInProgress)

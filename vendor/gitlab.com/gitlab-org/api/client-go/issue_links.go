@@ -24,10 +24,10 @@ import (
 
 type (
 	IssueLinksServiceInterface interface {
-		ListIssueRelations(pid interface{}, issue int, options ...RequestOptionFunc) ([]*IssueRelation, *Response, error)
-		GetIssueLink(pid interface{}, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error)
-		CreateIssueLink(pid interface{}, issue int, opt *CreateIssueLinkOptions, options ...RequestOptionFunc) (*IssueLink, *Response, error)
-		DeleteIssueLink(pid interface{}, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error)
+		ListIssueRelations(pid any, issue int, options ...RequestOptionFunc) ([]*IssueRelation, *Response, error)
+		GetIssueLink(pid any, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error)
+		CreateIssueLink(pid any, issue int, opt *CreateIssueLinkOptions, options ...RequestOptionFunc) (*IssueLink, *Response, error)
+		DeleteIssueLink(pid any, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error)
 	}
 
 	// IssueLinksService handles communication with the issue relations related methods
@@ -87,7 +87,7 @@ type IssueRelation struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/issue_links/#list-issue-relations
-func (s *IssueLinksService) ListIssueRelations(pid interface{}, issue int, options ...RequestOptionFunc) ([]*IssueRelation, *Response, error) {
+func (s *IssueLinksService) ListIssueRelations(pid any, issue int, options ...RequestOptionFunc) ([]*IssueRelation, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -112,7 +112,7 @@ func (s *IssueLinksService) ListIssueRelations(pid interface{}, issue int, optio
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/issue_links/#get-an-issue-link
-func (s *IssueLinksService) GetIssueLink(pid interface{}, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
+func (s *IssueLinksService) GetIssueLink(pid any, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -147,7 +147,7 @@ type CreateIssueLinkOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/issue_links/#create-an-issue-link
-func (s *IssueLinksService) CreateIssueLink(pid interface{}, issue int, opt *CreateIssueLinkOptions, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
+func (s *IssueLinksService) CreateIssueLink(pid any, issue int, opt *CreateIssueLinkOptions, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -172,7 +172,7 @@ func (s *IssueLinksService) CreateIssueLink(pid interface{}, issue int, opt *Cre
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/issue_links/#delete-an-issue-link
-func (s *IssueLinksService) DeleteIssueLink(pid interface{}, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
+func (s *IssueLinksService) DeleteIssueLink(pid any, issue, issueLink int, options ...RequestOptionFunc) (*IssueLink, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

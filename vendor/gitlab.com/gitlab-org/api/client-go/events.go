@@ -26,7 +26,7 @@ type (
 	// EventsServiceInterface defines all the API methods for the EventsService
 	EventsServiceInterface interface {
 		ListCurrentUserContributionEvents(opt *ListContributionEventsOptions, options ...RequestOptionFunc) ([]*ContributionEvent, *Response, error)
-		ListProjectVisibleEvents(pid interface{}, opt *ListProjectVisibleEventsOptions, options ...RequestOptionFunc) ([]*ProjectEvent, *Response, error)
+		ListProjectVisibleEvents(pid any, opt *ListProjectVisibleEventsOptions, options ...RequestOptionFunc) ([]*ProjectEvent, *Response, error)
 	}
 
 	// EventsService handles communication with the event related methods of
@@ -94,7 +94,7 @@ type ListContributionEventsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/events/#get-user-contribution-events
-func (s *UsersService) ListUserContributionEvents(uid interface{}, opt *ListContributionEventsOptions, options ...RequestOptionFunc) ([]*ContributionEvent, *Response, error) {
+func (s *UsersService) ListUserContributionEvents(uid any, opt *ListContributionEventsOptions, options ...RequestOptionFunc) ([]*ContributionEvent, *Response, error) {
 	user, err := parseID(uid)
 	if err != nil {
 		return nil, nil, err
@@ -219,7 +219,7 @@ type ListProjectVisibleEventsOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/events/#list-a-projects-visible-events
-func (s *EventsService) ListProjectVisibleEvents(pid interface{}, opt *ListProjectVisibleEventsOptions, options ...RequestOptionFunc) ([]*ProjectEvent, *Response, error) {
+func (s *EventsService) ListProjectVisibleEvents(pid any, opt *ListProjectVisibleEventsOptions, options ...RequestOptionFunc) ([]*ProjectEvent, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

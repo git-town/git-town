@@ -99,6 +99,7 @@ func TestIdentSelectorMatcher(t *testing.T) {
 			},
 		} {
 			t.Run(tc.wantReason, func(t *testing.T) {
+				t.Parallel()
 				expr, err := parser.ParseExpr(tc.expr)
 				must.NoError(t, err)
 
@@ -109,6 +110,7 @@ func TestIdentSelectorMatcher(t *testing.T) {
 			})
 		}
 		t.Run("Success", func(t *testing.T) {
+			t.Parallel()
 			expr, err := parser.ParseExpr(`foo.bar`)
 			must.NoError(t, err)
 			m := &matcher.IdentSelectorMatcher{
@@ -225,6 +227,7 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 	t.Run("Failure", func(t *testing.T) {
 		t.Parallel()
 		t.Run("NotEnoughFields", func(t *testing.T) {
+			t.Parallel()
 			params := funcParams(t, `func()`)
 			m := &matcher.FieldListPrefixMatcher{
 				Prefix: []matcher.PositionalFieldMatcher{
@@ -239,6 +242,7 @@ func TestFieldListPrefixMatcher(t *testing.T) {
 			must.Eq(t, "not enough fields, want at least 2, got 0", r.FailureReason())
 		})
 		t.Run("FieldDoesNotMatch", func(t *testing.T) {
+			t.Parallel()
 			params := funcParams(t, `func(a string)`)
 			m := &matcher.FieldListPrefixMatcher{
 				Prefix: []matcher.PositionalFieldMatcher{

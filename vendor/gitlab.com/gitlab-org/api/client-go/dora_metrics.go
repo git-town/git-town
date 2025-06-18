@@ -24,8 +24,8 @@ import (
 type (
 	// DORAMetricsServiceInterface defines all the API methods for the DORAMetricsService
 	DORAMetricsServiceInterface interface {
-		GetProjectDORAMetrics(pid interface{}, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error)
-		GetGroupDORAMetrics(gid interface{}, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error)
+		GetProjectDORAMetrics(pid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error)
+		GetGroupDORAMetrics(gid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error)
 	}
 
 	// DORAMetricsService handles communication with the DORA metrics related methods
@@ -64,16 +64,13 @@ type GetDORAMetricsOptions struct {
 	EnvironmentTiers *[]string           `url:"environment_tiers,comma,omitempty" json:"environment_tiers,omitempty"`
 	Interval         *DORAMetricInterval `url:"interval,omitempty" json:"interval,omitempty"`
 	StartDate        *ISOTime            `url:"start_date,omitempty" json:"start_date,omitempty"`
-
-	// Deprecated, use environment tiers instead
-	EnvironmentTier *string `url:"environment_tier,omitempty" json:"environment_tier,omitempty"`
 }
 
 // GetProjectDORAMetrics gets the DORA metrics for a project.
 //
 // GitLab API Docs:
 // https://docs.gitlab.com/api/dora/metrics/#get-project-level-dora-metrics
-func (s *DORAMetricsService) GetProjectDORAMetrics(pid interface{}, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
+func (s *DORAMetricsService) GetProjectDORAMetrics(pid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -98,7 +95,7 @@ func (s *DORAMetricsService) GetProjectDORAMetrics(pid interface{}, opt GetDORAM
 //
 // GitLab API Docs:
 // https://docs.gitlab.com/api/dora/metrics/#get-group-level-dora-metrics
-func (s *DORAMetricsService) GetGroupDORAMetrics(gid interface{}, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
+func (s *DORAMetricsService) GetGroupDORAMetrics(gid any, opt GetDORAMetricsOptions, options ...RequestOptionFunc) ([]DORAMetric, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err

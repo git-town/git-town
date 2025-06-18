@@ -289,16 +289,19 @@ func TestTestCommands(t *testing.T) {
 			must.NoError(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("the main branch is configured", func(t *testing.T) {
+			t.Parallel()
 			runtime := testruntime.Create(t)
 			must.NoError(t, runtime.Config.SetMainBranch("main"))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("the perennial branches are configured", func(t *testing.T) {
+			t.Parallel()
 			runtime := testruntime.Create(t)
 			must.NoError(t, runtime.Config.NormalConfig.SetPerennialBranches(gitdomain.NewLocalBranchNames("qa")))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("branch lineage is configured", func(t *testing.T) {
+			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch("main", "initial")
 			runtime.CreateFeatureBranch("foo", "main")

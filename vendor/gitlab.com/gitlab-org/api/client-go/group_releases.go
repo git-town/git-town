@@ -20,7 +20,7 @@ import (
 
 type (
 	GroupReleasesServiceInterface interface {
-		ListGroupReleases(gid interface{}, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error)
+		ListGroupReleases(gid any, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error)
 	}
 
 	// GroupReleasesService handles communication with the group
@@ -48,7 +48,7 @@ type ListGroupReleasesOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_releases.html#list-group-releases
-func (s *GroupReleasesService) ListGroupReleases(gid interface{}, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error) {
+func (s *GroupReleasesService) ListGroupReleases(gid any, opts *ListGroupReleasesOptions, options ...RequestOptionFunc) ([]*Release, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err

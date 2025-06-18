@@ -24,14 +24,14 @@ import (
 
 type (
 	GroupMilestonesServiceInterface interface {
-		ListGroupMilestones(gid interface{}, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error)
-		GetGroupMilestone(gid interface{}, milestone int, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
-		CreateGroupMilestone(gid interface{}, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
-		UpdateGroupMilestone(gid interface{}, milestone int, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
-		DeleteGroupMilestone(pid interface{}, milestone int, options ...RequestOptionFunc) (*Response, error)
-		GetGroupMilestoneIssues(gid interface{}, milestone int, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
-		GetGroupMilestoneMergeRequests(gid interface{}, milestone int, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error)
-		GetGroupMilestoneBurndownChartEvents(gid interface{}, milestone int, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error)
+		ListGroupMilestones(gid any, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error)
+		GetGroupMilestone(gid any, milestone int, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
+		CreateGroupMilestone(gid any, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
+		UpdateGroupMilestone(gid any, milestone int, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error)
+		DeleteGroupMilestone(pid any, milestone int, options ...RequestOptionFunc) (*Response, error)
+		GetGroupMilestoneIssues(gid any, milestone int, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error)
+		GetGroupMilestoneMergeRequests(gid any, milestone int, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error)
+		GetGroupMilestoneBurndownChartEvents(gid any, milestone int, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error)
 	}
 
 	// GroupMilestonesService handles communication with the milestone related
@@ -73,26 +73,28 @@ func (m GroupMilestone) String() string {
 // https://docs.gitlab.com/api/group_milestones/#list-group-milestones
 type ListGroupMilestonesOptions struct {
 	ListOptions
-	IIDs                    *[]int   `url:"iids[],omitempty" json:"iids,omitempty"`
-	State                   *string  `url:"state,omitempty" json:"state,omitempty"`
-	Title                   *string  `url:"title,omitempty" json:"title,omitempty"`
-	Search                  *string  `url:"search,omitempty" json:"search,omitempty"`
-	SearchTitle             *string  `url:"search_title,omitempty" json:"search_title,omitempty"`
-	IncludeParentMilestones *bool    `url:"include_parent_milestones,omitempty" json:"include_parent_milestones,omitempty"`
-	IncludeAncestors        *bool    `url:"include_ancestors,omitempty" json:"include_ancestors,omitempty"`
-	IncludeDescendents      *bool    `url:"include_descendents,omitempty" json:"include_descendents,omitempty"`
-	UpdatedBefore           *ISOTime `url:"updated_before,omitempty" json:"updated_before,omitempty"`
-	UpdatedAfter            *ISOTime `url:"updated_after,omitempty" json:"updated_after,omitempty"`
-	ContainingDate          *ISOTime `url:"containing_date,omitempty" json:"containing_date,omitempty"`
-	StartDate               *ISOTime `url:"start_date,omitempty" json:"start_date,omitempty"`
-	EndDate                 *ISOTime `url:"end_date,omitempty" json:"end_date,omitempty"`
+	IIDs               *[]int   `url:"iids[],omitempty" json:"iids,omitempty"`
+	State              *string  `url:"state,omitempty" json:"state,omitempty"`
+	Title              *string  `url:"title,omitempty" json:"title,omitempty"`
+	Search             *string  `url:"search,omitempty" json:"search,omitempty"`
+	SearchTitle        *string  `url:"search_title,omitempty" json:"search_title,omitempty"`
+	IncludeAncestors   *bool    `url:"include_ancestors,omitempty" json:"include_ancestors,omitempty"`
+	IncludeDescendents *bool    `url:"include_descendents,omitempty" json:"include_descendents,omitempty"`
+	UpdatedBefore      *ISOTime `url:"updated_before,omitempty" json:"updated_before,omitempty"`
+	UpdatedAfter       *ISOTime `url:"updated_after,omitempty" json:"updated_after,omitempty"`
+	ContainingDate     *ISOTime `url:"containing_date,omitempty" json:"containing_date,omitempty"`
+	StartDate          *ISOTime `url:"start_date,omitempty" json:"start_date,omitempty"`
+	EndDate            *ISOTime `url:"end_date,omitempty" json:"end_date,omitempty"`
+
+	// Deprecated: in GitLab 16.7, use IncludeAncestors instead
+	IncludeParentMilestones *bool `url:"include_parent_milestones,omitempty" json:"include_parent_milestones,omitempty"`
 }
 
 // ListGroupMilestones returns a list of group milestones.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#list-group-milestones
-func (s *GroupMilestonesService) ListGroupMilestones(gid interface{}, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error) {
+func (s *GroupMilestonesService) ListGroupMilestones(gid any, opt *ListGroupMilestonesOptions, options ...RequestOptionFunc) ([]*GroupMilestone, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -117,7 +119,7 @@ func (s *GroupMilestonesService) ListGroupMilestones(gid interface{}, opt *ListG
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestone(gid interface{}, milestone int, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
+func (s *GroupMilestonesService) GetGroupMilestone(gid any, milestone int, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -153,7 +155,7 @@ type CreateGroupMilestoneOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#create-new-milestone
-func (s *GroupMilestonesService) CreateGroupMilestone(gid interface{}, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
+func (s *GroupMilestonesService) CreateGroupMilestone(gid any, opt *CreateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -190,7 +192,7 @@ type UpdateGroupMilestoneOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#edit-milestone
-func (s *GroupMilestonesService) UpdateGroupMilestone(gid interface{}, milestone int, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
+func (s *GroupMilestonesService) UpdateGroupMilestone(gid any, milestone int, opt *UpdateGroupMilestoneOptions, options ...RequestOptionFunc) (*GroupMilestone, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -215,7 +217,7 @@ func (s *GroupMilestonesService) UpdateGroupMilestone(gid interface{}, milestone
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#delete-group-milestone
-func (s *GroupMilestonesService) DeleteGroupMilestone(pid interface{}, milestone int, options ...RequestOptionFunc) (*Response, error) {
+func (s *GroupMilestonesService) DeleteGroupMilestone(pid any, milestone int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -239,7 +241,7 @@ type GetGroupMilestoneIssuesOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-issues-assigned-to-a-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestoneIssues(gid interface{}, milestone int, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
+func (s *GroupMilestonesService) GetGroupMilestoneIssues(gid any, milestone int, opt *GetGroupMilestoneIssuesOptions, options ...RequestOptionFunc) ([]*Issue, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -272,7 +274,7 @@ type GetGroupMilestoneMergeRequestsOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-merge-requests-assigned-to-a-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid interface{}, milestone int, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
+func (s *GroupMilestonesService) GetGroupMilestoneMergeRequests(gid any, milestone int, opt *GetGroupMilestoneMergeRequestsOptions, options ...RequestOptionFunc) ([]*BasicMergeRequest, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
@@ -315,7 +317,7 @@ type GetGroupMilestoneBurndownChartEventsOptions ListOptions
 //
 // GitLab API docs:
 // https://docs.gitlab.com/api/group_milestones/#get-all-burndown-chart-events-for-a-single-milestone
-func (s *GroupMilestonesService) GetGroupMilestoneBurndownChartEvents(gid interface{}, milestone int, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error) {
+func (s *GroupMilestonesService) GetGroupMilestoneBurndownChartEvents(gid any, milestone int, opt *GetGroupMilestoneBurndownChartEventsOptions, options ...RequestOptionFunc) ([]*BurndownChartEvent, *Response, error) {
 	group, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err

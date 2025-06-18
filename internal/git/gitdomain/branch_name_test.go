@@ -53,10 +53,12 @@ func TestBranchName(t *testing.T) {
 	t.Run("NewBranchName and String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("normal branch name", func(t *testing.T) {
+			t.Parallel()
 			branchName := gitdomain.NewBranchName("branch-1")
 			must.EqOp(t, "branch-1", branchName.String())
 		})
 		t.Run("does not allow empty branch names", func(t *testing.T) {
+			t.Parallel()
 			defer asserts.Paniced(t)
 			gitdomain.NewBranchName("")
 		})
