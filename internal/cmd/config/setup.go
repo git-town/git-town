@@ -265,52 +265,24 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 				return aborted, tokenScope, forgeTypeOpt, err
 			}
 		case forgedomain.ForgeTypeCodeberg:
-			data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
+			aborted, tokenScope, err := enterCodebergToken(config, data, tokenScope)
 			if err != nil || aborted {
 				return aborted, tokenScope, forgeTypeOpt, err
-			}
-			if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
-				scope := determineScope(config.NormalConfig.GitConfig.CodebergToken)
-				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
-				if err != nil || aborted {
-					return aborted, tokenScope, forgeTypeOpt, err
-				}
 			}
 		case forgedomain.ForgeTypeGitea:
-			data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
+			aborted, tokenScope, err := enterGiteaToken(config, data, tokenScope)
 			if err != nil || aborted {
 				return aborted, tokenScope, forgeTypeOpt, err
-			}
-			if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
-				scope := determineScope(config.NormalConfig.GitConfig.GiteaToken)
-				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
-				if err != nil || aborted {
-					return aborted, tokenScope, forgeTypeOpt, err
-				}
 			}
 		case forgedomain.ForgeTypeGitHub:
-			data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
+			aborted, tokenScope, err := enterGithubToken(config, data, tokenScope)
 			if err != nil || aborted {
 				return aborted, tokenScope, forgeTypeOpt, err
-			}
-			if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
-				scope := determineScope(config.NormalConfig.GitConfig.GitHubToken)
-				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
-				if err != nil || aborted {
-					return aborted, tokenScope, forgeTypeOpt, err
-				}
 			}
 		case forgedomain.ForgeTypeGitLab:
-			data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
+			aborted, tokenScope, err := enterGitlabToken(config, data, tokenScope)
 			if err != nil || aborted {
 				return aborted, tokenScope, forgeTypeOpt, err
-			}
-			if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
-				scope := determineScope(config.NormalConfig.GitConfig.GitLabToken)
-				tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
-				if err != nil || aborted {
-					return aborted, tokenScope, forgeTypeOpt, err
-				}
 			}
 		}
 	}
@@ -331,6 +303,74 @@ func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, token
 	if showScopeDialog(data.userInput.config.NormalConfig.BitbucketUsername, config.NormalConfig.BitbucketUsername) &&
 		showScopeDialog(data.userInput.config.NormalConfig.BitbucketAppPassword, config.NormalConfig.BitbucketAppPassword) {
 		scope := determineScope(config.NormalConfig.GitConfig.BitbucketAppPassword)
+		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+	}
+	return false, tokenScope, nil
+}
+
+func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+	aborted := false
+	var err error = nil
+	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
+		scope := determineScope(config.NormalConfig.GitConfig.CodebergToken)
+		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+	}
+	return false, tokenScope, nil
+}
+
+func enterGiteaToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+	aborted := false
+	var err error = nil
+	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	if showScopeDialog(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken) {
+		scope := determineScope(config.NormalConfig.GitConfig.GiteaToken)
+		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+	}
+	return false, tokenScope, nil
+}
+
+func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+	aborted := false
+	var err error = nil
+	data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
+		scope := determineScope(config.NormalConfig.GitConfig.GitHubToken)
+		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+	}
+	return false, tokenScope, nil
+}
+
+func enterGitlabToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+	aborted := false
+	var err error = nil
+	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	if showScopeDialog(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken) {
+		scope := determineScope(config.NormalConfig.GitConfig.GitLabToken)
 		tokenScope, aborted, err = dialog.TokenScope(scope, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
