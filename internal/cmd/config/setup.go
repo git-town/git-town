@@ -274,9 +274,7 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 	return aborted, tokenScope, forgeTypeOpt, err
 }
 
-func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
-	aborted := false
-	var err error = nil
+func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
 	data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
@@ -296,9 +294,7 @@ func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, token
 	return false, tokenScope, nil
 }
 
-func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
-	aborted := false
-	var err error = nil
+func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
 	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
@@ -313,9 +309,7 @@ func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, tokenS
 	return false, tokenScope, nil
 }
 
-func enterGiteaToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
-	aborted := false
-	var err error = nil
+func enterGiteaToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
 	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
@@ -330,9 +324,7 @@ func enterGiteaToken(config config.UnvalidatedConfig, data *setupData, tokenScop
 	return false, tokenScope, nil
 }
 
-func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
-	aborted := false
-	var err error = nil
+func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
 	data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
@@ -347,9 +339,7 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 	return false, tokenScope, nil
 }
 
-func enterGitlabToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
-	aborted := false
-	var err error = nil
+func enterGitlabToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
 	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
