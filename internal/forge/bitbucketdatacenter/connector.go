@@ -88,6 +88,14 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
+func (self Connector) VerifyConnection() error {
+	return nil
+}
+
+func (self Connector) VerifyReadProposalPermission() error {
+	return nil
+}
+
 func (self Connector) apiBaseURL() string {
 	return fmt.Sprintf(
 		"https://%s/rest/api/latest/projects/%s/repos/%s/pull-requests",
