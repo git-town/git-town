@@ -77,7 +77,8 @@ const (
 	CreatePrototypeBranches            = "Create prototype branches:"
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
 Please upgrade to the new format: create.new-branch-type = "prototype"`
-	UnknownBranchType                   = "Unknown branch type: %s\n"
+	CredentialsNoAccess                 = "Keep credentials without access: %s"
+	CredentialsForgeUserName            = "Forge access as %s"
 	DetachNeedsSync                     = "please sync this stack before detaching branches from it"
 	DetachNoParent                      = "cannot detach branches without parent"
 	DetachOtherWorkTree                 = "cannot detach because branch %q it is active in another worktree"
@@ -284,6 +285,7 @@ and will be removed in future versions of Git Town.`
 	UnfinishedRunStateQuit                  = "Quit without running anything"
 	UnfinishedRunStateSkip                  = "Skip the current branch and continue the \"%s\" command on the next branch"
 	UnfinishedRunStateUndo                  = "Undo the previous \"%s\" command"
+	UnknownBranchType                       = "Unknown branch type: %s\n"
 	WalkAllOrStack                          = "please provide either --all or --stack"
 	WalkDone                                = "Branch walk done."
 	WalkNoDryRun                            = "there is no dry-run mode for walking through branches on your shell, please call with a command to run on each branch"
