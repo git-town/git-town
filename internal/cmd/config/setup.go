@@ -263,7 +263,7 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			aborted, tokenScope, err = enterBitBucketCloudToken(data, config, tokenScope)
+			aborted, tokenScope, err = enterBitBucketToken(data, config, tokenScope)
 		case forgedomain.ForgeTypeCodeberg:
 			data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
 			if err != nil || aborted {
@@ -317,7 +317,7 @@ func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool,
 	return false, tokenScope, forgeTypeOpt, nil
 }
 
-func enterBitBucketCloudToken(data *setupData, config config.UnvalidatedConfig, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
+func enterBitBucketToken(data *setupData, config config.UnvalidatedConfig, tokenScope configdomain.ConfigScope) (bool, configdomain.ConfigScope, error) {
 	aborted := false
 	var err error = nil
 	for {
