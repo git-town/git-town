@@ -78,7 +78,7 @@ const (
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
 Please upgrade to the new format: create.new-branch-type = "prototype"`
 	CredentialsNoAccess                 = "Keep credentials without access: %s"
-	CredentialsForgeUserName            = "Forge access as %s"
+	CredentialsForgeUserName            = "Forge access as %s\n"
 	DetachNeedsSync                     = "please sync this stack before detaching branches from it"
 	DetachNoParent                      = "cannot detach branches without parent"
 	DetachOtherWorkTree                 = "cannot detach because branch %q it is active in another worktree"
