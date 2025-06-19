@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -289,7 +290,7 @@ func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, token
 			return aborted, tokenScope, err
 		}
 		connector := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword: data.config.NormalConfig.BitbucketAppPassword,
+			AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
 			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
 			Log:         print.Logger{},
 			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
@@ -334,9 +335,46 @@ func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, token
 }
 
 func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, err
+	for {
+		data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		connector, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+		if err != nil {
+			return false, tokenScope, err
+		}
+		userName, err := connector.VerifyConnection()
+		if err != nil {
+			choice, aborted, err := dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, tokenScope, err
+			}
+			switch choice {
+			case dialog.CredentialsNoAccessChoiceRetry:
+				continue
+			case dialog.CredentialsNoAccessChoiceIgnore:
+			}
+		}
+		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
+		err = connector.VerifyReadProposalPermission()
+		if err != nil {
+			choice, aborted, err := dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, tokenScope, err
+			}
+			switch choice {
+			case dialog.CredentialsNoAccessChoiceRetry:
+				continue
+			case dialog.CredentialsNoAccessChoiceIgnore:
+			}
+		}
+		fmt.Println(messages.CredentialsAccess)
+		break
 	}
 	if showScopeDialog(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken) {
 		scope := determineScope(config.NormalConfig.GitConfig.CodebergToken)
@@ -369,7 +407,7 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
-		githubConnector, err := github.NewConnector(github.NewConnectorArgs{
+		connector, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
 			Log:       print.Logger{},
 			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
@@ -377,7 +415,7 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 		if err != nil {
 			return false, tokenScope, err
 		}
-		userName, err := githubConnector.VerifyConnection()
+		userName, err := connector.VerifyConnection()
 		if err != nil {
 			choice, aborted, err := dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
 			if err != nil || aborted {
@@ -390,7 +428,7 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 			}
 		}
 		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
-		err = githubConnector.VerifyReadProposalPermission()
+		err = connector.VerifyReadProposalPermission()
 		if err != nil {
 			choice, aborted, err := dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
 			if err != nil || aborted {
