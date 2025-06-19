@@ -183,7 +183,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
-	aborted, tokenScope, forgeTypeOpt, err = enterForge(config, data)
+	aborted, tokenScope, forgeTypeOpt, err = enterForgeAuth(config, data)
 	if err != nil || aborted {
 		return aborted, tokenScope, None[forgedomain.ForgeType](), err
 	}
@@ -260,7 +260,7 @@ func enterData(config config.UnvalidatedConfig, gitCommands git.Commands, backen
 	return false, tokenScope, forgeTypeOpt, nil
 }
 
-func enterForge(config config.UnvalidatedConfig, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], err error) {
+func enterForgeAuth(config config.UnvalidatedConfig, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], err error) {
 	forgeTypeOpt = determineHostingPlatform(config, data.userInput.config.NormalConfig.ForgeType)
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
