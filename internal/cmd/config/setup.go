@@ -21,6 +21,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
+	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -423,9 +424,31 @@ func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 }
 
 func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, err
+	for {
+		data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		connector, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GitLabToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+		if err != nil {
+			return false, tokenScope, err
+		}
+		works, aborted, choice, err := verifyAuth(connector, data)
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		if !works {
+			switch choice {
+			case dialog.CredentialsNoAccessChoiceRetry:
+				continue
+			case dialog.CredentialsNoAccessChoiceIgnore:
+			}
+		}
+		break
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 	if showScopeDialog {
