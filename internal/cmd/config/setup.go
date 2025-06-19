@@ -297,25 +297,11 @@ func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted 
 			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
 			UserName:    data.config.NormalConfig.BitbucketUsername,
 		})
-		userName, err := connector.VerifyConnection()
-		if err != nil {
-			choice, aborted, err := dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
-			}
+		works, aborted, choice, err := verifyAuth(connector, data)
+		if err != nil || aborted {
+			return aborted, tokenScope, err
 		}
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
-		err = connector.VerifyReadProposalPermission()
-		if err != nil {
-			choice, aborted, err := dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
+		if !works {
 			switch choice {
 			case dialog.CredentialsNoAccessChoiceRetry:
 				continue
@@ -347,32 +333,17 @@ func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted b
 		if err != nil {
 			return false, tokenScope, err
 		}
-		userName, err := connector.VerifyConnection()
-		if err != nil {
-			choice, aborted, err := dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
+		works, aborted, choice, err := verifyAuth(connector, data)
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		if !works {
 			switch choice {
 			case dialog.CredentialsNoAccessChoiceRetry:
 				continue
 			case dialog.CredentialsNoAccessChoiceIgnore:
 			}
 		}
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
-		err = connector.VerifyReadProposalPermission()
-		if err != nil {
-			choice, aborted, err := dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
-			}
-		}
-		fmt.Println(messages.CredentialsAccess)
 		break
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
@@ -410,32 +381,17 @@ func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 		if err != nil {
 			return false, tokenScope, err
 		}
-		userName, err := connector.VerifyConnection()
-		if err != nil {
-			choice, aborted, err := dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
+		works, aborted, choice, err := verifyAuth(connector, data)
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		if !works {
 			switch choice {
 			case dialog.CredentialsNoAccessChoiceRetry:
 				continue
 			case dialog.CredentialsNoAccessChoiceIgnore:
 			}
 		}
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
-		err = connector.VerifyReadProposalPermission()
-		if err != nil {
-			choice, aborted, err := dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
-			}
-		}
-		fmt.Println(messages.CredentialsAccess)
 		break
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
@@ -457,6 +413,22 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 		tokenScope, aborted, err = dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
 	}
 	return aborted, tokenScope, err
+}
+
+func verifyAuth(connector forgedomain.Connector, data *setupData) (works bool, aborted bool, choice dialog.CredentialsNoAccessChoice, err error) {
+	userName, err := connector.VerifyConnection()
+	if err != nil {
+		choice, aborted, err = dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
+		return false, aborted, choice, err
+	}
+	fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
+	err = connector.VerifyReadProposalPermission()
+	if err != nil {
+		choice, aborted, err = dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
+		return false, aborted, choice, err
+	}
+	fmt.Println(messages.CredentialsAccess)
+	return true, false, choice, nil
 }
 
 func determineScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
