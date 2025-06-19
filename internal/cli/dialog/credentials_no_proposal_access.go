@@ -29,7 +29,7 @@ func CredentialsNoProposalAccess(err error, inputs components.TestInput) (Creden
 		},
 	}
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
-	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, credentialsNoAccessHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, err), inputs)
 	if err != nil || aborted {
 		return selection, aborted, err
 	}

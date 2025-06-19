@@ -184,7 +184,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
-	aborted, tokenScope, forgeTypeOpt, err = enterForge(repo, data)
+	aborted, tokenScope, forgeTypeOpt, err = enterForgeAuth(repo, data)
 	if err != nil || aborted {
 		return aborted, tokenScope, None[forgedomain.ForgeType](), err
 	}
@@ -280,13 +280,13 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (aborted bool,
 	return aborted, tokenScope, forgeTypeOpt, err
 }
 
-func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
+func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
 	for {
-		data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(config.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+		data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
-		data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(config.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
+		data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
@@ -333,9 +333,9 @@ func enterBitbucketToken(config config.UnvalidatedConfig, data *setupData, token
 	return aborted, tokenScope, err
 }
 
-func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, resultScope configdomain.ConfigScope, err error) {
+func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
 	for {
-		data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
+		data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
@@ -396,9 +396,9 @@ func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool
 	return aborted, tokenScope, err
 }
 
-func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenScope configdomain.ConfigScope) (aborted bool, tokenScopeResult configdomain.ConfigScope, err error) {
+func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
 	for {
-		data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
+		data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
