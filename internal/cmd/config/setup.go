@@ -369,7 +369,6 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
-		fmt.Println(data.userInput.config.NormalConfig.GitHubToken)
 		githubConnector, err := github.NewConnector(github.NewConnectorArgs{
 			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
 			Log:       print.Logger{},
@@ -403,7 +402,7 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 			case dialog.CredentialsNoAccessChoiceIgnore:
 			}
 		}
-		fmt.Println("can list pull requests")
+		fmt.Println("API token permits access to pull requests")
 		break
 	}
 	if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {

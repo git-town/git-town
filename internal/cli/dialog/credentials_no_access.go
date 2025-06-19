@@ -13,7 +13,8 @@ const (
 	credentialsNoAccessHelp  = `
 The credentials you have entered seem to not allow API access at all.
 
-Received error: %s
+API error message: %s
+
 `
 )
 
@@ -29,7 +30,7 @@ func CredentialsNoAccess(err error, inputs components.TestInput) (CredentialsNoA
 		},
 	}
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
-	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, credentialsNoAccessHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, err), inputs)
 	if err != nil || aborted {
 		return selection, aborted, err
 	}
