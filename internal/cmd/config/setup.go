@@ -263,7 +263,7 @@ func enterForge(repo execute.OpenRepoResult, data *setupData) (aborted bool, tok
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			aborted, tokenScope, err = enterBitbucketToken(data, repo)
 		case forgedomain.ForgeTypeCodeberg:
-			aborted, tokenScope, err = enterCodebergToken(repo.UnvalidatedConfig, data, repo.ConfigSnapshot)
+			aborted, tokenScope, err = enterCodebergToken(data, repo)
 		case forgedomain.ForgeTypeGitea:
 			aborted, tokenScope, err = enterGiteaToken(repo.UnvalidatedConfig, data, repo.ConfigSnapshot)
 		case forgedomain.ForgeTypeGitHub:
@@ -293,14 +293,14 @@ func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted 
 	return aborted, tokenScope, err
 }
 
-func enterCodebergToken(config config.UnvalidatedConfig, data *setupData, configSnapshot undoconfig.ConfigSnapshot) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(config.NormalConfig.CodebergToken, data.dialogInputs.Next())
+func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
+	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, config.NormalConfig.CodebergToken)
+	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
 	if showScopeDialog {
-		oldTokenScope := determineScope(configSnapshot, configdomain.KeyCodebergToken, config.NormalConfig.CodebergToken)
+		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
 		tokenScope, aborted, err = dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
 	}
 	return aborted, tokenScope, err
