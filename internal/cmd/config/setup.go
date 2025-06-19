@@ -402,7 +402,7 @@ func enterGithubToken(config config.UnvalidatedConfig, data *setupData, tokenSco
 			case dialog.CredentialsNoAccessChoiceIgnore:
 			}
 		}
-		fmt.Println("API token permits access to pull requests")
+		fmt.Println(messages.CredentialsAccess)
 		break
 	}
 	if showScopeDialog(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken) {
