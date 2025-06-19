@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -460,6 +461,9 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 }
 
 func verifyAuth(connector forgedomain.Connector, data *setupData) (works bool, aborted bool, choice dialog.CredentialsNoAccessChoice, err error) {
+	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
+		return true, false, choice, nil
+	}
 	userName, err := connector.VerifyConnection()
 	if err != nil {
 		choice, aborted, err = dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
