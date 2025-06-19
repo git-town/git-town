@@ -265,11 +265,11 @@ func enterForge(repo execute.OpenRepoResult, data *setupData) (aborted bool, tok
 		case forgedomain.ForgeTypeCodeberg:
 			aborted, tokenScope, err = enterCodebergToken(data, repo)
 		case forgedomain.ForgeTypeGitea:
-			aborted, tokenScope, err = enterGiteaToken(repo.UnvalidatedConfig, data, repo.ConfigSnapshot)
+			aborted, tokenScope, err = enterGiteaToken(data, repo)
 		case forgedomain.ForgeTypeGitHub:
-			aborted, tokenScope, err = enterGithubToken(repo.UnvalidatedConfig, data, repo.ConfigSnapshot)
+			aborted, tokenScope, err = enterGithubToken(data, repo)
 		case forgedomain.ForgeTypeGitLab:
-			aborted, tokenScope, err = enterGitlabToken(repo.UnvalidatedConfig, data, repo.ConfigSnapshot)
+			aborted, tokenScope, err = enterGitlabToken(data, repo)
 		}
 	}
 	return aborted, tokenScope, forgeTypeOpt, err
@@ -306,40 +306,40 @@ func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted b
 	return aborted, tokenScope, err
 }
 
-func enterGiteaToken(config config.UnvalidatedConfig, data *setupData, configSnapshot undoconfig.ConfigSnapshot) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(config.NormalConfig.GiteaToken, data.dialogInputs.Next())
+func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
+	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, config.NormalConfig.GiteaToken)
+	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 	if showScopeDialog {
-		oldTokenScope := determineScope(configSnapshot, configdomain.KeyGiteaToken, config.NormalConfig.GiteaToken)
+		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 		tokenScope, aborted, err = dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
 	}
 	return aborted, tokenScope, err
 }
 
-func enterGithubToken(config config.UnvalidatedConfig, data *setupData, configSnapshot undoconfig.ConfigSnapshot) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(config.NormalConfig.GitHubToken, data.dialogInputs.Next())
+func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
+	data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, config.NormalConfig.GitHubToken)
+	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 	if showScopeDialog {
-		oldTokenScope := determineScope(configSnapshot, configdomain.KeyGithubToken, config.NormalConfig.GitHubToken)
+		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGithubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 		tokenScope, aborted, err = dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
 	}
 	return aborted, tokenScope, err
 }
 
-func enterGitlabToken(config config.UnvalidatedConfig, data *setupData, configSnapshot undoconfig.ConfigSnapshot) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(config.NormalConfig.GitLabToken, data.dialogInputs.Next())
+func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
+	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, tokenScope, err
 	}
-	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, config.NormalConfig.GitLabToken)
+	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 	if showScopeDialog {
-		oldTokenScope := determineScope(configSnapshot, configdomain.KeyGitlabToken, config.NormalConfig.GitLabToken)
+		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitlabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 		tokenScope, aborted, err = dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
 	}
 	return aborted, tokenScope, err
