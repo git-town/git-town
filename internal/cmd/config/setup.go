@@ -19,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -355,9 +356,28 @@ func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted b
 }
 
 func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, tokenScope, err
+	for {
+		data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		connector := gitea.NewConnector(gitea.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+		works, aborted, choice, err := verifyAuth(connector, data)
+		if err != nil || aborted {
+			return aborted, tokenScope, err
+		}
+		if !works {
+			switch choice {
+			case dialog.CredentialsNoAccessChoiceRetry:
+				continue
+			case dialog.CredentialsNoAccessChoiceIgnore:
+			}
+		}
+		break
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 	if showScopeDialog {
