@@ -437,6 +437,7 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 		if err != nil {
 			return false, tokenScope, err
 		}
+		// TODO: create a dedicated type for "aborted" and use it everywhere we have an "abort" or "aborted" variable
 		works, aborted, choice, err := verifyAuth(connector, data)
 		if err != nil || aborted {
 			return aborted, tokenScope, err
