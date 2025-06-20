@@ -205,9 +205,8 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 		}
 		if repeat {
 			continue
-		} else {
-			break
 		}
+		break
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		data.userInput.config.NormalConfig.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(repo.UnvalidatedConfig.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
@@ -386,7 +385,7 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	return false, false, nil
 }
 
-func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) {
+func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
 	forgeType, hasForgeType := forgeTypeOpt.Get()
 	if !hasForgeType {
 		return nil, nil
