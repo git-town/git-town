@@ -346,7 +346,9 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	if err != nil {
 		return dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
 	}
-	fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, exit))
+	if len(userName) > 0 {
+		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, exit))
+	}
 	err = connector.VerifyReadProposalPermission()
 	if err != nil {
 		return dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
