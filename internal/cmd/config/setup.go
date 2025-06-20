@@ -468,7 +468,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 		fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
 	}
 	if configFile.MainBranch.IsNone() {
-		fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
+		fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch, oldConfig))
 	}
 	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
@@ -643,11 +643,14 @@ func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope 
 	return gitCommands.RemoveGitLabToken(frontend)
 }
 
-func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {
-	if Some(newValue).Equal(oldValue) {
+func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[gitdomain.LocalBranchName], config config.UnvalidatedConfig) error {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
-	return config.SetMainBranch(newValue)
+	if mainBranch, hasNewValue := newValue.Get(); hasNewValue {
+		return config.SetMainBranch(mainBranch)
+	}
+	return nil
 }
 
 func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], gitCommands git.Commands, frontend gitdomain.Runner) error {
