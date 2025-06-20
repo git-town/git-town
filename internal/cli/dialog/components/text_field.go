@@ -7,9 +7,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
-func TextField(args TextFieldArgs) (string, bool, error) {
+func TextField(args TextFieldArgs) (string, dialogdomain.Aborted, error) {
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)
 	textInput.Prompt = args.Prompt

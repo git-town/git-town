@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -26,7 +27,7 @@ More details: https://www.git-town.com/preferences/push-hook.
 `
 )
 
-func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, bool, error) {
+func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, dialogdomain.Aborted, error) {
 	entries := list.Entries[configdomain.PushHook]{
 		{
 			Data: true,
