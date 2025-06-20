@@ -411,10 +411,10 @@ func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]
 }
 
 func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (tokenScope configdomain.ConfigScope, exit dialogdomain.Exit, err error) {
-	if !shouldAskForScope(forgeTypeOpt, data, repo) {
-		return configdomain.ConfigScopeLocal, false, nil
+	if shouldAskForScope(forgeTypeOpt, data, repo) {
+		return tokenScopeDialog(forgeTypeOpt, data, repo)
 	}
-	return tokenScopeDialog(forgeTypeOpt, data, repo)
+	return configdomain.ConfigScopeLocal, false, nil
 }
 
 func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) bool {
