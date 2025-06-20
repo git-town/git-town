@@ -13,7 +13,7 @@ const (
 	credentialsNoAccessHelp  = `
 The credentials you have entered seem to not allow API access at all.
 
-API error message: %s
+API error message: %v
 
 `
 )
