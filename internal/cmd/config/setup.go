@@ -281,21 +281,19 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (tokenScope configd
 
 func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt Option[forgedomain.ForgeType], exit dialogdomain.Exit, err error) {
 	forgeTypeOpt = determineHostingPlatform(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return forgeTypeOpt, false, nil
-	}
-	switch forgeType {
-	case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-		exit, err = enterBitbucketToken(data, repo)
-	case forgedomain.ForgeTypeCodeberg:
-		exit, err = enterCodebergToken(data, repo)
-	case forgedomain.ForgeTypeGitea:
-		exit, err = enterGiteaToken(data, repo)
-	case forgedomain.ForgeTypeGitHub:
-		exit, err = enterGithubToken(data, repo)
-	case forgedomain.ForgeTypeGitLab:
-		exit, err = enterGitlabToken(data, repo)
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+			exit, err = enterBitbucketToken(data, repo)
+		case forgedomain.ForgeTypeCodeberg:
+			exit, err = enterCodebergToken(data, repo)
+		case forgedomain.ForgeTypeGitea:
+			exit, err = enterGiteaToken(data, repo)
+		case forgedomain.ForgeTypeGitHub:
+			exit, err = enterGithubToken(data, repo)
+		case forgedomain.ForgeTypeGitLab:
+			exit, err = enterGitlabToken(data, repo)
+		}
 	}
 	return forgeTypeOpt, exit, err
 }
