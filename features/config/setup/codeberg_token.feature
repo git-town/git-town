@@ -4,7 +4,6 @@ Feature: enter the Codeberg API token
   Background:
     Given a Git repo with origin
 
-  @debug @this
   Scenario: auto-detected Codeberg platform
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town config setup" and enter into the dialog:
