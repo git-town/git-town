@@ -24,7 +24,7 @@ func CredentialsNoProposalAccess(connectorError error, inputs components.TestInp
 		CredentialsNoAccessChoiceIgnore,
 	)
 	selection, exit, err := components.RadioList(entries, 0, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs)
-	if err != nil || exit {
+	if err != nil {
 		return selection.Repeat(), exit, err
 	}
 	fmt.Printf(messages.CredentialsNoAccess, components.FormattedSelection(selection.String(), exit))
