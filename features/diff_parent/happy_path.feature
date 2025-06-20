@@ -11,8 +11,8 @@ Feature: view changes made on the current feature branch
     And the current branch is "feature"
     When I run "git-town diff-parent"
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git diff main feature |
+      | BRANCH  | COMMAND                            |
+      | feature | git diff --merge-base main feature |
 
   Scenario: child branch
     Given the branches
@@ -22,5 +22,5 @@ Feature: view changes made on the current feature branch
     And the current branch is "child"
     When I run "git-town diff-parent"
     Then Git Town runs the commands
-      | BRANCH | COMMAND               |
-      | child  | git diff parent child |
+      | BRANCH | COMMAND                            |
+      | child  | git diff --merge-base parent child |
