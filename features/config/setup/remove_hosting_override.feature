@@ -14,8 +14,8 @@ Feature: remove an existing forge type override
       | feature regex               | enter                |                                             |
       | unknown branch type         | enter                |                                             |
       | dev-remote                  | enter                |                                             |
-      | forge type                  | up up up up up enter |                                             |
       | origin hostname             | enter                |                                             |
+      | forge type                  | up up up up up enter |                                             |
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
       | sync-prototype-strategy     | enter                |                                             |

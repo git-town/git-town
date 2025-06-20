@@ -13,8 +13,8 @@ Feature: Accepting all default values in a brand-new Git repo leads to a working
       | feature regex               | enter |
       | unknown branch type         | enter |
       | dev-remote                  | enter |
-      | forge type                  | enter |
       | origin hostname             | enter |
+      | forge type                  | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |
       | sync-prototype-strategy     | enter |
