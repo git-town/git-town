@@ -758,7 +758,7 @@ func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[
 	if newValue.Equal(oldValue) {
 		return nil
 	}
-	if mainBranch, hasValue := newValue.Get(); hasValue {
+	if mainBranch, hasNewValue := newValue.Get(); hasNewValue {
 		return config.SetMainBranch(mainBranch)
 	}
 	return nil
