@@ -181,21 +181,32 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
-	if configFile.HostingOriginHostname.IsNone() {
-		data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
+	for {
+		if configFile.HostingOriginHostname.IsNone() {
+			data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+			}
+		}
+		if configFile.ForgeType.IsNone() {
+			data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(repo.UnvalidatedConfig.NormalConfig.ForgeType, data.dialogInputs.Next())
+			if err != nil || aborted {
+				return aborted, tokenScope, None[forgedomain.ForgeType](), err
+			}
+		}
+		aborted, tokenScope, forgeTypeOpt, err = enterForgeAuth(repo, data)
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
-	}
-	if configFile.ForgeType.IsNone() {
-		data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(repo.UnvalidatedConfig.NormalConfig.ForgeType, data.dialogInputs.Next())
+		aborted, repeat, err := testForgeAuth(repo, data, forgeTypeOpt)
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
-	}
-	aborted, tokenScope, forgeTypeOpt, err = enterForgeAuth(repo, data)
-	if err != nil || aborted {
-		return aborted, tokenScope, None[forgedomain.ForgeType](), err
+		if repeat {
+			continue
+		} else {
+			break
+		}
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		data.userInput.config.NormalConfig.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(repo.UnvalidatedConfig.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
@@ -464,9 +475,39 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 	return aborted, tokenScope, err
 }
 
-func verifyAuth(connector forgedomain.Connector, data *setupData) (works bool, aborted bool, choice dialog.CredentialsNoAccessChoice, err error) {
+func testForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (aborted bool, repeat bool, err error) {
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+			err = testBitbucketToken(data, repo)
+		case forgedomain.ForgeTypeCodeberg:
+			err = testCodebergToken(data, repo)
+		case forgedomain.ForgeTypeGitea:
+			err = testGiteaToken(data, repo)
+		case forgedomain.ForgeTypeGitHub:
+			err = testGithubToken(data, repo)
+		case forgedomain.ForgeTypeGitLab:
+			err = testGitlabToken(data, repo)
+		}
+	}
+	return aborted, tokenScope, forgeTypeOpt, err
+}
+
+func testGitHubConnection(data *setupData) (aborted bool, repeat bool, err error) {
+	connector, err := github.NewConnector(github.NewConnectorArgs{
+		APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+		Log:       print.Logger{},
+		RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+	})
+	if err != nil {
+		return false, false, err
+	}
+	return verifyAuth(connector, data)
+}
+
+func verifyAuth(connector forgedomain.Connector, data *setupData) (aborted bool, repeat bool, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
-		return true, false, choice, nil
+		return false, false, nil
 	}
 	userName, err := connector.VerifyConnection()
 	if err != nil {

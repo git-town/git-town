@@ -18,7 +18,7 @@ API error message: %s
 `
 )
 
-func CredentialsNoAccess(err error, inputs components.TestInput) (CredentialsNoAccessChoice, bool, error) {
+func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, aborted bool, err error) {
 	entries := list.Entries[CredentialsNoAccessChoice]{
 		{
 			Data: CredentialsNoAccessChoiceRetry,
@@ -32,10 +32,10 @@ func CredentialsNoAccess(err error, inputs components.TestInput) (CredentialsNoA
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
 	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, err), inputs)
 	if err != nil || aborted {
-		return selection, aborted, err
+		return false, aborted, err
 	}
 	fmt.Printf(messages.CredentialsNoAccess, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	return selection.Repeat(), aborted, err
 }
 
 type CredentialsNoAccessChoice string
@@ -47,4 +47,14 @@ const (
 
 func (self CredentialsNoAccessChoice) String() string {
 	return string(self)
+}
+
+func (self CredentialsNoAccessChoice) Repeat() bool {
+	switch self {
+	case CredentialsNoAccessChoiceRetry:
+		return true
+	case CredentialsNoAccessChoiceIgnore:
+		return false
+	}
+	panic("unhandled choice")
 }
