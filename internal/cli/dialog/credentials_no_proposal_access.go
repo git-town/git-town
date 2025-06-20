@@ -14,7 +14,7 @@ const (
 	credentialsNoProposalAccessHelp  = `
 The credentials you have entered allow API access, but don't allow access to proposals.
 
-Received error: %s
+Received error: %v
 `
 )
 
