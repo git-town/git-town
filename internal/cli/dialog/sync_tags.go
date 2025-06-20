@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -18,7 +19,7 @@ Should "git town sync" sync Git tags with origin?
 `
 )
 
-func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, bool, error) {
+func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, dialogdomain.Aborted, error) {
 	entries := list.Entries[configdomain.SyncTags]{
 		{
 			Data: true,

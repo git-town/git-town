@@ -2,10 +2,11 @@ package components
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
 // FormattedToken provides the given API token in a printable format.
-func FormattedSecret(secret string, aborted bool) string {
+func FormattedSecret(secret string, aborted dialogdomain.Aborted) string {
 	if aborted {
 		return colors.Red().Styled("(aborted)")
 	}
@@ -16,7 +17,7 @@ func FormattedSecret(secret string, aborted bool) string {
 }
 
 // FormattedSelection provides the given dialog choice in a printable format.
-func FormattedSelection(selection string, aborted bool) string {
+func FormattedSelection(selection string, aborted dialogdomain.Aborted) string {
 	if aborted {
 		return colors.Red().Styled("(aborted)")
 	}
@@ -24,7 +25,7 @@ func FormattedSelection(selection string, aborted bool) string {
 }
 
 // FormattedToken provides the given API token in a printable format.
-func FormattedToken(token string, aborted bool) string {
+func FormattedToken(token string, aborted dialogdomain.Aborted) string {
 	if aborted {
 		return colors.Red().Styled("(aborted)")
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -26,7 +27,7 @@ Git Town will not interact with the GitHub API.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.TestInput) (Option[configdomain.GitHubToken], bool, error) {
+func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.TestInput) (Option[configdomain.GitHubToken], dialogdomain.Aborted, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,

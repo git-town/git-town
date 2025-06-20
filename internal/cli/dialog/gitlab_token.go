@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -22,7 +23,7 @@ If you leave this empty, Git Town will not use the GitLab API.
 )
 
 // GitLabToken lets the user enter the GitHub API token.
-func GitLabToken(oldValue Option[configdomain.GitLabToken], inputs components.TestInput) (Option[configdomain.GitLabToken], bool, error) {
+func GitLabToken(oldValue Option[configdomain.GitLabToken], inputs components.TestInput) (Option[configdomain.GitLabToken], dialogdomain.Aborted, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitLabTokenHelp,

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -167,7 +168,7 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, bool, error) {
+func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, dialogdomain.Aborted, error) {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
