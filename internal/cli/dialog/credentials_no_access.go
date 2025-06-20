@@ -20,16 +20,10 @@ API error message: %v
 )
 
 func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, exit dialogdomain.Exit, err error) {
-	entries := list.Entries[CredentialsNoAccessChoice]{
-		{
-			Data: CredentialsNoAccessChoiceRetry,
-			Text: CredentialsNoAccessChoiceRetry,
-		},
-		{
-			Data: CredentialsNoAccessChoiceIgnore,
-			Text: CredentialsNoAccessChoiceIgnore,
-		},
-	}
+	entries := list.NewEntries(
+		CredentialsNoAccessChoiceRetry,
+		CredentialsNoAccessChoiceIgnore,
+	)
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
 	selection, exit, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
 	if err != nil || exit {
@@ -42,8 +36,8 @@ func CredentialsNoAccess(connectorError error, inputs components.TestInput) (rep
 type CredentialsNoAccessChoice string
 
 const (
-	CredentialsNoAccessChoiceRetry  = "enter the credentials again"
-	CredentialsNoAccessChoiceIgnore = "store these credentials and continue"
+	CredentialsNoAccessChoiceRetry  CredentialsNoAccessChoice = "enter the credentials again"
+	CredentialsNoAccessChoiceIgnore CredentialsNoAccessChoice = "store these credentials and continue"
 )
 
 func (self CredentialsNoAccessChoice) Repeat() bool {
