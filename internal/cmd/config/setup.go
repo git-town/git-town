@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
+	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
@@ -365,54 +366,10 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 }
 
 func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (aborted bool, repeat bool, err error) {
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return false, false, nil
-	}
-	var connector forgedomain.Connector
-	switch forgeType {
-	case forgedomain.ForgeTypeBitbucket:
-		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
-			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
-			Log:         print.Logger{},
-			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
-			UserName:    data.config.NormalConfig.BitbucketUsername,
-		})
-	case forgedomain.ForgeTypeBitbucketDatacenter:
-		// TODO
-	case forgedomain.ForgeTypeCodeberg:
-		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-	case forgedomain.ForgeTypeGitea:
-		connector = gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-	case forgedomain.ForgeTypeGitHub:
-		connector, err = github.NewConnector(github.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-	case forgedomain.ForgeTypeGitLab:
-		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GitLabToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-	}
+	connector, err := createConnector(data, forgeTypeOpt)
 	if err != nil {
 		return false, false, err
 	}
-	return verifyAuth(connector, data)
-}
-
-func verifyAuth(connector forgedomain.Connector, data *setupData) (aborted bool, repeat bool, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
 	}
@@ -427,6 +384,56 @@ func verifyAuth(connector forgedomain.Connector, data *setupData) (aborted bool,
 	}
 	fmt.Println(messages.CredentialsAccess)
 	return false, false, nil
+}
+
+func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) {
+	forgeType, hasForgeType := forgeTypeOpt.Get()
+	if !hasForgeType {
+		return nil, nil
+	}
+	switch forgeType {
+	case forgedomain.ForgeTypeBitbucket:
+		return bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+			AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
+			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
+			Log:         print.Logger{},
+			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
+			UserName:    data.config.NormalConfig.BitbucketUsername,
+		}), nil
+	case forgedomain.ForgeTypeBitbucketDatacenter:
+		return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
+			AppPassword:     data.userInput.config.NormalConfig.BitbucketAppPassword,
+			HostingPlatform: Some(forgedomain.ForgeTypeBitbucketDatacenter),
+			Log:             print.Logger{},
+			RemoteURL:       data.config.NormalConfig.DevURL().GetOrDefault(),
+			UserName:        data.config.NormalConfig.BitbucketUsername,
+		}), nil
+	case forgedomain.ForgeTypeCodeberg:
+		return codeberg.NewConnector(codeberg.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	case forgedomain.ForgeTypeGitea:
+		return gitea.NewConnector(gitea.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		}), nil
+	case forgedomain.ForgeTypeGitHub:
+		return github.NewConnector(github.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	case forgedomain.ForgeTypeGitLab:
+		return gitlab.NewConnector(gitlab.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GitLabToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	}
+	return nil, nil
 }
 
 func determineScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
