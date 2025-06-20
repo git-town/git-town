@@ -50,7 +50,7 @@ Feature: enter the Gitea API token
       | dev-remote                  | enter                     |                                             |
       | origin hostname             | enter                     |                                             |
       | forge type                  | down down down down enter |                                             |
-      | gitea token                 |         1 2 3 4 5 6 enter |                                             |
+      | gitea token                 | 1 2 3 4 5 6 enter         |                                             |
       | token scope                 | enter                     |                                             |
       | sync-feature-strategy       | enter                     |                                             |
       | sync-perennial-strategy     | enter                     |                                             |
