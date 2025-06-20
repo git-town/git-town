@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 )
 
@@ -18,7 +19,7 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, aborted bool, err error) {
+func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, aborted dialogdomain.Aborted, err error) {
 	entries := list.Entries[CredentialsNoAccessChoice]{
 		{
 			Data: CredentialsNoAccessChoiceRetry,
