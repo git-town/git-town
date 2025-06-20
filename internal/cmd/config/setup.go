@@ -328,23 +328,25 @@ func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted b
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
-		connector, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-		if err != nil {
-			return false, tokenScope, err
-		}
-		works, aborted, choice, err := verifyAuth(connector, data)
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !works {
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
+		if !subshell.IsInTest() {
+			connector, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
+				APIToken:  data.userInput.config.NormalConfig.CodebergToken,
+				Log:       print.Logger{},
+				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+			})
+			if err != nil {
+				return false, tokenScope, err
+			}
+			works, aborted, choice, err := verifyAuth(connector, data)
+			if err != nil || aborted {
+				return aborted, tokenScope, err
+			}
+			if !works {
+				switch choice {
+				case dialog.CredentialsNoAccessChoiceRetry:
+					continue
+				case dialog.CredentialsNoAccessChoiceIgnore:
+				}
 			}
 		}
 		break
@@ -363,20 +365,22 @@ func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool
 		if err != nil || aborted {
 			return aborted, tokenScope, err
 		}
-		connector := gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-		works, aborted, choice, err := verifyAuth(connector, data)
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !works {
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
+		if !subshell.IsInTest() {
+			connector := gitea.NewConnector(gitea.NewConnectorArgs{
+				APIToken:  data.userInput.config.NormalConfig.GiteaToken,
+				Log:       print.Logger{},
+				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+			})
+			works, aborted, choice, err := verifyAuth(connector, data)
+			if err != nil || aborted {
+				return aborted, tokenScope, err
+			}
+			if !works {
+				switch choice {
+				case dialog.CredentialsNoAccessChoiceRetry:
+					continue
+				case dialog.CredentialsNoAccessChoiceIgnore:
+				}
 			}
 		}
 		break
