@@ -12,7 +12,7 @@ import (
 const (
 	credentialsNoProposalAccessTitle = "Credentials do not grant access to proposals"
 	credentialsNoProposalAccessHelp  = `
-The credentials you have entered allow API access, but not to access proposals.
+The credentials you have entered allow API access, but don't allow access to proposals.
 
 Received error: %s
 `
