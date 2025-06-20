@@ -356,59 +356,57 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 }
 
 func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return nil, nil
-	}
-	switch forgeType {
-	case forgedomain.ForgeTypeBitbucket:
-		return bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
-			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
-			Log:         print.Logger{},
-			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
-			UserName:    data.config.NormalConfig.BitbucketUsername,
-		}), nil
-	case forgedomain.ForgeTypeBitbucketDatacenter:
-		return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			AppPassword:     data.userInput.config.NormalConfig.BitbucketAppPassword,
-			HostingPlatform: Some(forgedomain.ForgeTypeBitbucketDatacenter),
-			Log:             print.Logger{},
-			RemoteURL:       data.config.NormalConfig.DevURL().GetOrDefault(),
-			UserName:        data.config.NormalConfig.BitbucketUsername,
-		}), nil
-	case forgedomain.ForgeTypeCodeberg:
-		if subshell.IsInTest() {
-			return nil, nil
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket:
+			return bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+				AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
+				ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
+				Log:         print.Logger{},
+				RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
+				UserName:    data.config.NormalConfig.BitbucketUsername,
+			}), nil
+		case forgedomain.ForgeTypeBitbucketDatacenter:
+			return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
+				AppPassword:     data.userInput.config.NormalConfig.BitbucketAppPassword,
+				HostingPlatform: Some(forgedomain.ForgeTypeBitbucketDatacenter),
+				Log:             print.Logger{},
+				RemoteURL:       data.config.NormalConfig.DevURL().GetOrDefault(),
+				UserName:        data.config.NormalConfig.BitbucketUsername,
+			}), nil
+		case forgedomain.ForgeTypeCodeberg:
+			if subshell.IsInTest() {
+				return nil, nil
+			}
+			return codeberg.NewConnector(codeberg.NewConnectorArgs{
+				APIToken:  data.userInput.config.NormalConfig.CodebergToken,
+				Log:       print.Logger{},
+				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+			})
+		case forgedomain.ForgeTypeGitea:
+			if subshell.IsInTest() {
+				return nil, nil
+			}
+			return gitea.NewConnector(gitea.NewConnectorArgs{
+				APIToken:  data.userInput.config.NormalConfig.GiteaToken,
+				Log:       print.Logger{},
+				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+			}), nil
+		case forgedomain.ForgeTypeGitHub:
+			return github.NewConnector(github.NewConnectorArgs{
+				APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+				Log:       print.Logger{},
+				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+			})
+		case forgedomain.ForgeTypeGitLab:
+			return gitlab.NewConnector(gitlab.NewConnectorArgs{
+				APIToken:  data.userInput.config.NormalConfig.GitLabToken,
+				Log:       print.Logger{},
+				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+			})
 		}
-		return codeberg.NewConnector(codeberg.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-	case forgedomain.ForgeTypeGitea:
-		if subshell.IsInTest() {
-			return nil, nil
-		}
-		return gitea.NewConnector(gitea.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		}), nil
-	case forgedomain.ForgeTypeGitHub:
-		return github.NewConnector(github.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-	case forgedomain.ForgeTypeGitLab:
-		return gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GitLabToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
 	}
-	panic("unhandled forge type: " + forgeType.String())
+	return nil, nil
 }
 
 func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
@@ -441,23 +439,23 @@ func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupDat
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
-			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
+			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeCodeberg:
-			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
-			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
+			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitea:
-			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
-			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
+			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitHub:
-			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGithubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
-			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGithubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitLab:
-			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitlabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
-			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitlabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		}
 	}
-	panic("unhandled forge type")
+	return configdomain.ConfigScopeLocal, false, nil
 }
 
 func determineScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
@@ -565,7 +563,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(userInput, oldConfig, configFile, gitCommands, frontend)
 	}
-	panic("unknown configStorage: " + userInput.configStorage)
+	return nil
 }
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend gitdomain.Runner) error {
@@ -581,7 +579,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 		fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
 	}
 	if configFile.MainBranch.IsNone() {
-		fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic(), oldConfig))
+		fc.Check(saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch, oldConfig))
 	}
 	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig))
@@ -756,11 +754,14 @@ func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope 
 	return gitCommands.RemoveGitLabToken(frontend)
 }
 
-func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue gitdomain.LocalBranchName, config config.UnvalidatedConfig) error {
-	if Some(newValue).Equal(oldValue) {
+func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[gitdomain.LocalBranchName], config config.UnvalidatedConfig) error {
+	if newValue.Equal(oldValue) {
 		return nil
 	}
-	return config.SetMainBranch(newValue)
+	if mainBranch, hasValue := newValue.Get(); hasValue {
+		return config.SetMainBranch(mainBranch)
+	}
+	return nil
 }
 
 func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], gitCommands git.Commands, frontend gitdomain.Runner) error {
