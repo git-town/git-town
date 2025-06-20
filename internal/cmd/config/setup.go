@@ -125,7 +125,6 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[forgedomain.ForgeType]()
 }
 
-// TODO: return exit as the second to last value
 func enterData(repo execute.OpenRepoResult, data *setupData) (tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], exit dialogdomain.Exit, err error) {
 	tokenScope = configdomain.ConfigScopeLocal
 	configFile := data.configFile.GetOrDefault()
