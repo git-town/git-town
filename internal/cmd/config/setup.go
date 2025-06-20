@@ -439,26 +439,24 @@ func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupDa
 }
 
 func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (tokenScope configdomain.ConfigScope, exit dialogdomain.Exit, err error) {
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return configdomain.ConfigScopeLocal, false, nil
-	}
-	switch forgeType {
-	case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
-		return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
-	case forgedomain.ForgeTypeCodeberg:
-		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
-		return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
-	case forgedomain.ForgeTypeGitea:
-		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
-		return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
-	case forgedomain.ForgeTypeGitHub:
-		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGithubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
-		return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
-	case forgedomain.ForgeTypeGitLab:
-		oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitlabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
-		return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
+			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+		case forgedomain.ForgeTypeCodeberg:
+			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
+			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+		case forgedomain.ForgeTypeGitea:
+			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
+			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+		case forgedomain.ForgeTypeGitHub:
+			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGithubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+		case forgedomain.ForgeTypeGitLab:
+			oldTokenScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitlabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+			return dialog.TokenScope(oldTokenScope, data.dialogInputs.Next())
+		}
 	}
 	panic("unhandled forge type")
 }
