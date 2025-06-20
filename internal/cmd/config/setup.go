@@ -198,7 +198,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
-		aborted, repeat, err := testForgeAuth(repo, data, forgeTypeOpt)
+		aborted, repeat, err := testForgeAuth(data, forgeTypeOpt)
 		if err != nil || aborted {
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
@@ -295,34 +295,13 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (aborted bool,
 }
 
 func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	for {
-		data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		connector := bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
-			AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
-			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
-			Log:         print.Logger{},
-			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
-			UserName:    data.config.NormalConfig.BitbucketUsername,
-		})
-		works, aborted, choice, err := verifyAuth(connector, data)
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !works {
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
-			}
-		}
-		break
+	data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
+	}
+	data.userInput.config.NormalConfig.BitbucketAppPassword, aborted, err = dialog.BitbucketAppPassword(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.BitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername) &&
 		existsAndChanged(data.userInput.config.NormalConfig.BitbucketAppPassword, repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
@@ -334,33 +313,9 @@ func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted 
 }
 
 func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	for {
-		data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !subshell.IsInTest() {
-			connector, err := codeberg.NewConnector(codeberg.NewConnectorArgs{
-				APIToken:  data.userInput.config.NormalConfig.CodebergToken,
-				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-			})
-			if err != nil {
-				return false, tokenScope, err
-			}
-			works, aborted, choice, err := verifyAuth(connector, data)
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
-			if !works {
-				switch choice {
-				case dialog.CredentialsNoAccessChoiceRetry:
-					continue
-				case dialog.CredentialsNoAccessChoiceIgnore:
-				}
-			}
-		}
-		break
+	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
 	if showScopeDialog {
@@ -371,30 +326,9 @@ func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted b
 }
 
 func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	for {
-		data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !subshell.IsInTest() {
-			connector := gitea.NewConnector(gitea.NewConnectorArgs{
-				APIToken:  data.userInput.config.NormalConfig.GiteaToken,
-				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-			})
-			works, aborted, choice, err := verifyAuth(connector, data)
-			if err != nil || aborted {
-				return aborted, tokenScope, err
-			}
-			if !works {
-				switch choice {
-				case dialog.CredentialsNoAccessChoiceRetry:
-					continue
-				case dialog.CredentialsNoAccessChoiceIgnore:
-				}
-			}
-		}
-		break
+	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 	if showScopeDialog {
@@ -405,31 +339,9 @@ func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool
 }
 
 func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	for {
-		data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		connector, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-		if err != nil {
-			return false, tokenScope, err
-		}
-		works, aborted, choice, err := verifyAuth(connector, data)
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !works {
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
-			}
-		}
-		break
+	data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 	if showScopeDialog {
@@ -440,32 +352,9 @@ func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 }
 
 func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, tokenScope configdomain.ConfigScope, err error) {
-	for {
-		data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		connector, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  data.userInput.config.NormalConfig.GitLabToken,
-			Log:       print.Logger{},
-			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-		})
-		if err != nil {
-			return false, tokenScope, err
-		}
-		// TODO: create a dedicated type for "aborted" and use it everywhere we have an "abort" or "aborted" variable
-		works, aborted, choice, err := verifyAuth(connector, data)
-		if err != nil || aborted {
-			return aborted, tokenScope, err
-		}
-		if !works {
-			switch choice {
-			case dialog.CredentialsNoAccessChoiceRetry:
-				continue
-			case dialog.CredentialsNoAccessChoiceIgnore:
-			}
-		}
-		break
+	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, tokenScope, err
 	}
 	showScopeDialog := existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 	if showScopeDialog {
@@ -475,30 +364,48 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted boo
 	return aborted, tokenScope, err
 }
 
-func testForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (aborted bool, repeat bool, err error) {
-	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
-		switch forgeType {
-		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			err = testBitbucketToken(data, repo)
-		case forgedomain.ForgeTypeCodeberg:
-			err = testCodebergToken(data, repo)
-		case forgedomain.ForgeTypeGitea:
-			err = testGiteaToken(data, repo)
-		case forgedomain.ForgeTypeGitHub:
-			err = testGithubToken(data, repo)
-		case forgedomain.ForgeTypeGitLab:
-			err = testGitlabToken(data, repo)
-		}
+func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (aborted bool, repeat bool, err error) {
+	forgeType, hasForgeType := forgeTypeOpt.Get()
+	if !hasForgeType {
+		return false, false, nil
 	}
-	return aborted, tokenScope, forgeTypeOpt, err
-}
-
-func testGitHubConnection(data *setupData) (aborted bool, repeat bool, err error) {
-	connector, err := github.NewConnector(github.NewConnectorArgs{
-		APIToken:  data.userInput.config.NormalConfig.GitHubToken,
-		Log:       print.Logger{},
-		RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-	})
+	var connector forgedomain.Connector
+	switch forgeType {
+	case forgedomain.ForgeTypeBitbucket:
+		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+			AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
+			ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
+			Log:         print.Logger{},
+			RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
+			UserName:    data.config.NormalConfig.BitbucketUsername,
+		})
+	case forgedomain.ForgeTypeBitbucketDatacenter:
+		// TODO
+	case forgedomain.ForgeTypeCodeberg:
+		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	case forgedomain.ForgeTypeGitea:
+		connector = gitea.NewConnector(gitea.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	case forgedomain.ForgeTypeGitHub:
+		connector, err = github.NewConnector(github.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	case forgedomain.ForgeTypeGitLab:
+		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
+			APIToken:  data.userInput.config.NormalConfig.GitLabToken,
+			Log:       print.Logger{},
+			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+		})
+	}
 	if err != nil {
 		return false, false, err
 	}
@@ -511,17 +418,15 @@ func verifyAuth(connector forgedomain.Connector, data *setupData) (aborted bool,
 	}
 	userName, err := connector.VerifyConnection()
 	if err != nil {
-		choice, aborted, err = dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
-		return false, aborted, choice, err
+		return dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
 	}
 	fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, aborted))
 	err = connector.VerifyReadProposalPermission()
 	if err != nil {
-		choice, aborted, err = dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
-		return false, aborted, choice, err
+		return dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
 	}
 	fmt.Println(messages.CredentialsAccess)
-	return true, false, choice, nil
+	return false, false, nil
 }
 
 func determineScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {

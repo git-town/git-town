@@ -17,7 +17,7 @@ Received error: %s
 `
 )
 
-func CredentialsNoProposalAccess(err error, inputs components.TestInput) (CredentialsNoAccessChoice, bool, error) {
+func CredentialsNoProposalAccess(connectorError error, inputs components.TestInput) (repeat bool, aborted bool, err error) {
 	entries := list.Entries[CredentialsNoAccessChoice]{
 		{
 			Data: CredentialsNoAccessChoiceRetry,
@@ -29,10 +29,10 @@ func CredentialsNoProposalAccess(err error, inputs components.TestInput) (Creden
 		},
 	}
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
-	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, err), inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs)
 	if err != nil || aborted {
-		return selection, aborted, err
+		return selection.Repeat(), aborted, err
 	}
 	fmt.Printf(messages.CredentialsNoAccess, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	return selection.Repeat(), aborted, err
 }
