@@ -19,18 +19,11 @@ Received error: %v
 )
 
 func CredentialsNoProposalAccess(connectorError error, inputs components.TestInput) (repeat bool, exit dialogdomain.Exit, err error) {
-	entries := list.Entries[CredentialsNoAccessChoice]{
-		{
-			Data: CredentialsNoAccessChoiceRetry,
-			Text: `enter the credentials again`,
-		},
-		{
-			Data: CredentialsNoAccessChoiceIgnore,
-			Text: `store these credentials and continue`,
-		},
-	}
-	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
-	selection, exit, err := components.RadioList(entries, defaultPos, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs)
+	entries := list.NewEntries(
+		CredentialsNoAccessChoiceRetry,
+		CredentialsNoAccessChoiceIgnore,
+	)
+	selection, exit, err := components.RadioList(entries, 0, credentialsNoProposalAccessTitle, fmt.Sprintf(credentialsNoProposalAccessHelp, connectorError), inputs)
 	if err != nil || exit {
 		return selection.Repeat(), exit, err
 	}
