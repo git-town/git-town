@@ -302,31 +302,37 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 }
 
 func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	data.userInput.config.NormalConfig.BitbucketUsername, exit, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
+	existingUsername := data.userInput.config.NormalConfig.BitbucketUsername.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
+	data.userInput.config.NormalConfig.BitbucketUsername, exit, err = dialog.BitbucketUsername(existingUsername, data.dialogInputs.Next())
 	if err != nil || exit {
 		return exit, err
 	}
-	data.userInput.config.NormalConfig.BitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword, data.dialogInputs.Next())
+	existingPassword := data.userInput.config.NormalConfig.BitbucketAppPassword.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
+	data.userInput.config.NormalConfig.BitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(existingPassword, data.dialogInputs.Next())
 	return exit, err
 }
 
 func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	data.userInput.config.NormalConfig.CodebergToken, exit, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
+	existingToken := data.userInput.config.NormalConfig.CodebergToken.Or(repo.UnvalidatedConfig.NormalConfig.CodebergToken)
+	data.userInput.config.NormalConfig.CodebergToken, exit, err = dialog.CodebergToken(existingToken, data.dialogInputs.Next())
 	return exit, err
 }
 
 func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	data.userInput.config.NormalConfig.GiteaToken, exit, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
+	existingToken := data.userInput.config.NormalConfig.GiteaToken.Or(repo.UnvalidatedConfig.NormalConfig.GiteaToken)
+	data.userInput.config.NormalConfig.GiteaToken, exit, err = dialog.GiteaToken(existingToken, data.dialogInputs.Next())
 	return exit, err
 }
 
 func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	data.userInput.config.NormalConfig.GitHubToken, exit, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
+	existingToken := data.userInput.config.NormalConfig.GitHubToken.Or(repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+	data.userInput.config.NormalConfig.GitHubToken, exit, err = dialog.GitHubToken(existingToken, data.dialogInputs.Next())
 	return exit, err
 }
 
 func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	data.userInput.config.NormalConfig.GitLabToken, exit, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
+	existingToken := data.userInput.config.NormalConfig.GitLabToken.Or(repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+	data.userInput.config.NormalConfig.GitLabToken, exit, err = dialog.GitLabToken(existingToken, data.dialogInputs.Next())
 	return exit, err
 }
 
