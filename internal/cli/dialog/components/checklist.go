@@ -11,7 +11,7 @@ import (
 )
 
 // lets the user select zero, one, or many of the given entries
-func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, aborted dialogdomain.Aborted, err error) {
+func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, exit dialogdomain.Exit, err error) {
 	program := tea.NewProgram(CheckListModel[S]{
 		List:       list.NewList(entries, 0),
 		Selections: selections,

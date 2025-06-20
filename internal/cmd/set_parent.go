@@ -118,8 +118,8 @@ func executeSetParent(args []string, verbose configdomain.Verbose) error {
 			return err
 		}
 	}
-	runProgram, aborted := setParentProgram(outcome, selectedBranch, data)
-	if aborted {
+	runProgram, exit := setParentProgram(outcome, selectedBranch, data)
+	if exit {
 		return nil
 	}
 	runState := runstate.RunState{
@@ -172,7 +172,7 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setParentData, exit dialogdomain.Aborted, err error) {
+func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setParentData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -261,7 +261,7 @@ func verifySetParentData(data setParentData) error {
 	return nil
 }
 
-func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, aborted dialogdomain.Aborted) {
+func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdomain.LocalBranchName, data setParentData) (prog program.Program, exit dialogdomain.Exit) {
 	proposal, hasProposal := data.proposal.Get()
 	// update lineage
 	switch dialogOutcome {

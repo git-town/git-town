@@ -65,7 +65,7 @@ func executeBranch(verbose configdomain.Verbose) error {
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data branchData, exit dialogdomain.Aborted, err error) {
+func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data branchData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
