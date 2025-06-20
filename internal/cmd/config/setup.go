@@ -181,6 +181,12 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 			return aborted, tokenScope, None[forgedomain.ForgeType](), err
 		}
 	}
+	if configFile.HostingOriginHostname.IsNone() {
+		data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, tokenScope, None[forgedomain.ForgeType](), err
+		}
+	}
 	if configFile.ForgeType.IsNone() {
 		data.userInput.config.NormalConfig.ForgeType, aborted, err = dialog.ForgeType(repo.UnvalidatedConfig.NormalConfig.ForgeType, data.dialogInputs.Next())
 		if err != nil || aborted {
@@ -190,12 +196,6 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 	aborted, tokenScope, forgeTypeOpt, err = enterForgeAuth(repo, data)
 	if err != nil || aborted {
 		return aborted, tokenScope, None[forgedomain.ForgeType](), err
-	}
-	if configFile.HostingOriginHostname.IsNone() {
-		data.userInput.config.NormalConfig.HostingOriginHostname, aborted, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
-		if err != nil || aborted {
-			return aborted, tokenScope, None[forgedomain.ForgeType](), err
-		}
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		data.userInput.config.NormalConfig.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(repo.UnvalidatedConfig.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())

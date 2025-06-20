@@ -16,10 +16,10 @@ Feature: enter the Gitea API token
       | feature regex               | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
+      | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |
       | sync-prototype-strategy     | enter             |                                             |
@@ -48,10 +48,10 @@ Feature: enter the Gitea API token
       | feature regex               | enter                     |                                             |
       | unknown branch type         | enter                     |                                             |
       | dev-remote                  | enter                     |                                             |
-      | forge type                  | down down down down enter |                                             |
-      | gitea token                 | 1 2 3 4 5 6 enter         |                                             |
-      | token scope                 | enter                     |                                             |
       | origin hostname             | enter                     |                                             |
+      | forge type                  | down down down down enter |                                             |
+      | gitea token                 |         1 2 3 4 5 6 enter |                                             |
+      | token scope                 | enter                     |                                             |
       | sync-feature-strategy       | enter                     |                                             |
       | sync-perennial-strategy     | enter                     |                                             |
       | sync-prototype-strategy     | enter                     |                                             |
@@ -82,10 +82,10 @@ Feature: enter the Gitea API token
       | feature regex               | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
+      | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
-      | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |
       | sync-prototype-strategy     | enter             |                                             |
@@ -115,10 +115,10 @@ Feature: enter the Gitea API token
       | feature regex               | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
+      | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
-      | origin hostname             | enter                                     |                                             |
       | sync-feature-strategy       | enter                                     |                                             |
       | sync-perennial-strategy     | enter                                     |                                             |
       | sync-prototype-strategy     | enter                                     |                                             |
