@@ -45,10 +45,6 @@ const (
 	CredentialsNoAccessChoiceIgnore = "ignore"
 )
 
-func (self CredentialsNoAccessChoice) String() string {
-	return string(self)
-}
-
 func (self CredentialsNoAccessChoice) Repeat() bool {
 	switch self {
 	case CredentialsNoAccessChoiceRetry:
@@ -57,4 +53,8 @@ func (self CredentialsNoAccessChoice) Repeat() bool {
 		return false
 	}
 	panic("unhandled choice")
+}
+
+func (self CredentialsNoAccessChoice) String() string {
+	return string(self)
 }
