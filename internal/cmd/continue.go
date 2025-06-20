@@ -89,7 +89,7 @@ func executeContinue(verbose configdomain.Verbose) error {
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data continueData, exit dialogdomain.Aborted, err error) {
+func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data continueData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -170,7 +170,7 @@ type continueData struct {
 	stashSize        gitdomain.StashSize
 }
 
-func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Aborted, error) {
+func determineContinueRunstate(repo execute.OpenRepoResult) (runstate.RunState, dialogdomain.Exit, error) {
 	runStateOpt, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)

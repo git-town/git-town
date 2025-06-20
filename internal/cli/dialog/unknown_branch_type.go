@@ -24,7 +24,7 @@ on the next screen.
 `
 )
 
-func UnknownBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, dialogdomain.Aborted, error) {
+func UnknownBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, dialogdomain.Exit, error) {
 	options := []configdomain.BranchType{
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,

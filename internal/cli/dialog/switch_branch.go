@@ -167,7 +167,7 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	panic("unhandled branch type:" + branchType.String())
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Aborted, error) {
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: displayTypes,
 		InitialBranchPos:   cursor,

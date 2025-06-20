@@ -79,7 +79,7 @@ type diffParentData struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data diffParentData, exit dialogdomain.Aborted, err error) {
+func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data diffParentData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

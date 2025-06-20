@@ -22,7 +22,7 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 `
 )
 
-func NewBranchType(existingOpt Option[configdomain.BranchType], inputs components.TestInput) (Option[configdomain.BranchType], dialogdomain.Aborted, error) {
+func NewBranchType(existingOpt Option[configdomain.BranchType], inputs components.TestInput) (Option[configdomain.BranchType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.BranchType]]{
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
@@ -47,10 +47,10 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 			defaultPos = e
 		}
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
-	if err != nil || aborted {
-		return None[configdomain.BranchType](), aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
+	if err != nil || exit {
+		return None[configdomain.BranchType](), exit, err
 	}
-	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

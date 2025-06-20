@@ -165,7 +165,7 @@ type deleteData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data deleteData, exit dialogdomain.Aborted, err error) {
+func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data deleteData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

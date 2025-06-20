@@ -22,7 +22,7 @@ Only change this if your forge is hosted at a custom URL.
 `
 )
 
-func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.TestInput) (Option[forgedomain.ForgeType], dialogdomain.Aborted, error) {
+func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.TestInput) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.ForgeType]]{
 		{
 			Data: None[forgedomain.ForgeType](),

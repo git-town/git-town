@@ -22,7 +22,7 @@ Commonly used for developing new features and bug fixes.
 `
 )
 
-func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, dialogdomain.Aborted, error) {
+func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncFeatureStrategy]{
 		{
 			Data: configdomain.SyncFeatureStrategyMerge,
@@ -38,10 +38,10 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
-	if err != nil || aborted {
-		return configdomain.SyncFeatureStrategyMerge, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
+	if err != nil || exit {
+		return configdomain.SyncFeatureStrategyMerge, exit, err
 	}
-	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

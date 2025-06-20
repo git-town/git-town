@@ -34,8 +34,8 @@ func NewList[S comparable](entries Entries[S], cursor int) List[S] {
 	}
 }
 
-// Aborted indicates whether the user has Aborted this components.
-func (self *List[S]) Aborted() dialogdomain.Aborted {
+// Aborted indicates whether the user has chosen to abort this component.
+func (self *List[S]) Aborted() dialogdomain.Exit {
 	return self.Status == StatusAborted
 }
 

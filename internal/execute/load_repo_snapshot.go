@@ -17,7 +17,7 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], dialogdomain.Aborted, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], dialogdomain.Exit, error) {
 	runStateOpt, err := runstate.Load(args.RootDir)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err

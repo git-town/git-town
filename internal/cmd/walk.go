@@ -168,7 +168,7 @@ type walkData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, dialogdomain.Aborted, error) {
+func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun, stack configdomain.FullStack, verbose configdomain.Verbose) (walkData, dialogdomain.Exit, error) {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,

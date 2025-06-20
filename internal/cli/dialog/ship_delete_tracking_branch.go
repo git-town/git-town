@@ -22,7 +22,7 @@ automatically deletes branches when pull requests are merged through its UI.
 `
 )
 
-func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Aborted, error) {
+func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: true,
@@ -39,10 +39,10 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
-	if err != nil || aborted {
-		return true, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
+	if err != nil || exit {
+		return true, exit, err
 	}
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(format.Bool(selection), aborted))
-	return configdomain.ShipDeleteTrackingBranch(selection), aborted, err
+	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(format.Bool(selection), exit))
+	return configdomain.ShipDeleteTrackingBranch(selection), exit, err
 }
