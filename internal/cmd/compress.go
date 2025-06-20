@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -181,7 +182,7 @@ type compressBranchData struct {
 	parentBranch     gitdomain.LocalBranchName
 }
 
-func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit bool, err error) {
+func determineCompressBranchesData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose, message Option[gitdomain.CommitMessage], compressEntireStack configdomain.FullStack) (data compressBranchesData, exit dialogdomain.Aborted, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)

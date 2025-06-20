@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/muesli/termenv"
@@ -27,7 +28,7 @@ If you're unsure, it's safe to enable all of them - you can always adjust later.
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, bool, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, dialogdomain.Aborted, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),

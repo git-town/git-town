@@ -5,12 +5,13 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, aborted bool, err error) {
+func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBranchName, perennials gitdomain.LocalBranchNames, aborted dialogdomain.Aborted, err error) {
 	unvalidatedMain, hasMain := args.UnvalidatedMain.Get()
 	if hasMain {
 		return unvalidatedMain, args.UnvalidatedPerennials, false, nil

@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -124,7 +125,7 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[forgedomain.ForgeType]()
 }
 
-func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], err error) {
+func enterData(repo execute.OpenRepoResult, data *setupData) (aborted dialogdomain.Aborted, tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], err error) {
 	tokenScope = configdomain.ConfigScopeLocal
 	configFile := data.configFile.GetOrDefault()
 	aborted, err = dialog.Welcome(data.dialogInputs.Next())
@@ -280,7 +281,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 	return false, tokenScope, forgeTypeOpt, nil
 }
 
-func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (aborted bool, forgeTypeOpt Option[forgedomain.ForgeType], err error) {
+func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (aborted forgedomain.Aborted, forgeTypeOpt Option[forgedomain.ForgeType], err error) {
 	forgeTypeOpt = determineHostingPlatform(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
 	forgeType, hasForgeType := forgeTypeOpt.Get()
 	if !hasForgeType {
@@ -301,7 +302,7 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (aborted bool,
 	return aborted, forgeTypeOpt, err
 }
 
-func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, err error) {
+func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted forgedomain.Aborted, err error) {
 	data.userInput.config.NormalConfig.BitbucketUsername, aborted, err = dialog.BitbucketUsername(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername, data.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -310,22 +311,22 @@ func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (aborted 
 	return aborted, err
 }
 
-func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, err error) {
+func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (aborted forgedomain.Aborted, err error) {
 	data.userInput.config.NormalConfig.CodebergToken, aborted, err = dialog.CodebergToken(repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
 	return aborted, err
 }
 
-func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, err error) {
+func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (aborted forgedomain.Aborted, err error) {
 	data.userInput.config.NormalConfig.GiteaToken, aborted, err = dialog.GiteaToken(repo.UnvalidatedConfig.NormalConfig.GiteaToken, data.dialogInputs.Next())
 	return aborted, err
 }
 
-func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, err error) {
+func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (aborted forgedomain.Aborted, err error) {
 	data.userInput.config.NormalConfig.GitHubToken, aborted, err = dialog.GitHubToken(repo.UnvalidatedConfig.NormalConfig.GitHubToken, data.dialogInputs.Next())
 	return aborted, err
 }
 
-func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted bool, err error) {
+func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (aborted forgedomain.Aborted, err error) {
 	data.userInput.config.NormalConfig.GitLabToken, aborted, err = dialog.GitLabToken(repo.UnvalidatedConfig.NormalConfig.GitLabToken, data.dialogInputs.Next())
 	return aborted, err
 }
@@ -477,7 +478,7 @@ func existsAndChanged[T fmt.Stringer](input, existing T) bool {
 	return input.String() != "" && input.String() != existing.String()
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setupData, exit bool, err error) {
+func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setupData, exit dialogdomain.Aborted, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

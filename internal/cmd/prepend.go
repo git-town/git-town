@@ -8,6 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -227,7 +228,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propasalBody gitdomain.ProposalBody, proposalTitle gitdomain.ProposalTitle, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit bool, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propasalBody gitdomain.ProposalBody, proposalTitle gitdomain.ProposalTitle, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit dialogdomain.Aborted, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
