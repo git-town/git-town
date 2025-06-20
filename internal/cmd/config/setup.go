@@ -125,10 +125,11 @@ func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option
 	return None[forgedomain.ForgeType]()
 }
 
-func enterData(repo execute.OpenRepoResult, data *setupData) (tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], exit dialogdomain.Exit, err error) {
-	tokenScope = configdomain.ConfigScopeLocal
+func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.ConfigScope, Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+	tokenScope := configdomain.ConfigScopeLocal
 	configFile := data.configFile.GetOrDefault()
-	exit, err = dialog.Welcome(data.dialogInputs.Next())
+	exit, err := dialog.Welcome(data.dialogInputs.Next())
+	forgeTypeOpt := None[forgedomain.ForgeType]()
 	if err != nil || exit {
 		return tokenScope, forgeTypeOpt, exit, err
 	}
@@ -410,7 +411,7 @@ func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]
 	panic("unhandled forge type: " + forgeType.String())
 }
 
-func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (tokenScope configdomain.ConfigScope, exit dialogdomain.Exit, err error) {
+func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if shouldAskForScope(forgeTypeOpt, data, repo) {
 		return tokenScopeDialog(forgeTypeOpt, data, repo)
 	}
@@ -436,7 +437,7 @@ func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupDa
 	return false
 }
 
-func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (tokenScope configdomain.ConfigScope, exit dialogdomain.Exit, err error) {
+func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
