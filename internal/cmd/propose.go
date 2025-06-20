@@ -58,6 +58,7 @@ func proposeCommand() *cobra.Command {
 	addBodyFileFlag, readBodyFileFlag := flags.ProposalBodyFile()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addStackFlag, readStackFlag := flags.Stack("propose the entire stack")
+	addProposalLineageFlag, readProposalLineageFlag := flags.ProposalLineage("Include the proposal lineage in the proposal", configdomain.ProposalLineageComment)
 	addTitleFlag, readTitleFlag := flags.ProposalTitle()
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
@@ -79,6 +80,10 @@ func proposeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			proposalLineageAction, err := readProposalLineageFlag(cmd)
+			if err != nil {
+				return err
+			}
 			stack, err := readStackFlag(cmd)
 			if err != nil {
 				return err
@@ -91,19 +96,21 @@ func proposeCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executePropose(dryRun, verbose, title, bodyText, bodyFile, stack)
+
+			return executePropose(dryRun, verbose, title, bodyText, bodyFile, proposalLineageAction, stack)
 		},
 	}
 	addBodyFlag(&cmd)
 	addBodyFileFlag(&cmd)
 	addDryRunFlag(&cmd)
+	addProposalLineageFlag(&cmd)
 	addStackFlag(&cmd)
 	addTitleFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
+func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, lineageAction configdomain.ProposalLineage, fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,

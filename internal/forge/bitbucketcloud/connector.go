@@ -90,6 +90,18 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
+func (self Connector) GetProposalCommentsFn() Option[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)] {
+	return None[func(proposalID forgedomain.ProposalNumber) (Option[[]gitdomain.Comment], error)]()
+}
+
+func (self Connector) UpdateProposalCommentFn() Option[func(number int, commentID int, comment gitdomain.Comment) error] {
+	return None[func(number int, commentID int, comment gitdomain.Comment) error]()
+}
+
+func (self Connector) CreateProposalCommentFn() Option[func(number int, comment gitdomain.Comment) error] {
+	return None[func(number int, comment gitdomain.Comment) error]()
+}
+
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	self.log.Start(messages.APIProposalLookupStart)
 	query := fmt.Sprintf("source.branch.name = %q AND destination.branch.name = %q", branch, target)
