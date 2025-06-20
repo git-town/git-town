@@ -407,7 +407,7 @@ func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]
 			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
 		})
 	}
-	panic("unhandled forge type")
+	panic("unhandled forge type: " + forgeType.String())
 }
 
 func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (tokenScope configdomain.ConfigScope, exit dialogdomain.Exit, err error) {
