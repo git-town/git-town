@@ -27,6 +27,6 @@ When you're ready, press ENTER or O to continue.
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func Welcome(inputs components.TestInput) (dialogdomain.Aborted, error) {
+func Welcome(inputs components.TestInput) (dialogdomain.Exit, error) {
 	return components.TextDisplay(welcomeTitle, welcomeText, inputs)
 }

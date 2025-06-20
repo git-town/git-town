@@ -120,7 +120,7 @@ type switchData struct {
 	uncommittedChanges bool
 }
 
-func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit dialogdomain.Aborted, err error) {
+func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data switchData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

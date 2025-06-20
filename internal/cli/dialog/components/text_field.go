@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
-func TextField(args TextFieldArgs) (string, dialogdomain.Aborted, error) {
+func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 	textInput := textinput.New()
 	textInput.SetValue(args.ExistingValue)
 	textInput.Prompt = args.Prompt

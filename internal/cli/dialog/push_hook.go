@@ -27,7 +27,7 @@ More details: https://www.git-town.com/preferences/push-hook.
 `
 )
 
-func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, dialogdomain.Aborted, error) {
+func PushHook(existing configdomain.PushHook, inputs components.TestInput) (configdomain.PushHook, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.PushHook]{
 		{
 			Data: true,
@@ -39,10 +39,10 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs)
-	if err != nil || aborted {
-		return true, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, pushHookTitle, PushHookHelp, inputs)
+	if err != nil || exit {
+		return true, exit, err
 	}
-	fmt.Printf(messages.PushHook, components.FormattedSelection(format.Bool(selection.IsTrue()), aborted))
-	return selection, aborted, err
+	fmt.Printf(messages.PushHook, components.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	return selection, exit, err
 }

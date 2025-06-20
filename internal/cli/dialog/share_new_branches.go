@@ -24,7 +24,7 @@ Possible options:
 `
 )
 
-func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.TestInput) (configdomain.ShareNewBranches, dialogdomain.Aborted, error) {
+func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.TestInput) (configdomain.ShareNewBranches, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ShareNewBranches]{
 		{
 			Data: configdomain.ShareNewBranchesNone,
@@ -40,10 +40,10 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs)
-	if err != nil || aborted {
-		return configdomain.ShareNewBranchesNone, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs)
+	if err != nil || exit {
+		return configdomain.ShareNewBranchesNone, exit, err
 	}
-	fmt.Printf(messages.ShareNewBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	fmt.Printf(messages.ShareNewBranches, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

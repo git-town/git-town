@@ -163,7 +163,7 @@ type mergeData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (mergeData, dialogdomain.Aborted, error) {
+func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (mergeData, dialogdomain.Exit, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
