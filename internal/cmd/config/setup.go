@@ -408,12 +408,18 @@ func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]
 			UserName:        data.config.NormalConfig.BitbucketUsername,
 		}), nil
 	case forgedomain.ForgeTypeCodeberg:
+		if subshell.IsInTest() {
+			return nil, nil
+		}
 		return codeberg.NewConnector(codeberg.NewConnectorArgs{
 			APIToken:  data.userInput.config.NormalConfig.CodebergToken,
 			Log:       print.Logger{},
 			RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
 		})
 	case forgedomain.ForgeTypeGitea:
+		if subshell.IsInTest() {
+			return nil, nil
+		}
 		return gitea.NewConnector(gitea.NewConnectorArgs{
 			APIToken:  data.userInput.config.NormalConfig.GiteaToken,
 			Log:       print.Logger{},
