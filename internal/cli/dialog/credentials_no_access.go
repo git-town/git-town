@@ -22,11 +22,11 @@ func CredentialsNoAccess(connectorError error, inputs components.TestInput) (rep
 	entries := list.Entries[CredentialsNoAccessChoice]{
 		{
 			Data: CredentialsNoAccessChoiceRetry,
-			Text: `enter the credentials again`,
+			Text: CredentialsNoAccessChoiceRetry,
 		},
 		{
 			Data: CredentialsNoAccessChoiceIgnore,
-			Text: `store these credentials and continue`,
+			Text: CredentialsNoAccessChoiceIgnore,
 		},
 	}
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
@@ -41,8 +41,8 @@ func CredentialsNoAccess(connectorError error, inputs components.TestInput) (rep
 type CredentialsNoAccessChoice string
 
 const (
-	CredentialsNoAccessChoiceRetry  = "retry"
-	CredentialsNoAccessChoiceIgnore = "ignore"
+	CredentialsNoAccessChoiceRetry  = "enter the credentials again"
+	CredentialsNoAccessChoiceIgnore = "store these credentials and continue"
 )
 
 func (self CredentialsNoAccessChoice) Repeat() bool {
