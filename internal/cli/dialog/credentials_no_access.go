@@ -24,8 +24,7 @@ func CredentialsNoAccess(connectorError error, inputs components.TestInput) (rep
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
 	)
-	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
-	selection, exit, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
+	selection, exit, err := components.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
 	if err != nil || exit {
 		return false, exit, err
 	}
