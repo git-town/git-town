@@ -204,10 +204,9 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (tokenScope configd
 		if err != nil || exit {
 			return tokenScope, forgeTypeOpt, exit, err
 		}
-		if repeat {
-			continue
+		if !repeat {
+			break
 		}
-		break
 	}
 	tokenScope, exit, err = enterTokenScope(forgeTypeOpt, data, repo)
 	if err != nil || exit {
