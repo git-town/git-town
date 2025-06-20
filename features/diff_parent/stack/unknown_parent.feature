@@ -11,8 +11,8 @@ Feature: ask for missing parent
       | DIALOG                   | KEYS  |
       | parent branch of feature | enter |
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git diff main feature |
+      | BRANCH  | COMMAND                            |
+      | feature | git diff --merge-base main feature |
     And this lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
