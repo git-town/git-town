@@ -41,7 +41,7 @@ type sharedShipData struct {
 	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, shipStrategyOverride Option[configdomain.ShipStrategy], verbose configdomain.Verbose) (data sharedShipData, exit dialogdomain.Aborted, err error) {
+func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, shipStrategyOverride Option[configdomain.ShipStrategy], verbose configdomain.Verbose) (data sharedShipData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

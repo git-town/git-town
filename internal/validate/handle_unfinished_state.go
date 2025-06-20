@@ -24,7 +24,7 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Aborted, error) {
+func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) {
 	runState, hasRunState := args.RunState.Get()
 	if !hasRunState || runState.IsFinished() {
 		return false, nil
@@ -79,7 +79,7 @@ type UnfinishedStateArgs struct {
 	Verbose           configdomain.Verbose
 }
 
-func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dialogdomain.Aborted, error) {
+func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dialogdomain.Exit, error) {
 	if args.RepoStatus.Conflicts {
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
@@ -114,7 +114,7 @@ func continueRunstate(runState runstate.RunState, args UnfinishedStateArgs) (dia
 	})
 }
 
-func discardRunstate(rootDir gitdomain.RepoRootDir) (dialogdomain.Aborted, error) {
+func discardRunstate(rootDir gitdomain.RepoRootDir) (dialogdomain.Exit, error) {
 	_, err := state.Delete(rootDir, state.FileTypeRunstate)
 	return false, err
 }
@@ -122,7 +122,7 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (dialogdomain.Aborted, error
 // quickly provides a ValidatedConfig instance in situations where we continue runstate.
 // It is expected that all data exists.
 // This doesn't change lineage since we are in the middle of an ongoing Git Town operation.
-func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, dialogdomain.Aborted, error) {
+func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
 	mainBranch, hasMain := args.unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
 		branchesSnapshot, err := args.git.BranchesSnapshot(args.backend)
@@ -153,7 +153,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 	}, false, nil
 }
 
-func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Aborted, error) {
+func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
 	currentBranch, err := args.Git.CurrentBranch(args.Backend)
 	if err != nil {
 		return false, err
@@ -185,7 +185,7 @@ func skipRunstate(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 	})
 }
 
-func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Aborted, error) {
+func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogdomain.Exit, error) {
 	validatedConfig, exit, err := quickValidateConfig(quickValidateConfigArgs{
 		backend:      args.Backend,
 		dialogInputs: args.DialogTestInputs,

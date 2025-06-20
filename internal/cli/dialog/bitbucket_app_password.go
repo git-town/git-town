@@ -24,7 +24,7 @@ If you leave this empty, Git Town will not use the Bitbucket API.
 )
 
 // BitbucketAppPassword lets the user enter the Bitbucket API token.
-func BitbucketAppPassword(oldValue Option[configdomain.BitbucketAppPassword], inputs components.TestInput) (Option[configdomain.BitbucketAppPassword], dialogdomain.Aborted, error) {
+func BitbucketAppPassword(oldValue Option[configdomain.BitbucketAppPassword], inputs components.TestInput) (Option[configdomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketAppPasswordHelp,

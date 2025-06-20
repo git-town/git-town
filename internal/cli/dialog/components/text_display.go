@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
-func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Aborted, error) {
+func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Exit, error) {
 	model := textDisplayModel{
 		colors: colors.NewDialogColors(),
 		status: list.StatusActive,

@@ -23,7 +23,7 @@ If you leave this empty, Git Town will not use the GitLab API.
 )
 
 // GitLabToken lets the user enter the GitHub API token.
-func GitLabToken(oldValue Option[configdomain.GitLabToken], inputs components.TestInput) (Option[configdomain.GitLabToken], dialogdomain.Aborted, error) {
+func GitLabToken(oldValue Option[configdomain.GitLabToken], inputs components.TestInput) (Option[configdomain.GitLabToken], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitLabTokenHelp,

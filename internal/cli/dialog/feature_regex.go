@@ -20,7 +20,7 @@ is set to something other than "feature".
 `
 )
 
-func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs components.TestInput) (Option[configdomain.FeatureRegex], dialogdomain.Aborted, error) {
+func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs components.TestInput) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
 	value, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: existingValue.String(),
 		Help:          FeatureRegexHelp,

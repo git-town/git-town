@@ -21,7 +21,7 @@ Only update this if Git Town's auto-detection doesn't work.
 `
 )
 
-func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs components.TestInput) (Option[configdomain.HostingOriginHostname], dialogdomain.Aborted, error) {
+func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs components.TestInput) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
 	token, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          OriginHostnameHelp,

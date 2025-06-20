@@ -19,7 +19,7 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, aborted dialogdomain.Aborted, err error) {
+func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, exit dialogdomain.Exit, err error) {
 	entries := list.Entries[CredentialsNoAccessChoice]{
 		{
 			Data: CredentialsNoAccessChoiceRetry,
@@ -31,12 +31,12 @@ func CredentialsNoAccess(connectorError error, inputs components.TestInput) (rep
 		},
 	}
 	defaultPos := entries.IndexOf(CredentialsNoAccessChoiceRetry)
-	selection, aborted, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
-	if err != nil || aborted {
-		return false, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
+	if err != nil || exit {
+		return false, exit, err
 	}
-	fmt.Printf(messages.CredentialsNoAccess, components.FormattedSelection(selection.String(), aborted))
-	return selection.Repeat(), aborted, err
+	fmt.Printf(messages.CredentialsNoAccess, components.FormattedSelection(selection.String(), exit))
+	return selection.Repeat(), exit, err
 }
 
 type CredentialsNoAccessChoice string

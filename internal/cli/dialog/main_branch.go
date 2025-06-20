@@ -26,7 +26,7 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Aborted, error) {
+func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	cursor := 0
 	if defaultEntry, hasDefaultEntry := defaultEntryOpt.Get(); hasDefaultEntry {
 		cursor = slice.Index(localBranches, defaultEntry).GetOrElse(0)

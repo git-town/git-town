@@ -141,7 +141,7 @@ type renameData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameData, exit dialogdomain.Aborted, err error) {
+func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)

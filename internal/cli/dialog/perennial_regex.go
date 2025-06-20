@@ -24,7 +24,7 @@ it's safe to leave it blank.
 `
 )
 
-func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs components.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Aborted, error) {
+func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs components.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
 	value, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          PerennialRegexHelp,

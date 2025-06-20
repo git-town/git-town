@@ -23,7 +23,7 @@ If you leave this empty, Git Town will not use the gitea API.
 )
 
 // GiteaToken lets the user enter the Gitea API token.
-func GiteaToken(oldValue Option[configdomain.GiteaToken], inputs components.TestInput) (Option[configdomain.GiteaToken], dialogdomain.Aborted, error) {
+func GiteaToken(oldValue Option[configdomain.GiteaToken], inputs components.TestInput) (Option[configdomain.GiteaToken], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          giteaTokenHelp,

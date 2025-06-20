@@ -206,7 +206,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit dialogdomain.Aborted, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit dialogdomain.Exit, err error) {
 	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {

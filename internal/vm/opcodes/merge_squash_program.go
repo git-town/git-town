@@ -21,11 +21,11 @@ type MergeSquashProgram struct {
 }
 
 func (self *MergeSquashProgram) Run(args shared.RunArgs) error {
-	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, self.Authors, args.DialogTestInputs.Next())
+	author, exit, err := dialog.SelectSquashCommitAuthor(self.Branch, self.Authors, args.DialogTestInputs.Next())
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
-	if aborted {
+	if exit {
 		return errors.New("aborted by user")
 	}
 	repoAuthor := args.Config.Value.ValidatedConfigData.Author()

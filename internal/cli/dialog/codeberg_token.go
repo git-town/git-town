@@ -23,7 +23,7 @@ If you leave this empty, Git Town will not use the codeberg API.
 )
 
 // CodebergToken lets the user enter the Gitea API token.
-func CodebergToken(oldValue Option[configdomain.CodebergToken], inputs components.TestInput) (Option[configdomain.CodebergToken], dialogdomain.Aborted, error) {
+func CodebergToken(oldValue Option[configdomain.CodebergToken], inputs components.TestInput) (Option[configdomain.CodebergToken], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          codebergTokenHelp,

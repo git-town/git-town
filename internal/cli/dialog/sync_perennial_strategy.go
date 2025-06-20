@@ -21,7 +21,7 @@ via new commits pushed to their tracking branch from elsewhere.
 `
 )
 
-func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, dialogdomain.Aborted, error) {
+func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncPerennialStrategy]{
 		{
 			Data: configdomain.SyncPerennialStrategyFFOnly,
@@ -33,10 +33,10 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs c
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
-	if err != nil || aborted {
-		return configdomain.SyncPerennialStrategyRebase, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
+	if err != nil || exit {
+		return configdomain.SyncPerennialStrategyRebase, exit, err
 	}
-	fmt.Printf(messages.SyncPerennialBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	fmt.Printf(messages.SyncPerennialBranches, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

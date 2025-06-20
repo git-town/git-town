@@ -101,7 +101,7 @@ type undoData struct {
 	stashSize               gitdomain.StashSize
 }
 
-func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit dialogdomain.Aborted, err error) {
+func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

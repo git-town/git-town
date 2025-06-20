@@ -27,7 +27,7 @@ Git Town will not interact with the GitHub API.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.TestInput) (Option[configdomain.GitHubToken], dialogdomain.Aborted, error) {
+func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.TestInput) (Option[configdomain.GitHubToken], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,
