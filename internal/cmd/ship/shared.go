@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -40,7 +41,7 @@ type sharedShipData struct {
 	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, shipStrategyOverride Option[configdomain.ShipStrategy], verbose configdomain.Verbose) (data sharedShipData, exit bool, err error) {
+func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, shipStrategyOverride Option[configdomain.ShipStrategy], verbose configdomain.Verbose) (data sharedShipData, exit dialogdomain.Aborted, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {

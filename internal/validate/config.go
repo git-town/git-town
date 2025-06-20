@@ -3,6 +3,7 @@ package validate
 import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -11,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
+func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Aborted, error) {
 	// check Git user data
 	gitUserEmail, gitUserName, err := GitUser(args.Unvalidated.Value.UnvalidatedConfig)
 	if err != nil {

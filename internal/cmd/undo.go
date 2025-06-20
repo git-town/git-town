@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -100,7 +101,7 @@ type undoData struct {
 	stashSize               gitdomain.StashSize
 }
 
-func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit bool, err error) {
+func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit dialogdomain.Aborted, err error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
