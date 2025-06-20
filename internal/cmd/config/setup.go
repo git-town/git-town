@@ -200,6 +200,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (aborted bool, toke
 			return aborted, tokenScope, forgeTypeOpt, err
 		}
 		aborted, repeat, err := testForgeAuth(data, forgeTypeOpt)
+		fmt.Println("111111111111111111111111111111111111111111111111111111111", aborted, repeat)
 		if err != nil || aborted {
 			return aborted, tokenScope, forgeTypeOpt, err
 		}
