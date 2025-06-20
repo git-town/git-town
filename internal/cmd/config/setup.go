@@ -418,22 +418,20 @@ func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData
 }
 
 func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) bool {
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return false
-	}
-	switch forgeType {
-	case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-		return existsAndChanged(data.userInput.config.NormalConfig.BitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername) &&
-			existsAndChanged(data.userInput.config.NormalConfig.BitbucketAppPassword, repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
-	case forgedomain.ForgeTypeCodeberg:
-		return existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
-	case forgedomain.ForgeTypeGitea:
-		return existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
-	case forgedomain.ForgeTypeGitHub:
-		return existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
-	case forgedomain.ForgeTypeGitLab:
-		return existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		switch forgeType {
+		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+			return existsAndChanged(data.userInput.config.NormalConfig.BitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername) &&
+				existsAndChanged(data.userInput.config.NormalConfig.BitbucketAppPassword, repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
+		case forgedomain.ForgeTypeCodeberg:
+			return existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
+		case forgedomain.ForgeTypeGitea:
+			return existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
+		case forgedomain.ForgeTypeGitHub:
+			return existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+		case forgedomain.ForgeTypeGitLab:
+			return existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+		}
 	}
 	return false
 }
