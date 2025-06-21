@@ -1,6 +1,7 @@
 package forgedomain
 
 import (
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -34,9 +35,8 @@ type Connector interface {
 	// A None return value indicates that this connector does not support this feature (yet).
 	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
 
-	// NewProposalURL provides the URL of the page
-	// to create a new proposal online.
-	NewProposalURL(NewProposalURLData) (string, error)
+	// CreateProposal creates a proposal at the forge.
+	CreateProposal(NewProposalURLData) (string, error)
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
@@ -61,9 +61,11 @@ type Connector interface {
 }
 
 type NewProposalURLData struct {
-	Branch        gitdomain.LocalBranchName
-	MainBranch    gitdomain.LocalBranchName
-	ParentBranch  gitdomain.LocalBranchName
-	ProposalBody  gitdomain.ProposalBody
-	ProposalTitle gitdomain.ProposalTitle
+	BackendRunner  browser.BackendRunner
+	Branch         gitdomain.LocalBranchName
+	FrontendRunner browser.FrontendRunner
+	MainBranch     gitdomain.LocalBranchName
+	ParentBranch   gitdomain.LocalBranchName
+	ProposalBody   gitdomain.ProposalBody
+	ProposalTitle  gitdomain.ProposalTitle
 }

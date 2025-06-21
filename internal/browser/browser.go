@@ -12,7 +12,7 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend frontendRunner, backend backendRunner) {
+func Open(url string, frontend FrontendRunner, backend BackendRunner) {
 	command, hasCommand := OpenBrowserCommand(backend).Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
@@ -25,7 +25,7 @@ func Open(url string, frontend frontendRunner, backend backendRunner) {
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(runner backendRunner) Option[string] {
+func OpenBrowserCommand(runner BackendRunner) Option[string] {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
@@ -57,10 +57,10 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 	return None[string]()
 }
 
-type frontendRunner interface {
+type FrontendRunner interface {
 	Run(executable string, args ...string) error
 }
 
-type backendRunner interface {
+type BackendRunner interface {
 	Query(executable string, args ...string) (string, error)
 }
