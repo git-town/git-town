@@ -6,11 +6,9 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -18,7 +16,6 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	forgedomain.Data
 	runner Runner
 	ghPath string // full path of the gh executable
 	log    print.Logger
@@ -28,11 +25,6 @@ type Connector struct {
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	return Connector{
-		Data: forgedomain.Data{
-			Hostname:     args.RemoteURL.Host,
-			Organization: args.RemoteURL.Org,
-			Repository:   args.RemoteURL.Repo,
-		},
 		ghPath: args.GhPath,
 		runner: args.Runner,
 		log:    args.Log,
@@ -40,11 +32,9 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[configdomain.GitHubToken]
-	Log       print.Logger
-	RemoteURL giturl.Parts
-	Runner    Runner
-	GhPath    string
+	Log    print.Logger
+	Runner Runner
+	GhPath string
 }
 
 type Runner interface {

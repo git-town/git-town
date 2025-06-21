@@ -1,11 +1,16 @@
 package gh
 
-import "os/exec"
+import (
+	"os/exec"
 
-func Detect(querier Querier) bool {
+	. "github.com/git-town/git-town/v21/pkg/prelude"
+)
+
+func Detect() Option[string] {
 	// detect gh executable
 	ghPath, err := exec.LookPath("gh")
 	if err != nil {
-		return false
+		return None[string]()
 	}
+	return Some(ghPath)
 }
