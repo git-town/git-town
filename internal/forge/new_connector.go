@@ -3,10 +3,12 @@ package forge
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/gh"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
@@ -58,13 +60,26 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), nil
 	case forgedomain.ForgeTypeGitHub:
-		var err error
-		connector, err = github.NewConnector(github.NewConnectorArgs{
-			APIToken:  config.NormalConfig.GitHubToken,
-			Log:       log,
-			RemoteURL: remoteURL,
-		})
-		return Some(connector), err
+		if githubConnectorType, hasGitHubConnectorType := config.NormalConfig.GitHubConnectorType.Get(); hasGitHubConnectorType {
+			switch githubConnectorType {
+			case forgedomain.GitHubConnectorTypeAPI:
+				var err error
+				connector, err = github.NewConnector(github.NewConnectorArgs{
+					APIToken:  config.NormalConfig.GitHubToken,
+					Log:       log,
+					RemoteURL: remoteURL,
+				})
+				return Some(connector), err
+			case forgedomain.GitHubConnectorTypeGh:
+				connector, err = gh.NewConnector(gh.NewConnectorArgs{
+					APIToken:  Option[configdomain.GitHubToken]{},
+					Log:       log,
+					RemoteURL: remoteURL,
+					Runner:    nil,
+					GhPath:    "",
+				})
+			}
+		}
 	case forgedomain.ForgeTypeGitLab:
 		var err error
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
