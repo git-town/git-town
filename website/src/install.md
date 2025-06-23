@@ -73,7 +73,7 @@ sudo zypper in git-town
 
 OpenSUSE 15.x and 16.x users can use these steps to install Git Town:
 
-```
+```bash
 # replace 15.6 with 16.0 in the following command
 zypper ar -f -r https://download.opensuse.org/repositories/home:/ojkastl_buildservice:/git-town/15.6/home:ojkastl_buildservice:git-town.repo
 zypper refresh # accept the GPG key for the devel:tools:scm repository
