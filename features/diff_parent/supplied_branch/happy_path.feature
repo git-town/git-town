@@ -10,8 +10,8 @@ Feature: view changes made on another branch
   Scenario: feature branch
     When I run "git-town diff-parent alpha"
     Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git diff main alpha |
+      | BRANCH | COMMAND                          |
+      | main   | git diff --merge-base main alpha |
 
   Scenario: child branch
     Given the branches
@@ -19,5 +19,5 @@ Feature: view changes made on another branch
       | beta | feature | alpha  | local     |
     When I run "git-town diff-parent beta"
     Then Git Town runs the commands
-      | BRANCH | COMMAND             |
-      | main   | git diff alpha beta |
+      | BRANCH | COMMAND                          |
+      | main   | git diff --merge-base alpha beta |

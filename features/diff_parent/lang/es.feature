@@ -11,5 +11,5 @@ Feature: view changes made on the current feature branch
 
   Scenario: result
     Then Git Town runs the commands
-      | BRANCH  | COMMAND               |
-      | feature | git diff main feature |
+      | BRANCH  | COMMAND                            |
+      | feature | git diff --merge-base main feature |
