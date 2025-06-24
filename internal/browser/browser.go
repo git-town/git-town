@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -33,7 +34,7 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		return Some("start")
 	}
 	openBrowserCommands := make([]string, 0, 11)
-	if browser := os.Getenv("BROWSER"); browser != "" {
+	if browser := os.Getenv(browser.ENVVAR); browser != "" {
 		openBrowserCommands = append(openBrowserCommands, browser)
 	}
 	openBrowserCommands = append(openBrowserCommands,
