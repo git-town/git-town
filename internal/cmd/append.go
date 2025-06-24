@@ -399,7 +399,7 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 			&opcodes.ProposalCreate{
 				Branch:        data.targetBranch,
 				MainBranch:    data.config.ValidatedConfigData.MainBranch,
-				ProposalBody:  "",
+				ProposalBody:  None[gitdomain.ProposalBody](),
 				ProposalTitle: title,
 			},
 		)

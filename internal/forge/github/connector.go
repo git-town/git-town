@@ -59,8 +59,8 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
 		result += "&title=" + url.QueryEscape(title.String())
 	}
-	if len(data.ProposalBody) > 0 {
-		result += "&body=" + url.QueryEscape(data.ProposalBody.String())
+	if body, hasBody := data.ProposalBody.Get(); hasBody {
+		result += "&body=" + url.QueryEscape(body.String())
 	}
 	return result
 }

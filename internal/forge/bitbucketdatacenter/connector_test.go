@@ -46,7 +46,7 @@ func TestBitbucketConnector(t *testing.T) {
 			Branch:        "branch",
 			MainBranch:    "main",
 			ParentBranch:  "parent-branch",
-			ProposalBody:  "",
+			ProposalBody:  None[gitdomain.ProposalBody](),
 			ProposalTitle: None[gitdomain.ProposalTitle](),
 		})
 		want := "https://custom-url.com/projects/git-town/repos/docs/pull-requests?create&sourceBranch=branch&targetBranch=parent-branch"

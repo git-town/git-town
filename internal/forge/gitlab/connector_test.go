@@ -83,7 +83,7 @@ func TestGitlabConnector(t *testing.T) {
 					Branch:        tt.branch,
 					MainBranch:    "main",
 					ParentBranch:  tt.parent,
-					ProposalBody:  "",
+					ProposalBody:  None[gitdomain.ProposalBody](),
 					ProposalTitle: None[gitdomain.ProposalTitle](),
 				})
 				must.EqOp(t, tt.want, have)

@@ -49,49 +49,49 @@ func TestConnector(t *testing.T) {
 			branch gitdomain.LocalBranchName
 			parent gitdomain.LocalBranchName
 			title  Option[gitdomain.ProposalTitle]
-			body   gitdomain.ProposalBody
+			body   Option[gitdomain.ProposalBody]
 			want   string
 		}{
 			"top-level branch": {
 				branch: "feature",
 				parent: "main",
 				title:  None[gitdomain.ProposalTitle](),
-				body:   "",
+				body:   None[gitdomain.ProposalBody](),
 				want:   "https://github.com/organization/repo/compare/feature?expand=1",
 			},
 			"stacked change": {
 				branch: "feature-3",
 				parent: "feature-2",
 				title:  None[gitdomain.ProposalTitle](),
-				body:   "",
+				body:   None[gitdomain.ProposalBody](),
 				want:   "https://github.com/organization/repo/compare/feature-2...feature-3?expand=1",
 			},
 			"special characters in branch name": {
 				branch: "feature-#",
 				parent: "main",
 				title:  None[gitdomain.ProposalTitle](),
-				body:   "",
+				body:   None[gitdomain.ProposalBody](),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
 			},
 			"provide title and body": {
 				branch: "feature-#",
 				parent: "main",
 				title:  Some(gitdomain.ProposalTitle("my title")),
-				body:   "my body",
+				body:   Some(gitdomain.ProposalBody("my body")),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title&body=my+body",
 			},
 			"provide title only": {
 				branch: "feature-#",
 				parent: "main",
 				title:  Some(gitdomain.ProposalTitle("my title")),
-				body:   "",
+				body:   None[gitdomain.ProposalBody](),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&title=my+title",
 			},
 			"provide body only": {
 				branch: "feature-#",
 				parent: "main",
 				title:  None[gitdomain.ProposalTitle](),
-				body:   "my body",
+				body:   Some(gitdomain.ProposalBody("my body")),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1&body=my+body",
 			},
 		}

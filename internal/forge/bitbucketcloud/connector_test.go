@@ -62,7 +62,7 @@ func TestBitbucketConnector(t *testing.T) {
 			Branch:        "branch",
 			MainBranch:    "main",
 			ParentBranch:  "parent-branch",
-			ProposalBody:  "",
+			ProposalBody:  None[gitdomain.ProposalBody](),
 			ProposalTitle: None[gitdomain.ProposalTitle](),
 		})
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
