@@ -51,7 +51,7 @@ install:  # builds for the current platform
 
 lint: tools/node_modules tools/rta@${RTA_VERSION}  # lints the main codebase concurrently
 	make --no-print-directory lint-smoke
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
+	make --no-print-directory alphavet
 	make --no-print-directory deadcode
 	make --no-print-directory lint-messy-output
 	make --no-print-directory lint-optioncompare
@@ -83,6 +83,9 @@ lint-all: lint tools/rta@${RTA_VERSION}  # runs all linters
 	@(cd tools/tests_sorted && ../rta golangci-lint run)
 	@echo lint tools/lint_steps
 	@(cd tools/lint_steps && ../rta golangci-lint run)
+
+alphavet:
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v internal/cmd)
 
 lint-messy-output:
 	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output

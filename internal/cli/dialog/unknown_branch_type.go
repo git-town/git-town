@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -23,7 +24,7 @@ on the next screen.
 `
 )
 
-func UnknownBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, bool, error) {
+func UnknownBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, dialogdomain.Exit, error) {
 	options := []configdomain.BranchType{
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,

@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
@@ -166,7 +167,7 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	panic("unhandled branch type:" + branchType.String())
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: displayTypes,
 		InitialBranchPos:   cursor,

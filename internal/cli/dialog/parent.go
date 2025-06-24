@@ -29,9 +29,9 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
-	selection, aborted, err := components.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
-	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), aborted))
-	if aborted {
+	selection, exit, err := components.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
+	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), exit))
+	if exit {
 		return ParentOutcomeAborted, selection, err
 	}
 	if selection == PerennialBranchOption {

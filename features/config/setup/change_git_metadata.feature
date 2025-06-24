@@ -22,10 +22,10 @@ Feature: change existing information in Git metadata
       | feature regex                             | u s e r enter          |
       | unknown branch type                       | down enter             |
       | dev-remote                                | enter                  |
+      | origin hostname                           | c o d e enter          |
       | set forge type to "github"                | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
       | token scope                               | enter                  |
-      | origin hostname                           | c o d e enter          |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-prototype-strategy                   | down enter             |

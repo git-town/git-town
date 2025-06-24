@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -13,7 +14,7 @@ import (
 const commitsToBeamTitle = `Select the commits to beam into branch %q`
 
 // lets the user select commits to beam to the target branch
-func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, git git.Commands, querier gitdomain.Querier, inputs components.TestInput) (gitdomain.Commits, bool, error) {
+func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, git git.Commands, querier gitdomain.Querier, inputs components.TestInput) (gitdomain.Commits, dialogdomain.Exit, error) {
 	if len(commits) == 0 {
 		return gitdomain.Commits{}, false, nil
 	}
