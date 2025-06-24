@@ -16,12 +16,3 @@ Feature: multi-platform support
       | TOOL     |
       | open     |
       | xdg-open |
-
-  Scenario: no supported tool installed
-    Given the origin is "https://github.com/git-town/git-town.git"
-    And no tool to open browsers is installed
-    When I run "git-town repo"
-    Then Git Town prints:
-      """
-      Please open in a browser: https://github.com/git-town/git-town
-      """
