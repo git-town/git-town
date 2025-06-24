@@ -4,6 +4,7 @@ package browser
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"runtime"
 
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -12,8 +13,8 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend FrontendRunner, backend BackendRunner) {
-	command, hasCommand := OpenBrowserCommand(backend).Get()
+func Open(url string, frontend frontendRunner) {
+	command, hasCommand := OpenBrowserCommand().Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
 		return
@@ -25,7 +26,7 @@ func Open(url string, frontend FrontendRunner, backend BackendRunner) {
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(runner BackendRunner) Option[string] {
+func OpenBrowserCommand() Option[string] {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
@@ -34,6 +35,9 @@ func OpenBrowserCommand(runner BackendRunner) Option[string] {
 	}
 	openBrowserCommands := make([]string, 0, 11)
 	if browser := os.Getenv(EnvVarName); browser != "" {
+		if browser == EnvVarNone {
+			return None[string]()
+		}
 		openBrowserCommands = append(openBrowserCommands, browser)
 	}
 	openBrowserCommands = append(openBrowserCommands,
@@ -49,8 +53,8 @@ func OpenBrowserCommand(runner BackendRunner) Option[string] {
 		"netscape",
 	)
 	for _, browserCommand := range openBrowserCommands {
-		output, err := runner.Query("which", browserCommand)
-		if err == nil && len(output) > 0 {
+		executable, err := exec.LookPath(browserCommand)
+		if err == nil && len(executable) > 0 {
 			return Some(browserCommand)
 		}
 	}
@@ -59,8 +63,4 @@ func OpenBrowserCommand(runner BackendRunner) Option[string] {
 
 type FrontendRunner interface {
 	Run(executable string, args ...string) error
-}
-
-type BackendRunner interface {
-	Query(executable string, args ...string) (string, error)
 }
