@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/google/go-github/v58/github"
 	"golang.org/x/oauth2"
@@ -66,6 +67,11 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		result += "&body=" + url.QueryEscape(data.ProposalBody.String())
 	}
 	return result
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

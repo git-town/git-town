@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -71,6 +72,11 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
 		url.QueryEscape(data.ParentBranch.String()))
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

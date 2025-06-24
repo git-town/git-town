@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
@@ -39,6 +40,11 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 		return Some(self.findProposalViaAPI)
 	}
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
