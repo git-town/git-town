@@ -28,7 +28,7 @@ type Connector struct {
 	log      print.Logger
 }
 
-func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) error {
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
 	url := fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare))
 	browser.Open(url, data.FrontendRunner)
