@@ -10,7 +10,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-type Runner interface {
+type GitCommands interface {
 	SHAsForCommit(gitdomain.CommitMessage) gitdomain.SHAs
 }
 
@@ -132,7 +132,7 @@ type ExpandArgs struct {
 	InitialDevCommits      gitdomain.Commits
 	InitialOriginCommits   Option[gitdomain.Commits]
 	InitialWorktreeCommits Option[gitdomain.Commits]
-	LocalRepo              Runner
-	RemoteRepo             Runner
-	WorktreeRepo           Runner
+	LocalRepo              GitCommands
+	RemoteRepo             GitCommands
+	WorktreeRepo           GitCommands
 }

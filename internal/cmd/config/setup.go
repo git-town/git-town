@@ -28,6 +28,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -521,7 +522,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	err := saveAliases(oldConfig.NormalConfig.Aliases, userInput.config.NormalConfig.Aliases, gitCommands, frontend)
 	if err != nil {
 		return err
@@ -568,7 +569,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	return nil
 }
 
-func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	fc := execute.FailureCollector{}
 	if configFile.NewBranchType.IsNone() {
@@ -628,7 +629,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	return fc.Err
 }
 
-func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
+func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Commands, frontend subshelldomain.Runner) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := oldAliases[aliasableCommand]
 		newAlias, hasNew := newAliases[aliasableCommand]
@@ -645,7 +646,7 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 	return nil
 }
 
-func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newPassword.Equal(oldPassword) {
 		return nil
 	}
@@ -655,7 +656,7 @@ func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.Bitbu
 	return gitCommands.RemoveBitbucketAppPassword(frontend)
 }
 
-func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
@@ -701,7 +702,7 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	return nil
 }
 
-func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], gitCommands git.Commands, frontend gitdomain.Runner) (err error) {
+func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], gitCommands git.Commands, frontend subshelldomain.Runner) (err error) {
 	oldValue, oldHas := oldForgeType.Get()
 	newValue, newHas := newForgeType.Get()
 	if !oldHas && !newHas {
@@ -716,7 +717,7 @@ func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], git
 	return gitCommands.DeleteConfigEntryForgeType(frontend)
 }
 
-func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
@@ -726,7 +727,7 @@ func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], sc
 	return gitCommands.RemoveCodebergToken(frontend)
 }
 
-func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
@@ -736,7 +737,7 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
@@ -746,7 +747,7 @@ func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope 
 	return gitCommands.RemoveGitHubToken(frontend)
 }
 
-func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
@@ -766,7 +767,7 @@ func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[
 	return nil
 }
 
-func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], gitCommands git.Commands, frontend gitdomain.Runner) error {
+func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHostname], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
