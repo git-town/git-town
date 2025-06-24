@@ -38,6 +38,6 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, args.Frontend, args.Backend)
+	browser.Open(prURL, args.Frontend)
 	return nil
 }
