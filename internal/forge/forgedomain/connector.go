@@ -27,7 +27,7 @@ type Connector interface {
 	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
 
 	// OpenRepository opens this repository in the associated application, typically the browser.
-	OpenRepository() error
+	OpenRepository(runner subshelldomain.Runner) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
