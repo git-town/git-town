@@ -40,6 +40,13 @@ type Runner interface {
 	Run(executable string, args ...string) error
 }
 
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	args := []string{"pr", "create", "--base=" + data.ParentBranch.String(), "--head=" + data.Branch.String()}
+	if data.ProposalTitle {
+	}
+	return data.FrontendRunner.Run("gh", args)
+}
+
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return github.DefaultProposalMessage(data)
 }
