@@ -87,4 +87,5 @@
     - [Sync tags](preferences/sync-tags.md)
     - [Sync with upstream](preferences/sync-upstream.md)
   - [Offline mode](preferences/offline.md)
+  - [BROWSER env variable](preferences/browser.md)
   - [Branch lineage](preferences/parent.md)
