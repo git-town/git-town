@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -17,7 +18,6 @@ import (
 // via the GitHub API.
 type Connector struct {
 	runner Runner
-	ghPath string // full path of the gh executable
 	log    print.Logger
 }
 
@@ -25,7 +25,6 @@ type Connector struct {
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	return Connector{
-		ghPath: args.GhPath,
 		runner: args.Runner,
 		log:    args.Log,
 	}, nil
@@ -34,7 +33,6 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 type NewConnectorArgs struct {
 	Log    print.Logger
 	Runner Runner
-	GhPath string
 }
 
 type Runner interface {
@@ -51,7 +49,7 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 }
 
 func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.runner.Query(self.ghPath, "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.runner.Query("gh", "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -92,12 +90,8 @@ type ghData struct {
 	URL         string `json:"url"`
 }
 
-func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
-	return github.NewProposalURL(data, self.RepositoryURL())
-}
-
-func (self Connector) RepositoryURL() string {
-	return github.RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	return runner.Run("gh", "browse")
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -113,7 +107,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.runner.Query(self.ghPath, "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.runner.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -145,5 +139,5 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 }
 
 func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	return self.runner.Run(self.ghPath, "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
+	return self.runner.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
