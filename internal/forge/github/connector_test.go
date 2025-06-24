@@ -106,14 +106,13 @@ func TestConnector(t *testing.T) {
 					},
 					APIToken: None[configdomain.GitHubToken](),
 				}
-				have, err := connector.NewProposalURL(forgedomain.CreateProposalArgs{
+				have := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 					Branch:        tt.branch,
 					MainBranch:    "main",
 					ParentBranch:  tt.parent,
 					ProposalBody:  tt.body,
 					ProposalTitle: tt.title,
 				})
-				must.NoError(t, err)
 				must.EqOp(t, tt.want, have)
 			})
 		}
