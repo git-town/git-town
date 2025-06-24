@@ -8,12 +8,13 @@ import (
 	"runtime"
 
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend FrontendRunner) {
+func Open(url string, frontend subshelldomain.Runner) {
 	command, hasCommand := OpenBrowserCommand().Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
@@ -59,8 +60,4 @@ func OpenBrowserCommand() Option[string] {
 		}
 	}
 	return None[string]()
-}
-
-type FrontendRunner interface {
-	Run(executable string, args ...string) error
 }

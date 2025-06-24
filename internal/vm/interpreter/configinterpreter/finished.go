@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -24,7 +25,7 @@ func Finished(args FinishedArgs) error {
 		}
 		endBranchesSnapshot = Some(snapshot)
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Backend}
+	configGitAccess := gitconfig.Access{Shell: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
@@ -60,7 +61,7 @@ func Finished(args FinishedArgs) error {
 }
 
 type FinishedArgs struct {
-	Backend               gitdomain.RunnerQuerier
+	Backend               subshelldomain.RunnerQuerier
 	BeginBranchesSnapshot Option[gitdomain.BranchesSnapshot]
 	BeginConfigSnapshot   undoconfig.ConfigSnapshot
 	Command               string

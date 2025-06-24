@@ -1,9 +1,9 @@
 package forgedomain
 
 import (
-	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -62,7 +62,7 @@ type Connector interface {
 
 type CreateProposalArgs struct {
 	Branch         gitdomain.LocalBranchName
-	FrontendRunner browser.FrontendRunner
+	FrontendRunner subshelldomain.Runner
 	MainBranch     gitdomain.LocalBranchName
 	ParentBranch   gitdomain.LocalBranchName
 	ProposalBody   gitdomain.ProposalBody

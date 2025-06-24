@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/vm/program"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -43,12 +44,12 @@ func Execute(args ExecuteArgs) {
 }
 
 type ExecuteArgs struct {
-	Backend       gitdomain.RunnerQuerier
+	Backend       subshelldomain.RunnerQuerier
 	Config        config.ValidatedConfig
 	Connector     Option[forgedomain.Connector]
 	Detached      configdomain.Detached
 	FinalMessages stringslice.Collector
-	Frontend      gitdomain.Runner
+	Frontend      subshelldomain.Runner
 	Git           git.Commands
 	Prog          program.Program
 }
