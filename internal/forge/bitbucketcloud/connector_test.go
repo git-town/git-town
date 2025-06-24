@@ -57,7 +57,7 @@ func TestBitbucketConnector(t *testing.T) {
 			ForgeType: None[forgedomain.ForgeType](),
 			RemoteURL: url,
 		})
-		have, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
+		have, err := connector.NewProposalURL(forgedomain.CreateProposalArgs{
 			Branch:        "branch",
 			MainBranch:    "main",
 			ParentBranch:  "parent-branch",

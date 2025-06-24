@@ -13,17 +13,16 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend FrontendRunner) bool {
+func Open(url string, frontend FrontendRunner) {
 	command, hasCommand := OpenBrowserCommand().Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
-		return false
+		return
 	}
 	err := frontend.Run(command, url)
 	if err != nil {
 		fmt.Printf(messages.BrowserOpen, url)
 	}
-	return err == nil
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.

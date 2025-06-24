@@ -13,6 +13,10 @@ import (
 // i.e. they return an option of the function to call.
 // A `None` value implies that the respective functionality isn't supported by this connector implementation.
 type Connector interface {
+
+	// CreateProposal creates a proposal at the forge.
+	CreateProposal(CreateProposalArgs) error
+
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective forge type is prepopulated with.
 	DefaultProposalMessage(proposal ProposalData) string
@@ -34,9 +38,6 @@ type Connector interface {
 	// to merge the proposal with the given number using the given message.
 	// A None return value indicates that this connector does not support this feature (yet).
 	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
-
-	// CreateProposal creates a proposal at the forge.
-	CreateProposal(NewProposalURLData) error
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
@@ -60,8 +61,8 @@ type Connector interface {
 	VerifyReadProposalPermission() error
 }
 
-type NewProposalURLData struct {
-	BackendRunner  browser.BackendRunner
+type CreateProposalArgs struct {
+	// BackendRunner  browser.BackendRunner
 	Branch         gitdomain.LocalBranchName
 	FrontendRunner browser.FrontendRunner
 	MainBranch     gitdomain.LocalBranchName
