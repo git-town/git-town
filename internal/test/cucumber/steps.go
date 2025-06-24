@@ -882,6 +882,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
+		if browserBin, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.EnvVarName, browserBin)
+		}
 		answers := asserts.NoError1(helpers.TableToInputEnv(input))
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))

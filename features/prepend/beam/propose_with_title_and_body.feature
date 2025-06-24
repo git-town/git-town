@@ -13,8 +13,8 @@ Feature: propose a newly prepended branch
     And the current branch is "existing"
     And Git setting "git-town.sync-feature-strategy" is "rebase"
     And the origin is "git@github.com:git-town/git-town.git"
-    And tool "open" is installed
     And a proposal for this branch does not exist
+    And tool "open" is installed
     When I run "git-town prepend new --beam --propose --title='proposal title' --body='proposal body'" and enter into the dialog:
       | DIALOG                    | KEYS             |
       | select "unrelated commit" | down space enter |
