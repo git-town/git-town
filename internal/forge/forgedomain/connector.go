@@ -13,7 +13,6 @@ import (
 // i.e. they return an option of the function to call.
 // A `None` value implies that the respective functionality isn't supported by this connector implementation.
 type Connector interface {
-
 	// CreateProposal creates a proposal at the forge.
 	CreateProposal(CreateProposalArgs) error
 
