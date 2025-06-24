@@ -54,11 +54,7 @@ type TestRunner struct {
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (self *TestRunner) MockBrokenCommand(name string) {
-	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(self.BinDir, name))
-	self.createMockBinary("which", content)
-	// write custom command
-	content = "#!/usr/bin/env bash\n\nexit 1"
+	content := "#!/usr/bin/env bash\n\nexit 1"
 	self.createMockBinary(name, content)
 }
 

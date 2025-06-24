@@ -1549,6 +1549,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.MockBrokenCommand(name)
+		state.browserVariable = Some(name)
 	})
 
 	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
