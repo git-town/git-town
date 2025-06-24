@@ -26,6 +26,9 @@ type Connector interface {
 	// A None return value indicates that this connector does not support this feature (yet).
 	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
 
+	// OpenRepository opens this repository in the associated application, typically the browser.
+	OpenRepository() error
+
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to search for a proposal that has the given branch as its source branch.
@@ -37,9 +40,6 @@ type Connector interface {
 	// to merge the proposal with the given number using the given message.
 	// A None return value indicates that this connector does not support this feature (yet).
 	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
-
-	// RepositoryURL provides the URL where the current repository can be found online.
-	RepositoryURL() string
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call

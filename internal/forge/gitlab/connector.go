@@ -41,6 +41,11 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
+func (self Connector) OpenRepository(runner da) error {
+	url := self.Data.RepositoryURL()
+	browser.Open(url, data.FrontendRunner)
+}
+
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if self.APIToken.IsNone() {
 		return None[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
