@@ -8,18 +8,19 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 type RunArgs struct {
-	Backend                         gitdomain.RunnerQuerier
+	Backend                         subshelldomain.RunnerQuerier
 	BranchInfos                     Option[gitdomain.BranchInfos]
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
 	Detached                        configdomain.Detached
 	DialogTestInputs                components.TestInputs
 	FinalMessages                   stringslice.Collector
-	Frontend                        gitdomain.Runner
+	Frontend                        subshelldomain.Runner
 	Git                             git.Commands
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)

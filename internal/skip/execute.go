@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undobranches"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/lightinterpreter"
@@ -63,13 +64,13 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	Backend         gitdomain.RunnerQuerier
+	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
 	Config          config.ValidatedConfig
 	Connector       Option[forgedomain.Connector]
 	Detached        configdomain.Detached
 	FinalMessages   stringslice.Collector
-	Frontend        gitdomain.Runner
+	Frontend        subshelldomain.Runner
 	Git             git.Commands
 	HasOpenChanges  bool
 	InitialBranch   gitdomain.LocalBranchName
