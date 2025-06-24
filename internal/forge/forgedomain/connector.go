@@ -66,5 +66,5 @@ type CreateProposalArgs struct {
 	MainBranch     gitdomain.LocalBranchName
 	ParentBranch   gitdomain.LocalBranchName
 	ProposalBody   gitdomain.ProposalBody
-	ProposalTitle  gitdomain.ProposalTitle
+	ProposalTitle  Option[gitdomain.ProposalTitle]
 }

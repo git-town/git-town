@@ -56,8 +56,8 @@ func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string
 		toCompare = data.ParentBranch.String() + "..." + data.Branch.String()
 	}
 	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
-	if len(data.ProposalTitle) > 0 {
-		result += "&title=" + url.QueryEscape(data.ProposalTitle.String())
+	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+		result += "&title=" + url.QueryEscape(title.String())
 	}
 	if len(data.ProposalBody) > 0 {
 		result += "&body=" + url.QueryEscape(data.ProposalBody.String())
