@@ -63,13 +63,9 @@ func (self *TestRunner) MockBrokenCommand(name string) {
 }
 
 // MockCommand adds a mock for the command with the given name.
-func (self *TestRunner) MockCommand(name string) {
-	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(self.BinDir, name))
-	self.createMockBinary("which", content)
-	// write custom command
-	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	self.createMockBinary(name, content)
+func (self *TestRunner) MockCommand(name string) string {
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
+	return self.createMockBinary(name, content)
 }
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
@@ -297,10 +293,12 @@ func (self *TestRunner) createBinDir() {
 }
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
-func (self *TestRunner) createMockBinary(name string, content string) {
+func (self *TestRunner) createMockBinary(name string, content string) string {
 	self.createBinDir()
+	binaryPath := filepath.Join(self.BinDir, name)
 	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(filepath.Join(self.BinDir, name), []byte(content), 0o744))
+	asserts.NoError(os.WriteFile(binaryPath, []byte(content), 0o744))
+	return binaryPath
 }
 
 // Options defines optional arguments for ShellRunner.RunWith().

@@ -16,6 +16,7 @@ Feature: proposing uncommitted changes via a separate top-level branch, let Git 
     And I ran "git add new_file"
     When I run "git-town hack new --propose" and enter "unrelated idea" for the commit message
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH   | COMMAND                                                        |

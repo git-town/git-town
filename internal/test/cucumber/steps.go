@@ -1537,7 +1537,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.MockCommand(tool)
+		toolPath := devRepo.MockCommand(tool)
+		state.browserVariable = Some(toolPath)
 	})
 
 	// This step exists to avoid re-creating commits with the same SHA as existing commits
@@ -1556,8 +1557,16 @@ func runCommand(ctx context.Context, command string) {
 	}
 	var exitCode int
 	var runOutput string
+	env := []string{}
+	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
+		fmt.Println("11111111111111111111111111111111111111111111111111111111111")
+		env = append(env, "BROWSER="+browserVariable)
+	}
+	fmt.Println("22222222222222222222222222222222222222222222222222222222", env)
 	if hasDevRepo {
-		runOutput, exitCode = devRepo.MustQueryStringCode(command)
+		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
+			Env: env,
+		})
 		devRepo.Reload()
 	} else {
 		parts := asserts.NoError1(shellquote.Split(command))
