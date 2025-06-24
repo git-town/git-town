@@ -13,7 +13,7 @@ import (
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend frontendRunner) {
+func Open(url string, frontend FrontendRunner) {
 	command, hasCommand := OpenBrowserCommand().Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
@@ -61,6 +61,6 @@ func OpenBrowserCommand() Option[string] {
 	return None[string]()
 }
 
-type frontendRunner interface {
+type FrontendRunner interface {
 	Run(executable string, args ...string) error
 }
