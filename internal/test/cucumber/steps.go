@@ -826,17 +826,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage(message)
-		output := ""
-		exitCode := 0
+		env := os.Environ()
 		if browserPath, has := state.browserVariable.Get(); has {
-			env := os.Environ()
 			env = envvars.Replace(env, browser.EnvVarName, browserPath)
-			output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
-				Env: env,
-			})
-		} else {
-			output, exitCode = devRepo.MustQueryStringCode(cmd)
 		}
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
+			Env: env,
+		})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
