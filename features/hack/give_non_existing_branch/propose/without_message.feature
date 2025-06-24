@@ -10,10 +10,10 @@ Feature: proposing uncommitted changes via a separate top-level branch, let Git 
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And the current branch is "existing"
-    And an uncommitted file with name "new_file" and content "new content"
-    And I ran "git add new_file"
     And the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
+    And an uncommitted file with name "new_file" and content "new content"
+    And I ran "git add new_file"
     When I run "git-town hack new --propose" and enter "unrelated idea" for the commit message
 
   Scenario: result
