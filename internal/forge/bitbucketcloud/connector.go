@@ -61,7 +61,7 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return Some(self.findProposalViaAPI)
 }
 
-func (self Connector) CreateProposal(data forgedomain.NewProposalURLData) (string, error) {
+func (self Connector) CreateProposal(data forgedomain.NewProposalURLData) error {
 	url := fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 		self.RepositoryURL(),
 		url.QueryEscape(data.Branch.String()),
@@ -69,6 +69,7 @@ func (self Connector) CreateProposal(data forgedomain.NewProposalURLData) (strin
 		url.QueryEscape(self.Repository),
 		url.QueryEscape(data.ParentBranch.String()))
 	browser.Open(url, data.BackendRunner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

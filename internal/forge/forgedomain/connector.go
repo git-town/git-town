@@ -36,7 +36,7 @@ type Connector interface {
 	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
 
 	// CreateProposal creates a proposal at the forge.
-	CreateProposal(NewProposalURLData) (string, error)
+	CreateProposal(NewProposalURLData) error
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
