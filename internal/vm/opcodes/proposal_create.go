@@ -3,7 +3,6 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -28,16 +27,12 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	prURL, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
-		Branch:        self.Branch,
-		MainBranch:    self.MainBranch,
-		ParentBranch:  parentBranch,
-		ProposalBody:  self.ProposalBody,
-		ProposalTitle: self.ProposalTitle,
+	return connector.CreateProposal(forgedomain.CreateProposalArgs{
+		Branch:         self.Branch,
+		FrontendRunner: args.Frontend,
+		MainBranch:     self.MainBranch,
+		ParentBranch:   parentBranch,
+		ProposalBody:   self.ProposalBody,
+		ProposalTitle:  self.ProposalTitle,
 	})
-	if err != nil {
-		return err
-	}
-	browser.Open(prURL, args.Frontend)
-	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -27,6 +28,11 @@ type Connector struct {
 	APIToken Option[configdomain.GitHubToken]
 	client   *github.Client
 	log      print.Logger
+}
+
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
+	return nil
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
@@ -63,7 +69,7 @@ func NewProposalURL(data forgedomain.NewProposalURLData, repoURL string) (string
 	if len(data.ProposalBody) > 0 {
 		result += "&body=" + url.QueryEscape(data.ProposalBody.String())
 	}
-	return result, nil
+	return result
 }
 
 func (self Connector) RepositoryURL() string {
