@@ -33,7 +33,7 @@ func OpenBrowserCommand() Option[string] {
 		//       So we are using "start" here.
 		return Some("start")
 	}
-	openBrowserCommands := []string{}
+	openBrowserCommands := make([]string, 0, 11)
 	if browser := os.Getenv("BROWSER"); browser != "" {
 		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 		openBrowserCommands = append(openBrowserCommands, browser)
