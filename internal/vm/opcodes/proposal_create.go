@@ -28,10 +28,11 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 		return forgedomain.UnsupportedServiceError()
 	}
 	return connector.CreateProposal(forgedomain.CreateProposalArgs{
-		Branch:        self.Branch,
-		MainBranch:    self.MainBranch,
-		ParentBranch:  parentBranch,
-		ProposalBody:  self.ProposalBody,
-		ProposalTitle: self.ProposalTitle,
+		Branch:         self.Branch,
+		FrontendRunner: args.Frontend,
+		MainBranch:     self.MainBranch,
+		ParentBranch:   parentBranch,
+		ProposalBody:   self.ProposalBody,
+		ProposalTitle:  self.ProposalTitle,
 	})
 }

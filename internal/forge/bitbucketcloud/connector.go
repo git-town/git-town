@@ -49,6 +49,11 @@ type NewConnectorArgs struct {
 	UserName    Option[configdomain.BitbucketUsername]
 }
 
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
+	return nil
+}
+
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
@@ -59,11 +64,6 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 		return Some(self.findProposalViaOverride)
 	}
 	return Some(self.findProposalViaAPI)
-}
-
-func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
-	return nil
 }
 
 func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
