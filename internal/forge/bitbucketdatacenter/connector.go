@@ -49,11 +49,7 @@ type NewConnectorArgs struct {
 }
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	url := fmt.Sprintf("%s/pull-requests?create&sourceBranch=%s&targetBranch=%s",
-		self.RepositoryURL(),
-		url.QueryEscape(data.Branch.String()),
-		url.QueryEscape(data.ParentBranch.String()))
-	browser.Open(url, data.FrontendRunner)
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
 	return nil
 }
 
@@ -68,6 +64,13 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 		return Some(self.findProposalViaOverride)
 	}
 	return Some(self.findProposalViaAPI)
+}
+
+func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
+	return fmt.Sprintf("%s/pull-requests?create&sourceBranch=%s&targetBranch=%s",
+		self.RepositoryURL(),
+		url.QueryEscape(data.Branch.String()),
+		url.QueryEscape(data.ParentBranch.String()))
 }
 
 func (self Connector) RepositoryURL() string {
