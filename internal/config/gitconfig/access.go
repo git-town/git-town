@@ -17,7 +17,7 @@ import (
 
 // Access provides typesafe access to the Git configuration on disk.
 type Access struct {
-	Runner subshelldomain.RunnerQuerier
+	Shell subshelldomain.RunnerQuerier
 }
 
 func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
@@ -27,7 +27,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 	if hasScope {
 		cmdArgs = append(cmdArgs, scope.GitFlag())
 	}
-	output, err := self.Runner.Query("git", cmdArgs...)
+	output, err := self.Shell.Query("git", cmdArgs...)
 	if err != nil || output == "" {
 		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
 	}
@@ -79,7 +79,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 }
 
 func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
-	output, err := self.Runner.Query("git", "remote", "get-url", remote.String())
+	output, err := self.Shell.Query("git", "remote", "get-url", remote.String())
 	if err != nil {
 		// NOTE: it's okay to ignore the error here.
 		// If we get an error here, we simply don't use the origin remote.
@@ -94,17 +94,17 @@ func (self *Access) RemoveConfigValue(scope configdomain.ConfigScope, key config
 		args = append(args, "--global")
 	}
 	args = append(args, "--unset", key.String())
-	return self.Runner.Run("git", args...)
+	return self.Shell.Run("git", args...)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
-	return self.Runner.Run("git", "config", "--unset", key.String())
+	return self.Shell.Run("git", "config", "--unset", key.String())
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (self *Access) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSnapshot) error {
-	err := self.Runner.Run("git", "config", "--remove-section", "git-town")
+	err := self.Shell.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -118,7 +118,7 @@ func (self *Access) RemoveLocalGitConfiguration(localSnapshot configdomain.Singl
 	}
 	for key := range localSnapshot {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
-			err = self.Runner.Run("git", "config", "--unset", key.String())
+			err = self.Shell.Run("git", "config", "--unset", key.String())
 			if err != nil {
 				return fmt.Errorf(messages.ConfigRemoveError, err)
 			}
@@ -134,7 +134,7 @@ func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdom
 		args = append(args, "--global")
 	}
 	args = append(args, key.String(), value)
-	return self.Runner.Run("git", args...)
+	return self.Shell.Run("git", args...)
 }
 
 func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {

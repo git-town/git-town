@@ -25,7 +25,7 @@ func Finished(args FinishedArgs) error {
 		}
 		endBranchesSnapshot = Some(snapshot)
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Backend}
+	configGitAccess := gitconfig.Access{Shell: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err

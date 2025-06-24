@@ -28,7 +28,7 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Backend}
+	configGitAccess := gitconfig.Access{Shell: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
