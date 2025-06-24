@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -27,6 +28,13 @@ type Connector struct {
 	log      print.Logger
 }
 
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
+	url := fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare))
+	browser.Open(url, data.FrontendRunner)
+	return nil
+}
+
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
@@ -39,11 +47,6 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 		return Some(self.findProposalViaAPI)
 	}
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
-}
-
-func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) (string, error) {
-	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
-	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
 func (self Connector) RepositoryURL() string {
