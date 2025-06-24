@@ -716,8 +716,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
-		if browserBin, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserBin)
+		if browserPath, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.EnvVarName, browserPath)
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
@@ -828,9 +828,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockCommitMessage(message)
 		output := ""
 		exitCode := 0
-		if browserBin, has := state.browserVariable.Get(); has {
+		if browserPath, has := state.browserVariable.Get(); has {
 			env := os.Environ()
-			env = envvars.Replace(env, browser.EnvVarName, browserBin)
+			env = envvars.Replace(env, browser.EnvVarName, browserPath)
 			output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 				Env: env,
 			})
@@ -882,8 +882,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
-		if browserBin, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.EnvVarName, browserBin)
+		if browserPath, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.EnvVarName, browserPath)
 		}
 		answers := asserts.NoError1(helpers.TableToInputEnv(input))
 		for dialogNumber, answer := range answers {
