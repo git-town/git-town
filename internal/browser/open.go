@@ -33,7 +33,7 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		return Some("start")
 	}
 	openBrowserCommands := make([]string, 0, 11)
-	if browser := os.Getenv(ENVVAR); browser != "" {
+	if browser := os.Getenv(EnvVarName); browser != "" {
 		openBrowserCommands = append(openBrowserCommands, browser)
 	}
 	openBrowserCommands = append(openBrowserCommands,
