@@ -19,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -149,11 +150,11 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Backend           gitdomain.RunnerQuerier
+	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
 	ConfigSnapshot    undoconfig.ConfigSnapshot
 	FinalMessages     stringslice.Collector
-	Frontend          gitdomain.Runner
+	Frontend          subshelldomain.Runner
 	Git               git.Commands
 	IsOffline         configdomain.Offline
 	RootDir           gitdomain.RepoRootDir
@@ -165,7 +166,7 @@ func emptyOpenRepoResult() OpenRepoResult {
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func newFrontendRunner(args newFrontendRunnerArgs) gitdomain.Runner { //nolint:ireturn
+func newFrontendRunner(args newFrontendRunnerArgs) subshelldomain.Runner { //nolint:ireturn
 	if args.dryRun {
 		return &subshell.FrontendDryRunner{
 			Backend:          args.backend,

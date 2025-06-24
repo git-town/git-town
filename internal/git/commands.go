@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -27,11 +28,11 @@ type Commands struct {
 	RemotesCache       *cache.Cache[gitdomain.Remotes]                // caches Git remotes
 }
 
-func (self *Commands) AbortMerge(runner gitdomain.Runner) error {
+func (self *Commands) AbortMerge(runner subshelldomain.Runner) error {
 	return runner.Run("git", "merge", "--abort")
 }
 
-func (self *Commands) AbortRebase(runner gitdomain.Runner) error {
+func (self *Commands) AbortRebase(runner subshelldomain.Runner) error {
 	return runner.Run("git", "rebase", "--abort")
 }
 
@@ -56,12 +57,12 @@ func (self *Commands) BranchContainsMerges(querier gitdomain.Querier, branch, pa
 	return len(output) > 0, err
 }
 
-func (self *Commands) BranchExists(runner gitdomain.Runner, branch gitdomain.LocalBranchName) bool {
+func (self *Commands) BranchExists(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "refs/heads/"+branch.String())
 	return err == nil
 }
 
-func (self *Commands) BranchExistsRemotely(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
+func (self *Commands) BranchExistsRemotely(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote) bool {
 	err := runner.Run("git", "ls-remote", remote.String(), branch.String())
 	return err == nil
 }
@@ -190,7 +191,7 @@ func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
 	return os.Chdir(dir.String())
 }
 
-func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
+func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
 	err := self.CheckoutBranchUncached(runner, name, merge)
 	if err != nil {
 		return err
@@ -203,7 +204,7 @@ func (self *Commands) CheckoutBranch(runner gitdomain.Runner, name gitdomain.Loc
 	return nil
 }
 
-func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
+func (self *Commands) CheckoutBranchUncached(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
 	args := []string{"checkout", name.String()}
 	if merge {
 		args = append(args, "-m")
@@ -215,15 +216,15 @@ func (self *Commands) CheckoutBranchUncached(runner gitdomain.Runner, name gitdo
 	return nil
 }
 
-func (self *Commands) CherryPick(runner gitdomain.Runner, sha gitdomain.SHA) error {
+func (self *Commands) CherryPick(runner subshelldomain.Runner, sha gitdomain.SHA) error {
 	return runner.Run("git", "cherry-pick", sha.String())
 }
 
-func (self *Commands) CherryPickAbort(runner gitdomain.Runner) error {
+func (self *Commands) CherryPickAbort(runner subshelldomain.Runner) error {
 	return runner.Run("git", "cherry-pick", "--abort")
 }
 
-func (self *Commands) CherryPickContinue(runner gitdomain.Runner) error {
+func (self *Commands) CherryPickContinue(runner subshelldomain.Runner) error {
 	return runner.RunWithEnv([]string{"GIT_EDITOR=true"}, "git", "cherry-pick", "--continue")
 }
 
@@ -243,7 +244,7 @@ func (self *Commands) CommentOutSquashCommitMessage(prefix Option[string]) error
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (self *Commands) Commit(runner gitdomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
+func (self *Commands) Commit(runner subshelldomain.Runner, useMessage configdomain.UseMessage, author Option[gitdomain.Author], commitHook configdomain.CommitHook) error {
 	args := []string{"commit"}
 	switch {
 	case useMessage.IsCustomMessage():
@@ -272,7 +273,7 @@ func (self *Commands) CommitMessage(querier gitdomain.Querier, sha gitdomain.SHA
 	return gitdomain.CommitMessage(strings.TrimSpace(output)), err
 }
 
-func (self *Commands) CommitStart(runner gitdomain.Runner) error {
+func (self *Commands) CommitStart(runner subshelldomain.Runner) error {
 	return runner.Run("git", "commit")
 }
 
@@ -339,14 +340,14 @@ func (self *Commands) ContentBlobInfo(querier gitdomain.Querier, branch gitdomai
 	return Some(sha), err
 }
 
-func (self *Commands) ContinueRebase(runner gitdomain.Runner) error {
+func (self *Commands) ContinueRebase(runner subshelldomain.Runner) error {
 	return runner.RunWithEnv([]string{"GIT_EDITOR=true"}, "git", "rebase", "--continue")
 }
 
 // CreateAndCheckoutBranch creates a new branch with the given name and checks it out using a single Git operation.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *Commands) CreateAndCheckoutBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) error {
+func (self *Commands) CreateAndCheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName) error {
 	err := runner.Run("git", "checkout", "-b", name.String())
 	self.CurrentBranchCache.Set(name)
 	return err
@@ -355,7 +356,7 @@ func (self *Commands) CreateAndCheckoutBranch(runner gitdomain.Runner, name gitd
 // CreateAndCheckoutBranchWithParent creates a new branch with the given name and parent and checks it out using a single Git operation.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+func (self *Commands) CreateAndCheckoutBranchWithParent(runner subshelldomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	args := []string{"checkout", "-b", name.String(), parent.String()}
 	if parent.IsRemoteBranchName() {
 		args = append(args, "--no-track")
@@ -368,11 +369,11 @@ func (self *Commands) CreateAndCheckoutBranchWithParent(runner gitdomain.Runner,
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *Commands) CreateBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+func (self *Commands) CreateBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName, parent gitdomain.Location) error {
 	return runner.Run("git", "branch", name.String(), parent.String())
 }
 
-func (self *Commands) CreateTrackingBranch(runner gitdomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) CreateTrackingBranch(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -415,7 +416,7 @@ func (self *Commands) CurrentBranchDuringRebase(querier gitdomain.Querier) (gitd
 	return "", errors.New(messages.BranchCurrentProblemNoError)
 }
 
-func (self *Commands) CurrentBranchHasTrackingBranch(runner gitdomain.Runner) bool {
+func (self *Commands) CurrentBranchHasTrackingBranch(runner subshelldomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
 	return err == nil
 }
@@ -461,50 +462,50 @@ func (self *Commands) DefaultRemote(querier gitdomain.Querier) gitdomain.Remote 
 }
 
 // DeleteConfigEntryForgeType removes the forge type config entry.
-func (self *Commands) DeleteConfigEntryForgeType(runner gitdomain.Runner) error {
+func (self *Commands) DeleteConfigEntryForgeType(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
 }
 
 // DeleteConfigEntryOriginHostname removes the origin hostname override
-func (self *Commands) DeleteConfigEntryOriginHostname(runner gitdomain.Runner) error {
+func (self *Commands) DeleteConfigEntryOriginHostname(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
-func (self *Commands) DeleteLastCommit(runner gitdomain.Runner) error {
+func (self *Commands) DeleteLastCommit(runner subshelldomain.Runner) error {
 	return runner.Run("git", "reset", "--hard", "HEAD~1")
 }
 
-func (self *Commands) DeleteLocalBranch(runner gitdomain.Runner, name gitdomain.LocalBranchName) error {
+func (self *Commands) DeleteLocalBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "-D", name.String())
 }
 
-func (self *Commands) DeleteTrackingBranch(runner gitdomain.Runner, name gitdomain.RemoteBranchName) error {
+func (self *Commands) DeleteTrackingBranch(runner subshelldomain.Runner, name gitdomain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()
 	return runner.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (self *Commands) DiffParent(runner gitdomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
+func (self *Commands) DiffParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "diff", "--merge-base", parentBranch.String(), branch.String())
 }
 
-func (self *Commands) DiscardOpenChanges(runner gitdomain.Runner) error {
+func (self *Commands) DiscardOpenChanges(runner subshelldomain.Runner) error {
 	return runner.Run("git", "reset", "--hard")
 }
 
-func (self *Commands) DropMostRecentStash(runner gitdomain.Runner) error {
+func (self *Commands) DropMostRecentStash(runner subshelldomain.Runner) error {
 	return runner.Run("git", "stash", "drop")
 }
 
-func (self *Commands) Fetch(runner gitdomain.Runner, syncTags configdomain.SyncTags) error {
+func (self *Commands) Fetch(runner subshelldomain.Runner, syncTags configdomain.SyncTags) error {
 	if syncTags.IsTrue() {
 		return runner.Run("git", "fetch", "--prune", "--tags")
 	}
 	return runner.Run("git", "fetch", "--prune", "--no-tags")
 }
 
-func (self *Commands) FetchUpstream(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+func (self *Commands) FetchUpstream(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "fetch", gitdomain.RemoteUpstream.String(), branch.String())
 }
 
@@ -564,7 +565,7 @@ func (self *Commands) FirstCommitMessageInBranch(runner gitdomain.Querier, branc
 }
 
 // provides the first branch in the given list of branch names that actually exists
-func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
+func (self *Commands) FirstExistingBranch(runner subshelldomain.Runner, branches ...gitdomain.LocalBranchName) Option[gitdomain.LocalBranchName] {
 	for _, branch := range branches {
 		if self.BranchExists(runner, branch) {
 			return Some(branch)
@@ -573,7 +574,7 @@ func (self *Commands) FirstExistingBranch(runner gitdomain.Runner, branches ...g
 	return None[gitdomain.LocalBranchName]()
 }
 
-func (self *Commands) ForcePushBranchSafely(runner gitdomain.Runner, noPushHook configdomain.NoPushHook, forceIfIncludes bool) error {
+func (self *Commands) ForcePushBranchSafely(runner subshelldomain.Runner, noPushHook configdomain.NoPushHook, forceIfIncludes bool) error {
 	args := []string{"push", "--force-with-lease"}
 	if forceIfIncludes {
 		args = append(args, "--force-if-includes")
@@ -608,7 +609,7 @@ func (self *Commands) GitVersion(querier gitdomain.Querier) (Version, error) {
 	}, nil
 }
 
-func (self *Commands) HasMergeInProgress(runner gitdomain.Runner) bool {
+func (self *Commands) HasMergeInProgress(runner subshelldomain.Runner) bool {
 	err := runner.Run("git", "rev-parse", "--verify", "-q", "MERGE_HEAD")
 	return err == nil
 }
@@ -628,15 +629,15 @@ func (self *Commands) HasRebaseInProgress(querier gitdomain.Querier) (bool, erro
 	return false, nil
 }
 
-func (self *Commands) MergeBranchNoEdit(runner gitdomain.Runner, branch gitdomain.BranchName) error {
+func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
 
-func (self *Commands) MergeFastForward(runner gitdomain.Runner, branch gitdomain.BranchName) error {
+func (self *Commands) MergeFastForward(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--ff-only", branch.String())
 }
 
-func (self *Commands) MergeNoFastForward(runner gitdomain.Runner, useMessage configdomain.UseMessage, branch gitdomain.LocalBranchName) error {
+func (self *Commands) MergeNoFastForward(runner subshelldomain.Runner, useMessage configdomain.UseMessage, branch gitdomain.LocalBranchName) error {
 	args := []string{"merge", "--no-ff"}
 	switch {
 	case useMessage.IsCustomMessage():
@@ -669,7 +670,7 @@ func (self *Commands) OriginHead(querier gitdomain.Querier) Option[gitdomain.Loc
 	return Some(gitdomain.LocalBranchName(LastBranchInRef(output)))
 }
 
-func (self *Commands) PopStash(runner gitdomain.Runner) error {
+func (self *Commands) PopStash(runner subshelldomain.Runner) error {
 	err := runner.Run("git", "stash", "pop")
 	if err != nil {
 		_ = runner.Run("git", "stash", "drop")
@@ -689,12 +690,12 @@ func (self *Commands) PreviouslyCheckedOutBranch(querier gitdomain.Querier) Opti
 	return gitdomain.NewLocalBranchNameOption(output)
 }
 
-func (self *Commands) Pull(runner gitdomain.Runner) error {
+func (self *Commands) Pull(runner subshelldomain.Runner) error {
 	return runner.Run("git", "pull")
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
-func (self *Commands) PushCurrentBranch(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushCurrentBranch(runner subshelldomain.Runner, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -702,7 +703,7 @@ func (self *Commands) PushCurrentBranch(runner gitdomain.Runner, noPushHook conf
 	return runner.Run("git", args...)
 }
 
-func (self *Commands) PushLocalBranch(runner gitdomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushLocalBranch(runner subshelldomain.Runner, localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -712,7 +713,7 @@ func (self *Commands) PushLocalBranch(runner gitdomain.Runner, localSHA gitdomai
 }
 
 // PushTags pushes new the Git tags to origin.
-func (self *Commands) PushTags(runner gitdomain.Runner, noPushHook configdomain.NoPushHook) error {
+func (self *Commands) PushTags(runner subshelldomain.Runner, noPushHook configdomain.NoPushHook) error {
 	args := []string{"push", "--tags"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -721,12 +722,12 @@ func (self *Commands) PushTags(runner gitdomain.Runner, noPushHook configdomain.
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (self *Commands) Rebase(runner gitdomain.Runner, target gitdomain.BranchName) error {
+func (self *Commands) Rebase(runner subshelldomain.Runner, target gitdomain.BranchName) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", target.String())
 }
 
 // Rebase initiates a Git rebase of the current branch onto the given branch.
-func (self *Commands) RebaseOnto(runner gitdomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
+func (self *Commands) RebaseOnto(runner subshelldomain.Runner, branchToRebaseOnto gitdomain.Location, commitsToRemove gitdomain.Location, upstream Option[gitdomain.LocalBranchName]) error {
 	args := []string{"-c", "rebase.updateRefs=false", "rebase", "--onto", branchToRebaseOnto.String()}
 	if upstream, hasUpstream := upstream.Get(); hasUpstream {
 		args = append(args, upstream.String())
@@ -757,48 +758,48 @@ func (self *Commands) RemotesUncached(querier gitdomain.Querier) (gitdomain.Remo
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
-func (self *Commands) RemoveBitbucketAppPassword(runner gitdomain.Runner) error {
+func (self *Commands) RemoveBitbucketAppPassword(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketAppPassword.String())
 }
 
-func (self *Commands) RemoveBitbucketUsername(runner gitdomain.Runner) error {
+func (self *Commands) RemoveBitbucketUsername(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
 }
 
-func (self *Commands) RemoveCodebergToken(runner gitdomain.Runner) error {
+func (self *Commands) RemoveCodebergToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyCodebergToken.String())
 }
 
 // RemoveCommit removes the given commit from the current branch
-func (self *Commands) RemoveCommit(runner gitdomain.Runner, commit gitdomain.SHA) error {
+func (self *Commands) RemoveCommit(runner subshelldomain.Runner, commit gitdomain.SHA) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", commit.String()+"^", commit.String())
 }
 
-func (self *Commands) RemoveFile(runner gitdomain.Runner, fileName string) error {
+func (self *Commands) RemoveFile(runner subshelldomain.Runner, fileName string) error {
 	return runner.Run("git", "rm", fileName)
 }
 
-func (self *Commands) RemoveGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
+func (self *Commands) RemoveGitAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
 }
 
-func (self *Commands) RemoveGitHubToken(runner gitdomain.Runner) error {
+func (self *Commands) RemoveGitHubToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGithubToken.String())
 }
 
-func (self *Commands) RemoveGitLabToken(runner gitdomain.Runner) error {
+func (self *Commands) RemoveGitLabToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGitlabToken.String())
 }
 
-func (self *Commands) RemoveGiteaToken(runner gitdomain.Runner) error {
+func (self *Commands) RemoveGiteaToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
-func (self *Commands) RenameBranch(runner gitdomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
+func (self *Commands) RenameBranch(runner subshelldomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
 	return runner.Run("git", "branch", "--move", oldName.String(), newName.String())
 }
 
-func (self *Commands) RepoStatus(backend gitdomain.RunnerQuerier) (gitdomain.RepoStatus, error) {
+func (self *Commands) RepoStatus(backend subshelldomain.RunnerQuerier) (gitdomain.RepoStatus, error) {
 	output, err := backend.Query("git", "status", "-z", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
@@ -823,24 +824,24 @@ func (self *Commands) RepoStatus(backend gitdomain.RunnerQuerier) (gitdomain.Rep
 	}, nil
 }
 
-func (self *Commands) ResetBranch(runner gitdomain.Runner, target gitdomain.BranchName) error {
+func (self *Commands) ResetBranch(runner subshelldomain.Runner, target gitdomain.BranchName) error {
 	return runner.Run("git", "reset", "--soft", target.String())
 }
 
-func (self *Commands) ResetCurrentBranchToSHA(runner gitdomain.Runner, sha gitdomain.SHA) error {
+func (self *Commands) ResetCurrentBranchToSHA(runner subshelldomain.Runner, sha gitdomain.SHA) error {
 	return runner.Run("git", "reset", "--hard", sha.String())
 }
 
-func (self *Commands) ResetRemoteBranchToSHA(runner gitdomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
+func (self *Commands) ResetRemoteBranchToSHA(runner subshelldomain.Runner, branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
 	remote := branch.Remote()
 	return runner.Run("git", "push", "--force-with-lease", remote.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
-func (self *Commands) ResolveConflict(runner gitdomain.Runner, file string, resolution gitdomain.ConflictResolution) error {
+func (self *Commands) ResolveConflict(runner subshelldomain.Runner, file string, resolution gitdomain.ConflictResolution) error {
 	return runner.Run("git", "checkout", resolution.GitFlag(), file)
 }
 
-func (self *Commands) RevertCommit(runner gitdomain.Runner, sha gitdomain.SHA) error {
+func (self *Commands) RevertCommit(runner subshelldomain.Runner, sha gitdomain.SHA) error {
 	return runner.Run("git", "revert", sha.String())
 }
 
@@ -861,39 +862,39 @@ func (self *Commands) SHAForBranch(querier gitdomain.Querier, name gitdomain.Bra
 	return gitdomain.NewSHA(output), nil
 }
 
-func (self *Commands) SetBitbucketAppPassword(runner gitdomain.Runner, value configdomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
+func (self *Commands) SetBitbucketAppPassword(runner subshelldomain.Runner, value configdomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketAppPassword.String(), value.String())
 }
 
-func (self *Commands) SetBitbucketUsername(runner gitdomain.Runner, value configdomain.BitbucketUsername, scope configdomain.ConfigScope) error {
+func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value configdomain.BitbucketUsername, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
-func (self *Commands) SetCodebergToken(runner gitdomain.Runner, value configdomain.CodebergToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value configdomain.CodebergToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 
-func (self *Commands) SetForgeType(runner gitdomain.Runner, platform forgedomain.ForgeType) error {
+func (self *Commands) SetForgeType(runner subshelldomain.Runner, platform forgedomain.ForgeType) error {
 	return runner.Run("git", "config", configdomain.KeyForgeType.String(), platform.String())
 }
 
-func (self *Commands) SetGitAlias(runner gitdomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
+func (self *Commands) SetGitAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
 }
 
-func (self *Commands) SetGitHubToken(runner gitdomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGithubToken.String(), value.String())
 }
 
-func (self *Commands) SetGitLabToken(runner gitdomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitlabToken.String(), value.String())
 }
 
-func (self *Commands) SetGiteaToken(runner gitdomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGiteaToken.String(), value.String())
 }
 
-func (self *Commands) SetOriginHostname(runner gitdomain.Runner, hostname configdomain.HostingOriginHostname) error {
+func (self *Commands) SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
 	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
 }
 
@@ -905,16 +906,16 @@ func (self *Commands) ShortenSHA(querier gitdomain.Querier, sha gitdomain.SHA) (
 	return gitdomain.NewSHA(output), nil
 }
 
-func (self *Commands) SquashMerge(runner gitdomain.Runner, branch gitdomain.LocalBranchName) error {
+func (self *Commands) SquashMerge(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
 	return runner.Run("git", "merge", "--squash", "--ff", branch.String())
 }
 
-func (self *Commands) StageFiles(runner gitdomain.Runner, names ...string) error {
+func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) error {
 	args := append([]string{"add"}, names...)
 	return runner.Run("git", args...)
 }
 
-func (self *Commands) Stash(runner gitdomain.Runner) error {
+func (self *Commands) Stash(runner subshelldomain.Runner) error {
 	err := runner.Run("git", "add", "-A")
 	if err != nil {
 		return err
@@ -927,11 +928,11 @@ func (self *Commands) StashSize(querier gitdomain.Querier) (gitdomain.StashSize,
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
 }
 
-func (self *Commands) UndoLastCommit(runner gitdomain.Runner) error {
+func (self *Commands) UndoLastCommit(runner subshelldomain.Runner) error {
 	return runner.Run("git", "reset", "--soft", "HEAD~1")
 }
 
-func (self *Commands) UnstageAll(runner gitdomain.Runner) error {
+func (self *Commands) UnstageAll(runner subshelldomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
 }
 

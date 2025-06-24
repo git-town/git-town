@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -29,7 +30,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 }
 
 type MainAndPerennialsArgs struct {
-	Backend               gitdomain.RunnerQuerier
+	Backend               subshelldomain.RunnerQuerier
 	DialogInputs          components.TestInputs
 	GetDefaultBranch      func(gitdomain.Querier) Option[gitdomain.LocalBranchName]
 	HasConfigFile         bool
