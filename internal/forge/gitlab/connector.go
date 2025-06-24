@@ -26,7 +26,7 @@ type Connector struct {
 }
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	url := self.Data.newProposalURL(data)
+	url := self.Data.NewProposalURL(data)
 	browser.Open(url, data.FrontendRunner)
 	return nil
 }

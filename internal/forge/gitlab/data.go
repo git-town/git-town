@@ -26,7 +26,7 @@ func (self Data) baseURL() string {
 	return "https://" + self.HostnameWithStandardPort()
 }
 
-func (self Data) newProposalURL(data forgedomain.CreateProposalArgs) string {
+func (self Data) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", data.Branch.String())
 	query.Add("merge_request[target_branch]", data.ParentBranch.String())
