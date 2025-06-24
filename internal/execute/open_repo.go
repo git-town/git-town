@@ -186,7 +186,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) subshelldomain.Runner { //nol
 }
 
 type newFrontendRunnerArgs struct {
-	backend          gitdomain.Querier
+	backend          subshelldomain.Querier
 	counter          Mutable[gohacks.Counter]
 	dryRun           configdomain.DryRun
 	getCurrentBranch subshell.GetCurrentBranchFunc

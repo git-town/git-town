@@ -17,19 +17,20 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
-	Backend          gitdomain.Querier
+	Backend          subshelldomain.Querier
 	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
 	PrintBranchNames bool
 	PrintCommands    bool
 }
 
-type GetCurrentBranchFunc func(gitdomain.Querier) (gitdomain.LocalBranchName, error)
+type GetCurrentBranchFunc func(subshelldomain.Querier) (gitdomain.LocalBranchName, error)
 
 func FormatCommand(currentBranch gitdomain.LocalBranchName, printBranch bool, env []string, executable string, args ...string) string {
 	result := ""

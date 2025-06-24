@@ -32,7 +32,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 type MainAndPerennialsArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	DialogInputs          components.TestInputs
-	GetDefaultBranch      func(gitdomain.Querier) Option[gitdomain.LocalBranchName]
+	GetDefaultBranch      func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
 	HasConfigFile         bool
 	LocalBranches         gitdomain.LocalBranchNames
 	UnvalidatedMain       Option[gitdomain.LocalBranchName]
