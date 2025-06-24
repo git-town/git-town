@@ -23,6 +23,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/test/commands"
 	"github.com/git-town/git-town/v21/internal/test/datatable"
+	"github.com/git-town/git-town/v21/internal/test/envvars"
 	"github.com/git-town/git-town/v21/internal/test/filesystem"
 	"github.com/git-town/git-town/v21/internal/test/fixture"
 	"github.com/git-town/git-town/v21/internal/test/handlebars"
@@ -821,9 +822,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		output := ""
 		exitCode := 0
 		if browser, has := state.browserVariable.Get(); has {
-			envPath := os.Getenv("PATH")
-			env := []string{"PATH="}
-			env = append(env, "BROWSER="+browser)
+			env := os.Environ()
+			env = envvars.Replace(env, "BROWSER", browser)
 			output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 				Env: env,
 			})
@@ -1548,8 +1548,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		toolPath := devRepo.MockCommand(tool)
-		state.browserVariable = Some(toolPath)
+		devRepo.MockCommand(tool)
+		state.browserVariable = Some(tool)
 	})
 
 	// This step exists to avoid re-creating commits with the same SHA as existing commits
@@ -1570,10 +1570,8 @@ func runCommand(ctx context.Context, command string) {
 	var runOutput string
 	env := []string{}
 	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
-		fmt.Println("11111111111111111111111111111111111111111111111111111111111")
 		env = append(env, "BROWSER="+browserVariable)
 	}
-	fmt.Println("22222222222222222222222222222222222222222222222222222222", env)
 	if hasDevRepo {
 		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
 			Env: env,
