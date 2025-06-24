@@ -102,6 +102,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -143,6 +144,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -185,6 +187,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -622,6 +625,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
