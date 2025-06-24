@@ -60,7 +60,6 @@ Feature: Prepopulate title and body
       Error: open zonk.txt: no such file or directory
       """
 
-  @this
   Scenario: provide title via CLI and body via STDIN
     When I pipe the following text into "git-town propose --body-file -":
       """
