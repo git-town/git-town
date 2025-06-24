@@ -35,6 +35,9 @@ func OpenBrowserCommand() Option[string] {
 	}
 	openBrowserCommands := make([]string, 0, 11)
 	if browser := os.Getenv(ENVVAR); browser != "" {
+		if browser == ENVVAR_NONE {
+			return None[string]()
+		}
 		openBrowserCommands = append(openBrowserCommands, browser)
 	}
 	openBrowserCommands = append(openBrowserCommands,

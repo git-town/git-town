@@ -30,7 +30,6 @@ Feature: support many browsers and operating systems
       | mozilla       |
       | netscape      |
 
-  @this
   Scenario: no supported tool installed
     And the origin is "https://github.com/git-town/git-town.git"
     And no tool to open browsers is installed
