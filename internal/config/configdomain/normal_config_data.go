@@ -20,6 +20,7 @@ type NormalConfigData struct {
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
+	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
