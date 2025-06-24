@@ -714,7 +714,10 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
-		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: Some(input.Content)})
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
+			Env:   env,
+			Input: Some(input.Content),
+		})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
