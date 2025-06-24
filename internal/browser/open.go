@@ -34,12 +34,9 @@ func OpenBrowserCommand() Option[string] {
 		return Some("start")
 	}
 	openBrowserCommands := make([]string, 0, 11)
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-	if browser := os.Getenv("BROWSER"); browser != "" {
-		fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+	if browser := os.Getenv(ENVVAR); browser != "" {
 		openBrowserCommands = append(openBrowserCommands, browser)
 	}
-	fmt.Println("CCCCCCCCCCCCCCCCCCCCCCCCC", openBrowserCommands)
 	openBrowserCommands = append(openBrowserCommands,
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in the native browser from Crostini on ChromeOS
