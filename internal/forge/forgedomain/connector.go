@@ -61,7 +61,6 @@ type Connector interface {
 }
 
 type CreateProposalArgs struct {
-	// BackendRunner  browser.BackendRunner
 	Branch         gitdomain.LocalBranchName
 	FrontendRunner browser.FrontendRunner
 	MainBranch     gitdomain.LocalBranchName
