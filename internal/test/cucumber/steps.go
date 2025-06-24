@@ -717,7 +717,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		if browserBin, has := state.browserVariable.Get(); has {
-			env = envvars.Replace(env, browser.ENVVAR, browserBin)
+			env = envvars.Replace(env, browser.EnvVarName, browserBin)
 		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
@@ -830,7 +830,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		exitCode := 0
 		if browserBin, has := state.browserVariable.Get(); has {
 			env := os.Environ()
-			env = envvars.Replace(env, browser.ENVVAR, browserBin)
+			env = envvars.Replace(env, browser.EnvVarName, browserBin)
 			output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 				Env: env,
 			})
@@ -951,7 +951,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^no tool to open browsers is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		state.browserVariable = Some(string(browser.ENVVAR_NONE))
+		state.browserVariable = Some(string(browser.EnvVarNone))
 	})
 
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {
@@ -1577,7 +1577,7 @@ func runCommand(ctx context.Context, command string) {
 	var runOutput string
 	env := os.Environ()
 	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
-		env = envvars.Replace(env, browser.ENVVAR, browserVariable)
+		env = envvars.Replace(env, browser.EnvVarName, browserVariable)
 	}
 	if hasDevRepo {
 		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
