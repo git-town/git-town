@@ -1568,9 +1568,9 @@ func runCommand(ctx context.Context, command string) {
 	}
 	var exitCode int
 	var runOutput string
-	env := []string{}
+	env := os.Environ()
 	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
-		env = append(env, "BROWSER="+browserVariable)
+		env = envvars.Replace(env, "BROWSER", browserVariable)
 	}
 	if hasDevRepo {
 		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
