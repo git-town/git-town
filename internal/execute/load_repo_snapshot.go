@@ -2,6 +2,7 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -16,7 +17,7 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], bool, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, Option[gitdomain.BranchInfos], dialogdomain.Exit, error) {
 	runStateOpt, err := runstate.Load(args.RootDir)
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), 0, None[gitdomain.BranchInfos](), false, err

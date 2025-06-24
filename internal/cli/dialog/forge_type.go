@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -21,7 +22,7 @@ Only change this if your forge is hosted at a custom URL.
 `
 )
 
-func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.TestInput) (Option[forgedomain.ForgeType], bool, error) {
+func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.TestInput) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.ForgeType]]{
 		{
 			Data: None[forgedomain.ForgeType](),

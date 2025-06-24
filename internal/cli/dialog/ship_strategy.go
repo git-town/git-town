@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 )
@@ -26,7 +27,7 @@ Options:
 `
 )
 
-func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, bool, error) {
+func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ShipStrategy]{
 		{
 			Data: configdomain.ShipStrategyAPI,
@@ -46,12 +47,12 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 		},
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
-	if err != nil || aborted {
-		return configdomain.ShipStrategyAPI, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
+	if err != nil || exit {
+		return configdomain.ShipStrategyAPI, exit, err
 	}
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }
 
 func shipStrategyEntryIndex(entries list.Entries[configdomain.ShipStrategy], needle configdomain.ShipStrategy) int {

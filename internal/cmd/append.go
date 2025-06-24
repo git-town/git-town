@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -205,7 +206,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit bool, err error) {
+func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit dialogdomain.Exit, err error) {
 	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {

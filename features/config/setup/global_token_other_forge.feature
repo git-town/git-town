@@ -15,10 +15,10 @@ Feature: a global API token of another forge exists
       | feature regex               | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
+      | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
-      | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |
       | sync-prototype-strategy     | enter             |                                             |

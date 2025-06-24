@@ -14,8 +14,8 @@ Feature: Configure a different development remote
       | feature regex               | enter    |
       | unknown branch type         | enter    |
       | dev-remote                  | up enter |
-      | forge type                  | enter    |
       | origin hostname             | enter    |
+      | forge type                  | enter    |
       | sync-feature-strategy       | enter    |
       | sync-perennial-strategy     | enter    |
       | sync-prototype-strategy     | enter    |

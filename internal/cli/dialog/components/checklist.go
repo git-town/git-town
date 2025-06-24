@@ -6,11 +6,12 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 )
 
 // lets the user select zero, one, or many of the given entries
-func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, aborted bool, err error) {
+func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, exit dialogdomain.Exit, err error) {
 	program := tea.NewProgram(CheckListModel[S]{
 		List:       list.NewList(entries, 0),
 		Selections: selections,

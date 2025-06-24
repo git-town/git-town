@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -25,7 +26,7 @@ This is typically the branch called
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option[gitdomain.LocalBranchName], inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	cursor := 0
 	if defaultEntry, hasDefaultEntry := defaultEntryOpt.Get(); hasDefaultEntry {
 		cursor = slice.Index(localBranches, defaultEntry).GetOrElse(0)

@@ -3,6 +3,7 @@ package validate
 import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -11,7 +12,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
+func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
 	// check Git user data
 	gitUserEmail, gitUserName, err := GitUser(args.Unvalidated.Value.UnvalidatedConfig)
 	if err != nil {
@@ -21,7 +22,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
-		validatedMain, additionalPerennials, aborted, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
+		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 			Backend:               args.Backend,
 			DialogInputs:          args.TestInputs,
 			GetDefaultBranch:      args.Git.DefaultBranch,
@@ -30,8 +31,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, bool, error) {
 			UnvalidatedMain:       args.Unvalidated.Value.UnvalidatedConfig.MainBranch,
 			UnvalidatedPerennials: args.Unvalidated.Value.NormalConfig.PerennialBranches,
 		})
-		if err != nil || aborted {
-			return config.EmptyValidatedConfig(), aborted, err
+		if err != nil || exit {
+			return config.EmptyValidatedConfig(), exit, err
 		}
 		mainBranch = validatedMain
 		args.BranchesAndTypes[validatedMain] = configdomain.BranchTypeMainBranch

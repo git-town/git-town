@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 )
@@ -21,7 +22,7 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs components.TestInput) (configdomain.SyncPrototypeStrategy, bool, error) {
+func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs components.TestInput) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncPrototypeStrategy]{
 		{
 			Data: configdomain.SyncPrototypeStrategyMerge,
@@ -37,10 +38,10 @@ func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs c
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
-	if err != nil || aborted {
-		return configdomain.SyncPrototypeStrategyMerge, aborted, err
+	selection, exit, err := components.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
+	if err != nil || exit {
+		return configdomain.SyncPrototypeStrategyMerge, exit, err
 	}
-	fmt.Printf(messages.SyncPrototypeBranches, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	fmt.Printf(messages.SyncPrototypeBranches, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

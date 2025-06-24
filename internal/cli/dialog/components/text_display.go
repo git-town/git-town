@@ -6,9 +6,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
-func TextDisplay(title, text string, inputs TestInput) (bool, error) {
+func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Exit, error) {
 	model := textDisplayModel{
 		colors: colors.NewDialogColors(),
 		status: list.StatusActive,

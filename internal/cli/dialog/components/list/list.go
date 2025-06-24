@@ -6,6 +6,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 )
 
@@ -33,8 +34,8 @@ func NewList[S comparable](entries Entries[S], cursor int) List[S] {
 	}
 }
 
-// Aborted indicates whether the user has Aborted this components.
-func (self *List[S]) Aborted() bool {
+// Aborted indicates whether the user has chosen to abort this component.
+func (self *List[S]) Aborted() dialogdomain.Exit {
 	return self.Status == StatusAborted
 }
 
