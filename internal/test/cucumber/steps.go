@@ -15,6 +15,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -715,6 +716,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
+		if browserBin, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.ENVVAR, browserBin)
+		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
 			Input: Some(input.Content),
@@ -824,9 +828,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.MockCommitMessage(message)
 		output := ""
 		exitCode := 0
-		if browser, has := state.browserVariable.Get(); has {
+		if browserBin, has := state.browserVariable.Get(); has {
 			env := os.Environ()
-			env = envvars.Replace(env, "BROWSER", browser)
+			env = envvars.Replace(env, browser.ENVVAR, browserBin)
 			output, exitCode = devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 				Env: env,
 			})
@@ -1573,7 +1577,7 @@ func runCommand(ctx context.Context, command string) {
 	var runOutput string
 	env := os.Environ()
 	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
-		env = envvars.Replace(env, "BROWSER", browserVariable)
+		env = envvars.Replace(env, browser.ENVVAR, browserVariable)
 	}
 	if hasDevRepo {
 		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
