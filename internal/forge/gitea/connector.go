@@ -84,21 +84,25 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
-func (self Connector) VerifyConnection() (string, error) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
-		return "", err
+		return forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
 	}
-	return user.UserName, nil
-}
-
-func (self Connector) VerifyReadProposalPermission() error {
-	_, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	_, _, err = self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 1,
 		},
 	})
-	return err
+	return forgedomain.VerifyConnectionResult{
+		AuthenticatedUser:   NewOption(user.UserName),
+		AuthenticationError: nil,
+		AuthorizationError:  err,
+	}
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
