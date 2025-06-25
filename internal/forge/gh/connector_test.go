@@ -3,6 +3,7 @@ package gh_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gh"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -20,6 +21,11 @@ github.com
   - Token: gho_************************************
   - Token scopes: 'gist', 'read:org', 'repo'`[1:]
 		have := gh.ParsePermissionsOutput(give)
-		must.EqOp(t, Some("kevgo"), have.AuthenticatedUser)
+		want := forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   Some("kevgo"),
+			AuthenticationError: nil,
+			AuthorizationError:  nil,
+		}
+		must.Eq(t, want, have)
 	})
 }

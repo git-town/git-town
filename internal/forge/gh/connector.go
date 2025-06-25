@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -181,11 +182,30 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		AuthenticationError: nil,
 		AuthorizationError:  nil,
 	}
-	loginRegex := regexp.MustCompile(`Logged in to github.com account ([^ ]+)`)
-	for _, line := range strings.Split(output, "\n") {
-		matches := loginRegex.FindStringSubmatch(line)
-		fmt.Println("1111111111111111111111111", matches)
-		result.AuthenticatedUser = NewOption(matches[1])
+	lines := strings.Split(output, "\n")
+	regex := regexp.MustCompile(`Logged in to github.com account (\w+)`)
+	found := false
+	for _, line := range lines {
+		matches := regex.FindStringSubmatch(line)
+		if matches != nil {
+			result.AuthenticatedUser = NewOption(matches[1])
+			found = true
+			break
+		}
+	}
+	if !found {
+		result.AuthenticationError = fmt.Errorf("no user logged in")
+	}
+	regex = regexp.MustCompile(`Token scopes: (.+)`)
+	for _, line := range lines {
+		matches := regex.FindStringSubmatch(line)
+		if matches != nil {
+			parts := strings.Split(matches[1], ", ")
+			if slices.Contains(parts, "'repo'") {
+				break
+			}
+			result.AuthorizationError = fmt.Errorf(`cannot find "repo" scope: %v`, parts)
+		}
 	}
 	return result
 }
