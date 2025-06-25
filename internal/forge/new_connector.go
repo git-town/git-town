@@ -75,6 +75,14 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				})
 				return Some(connector), err
 			}
+		} else {
+			// no GitHubConnectorType specified --> use the API connector
+			connector, err = github.NewConnector(github.NewConnectorArgs{
+				APIToken:  config.NormalConfig.GitHubToken,
+				Log:       log,
+				RemoteURL: remoteURL,
+			})
+			return Some(connector), err
 		}
 	case forgedomain.ForgeTypeGitLab:
 		var err error
