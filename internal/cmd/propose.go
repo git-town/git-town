@@ -103,7 +103,7 @@ func proposeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
+func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFile Option[gitdomain.ProposalBodyFile], fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -184,7 +184,7 @@ type branchToProposeData struct {
 	syncStatus          gitdomain.SyncStatus
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit dialogdomain.Exit, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFileOpt Option[gitdomain.ProposalBodyFile]) (data proposeData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -306,7 +306,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	var bodyText Option[gitdomain.ProposalBody]
 	if body.IsSome() {
 		bodyText = body
-	} else if len(bodyFile) > 0 {
+	} else if bodyFile, hasBodyFile := bodyFileOpt.Get(); hasBodyFile {
 		if bodyFile.ShouldReadStdin() {
 			content, err := io.ReadAll(os.Stdin)
 			if err != nil {
