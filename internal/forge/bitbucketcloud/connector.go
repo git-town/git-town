@@ -101,7 +101,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResult) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, err := self.client.User.Profile()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
