@@ -73,6 +73,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 					Log:    log,
 					Runner: nil,
 				})
+				return Some(connector), err
 			}
 		}
 	case forgedomain.ForgeTypeGitLab:
