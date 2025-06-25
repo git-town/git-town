@@ -42,9 +42,11 @@ type Runner interface {
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"pr", "create", "--base=" + data.ParentBranch.String(), "--head=" + data.Branch.String()}
-	if data.ProposalTitle {
+	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+		args = append(args, "--title="+title.String())
 	}
-	return data.FrontendRunner.Run("gh", args)
+	if body, hasBody := data.ProposalBody
+	return data.FrontendRunner.Run("gh", args...)
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
