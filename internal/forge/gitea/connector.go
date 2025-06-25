@@ -84,7 +84,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
-func (self Connector) VerifyConnection() (info forgedomain.AuthenticationInfo, err error) {
+func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResult, err error) {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
 		return info, err
@@ -94,7 +94,7 @@ func (self Connector) VerifyConnection() (info forgedomain.AuthenticationInfo, e
 			PageSize: 1,
 		},
 	})
-	return forgedomain.AuthenticationInfo{
+	return forgedomain.VerifyConnectionResult{
 		Username:         user.UserName,
 		CanReadProposals: err != nil,
 	}, err

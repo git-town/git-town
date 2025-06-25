@@ -54,16 +54,18 @@ type Connector interface {
 	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
 
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
-	VerifyConnection() (AuthenticationInfo, error)
+	VerifyConnection() VerifyConnectionResult
 }
 
-type AuthenticationInfo struct {
+type VerifyConnectionResult struct {
 	Username         string
+	LoginError       error
 	CanReadProposals bool
+	PermissionsError error
 }
 
-func EmptyAuthenticationInfo() AuthenticationInfo {
-	return AuthenticationInfo{}
+func EmptyAuthenticationInfo() VerifyConnectionResult {
+	return VerifyConnectionResult{}
 }
 
 type CreateProposalArgs struct {

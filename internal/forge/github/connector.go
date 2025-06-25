@@ -99,7 +99,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (info forgedomain.AuthenticationInfo, err error) {
+func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResult, err error) {
 	user, _, err := self.client.Users.Get(context.Background(), "")
 	if err != nil {
 		return info, err
@@ -109,7 +109,7 @@ func (self Connector) VerifyConnection() (info forgedomain.AuthenticationInfo, e
 			PerPage: 1,
 		},
 	})
-	return forgedomain.AuthenticationInfo{
+	return forgedomain.VerifyConnectionResult{
 		Username:         *user.Login,
 		CanReadProposals: err != nil,
 	}, err

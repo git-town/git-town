@@ -99,11 +99,13 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
-func (self Connector) VerifyConnection() (forgedomain.AuthenticationInfo, error) {
-	return forgedomain.AuthenticationInfo{
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
+	return forgedomain.VerifyConnectionResult{
 		Username:         "",
+		LoginError:       nil,
 		CanReadProposals: true,
-	}, nil
+		PermissionsError: nil,
+	}
 }
 
 func (self Connector) apiBaseURL() string {

@@ -343,11 +343,11 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
 	}
-	userName, err := connector.VerifyConnection()
+	authInfo, err := connector.VerifyConnection()
 	if err != nil {
 		return dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
 	}
-	if len(userName) > 0 {
+	if len(authInfo.Username) > 0 {
 		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, exit))
 	}
 	err = connector.VerifyReadProposalPermission()
