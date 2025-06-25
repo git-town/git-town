@@ -194,7 +194,7 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		}
 	}
 	if !found {
-		result.AuthenticationError = fmt.Errorf("no user logged in")
+		result.AuthenticationError = fmt.Errorf("not logged in")
 	}
 	regex = regexp.MustCompile(`Token scopes: (.+)`)
 	for _, line := range lines {

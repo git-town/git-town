@@ -1,6 +1,7 @@
 package gh_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -11,7 +12,7 @@ import (
 
 func TestParseStatusOutput(t *testing.T) {
 	t.Parallel()
-	t.Run("github.com output", func(t *testing.T) {
+	t.Run("logged into github.com", func(t *testing.T) {
 		t.Parallel()
 		give := `
 github.com
@@ -24,6 +25,18 @@ github.com
 		want := forgedomain.VerifyConnectionResult{
 			AuthenticatedUser:   Some("kevgo"),
 			AuthenticationError: nil,
+			AuthorizationError:  nil,
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("not logged in", func(t *testing.T) {
+		t.Parallel()
+		give := "You are not logged into any GitHub hosts. To log in, run: gh auth login"
+		have := gh.ParsePermissionsOutput(give)
+		want := forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: errors.New("not logged in"),
 			AuthorizationError:  nil,
 		}
 		must.Eq(t, want, have)
