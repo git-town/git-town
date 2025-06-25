@@ -292,8 +292,18 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 		case forgedomain.ForgeTypeGitea:
 			exit, err = enterGiteaToken(data, repo)
 		case forgedomain.ForgeTypeGitHub:
-			// TODO: ask for the GitHubConnectorType here
-			exit, err = enterGithubToken(data, repo)
+			existing := data.userInput.config.NormalConfig.GitHubConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
+			var answer forgedomain.GitHubConnectorType
+			answer, exit, err = dialog.GitHubConnectorType(existing, data.dialogInputs.Next())
+			if err != nil || exit {
+				return forgeTypeOpt, exit, err
+			}
+			data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
+			switch answer {
+			case forgedomain.GitHubConnectorTypeAPI:
+				exit, err = enterGithubToken(data, repo)
+			case forgedomain.GitHubConnectorTypeGh:
+			}
 		case forgedomain.ForgeTypeGitLab:
 			exit, err = enterGitlabToken(data, repo)
 		}
