@@ -312,13 +312,13 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 			if err != nil {
 				return data, false, fmt.Errorf("cannot read STDIN: %w", err)
 			}
-			bodyText = Some(gitdomain.ProposalBody(content))
+			bodyText = NewOption(gitdomain.ProposalBody(content))
 		} else {
 			fileData, err := os.ReadFile(bodyFile.String())
 			if err != nil {
 				return data, false, err
 			}
-			bodyText = Some(gitdomain.ProposalBody(fileData))
+			bodyText = NewOption(gitdomain.ProposalBody(fileData))
 		}
 	}
 	return proposeData{
