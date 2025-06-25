@@ -292,6 +292,7 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 		case forgedomain.ForgeTypeGitea:
 			exit, err = enterGiteaToken(data, repo)
 		case forgedomain.ForgeTypeGitHub:
+			// TODO: ask for the GitHubConnectorType here
 			exit, err = enterGithubToken(data, repo)
 		case forgedomain.ForgeTypeGitLab:
 			exit, err = enterGitlabToken(data, repo)
