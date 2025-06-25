@@ -3,6 +3,8 @@ package gh
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -127,7 +129,19 @@ func (self Connector) VerifyConnection() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return ParseAuthStatusOutput(output)
+	return ParseAuthStatusUser(output)
+}
+
+func (self Connector) VerifyReadProposalPermission() error {
+	output, err := self.runner.Query("gh", "auth", "status", "--active")
+	if err != nil {
+		return err
+	}
+	permissions := ParseAuthStatusPermissions(output)
+	if !slices.Contains(permissions, "repo") {
+		return fmt.Errorf(`permissions don't include "repo": %v`, permissions)
+	}
+	return nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -170,6 +184,20 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return self.runner.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
-func ParseAuthStatusOutput(output string) (string, error) {
-	lines := strings.Split(output, "\n")
+func ParseAuthStatusUser(output string) (string, error) {
+	regex := regexp.MustCompile(`Logged in to github.com account ([^ ]+)`)
+	for _, line := range strings.Split(output, "\n") {
+		matches := regex.FindStringSubmatch(line)
+		fmt.Println("1111111111111111111111111", matches)
+	}
+	return "", nil
+}
+
+func ParseAuthStatusPermissions(output string) (string, error) {
+	regex := regexp.MustCompile(`Logged in to github.com account ([^ ]+)`)
+	for _, line := range strings.Split(output, "\n") {
+		matches := regex.FindStringSubmatch(line)
+		fmt.Println("1111111111111111111111111", matches)
+	}
+	return "", nil
 }

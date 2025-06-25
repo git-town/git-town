@@ -18,7 +18,7 @@ github.com
   - Git operations protocol: ssh
   - Token: gho_************************************
   - Token scopes: 'gist', 'read:org', 'repo'`[1:]
-		have, err := gh.ParseAuthStatusOutput(give)
+		have, err := gh.AuthStatusUser(give)
 		must.NoError(t, err)
 		must.EqOp(t, "kevgo", have)
 	})
