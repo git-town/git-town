@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -15,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/google/go-github/v58/github"
 	"golang.org/x/oauth2"
@@ -27,6 +29,11 @@ type Connector struct {
 	APIToken Option[configdomain.GitHubToken]
 	client   *github.Client
 	log      print.Logger
+}
+
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
+	return nil
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
@@ -47,23 +54,24 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
-	return NewProposalURL(data, self.RepositoryURL())
-}
-
-func NewProposalURL(data forgedomain.NewProposalURLData, repoURL string) (string, error) {
+func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	toCompare := data.Branch.String()
 	if data.ParentBranch != data.MainBranch {
 		toCompare = data.ParentBranch.String() + "..." + data.Branch.String()
 	}
-	result := fmt.Sprintf("%s/compare/%s?expand=1", repoURL, url.PathEscape(toCompare))
-	if len(data.ProposalTitle) > 0 {
-		result += "&title=" + url.QueryEscape(data.ProposalTitle.String())
+	result := fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare))
+	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+		result += "&title=" + url.QueryEscape(title.String())
 	}
-	if len(data.ProposalBody) > 0 {
-		result += "&body=" + url.QueryEscape(data.ProposalBody.String())
+	if body, hasBody := data.ProposalBody.Get(); hasBody {
+		result += "&body=" + url.QueryEscape(body.String())
 	}
-	return result, nil
+	return result
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

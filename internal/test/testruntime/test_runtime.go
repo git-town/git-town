@@ -94,7 +94,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		Access: gitconfig.Access{
-			Runner: &testRunner,
+			Shell: &testRunner,
 		},
 		ConfigFile:    None[configdomain.PartialConfig](),
 		DryRun:        false,

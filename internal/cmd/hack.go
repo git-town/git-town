@@ -23,6 +23,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/configinterpreter"
@@ -224,7 +225,7 @@ func createFeatureBranch(args createFeatureBranchArgs) error {
 
 type createFeatureBranchArgs struct {
 	appendData            appendFeatureData
-	backend               gitdomain.RunnerQuerier
+	backend               subshelldomain.RunnerQuerier
 	beginBranchesSnapshot gitdomain.BranchesSnapshot
 	beginConfigSnapshot   undoconfig.ConfigSnapshot
 	beginStashSize        gitdomain.StashSize
@@ -232,7 +233,7 @@ type createFeatureBranchArgs struct {
 	commandsCounter       Mutable[gohacks.Counter]
 	dryRun                configdomain.DryRun
 	finalMessages         stringslice.Collector
-	frontend              gitdomain.Runner
+	frontend              subshelldomain.Runner
 	git                   git.Commands
 	rootDir               gitdomain.RepoRootDir
 	verbose               configdomain.Verbose

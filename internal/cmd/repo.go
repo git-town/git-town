@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
@@ -66,9 +65,9 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	browser.Open(data.connector.RepositoryURL(), repo.Frontend, repo.Backend)
+	err = data.connector.OpenRepository(repo.Frontend)
 	print.Footer(verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
-	return nil
+	return err
 }
 
 func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoData, err error) {

@@ -3,6 +3,7 @@ package forgedomain
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -12,6 +13,9 @@ import (
 // i.e. they return an option of the function to call.
 // A `None` value implies that the respective functionality isn't supported by this connector implementation.
 type Connector interface {
+	// CreateProposal creates a proposal at the forge.
+	CreateProposal(CreateProposalArgs) error
+
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective forge type is prepopulated with.
 	DefaultProposalMessage(proposal ProposalData) string
@@ -21,6 +25,9 @@ type Connector interface {
 	// to load details about the proposal for the given branch into the given target branch.
 	// A None return value indicates that this connector does not support this feature (yet).
 	FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[Proposal], error)]
+
+	// OpenRepository opens this repository in the associated application, typically the browser.
+	OpenRepository(runner subshelldomain.Runner) error
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -33,13 +40,6 @@ type Connector interface {
 	// to merge the proposal with the given number using the given message.
 	// A None return value indicates that this connector does not support this feature (yet).
 	SquashMergeProposalFn() Option[func(number int, message gitdomain.CommitMessage) error]
-
-	// NewProposalURL provides the URL of the page
-	// to create a new proposal online.
-	NewProposalURL(NewProposalURLData) (string, error)
-
-	// RepositoryURL provides the URL where the current repository can be found online.
-	RepositoryURL() string
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
@@ -60,10 +60,11 @@ type Connector interface {
 	VerifyReadProposalPermission() error
 }
 
-type NewProposalURLData struct {
-	Branch        gitdomain.LocalBranchName
-	MainBranch    gitdomain.LocalBranchName
-	ParentBranch  gitdomain.LocalBranchName
-	ProposalBody  gitdomain.ProposalBody
-	ProposalTitle gitdomain.ProposalTitle
+type CreateProposalArgs struct {
+	Branch         gitdomain.LocalBranchName
+	FrontendRunner subshelldomain.Runner
+	MainBranch     gitdomain.LocalBranchName
+	ParentBranch   gitdomain.LocalBranchName
+	ProposalBody   Option[gitdomain.ProposalBody]
+	ProposalTitle  Option[gitdomain.ProposalTitle]
 }

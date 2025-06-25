@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -14,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/ktrysmt/go-bitbucket"
 )
@@ -48,6 +50,11 @@ type NewConnectorArgs struct {
 	UserName    Option[configdomain.BitbucketUsername]
 }
 
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
+	return nil
+}
+
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
@@ -60,14 +67,18 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return Some(self.findProposalViaAPI)
 }
 
-func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
-			self.RepositoryURL(),
-			url.QueryEscape(data.Branch.String()),
-			url.QueryEscape(self.Organization),
-			url.QueryEscape(self.Repository),
-			url.QueryEscape(data.ParentBranch.String())),
-		nil
+		self.RepositoryURL(),
+		url.QueryEscape(data.Branch.String()),
+		url.QueryEscape(self.Organization),
+		url.QueryEscape(self.Repository),
+		url.QueryEscape(data.ParentBranch.String()))
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

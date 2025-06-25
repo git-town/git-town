@@ -54,21 +54,13 @@ type TestRunner struct {
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (self *TestRunner) MockBrokenCommand(name string) {
-	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(self.BinDir, name))
-	self.createMockBinary("which", content)
-	// write custom command
-	content = "#!/usr/bin/env bash\n\nexit 1"
+	content := "#!/usr/bin/env bash\n\nexit 1"
 	self.createMockBinary(name, content)
 }
 
 // MockCommand adds a mock for the command with the given name.
 func (self *TestRunner) MockCommand(name string) {
-	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(self.BinDir, name))
-	self.createMockBinary("which", content)
-	// write custom command
-	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
 	self.createMockBinary(name, content)
 }
 
@@ -299,8 +291,9 @@ func (self *TestRunner) createBinDir() {
 // createMockBinary creates an executable with the given name and content in ms.binDir.
 func (self *TestRunner) createMockBinary(name string, content string) {
 	self.createBinDir()
+	binaryPath := filepath.Join(self.BinDir, name)
 	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(filepath.Join(self.BinDir, name), []byte(content), 0o744))
+	asserts.NoError(os.WriteFile(binaryPath, []byte(content), 0o744))
 }
 
 // Options defines optional arguments for ShellRunner.RunWith().

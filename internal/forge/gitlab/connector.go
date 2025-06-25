@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -12,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
@@ -24,6 +26,12 @@ type Connector struct {
 	log print.Logger
 }
 
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	url := self.Data.NewProposalURL(data)
+	browser.Open(url, data.FrontendRunner)
+	return nil
+}
+
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	if len(forgedomain.ReadProposalOverride()) > 0 {
 		return Some(self.findProposalViaOverride)
@@ -32,6 +40,11 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 		return Some(self.findProposalViaAPI)
 	}
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {

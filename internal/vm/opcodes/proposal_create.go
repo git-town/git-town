@@ -3,19 +3,19 @@ package opcodes
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // ProposalCreate creates a new proposal for the current branch.
 type ProposalCreate struct {
 	Branch                  gitdomain.LocalBranchName
 	MainBranch              gitdomain.LocalBranchName
-	ProposalBody            gitdomain.ProposalBody
-	ProposalTitle           gitdomain.ProposalTitle
+	ProposalBody            Option[gitdomain.ProposalBody]
+	ProposalTitle           Option[gitdomain.ProposalTitle]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
@@ -28,16 +28,12 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
-	prURL, err := connector.NewProposalURL(forgedomain.NewProposalURLData{
-		Branch:        self.Branch,
-		MainBranch:    self.MainBranch,
-		ParentBranch:  parentBranch,
-		ProposalBody:  self.ProposalBody,
-		ProposalTitle: self.ProposalTitle,
+	return connector.CreateProposal(forgedomain.CreateProposalArgs{
+		Branch:         self.Branch,
+		FrontendRunner: args.Frontend,
+		MainBranch:     self.MainBranch,
+		ParentBranch:   parentBranch,
+		ProposalBody:   self.ProposalBody,
+		ProposalTitle:  self.ProposalTitle,
 	})
-	if err != nil {
-		return err
-	}
-	browser.Open(prURL, args.Frontend, args.Backend)
-	return nil
 }

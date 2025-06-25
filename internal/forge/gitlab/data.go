@@ -18,11 +18,11 @@ func (self Data) DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (!%d)", data.Title, data.Number))
 }
 
-func (self Data) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+func (self Data) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", data.Branch.String())
 	query.Add("merge_request[target_branch]", data.ParentBranch.String())
-	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode()), nil
+	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode())
 }
 
 func (self Data) RepositoryURL() string {

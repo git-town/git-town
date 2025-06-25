@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"code.gitea.io/sdk/gitea"
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -16,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"golang.org/x/oauth2"
 )
@@ -25,6 +27,13 @@ type Connector struct {
 	APIToken Option[configdomain.GiteaToken]
 	client   *gitea.Client
 	log      print.Logger
+}
+
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
+	url := fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare))
+	browser.Open(url, data.FrontendRunner)
+	return nil
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
@@ -41,9 +50,9 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return None[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)]()
 }
 
-func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
-	toCompare := data.ParentBranch.String() + "..." + data.Branch.String()
-	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

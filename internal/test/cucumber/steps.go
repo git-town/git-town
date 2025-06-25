@@ -15,6 +15,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -23,6 +24,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/test/commands"
 	"github.com/git-town/git-town/v21/internal/test/datatable"
+	"github.com/git-town/git-town/v21/internal/test/envvars"
 	"github.com/git-town/git-town/v21/internal/test/filesystem"
 	"github.com/git-town/git-town/v21/internal/test/fixture"
 	"github.com/git-town/git-town/v21/internal/test/handlebars"
@@ -100,6 +102,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -141,6 +144,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -183,6 +187,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -620,6 +625,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ScenarioState{
 			beforeRunDevSHAs:     None[gitdomain.Commits](),
 			beforeRunOriginSHAs:  None[gitdomain.Commits](),
+			browserVariable:      None[string](),
 			fixture:              fixture,
 			initialBranches:      None[datatable.DataTable](),
 			initialCommits:       None[datatable.DataTable](),
@@ -714,6 +720,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
+		if browserPath, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+		}
 		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
 			Env:   env,
 			Input: Some(input.Content),
@@ -821,7 +830,13 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		devRepo.MockCommitMessage(message)
-		output, exitCode := devRepo.MustQueryStringCode(cmd)
+		env := os.Environ()
+		if browserPath, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+		}
+		output, exitCode := devRepo.MustQueryStringCodeWith(cmd, &subshell.Options{
+			Env: env,
+		})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 		devRepo.Reload()
@@ -867,6 +882,9 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state.CaptureState()
 		updateInitialSHAs(state)
 		env := os.Environ()
+		if browserPath, has := state.browserVariable.Get(); has {
+			env = envvars.Replace(env, browser.EnvVarName, browserPath)
+		}
 		answers := asserts.NoError1(helpers.TableToInputEnv(input))
 		for dialogNumber, answer := range answers {
 			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
@@ -936,8 +954,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^no tool to open browsers is installed$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		devRepo := state.fixture.DevRepo.GetOrPanic()
-		devRepo.MockNoCommandsInstalled()
+		state.browserVariable = Some(string(browser.EnvVarNone))
 	})
 
 	sc.Step(`^no uncommitted files exist now$`, func(ctx context.Context) error {
@@ -1535,12 +1552,14 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.MockBrokenCommand(name)
+		state.browserVariable = Some(name)
 	})
 
 	sc.Step(`^tool "([^"]*)" is installed$`, func(ctx context.Context, tool string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		devRepo.MockCommand(tool)
+		state.browserVariable = Some(tool)
 	})
 
 	// This step exists to avoid re-creating commits with the same SHA as existing commits
@@ -1559,8 +1578,14 @@ func runCommand(ctx context.Context, command string) {
 	}
 	var exitCode int
 	var runOutput string
+	env := os.Environ()
+	if browserVariable, hasBrowserOverride := state.browserVariable.Get(); hasBrowserOverride {
+		env = envvars.Replace(env, browser.EnvVarName, browserVariable)
+	}
 	if hasDevRepo {
-		runOutput, exitCode = devRepo.MustQueryStringCode(command)
+		runOutput, exitCode = devRepo.MustQueryStringCodeWith(command, &subshell.Options{
+			Env: env,
+		})
 		devRepo.Reload()
 	} else {
 		parts := asserts.NoError1(shellquote.Split(command))
