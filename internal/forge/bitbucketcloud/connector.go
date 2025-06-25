@@ -105,10 +105,9 @@ func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResul
 	user, err := self.client.User.Profile()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
-			AuthenticatedUser:    None[string](),
-			AuthenticationError:  err,
-			AuthorizationSuccess: false,
-			AuthorizationError:   nil,
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
 		}
 	}
 	_, err = self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
@@ -118,10 +117,9 @@ func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResul
 		States:   []string{},
 	})
 	return forgedomain.VerifyConnectionResult{
-		AuthenticatedUser:    Some(user.Username),
-		AuthenticationError:  nil,
-		AuthorizationSuccess: err == nil,
-		AuthorizationError:   err,
+		AuthenticatedUser:   Some(user.Username),
+		AuthenticationError: nil,
+		AuthorizationError:  err,
 	}
 }
 

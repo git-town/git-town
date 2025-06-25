@@ -88,10 +88,9 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
-			AuthenticatedUser:    None[string](),
-			AuthenticationError:  err,
-			AuthorizationSuccess: false,
-			AuthorizationError:   nil,
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
 		}
 	}
 	_, _, err = self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
@@ -100,10 +99,9 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		},
 	})
 	return forgedomain.VerifyConnectionResult{
-		AuthenticatedUser:    Some(user.UserName),
-		AuthenticationError:  err,
-		AuthorizationSuccess: err == nil,
-		AuthorizationError:   err,
+		AuthenticatedUser:   Some(user.UserName),
+		AuthenticationError: err,
+		AuthorizationError:  err,
 	}
 }
 
