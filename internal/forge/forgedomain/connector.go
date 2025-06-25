@@ -58,10 +58,10 @@ type Connector interface {
 }
 
 type VerifyConnectionResult struct {
-	AuthenticatedUser    string // the authenticated username
-	AuthenticationError  error  // error while verifying to verify authentication
-	AuthorizationError   error  // error while verifying authorization
-	AuthorizationSuccess bool   // whether the connection provides proper authorization
+	AuthenticatedUser    Option[string] // the authenticated username
+	AuthenticationError  error          // error while verifying to verify authentication
+	AuthorizationError   error          // error while verifying authorization
+	AuthorizationSuccess bool           // whether the connection provides proper authorization
 }
 
 type CreateProposalArgs struct {

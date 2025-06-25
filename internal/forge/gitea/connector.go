@@ -88,7 +88,7 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
-			AuthenticatedUser:    "",
+			AuthenticatedUser:    None[string](),
 			AuthenticationError:  err,
 			AuthorizationSuccess: false,
 			AuthorizationError:   nil,
@@ -100,7 +100,7 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		},
 	})
 	return forgedomain.VerifyConnectionResult{
-		AuthenticatedUser:    user.UserName,
+		AuthenticatedUser:    Some(user.UserName),
 		AuthenticationError:  err,
 		AuthorizationSuccess: err == nil,
 		AuthorizationError:   err,

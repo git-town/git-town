@@ -347,8 +347,8 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	if verifyResult.AuthenticationError != nil {
 		return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, data.dialogInputs.Next())
 	}
-	if len(verifyResult.AuthenticatedUser) > 0 {
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(verifyResult.AuthenticatedUser, exit))
+	if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
+		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(user, exit))
 	}
 	if verifyResult.AuthorizationError != nil {
 		return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, data.dialogInputs.Next())
