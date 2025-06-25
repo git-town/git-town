@@ -4,9 +4,9 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undobranches"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/undo/undostash"
@@ -32,7 +32,7 @@ func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, e
 }
 
 type CreateUndoProgramArgs struct {
-	Backend        gitdomain.RunnerQuerier
+	Backend        subshelldomain.RunnerQuerier
 	Config         config.ValidatedConfig
 	DryRun         configdomain.DryRun
 	FinalMessages  stringslice.Collector

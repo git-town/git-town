@@ -21,6 +21,9 @@ type ScenarioState struct {
 	// commits at the origin remote before the end-to-end test executed the most recent subshell command
 	beforeRunOriginSHAs Option[gitdomain.Commits]
 
+	// content of the $BROWSER variable in the subshell
+	browserVariable Option[string]
+
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 

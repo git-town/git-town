@@ -5,13 +5,14 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
 // but does not execute them.
 type FrontendDryRunner struct {
-	Backend          gitdomain.Querier
+	Backend          subshelldomain.Querier
 	CommandsCounter  Mutable[gohacks.Counter]
 	GetCurrentBranch GetCurrentBranchFunc
 	PrintBranchNames bool

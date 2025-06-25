@@ -144,7 +144,7 @@ func prependCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePrepend(args []string, beam configdomain.Beam, proposalBody gitdomain.ProposalBody, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, proposalTitle gitdomain.ProposalTitle, verbose configdomain.Verbose) error {
+func executePrepend(args []string, beam configdomain.Beam, proposalBody Option[gitdomain.ProposalBody], commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, proposalTitle Option[gitdomain.ProposalTitle], verbose configdomain.Verbose) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -219,8 +219,8 @@ type prependData struct {
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
 	proposal            Option[forgedomain.Proposal]
-	proposalBody        gitdomain.ProposalBody
-	proposalTitle       gitdomain.ProposalTitle
+	proposalBody        Option[gitdomain.ProposalBody]
+	proposalTitle       Option[gitdomain.ProposalTitle]
 	propose             configdomain.Propose
 	prototype           configdomain.Prototype
 	remotes             gitdomain.Remotes
@@ -228,7 +228,7 @@ type prependData struct {
 	targetBranch        gitdomain.LocalBranchName
 }
 
-func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propasalBody gitdomain.ProposalBody, proposalTitle gitdomain.ProposalTitle, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit dialogdomain.Exit, err error) {
+func determinePrependData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, proposalBody Option[gitdomain.ProposalBody], proposalTitle Option[gitdomain.ProposalTitle], propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data prependData, exit dialogdomain.Exit, err error) {
 	prefetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -356,7 +356,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		preFetchBranchInfos: prefetchBranchSnapshot.Branches,
 		previousBranch:      previousBranch,
 		proposal:            proposalOpt,
-		proposalBody:        propasalBody,
+		proposalBody:        proposalBody,
 		proposalTitle:       proposalTitle,
 		propose:             propose,
 		prototype:           prototype,

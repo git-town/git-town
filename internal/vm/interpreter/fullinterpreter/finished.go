@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runlog"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -27,7 +28,7 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Backend}
+	configGitAccess := gitconfig.Access{Shell: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
@@ -55,7 +56,7 @@ func finished(args finishedArgs) error {
 }
 
 type finishedArgs struct {
-	Backend         gitdomain.RunnerQuerier
+	Backend         subshelldomain.RunnerQuerier
 	CommandsCounter Mutable[gohacks.Counter]
 	FinalMessages   stringslice.Collector
 	Git             git.Commands

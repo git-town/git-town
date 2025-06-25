@@ -103,7 +103,7 @@ func proposeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile, fullStack configdomain.FullStack) error {
+func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFile Option[gitdomain.ProposalBodyFile], fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           dryRun,
 		PrintBranchNames: true,
@@ -171,8 +171,8 @@ type proposeData struct {
 	nonExistingBranches gitdomain.LocalBranchNames // branches that are listed in the lineage information, but don't exist in the repo, neither locally nor remotely
 	preFetchBranchInfos gitdomain.BranchInfos
 	previousBranch      Option[gitdomain.LocalBranchName]
-	proposalBody        gitdomain.ProposalBody
-	proposalTitle       gitdomain.ProposalTitle
+	proposalBody        Option[gitdomain.ProposalBody]
+	proposalTitle       Option[gitdomain.ProposalTitle]
 	remotes             gitdomain.Remotes
 	stashSize           gitdomain.StashSize
 }
@@ -184,7 +184,7 @@ type branchToProposeData struct {
 	syncStatus          gitdomain.SyncStatus
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title gitdomain.ProposalTitle, body gitdomain.ProposalBody, bodyFile gitdomain.ProposalBodyFile) (data proposeData, exit dialogdomain.Exit, err error) {
+func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFileOpt Option[gitdomain.ProposalBodyFile]) (data proposeData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -303,22 +303,22 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil {
 		return data, false, err
 	}
-	var bodyText gitdomain.ProposalBody
-	if len(body) > 0 {
+	var bodyText Option[gitdomain.ProposalBody]
+	if body.IsSome() {
 		bodyText = body
-	} else if len(bodyFile) > 0 {
+	} else if bodyFile, hasBodyFile := bodyFileOpt.Get(); hasBodyFile {
 		if bodyFile.ShouldReadStdin() {
 			content, err := io.ReadAll(os.Stdin)
 			if err != nil {
 				return data, false, fmt.Errorf("cannot read STDIN: %w", err)
 			}
-			bodyText = gitdomain.ProposalBody(content)
+			bodyText = NewOption(gitdomain.ProposalBody(content))
 		} else {
 			fileData, err := os.ReadFile(bodyFile.String())
 			if err != nil {
 				return data, false, err
 			}
-			bodyText = gitdomain.ProposalBody(fileData)
+			bodyText = NewOption(gitdomain.ProposalBody(fileData))
 		}
 	}
 	return proposeData{

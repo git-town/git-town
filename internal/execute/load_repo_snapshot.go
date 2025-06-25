@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -79,14 +80,14 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 }
 
 type LoadRepoSnapshotArgs struct {
-	Backend               gitdomain.RunnerQuerier
+	Backend               subshelldomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
 	Detached              configdomain.Detached
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
-	Frontend              gitdomain.Runner
+	Frontend              subshelldomain.Runner
 	Git                   git.Commands
 	HandleUnfinishedState bool
 	Repo                  OpenRepoResult

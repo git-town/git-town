@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/carlmjohnson/requests"
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -13,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -47,6 +49,11 @@ type NewConnectorArgs struct {
 	UserName        Option[configdomain.BitbucketUsername]
 }
 
+func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
+	browser.Open(self.NewProposalURL(data), data.FrontendRunner)
+	return nil
+}
+
 func (self Connector) DefaultProposalMessage(proposalData forgedomain.ProposalData) string {
 	data := proposalData.Data()
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
@@ -60,12 +67,16 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return Some(self.findProposalViaAPI)
 }
 
-func (self Connector) NewProposalURL(data forgedomain.NewProposalURLData) (string, error) {
+func (self Connector) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	return fmt.Sprintf("%s/pull-requests?create&sourceBranch=%s&targetBranch=%s",
-			self.RepositoryURL(),
-			url.QueryEscape(data.Branch.String()),
-			url.QueryEscape(data.ParentBranch.String())),
-		nil
+		self.RepositoryURL(),
+		url.QueryEscape(data.Branch.String()),
+		url.QueryEscape(data.ParentBranch.String()))
+}
+
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	browser.Open(self.RepositoryURL(), runner)
+	return nil
 }
 
 func (self Connector) RepositoryURL() string {

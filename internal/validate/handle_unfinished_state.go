@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/skip"
 	"github.com/git-town/git-town/v21/internal/state"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -62,13 +63,13 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 }
 
 type UnfinishedStateArgs struct {
-	Backend           gitdomain.RunnerQuerier
+	Backend           subshelldomain.RunnerQuerier
 	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[forgedomain.Connector]
 	Detached          configdomain.Detached
 	DialogTestInputs  components.TestInputs
 	FinalMessages     stringslice.Collector
-	Frontend          gitdomain.Runner
+	Frontend          subshelldomain.Runner
 	Git               git.Commands
 	HasOpenChanges    bool
 	PushHook          configdomain.PushHook
@@ -213,7 +214,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 }
 
 type quickValidateConfigArgs struct {
-	backend      gitdomain.RunnerQuerier
+	backend      subshelldomain.RunnerQuerier
 	dialogInputs components.TestInputs
 	git          git.Commands
 	unvalidated  Mutable[config.UnvalidatedConfig]

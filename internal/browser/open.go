@@ -4,16 +4,18 @@ package browser
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"runtime"
 
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, frontend frontendRunner, backend backendRunner) {
-	command, hasCommand := OpenBrowserCommand(backend).Get()
+func Open(url string, frontend subshelldomain.Runner) {
+	command, hasCommand := OpenBrowserCommand().Get()
 	if !hasCommand {
 		fmt.Printf(messages.BrowserOpen, url)
 		return
@@ -25,7 +27,7 @@ func Open(url string, frontend frontendRunner, backend backendRunner) {
 }
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(runner backendRunner) Option[string] {
+func OpenBrowserCommand() Option[string] {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
@@ -33,7 +35,10 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		return Some("start")
 	}
 	openBrowserCommands := make([]string, 0, 11)
-	if browser := os.Getenv(ENVVAR); browser != "" {
+	if browser := os.Getenv(EnvVarName); browser != "" {
+		if browser == EnvVarNone {
+			return None[string]()
+		}
 		openBrowserCommands = append(openBrowserCommands, browser)
 	}
 	openBrowserCommands = append(openBrowserCommands,
@@ -49,18 +54,10 @@ func OpenBrowserCommand(runner backendRunner) Option[string] {
 		"netscape",
 	)
 	for _, browserCommand := range openBrowserCommands {
-		output, err := runner.Query("which", browserCommand)
-		if err == nil && len(output) > 0 {
+		executable, err := exec.LookPath(browserCommand)
+		if err == nil && len(executable) > 0 {
 			return Some(browserCommand)
 		}
 	}
 	return None[string]()
-}
-
-type frontendRunner interface {
-	Run(executable string, args ...string) error
-}
-
-type backendRunner interface {
-	Query(executable string, args ...string) (string, error)
 }

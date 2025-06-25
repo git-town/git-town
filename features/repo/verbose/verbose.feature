@@ -13,13 +13,9 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                   |
       |        | backend  | git config -lz --local                    |
       |        | backend  | git config -lz                            |
-      |        | backend  | which wsl-open                            |
-      |        | backend  | which garcon-url-handler                  |
-      |        | backend  | which xdg-open                            |
-      |        | backend  | which open                                |
       |        | backend  | git branch --show-current                 |
       | main   | frontend | open https://github.com/git-town/git-town |
     And Git Town prints:
       """
-      Ran 11 shell commands.
+      Ran 7 shell commands.
       """

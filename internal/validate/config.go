@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -88,13 +89,13 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 }
 
 type ConfigArgs struct {
-	Backend            gitdomain.RunnerQuerier
+	Backend            subshelldomain.RunnerQuerier
 	BranchesAndTypes   configdomain.BranchesAndTypes
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	Connector          Option[forgedomain.Connector]
 	DialogTestInputs   components.TestInputs
-	Frontend           gitdomain.Runner
+	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
 	RepoStatus         gitdomain.RepoStatus

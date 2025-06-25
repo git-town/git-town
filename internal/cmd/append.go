@@ -388,6 +388,10 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 	}
 	moveCommitsToAppendedBranch(prog, data, beamCherryPick)
 	if data.propose {
+		title := None[gitdomain.ProposalTitle]()
+		if commitMessage, has := data.commitMessage.Get(); has {
+			title = Some(gitdomain.ProposalTitle(string(commitMessage)))
+		}
 		prog.Value.Add(
 			&opcodes.BranchTrackingCreate{
 				Branch: data.targetBranch,
@@ -395,8 +399,8 @@ func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, 
 			&opcodes.ProposalCreate{
 				Branch:        data.targetBranch,
 				MainBranch:    data.config.ValidatedConfigData.MainBranch,
-				ProposalBody:  "",
-				ProposalTitle: gitdomain.ProposalTitle(data.commitMessage.GetOrDefault()),
+				ProposalBody:  None[gitdomain.ProposalBody](),
+				ProposalTitle: title,
 			},
 		)
 	}

@@ -10,9 +10,8 @@ repository in your browser. Git Town can display repositories hosted on
 [Gitea](https://gitea.com), [Bitbucket](https://bitbucket.org), and
 [Codeberg](https://codeberg.org).
 
-On non-Windows systems, Git Town will first read the `BROWSER` environment
-variable to determine the browser command. If it isn't set, Git Town will try
-various common commands like `open`, `xdg-open`, or `x-www-browser`.
+You can configure the browser which Git Town opens using the
+[BROWSER environment variable](../preferences/browser.md).
 
 ## Positional arguments
 
