@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/forge/gh"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
 
@@ -18,8 +19,7 @@ github.com
   - Git operations protocol: ssh
   - Token: gho_************************************
   - Token scopes: 'gist', 'read:org', 'repo'`[1:]
-		have, err := gh.AuthStatusUser(give)
-		must.NoError(t, err)
-		must.EqOp(t, "kevgo", have)
+		have := gh.ParsePermissionsOutput(give)
+		must.EqOp(t, Some("kevgo"), have.AuthenticatedUser)
 	})
 }
