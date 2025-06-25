@@ -344,14 +344,14 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 		return false, false, nil
 	}
 	verifyResult := connector.VerifyConnection()
-	if verifyResult.LoginError != nil {
-		return dialog.CredentialsNoAccess(verifyResult.LoginError, data.dialogInputs.Next())
+	if verifyResult.AuthenticationError != nil {
+		return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, data.dialogInputs.Next())
 	}
-	if len(verifyResult.Username) > 0 {
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(verifyResult.Username, exit))
+	if len(verifyResult.AuthenticatedUser) > 0 {
+		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(verifyResult.AuthenticatedUser, exit))
 	}
-	if verifyResult.PermissionsError != nil {
-		return dialog.CredentialsNoProposalAccess(verifyResult.PermissionsError, data.dialogInputs.Next())
+	if verifyResult.AuthorizationError != nil {
+		return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, data.dialogInputs.Next())
 	}
 	fmt.Println(messages.CredentialsAccess)
 	return false, false, nil

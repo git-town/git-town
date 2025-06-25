@@ -101,10 +101,10 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	return forgedomain.VerifyConnectionResult{
-		Username:         "",
-		LoginError:       nil,
-		CanReadProposals: true,
-		PermissionsError: nil,
+		AuthenticatedUser:    "",
+		AuthenticationError:  nil,
+		AuthorizationSuccess: true,
+		AuthorizationError:   nil,
 	}
 }
 

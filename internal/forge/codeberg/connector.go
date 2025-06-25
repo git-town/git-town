@@ -88,10 +88,10 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.GetMyUserInfo()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
-			Username:         "",
-			LoginError:       err,
-			CanReadProposals: false,
-			PermissionsError: nil,
+			AuthenticatedUser:    "",
+			AuthenticationError:  err,
+			AuthorizationSuccess: false,
+			AuthorizationError:   nil,
 		}
 	}
 	_, _, err = self.client.ListRepoPullRequests(self.Organization, self.Repository, forgejo.ListPullRequestsOptions{
@@ -100,10 +100,10 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		},
 	})
 	return forgedomain.VerifyConnectionResult{
-		Username:         user.UserName,
-		LoginError:       nil,
-		CanReadProposals: err == nil,
-		PermissionsError: err,
+		AuthenticatedUser:    user.UserName,
+		AuthenticationError:  nil,
+		AuthorizationSuccess: err == nil,
+		AuthorizationError:   err,
 	}
 }
 

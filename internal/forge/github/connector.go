@@ -103,10 +103,10 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.Users.Get(context.Background(), "")
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
-			Username:         "",
-			LoginError:       err,
-			CanReadProposals: false,
-			PermissionsError: nil,
+			AuthenticatedUser:    "",
+			AuthenticationError:  err,
+			AuthorizationSuccess: false,
+			AuthorizationError:   nil,
 		}
 	}
 	_, _, err = self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
@@ -115,10 +115,10 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		},
 	})
 	return forgedomain.VerifyConnectionResult{
-		Username:         *user.Login,
-		LoginError:       nil,
-		CanReadProposals: err == nil,
-		PermissionsError: err,
+		AuthenticatedUser:    *user.Login,
+		AuthenticationError:  nil,
+		AuthorizationSuccess: err == nil,
+		AuthorizationError:   err,
 	}
 }
 

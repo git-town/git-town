@@ -76,10 +76,10 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.Users.CurrentUser()
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
-			Username:         "",
-			LoginError:       err,
-			CanReadProposals: false,
-			PermissionsError: nil,
+			AuthenticatedUser:    "",
+			AuthenticationError:  err,
+			AuthorizationSuccess: false,
+			AuthorizationError:   nil,
 		}
 	}
 	_, _, err = self.client.MergeRequests.ListMergeRequests(&gitlab.ListMergeRequestsOptions{
@@ -88,10 +88,10 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 		},
 	})
 	return forgedomain.VerifyConnectionResult{
-		Username:         user.Username,
-		LoginError:       nil,
-		CanReadProposals: err == nil,
-		PermissionsError: err,
+		AuthenticatedUser:    user.Username,
+		AuthenticationError:  nil,
+		AuthorizationSuccess: err == nil,
+		AuthorizationError:   err,
 	}
 }
 
