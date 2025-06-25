@@ -72,10 +72,15 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (forgedomain.VerifyConnectionResult, error) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.Users.CurrentUser()
 	if err != nil {
-		return forgedomain.EmptyAuthenticationInfo(), err
+		return forgedomain.VerifyConnectionResult{
+			Username:         "",
+			LoginError:       err,
+			CanReadProposals: false,
+			PermissionsError: nil,
+		}
 	}
 	_, _, err = self.client.MergeRequests.ListMergeRequests(&gitlab.ListMergeRequestsOptions{
 		ListOptions: gitlab.ListOptions{
@@ -84,8 +89,10 @@ func (self Connector) VerifyConnection() (forgedomain.VerifyConnectionResult, er
 	})
 	return forgedomain.VerifyConnectionResult{
 		Username:         user.Username,
-		CanReadProposals: err != nil,
-	}, err
+		LoginError:       nil,
+		CanReadProposals: err == nil,
+		PermissionsError: err,
+	}
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

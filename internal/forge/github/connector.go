@@ -99,10 +99,15 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResult, err error) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, _, err := self.client.Users.Get(context.Background(), "")
 	if err != nil {
-		return info, err
+		return forgedomain.VerifyConnectionResult{
+			Username:         "",
+			LoginError:       err,
+			CanReadProposals: false,
+			PermissionsError: nil,
+		}
 	}
 	_, _, err = self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		ListOptions: github.ListOptions{
@@ -111,8 +116,10 @@ func (self Connector) VerifyConnection() (info forgedomain.VerifyConnectionResul
 	})
 	return forgedomain.VerifyConnectionResult{
 		Username:         *user.Login,
-		CanReadProposals: err != nil,
-	}, err
+		LoginError:       nil,
+		CanReadProposals: err == nil,
+		PermissionsError: err,
+	}
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {

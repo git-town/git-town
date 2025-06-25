@@ -64,10 +64,6 @@ type VerifyConnectionResult struct {
 	PermissionsError error
 }
 
-func EmptyAuthenticationInfo() VerifyConnectionResult {
-	return VerifyConnectionResult{}
-}
-
 type CreateProposalArgs struct {
 	Branch         gitdomain.LocalBranchName
 	FrontendRunner subshelldomain.Runner
