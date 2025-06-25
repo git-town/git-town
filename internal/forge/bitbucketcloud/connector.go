@@ -101,22 +101,26 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (string, error) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	user, err := self.client.User.Profile()
 	if err != nil {
-		return "", err
+		return forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
 	}
-	return user.Username, nil
-}
-
-func (self Connector) VerifyReadProposalPermission() error {
-	_, err := self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
+	_, err = self.client.Repositories.PullRequests.Gets(&bitbucket.PullRequestsOptions{
 		Owner:    self.Organization,
 		RepoSlug: self.Repository,
 		Query:    "",
 		States:   []string{},
 	})
-	return err
+	return forgedomain.VerifyConnectionResult{
+		AuthenticatedUser:   NewOption(user.Username),
+		AuthenticationError: nil,
+		AuthorizationError:  err,
+	}
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
