@@ -62,6 +62,10 @@ type AuthenticationInfo struct {
 	CanReadProposals bool
 }
 
+func EmptyAuthenticationInfo() AuthenticationInfo {
+	return AuthenticationInfo{}
+}
+
 type CreateProposalArgs struct {
 	Branch         gitdomain.LocalBranchName
 	FrontendRunner subshelldomain.Runner

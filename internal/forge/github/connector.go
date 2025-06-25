@@ -99,21 +99,20 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (string, error) {
+func (self Connector) VerifyConnection() (info forgedomain.AuthenticationInfo, err error) {
 	user, _, err := self.client.Users.Get(context.Background(), "")
 	if err != nil {
-		return "", err
+		return info, err
 	}
-	return *user.Login, nil
-}
-
-func (self Connector) VerifyReadProposalPermission() error {
-	_, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
+	_, _, err = self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		ListOptions: github.ListOptions{
 			PerPage: 1,
 		},
 	})
-	return err
+	return forgedomain.AuthenticationInfo{
+		Username:         *user.Login,
+		CanReadProposals: err != nil,
+	}, err
 }
 
 func (self Connector) findProposalViaAPI(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
