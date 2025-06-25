@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -124,24 +123,16 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (string, error) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	output, err := self.runner.Query("gh", "auth", "status", "--active")
 	if err != nil {
-		return "", err
+		return forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
 	}
-	return ParseAuthStatusUser(output)
-}
-
-func (self Connector) VerifyReadProposalPermission() error {
-	output, err := self.runner.Query("gh", "auth", "status", "--active")
-	if err != nil {
-		return err
-	}
-	permissions := ParseAuthStatusPermissions(output)
-	if !slices.Contains(permissions, "repo") {
-		return fmt.Errorf(`permissions don't include "repo": %v`, permissions)
-	}
-	return nil
+	return ParsePermissionsOutput(output)
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -184,20 +175,17 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return self.runner.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
-func ParseAuthStatusUser(output string) (string, error) {
-	regex := regexp.MustCompile(`Logged in to github.com account ([^ ]+)`)
-	for _, line := range strings.Split(output, "\n") {
-		matches := regex.FindStringSubmatch(line)
-		fmt.Println("1111111111111111111111111", matches)
+func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
+	result := forgedomain.VerifyConnectionResult{
+		AuthenticatedUser:   None[string](),
+		AuthenticationError: nil,
+		AuthorizationError:  nil,
 	}
-	return "", nil
-}
-
-func ParseAuthStatusPermissions(output string) (string, error) {
-	regex := regexp.MustCompile(`Logged in to github.com account ([^ ]+)`)
+	loginRegex := regexp.MustCompile(`Logged in to github.com account ([^ ]+)`)
 	for _, line := range strings.Split(output, "\n") {
-		matches := regex.FindStringSubmatch(line)
+		matches := loginRegex.FindStringSubmatch(line)
 		fmt.Println("1111111111111111111111111", matches)
+		result.AuthenticatedUser = NewOption(matches[1])
 	}
-	return "", nil
+	return result
 }
