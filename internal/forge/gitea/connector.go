@@ -100,7 +100,7 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	})
 	return forgedomain.VerifyConnectionResult{
 		AuthenticatedUser:   Some(user.UserName),
-		AuthenticationError: err,
+		AuthenticationError: nil,
 		AuthorizationError:  err,
 	}
 }
