@@ -7,14 +7,15 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // ProposalCreate creates a new proposal for the current branch.
 type ProposalCreate struct {
 	Branch                  gitdomain.LocalBranchName
 	MainBranch              gitdomain.LocalBranchName
-	ProposalBody            gitdomain.ProposalBody
-	ProposalTitle           gitdomain.ProposalTitle
+	ProposalBody            Option[gitdomain.ProposalBody]
+	ProposalTitle           Option[gitdomain.ProposalTitle]
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 

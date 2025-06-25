@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -45,8 +46,8 @@ func TestBitbucketConnector(t *testing.T) {
 			Branch:        "branch",
 			MainBranch:    "main",
 			ParentBranch:  "parent-branch",
-			ProposalBody:  "",
-			ProposalTitle: "",
+			ProposalBody:  None[gitdomain.ProposalBody](),
+			ProposalTitle: None[gitdomain.ProposalTitle](),
 		})
 		want := "https://custom-url.com/projects/git-town/repos/docs/pull-requests?create&sourceBranch=branch&targetBranch=parent-branch"
 		must.EqOp(t, want, have)
