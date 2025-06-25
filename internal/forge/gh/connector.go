@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -48,8 +49,6 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if body, hasBody := data.ProposalBody.Get(); hasBody {
 		args = append(args, "--body="+body.String())
 	}
-	if bodyFile, hasBodyFile := data.ProposalBodyFile.Get(); hasBodyFile {
-	}
 	return data.FrontendRunner.Run("gh", args...)
 }
 
@@ -59,6 +58,10 @@ func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) stri
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
 	return Some(self.findProposal)
+}
+
+func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) (err error)] {
+	return Some(self.squashMergeProposal)
 }
 
 func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -119,6 +122,14 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
+func (self Connector) VerifyConnection() (string, error) {
+	output, err := self.runner.Query("gh", "auth", "status", "--active")
+	if err != nil {
+		return "", err
+	}
+	return ParseAuthStatusOutput(output)
+}
+
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
 	out, err := self.runner.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
@@ -151,6 +162,14 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	return Some(proposal), nil
 }
 
+func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
+	return self.runner.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
+}
+
 func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
 	return self.runner.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
+}
+
+func ParseAuthStatusOutput(output string) (string, error) {
+	lines := strings.Split(output, "\n")
 }
