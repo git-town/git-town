@@ -3,7 +3,6 @@ package forge
 import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
@@ -25,6 +24,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		return None[forgedomain.Connector](), nil
 	}
 	var connector forgedomain.Connector
+	var err error
 	switch platform {
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
@@ -45,7 +45,6 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), nil
 	case forgedomain.ForgeTypeCodeberg:
-		var err error
 		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
 			APIToken:  config.NormalConfig.CodebergToken,
 			Log:       log,
@@ -63,7 +62,6 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		if githubConnectorType, hasGitHubConnectorType := config.NormalConfig.GitHubConnectorType.Get(); hasGitHubConnectorType {
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
-				var err error
 				connector, err = github.NewConnector(github.NewConnectorArgs{
 					APIToken:  config.NormalConfig.GitHubToken,
 					Log:       log,
@@ -72,11 +70,8 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				return Some(connector), err
 			case forgedomain.GitHubConnectorTypeGh:
 				connector, err = gh.NewConnector(gh.NewConnectorArgs{
-					APIToken:  Option[configdomain.GitHubToken]{},
-					Log:       log,
-					RemoteURL: remoteURL,
-					Runner:    nil,
-					GhPath:    "",
+					Log:    log,
+					Runner: nil,
 				})
 			}
 		}
