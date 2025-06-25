@@ -48,6 +48,8 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if body, hasBody := data.ProposalBody.Get(); hasBody {
 		args = append(args, "--body="+body.String())
 	}
+	if bodyFile, hasBodyFile := data.ProposalBodyFile.Get(); hasBodyFile {
+	}
 	return data.FrontendRunner.Run("gh", args...)
 }
 
