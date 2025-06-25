@@ -65,6 +65,6 @@ type CreateProposalArgs struct {
 	FrontendRunner subshelldomain.Runner
 	MainBranch     gitdomain.LocalBranchName
 	ParentBranch   gitdomain.LocalBranchName
-	ProposalBody   gitdomain.ProposalBody
-	ProposalTitle  gitdomain.ProposalTitle
+	ProposalBody   Option[gitdomain.ProposalBody]
+	ProposalTitle  Option[gitdomain.ProposalTitle]
 }
