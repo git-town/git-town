@@ -3,6 +3,8 @@ package gh
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -122,12 +124,16 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 	return Some(self.updateProposalTarget)
 }
 
-func (self Connector) VerifyConnection() (string, error) {
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 	output, err := self.runner.Query("gh", "auth", "status", "--active")
 	if err != nil {
-		return "", err
+		return forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
 	}
-	return ParseAuthStatusOutput(output)
+	return ParsePermissionsOutput(output)
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -170,6 +176,36 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return self.runner.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
-func ParseAuthStatusOutput(output string) (string, error) {
+func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
+	result := forgedomain.VerifyConnectionResult{
+		AuthenticatedUser:   None[string](),
+		AuthenticationError: nil,
+		AuthorizationError:  nil,
+	}
 	lines := strings.Split(output, "\n")
+	regex := regexp.MustCompile(`Logged in to github.com account (\w+)`)
+	found := false
+	for _, line := range lines {
+		matches := regex.FindStringSubmatch(line)
+		if matches != nil {
+			result.AuthenticatedUser = NewOption(matches[1])
+			found = true
+			break
+		}
+	}
+	if !found {
+		result.AuthenticationError = fmt.Errorf("not logged in")
+	}
+	regex = regexp.MustCompile(`Token scopes: (.+)`)
+	for _, line := range lines {
+		matches := regex.FindStringSubmatch(line)
+		if matches != nil {
+			parts := strings.Split(matches[1], ", ")
+			if slices.Contains(parts, "'repo'") {
+				break
+			}
+			result.AuthorizationError = fmt.Errorf(`cannot find "repo" scope: %v`, parts)
+		}
+	}
+	return result
 }
