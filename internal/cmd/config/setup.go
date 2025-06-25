@@ -343,16 +343,15 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
 	}
-	authInfo, err := connector.VerifyConnection()
-	if err != nil {
-		return dialog.CredentialsNoAccess(err, data.dialogInputs.Next())
+	verifyResult := connector.VerifyConnection()
+	if verifyResult.LoginError != nil {
+		return dialog.CredentialsNoAccess(verifyResult.LoginError, data.dialogInputs.Next())
 	}
-	if len(authInfo.Username) > 0 {
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(userName, exit))
+	if len(verifyResult.Username) > 0 {
+		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(verifyResult.Username, exit))
 	}
-	err = connector.VerifyReadProposalPermission()
-	if err != nil {
-		return dialog.CredentialsNoProposalAccess(err, data.dialogInputs.Next())
+	if verifyResult.PermissionsError != nil {
+		return dialog.CredentialsNoProposalAccess(verifyResult.PermissionsError, data.dialogInputs.Next())
 	}
 	fmt.Println(messages.CredentialsAccess)
 	return false, false, nil
