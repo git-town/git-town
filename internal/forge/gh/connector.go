@@ -45,7 +45,9 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
 		args = append(args, "--title="+title.String())
 	}
-	if body, hasBody := data.ProposalBody
+	if body, hasBody := data.ProposalBody.Get(); hasBody {
+		args = append(args, "--body="+body.String())
+	}
 	return data.FrontendRunner.Run("gh", args...)
 }
 
