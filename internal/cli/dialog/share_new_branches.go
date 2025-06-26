@@ -17,8 +17,8 @@ How should Git Town share the new branches it creates?
 
 Possible options:
 
-- none: New branches remain local until you sync or propose them.
-- push: push new branches to the development remote.
+- none: New branches are local until you sync or propose them
+- push: push new branches to the development remote
 - propose: propose new branches
 
 `

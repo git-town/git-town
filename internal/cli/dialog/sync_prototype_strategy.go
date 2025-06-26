@@ -13,7 +13,8 @@ import (
 const (
 	syncPrototypeStrategyTitle = `Sync-prototype strategy`
 	SyncPrototypeStrategyHelp  = `
-Choose how Git Town should synchronize prototype branches.
+Choose how Git Town should
+synchronize prototype branches.
 
 Prototype branches are local-only feature branches.
 They are useful for reducing load on CI systems

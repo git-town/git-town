@@ -14,14 +14,19 @@ import (
 const (
 	syncUpstreamTitle = `Sync with upstream remote`
 	SyncUpstreamHelp  = `
-Should git town sync also fetch updates from the upstream remote?
+Should git town sync also fetch
+updates from the upstream remote?
 
-If an upstream remote exists and this option is enabled,
-"git town sync" will update your local main branch
-with commits from the upstream's main branch.
+If an upstream remote exists
+and this option is enabled,
+"git town sync" will update
+your local main branch
+with commits from the
+upstream's main branch.
 
-This keeps a forked repository up-to-date
-with changes made to the original project.
+This keeps a forked repository
+up-to-date with changes
+made to the original project.
 
 `
 )

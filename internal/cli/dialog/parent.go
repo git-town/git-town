@@ -16,8 +16,8 @@ var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)
 const (
 	parentBranchTitleTemplate = `Parent branch for %s`
 	parentBranchHelpTemplate  = `
-Please select the parent of branch %q or enter its number.
-Most of the time this is the main branch (%v).
+Please select the parent of branch %q
+or enter its number.
 
 
 `

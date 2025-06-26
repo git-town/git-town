@@ -13,8 +13,9 @@ import (
 const (
 	tokenScopeTitle = `API token scope`
 	tokenScopeHelp  = `
-Do you want to use the API token you just entered
-just for this Git repo or for all Git repos on this machine?
+Do you want to use the API token
+you just entered just for this Git repo
+or for all Git repos on this machine?
 
 `
 )
