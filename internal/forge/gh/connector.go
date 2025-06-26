@@ -94,7 +94,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 		return None[forgedomain.Proposal](), nil
 	}
 	if len(parsed) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf("found more than one pull request: %d", len(parsed))
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(parsed), branch, target)
 	}
 	pr := parsed[0]
 	proposal := forgedomain.Proposal{
