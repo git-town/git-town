@@ -23,7 +23,7 @@ Some of Git Towns' functionality requires access the API of your forge:
   updates the affected pull requests
 - click the "merge" button on a pull request from your CLI
 
-Configuring API access is super easy. Here is how you do it:
+Configuring API access is easy. Here is how you do it:
 
 - GitHub: You can set up the [access token](preferences/github-token.md) that
   allows Git Town to talk to GitHub's API, or set up GitHub's
