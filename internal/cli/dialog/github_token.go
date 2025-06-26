@@ -16,12 +16,15 @@ const (
 Git Town can update pull requests
 and ship branches on your behalf
 using the GitHub API.
-To enable this, enter a GitHub API token.
+To enable this,
+enter a GitHub API token.
 
-More details: https://www.git-town.com/preferences/github-token
+More details:
+https://www.git-town.com/preferences/github-token
 
 If you leave this blank,
-Git Town will not interact with the GitHub API.
+Git Town will not interact
+with the GitHub API.
 
 `
 )

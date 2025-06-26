@@ -13,10 +13,12 @@ import (
 const (
 	syncPerennialStrategyTitle = `Perennial branch sync strategy`
 	SyncPerennialStrategyHelp  = `
-Choose how Git Town should synchronize perennial branches.
+Choose how Git Town should
+synchronize perennial branches.
 
-These branches have no parent and are only updated
-via new commits pushed to their tracking branch from elsewhere.
+These branches have no parent
+and are only updated
+by shipping feature branches.
 
 `
 )

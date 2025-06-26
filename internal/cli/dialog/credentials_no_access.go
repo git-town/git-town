@@ -12,7 +12,8 @@ import (
 const (
 	credentialsNoAccessTitle = "Credentials do not grant API access"
 	credentialsNoAccessHelp  = `
-The credentials you have entered seem to not allow API access at all.
+The credentials you have entered
+seem to not allow API access.
 
 API error message: %v
 
