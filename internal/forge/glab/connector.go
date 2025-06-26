@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/forge/github"
+	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -25,22 +25,22 @@ type Connector struct {
 }
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	args := []string{"pr", "create", "--base=" + data.ParentBranch.String(), "--head=" + data.Branch.String()}
+	args := []string{"mr", "create", "--target-branch=" + data.ParentBranch.String(), "--source-branch=" + data.Branch.String()}
 	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
 		args = append(args, "--title="+title.String())
 	}
 	if body, hasBody := data.ProposalBody.Get(); hasBody {
-		args = append(args, "--body="+body.String())
+		args = append(args, "--description="+body.String())
 	}
-	err := self.Frontend.Run("gh", args...)
+	err := self.Frontend.Run("glab", args...)
 	if err != nil {
 		return err
 	}
-	return self.Frontend.Run("gh", "pr", "view", "--web")
+	return self.Frontend.Run("glab", "mr", "view", "--web")
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
-	return github.DefaultProposalMessage(data)
+	return gitlab.DefaultProposalMessage(data)
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -48,7 +48,7 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 }
 
 func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	return runner.Run("gh", "browse")
+	return runner.Run("glab", "repo", "view", "--web")
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -68,7 +68,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	output, err := self.Backend.Query("gh", "auth", "status", "--active")
+	output, err := self.Backend.Query("glab", "auth", "status")
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
 			AuthenticatedUser:   None[string](),
@@ -80,7 +80,7 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 }
 
 func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.Backend.Query("gh", "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.Backend.Query("glab", "mr", "list", "--source-branch="+branch.String(), "--target-branch="+target.String(), "--output=json")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -95,11 +95,11 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	pr := parsed[0]
 	proposal := forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         NewOption(pr.Body),
-			MergeWithAPI: pr.Mergeable == "MERGEABLE",
+			Body:         NewOption(pr.Description),
+			MergeWithAPI: pr.Mergeable == "mergeable",
 			Number:       pr.Number,
-			Source:       gitdomain.NewLocalBranchName(pr.HeadRefName),
-			Target:       gitdomain.NewLocalBranchName(pr.BaseRefName),
+			Source:       gitdomain.NewLocalBranchName(pr.SourceBranch),
+			Target:       gitdomain.NewLocalBranchName(pr.TargetBranch),
 			Title:        pr.Title,
 			URL:          pr.URL,
 		},
@@ -109,17 +109,17 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 }
 
 type ghData struct {
-	BaseRefName string `json:"baseRefName"`
-	Body        string `json:"body"`
-	HeadRefName string `json:"headRefName"`
-	Mergeable   string `json:"mergeable"`
-	Number      int    `json:"number"`
-	Title       string `json:"title"`
-	URL         string `json:"url"`
+	TargetBranch string `json:"target_branch"`
+	Description  string `json:"description"`
+	SourceBranch string `json:"source_branch"`
+	Mergeable    string `json:"detailed_merge_status"`
+	Number       int    `json:"iid"`
+	Title        string `json:"title"`
+	URL          string `json:"web_url"`
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.Backend.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -134,11 +134,11 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	pr := parsed[0]
 	proposal := forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         NewOption(pr.Body),
+			Body:         NewOption(pr.Description),
 			MergeWithAPI: pr.Mergeable == "MERGEABLE",
 			Number:       pr.Number,
-			Source:       gitdomain.NewLocalBranchName(pr.HeadRefName),
-			Target:       gitdomain.NewLocalBranchName(pr.BaseRefName),
+			Source:       gitdomain.NewLocalBranchName(pr.SourceBranch),
+			Target:       gitdomain.NewLocalBranchName(pr.TargetBranch),
 			Title:        pr.Title,
 			URL:          pr.URL,
 		},
@@ -148,11 +148,11 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
-	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
+	return self.Frontend.Run("glab", "mr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
 }
 
 func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	return self.Frontend.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
+	return self.Frontend.Run("glab", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {

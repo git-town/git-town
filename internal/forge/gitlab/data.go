@@ -15,7 +15,7 @@ type Data struct {
 }
 
 func (self Data) DefaultProposalMessage(data forgedomain.ProposalData) string {
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (!%d)", data.Title, data.Number))
+	return DefaultProposalMessage(data)
 }
 
 func (self Data) NewProposalURL(data forgedomain.CreateProposalArgs) string {
@@ -35,4 +35,8 @@ func (self Data) baseURL() string {
 
 func (self Data) projectPath() string {
 	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
+}
+
+func DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (!%d)", data.Title, data.Number))
 }
