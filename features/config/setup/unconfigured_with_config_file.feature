@@ -14,27 +14,27 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
-
+      
       [hosting]
       dev-remote = "origin"
       origin-hostname = "github.com"
       forge-type = "github"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       push-hook = true
       tags = true
       upstream = true
-
+      
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -44,6 +44,7 @@ Feature: don't ask for information already provided by the config file
       | DIALOG                     | KEYS              |
       | welcome                    | enter             |
       | aliases                    | enter             |
+      | github connector type: API | enter             |
       | GitHub token               | 1 2 3 4 5 6 enter |
       | token scope: local         | enter             |
       | save config to config file | down enter        |
