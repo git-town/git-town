@@ -18,6 +18,7 @@ func (self GitHubConnectorType) String() string {
 	return string(self)
 }
 
+// GitHubConnectorTypes provides all possible types that the GitHubConnectorTypes enum can have.
 func GitHubConnectorTypes() []GitHubConnectorType {
 	return []GitHubConnectorType{
 		GitHubConnectorTypeAPI,
