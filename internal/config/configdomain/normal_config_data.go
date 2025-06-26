@@ -105,6 +105,7 @@ func DefaultNormalConfig() NormalConfigData {
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
+		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),
