@@ -18,6 +18,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
+      | github connector type: API  | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
@@ -50,6 +51,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter                          |                                             |
       | origin hostname             | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
+      | github connector type: API  | enter                          |                                             |
       | github token                | 1 2 3 4 5 6 enter              |                                             |
       | token scope                 | enter                          |                                             |
       | sync-feature-strategy       | enter                          |                                             |
@@ -85,6 +87,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter                               |                                             |
       | origin hostname             | enter                               |                                             |
       | forge type: auto-detect     | enter                               |                                             |
+      | github connector type: API  | enter                               |                                             |
       | github token                | backspace backspace backspace enter |                                             |
       | sync-feature-strategy       | enter                               |                                             |
       | sync-perennial-strategy     | enter                               |                                             |
@@ -117,6 +120,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
+      | github connector type: API  | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
       | sync-feature-strategy       | enter             |                                             |
@@ -150,6 +154,7 @@ Feature: enter the GitHub API token
       | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
+      | github connector type: API  | enter                                     |                                             |
       | github token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
       | sync-feature-strategy       | enter                                     |                                             |

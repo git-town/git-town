@@ -21,6 +21,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/gh"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
@@ -202,7 +203,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 		if err != nil || exit {
 			return tokenScope, forgeTypeOpt, exit, err
 		}
-		repeat, exit, err := testForgeAuth(data, forgeTypeOpt)
+		repeat, exit, err := testForgeAuth(data, repo, forgeTypeOpt)
 		if err != nil || exit {
 			return tokenScope, forgeTypeOpt, exit, err
 		}
@@ -346,8 +347,8 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (exit dialog
 	return exit, err
 }
 
-func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (repeat bool, exit dialogdomain.Exit, err error) {
-	connector, err := createConnector(data, forgeTypeOpt)
+func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (repeat bool, exit dialogdomain.Exit, err error) {
+	connector, err := createConnector(data, repo, forgeTypeOpt)
 	if err != nil {
 		return false, false, err
 	}
@@ -368,7 +369,7 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	return false, false, nil
 }
 
-func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
+func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket:
@@ -406,11 +407,21 @@ func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]
 				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
 			}), nil
 		case forgedomain.ForgeTypeGitHub:
-			return github.NewConnector(github.NewConnectorArgs{
-				APIToken:  data.userInput.config.NormalConfig.GitHubToken,
-				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-			})
+			if connectorType, hasConnectorType := data.userInput.config.NormalConfig.GitHubConnectorType.Get(); hasConnectorType {
+				switch connectorType {
+				case forgedomain.GitHubConnectorTypeAPI:
+					return github.NewConnector(github.NewConnectorArgs{
+						APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+						Log:       print.Logger{},
+						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+					})
+				case forgedomain.GitHubConnectorTypeGh:
+					return gh.NewConnector(gh.NewConnectorArgs{
+						Log:    print.Logger{},
+						Runner: repo.Backend,
+					})
+				}
+			}
 		case forgedomain.ForgeTypeGitLab:
 			return gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:  data.userInput.config.NormalConfig.GitLabToken,

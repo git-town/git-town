@@ -12,6 +12,7 @@ import (
 
 func TestParseStatusOutput(t *testing.T) {
 	t.Parallel()
+
 	t.Run("logged into github.com with correct scopes", func(t *testing.T) {
 		t.Parallel()
 		give := `

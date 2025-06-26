@@ -29,7 +29,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | unknown branch type                       | enter |
       | dev-remote                                | enter |
       | origin hostname                           | enter |
-      | hosting service                           | enter |
+      | forge type                                | enter |
       | sync-feature-strategy                     | enter |
       | sync-perennial-strategy                   | enter |
       | sync-prototype-strategy                   | enter |

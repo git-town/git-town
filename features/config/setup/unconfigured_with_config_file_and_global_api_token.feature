@@ -1,6 +1,7 @@
 @messyoutput
 Feature: don't ask for information already provided by the config file
 
+  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -24,6 +25,7 @@ Feature: don't ask for information already provided by the config file
       dev-remote = "origin"
       origin-hostname = "github.com"
       forge-type = "github"
+      github-connector = "gh"
 
       [ship]
       delete-tracking-branch = true

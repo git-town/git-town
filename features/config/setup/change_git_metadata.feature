@@ -24,6 +24,7 @@ Feature: change existing information in Git metadata
       | dev-remote                                | enter                  |
       | origin hostname                           | c o d e enter          |
       | set forge type to "github"                | up up enter            |
+      | set github forge type to "API"            | enter                  |
       | github token                              | 1 2 3 4 5 6 enter      |
       | token scope                               | enter                  |
       | sync-feature-strategy                     | down enter             |
