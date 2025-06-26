@@ -25,7 +25,7 @@ func TestParseGitHubConnectorType(t *testing.T) {
 		},
 		"invalid": {
 			val: None[forgedomain.GitHubConnectorType](),
-			err: errors.New(`unknown GitHubConnectorType: "zonk"`),
+			err: errors.New(`unknown GitHubConnectorType: "invalid"`),
 		},
 		"": {
 			val: None[forgedomain.GitHubConnectorType](),
@@ -34,7 +34,7 @@ func TestParseGitHubConnectorType(t *testing.T) {
 	}
 	for give, want := range tests {
 		have, err := forgedomain.ParseGitHubConnectorType(give)
-		must.EqOp(t, want.err, err)
+		must.Eq(t, want.err, err)
 		must.Eq(t, want.val, have)
 	}
 }
