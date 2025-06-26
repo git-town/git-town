@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/github"
@@ -52,7 +53,18 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if body, hasBody := data.ProposalBody.Get(); hasBody {
 		args = append(args, "--body="+body.String())
 	}
-	return data.FrontendRunner.Run("gh", args...)
+	err := data.FrontendRunner.Run("gh", args...)
+	if err != nil {
+		return err
+	}
+	proposalOpt, err := self.findProposal(data.Branch, data.ParentBranch)
+	if err != nil {
+		return err
+	}
+	if proposal, hasProposal := proposalOpt.Get(); hasProposal {
+		browser.Open(proposal.Data.Data().URL, self.frontend)
+	}
+	return nil
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
