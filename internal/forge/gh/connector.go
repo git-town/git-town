@@ -164,16 +164,14 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 	}
 	lines := strings.Split(output, "\n")
 	regex := regexp.MustCompile(`Logged in to github.com account (\w+)`)
-	found := false
 	for _, line := range lines {
 		matches := regex.FindStringSubmatch(line)
 		if matches != nil {
 			result.AuthenticatedUser = NewOption(matches[1])
-			found = true
 			break
 		}
 	}
-	if !found {
+	if result.AuthenticatedUser.IsNone() {
 		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
 	}
 	regex = regexp.MustCompile(`Token scopes: (.+)`)
