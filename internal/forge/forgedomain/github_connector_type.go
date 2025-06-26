@@ -18,6 +18,13 @@ func (self GitHubConnectorType) String() string {
 	return string(self)
 }
 
+func GitHubConnectorTypes() []GitHubConnectorType {
+	return []GitHubConnectorType{
+		GitHubConnectorTypeAPI,
+		GitHubConnectorTypeGh,
+	}
+}
+
 func ParseGitHubConnectorType(text string) (Option[GitHubConnectorType], error) {
 	if text == "" {
 		return None[GitHubConnectorType](), nil
@@ -28,11 +35,4 @@ func ParseGitHubConnectorType(text string) (Option[GitHubConnectorType], error) 
 		}
 	}
 	return None[GitHubConnectorType](), fmt.Errorf("unknown GitHubConnectorType: %q", text)
-}
-
-func GitHubConnectorTypes() []GitHubConnectorType {
-	return []GitHubConnectorType{
-		GitHubConnectorTypeAPI,
-		GitHubConnectorTypeGh,
-	}
 }
