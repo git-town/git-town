@@ -163,7 +163,7 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		AuthorizationError:  nil,
 	}
 	lines := strings.Split(output, "\n")
-	regex := regexp.MustCompile(`Logged in to \w+ as (\w+) `)
+	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
 	found := false
 	for _, line := range lines {
 		matches := regex.FindStringSubmatch(line)
