@@ -16,8 +16,12 @@ const (
 	githubConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitHub:
 
-1. GitHub API: you create an API token and enter it here
-2. GitHub's "gh" tool: safer and more convenient, but you need to install this application
+1. GitHub API:
+   - Git Town talks directly with the GitHub API
+	 - it uses an access token that you create for your GitHub account and provide on the next screen
+2. GitHub's "gh" tool:
+   - this is safer and more convenient
+	 - but you need to install this application
 
 `
 )
