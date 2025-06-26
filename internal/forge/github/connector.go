@@ -37,7 +37,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
-	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
+	return DefaultProposalMessage(data)
 }
 
 func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -71,7 +71,7 @@ func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
 }
 
 func (self Connector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
+	return RepositoryURL(self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
 func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
@@ -219,6 +219,10 @@ func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInte
 	return nil
 }
 
+func DefaultProposalMessage(data forgedomain.ProposalData) string {
+	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
+}
+
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
@@ -249,6 +253,10 @@ type NewConnectorArgs struct {
 	APIToken  Option[configdomain.GitHubToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
+}
+
+func RepositoryURL(hostNameWithStandardPort string, organization string, repository string) string {
+	return fmt.Sprintf("https://%s/%s/%s", hostNameWithStandardPort, organization, repository)
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

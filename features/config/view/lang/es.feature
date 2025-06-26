@@ -55,6 +55,7 @@ Feature: show the configuration in Spanish
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 

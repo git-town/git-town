@@ -24,6 +24,7 @@ Feature: don't ask for information already provided by the config file
       dev-remote = "origin"
       origin-hostname = "github.com"
       forge-type = "github"
+      github-connector = "gh"
 
       [ship]
       delete-tracking-branch = true

@@ -82,6 +82,7 @@ const (
 	KeyFeatureRegex                        = Key("git-town.feature-regex")
 	KeyForgeType                           = Key("git-town.forge-type")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
+	KeyGitHubConnectorType                 = Key("git-town.github-connector")
 	KeyGithubToken                         = Key(pkg.KeyGithubToken)
 	KeyGitlabToken                         = Key("git-town.gitlab-token")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
@@ -136,6 +137,7 @@ var keys = []Key{
 	KeyFeatureRegex,
 	KeyForgeType,
 	KeyGiteaToken,
+	KeyGitHubConnectorType,
 	KeyGithubToken,
 	KeyGitlabToken,
 	KeyGitUserEmail,

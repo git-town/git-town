@@ -44,12 +44,14 @@ Feature: don't ask for information already provided by the config file
       | DIALOG                     | KEYS              |
       | welcome                    | enter             |
       | aliases                    | enter             |
+      | github connector type: API | enter             |
       | GitHub token               | 1 2 3 4 5 6 enter |
       | token scope: local         | enter             |
       | save config to config file | down enter        |
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --local git-town.github-token 123456 |
+      | git config git-town.github-connector api        |
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist

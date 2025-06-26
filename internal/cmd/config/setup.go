@@ -21,6 +21,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/gh"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
@@ -202,7 +203,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 		if err != nil || exit {
 			return tokenScope, forgeTypeOpt, exit, err
 		}
-		repeat, exit, err := testForgeAuth(data, forgeTypeOpt)
+		repeat, exit, err := testForgeAuth(data, repo, forgeTypeOpt)
 		if err != nil || exit {
 			return tokenScope, forgeTypeOpt, exit, err
 		}
@@ -292,7 +293,18 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 		case forgedomain.ForgeTypeGitea:
 			exit, err = enterGiteaToken(data, repo)
 		case forgedomain.ForgeTypeGitHub:
-			exit, err = enterGithubToken(data, repo)
+			existing := data.userInput.config.NormalConfig.GitHubConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
+			var answer forgedomain.GitHubConnectorType
+			answer, exit, err = dialog.GitHubConnectorType(existing, data.dialogInputs.Next())
+			if err != nil || exit {
+				return forgeTypeOpt, exit, err
+			}
+			data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
+			switch answer {
+			case forgedomain.GitHubConnectorTypeAPI:
+				exit, err = enterGithubToken(data, repo)
+			case forgedomain.GitHubConnectorTypeGh:
+			}
 		case forgedomain.ForgeTypeGitLab:
 			exit, err = enterGitlabToken(data, repo)
 		}
@@ -335,8 +347,8 @@ func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (exit dialog
 	return exit, err
 }
 
-func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (repeat bool, exit dialogdomain.Exit, err error) {
-	connector, err := createConnector(data, forgeTypeOpt)
+func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (repeat bool, exit dialogdomain.Exit, err error) {
+	connector, err := createConnector(data, repo, forgeTypeOpt)
 	if err != nil {
 		return false, false, err
 	}
@@ -357,7 +369,7 @@ func testForgeAuth(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) 
 	return false, false, nil
 }
 
-func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
+func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket:
@@ -395,11 +407,21 @@ func createConnector(data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]
 				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
 			}), nil
 		case forgedomain.ForgeTypeGitHub:
-			return github.NewConnector(github.NewConnectorArgs{
-				APIToken:  data.userInput.config.NormalConfig.GitHubToken,
-				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-			})
+			if connectorType, hasConnectorType := data.userInput.config.NormalConfig.GitHubConnectorType.Get(); hasConnectorType {
+				switch connectorType {
+				case forgedomain.GitHubConnectorTypeAPI:
+					return github.NewConnector(github.NewConnectorArgs{
+						APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+						Log:       print.Logger{},
+						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+					})
+				case forgedomain.GitHubConnectorTypeGh:
+					return gh.Connector{
+						Backend:  repo.Backend,
+						Frontend: repo.Backend,
+					}, nil
+				}
+			}
 		case forgedomain.ForgeTypeGitLab:
 			return gitlab.NewConnector(gitlab.NewConnectorArgs{
 				APIToken:  data.userInput.config.NormalConfig.GitLabToken,
@@ -543,7 +565,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 				return err
 			}
 		case forgedomain.ForgeTypeGitHub:
-			err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
+			err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend)
 			if err != nil {
 				return err
 			}
@@ -576,6 +598,9 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.ForgeType.IsNone() {
 		fc.Check(saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend))
+	}
+	if configFile.GitHubConnectorType.IsNone() {
+		fc.Check(saveGitHubConnectorType(oldConfig.NormalConfig.GitHubConnectorType, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend))
 	}
 	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
@@ -736,7 +761,22 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+	if newType.Equal(oldType) {
+		return nil
+	}
+	if value, has := newType.Get(); has {
+		return gitCommands.SetGitHubConnectorType(frontend, value)
+	}
+	return gitCommands.RemoveGitHubConnectorType(frontend)
+}
+
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+	if connectorType, has := githubConnectorType.Get(); has {
+		if connectorType == forgedomain.GitHubConnectorTypeGh {
+			return nil
+		}
+	}
 	if newToken.Equal(oldToken) {
 		return nil
 	}

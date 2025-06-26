@@ -49,6 +49,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	var devRemote Option[gitdomain.Remote]
 	var featureRegex Option[configdomain.FeatureRegex]
 	var forgeType Option[forgedomain.ForgeType]
+	var githubConnectorType Option[forgedomain.GitHubConnectorType]
 	var hostingOriginHostname Option[configdomain.HostingOriginHostname]
 	var mainBranch Option[gitdomain.LocalBranchName]
 	var newBranchType Option[configdomain.BranchType]
@@ -174,6 +175,12 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 				return configdomain.EmptyPartialConfig(), err
 			}
 		}
+		if data.Hosting.GitHubConnectorType != nil {
+			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType)
+			if err != nil {
+				return configdomain.EmptyPartialConfig(), err
+			}
+		}
 		if data.Hosting.OriginHostname != nil {
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
 		}
@@ -246,6 +253,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
+		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              None[configdomain.GitHubToken](),
 		GitLabToken:              None[configdomain.GitLabToken](),
 		GitUserEmail:             None[configdomain.GitUserEmail](),

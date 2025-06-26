@@ -211,7 +211,7 @@ func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun,
 	if !hasInitialBranch {
 		return walkData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return walkData{}, false, err
 	}

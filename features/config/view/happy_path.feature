@@ -55,6 +55,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -88,6 +89,7 @@ Feature: show the configuration
 
       [hosting]
       forge-type = "github"
+      github-connector = "gh"
       origin-hostname = "github.com"
 
       [ship]
@@ -132,6 +134,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: gh
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -155,6 +158,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
+    And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -180,6 +184,7 @@ Feature: show the configuration
 
       [hosting]
       forge-type = "github"
+      github-connector = "gh"
       origin-hostname = "github.com"
 
       [ship]
@@ -224,6 +229,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: api
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -280,6 +286,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -342,6 +349,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 

@@ -25,6 +25,7 @@ Feature: show the configuration
     And Git setting "git-town.unknown-branch-type" is "observed"
     And Git setting "git-town.feature-regex" is "^user-.*$"
     And Git setting "git-town.ship-strategy" is "squash-merge"
+    And Git setting "git-town.github-connector" is "api"
     When I run "git-town config"
     Then Git Town prints:
       """
@@ -56,6 +57,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: api
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -133,6 +135,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -225,6 +228,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -281,6 +285,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 
@@ -343,6 +348,7 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
 

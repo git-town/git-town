@@ -293,7 +293,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 			branchesToValidate = targetBranches
 		}
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return data, false, err
 	}

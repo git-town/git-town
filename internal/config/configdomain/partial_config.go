@@ -19,6 +19,7 @@ type PartialConfig struct {
 	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
+	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -62,6 +63,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	forgeType, err := forgedomain.ParseForgeType(snapshot[KeyForgeType])
 	ec.Check(err)
+	githubConnectorType, err := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
+	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
 	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
@@ -102,6 +105,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
+		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
@@ -143,6 +147,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
+		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
@@ -181,6 +186,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
 		FeatureRegex:             self.FeatureRegex,
 		ForgeType:                self.ForgeType,
+		GitHubConnectorType:      self.GitHubConnectorType,
 		GitHubToken:              self.GitHubToken,
 		GitLabToken:              self.GitLabToken,
 		GiteaToken:               self.GiteaToken,

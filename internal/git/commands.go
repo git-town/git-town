@@ -783,6 +783,10 @@ func (self *Commands) RemoveGitAlias(runner subshelldomain.Runner, aliasableComm
 	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
 }
 
+func (self *Commands) RemoveGitHubConnectorType(runner subshelldomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyGitHubConnectorType.String())
+}
+
 func (self *Commands) RemoveGitHubToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGithubToken.String())
 }
@@ -880,6 +884,10 @@ func (self *Commands) SetForgeType(runner subshelldomain.Runner, platform forged
 
 func (self *Commands) SetGitAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
 	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
+}
+
+func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType) error {
+	return runner.Run("git", "config", configdomain.KeyGitHubConnectorType.String(), value.String())
 }
 
 func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {

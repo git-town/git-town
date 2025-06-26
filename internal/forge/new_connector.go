@@ -7,15 +7,18 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketdatacenter"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/forge/gh"
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
-func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[forgedomain.Connector], error) {
+// TODO: replace most arguments with OpenRepoResult
+func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger, frontend subshelldomain.Runner, backend subshelldomain.Querier) (Option[forgedomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.NormalConfig.RemoteURL(remote).Get()
 	forgeType := config.NormalConfig.ForgeType
 	platform, hasPlatform := Detect(remoteURL, forgeType).Get()
@@ -23,6 +26,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		return None[forgedomain.Connector](), nil
 	}
 	var connector forgedomain.Connector
+	var err error
 	switch platform {
 	case forgedomain.ForgeTypeBitbucket:
 		connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
@@ -43,7 +47,6 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), nil
 	case forgedomain.ForgeTypeCodeberg:
-		var err error
 		connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
 			APIToken:  config.NormalConfig.CodebergToken,
 			Log:       log,
@@ -58,7 +61,24 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), nil
 	case forgedomain.ForgeTypeGitHub:
-		var err error
+		if githubConnectorType, hasGitHubConnectorType := config.NormalConfig.GitHubConnectorType.Get(); hasGitHubConnectorType {
+			switch githubConnectorType {
+			case forgedomain.GitHubConnectorTypeAPI:
+				connector, err = github.NewConnector(github.NewConnectorArgs{
+					APIToken:  config.NormalConfig.GitHubToken,
+					Log:       log,
+					RemoteURL: remoteURL,
+				})
+				return Some(connector), err
+			case forgedomain.GitHubConnectorTypeGh:
+				connector = gh.Connector{
+					Backend:  backend,
+					Frontend: frontend,
+				}
+				return Some(connector), err
+			}
+		}
+		// no GitHubConnectorType specified --> use the API connector
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitHubToken,
 			Log:       log,

@@ -10,6 +10,8 @@ const (
 	APIUnexpectedResultDataStructure   = "unexpected result data structure"
 	APIUpdateProposalSource            = "Updating source branch of proposal %s to %s ... "
 	APIUpdateProposalTarget            = "Updating target branch of proposal %s to %s ... "
+	AuthenticationMissing              = "not logged in"
+	AuthorizationMissing               = `cannot find "repo" scope: %v`
 	BitbucketAppPassword               = "Bitbucket app password: %s"
 	BitbucketUsername                  = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
@@ -120,6 +122,8 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GiteaToken                          = "Gitea token: %s\n"
 	GitAnotherProcessIsRunningRetry     = "another git process seems to be running in this repository, retrying in 1 sec ..."
 	GitHubEnterpriseInitializeError     = "cannot initialize GitHub Enterprise client: %s"
+	GitHubConnectorType                 = "GitHub connector type: %s\n"
+	GitHubConnectorTypeUnknown          = "unknown GitHubConnectorType: %q"
 	GitHubToken                         = "GitHub token: %s\n"
 	GitLabToken                         = "GitLab token: %s\n"
 	GitDirMissing                       = "cannot determine the '.git' directory: %w"

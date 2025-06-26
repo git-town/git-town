@@ -17,6 +17,7 @@ Feature: a global API token of another forge exists
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
+      | github connector type: API  | enter             |                                             |
       | github token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
@@ -33,6 +34,7 @@ Feature: a global API token of another forge exists
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --local git-town.github-token 123456 |
+      | git config git-town.github-connector api        |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" is now "123456"
     And local Git setting "git-town.gitlab-token" now doesn't exist

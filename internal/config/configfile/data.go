@@ -39,10 +39,11 @@ type Create struct {
 }
 
 type Hosting struct {
-	DevRemote      *string `toml:"dev-remote"`
-	ForgeType      *string `toml:"forge-type"`
-	OriginHostname *string `toml:"origin-hostname"`
-	Platform       *string `toml:"platform"`
+	DevRemote           *string `toml:"dev-remote"`
+	ForgeType           *string `toml:"forge-type"`
+	GitHubConnectorType *string `toml:"github-connector"`
+	OriginHostname      *string `toml:"origin-hostname"`
+	Platform            *string `toml:"platform"`
 }
 
 func (self Hosting) IsEmpty() bool {

@@ -20,6 +20,7 @@ type NormalConfigData struct {
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
+	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
@@ -104,6 +105,7 @@ func DefaultNormalConfig() NormalConfigData {
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
+		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[GitHubToken](),
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),
