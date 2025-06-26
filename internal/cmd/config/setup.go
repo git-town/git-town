@@ -417,9 +417,9 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 					})
 				case forgedomain.GitHubConnectorTypeGh:
 					return gh.NewConnector(gh.NewConnectorArgs{
-						Log:      print.Logger{},
-						Frontend: repo.Backend,
 						Backend:  repo.Backend,
+						Frontend: repo.Backend,
+						Log:      print.Logger{},
 					})
 				}
 			}

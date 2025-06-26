@@ -72,9 +72,9 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				return Some(connector), err
 			case forgedomain.GitHubConnectorTypeGh:
 				connector, err = gh.NewConnector(gh.NewConnectorArgs{
-					Log:      log,
-					Frontend: frontend,
 					Backend:  backend,
+					Frontend: frontend,
+					Log:      log,
 				})
 				return Some(connector), err
 			}
