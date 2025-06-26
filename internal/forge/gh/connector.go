@@ -2,6 +2,7 @@ package gh
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"slices"
@@ -13,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -20,16 +22,16 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	runner Runner
 	log    print.Logger
+	runner Runner
 }
 
 // NewConnector provides a fully configured gh.Connector instance
 // if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	return Connector{
-		runner: args.Runner,
 		log:    args.Log,
+		runner: args.Runner,
 	}, nil
 }
 
@@ -194,7 +196,7 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		}
 	}
 	if !found {
-		result.AuthenticationError = fmt.Errorf("not logged in")
+		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
 	}
 	regex = regexp.MustCompile(`Token scopes: (.+)`)
 	for _, line := range lines {
@@ -204,7 +206,7 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 			if slices.Contains(parts, "'repo'") {
 				break
 			}
-			result.AuthorizationError = fmt.Errorf(`cannot find "repo" scope: %v`, parts)
+			result.AuthorizationError = fmt.Errorf(messages.AuthorizationMissing, parts)
 		}
 	}
 	return result

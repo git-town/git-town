@@ -51,7 +51,7 @@ linters:
     tagliatelle:
       case:
         rules:
-          json: pascal
+          json: camel
         use-field-name: true
 
   exclusions:

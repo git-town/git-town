@@ -10,6 +10,8 @@ const (
 	APIUnexpectedResultDataStructure   = "unexpected result data structure"
 	APIUpdateProposalSource            = "Updating source branch of proposal %s to %s ... "
 	APIUpdateProposalTarget            = "Updating target branch of proposal %s to %s ... "
+	AuthenticationMissing              = "not logged in"
+	AuthorizationMissing               = `cannot find "repo" scope: %v`
 	BitbucketAppPassword               = "Bitbucket app password: %s"
 	BitbucketUsername                  = "Bitbucket username: %s"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
