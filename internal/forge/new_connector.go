@@ -1,8 +1,6 @@
 package forge
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/forge/bitbucketcloud"
@@ -63,12 +61,9 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), nil
 	case forgedomain.ForgeTypeGitHub:
-		fmt.Println("1111111111111111111111111111111111111111111111")
 		if githubConnectorType, hasGitHubConnectorType := config.NormalConfig.GitHubConnectorType.Get(); hasGitHubConnectorType {
-			fmt.Println("2222222222222222222222222222222222222222")
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
-				fmt.Println("33333333333333333333333333")
 				connector, err = github.NewConnector(github.NewConnectorArgs{
 					APIToken:  config.NormalConfig.GitHubToken,
 					Log:       log,
@@ -76,7 +71,6 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				})
 				return Some(connector), err
 			case forgedomain.GitHubConnectorTypeGh:
-				fmt.Println("444444444444444444444444444444")
 				connector, err = gh.NewConnector(gh.NewConnectorArgs{
 					Backend:  backend,
 					Frontend: frontend,
@@ -85,7 +79,6 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				return Some(connector), err
 			}
 		}
-		fmt.Println("555555555555555555555555555555555555555555555555")
 		// no GitHubConnectorType specified --> use the API connector
 		connector, err = github.NewConnector(github.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitHubToken,
