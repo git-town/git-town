@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -164,28 +163,15 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 	}
 	lines := strings.Split(output, "\n")
 	regex := regexp.MustCompile(`Logged in to \S+ as (\S+) `)
-	found := false
 	for _, line := range lines {
 		matches := regex.FindStringSubmatch(line)
 		if matches != nil {
 			result.AuthenticatedUser = NewOption(matches[1])
-			found = true
 			break
 		}
 	}
-	if !found {
+	if result.AuthenticatedUser.IsNone() {
 		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
-	}
-	regex = regexp.MustCompile(`Token scopes: (.+)`)
-	for _, line := range lines {
-		matches := regex.FindStringSubmatch(line)
-		if matches != nil {
-			parts := strings.Split(matches[1], ", ")
-			if slices.Contains(parts, "'repo'") {
-				break
-			}
-			result.AuthorizationError = fmt.Errorf(messages.AuthorizationMissing, parts)
-		}
 	}
 	return result
 }

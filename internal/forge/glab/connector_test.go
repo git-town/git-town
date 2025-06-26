@@ -32,24 +32,6 @@ func TestParseStatusOutput(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
-	// 	t.Run("logged into github.com with missing scopes", func(t *testing.T) {
-	// 		t.Parallel()
-	// 		give := `
-	// github.com
-	//   ✓ Logged in to github.com account kevgo (keyring)
-	//   - Active account: true
-	//   - Git operations protocol: ssh
-	//   - Token: gho_************************************
-	//   - Token scopes: 'gist', 'read:org'`[1:]
-	// 		have := gh.ParsePermissionsOutput(give)
-	// 		want := forgedomain.VerifyConnectionResult{
-	// 			AuthenticatedUser:   Some("kevgo"),
-	// 			AuthenticationError: nil,
-	// 			AuthorizationError:  errors.New(`cannot find "repo" scope: ['gist' 'read:org']`),
-	// 		}
-	// 		must.Eq(t, want, have)
-	// 	})
-
 	t.Run("not logged in", func(t *testing.T) {
 		t.Parallel()
 		give := `
