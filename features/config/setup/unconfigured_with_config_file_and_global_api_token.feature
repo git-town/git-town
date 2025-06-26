@@ -1,7 +1,6 @@
 @messyoutput
 Feature: don't ask for information already provided by the config file
 
-  @this
   Scenario:
     Given a Git repo with origin
     And Git Town is not configured
@@ -16,28 +15,28 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
-
+      
       [hosting]
       dev-remote = "origin"
       origin-hostname = "github.com"
       forge-type = "github"
       github-connector = "gh"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       push-hook = true
       tags = true
       upstream = true
-
+      
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -49,7 +48,8 @@ Feature: don't ask for information already provided by the config file
       | aliases                    | enter      |
       | GitHub token               | enter      |
       | save config to config file | down enter |
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | BRANCH | COMMAND |
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist

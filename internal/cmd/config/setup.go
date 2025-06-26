@@ -565,7 +565,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 				return err
 			}
 		case forgedomain.ForgeTypeGitHub:
-			err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, gitCommands, frontend)
+			err = saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend)
 			if err != nil {
 				return err
 			}
@@ -758,7 +758,12 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+	if connectorType, has := githubConnectorType.Get(); has {
+		if connectorType == forgedomain.GitHubConnectorTypeGh {
+			return nil
+		}
+	}
 	if newToken.Equal(oldToken) {
 		return nil
 	}
