@@ -29,6 +29,7 @@ type Connector struct {
 
 // NewConnector provides a fully configured gh.Connector instance
 // if the current repo is hosted on GitHub, otherwise nil.
+// TODO: remove this function, construct the struct directly
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	return Connector{
 		backend:  args.Backend,

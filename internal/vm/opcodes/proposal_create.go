@@ -28,6 +28,7 @@ func (self *ProposalCreate) Run(args shared.RunArgs) error {
 	if !hasConnector {
 		return forgedomain.UnsupportedServiceError()
 	}
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa", connector)
 	return connector.CreateProposal(forgedomain.CreateProposalArgs{
 		Branch:         self.Branch,
 		FrontendRunner: args.Frontend,
