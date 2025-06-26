@@ -416,11 +416,10 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
 					})
 				case forgedomain.GitHubConnectorTypeGh:
-					return gh.NewConnector(gh.NewConnectorArgs{
+					return gh.Connector{
 						Backend:  repo.Backend,
 						Frontend: repo.Backend,
-						Log:      print.Logger{},
-					})
+					}, nil
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:

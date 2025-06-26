@@ -22,20 +22,8 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	backend  subshelldomain.Querier
-	frontend subshelldomain.Runner
-	log      print.Logger
-}
-
-// NewConnector provides a fully configured gh.Connector instance
-// if the current repo is hosted on GitHub, otherwise nil.
-// TODO: remove this function, construct the struct directly
-func NewConnector(args NewConnectorArgs) (Connector, error) {
-	return Connector{
-		backend:  args.Backend,
-		frontend: args.Frontend,
-		log:      args.Log,
-	}, nil
+	Backend  subshelldomain.Querier
+	Frontend subshelldomain.Runner
 }
 
 type NewConnectorArgs struct {
@@ -52,11 +40,11 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if body, hasBody := data.ProposalBody.Get(); hasBody {
 		args = append(args, "--body="+body.String())
 	}
-	err := self.frontend.Run("gh", args...)
+	err := self.Frontend.Run("gh", args...)
 	if err != nil {
 		return err
 	}
-	return self.frontend.Run("gh", "pr", "view", "--web")
+	return self.Frontend.Run("gh", "pr", "view", "--web")
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
@@ -88,7 +76,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	output, err := self.backend.Query("gh", "auth", "status", "--active")
+	output, err := self.Backend.Query("gh", "auth", "status", "--active")
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
 			AuthenticatedUser:   None[string](),
@@ -100,7 +88,7 @@ func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
 }
 
 func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.backend.Query("gh", "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.Backend.Query("gh", "pr", "list", "--head="+branch.String(), "--base="+target.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -142,7 +130,7 @@ type ghData struct {
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.backend.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.Backend.Query("gh", "--head="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -174,11 +162,11 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
-	return self.frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
+	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
 }
 
 func (self Connector) updateProposalTarget(proposalData forgedomain.ProposalInterface, target gitdomain.LocalBranchName, _ stringslice.Collector) error {
-	return self.frontend.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
+	return self.Frontend.Run("gh", "edit", strconv.Itoa(proposalData.Data().Number), "--base="+target.String())
 }
 
 func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
