@@ -74,6 +74,7 @@
     - [Bitbucket username](preferences/bitbucket-username.md)
     - [Codeberg token](preferences/codeberg-token.md)
     - [Gitea token](preferences/gitea-token.md)
+    - [GitHub connector](preferences/github-connector.md)
     - [GitHub token](preferences/github-token.md)
     - [GitLab token](preferences/gitlab-token.md)
   - [Ship]()
