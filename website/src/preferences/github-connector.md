@@ -2,23 +2,23 @@
 
 Git Town can interact with GitHub in two different ways.
 
-1. **GitHub API:** Git Town talks directly with the GitHub API. This uses an
-   access token for your account, which you need to create at
-   [github.com/settings/tokens](https://github.com/settings/tokens). By default,
-   Git stores this token in clear text in your Git configuration. You can
-   connect Git to your operating system's encrypted
+1. **GitHub API:** <br> Git Town communicates directly with the GitHub API using
+   a personal access token. You'll need to generate this token
+   [github.com/settings/tokens](https://github.com/settings/tokens).
+
+   By default, Git stores such tokens in plaintext in your Git configuration. To
+   avoid this, consider configuring Git to use your operating system's encrypted
    [credentials storage](https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
    for better security.
 
-2. **GitHub's "gh" application:** This sets up and stores the access token for
-   you, but you need to install and configure the [gh](https://cli.github.com)
-   tool.
+2. **GitHub CLI (gh):** <br> The [gh](https://cli.github.com) CLI handles
+   authentication and token management for you.
 
 ## config file
 
-Storing this value in the config file is not recommended because it forces all
-members of your team to use this connector type. Having said that, the config
-file would contain this value like this:
+It is generally not recommended to hardcode the connector type in your config
+file, as it enforces usage or non-usage of `gh` to your entire team. If you want
+to set it explicitly, it would look like this:
 
 ```toml
 [hosting]
