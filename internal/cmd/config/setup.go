@@ -599,6 +599,9 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	if configFile.ForgeType.IsNone() {
 		fc.Check(saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend))
 	}
+	if configFile.GitHubConnectorType.IsNone() {
+		fc.Check(saveGitHubConnectorType(oldConfig.NormalConfig.GitHubConnectorType, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend))
+	}
 	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
 	}
@@ -758,6 +761,15 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
+func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnectorType], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+	if newType.Equal(oldType) {
+		return nil
+	}
+	if value, has := newType.Get(); has {
+		return gitCommands.SetGitHubConnectorType(frontend, value, scope)
+	}
+	return gitCommands.RemoveGitHubConnectorType(frontend)
+}
 func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if connectorType, has := githubConnectorType.Get(); has {
 		if connectorType == forgedomain.GitHubConnectorTypeGh {
