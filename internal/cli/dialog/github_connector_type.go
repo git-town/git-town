@@ -17,11 +17,12 @@ const (
 Git Town supports two ways to connect to GitHub:
 
 1. GitHub API:
-   - Git Town talks directly with the GitHub API
-	 - it uses an access token that you create for your GitHub account and provide on the next screen
-2. GitHub's "gh" tool:
-   - this is safer and more convenient
-	 - but you need to install this application
+   Git Town talks directly with the GitHub API.
+	 This uses an access token for your account
+	 that you provide on the next screen.
+2. GitHub's "gh" application:
+   This doesn't require an access token
+	 but you need to install and configure the gh tool.
 
 `
 )
