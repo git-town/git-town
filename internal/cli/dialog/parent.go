@@ -16,8 +16,8 @@ var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)
 const (
 	parentBranchTitleTemplate = `Parent branch for %s`
 	parentBranchHelpTemplate  = `
-Please select the parent of branch %q or enter its number.
-Most of the time this is the main branch (%v).
+Please select the parent of branch %q
+or enter its number.
 
 
 `
@@ -28,7 +28,7 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	parentCandidates := ParentCandidateNames(args)
 	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
-	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
+	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch)
 	selection, exit, err := components.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
 	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), exit))
 	if exit {

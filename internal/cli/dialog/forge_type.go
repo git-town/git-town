@@ -14,10 +14,13 @@ import (
 const (
 	hostingPlatformTitle = `Forge type`
 	HostingPlatformHelp  = `
-Git Town uses this setting to open browser URLs
-and interact with your code hosting provider's API.
+Git Town uses this setting
+to open browser URLs
+and interact with your
+code hosting provider's API.
 
-Only change this if your forge is hosted at a custom URL.
+Only change this if your forge
+is hosted at a custom URL.
 
 `
 )

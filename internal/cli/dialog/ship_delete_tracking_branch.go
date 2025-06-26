@@ -14,10 +14,12 @@ import (
 const (
 	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
 	ShipDeleteTrackingBranchHelp  = `
-Should git town ship delete the remote tracking branch after shipping?
+Should git town ship delete
+the remote tracking branch after shipping?
 
-Disable this if your code hosting provider (GitHub, GitLab, etc.)
-automatically deletes branches when pull requests are merged through its UI.
+Disable this if your code hosting provider
+(GitHub, GitLab, etc.) automatically deletes
+branches when pull requests are merged through its UI.
 
 `
 )

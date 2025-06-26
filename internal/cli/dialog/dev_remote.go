@@ -14,7 +14,8 @@ import (
 const (
 	DevRemoteTypeTitle = `Development Remote`
 	DevRemoteHelp      = `
-Which remote should Git Town use for development?
+Which remote should Git Town use
+for development?
 
 Typically that's the "origin" remote.
 

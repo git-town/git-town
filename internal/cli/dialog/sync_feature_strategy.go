@@ -13,11 +13,14 @@ import (
 const (
 	syncFeatureStrategyTitle = `Feature branch sync strategy`
 	SyncFeatureStrategyHelp  = `
-Choose how Git Town should synchronize feature branches.
+Choose how Git Town should
+synchronize feature branches.
 
-These are short-lived branches created from the main branch
+These are short-lived branches
+created from the main branch
 and eventually merged back into it.
-Commonly used for developing new features and bug fixes.
+Commonly used for developing
+new features and bug fixes.
 
 `
 )
