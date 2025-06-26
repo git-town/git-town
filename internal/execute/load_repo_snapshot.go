@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
@@ -34,7 +33,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
-			Connector:         None[forgedomain.Connector](),
+			Connector:         connector, // this is needed to continue an interrupted "propose" opcode
 			Detached:          args.Detached,
 			DialogTestInputs:  args.DialogTestInputs,
 			FinalMessages:     args.Repo.FinalMessages,
