@@ -85,6 +85,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("Bitbucket app password", format.OptionalStringerSetting(config.NormalConfig.BitbucketAppPassword))
 	print.Entry("Codeberg token", format.OptionalStringerSetting(config.NormalConfig.CodebergToken))
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
+	print.Entry("GitHub connector type", format.OptionalStringerSetting(config.NormalConfig.GitHubConnectorType))
 	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
 	fmt.Println()

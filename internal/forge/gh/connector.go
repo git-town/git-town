@@ -62,8 +62,36 @@ func (self Connector) FindProposalFn() Option[func(branch, target gitdomain.Loca
 	return Some(self.findProposal)
 }
 
+func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
+	return runner.Run("gh", "browse")
+}
+
+func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
+	return Some(self.searchProposal)
+}
+
 func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) (err error)] {
 	return Some(self.squashMergeProposal)
+}
+
+func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
+	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
+}
+
+func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
+	return Some(self.updateProposalTarget)
+}
+
+func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
+	output, err := self.runner.Query("gh", "auth", "status", "--active")
+	if err != nil {
+		return forgedomain.VerifyConnectionResult{
+			AuthenticatedUser:   None[string](),
+			AuthenticationError: err,
+			AuthorizationError:  nil,
+		}
+	}
+	return ParsePermissionsOutput(output)
 }
 
 func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -106,34 +134,6 @@ type ghData struct {
 	Number      int    `json:"number"`
 	Title       string `json:"title"`
 	URL         string `json:"url"`
-}
-
-func (self Connector) OpenRepository(runner subshelldomain.Runner) error {
-	return runner.Run("gh", "browse")
-}
-
-func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error)] {
-	return Some(self.searchProposal)
-}
-
-func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
-}
-
-func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
-	return Some(self.updateProposalTarget)
-}
-
-func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	output, err := self.runner.Query("gh", "auth", "status", "--active")
-	if err != nil {
-		return forgedomain.VerifyConnectionResult{
-			AuthenticatedUser:   None[string](),
-			AuthenticationError: err,
-			AuthorizationError:  nil,
-		}
-	}
-	return ParsePermissionsOutput(output)
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
