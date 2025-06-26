@@ -87,11 +87,8 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	}
 	var parsed []ghData
 	err = json.Unmarshal([]byte(out), &parsed)
-	if err != nil {
+	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
-	}
-	if len(parsed) == 0 {
-		return None[forgedomain.Proposal](), nil
 	}
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(parsed), branch, target)
@@ -129,11 +126,8 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	}
 	var parsed []ghData
 	err = json.Unmarshal([]byte(out), &parsed)
-	if err != nil {
+	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
-	}
-	if len(parsed) == 0 {
-		return None[forgedomain.Proposal](), nil
 	}
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf("found more than one pull request: %d", len(parsed))
