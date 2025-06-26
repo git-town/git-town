@@ -31,7 +31,7 @@ func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], input
 	entries := list.Entries[forgedomain.GitHubConnectorType]{
 		{
 			Data: forgedomain.GitHubConnectorTypeAPI,
-			Text: "GitHub API token",
+			Text: "API token",
 		},
 		{
 			Data: forgedomain.GitHubConnectorTypeGh,
