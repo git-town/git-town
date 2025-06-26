@@ -761,12 +761,12 @@ func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope co
 	return gitCommands.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnectorType], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newType.Equal(oldType) {
 		return nil
 	}
 	if value, has := newType.Get(); has {
-		return gitCommands.SetGitHubConnectorType(frontend, value, scope)
+		return gitCommands.SetGitHubConnectorType(frontend, value)
 	}
 	return gitCommands.RemoveGitHubConnectorType(frontend)
 }

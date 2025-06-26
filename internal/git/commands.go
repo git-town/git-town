@@ -886,8 +886,8 @@ func (self *Commands) SetGitAlias(runner subshelldomain.Runner, aliasableCommand
 	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
 }
 
-func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitHubConnectorType.String(), value.String())
+func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType) error {
+	return runner.Run("git", "config", configdomain.KeyGitHubConnectorType.String(), value.String())
 }
 
 func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
