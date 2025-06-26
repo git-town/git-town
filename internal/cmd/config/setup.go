@@ -771,6 +771,7 @@ func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnector
 	}
 	return gitCommands.RemoveGitHubConnectorType(frontend)
 }
+
 func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if connectorType, has := githubConnectorType.Get(); has {
 		if connectorType == forgedomain.GitHubConnectorTypeGh {
