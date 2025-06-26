@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -24,12 +23,6 @@ import (
 type Connector struct {
 	Backend  subshelldomain.Querier
 	Frontend subshelldomain.Runner
-}
-
-type NewConnectorArgs struct {
-	Backend  subshelldomain.Querier
-	Frontend subshelldomain.Runner
-	Log      print.Logger
 }
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
