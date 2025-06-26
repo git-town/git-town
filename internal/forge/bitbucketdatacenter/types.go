@@ -1,4 +1,3 @@
-//nolint:tagliatelle // we integrate with remote APIs only
 package bitbucketdatacenter
 
 type PullRequestResponse struct {
