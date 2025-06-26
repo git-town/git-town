@@ -39,14 +39,14 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -55,13 +55,14 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge
@@ -82,18 +83,19 @@ Feature: show the configuration
       contribution-regex = "^renovate/"
       observed-regex = "^dependabot/"
       unknown-type = "observed"
-
+      
       [create]
       share-new-branches = "push"
-
+      
       [hosting]
       forge-type = "github"
+      github-connector = "gh"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "squash-merge"
-
+      
       [sync]
       feature-strategy = "rebase"
       perennial-strategy = "ff-only"
@@ -116,14 +118,14 @@ Feature: show the configuration
         perennial regex: ^release-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: push
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -132,13 +134,14 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: gh
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: squash-merge
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: rebase
@@ -155,6 +158,7 @@ Feature: show the configuration
     And Git setting "git-town.observed-regex" is "^git-observed-regex"
     And Git setting "git-town.perennial-regex" is "^git-perennial-"
     And Git setting "git-town.feature-regex" is "git-feature-.*"
+    And Git setting "git-town.github-connector" is "api"
     And Git setting "git-town.share-new-branches" is "no"
     And Git setting "git-town.ship-strategy" is "squash-merge"
     And Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -174,18 +178,19 @@ Feature: show the configuration
       contribution-regex = "^config-contribution-regex"
       observed-regex = "^config-observed-regex"
       unknown-type = "contribution"
-
+      
       [create]
       share-new-branches = "push"
-
+      
       [hosting]
       forge-type = "github"
+      github-connector = "gh"
       origin-hostname = "github.com"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
@@ -208,14 +213,14 @@ Feature: show the configuration
         perennial regex: ^git-perennial-
         prototype branches: prototype-1, prototype-2
         unknown branch type: observed
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: github
@@ -224,13 +229,14 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: api
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: no
         ship strategy: squash-merge
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge
@@ -264,14 +270,14 @@ Feature: show the configuration
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -280,13 +286,14 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge
@@ -294,7 +301,7 @@ Feature: show the configuration
         prototype sync strategy: merge
         sync tags: yes
         sync with upstream: yes
-
+      
       Branch Lineage:
         main
           alpha
@@ -304,7 +311,7 @@ Feature: show the configuration
           parked-2
           prototype-1
           prototype-2
-
+      
         qa
           hotfix
       """
@@ -326,14 +333,14 @@ Feature: show the configuration
         perennial regex: (not set)
         prototype branches: prototype-1, prototype-2
         unknown branch type: feature
-
+      
       Configuration:
         offline: no
-
+      
       Create:
         new branch type: (not set)
         share new branches: no
-
+      
       Hosting:
         development remote: origin
         forge type: (not set)
@@ -342,13 +349,14 @@ Feature: show the configuration
         Bitbucket app password: (not set)
         Codeberg token: (not set)
         Gitea token: (not set)
+        GitHub connector type: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
-
+      
       Ship:
         delete tracking branch: yes
         ship strategy: api
-
+      
       Sync:
         run pre-push hook: yes
         feature sync strategy: merge
