@@ -186,7 +186,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if !hasOldBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{})
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return data, false, err
 	}

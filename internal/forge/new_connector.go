@@ -12,11 +12,13 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
-func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger) (Option[forgedomain.Connector], error) {
+// TODO: replace most arguments with OpenRepoResult
+func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger, frontend subshelldomain.Runner, backend subshelldomain.Querier) (Option[forgedomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.NormalConfig.RemoteURL(remote).Get()
 	forgeType := config.NormalConfig.ForgeType
 	platform, hasPlatform := Detect(remoteURL, forgeType).Get()
@@ -70,8 +72,9 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				return Some(connector), err
 			case forgedomain.GitHubConnectorTypeGh:
 				connector, err = gh.NewConnector(gh.NewConnectorArgs{
-					Log:    log,
-					Runner: nil,
+					Log:      log,
+					Frontend: frontend,
+					Backend:  backend,
 				})
 				return Some(connector), err
 			}
