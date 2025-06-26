@@ -123,6 +123,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitAnotherProcessIsRunningRetry     = "another git process seems to be running in this repository, retrying in 1 sec ..."
 	GitHubEnterpriseInitializeError     = "cannot initialize GitHub Enterprise client: %s"
 	GitHubConnectorType                 = "GitHub connector type: %s\n"
+	GitHubConnectorTypeUnknown          = "unknown GitHubConnectorType: %q"
 	GitHubToken                         = "GitHub token: %s\n"
 	GitLabToken                         = "GitLab token: %s\n"
 	GitDirMissing                       = "cannot determine the '.git' directory: %w"

@@ -3,6 +3,7 @@ package forgedomain
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -35,5 +36,5 @@ func ParseGitHubConnectorType(text string) (Option[GitHubConnectorType], error) 
 			return Some(connectorType), nil
 		}
 	}
-	return None[GitHubConnectorType](), fmt.Errorf("unknown GitHubConnectorType: %q", text)
+	return None[GitHubConnectorType](), fmt.Errorf(messages.GitHubConnectorTypeUnknown, text)
 }
