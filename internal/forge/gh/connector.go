@@ -85,7 +85,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []ghData
+	var parsed []jsonData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -93,30 +93,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(parsed), branch, target)
 	}
-	pr := parsed[0]
-	proposal := forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(pr.Body),
-			MergeWithAPI: pr.Mergeable == "MERGEABLE",
-			Number:       pr.Number,
-			Source:       gitdomain.NewLocalBranchName(pr.HeadRefName),
-			Target:       gitdomain.NewLocalBranchName(pr.BaseRefName),
-			Title:        pr.Title,
-			URL:          pr.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
-	return Some(proposal), nil
-}
-
-type ghData struct {
-	BaseRefName string `json:"baseRefName"`
-	Body        string `json:"body"`
-	HeadRefName string `json:"headRefName"`
-	Mergeable   string `json:"mergeable"`
-	Number      int    `json:"number"`
-	Title       string `json:"title"`
-	URL         string `json:"url"`
+	return Some(parsed[0].ToProposal()), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -124,7 +101,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []ghData
+	var parsed []jsonData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -132,20 +109,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf("found more than one pull request: %d", len(parsed))
 	}
-	pr := parsed[0]
-	proposal := forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(pr.Body),
-			MergeWithAPI: pr.Mergeable == "MERGEABLE",
-			Number:       pr.Number,
-			Source:       gitdomain.NewLocalBranchName(pr.HeadRefName),
-			Target:       gitdomain.NewLocalBranchName(pr.BaseRefName),
-			Title:        pr.Title,
-			URL:          pr.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
-	return Some(proposal), nil
+	return Some(parsed[0].ToProposal()), nil
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
