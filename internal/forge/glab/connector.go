@@ -25,7 +25,7 @@ type Connector struct {
 }
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
-	args := []string{"mr", "create", "--target-branch=" + data.ParentBranch.String(), "--source-branch=" + data.Branch.String()}
+	args := []string{"mr", "create", "--source-branch=" + data.Branch.String(), "--target-branch=" + data.ParentBranch.String()}
 	title, hasTitle := data.ProposalTitle.Get()
 	if hasTitle {
 		args = append(args, "--title="+title.String())
