@@ -68,9 +68,7 @@ func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalI
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {
-	fmt.Println("111111111111111111111111111111111111111111111")
 	output, err := self.Backend.Query("glab", "auth", "status")
-	fmt.Println("22222222222222222222222222222222222222222", err, output)
 	if err != nil {
 		return forgedomain.VerifyConnectionResult{
 			AuthenticatedUser:   None[string](),
