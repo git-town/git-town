@@ -19,7 +19,7 @@ func TestParseJsonOutput(t *testing.T) {
 		must.NoError(t, err)
 		want := Some(forgedomain.Proposal{
 			Data: forgedomain.ProposalData{
-				Body:         Some(""),
+				Body:         None[string](),
 				MergeWithAPI: true,
 				Number:       5,
 				Source:       "kg-test",
@@ -39,8 +39,9 @@ func TestParseJsonOutput(t *testing.T) {
 	t.Run("no results", func(t *testing.T) {
 		t.Parallel()
 		give := `[]`
-		_, err := glab.ParseJSONOutput(give, "branch")
-		must.Error(t, err)
+		have, err := glab.ParseJSONOutput(give, "branch")
+		must.NoError(t, err)
+		must.Eq(t, None[forgedomain.Proposal](), have)
 	})
 
 	t.Run("invalid JSON", func(t *testing.T) {
