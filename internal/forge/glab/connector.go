@@ -34,7 +34,6 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if hasBody {
 		args = append(args, "--description="+body.String())
 	}
-
 	if !hasTitle || !hasBody {
 		args = append(args, "--fill")
 	}
