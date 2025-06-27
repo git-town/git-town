@@ -125,6 +125,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	GitHubConnectorType                 = "GitHub connector type: %s\n"
 	GitHubConnectorTypeUnknown          = "unknown GitHubConnectorType: %q"
 	GitHubToken                         = "GitHub token: %s\n"
+	GitHubTokenTypeUnknown              = "unknown GitHubTokenType: %q"
 	GitLabConnectorType                 = "GitLab connector type: %s\n"
 	GitLabConnectorTypeUnknown          = "unknown GitLabConnectorType: %q"
 	GitLabToken                         = "GitLab token: %s\n"

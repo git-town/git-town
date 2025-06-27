@@ -304,7 +304,8 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 			switch answer {
 			case forgedomain.GitHubConnectorTypeAPI:
 				existing := data.userInput.config.NormalConfig.GitHubTokenType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubTokenType)
-				answer, exit, err := dialog.GitHubTokenType(existing, data.dialogInputs.Next())
+				var answer forgedomain.GitHubTokenType
+				answer, exit, err = dialog.GitHubTokenType(existing, data.dialogInputs.Next())
 				exit, err = enterGitHubToken(data, repo)
 			case forgedomain.GitHubConnectorTypeGh:
 			}

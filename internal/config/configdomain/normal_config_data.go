@@ -22,6 +22,7 @@ type NormalConfigData struct {
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
+	GitHubTokenType          Option[forgedomain.GitHubTokenType]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
