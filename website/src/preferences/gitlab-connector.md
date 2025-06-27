@@ -3,7 +3,7 @@
 Git Town can interact with GitLab in two different ways.
 
 1. **GitLab API:** <br> Git Town communicates directly with the GitLab API using
-   a personal access token. You'll need to generate this token
+   a personal access token. You'll need to generate this token at
    [gitlab.com/settings/tokens](https://gitlab.com/-/user_settings/personal_access_tokens).
 
    By default, Git stores such tokens in plaintext in your Git configuration. To
