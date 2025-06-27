@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
+	"github.com/git-town/git-town/v21/internal/forge/glab"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -434,11 +435,21 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
-			return gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:  data.userInput.config.NormalConfig.GitLabToken,
-				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-			})
+			if connectorType, hasConnectorType := data.userInput.config.NormalConfig.GitLabConnectorType.Get(); hasConnectorType {
+				switch connectorType {
+				case forgedomain.GitLabConnectorTypeAPI:
+					return gitlab.NewConnector(gitlab.NewConnectorArgs{
+						APIToken:  data.userInput.config.NormalConfig.GitLabToken,
+						Log:       print.Logger{},
+						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+					})
+				case forgedomain.GitLabConnectorTypeGlab:
+					return glab.Connector{
+						Backend:  repo.Backend,
+						Frontend: repo.Backend,
+					}, nil
+				}
+			}
 		}
 	}
 	return nil, nil
