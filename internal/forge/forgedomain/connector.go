@@ -2,7 +2,6 @@ package forgedomain
 
 import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -45,13 +44,13 @@ type Connector interface {
 	// calling this function returns a function that you can call
 	// to update the source branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalSourceFn() Option[func(proposal ProposalInterface, newSource gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+	UpdateProposalSourceFn() Option[func(proposal ProposalInterface, newSource gitdomain.LocalBranchName) error]
 
 	// If this connector instance supports loading proposals via the API,
 	// calling this function returns a function that you can call
 	// to update the target branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error]
 
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyConnection() VerifyConnectionResult

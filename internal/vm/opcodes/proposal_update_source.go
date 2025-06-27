@@ -31,7 +31,7 @@ func (self *ProposalUpdateSource) Run(args shared.RunArgs) error {
 	if !canUpdateProposalSource {
 		return errors.New(messages.ProposalSourceCannotUpdate)
 	}
-	return updateProposalSource(self.Proposal.Data, self.NewBranch, args.FinalMessages)
+	return updateProposalSource(self.Proposal.Data, self.NewBranch)
 }
 
 func (self *ProposalUpdateSource) ShouldUndoOnError() bool {
