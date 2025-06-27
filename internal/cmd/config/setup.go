@@ -306,7 +306,18 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 			case forgedomain.GitHubConnectorTypeGh:
 			}
 		case forgedomain.ForgeTypeGitLab:
-			exit, err = enterGitlabToken(data, repo)
+			existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
+			var answer forgedomain.GitLabConnectorType
+			answer, exit, err = dialog.GitLabConnectorType(existing, data.dialogInputs.Next())
+			if err != nil || exit {
+				return forgeTypeOpt, exit, err
+			}
+			data.userInput.config.NormalConfig.GitLabConnectorType = Some(answer)
+			switch answer {
+			case forgedomain.GitLabConnectorTypeAPI:
+				exit, err = enterGitlabToken(data, repo)
+			case forgedomain.GitLabConnectorTypeGh:
+			}
 		}
 	}
 	return forgeTypeOpt, exit, err

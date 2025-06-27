@@ -22,6 +22,7 @@ type NormalConfigData struct {
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
+	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
@@ -107,6 +108,7 @@ func DefaultNormalConfig() NormalConfigData {
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
 		GitHubToken:              None[GitHubToken](),
+		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),

@@ -21,6 +21,7 @@ type PartialConfig struct {
 	ForgeType                Option[forgedomain.ForgeType]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
+	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
 	GitUserName              Option[GitUserName]
