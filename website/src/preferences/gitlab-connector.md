@@ -11,14 +11,14 @@ Git Town can interact with GitLab in two different ways.
    [credentials storage](https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
    for better security.
 
-2. **GitLab CLI (glab):** <br> The [glab](https://gitlab.com/gitlab-org/cli) CLI handles
-   authentication and token management for you.
+2. **GitLab CLI (glab):** <br> The [glab](https://gitlab.com/gitlab-org/cli) CLI
+   handles authentication and token management for you.
 
 ## config file
 
 It is generally not recommended to hardcode the connector type in your config
-file, as it enforces usage or non-usage of `glab` to your entire team. If you want
-to set it explicitly, it would look like this:
+file, as it enforces usage or non-usage of `glab` to your entire team. If you
+want to set it explicitly, it would look like this:
 
 ```toml
 [hosting]

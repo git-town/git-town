@@ -5,7 +5,8 @@ requests as branches get created, shipped, or deleted. To do so, Git Town needs
 a
 [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 with the `repo` scope. You can create one in your
-[account settings](https://github.com/settings/tokens/new) or get one created for you by using the [api connector type for GitHub](github-connector.md).
+[account settings](https://github.com/settings/tokens/new) or get one created
+for you by using the [api connector type for GitHub](github-connector.md).
 
 ## config file
 

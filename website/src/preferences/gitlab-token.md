@@ -5,7 +5,9 @@ requests as branches get created, shipped, or deleted. To do so, Git Town needs
 a
 [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 with `api` scope. You can create one in your account settings.
-[account settings](https://gitlab.com/-/user_settings/personal_access_tokens) or get one created for you by using the [api connector type for GitLab](gitlab-connector.md).
+[account settings](https://gitlab.com/-/user_settings/personal_access_tokens) or
+get one created for you by using the
+[api connector type for GitLab](gitlab-connector.md).
 
 ## config file
 
