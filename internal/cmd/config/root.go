@@ -87,6 +87,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("Gitea token", format.OptionalStringerSetting(config.NormalConfig.GiteaToken))
 	print.Entry("GitHub connector type", format.OptionalStringerSetting(config.NormalConfig.GitHubConnectorType))
 	print.Entry("GitHub token", format.OptionalStringerSetting(config.NormalConfig.GitHubToken))
+	print.Entry("GitLab connector type", format.OptionalStringerSetting(config.NormalConfig.GitLabConnectorType))
 	print.Entry("GitLab token", format.OptionalStringerSetting(config.NormalConfig.GitLabToken))
 	fmt.Println()
 	print.Header("Ship")

@@ -791,6 +791,10 @@ func (self *Commands) RemoveGitHubToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGitHubToken.String())
 }
 
+func (self *Commands) RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyGitLabConnectorType.String())
+}
+
 func (self *Commands) RemoveGitLabToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGitLabToken.String())
 }
@@ -892,6 +896,10 @@ func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value
 
 func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitHubToken.String(), value.String())
+}
+
+func (self *Commands) SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType) error {
+	return runner.Run("git", "config", configdomain.KeyGitLabConnectorType.String(), value.String())
 }
 
 func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
