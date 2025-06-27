@@ -183,7 +183,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 			}
 		}
 		if data.Hosting.GitLabConnectorType != nil {
-			gitlabConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType)
+			gitLabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
 			if err != nil {
 				return configdomain.EmptyPartialConfig(), err
 			}
