@@ -41,7 +41,7 @@ func TestEntries(t *testing.T) {
 			entries := list.Entries[forgedomain.ForgeType]{
 				{
 					Data: forgedomain.ForgeTypeGitHub,
-					Text: "Github",
+					Text: "GitHub",
 				},
 				{
 					Data: forgedomain.ForgeTypeGitLab,
@@ -61,7 +61,7 @@ func TestEntries(t *testing.T) {
 				},
 				{
 					Data: Some(forgedomain.ForgeTypeGitHub),
-					Text: "Github",
+					Text: "GitHub",
 				},
 				{
 					Data: Some(forgedomain.ForgeTypeGitLab),
@@ -90,7 +90,7 @@ func TestEntries(t *testing.T) {
 				},
 				{
 					Data: Some(forgedomain.ForgeTypeGitHub),
-					Text: "Github",
+					Text: "GitHub",
 				},
 				{
 					Data: Some(forgedomain.ForgeTypeGitLab),

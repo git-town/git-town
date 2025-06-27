@@ -13,7 +13,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestGitlabConnector(t *testing.T) {
+func TestGitLabConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
@@ -92,7 +92,7 @@ func TestGitlabConnector(t *testing.T) {
 	})
 }
 
-func TestNewGitlabConnector(t *testing.T) {
+func TestNewGitLabConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("GitLab SaaS", func(t *testing.T) {
