@@ -17,7 +17,7 @@ Git Town can interact with GitLab in two different ways.
 ## config file
 
 It is generally not recommended to hardcode the connector type in your config
-file, as it enforces usage or non-usage of `glab` to your entire team. If you
+file, as it enforces usage or non-usage of `glab` for your entire team. If you
 want to set it explicitly, it would look like this:
 
 ```toml
