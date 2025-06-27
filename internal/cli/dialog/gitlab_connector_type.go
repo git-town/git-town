@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	gitlabConnectorTypeTitle = `GitLab connector type`
-	gitlabConnectorTypeHelp  = `
+	gitLabConnectorTypeTitle = `GitLab connector type`
+	gitLabConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitLab:
 
 1. GitLab API:
@@ -42,7 +42,7 @@ func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], input
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, gitlabConnectorTypeTitle, gitlabConnectorTypeHelp, inputs)
+	selection, exit, err := components.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs)
 	if err != nil || exit {
 		return forgedomain.GitLabConnectorTypeAPI, exit, err
 	}
