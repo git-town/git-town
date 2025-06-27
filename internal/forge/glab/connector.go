@@ -86,7 +86,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []ghData
+	var parsed []glabData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -110,7 +110,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	return Some(proposal), nil
 }
 
-type ghData struct {
+type glabData struct {
 	Description  string `json:"description"`
 	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
 	Number       int    `json:"iid"`                   //nolint:tagliatelle
@@ -125,7 +125,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []ghData
+	var parsed []glabData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
