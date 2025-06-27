@@ -25,6 +25,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
+	"github.com/git-town/git-town/v21/internal/forge/glab"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -306,7 +307,18 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 			case forgedomain.GitHubConnectorTypeGh:
 			}
 		case forgedomain.ForgeTypeGitLab:
-			exit, err = enterGitLabToken(data, repo)
+			existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
+			var answer forgedomain.GitLabConnectorType
+			answer, exit, err = dialog.GitLabConnectorType(existing, data.dialogInputs.Next())
+			if err != nil || exit {
+				return forgeTypeOpt, exit, err
+			}
+			data.userInput.config.NormalConfig.GitLabConnectorType = Some(answer)
+			switch answer {
+			case forgedomain.GitLabConnectorTypeAPI:
+				exit, err = enterGitLabToken(data, repo)
+			case forgedomain.GitLabConnectorTypeGlab:
+			}
 		}
 	}
 	return forgeTypeOpt, exit, err
@@ -423,11 +435,21 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
-			return gitlab.NewConnector(gitlab.NewConnectorArgs{
-				APIToken:  data.userInput.config.NormalConfig.GitLabToken,
-				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
-			})
+			if connectorType, hasConnectorType := data.userInput.config.NormalConfig.GitLabConnectorType.Get(); hasConnectorType {
+				switch connectorType {
+				case forgedomain.GitLabConnectorTypeAPI:
+					return gitlab.NewConnector(gitlab.NewConnectorArgs{
+						APIToken:  data.userInput.config.NormalConfig.GitLabToken,
+						Log:       print.Logger{},
+						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+					})
+				case forgedomain.GitLabConnectorTypeGlab:
+					return glab.Connector{
+						Backend:  repo.Backend,
+						Frontend: repo.Backend,
+					}, nil
+				}
+			}
 		}
 	}
 	return nil, nil
@@ -570,7 +592,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 				return err
 			}
 		case forgedomain.ForgeTypeGitLab:
-			err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, gitCommands, frontend)
+			err = saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, userInput.config.NormalConfig.GitLabConnectorType, gitCommands, frontend)
 			if err != nil {
 				return err
 			}
@@ -601,6 +623,9 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.GitHubConnectorType.IsNone() {
 		fc.Check(saveGitHubConnectorType(oldConfig.NormalConfig.GitHubConnectorType, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend))
+	}
+	if configFile.GitLabConnectorType.IsNone() {
+		fc.Check(saveGitLabConnectorType(oldConfig.NormalConfig.GitLabConnectorType, userInput.config.NormalConfig.GitLabConnectorType, gitCommands, frontend))
 	}
 	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend))
@@ -786,7 +811,22 @@ func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope 
 	return gitCommands.RemoveGitHubToken(frontend)
 }
 
-func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitLabConnectorType(oldType, newType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+	if newType.Equal(oldType) {
+		return nil
+	}
+	if value, has := newType.Get(); has {
+		return gitCommands.SetGitLabConnectorType(frontend, value)
+	}
+	return gitCommands.RemoveGitLabConnectorType(frontend)
+}
+
+func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+	if connectorType, has := gitlabConnectorType.Get(); has {
+		if connectorType == forgedomain.GitLabConnectorTypeGlab {
+			return nil
+		}
+	}
 	if newToken.Equal(oldToken) {
 		return nil
 	}

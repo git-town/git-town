@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
+	"github.com/git-town/git-town/v21/internal/forge/glab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -18,6 +19,7 @@ import (
 
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
 // TODO: replace most arguments with OpenRepoResult
+// or replace config.UnvalidatedConfig with config.UnvalidatedConfig.NormalConfig
 func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log print.Logger, frontend subshelldomain.Runner, backend subshelldomain.Querier) (Option[forgedomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.NormalConfig.RemoteURL(remote).Get()
 	forgeType := config.NormalConfig.ForgeType
@@ -86,7 +88,24 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), err
 	case forgedomain.ForgeTypeGitLab:
-		var err error
+		if gitLabConnectorType, hasGitLabConnectorType := config.NormalConfig.GitLabConnectorType.Get(); hasGitLabConnectorType {
+			switch gitLabConnectorType {
+			case forgedomain.GitLabConnectorTypeAPI:
+				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
+					APIToken:  config.NormalConfig.GitLabToken,
+					Log:       log,
+					RemoteURL: remoteURL,
+				})
+				return Some(connector), err
+			case forgedomain.GitLabConnectorTypeGlab:
+				connector = glab.Connector{
+					Backend:  backend,
+					Frontend: frontend,
+				}
+				return Some(connector), err
+			}
+		}
+		// no GitLabConnectorType specified --> use the API connector
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitLabToken,
 			Log:       log,

@@ -57,6 +57,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector type: (not set)
         GitHub token: (not set)
+        GitLab connector type: (not set)
         GitLab token: (not set)
 
       Ship:
@@ -136,6 +137,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector type: gh
         GitHub token: (not set)
+        GitLab connector type: (not set)
         GitLab token: (not set)
 
       Ship:
@@ -231,6 +233,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector type: api
         GitHub token: (not set)
+        GitLab connector type: (not set)
         GitLab token: (not set)
 
       Ship:
@@ -288,6 +291,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector type: (not set)
         GitHub token: (not set)
+        GitLab connector type: (not set)
         GitLab token: (not set)
 
       Ship:
@@ -351,6 +355,7 @@ Feature: show the configuration
         Gitea token: (not set)
         GitHub connector type: (not set)
         GitHub token: (not set)
+        GitLab connector type: (not set)
         GitLab token: (not set)
 
       Ship:

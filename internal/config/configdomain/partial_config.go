@@ -21,6 +21,7 @@ type PartialConfig struct {
 	ForgeType                Option[forgedomain.ForgeType]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[GitHubToken]
+	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
 	GitUserName              Option[GitUserName]
@@ -65,6 +66,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	githubConnectorType, err := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
 	ec.Check(err)
+	gitlabConnectorType, err := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
+	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
 	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
@@ -107,6 +110,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGitHubToken]),
+		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitLabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
 		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
@@ -149,6 +153,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
 		GitHubToken:              other.GitHubToken.Or(self.GitHubToken),
+		GitLabConnectorType:      other.GitLabConnectorType.Or(self.GitLabConnectorType),
 		GitLabToken:              other.GitLabToken.Or(self.GitLabToken),
 		GitUserEmail:             other.GitUserEmail.Or(self.GitUserEmail),
 		GitUserName:              other.GitUserName.Or(self.GitUserName),
@@ -188,6 +193,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		ForgeType:                self.ForgeType,
 		GitHubConnectorType:      self.GitHubConnectorType,
 		GitHubToken:              self.GitHubToken,
+		GitLabConnectorType:      self.GitLabConnectorType,
 		GitLabToken:              self.GitLabToken,
 		GiteaToken:               self.GiteaToken,
 		HostingOriginHostname:    self.HostingOriginHostname,

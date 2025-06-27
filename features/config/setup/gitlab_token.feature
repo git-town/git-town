@@ -18,6 +18,7 @@ Feature: enter the GitLab API token
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type: auto-detect     | enter             |                                             |
+      | gitlab connector type: api  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
@@ -34,8 +35,8 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --local git-town.gitlab-token 123456 |
+      | git config git-town.gitlab-connector api        |
     And local Git setting "git-town.forge-type" still doesn't exist
-    And local Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
@@ -50,6 +51,7 @@ Feature: enter the GitLab API token
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | up enter          |                                             |
+      | gitlab connector type: api  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
@@ -67,6 +69,7 @@ Feature: enter the GitLab API token
       | COMMAND                                         |
       | git config --local git-town.gitlab-token 123456 |
       | git config git-town.forge-type gitlab           |
+      | git config git-town.gitlab-connector api        |
     And local Git setting "git-town.forge-type" is now "gitlab"
     And local Git setting "git-town.gitlab-token" is now "123456"
 
@@ -84,6 +87,7 @@ Feature: enter the GitLab API token
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
       | forge type                  | enter             |                                             |
+      | gitlab connector type: api  | enter             |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
       | token scope                 | down enter        |                                             |
       | sync-feature-strategy       | enter             |                                             |
@@ -100,6 +104,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                          |
       | git config --global git-town.gitlab-token 123456 |
+      | git config git-town.gitlab-connector api         |
     And global Git setting "git-town.gitlab-token" is now "123456"
 
   Scenario: edit global GitLab token
@@ -117,7 +122,8 @@ Feature: enter the GitLab API token
       | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
       | forge type                  | enter                                     |                                             |
-      | github token                | backspace backspace backspace 4 5 6 enter |                                             |
+      | gitlab connector type: api  | enter                                     |                                             |
+      | gitlab token                | backspace backspace backspace 4 5 6 enter |                                             |
       | token scope                 | enter                                     |                                             |
       | sync-feature-strategy       | enter                                     |                                             |
       | sync-perennial-strategy     | enter                                     |                                             |
@@ -133,4 +139,5 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                       |
       | git config --global git-town.gitlab-token 456 |
+      | git config git-town.gitlab-connector api      |
     And global Git setting "git-town.gitlab-token" is now "456"

@@ -1,28 +1,28 @@
-# GitHub connector
+# GitLab connector
 
-Git Town can interact with GitHub in two different ways.
+Git Town can interact with GitLab in two different ways.
 
-1. **GitHub API:** <br> Git Town communicates directly with the GitHub API using
-   a personal access token. You'll need to generate this token
-   [github.com/settings/tokens](https://github.com/settings/tokens).
+1. **GitLab API:** <br> Git Town communicates directly with the GitLab API using
+   a personal access token. You'll need to generate this token at
+   [gitlab.com/settings/tokens](https://gitlab.com/-/user_settings/personal_access_tokens).
 
    By default, Git stores such tokens in plaintext in your Git configuration. To
    avoid this, consider configuring Git to use your operating system's encrypted
    [credentials storage](https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
    for better security.
 
-2. **GitHub CLI (gh):** <br> The [gh](https://cli.github.com) CLI handles
-   authentication and token management for you.
+2. **GitLab CLI (glab):** <br> The [glab](https://gitlab.com/gitlab-org/cli) CLI
+   handles authentication and token management for you.
 
 ## config file
 
 It is generally not recommended to hardcode the connector type in your config
-file, as it enforces usage or non-usage of `gh` for your entire team. If you
+file, as it enforces usage or non-usage of `glab` for your entire team. If you
 want to set it explicitly, it would look like this:
 
 ```toml
 [hosting]
-github-connector = "api" # or "gh"
+gitlab-connector = "api" # or "glab"
 ```
 
 ## Git metadata
@@ -30,7 +30,7 @@ github-connector = "api" # or "gh"
 You can configure the API token manually by running:
 
 ```wrap
-git config [--global] git-town.github-connector <api|gh>
+git config [--global] git-town.gitlab-connector <api|glab>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on

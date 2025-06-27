@@ -76,6 +76,7 @@
     - [Gitea token](preferences/gitea-token.md)
     - [GitHub connector](preferences/github-connector.md)
     - [GitHub token](preferences/github-token.md)
+    - [GitLab connector](preferences/gitlab-connector.md)
     - [GitLab token](preferences/gitlab-token.md)
   - [Ship]()
     - [Delete tracking branch](preferences/ship-delete-tracking-branch.md)
