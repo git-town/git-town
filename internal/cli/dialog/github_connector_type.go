@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	githubConnectorTypeTitle = `GitHub connector type`
-	githubConnectorTypeHelp  = `
+	gitHubConnectorTypeTitle = `GitHub connector type`
+	gitHubConnectorTypeHelp  = `
 Git Town supports two ways to connect to GitHub:
 
 1. GitHub API:
@@ -42,7 +42,7 @@ func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], input
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, githubConnectorTypeTitle, githubConnectorTypeHelp, inputs)
+	selection, exit, err := components.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs)
 	if err != nil || exit {
 		return forgedomain.GitHubConnectorTypeAPI, exit, err
 	}
