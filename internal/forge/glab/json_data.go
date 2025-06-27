@@ -16,16 +16,16 @@ type jsonData struct {
 	URL          string `json:"web_url"` //nolint:tagliatelle
 }
 
-func (data jsonData) ToProposal() forgedomain.Proposal {
+func (self jsonData) ToProposal() forgedomain.Proposal {
 	return forgedomain.Proposal{
 		Data: forgedomain.ProposalData{
-			Body:         NewOption(data.Description),
-			MergeWithAPI: data.Mergeable == "mergeable",
-			Number:       data.Number,
-			Source:       gitdomain.NewLocalBranchName(data.SourceBranch),
-			Target:       gitdomain.NewLocalBranchName(data.TargetBranch),
-			Title:        data.Title,
-			URL:          data.URL,
+			Body:         NewOption(self.Description),
+			MergeWithAPI: self.Mergeable == "mergeable",
+			Number:       self.Number,
+			Source:       gitdomain.NewLocalBranchName(self.SourceBranch),
+			Target:       gitdomain.NewLocalBranchName(self.TargetBranch),
+			Title:        self.Title,
+			URL:          self.URL,
 		},
 		ForgeType: forgedomain.ForgeTypeGitHub,
 	}
