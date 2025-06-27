@@ -22,11 +22,6 @@ func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[fo
 	return Some(parsed[0].ToProposal()), nil
 }
 
-type ParseJSONOutputArgs struct {
-	output             string
-	multipleFoundError error
-}
-
 type jsonData struct {
 	Description  string `json:"description"`
 	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
