@@ -43,6 +43,6 @@ func (self jsonData) ToProposal() forgedomain.Proposal {
 			Title:        self.Title,
 			URL:          self.URL,
 		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
+		ForgeType: forgedomain.ForgeTypeGitLab,
 	}
 }
