@@ -33,7 +33,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
-			Connector:         connector, // this is needed to continue an interrupted "propose" opcode
+			Connector:         args.Connector, // this is needed to continue an interrupted "propose" opcode
 			Detached:          args.Detached,
 			DialogTestInputs:  args.DialogTestInputs,
 			FinalMessages:     args.Repo.FinalMessages,
