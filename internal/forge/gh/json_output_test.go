@@ -84,5 +84,4 @@ func TestParseJSONOutput(t *testing.T) {
 		_, err := gh.ParseJSONOutput(give, "branch")
 		must.Error(t, err)
 	})
-
 }

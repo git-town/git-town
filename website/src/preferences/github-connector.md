@@ -17,8 +17,8 @@ Git Town can interact with GitHub in two different ways.
 ## config file
 
 It is generally not recommended to hardcode the connector type in your config
-file, as it enforces usage or non-usage of `gh` for your entire team. If you want
-to set it explicitly, it would look like this:
+file, as it enforces usage or non-usage of `gh` for your entire team. If you
+want to set it explicitly, it would look like this:
 
 ```toml
 [hosting]
