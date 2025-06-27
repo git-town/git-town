@@ -22,6 +22,12 @@ func (self Data) NewProposalURL(data forgedomain.CreateProposalArgs) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", data.Branch.String())
 	query.Add("merge_request[target_branch]", data.ParentBranch.String())
+	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+		query.Add("merge_request[title]", title.String())
+	}
+	if body, hasBody := data.ProposalBody.Get(); hasBody {
+		query.Add("merge_request[description]", body.String())
+	}
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", self.RepositoryURL(), query.Encode())
 }
 
