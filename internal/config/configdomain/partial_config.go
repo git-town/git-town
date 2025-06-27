@@ -66,6 +66,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	githubConnectorType, err := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
 	ec.Check(err)
+	gitlabConnectorType, err := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
+	ec.Check(err)
 	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
 	ec.Check(err)
 	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
@@ -108,6 +110,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              ParseGitHubToken(snapshot[KeyGithubToken]),
+		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitlabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
 		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
