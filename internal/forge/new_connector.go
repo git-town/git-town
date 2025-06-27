@@ -86,7 +86,24 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		})
 		return Some(connector), err
 	case forgedomain.ForgeTypeGitLab:
-		var err error
+		if gitLabConnectorType, hasGitLabConnectorType := config.NormalConfig.GitLabConnectorType.Get(); hasGitLabConnectorType {
+			switch gitLabConnectorType {
+			case forgedomain.GitLabConnectorTypeAPI:
+				connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
+					APIToken:  config.NormalConfig.GitLabToken,
+					Log:       log,
+					RemoteURL: remoteURL,
+				})
+				return Some(connector), err
+			case forgedomain.GitLabConnectorTypeGh:
+				connector = gh.Connector{
+					Backend:  backend,
+					Frontend: frontend,
+				}
+				return Some(connector), err
+			}
+		}
+		// no GitLabConnectorType specified --> use the API connector
 		connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:  config.NormalConfig.GitLabToken,
 			Log:       log,
