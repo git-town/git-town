@@ -94,34 +94,11 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(parsed), branch, target)
 	}
-	pr := parsed[0]
-	proposal := forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(pr.Description),
-			MergeWithAPI: pr.Mergeable == "mergeable",
-			Number:       pr.Number,
-			Source:       gitdomain.NewLocalBranchName(pr.SourceBranch),
-			Target:       gitdomain.NewLocalBranchName(pr.TargetBranch),
-			Title:        pr.Title,
-			URL:          pr.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
-	return Some(proposal), nil
-}
-
-type glabData struct {
-	Description  string `json:"description"`
-	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
-	Number       int    `json:"iid"`                   //nolint:tagliatelle
-	SourceBranch string `json:"source_branch"`         //nolint:tagliatelle
-	TargetBranch string `json:"target_branch"`         //nolint:tagliatelle
-	Title        string `json:"title"`
-	URL          string `json:"web_url"` //nolint:tagliatelle
+	return Some(parsed[0].ToProposal()), nil
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
-	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--json=number,title,body,mergeable,headRefName,baseRefName,url")
+	out, err := self.Backend.Query("glab", "--source-branch="+branch.String(), "--output=json")
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
@@ -133,20 +110,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if len(parsed) > 1 {
 		return None[forgedomain.Proposal](), fmt.Errorf("found more than one pull request: %d", len(parsed))
 	}
-	pr := parsed[0]
-	proposal := forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(pr.Description),
-			MergeWithAPI: pr.Mergeable == "MERGEABLE",
-			Number:       pr.Number,
-			Source:       gitdomain.NewLocalBranchName(pr.SourceBranch),
-			Target:       gitdomain.NewLocalBranchName(pr.TargetBranch),
-			Title:        pr.Title,
-			URL:          pr.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
-	return Some(proposal), nil
+	return Some(parsed[0].ToProposal()), nil
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
@@ -176,4 +140,29 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
 	}
 	return result
+}
+
+type glabData struct {
+	Description  string `json:"description"`
+	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
+	Number       int    `json:"iid"`                   //nolint:tagliatelle
+	SourceBranch string `json:"source_branch"`         //nolint:tagliatelle
+	TargetBranch string `json:"target_branch"`         //nolint:tagliatelle
+	Title        string `json:"title"`
+	URL          string `json:"web_url"` //nolint:tagliatelle
+}
+
+func (data glabData) ToProposal() forgedomain.Proposal {
+	return forgedomain.Proposal{
+		Data: forgedomain.ProposalData{
+			Body:         NewOption(data.Description),
+			MergeWithAPI: data.Mergeable == "mergeable",
+			Number:       data.Number,
+			Source:       gitdomain.NewLocalBranchName(data.SourceBranch),
+			Target:       gitdomain.NewLocalBranchName(data.TargetBranch),
+			Title:        data.Title,
+			URL:          data.URL,
+		},
+		ForgeType: forgedomain.ForgeTypeGitHub,
+	}
 }
