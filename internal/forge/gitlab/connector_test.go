@@ -74,6 +74,13 @@ func TestGitLabConnector(t *testing.T) {
 				body:   None[gitdomain.ProposalBody](),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main&merge_request%5Btitle%5D=my+title",
 			},
+			"proposal with body": {
+				branch: "feature",
+				parent: "main",
+				title:  None[gitdomain.ProposalTitle](),
+				body:   Some(gitdomain.ProposalBody("my body")),
+				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bdescription%5D=my+body&merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main",
+			},
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
