@@ -1,10 +1,26 @@
 package gh
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
+
+func ParseJSONOutput(output string, branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
+	var parsed []jsonData
+	err := json.Unmarshal([]byte(output), &parsed)
+	if err != nil || len(parsed) == 0 {
+		return None[forgedomain.Proposal](), err
+	}
+	if len(parsed) > 1 {
+		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
+	}
+	return Some(parsed[0].ToProposal()), nil
+}
 
 // data returned by glab in JSON mode
 type jsonData struct {
