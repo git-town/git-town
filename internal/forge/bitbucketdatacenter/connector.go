@@ -95,8 +95,8 @@ func (self Connector) UpdateProposalSourceFn() Option[func(forgedomain.ProposalI
 	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
 }
 
-func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error] {
-	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName, stringslice.Collector) error]()
+func (self Connector) UpdateProposalTargetFn() Option[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error] {
+	return None[func(forgedomain.ProposalInterface, gitdomain.LocalBranchName) error]()
 }
 
 func (self Connector) VerifyConnection() forgedomain.VerifyConnectionResult {

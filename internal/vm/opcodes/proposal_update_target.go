@@ -30,7 +30,7 @@ func (self *ProposalUpdateTarget) Run(args shared.RunArgs) error {
 	if !canUpdateProposalTarget {
 		return forgedomain.UnsupportedServiceError()
 	}
-	return updateProposalTarget(self.Proposal.Data, self.NewBranch, args.FinalMessages)
+	return updateProposalTarget(self.Proposal.Data, self.NewBranch)
 }
 
 func (self *ProposalUpdateTarget) ShouldUndoOnError() bool {

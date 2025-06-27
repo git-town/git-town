@@ -51,7 +51,7 @@ type Connector interface {
 	// calling this function returns a function that you can call
 	// to update the target branch of the proposal with the given number.
 	// A None return value indicates that this connector does not support this feature (yet).
-	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName, finalMessages stringslice.Collector) error]
+	UpdateProposalTargetFn() Option[func(proposal ProposalInterface, newTarget gitdomain.LocalBranchName) error]
 
 	// VerifyConnection checks whether this connector can make successful requests to the forge.
 	VerifyConnection() VerifyConnectionResult
