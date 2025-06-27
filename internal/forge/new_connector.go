@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/gitea"
 	"github.com/git-town/git-town/v21/internal/forge/github"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
+	"github.com/git-town/git-town/v21/internal/forge/glab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -96,7 +97,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 				})
 				return Some(connector), err
 			case forgedomain.GitLabConnectorTypeGlab:
-				connector = gh.Connector{
+				connector = glab.Connector{
 					Backend:  backend,
 					Frontend: frontend,
 				}
