@@ -1,9 +1,7 @@
 package glab
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -85,15 +83,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []jsonData
-	err = json.Unmarshal([]byte(out), &parsed)
-	if err != nil || len(parsed) == 0 {
-		return None[forgedomain.Proposal](), err
-	}
-	if len(parsed) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromToFound, len(parsed), branch, target)
-	}
-	return Some(parsed[0].ToProposal()), nil
+	return ParseJSONOutput(out, branch)
 }
 
 func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[forgedomain.Proposal], error) {
@@ -101,15 +91,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []jsonData
-	err = json.Unmarshal([]byte(out), &parsed)
-	if err != nil || len(parsed) == 0 {
-		return None[forgedomain.Proposal](), err
-	}
-	if len(parsed) > 1 {
-		return None[forgedomain.Proposal](), fmt.Errorf(messages.ProposalMultipleFromFound, len(parsed), branch)
-	}
-	return Some(parsed[0].ToProposal()), nil
+	return ParseJSONOutput(out, branch)
 }
 
 func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
