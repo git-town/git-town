@@ -86,7 +86,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []glabData
+	var parsed []jsonData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -102,7 +102,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []glabData
+	var parsed []jsonData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -140,29 +140,4 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		result.AuthenticationError = errors.New(messages.AuthenticationMissing)
 	}
 	return result
-}
-
-type glabData struct {
-	Description  string `json:"description"`
-	Mergeable    string `json:"detailed_merge_status"` //nolint:tagliatelle
-	Number       int    `json:"iid"`                   //nolint:tagliatelle
-	SourceBranch string `json:"source_branch"`         //nolint:tagliatelle
-	TargetBranch string `json:"target_branch"`         //nolint:tagliatelle
-	Title        string `json:"title"`
-	URL          string `json:"web_url"` //nolint:tagliatelle
-}
-
-func (data glabData) ToProposal() forgedomain.Proposal {
-	return forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(data.Description),
-			MergeWithAPI: data.Mergeable == "mergeable",
-			Number:       data.Number,
-			Source:       gitdomain.NewLocalBranchName(data.SourceBranch),
-			Target:       gitdomain.NewLocalBranchName(data.TargetBranch),
-			Title:        data.Title,
-			URL:          data.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
 }
