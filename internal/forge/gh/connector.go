@@ -85,7 +85,7 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []ghData
+	var parsed []jsonData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -101,7 +101,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	if err != nil {
 		return None[forgedomain.Proposal](), err
 	}
-	var parsed []ghData
+	var parsed []jsonData
 	err = json.Unmarshal([]byte(out), &parsed)
 	if err != nil || len(parsed) == 0 {
 		return None[forgedomain.Proposal](), err
@@ -150,29 +150,4 @@ func ParsePermissionsOutput(output string) forgedomain.VerifyConnectionResult {
 		}
 	}
 	return result
-}
-
-type ghData struct {
-	BaseRefName string `json:"baseRefName"`
-	Body        string `json:"body"`
-	HeadRefName string `json:"headRefName"`
-	Mergeable   string `json:"mergeable"`
-	Number      int    `json:"number"`
-	Title       string `json:"title"`
-	URL         string `json:"url"`
-}
-
-func (data ghData) ToProposal() forgedomain.Proposal {
-	return forgedomain.Proposal{
-		Data: forgedomain.ProposalData{
-			Body:         NewOption(data.Body),
-			MergeWithAPI: data.Mergeable == "MERGEABLE",
-			Number:       data.Number,
-			Source:       gitdomain.NewLocalBranchName(data.HeadRefName),
-			Target:       gitdomain.NewLocalBranchName(data.BaseRefName),
-			Title:        data.Title,
-			URL:          data.URL,
-		},
-		ForgeType: forgedomain.ForgeTypeGitHub,
-	}
 }
