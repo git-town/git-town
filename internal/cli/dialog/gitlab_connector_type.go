@@ -34,8 +34,8 @@ func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], input
 			Text: "API token",
 		},
 		{
-			Data: forgedomain.GitLabConnectorTypeGh,
-			Text: "gh tool",
+			Data: forgedomain.GitLabConnectorTypeGlab,
+			Text: "glab tool",
 		},
 	}
 	defaultPos := 0

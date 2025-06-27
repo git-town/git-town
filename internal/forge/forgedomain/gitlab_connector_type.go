@@ -11,8 +11,8 @@ import (
 type GitLabConnectorType string
 
 const (
-	GitLabConnectorTypeAPI GitLabConnectorType = "api"  // connect to the GitLab API using Git Town's built-in API connector
-	GitLabConnectorTypeGh  GitLabConnectorType = "glab" // connect to the GitLab API by calling GitLab's "glab" tool
+	GitLabConnectorTypeAPI  GitLabConnectorType = "api"  // connect to the GitLab API using Git Town's built-in API connector
+	GitLabConnectorTypeGlab GitLabConnectorType = "glab" // connect to the GitLab API by calling GitLab's "glab" tool
 )
 
 func (self GitLabConnectorType) String() string {
@@ -23,7 +23,7 @@ func (self GitLabConnectorType) String() string {
 func GitLabConnectorTypes() []GitLabConnectorType {
 	return []GitLabConnectorType{
 		GitLabConnectorTypeAPI,
-		GitLabConnectorTypeGh,
+		GitLabConnectorTypeGlab,
 	}
 }
 

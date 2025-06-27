@@ -316,7 +316,7 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 			switch answer {
 			case forgedomain.GitLabConnectorTypeAPI:
 				exit, err = enterGitLabToken(data, repo)
-			case forgedomain.GitLabConnectorTypeGh:
+			case forgedomain.GitLabConnectorTypeGlab:
 			}
 		}
 	}
