@@ -26,17 +26,20 @@ type Connector struct {
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {
 	args := []string{"mr", "create", "--target-branch=" + data.ParentBranch.String(), "--source-branch=" + data.Branch.String()}
-	if title, hasTitle := data.ProposalTitle.Get(); hasTitle {
+	title, hasTitle := data.ProposalTitle.Get()
+	if hasTitle {
 		args = append(args, "--title="+title.String())
 	}
-	if body, hasBody := data.ProposalBody.Get(); hasBody {
+	body, hasBody := data.ProposalBody.Get()
+	if hasBody {
 		args = append(args, "--description="+body.String())
 	}
-	err := self.Frontend.Run("glab", args...)
-	if err != nil {
-		return err
+
+	if !hasTitle || !hasBody {
+		args = append(args, "--fill")
 	}
-	return self.Frontend.Run("glab", "mr", "view", "--web")
+	args = append(args, "--web")
+	return self.Frontend.Run("glab", args...)
 }
 
 func (self Connector) DefaultProposalMessage(data forgedomain.ProposalData) string {
