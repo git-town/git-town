@@ -22,7 +22,7 @@ Git Town supports two ways to connect to GitLab:
 	 that you provide on the next screen.
 2. GitLab's "glab" application:
    This doesn't require an access token
-	 but you need to install and configure the gh tool.
+	 but you need to install and configure the glab tool.
 
 `
 )
