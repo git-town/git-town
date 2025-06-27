@@ -7,7 +7,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func GithubAPIToken() Option[configdomain.GitHubToken] {
+func GitHubAPIToken() Option[configdomain.GitHubToken] {
 	apiToken := os.Getenv("GITHUB_TOKEN")
 	if len(apiToken) > 0 {
 		return Some(configdomain.GitHubToken(apiToken))

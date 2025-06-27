@@ -83,9 +83,9 @@ const (
 	KeyForgeType                           = Key("git-town.forge-type")
 	KeyGiteaToken                          = Key("git-town.gitea-token")
 	KeyGitHubConnectorType                 = Key("git-town.github-connector")
-	KeyGithubToken                         = Key(pkg.KeyGithubToken)
+	KeyGitHubToken                         = Key(pkg.KeyGitHubToken)
 	KeyGitLabConnectorType                 = Key("git-town.gitlab-connector")
-	KeyGitlabToken                         = Key("git-town.gitlab-token")
+	KeyGitLabToken                         = Key("git-town.gitlab-token")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyNewBranchType                       = Key("git-town.new-branch-type")
@@ -139,9 +139,9 @@ var keys = []Key{
 	KeyForgeType,
 	KeyGiteaToken,
 	KeyGitHubConnectorType,
-	KeyGithubToken,
+	KeyGitHubToken,
 	KeyGitLabConnectorType,
-	KeyGitlabToken,
+	KeyGitLabToken,
 	KeyGitUserEmail,
 	KeyGitUserName,
 	KeyMainBranch,

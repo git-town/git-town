@@ -6,6 +6,6 @@ import (
 
 func Load() configdomain.PartialConfig {
 	partialConfig := configdomain.EmptyPartialConfig()
-	partialConfig.GitHubToken = GithubAPIToken()
+	partialConfig.GitHubToken = GitHubAPIToken()
 	return partialConfig
 }
