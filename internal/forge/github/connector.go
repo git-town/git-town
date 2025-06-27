@@ -190,7 +190,7 @@ func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMe
 	if number <= 0 {
 		return errors.New(messages.ProposalNoNumberGiven)
 	}
-	self.log.Start(messages.ForgeGithubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
+	self.log.Start(messages.ForgeGitHubMergingViaAPI, colors.BoldGreen().Styled("#"+strconv.Itoa(number)))
 	commitMessageParts := message.Parts()
 	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Text, &github.PullRequestOptions{
 		MergeMethod: "squash",
@@ -223,8 +223,6 @@ func DefaultProposalMessage(data forgedomain.ProposalData) string {
 	return forgedomain.CommitBody(data, fmt.Sprintf("%s (#%d)", data.Title, data.Number))
 }
 
-// NewConnector provides a fully configured GithubConnector instance
-// if the current repo is hosted on GitHub, otherwise nil.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
