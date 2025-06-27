@@ -12,35 +12,11 @@ import (
 func TestParseJSONOutput(t *testing.T) {
 	t.Parallel()
 
-	t.Run("single result", func(t *testing.T) {
+	t.Run("invalid JSON", func(t *testing.T) {
 		t.Parallel()
-		give := `
-[
-  {
-    "baseRefName": "main",
-    "body": "GitLab also provides a CLI app. This PR adds support for it similar to GitHub.\n",
-    "headRefName": "kg-glab",
-    "mergeable": "MERGEABLE",
-    "number": 5079,
-    "title": "glab connector type",
-    "url": "https://github.com/git-town/git-town/pull/5079"
-  }
-]`
-		have, err := gh.ParseJSONOutput(give, "branch")
-		must.NoError(t, err)
-		want := Some(forgedomain.Proposal{
-			Data: forgedomain.ProposalData{
-				Body:         Some("GitLab also provides a CLI app. This PR adds support for it similar to GitHub.\n"),
-				MergeWithAPI: true,
-				Number:       5079,
-				Source:       "kg-glab",
-				Target:       "main",
-				Title:        "glab connector type",
-				URL:          "https://github.com/git-town/git-town/pull/5079",
-			},
-			ForgeType: forgedomain.ForgeTypeGitHub,
-		})
-		must.Eq(t, want, have)
+		give := `[zonk`
+		_, err := gh.ParseJSONOutput(give, "branch")
+		must.Error(t, err)
 	})
 
 	t.Run("multiple results", func(t *testing.T) {
@@ -78,10 +54,34 @@ func TestParseJSONOutput(t *testing.T) {
 		must.Eq(t, None[forgedomain.Proposal](), have)
 	})
 
-	t.Run("invalid JSON", func(t *testing.T) {
+	t.Run("single result", func(t *testing.T) {
 		t.Parallel()
-		give := `[zonk`
-		_, err := gh.ParseJSONOutput(give, "branch")
-		must.Error(t, err)
+		give := `
+[
+  {
+    "baseRefName": "main",
+    "body": "GitLab also provides a CLI app. This PR adds support for it similar to GitHub.\n",
+    "headRefName": "kg-glab",
+    "mergeable": "MERGEABLE",
+    "number": 5079,
+    "title": "glab connector type",
+    "url": "https://github.com/git-town/git-town/pull/5079"
+  }
+]`
+		have, err := gh.ParseJSONOutput(give, "branch")
+		must.NoError(t, err)
+		want := Some(forgedomain.Proposal{
+			Data: forgedomain.ProposalData{
+				Body:         Some("GitLab also provides a CLI app. This PR adds support for it similar to GitHub.\n"),
+				MergeWithAPI: true,
+				Number:       5079,
+				Source:       "kg-glab",
+				Target:       "main",
+				Title:        "glab connector type",
+				URL:          "https://github.com/git-town/git-town/pull/5079",
+			},
+			ForgeType: forgedomain.ForgeTypeGitHub,
+		})
+		must.Eq(t, want, have)
 	})
 }
