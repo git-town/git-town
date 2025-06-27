@@ -48,6 +48,8 @@ func TestGitLabConnector(t *testing.T) {
 		tests := map[string]struct {
 			branch gitdomain.LocalBranchName
 			parent gitdomain.LocalBranchName
+			title  Option[gitdomain.ProposalTitle]
+			body   Option[gitdomain.ProposalBody]
 			want   string
 		}{
 			"top-level branch": {
@@ -64,6 +66,13 @@ func TestGitLabConnector(t *testing.T) {
 				branch: "feature-#",
 				parent: "main",
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-%23&merge_request%5Btarget_branch%5D=main",
+			},
+			"proposal with title": {
+				branch: "feature",
+				parent: "main",
+				title:  Some(gitdomain.ProposalTitle("my title")),
+				body:   None[gitdomain.ProposalBody](),
+				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main&merge_request%5Btitle%5D=my+title",
 			},
 		}
 		for name, tt := range tests {
@@ -83,8 +92,8 @@ func TestGitLabConnector(t *testing.T) {
 					Branch:        tt.branch,
 					MainBranch:    "main",
 					ParentBranch:  tt.parent,
-					ProposalBody:  None[gitdomain.ProposalBody](),
-					ProposalTitle: None[gitdomain.ProposalTitle](),
+					ProposalBody:  tt.body,
+					ProposalTitle: tt.title,
 				})
 				must.EqOp(t, tt.want, have)
 			})
