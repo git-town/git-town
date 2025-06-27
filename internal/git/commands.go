@@ -788,11 +788,11 @@ func (self *Commands) RemoveGitHubConnectorType(runner subshelldomain.Runner) er
 }
 
 func (self *Commands) RemoveGitHubToken(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGithubToken.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyGitHubToken.String())
 }
 
 func (self *Commands) RemoveGitLabToken(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGitlabToken.String())
+	return runner.Run("git", "config", "--unset", configdomain.KeyGitLabToken.String())
 }
 
 func (self *Commands) RemoveGiteaToken(runner subshelldomain.Runner) error {
@@ -891,11 +891,11 @@ func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value
 }
 
 func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGithubToken.String(), value.String())
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitHubToken.String(), value.String())
 }
 
 func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitlabToken.String(), value.String())
+	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitLabToken.String(), value.String())
 }
 
 func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {

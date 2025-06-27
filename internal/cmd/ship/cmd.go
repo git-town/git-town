@@ -52,7 +52,7 @@ func Cmd() *cobra.Command {
 		Use:   shipCommand,
 		Args:  cobra.MaximumNArgs(1),
 		Short: shipDesc,
-		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken)),
+		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			shipStrategyOverride, err := readShipStrategyFlag(cmd)
 			if err != nil {

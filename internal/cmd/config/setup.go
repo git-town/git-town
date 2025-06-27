@@ -302,11 +302,11 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 			data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
 			switch answer {
 			case forgedomain.GitHubConnectorTypeAPI:
-				exit, err = enterGithubToken(data, repo)
+				exit, err = enterGitHubToken(data, repo)
 			case forgedomain.GitHubConnectorTypeGh:
 			}
 		case forgedomain.ForgeTypeGitLab:
-			exit, err = enterGitlabToken(data, repo)
+			exit, err = enterGitLabToken(data, repo)
 		}
 	}
 	return forgeTypeOpt, exit, err
@@ -335,13 +335,13 @@ func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (exit dialogd
 	return exit, err
 }
 
-func enterGithubToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
+func enterGitHubToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
 	existingToken := data.userInput.config.NormalConfig.GitHubToken.Or(repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 	data.userInput.config.NormalConfig.GitHubToken, exit, err = dialog.GitHubToken(existingToken, data.dialogInputs.Next())
 	return exit, err
 }
 
-func enterGitlabToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
+func enterGitLabToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
 	existingToken := data.userInput.config.NormalConfig.GitLabToken.Or(repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 	data.userInput.config.NormalConfig.GitLabToken, exit, err = dialog.GitLabToken(existingToken, data.dialogInputs.Next())
 	return exit, err
@@ -472,10 +472,10 @@ func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupDat
 			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitHub:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGithubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitLab:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitlabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		}
 	}
