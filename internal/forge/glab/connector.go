@@ -109,11 +109,11 @@ func (self Connector) findProposal(branch, target gitdomain.LocalBranchName) (Op
 }
 
 type ghData struct {
-	TargetBranch string `json:"target_branch"`
 	Description  string `json:"description"`
-	SourceBranch string `json:"source_branch"`
 	Mergeable    string `json:"detailed_merge_status"`
 	Number       int    `json:"iid"`
+	SourceBranch string `json:"source_branch"`
+	TargetBranch string `json:"target_branch"`
 	Title        string `json:"title"`
 	URL          string `json:"web_url"`
 }
