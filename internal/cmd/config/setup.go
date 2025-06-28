@@ -118,7 +118,7 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineHostingPlatform(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType]) Option[forgedomain.ForgeType] {
+func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType]) Option[forgedomain.ForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
@@ -284,7 +284,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 }
 
 func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt Option[forgedomain.ForgeType], exit dialogdomain.Exit, err error) {
-	forgeTypeOpt = determineHostingPlatform(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
+	forgeTypeOpt = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -394,11 +394,11 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 			}), nil
 		case forgedomain.ForgeTypeBitbucketDatacenter:
 			return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-				AppPassword:     data.userInput.config.NormalConfig.BitbucketAppPassword,
-				HostingPlatform: Some(forgedomain.ForgeTypeBitbucketDatacenter),
-				Log:             print.Logger{},
-				RemoteURL:       data.config.NormalConfig.DevURL().GetOrDefault(),
-				UserName:        data.config.NormalConfig.BitbucketUsername,
+				AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
+				ForgeType:   Some(forgedomain.ForgeTypeBitbucketDatacenter),
+				Log:         print.Logger{},
+				RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
+				UserName:    data.config.NormalConfig.BitbucketUsername,
 			}), nil
 		case forgedomain.ForgeTypeCodeberg:
 			if subshell.IsInTest() {
