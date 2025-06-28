@@ -387,7 +387,7 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 	return false, false, nil
 }
 
-func createConnector(userInput config.NormalConfig, backend subshelldomain.RunnerQuerier, forgeTypeOpt Option[forgedomain.ForgeType]) (Option[forgedomain.Connector], error) { //nolint:ireturn
+func createConnector(userInput config.NormalConfig, backend subshelldomain.RunnerQuerier, forgeTypeOpt Option[forgedomain.ForgeType]) (Option[forgedomain.Connector], error) {
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		var connector forgedomain.Connector
 		var err error
