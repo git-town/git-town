@@ -365,9 +365,13 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
 	}
-	connector, err := createConnector(data.userInput.config.NormalConfig, repo.Backend, forgeTypeOpt)
+	connectorOpt, err := createConnector(data.userInput.config.NormalConfig, repo.Backend, forgeTypeOpt)
 	if err != nil {
 		return false, false, err
+	}
+	connector, hasConnector := connectorOpt.Get()
+	if !hasConnector {
+		return false, false, nil
 	}
 	verifyResult := connector.VerifyConnection()
 	if verifyResult.AuthenticationError != nil {
@@ -383,78 +387,88 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 	return false, false, nil
 }
 
-func createConnector(userInput config.NormalConfig, backend subshelldomain.RunnerQuerier, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
+func createConnector(userInput config.NormalConfig, backend subshelldomain.RunnerQuerier, forgeTypeOpt Option[forgedomain.ForgeType]) (Option[forgedomain.Connector], error) {
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
+		var connector forgedomain.Connector
+		var err error
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket:
-			return bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
+			connector = bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 				AppPassword: userInput.BitbucketAppPassword,
 				ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
 				Log:         print.Logger{},
 				RemoteURL:   userInput.DevURL().GetOrDefault(),
 				UserName:    userInput.BitbucketUsername,
-			}), nil
+			})
+			return Some(connector), nil
 		case forgedomain.ForgeTypeBitbucketDatacenter:
-			return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
+			connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 				AppPassword: userInput.BitbucketAppPassword,
 				ForgeType:   Some(forgedomain.ForgeTypeBitbucketDatacenter),
 				Log:         print.Logger{},
 				RemoteURL:   userInput.DevURL().GetOrDefault(),
 				UserName:    userInput.BitbucketUsername,
-			}), nil
+			})
+			return Some(connector), nil
 		case forgedomain.ForgeTypeCodeberg:
 			if subshell.IsInTest() {
-				return nil, nil
+				return None[forgedomain.Connector](), nil
 			}
-			return codeberg.NewConnector(codeberg.NewConnectorArgs{
+			connector, err = codeberg.NewConnector(codeberg.NewConnectorArgs{
 				APIToken:  userInput.CodebergToken,
 				Log:       print.Logger{},
 				RemoteURL: userInput.DevURL().GetOrDefault(),
 			})
+			return Some(connector), err
 		case forgedomain.ForgeTypeGitea:
 			if subshell.IsInTest() {
-				return nil, nil
+				return None[forgedomain.Connector](), nil
 			}
-			return gitea.NewConnector(gitea.NewConnectorArgs{
+			connector = gitea.NewConnector(gitea.NewConnectorArgs{
 				APIToken:  userInput.GiteaToken,
 				Log:       print.Logger{},
 				RemoteURL: userInput.DevURL().GetOrDefault(),
-			}), nil
+			})
+			return Some(connector), nil
 		case forgedomain.ForgeTypeGitHub:
 			if connectorType, hasConnectorType := userInput.GitHubConnectorType.Get(); hasConnectorType {
 				switch connectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
-					return github.NewConnector(github.NewConnectorArgs{
+					connector, err = github.NewConnector(github.NewConnectorArgs{
 						APIToken:  userInput.GitHubToken,
 						Log:       print.Logger{},
 						RemoteURL: userInput.DevURL().GetOrDefault(),
 					})
+					return Some(connector), err
 				case forgedomain.GitHubConnectorTypeGh:
-					return gh.Connector{
+					connector = gh.Connector{
 						Backend:  backend,
 						Frontend: backend,
-					}, nil
+					}
+					return Some(connector), nil
 				}
 			}
 		case forgedomain.ForgeTypeGitLab:
 			if connectorType, hasConnectorType := userInput.GitLabConnectorType.Get(); hasConnectorType {
 				switch connectorType {
 				case forgedomain.GitLabConnectorTypeAPI:
-					return gitlab.NewConnector(gitlab.NewConnectorArgs{
+					connector, err = gitlab.NewConnector(gitlab.NewConnectorArgs{
 						APIToken:  userInput.GitLabToken,
 						Log:       print.Logger{},
 						RemoteURL: userInput.DevURL().GetOrDefault(),
 					})
+					return Some(connector), err
 				case forgedomain.GitLabConnectorTypeGlab:
-					return glab.Connector{
+					connector = glab.Connector{
 						Backend:  backend,
 						Frontend: backend,
-					}, nil
+					}
+					return Some(connector), nil
 				}
 			}
 		}
 	}
-	return nil, nil
+	return None[forgedomain.Connector](), nil
 }
 
 func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
