@@ -88,7 +88,7 @@ func TestGitea(t *testing.T) {
 	//
 	// t.Run("NewProposalURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingPlatform: configdomain.HostingGitea,
+	// 		ForgeType: configdomain.HostingGitea,
 	// 		RemoteURL:       giturl.Parse("git@gitea.com:git-town/docs.git"),
 	//    APIToken:        None[configdomain.GiteaToken](),
 	// 		Log:             log.Silent{},
@@ -105,7 +105,7 @@ func TestGitea(t *testing.T) {
 	//
 	// t.Run("RepositoryURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingPlatform: configdomain.HostingGitea,
+	// 		ForgeType: configdomain.HostingGitea,
 	// 		RemoteURL:       giturl.Parse("git@gitea.com:git-town/docs.git"),
 	//    APIToken:        None[configdomain.GiteaToken](),
 	// 		Log:             log.Silent{},
@@ -126,7 +126,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// t.Run("hosted service type provided manually", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingPlatform: configdomain.HostingGitea,
+	// 		ForgeType: configdomain.HostingGitea,
 	// 		RemoteURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 	//    APIToken:       None[configdomain.GiteaToken](),
 	// 		Log:            log.Silent{},
@@ -147,7 +147,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// t.Run("repo is hosted by another forge type --> no connector", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingPlatform: configdomain.HostingNone,
+	// 		ForgeType: configdomain.HostingNone,
 	// 		RemoteURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
 	//    APIToken:        None[configdomain.GiteaToken](),
 	// 		Log:             log.Silent{},
@@ -164,7 +164,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	t.Parallel()
 	// 	var remoteURL *giturl.Parts
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingPlatform: configdomain.HostingNone,
+	// 		ForgeType: configdomain.HostingNone,
 	// 		RemoteURL:       remoteURL,
 	//    APIToken:        None[configdomain.GiteaToken](),
 	// 		Log:             log.Silent{},
