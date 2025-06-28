@@ -402,16 +402,16 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 				AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
 				ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
 				Log:         print.Logger{},
-				RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
-				UserName:    data.config.NormalConfig.BitbucketUsername,
+				RemoteURL:   data.userInput.config.NormalConfig.DevURL().GetOrDefault(),
+				UserName:    data.userInput.config.NormalConfig.BitbucketUsername,
 			}), nil
 		case forgedomain.ForgeTypeBitbucketDatacenter:
 			return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 				AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
 				ForgeType:   Some(forgedomain.ForgeTypeBitbucketDatacenter),
 				Log:         print.Logger{},
-				RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
-				UserName:    data.config.NormalConfig.BitbucketUsername,
+				RemoteURL:   data.userInput.config.NormalConfig.DevURL().GetOrDefault(),
+				UserName:    data.userInput.config.NormalConfig.BitbucketUsername,
 			}), nil
 		case forgedomain.ForgeTypeCodeberg:
 			if subshell.IsInTest() {
@@ -420,7 +420,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 			return codeberg.NewConnector(codeberg.NewConnectorArgs{
 				APIToken:  data.userInput.config.NormalConfig.CodebergToken,
 				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+				RemoteURL: data.userInput.config.NormalConfig.DevURL().GetOrDefault(),
 			})
 		case forgedomain.ForgeTypeGitea:
 			if subshell.IsInTest() {
@@ -429,7 +429,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 			return gitea.NewConnector(gitea.NewConnectorArgs{
 				APIToken:  data.userInput.config.NormalConfig.GiteaToken,
 				Log:       print.Logger{},
-				RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+				RemoteURL: data.userInput.config.NormalConfig.DevURL().GetOrDefault(),
 			}), nil
 		case forgedomain.ForgeTypeGitHub:
 			if connectorType, hasConnectorType := data.userInput.config.NormalConfig.GitHubConnectorType.Get(); hasConnectorType {
@@ -456,7 +456,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 					return github.NewConnector(github.NewConnectorArgs{
 						APIToken:  githubToken,
 						Log:       print.Logger{},
-						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+						RemoteURL: data.userInput.config.NormalConfig.DevURL().GetOrDefault(),
 					})
 				case forgedomain.GitHubConnectorTypeGh:
 					return gh.Connector{
@@ -472,7 +472,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 					return gitlab.NewConnector(gitlab.NewConnectorArgs{
 						APIToken:  data.userInput.config.NormalConfig.GitLabToken,
 						Log:       print.Logger{},
-						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
+						RemoteURL: data.userInput.config.NormalConfig.DevURL().GetOrDefault(),
 					})
 				case forgedomain.GitLabConnectorTypeGlab:
 					return glab.Connector{
