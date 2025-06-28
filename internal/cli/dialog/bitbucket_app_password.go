@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -28,7 +28,7 @@ Git Town will not use the Bitbucket API.
 )
 
 // BitbucketAppPassword lets the user enter the Bitbucket API token.
-func BitbucketAppPassword(oldValue Option[configdomain.BitbucketAppPassword], inputs components.TestInput) (Option[configdomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+func BitbucketAppPassword(oldValue Option[forgedomain.BitbucketAppPassword], inputs components.TestInput) (Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketAppPasswordHelp,
@@ -37,5 +37,5 @@ func BitbucketAppPassword(oldValue Option[configdomain.BitbucketAppPassword], in
 		Title:         bitbucketAppPasswordTitle,
 	})
 	fmt.Printf(messages.BitbucketAppPassword, components.FormattedSecret(text, aborted))
-	return configdomain.ParseBitbucketAppPassword(text), aborted, err
+	return forgedomain.ParseBitbucketAppPassword(text), aborted, err
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
@@ -23,7 +22,7 @@ import (
 
 type Connector struct {
 	forgedomain.Data
-	APIToken Option[configdomain.GiteaToken]
+	APIToken Option[forgedomain.GiteaToken]
 	client   *gitea.Client
 	log      print.Logger
 }
@@ -254,7 +253,7 @@ func NewConnector(args NewConnectorArgs) Connector {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[configdomain.GiteaToken]
+	APIToken  Option[forgedomain.GiteaToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }

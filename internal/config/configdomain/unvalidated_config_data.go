@@ -9,8 +9,8 @@ import (
 // It might be lacking essential information in case Git metadata and config files don't contain it.
 // If you need this information, validate it into a ValidatedConfig.
 type UnvalidatedConfigData struct {
-	GitUserEmail Option[GitUserEmail]
-	GitUserName  Option[GitUserName]
+	GitUserEmail Option[gitdomain.GitUserEmail]
+	GitUserName  Option[gitdomain.GitUserName]
 	MainBranch   Option[gitdomain.LocalBranchName]
 }
 
@@ -42,8 +42,8 @@ func (self *UnvalidatedConfigData) ToValidatedConfig(defaults ValidatedConfigDat
 // DefaultUnvalidatedConfig provides the default configuration data to use when nothing is configured.
 func DefaultUnvalidatedConfig() UnvalidatedConfigData {
 	return UnvalidatedConfigData{
-		GitUserEmail: None[GitUserEmail](),
-		GitUserName:  None[GitUserName](),
+		GitUserEmail: None[gitdomain.GitUserEmail](),
+		GitUserName:  None[gitdomain.GitUserName](),
 		MainBranch:   None[gitdomain.LocalBranchName](),
 	}
 }

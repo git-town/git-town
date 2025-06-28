@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/cli/format"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,7 +15,7 @@ func TestOptionalStringerSetting(t *testing.T) {
 		"":         "(not set)",
 	}
 	for give, want := range tests {
-		option := configdomain.ParseGitHubToken(give)
+		option := forgedomain.ParseGitHubToken(give)
 		have := format.OptionalStringerSetting(option)
 		must.EqOp(t, want, have)
 	}

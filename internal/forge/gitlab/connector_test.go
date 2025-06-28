@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/gitlab"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -94,7 +93,7 @@ func TestGitLabConnector(t *testing.T) {
 				t.Parallel()
 				connector := gitlab.Connector{
 					Data: gitlab.Data{
-						APIToken: None[configdomain.GitLabToken](),
+						APIToken: None[forgedomain.GitLabToken](),
 						Data: forgedomain.Data{
 							Hostname:     "gitlab.com",
 							Organization: "organization",
@@ -123,7 +122,7 @@ func TestNewGitLabConnector(t *testing.T) {
 		remoteURL, has := giturl.Parse("git@gitlab.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  None[configdomain.GitLabToken](),
+			APIToken:  None[forgedomain.GitLabToken](),
 			Log:       print.Logger{},
 			RemoteURL: remoteURL,
 		})
@@ -134,7 +133,7 @@ func TestNewGitLabConnector(t *testing.T) {
 				Organization: "git-town",
 				Repository:   "docs",
 			},
-			APIToken: None[configdomain.GitLabToken](),
+			APIToken: None[forgedomain.GitLabToken](),
 		}
 		must.Eq(t, wantConfig, have.Data)
 	})
@@ -144,7 +143,7 @@ func TestNewGitLabConnector(t *testing.T) {
 		remoteURL, has := giturl.Parse("git@custom-url.com:git-town/docs.git").Get()
 		must.True(t, has)
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  None[configdomain.GitLabToken](),
+			APIToken:  None[forgedomain.GitLabToken](),
 			Log:       print.Logger{},
 			RemoteURL: remoteURL,
 		})
@@ -155,7 +154,7 @@ func TestNewGitLabConnector(t *testing.T) {
 				Organization: "git-town",
 				Repository:   "docs",
 			},
-			APIToken: None[configdomain.GitLabToken](),
+			APIToken: None[forgedomain.GitLabToken](),
 		}
 		must.Eq(t, wantConfig, have.Data)
 	})
@@ -165,7 +164,7 @@ func TestNewGitLabConnector(t *testing.T) {
 		remoteURL, has := giturl.Parse("git@gitlab.domain:1234/group/project").Get()
 		must.True(t, has)
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			APIToken:  None[configdomain.GitLabToken](),
+			APIToken:  None[forgedomain.GitLabToken](),
 			Log:       print.Logger{},
 			RemoteURL: remoteURL,
 		})
@@ -176,7 +175,7 @@ func TestNewGitLabConnector(t *testing.T) {
 				Organization: "group",
 				Repository:   "project",
 			},
-			APIToken: None[configdomain.GitLabToken](),
+			APIToken: None[forgedomain.GitLabToken](),
 		}
 		must.Eq(t, wantConfig, have.Data)
 	})

@@ -12,19 +12,19 @@ import (
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
 type NormalConfigData struct {
 	Aliases                  Aliases
-	BitbucketAppPassword     Option[BitbucketAppPassword]
-	BitbucketUsername        Option[BitbucketUsername]
+	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
+	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[CodebergToken]
+	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[GitHubToken]
+	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
-	GitLabToken              Option[GitLabToken]
-	GiteaToken               Option[GiteaToken]
+	GitLabToken              Option[forgedomain.GitLabToken]
+	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
@@ -98,19 +98,19 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 func DefaultNormalConfig() NormalConfigData {
 	return NormalConfigData{
 		Aliases:                  Aliases{},
-		BitbucketAppPassword:     None[BitbucketAppPassword](),
-		BitbucketUsername:        None[BitbucketUsername](),
+		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
+		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      BranchTypeOverrides{},
-		CodebergToken:            None[CodebergToken](),
+		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[ContributionRegex](),
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
-		GitHubToken:              None[GitHubToken](),
+		GitHubToken:              None[forgedomain.GitHubToken](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
-		GitLabToken:              None[GitLabToken](),
-		GiteaToken:               None[GiteaToken](),
+		GitLabToken:              None[forgedomain.GitLabToken](),
+		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),
