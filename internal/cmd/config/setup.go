@@ -362,12 +362,12 @@ func enterGitLabToken(data *setupData, repo execute.OpenRepoResult) (exit dialog
 }
 
 func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (repeat bool, exit dialogdomain.Exit, err error) {
+	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
+		return false, false, nil
+	}
 	connector, err := createConnector(data.userInput.config.NormalConfig, repo.Backend, forgeTypeOpt)
 	if err != nil {
 		return false, false, err
-	}
-	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
-		return false, false, nil
 	}
 	verifyResult := connector.VerifyConnection()
 	if verifyResult.AuthenticationError != nil {
