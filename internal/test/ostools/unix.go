@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/pkg/asserts"
 )
 
-// This package contains platform-specific testing tool implementations for Unix-like platforms.
+// This package contains OS-specific testing tool implementations for Unix-like systems.
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.
 func CreateLsTool(toolPath string) {

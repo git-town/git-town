@@ -23,17 +23,17 @@ const (
 )
 
 // ParseForgeType provides the ForgeType enum matching the given text.
-func ParseForgeType(platformName string) (Option[ForgeType], error) {
-	if platformName == "" {
+func ParseForgeType(name string) (Option[ForgeType], error) {
+	if name == "" {
 		return None[ForgeType](), nil
 	}
-	platformNameLower := strings.ToLower(platformName)
+	nameLower := strings.ToLower(name)
 	for _, forgeType := range forgeTypes() {
-		if platformNameLower == forgeType.String() {
+		if nameLower == forgeType.String() {
 			return Some(forgeType), nil
 		}
 	}
-	return None[ForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, platformName)
+	return None[ForgeType](), fmt.Errorf(messages.ForgeTypeUnknown, name)
 }
 
 // forgeTypes provides all legal values for ForgeType
