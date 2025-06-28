@@ -384,7 +384,7 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 }
 
 func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (forgedomain.Connector, error) { //nolint:ireturn
-	remoteURL := data.config.NormalConfig.DevURL().GetOrDefault()
+	remoteURL := data.userInput.config.NormalConfig.DevURL().Or(data.config.NormalConfig.DevURL()).GetOrDefault()
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket:
@@ -393,7 +393,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 				ForgeType:   forgeTypeOpt,
 				Log:         print.Logger{},
 				RemoteURL:   remoteURL,
-				UserName:    data.config.NormalConfig.BitbucketUsername,
+				UserName:    data.userInput.config.NormalConfig.BitbucketUsername,
 			}), nil
 		case forgedomain.ForgeTypeBitbucketDatacenter:
 			return bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
@@ -401,7 +401,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 				ForgeType:   Some(forgedomain.ForgeTypeBitbucketDatacenter),
 				Log:         print.Logger{},
 				RemoteURL:   remoteURL,
-				UserName:    data.config.NormalConfig.BitbucketUsername,
+				UserName:    data.userInput.config.NormalConfig.BitbucketUsername,
 			}), nil
 		case forgedomain.ForgeTypeCodeberg:
 			if subshell.IsInTest() {
