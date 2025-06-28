@@ -164,14 +164,6 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
 	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
 	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
-	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
-	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
-	print.Entry("observed regex", format.OptionalStringerSetting(config.NormalConfig.ObservedRegex))
-	print.Entry("parked branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeParkedBranch)))
-	print.Entry("perennial branches", format.StringsSetting(config.NormalConfig.PerennialBranches.Join(", ")))
-	print.Entry("perennial regex", format.OptionalStringerSetting(config.NormalConfig.PerennialRegex))
-	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
-	print.Entry("unknown branch type", config.NormalConfig.UnknownBranchType.String())
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
@@ -185,17 +177,35 @@ func printConfig(config config.UnvalidatedConfig) {
 	print.Entry("contribution branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeContributionBranch)))
 	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
 	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
-	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
-	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
-	print.Entry("observed regex", format.OptionalStringerSetting(config.NormalConfig.ObservedRegex))
-	print.Entry("parked branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeParkedBranch)))
-	print.Entry("perennial branches", format.StringsSetting(config.NormalConfig.PerennialBranches.Join(", ")))
-	print.Entry("perennial regex", format.OptionalStringerSetting(config.NormalConfig.PerennialRegex))
-	print.Entry("prototype branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypePrototypeBranch)))
-	print.Entry("unknown branch type", config.NormalConfig.UnknownBranchType.String())
 	fmt.Println()
 	if config.NormalConfig.Lineage.Len() > 0 {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
 	`
 	must.EqOp(t, want, have)
+}
+
+func TestFindUnprinted(t *testing.T) {
+	t.Parallel()
+	fields := []string{
+		"ContributionRegex",
+		"FeatureRegex",
+		"MainBranch",
+		"ObservedRegex",
+		"ForgeType",
+	}
+	whiteList := []string{
+		"ParkedBranch",
+	}
+	printText := `
+	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
+	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
+	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
+	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
+	`
+	have := main.FindUnprinted(fields, printText, whiteList)
+	want := []string{
+		"ObservedRegex",
+		"ForgeType",
+	}
+	must.Eq(t, want, have)
 }

@@ -29,7 +29,7 @@ func main() {
 	printBody := ParsePrintFile(printText)
 
 	// find fields that are in the definition file but not the print file
-	unprinted := findUnprinted(definitionFields, printBody, whiteList)
+	unprinted := FindUnprinted(definitionFields, printBody, whiteList)
 	if len(unprinted) == 0 {
 		return
 	}
@@ -77,7 +77,7 @@ func ParsePrintFile(text string) string {
 	return match[1]
 }
 
-func findUnprinted(fields []string, text string, whiteList []string) []string {
+func FindUnprinted(fields []string, text string, whiteList []string) []string {
 	result := []string{}
 	for _, field := range fields {
 		if strings.Contains(text, field) {
