@@ -766,7 +766,7 @@ func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], git
 	return gitCommands.DeleteConfigEntryForgeType(frontend)
 }
 
-func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveCodebergToken(oldToken, newToken Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}

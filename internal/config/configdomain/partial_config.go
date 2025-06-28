@@ -14,7 +14,7 @@ type PartialConfig struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[CodebergToken]
+	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
@@ -103,7 +103,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
 		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
-		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
+		CodebergToken:            forgedomain.ParseCodebergToken(snapshot[KeyCodebergToken]),
 		ContributionRegex:        contributionRegex,
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,

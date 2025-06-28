@@ -254,7 +254,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-		CodebergToken:            None[configdomain.CodebergToken](),
+		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        contributionRegex,
 		UnknownBranchType:        unknownBranchType,
 		DevRemote:                devRemote,

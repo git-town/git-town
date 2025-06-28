@@ -878,7 +878,7 @@ func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value f
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
-func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value configdomain.CodebergToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 

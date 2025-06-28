@@ -15,7 +15,7 @@ type NormalConfigData struct {
 	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[CodebergToken]
+	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                gitdomain.Remote
 	FeatureRegex             Option[FeatureRegex]
@@ -101,7 +101,7 @@ func DefaultNormalConfig() NormalConfigData {
 		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
 		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      BranchTypeOverrides{},
-		CodebergToken:            None[CodebergToken](),
+		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[ContributionRegex](),
 		DevRemote:                gitdomain.RemoteOrigin,
 		FeatureRegex:             None[FeatureRegex](),
