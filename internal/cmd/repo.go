@@ -81,7 +81,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	if !hasRemote {
 		return repoData{connector: nil}, nil
 	}
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig, remote, print.Logger{}, repo.Frontend, repo.Backend)
+	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, remote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return data, err
 	}
