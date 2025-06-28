@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -24,7 +24,7 @@ Git Town will not use the Bitbucket API.
 `
 )
 
-func BitbucketUsername(oldValue Option[configdomain.BitbucketUsername], inputs components.TestInput) (Option[configdomain.BitbucketUsername], dialogdomain.Exit, error) {
+func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs components.TestInput) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketUsernameHelp,
@@ -33,5 +33,5 @@ func BitbucketUsername(oldValue Option[configdomain.BitbucketUsername], inputs c
 		Title:         bitbucketUsernameTitle,
 	})
 	fmt.Printf(messages.BitbucketUsername, components.FormattedSecret(text, aborted))
-	return configdomain.ParseBitbucketUsername(text), aborted, err
+	return forgedomain.ParseBitbucketUsername(text), aborted, err
 }

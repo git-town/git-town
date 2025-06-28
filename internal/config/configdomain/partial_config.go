@@ -11,8 +11,8 @@ import (
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
 	Aliases                  Aliases
-	BitbucketAppPassword     Option[BitbucketAppPassword]
-	BitbucketUsername        Option[BitbucketUsername]
+	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
+	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
@@ -100,8 +100,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
-		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
-		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
+		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
+		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
 		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
 		ContributionRegex:        contributionRegex,

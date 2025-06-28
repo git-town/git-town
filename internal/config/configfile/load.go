@@ -251,8 +251,8 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	}
 	return configdomain.PartialConfig{
 		Aliases:                  map[configdomain.AliasableCommand]string{},
-		BitbucketAppPassword:     None[configdomain.BitbucketAppPassword](),
-		BitbucketUsername:        None[configdomain.BitbucketUsername](),
+		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
+		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            None[configdomain.CodebergToken](),
 		ContributionRegex:        contributionRegex,

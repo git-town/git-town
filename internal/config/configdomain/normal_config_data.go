@@ -12,8 +12,8 @@ import (
 // configuration settings that exist in both UnvalidatedConfig and ValidatedConfig
 type NormalConfigData struct {
 	Aliases                  Aliases
-	BitbucketAppPassword     Option[BitbucketAppPassword]
-	BitbucketUsername        Option[BitbucketUsername]
+	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
+	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
 	CodebergToken            Option[CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
@@ -98,8 +98,8 @@ func (self *NormalConfigData) PartialBranchesOfType(branchType BranchType) gitdo
 func DefaultNormalConfig() NormalConfigData {
 	return NormalConfigData{
 		Aliases:                  Aliases{},
-		BitbucketAppPassword:     None[BitbucketAppPassword](),
-		BitbucketUsername:        None[BitbucketUsername](),
+		BitbucketAppPassword:     None[forgedomain.BitbucketAppPassword](),
+		BitbucketUsername:        None[forgedomain.BitbucketUsername](),
 		BranchTypeOverrides:      BranchTypeOverrides{},
 		CodebergToken:            None[CodebergToken](),
 		ContributionRegex:        None[ContributionRegex](),

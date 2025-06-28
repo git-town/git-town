@@ -870,11 +870,11 @@ func (self *Commands) SHAForBranch(querier subshelldomain.Querier, name gitdomai
 	return gitdomain.NewSHA(output), nil
 }
 
-func (self *Commands) SetBitbucketAppPassword(runner subshelldomain.Runner, value configdomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
+func (self *Commands) SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketAppPassword.String(), value.String())
 }
 
-func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value configdomain.BitbucketUsername, scope configdomain.ConfigScope) error {
+func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
