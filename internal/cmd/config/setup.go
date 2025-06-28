@@ -437,9 +437,19 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 					tokenType := data.userInput.config.NormalConfig.GitHubTokenType.GetOrElse(forgedomain.GitHubTokenTypeEnter)
 					switch tokenType {
 					case forgedomain.GitHubTokenTypeCLI:
-						githubToken = data.userInput.config.NormalConfig.GitHubToken
+						if call, hasCall := data.userInput.config.NormalConfig.GitHubTokenCall.Get(); hasCall {
+							executable, args, err := call.CallableFormat()
+							if err != nil {
+								return nil, err
+							}
+							output, err := repo.Backend.Query(executable, args...)
+							if err != nil {
+								return nil, err
+							}
+							githubToken = NewOption(forgedomain.GitHubToken(output))
+						}
 					case forgedomain.GitHubTokenTypeEnter:
-						entered = loadFromSubshell(data.userInput.config.NormalConfig.GitHubTokenCall)
+						githubToken = data.userInput.config.NormalConfig.GitHubToken
 					}
 					return github.NewConnector(github.NewConnectorArgs{
 						APIToken:  githubToken,
