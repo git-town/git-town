@@ -26,7 +26,7 @@ func main() {
 
 	// read and parse print file
 	printText := readFile(printConfigPath)
-	printBody := parsePrintFile(printText)
+	printBody := ParsePrintFile(printText)
 
 	// find fields that are in the definition file but not the print file
 	unprinted := findUnprinted(definitionFields, printBody, whiteList)
@@ -68,7 +68,7 @@ func DefinitionFields(text string) []string {
 	return result
 }
 
-func parsePrintFile(text string) string {
+func ParsePrintFile(text string) string {
 	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
 	match := functionContentRE.FindStringSubmatch(string(text))
 	if len(match) < 2 {
