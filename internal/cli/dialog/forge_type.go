@@ -12,12 +12,11 @@ import (
 )
 
 const (
-	hostingPlatformTitle = `Forge type`
-	HostingPlatformHelp  = `
+	forgeTypeTitle = `Forge type`
+	forgeTypeHelp  = `
 Git Town uses this setting
 to open browser URLs
-and interact with your
-code hosting provider's API.
+and interact with your forge's API.
 
 Only change this if your forge
 is hosted at a custom URL.
@@ -59,7 +58,7 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.Te
 	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
-	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
+	newValue, aborted, err := components.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
 	fmt.Printf(messages.Forge, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
 	return newValue, aborted, err
 }

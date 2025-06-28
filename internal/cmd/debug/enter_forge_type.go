@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func enterHostingPlatform() *cobra.Command {
+func enterForgeType() *cobra.Command {
 	return &cobra.Command{
-		Use: "hosting-platform",
+		Use: "forge-type",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			dialogInputs := components.LoadTestInputs(os.Environ())
 			_, _, err := dialog.ForgeType(None[forgedomain.ForgeType](), dialogInputs.Next())
