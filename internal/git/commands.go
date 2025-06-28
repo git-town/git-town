@@ -870,15 +870,15 @@ func (self *Commands) SHAForBranch(querier subshelldomain.Querier, name gitdomai
 	return gitdomain.NewSHA(output), nil
 }
 
-func (self *Commands) SetBitbucketAppPassword(runner subshelldomain.Runner, value configdomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
+func (self *Commands) SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketAppPassword.String(), value.String())
 }
 
-func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value configdomain.BitbucketUsername, scope configdomain.ConfigScope) error {
+func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketUsername.String(), value.String())
 }
 
-func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value configdomain.CodebergToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 
@@ -894,7 +894,7 @@ func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value
 	return runner.Run("git", "config", configdomain.KeyGitHubConnectorType.String(), value.String())
 }
 
-func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitHubToken.String(), value.String())
 }
 
@@ -902,11 +902,11 @@ func (self *Commands) SetGitLabConnectorType(runner subshelldomain.Runner, value
 	return runner.Run("git", "config", configdomain.KeyGitLabConnectorType.String(), value.String())
 }
 
-func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitLabToken.String(), value.String())
 }
 
-func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGiteaToken.String(), value.String())
 }
 

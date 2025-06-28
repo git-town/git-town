@@ -5,7 +5,6 @@ import (
 
 	"codeberg.org/mvdkleijn/forgejo-sdk/forgejo/v2"
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/codeberg"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/forge/github"
@@ -135,7 +134,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("custom URL", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			APIToken:  configdomain.ParseGitHubToken("apiToken"),
+			APIToken:  forgedomain.ParseGitHubToken("apiToken"),
 			Log:       print.Logger{},
 			RemoteURL: giturl.Parse("git@custom-url.com:git-town/docs.git").GetOrPanic(),
 		})
