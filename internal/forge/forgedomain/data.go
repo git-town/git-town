@@ -2,7 +2,7 @@ package forgedomain
 
 import "strings"
 
-// Data contains data needed by all platform connectors.
+// Data contains data needed by all forge connectors.
 type Data struct {
 	// Hostname override
 	Hostname string
