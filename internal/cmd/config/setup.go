@@ -200,7 +200,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 				return tokenScope, forgeTypeOpt, exit, err
 			}
 		}
-		forgeTypeOpt := determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
+		forgeTypeOpt = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
 		exit, err = enterForgeAuth(repo, data, forgeTypeOpt)
 		if err != nil || exit {
 			return tokenScope, forgeTypeOpt, exit, err
