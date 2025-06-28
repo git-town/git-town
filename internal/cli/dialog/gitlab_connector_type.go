@@ -20,6 +20,7 @@ Git Town supports two ways to connect to GitLab:
    Git Town talks directly with the GitLab API.
 	 This uses an access token for your account
 	 that you provide on the next screen.
+
 2. GitLab's "glab" application:
    This doesn't require an access token
 	 but you need to install and configure the glab tool.
