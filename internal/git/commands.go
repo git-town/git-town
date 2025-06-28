@@ -894,7 +894,7 @@ func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value
 	return runner.Run("git", "config", configdomain.KeyGitHubConnectorType.String(), value.String())
 }
 
-func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value configdomain.GitHubToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitHubToken.String(), value.String())
 }
 

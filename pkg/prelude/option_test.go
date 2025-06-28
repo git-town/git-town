@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -125,7 +126,7 @@ func TestOption(t *testing.T) {
 		t.Run("Some(struct that implements fmt.Stringer)", func(t *testing.T) {
 			t.Parallel()
 			text := "my token"
-			option := Some(configdomain.GitHubToken(text))
+			option := Some(forgedomain.GitHubToken(text))
 			have := option.String()
 			must.EqOp(t, text, have)
 		})

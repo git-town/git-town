@@ -20,7 +20,7 @@ type PartialConfig struct {
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[GitHubToken]
+	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
@@ -109,7 +109,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              ParseGitHubToken(snapshot[KeyGitHubToken]),
+		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[KeyGitHubToken]),
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              ParseGitLabToken(snapshot[KeyGitLabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),

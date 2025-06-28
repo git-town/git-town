@@ -261,7 +261,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              None[configdomain.GitHubToken](),
+		GitHubToken:              None[forgedomain.GitHubToken](),
 		GitLabConnectorType:      gitLabConnectorType,
 		GitLabToken:              None[configdomain.GitLabToken](),
 		GitUserEmail:             None[configdomain.GitUserEmail](),

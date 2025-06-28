@@ -21,7 +21,7 @@ type NormalConfigData struct {
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // Some = override by user, None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[GitHubToken]
+	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[GitLabToken]
 	GiteaToken               Option[GiteaToken]
@@ -107,7 +107,7 @@ func DefaultNormalConfig() NormalConfigData {
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
-		GitHubToken:              None[GitHubToken](),
+		GitHubToken:              None[forgedomain.GitHubToken](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[GitLabToken](),
 		GiteaToken:               None[GiteaToken](),
