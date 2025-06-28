@@ -22,7 +22,7 @@ var whiteList = []string{
 func main() {
 	// read and parse definition file
 	definitionText := readFile(normalConfigDataPath)
-	definitionFields := definitionFields(definitionText)
+	definitionFields := DefinitionFields(definitionText)
 
 	// read and parse print file
 	printText := readFile(printConfigPath)
@@ -48,7 +48,7 @@ func readFile(path string) string {
 	return string(result)
 }
 
-func definitionFields(text string) []string {
+func DefinitionFields(text string) []string {
 	structRE := regexp.MustCompile(`type NormalConfigData struct {([^}]*)}`)
 	match := structRE.FindStringSubmatch(string(text))
 	if len(match) < 2 {
