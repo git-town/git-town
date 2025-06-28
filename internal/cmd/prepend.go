@@ -278,7 +278,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if !hasInitialBranchInfo {
 		return data, false, errors.New(messages.CurrentBranchCannotDetermine)
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return data, false, err
 	}

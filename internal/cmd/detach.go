@@ -211,7 +211,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if branchToDetachInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDetach)
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return data, false, err
 	}
