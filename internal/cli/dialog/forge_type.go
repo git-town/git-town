@@ -16,8 +16,7 @@ const (
 	forgeTypeHelp  = `
 Git Town uses this setting
 to open browser URLs
-and interact with your
-forge's API.
+and interact with your forge's API.
 
 Only change this if your forge
 is hosted at a custom URL.
