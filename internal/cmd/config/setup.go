@@ -306,7 +306,15 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData) (forgeTypeOpt 
 				existing := data.userInput.config.NormalConfig.GitHubTokenType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubTokenType)
 				var answer forgedomain.GitHubTokenType
 				answer, exit, err = dialog.GitHubTokenType(existing, data.dialogInputs.Next())
-				exit, err = enterGitHubToken(data, repo)
+				if err != nil || exit {
+					return forgeTypeOpt, exit, err
+				}
+				data.userInput.config.NormalConfig.GitHubTokenType = Some(answer)
+				switch answer {
+				case forgedomain.GitHubTokenTypeCLI:
+				case forgedomain.GitHubTokenTypeEnter:
+					exit, err = enterGitHubToken(data, repo)
+				}
 			case forgedomain.GitHubConnectorTypeGh:
 			}
 		case forgedomain.ForgeTypeGitLab:
@@ -425,8 +433,16 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 			if connectorType, hasConnectorType := data.userInput.config.NormalConfig.GitHubConnectorType.Get(); hasConnectorType {
 				switch connectorType {
 				case forgedomain.GitHubConnectorTypeAPI:
+					var githubToken Option[forgedomain.GitHubToken]
+					tokenType := data.userInput.config.NormalConfig.GitHubTokenType.GetOrElse(forgedomain.GitHubTokenTypeEnter)
+					switch tokenType {
+					case forgedomain.GitHubTokenTypeCLI:
+						githubToken = data.userInput.config.NormalConfig.GitHubToken
+					case forgedomain.GitHubTokenTypeEnter:
+						entered = loadFromSubshell(data.userInput.config.NormalConfig.GitHubTokenCall)
+					}
 					return github.NewConnector(github.NewConnectorArgs{
-						APIToken:  data.userInput.config.NormalConfig.GitHubToken,
+						APIToken:  githubToken,
 						Log:       print.Logger{},
 						RemoteURL: data.config.NormalConfig.DevURL().GetOrDefault(),
 					})
