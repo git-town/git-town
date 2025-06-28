@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
@@ -23,7 +22,7 @@ import (
 // via the Codeberg API.
 type Connector struct {
 	forgedomain.Data
-	APIToken Option[configdomain.CodebergToken]
+	APIToken Option[forgedomain.CodebergToken]
 	client   *forgejo.Client
 	log      print.Logger
 }
@@ -251,7 +250,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[configdomain.CodebergToken]
+	APIToken  Option[forgedomain.CodebergToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }

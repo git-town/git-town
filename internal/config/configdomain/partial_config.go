@@ -11,21 +11,21 @@ import (
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
 	Aliases                  Aliases
-	BitbucketAppPassword     Option[BitbucketAppPassword]
-	BitbucketUsername        Option[BitbucketUsername]
+	BitbucketAppPassword     Option[forgedomain.BitbucketAppPassword]
+	BitbucketUsername        Option[forgedomain.BitbucketUsername]
 	BranchTypeOverrides      BranchTypeOverrides
-	CodebergToken            Option[CodebergToken]
+	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                Option[gitdomain.Remote]
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
-	GitHubToken              Option[GitHubToken]
+	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
-	GitLabToken              Option[GitLabToken]
-	GitUserEmail             Option[GitUserEmail]
-	GitUserName              Option[GitUserName]
-	GiteaToken               Option[GiteaToken]
+	GitLabToken              Option[forgedomain.GitLabToken]
+	GitUserEmail             Option[gitdomain.GitUserEmail]
+	GitUserName              Option[gitdomain.GitUserName]
+	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
 	MainBranch               Option[gitdomain.LocalBranchName]
@@ -100,21 +100,21 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 	ec.Check(err)
 	return PartialConfig{
 		Aliases:                  aliases,
-		BitbucketAppPassword:     ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
-		BitbucketUsername:        ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
+		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
+		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
 		BranchTypeOverrides:      branchTypeOverrides,
-		CodebergToken:            ParseCodebergToken(snapshot[KeyCodebergToken]),
+		CodebergToken:            forgedomain.ParseCodebergToken(snapshot[KeyCodebergToken]),
 		ContributionRegex:        contributionRegex,
 		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              ParseGitHubToken(snapshot[KeyGitHubToken]),
+		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[KeyGitHubToken]),
 		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              ParseGitLabToken(snapshot[KeyGitLabToken]),
-		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
-		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
-		GiteaToken:               ParseGiteaToken(snapshot[KeyGiteaToken]),
+		GitLabToken:              forgedomain.ParseGitLabToken(snapshot[KeyGitLabToken]),
+		GitUserEmail:             gitdomain.ParseGitUserEmail(snapshot[KeyGitUserEmail]),
+		GitUserName:              gitdomain.ParseGitUserName(snapshot[KeyGitUserName]),
+		GiteaToken:               forgedomain.ParseGiteaToken(snapshot[KeyGiteaToken]),
 		HostingOriginHostname:    ParseHostingOriginHostname(snapshot[KeyHostingOriginHostname]),
 		Lineage:                  lineage,
 		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),

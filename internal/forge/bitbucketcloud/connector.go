@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
@@ -42,11 +41,11 @@ func NewConnector(args NewConnectorArgs) Connector {
 }
 
 type NewConnectorArgs struct {
-	AppPassword Option[configdomain.BitbucketAppPassword]
+	AppPassword Option[forgedomain.BitbucketAppPassword]
 	ForgeType   Option[forgedomain.ForgeType]
 	Log         print.Logger
 	RemoteURL   giturl.Parts
-	UserName    Option[configdomain.BitbucketUsername]
+	UserName    Option[forgedomain.BitbucketUsername]
 }
 
 func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error {

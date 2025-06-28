@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 type Data struct {
 	forgedomain.Data
-	APIToken Option[configdomain.GitLabToken]
+	APIToken Option[forgedomain.GitLabToken]
 }
 
 func (self Data) DefaultProposalMessage(data forgedomain.ProposalData) string {

@@ -9,8 +9,8 @@ import (
 // ValidatedConfigData is Git Town configuration where all essential values are guaranteed to exist and have meaningful values.
 // This is ensured by querying from the user if needed.
 type ValidatedConfigData struct {
-	GitUserEmail GitUserEmail
-	GitUserName  GitUserName
+	GitUserEmail gitdomain.GitUserEmail
+	GitUserName  gitdomain.GitUserName
 	MainBranch   gitdomain.LocalBranchName
 }
 

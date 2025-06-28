@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -18,31 +18,31 @@ func TestLoad(t *testing.T) {
 		name        string
 		githubToken *string
 		authToken   *string
-		want        prelude.Option[configdomain.GitHubToken]
+		want        prelude.Option[forgedomain.GitHubToken]
 	}{
 		{
 			name:        "loads from GITHUB_TOKEN when both are set",
 			githubToken: &tokenText,
 			authToken:   &authTokenText,
-			want:        prelude.Some(configdomain.GitHubToken(tokenText)),
+			want:        prelude.Some(forgedomain.GitHubToken(tokenText)),
 		},
 		{
 			name:        "loads from GITHUB_AUTH_TOKEN if GITHUB_TOKEN is empty",
 			githubToken: ptr(""),
 			authToken:   &authTokenText,
-			want:        prelude.Some(configdomain.GitHubToken(authTokenText)),
+			want:        prelude.Some(forgedomain.GitHubToken(authTokenText)),
 		},
 		{
 			name:        "loads from GITHUB_TOKEN only",
 			githubToken: &tokenText,
 			authToken:   nil,
-			want:        prelude.Some(configdomain.GitHubToken(tokenText)),
+			want:        prelude.Some(forgedomain.GitHubToken(tokenText)),
 		},
 		{
 			name:        "returns none when no env is set",
 			githubToken: nil,
 			authToken:   nil,
-			want:        prelude.None[configdomain.GitHubToken](),
+			want:        prelude.None[forgedomain.GitHubToken](),
 		},
 	}
 

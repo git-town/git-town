@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -30,7 +30,7 @@ with the GitHub API.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.TestInput) (Option[configdomain.GitHubToken], dialogdomain.Exit, error) {
+func GitHubToken(oldValue Option[forgedomain.GitHubToken], inputs components.TestInput) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,
@@ -39,5 +39,5 @@ func GitHubToken(oldValue Option[configdomain.GitHubToken], inputs components.Te
 		Title:         githubTokenTitle,
 	})
 	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	return configdomain.ParseGitHubToken(text), aborted, err
+	return forgedomain.ParseGitHubToken(text), aborted, err
 }

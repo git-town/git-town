@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -26,7 +26,7 @@ Git Town will not use the codeberg API.
 )
 
 // CodebergToken lets the user enter the Gitea API token.
-func CodebergToken(oldValue Option[configdomain.CodebergToken], inputs components.TestInput) (Option[configdomain.CodebergToken], dialogdomain.Exit, error) {
+func CodebergToken(oldValue Option[forgedomain.CodebergToken], inputs components.TestInput) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
 	text, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          codebergTokenHelp,
@@ -35,5 +35,5 @@ func CodebergToken(oldValue Option[configdomain.CodebergToken], inputs component
 		Title:         codebergTokenTitle,
 	})
 	fmt.Printf(messages.CodebergToken, components.FormattedSecret(text, aborted))
-	return configdomain.ParseCodebergToken(text), aborted, err
+	return forgedomain.ParseCodebergToken(text), aborted, err
 }

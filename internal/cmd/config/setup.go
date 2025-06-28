@@ -698,7 +698,7 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 	return nil
 }
 
-func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.BitbucketAppPassword], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveBitbucketAppPassword(oldPassword, newPassword Option[forgedomain.BitbucketAppPassword], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newPassword.Equal(oldPassword) {
 		return nil
 	}
@@ -708,7 +708,7 @@ func saveBitbucketAppPassword(oldPassword, newPassword Option[configdomain.Bitbu
 	return gitCommands.RemoveBitbucketAppPassword(frontend)
 }
 
-func saveBitbucketUsername(oldValue, newValue Option[configdomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveBitbucketUsername(oldValue, newValue Option[forgedomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
@@ -769,7 +769,7 @@ func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], git
 	return gitCommands.DeleteConfigEntryForgeType(frontend)
 }
 
-func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveCodebergToken(oldToken, newToken Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
@@ -779,7 +779,7 @@ func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], sc
 	return gitCommands.RemoveCodebergToken(frontend)
 }
 
-func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGiteaToken(oldToken, newToken Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
@@ -799,7 +799,7 @@ func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnector
 	return gitCommands.RemoveGitHubConnectorType(frontend)
 }
 
-func saveGitHubToken(oldToken, newToken Option[configdomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitHubToken(oldToken, newToken Option[forgedomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if connectorType, has := githubConnectorType.Get(); has {
 		if connectorType == forgedomain.GitHubConnectorTypeGh {
 			return nil
@@ -824,7 +824,7 @@ func saveGitLabConnectorType(oldType, newType Option[forgedomain.GitLabConnector
 	return gitCommands.RemoveGitLabConnectorType(frontend)
 }
 
-func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitLabToken(oldToken, newToken Option[forgedomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if connectorType, has := gitlabConnectorType.Get(); has {
 		if connectorType == forgedomain.GitLabConnectorTypeGlab {
 			return nil

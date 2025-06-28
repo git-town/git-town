@@ -7,7 +7,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/browser"
 	"github.com/git-town/git-town/v21/internal/cli/print"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
@@ -218,7 +217,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	APIToken  Option[configdomain.GitLabToken]
+	APIToken  Option[forgedomain.GitLabToken]
 	Log       print.Logger
 	RemoteURL giturl.Parts
 }
