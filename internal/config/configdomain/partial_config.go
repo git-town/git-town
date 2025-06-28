@@ -23,8 +23,8 @@ type PartialConfig struct {
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
-	GitUserEmail             Option[GitUserEmail]
-	GitUserName              Option[GitUserName]
+	GitUserEmail             Option[gitdomain.GitUserEmail]
+	GitUserName              Option[gitdomain.GitUserName]
 	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
@@ -112,8 +112,8 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[KeyGitHubToken]),
 		GitLabConnectorType:      gitlabConnectorType,
 		GitLabToken:              forgedomain.ParseGitLabToken(snapshot[KeyGitLabToken]),
-		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
-		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
+		GitUserEmail:             gitdomain.ParseGitUserEmail(snapshot[KeyGitUserEmail]),
+		GitUserName:              gitdomain.ParseGitUserName(snapshot[KeyGitUserName]),
 		GiteaToken:               forgedomain.ParseGiteaToken(snapshot[KeyGiteaToken]),
 		HostingOriginHostname:    ParseHostingOriginHostname(snapshot[KeyHostingOriginHostname]),
 		Lineage:                  lineage,
