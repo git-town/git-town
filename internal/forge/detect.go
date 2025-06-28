@@ -24,9 +24,9 @@ func Detect(remoteURL giturl.Parts, userOverride Option[forgedomain.ForgeType]) 
 		forgedomain.ForgeTypeGitHub:              github.Detect,
 		forgedomain.ForgeTypeGitLab:              gitlab.Detect,
 	}
-	for platform, detector := range detectors {
+	for forgeType, detector := range detectors {
 		if detector(remoteURL) {
-			return Some(platform)
+			return Some(forgeType)
 		}
 	}
 	return None[forgedomain.ForgeType]()

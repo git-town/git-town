@@ -882,8 +882,8 @@ func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value forge
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 
-func (self *Commands) SetForgeType(runner subshelldomain.Runner, platform forgedomain.ForgeType) error {
-	return runner.Run("git", "config", configdomain.KeyForgeType.String(), platform.String())
+func (self *Commands) SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
+	return runner.Run("git", "config", configdomain.KeyForgeType.String(), forgeType.String())
 }
 
 func (self *Commands) SetGitAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
