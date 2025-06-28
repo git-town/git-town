@@ -387,7 +387,7 @@ func createConnector(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt 
 		case forgedomain.ForgeTypeBitbucket:
 			return bitbucketcloud.NewConnector(bitbucketcloud.NewConnectorArgs{
 				AppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword,
-				ForgeType:   Some(forgedomain.ForgeTypeBitbucket),
+				ForgeType:   forgeTypeOpt,
 				Log:         print.Logger{},
 				RemoteURL:   data.config.NormalConfig.DevURL().GetOrDefault(),
 				UserName:    data.config.NormalConfig.BitbucketUsername,
