@@ -20,8 +20,8 @@ import (
 // NewConnector provides an instance of the forge connector to use based on the given gitConfig.
 func NewConnector(config config.NormalConfig, remote gitdomain.Remote, log print.Logger, frontend subshelldomain.Runner, backend subshelldomain.Querier) (Option[forgedomain.Connector], error) {
 	remoteURL, hasRemoteURL := config.RemoteURL(remote).Get()
-	platform, hasPlatform := Detect(remoteURL, config.ForgeType).Get()
-	if !hasRemoteURL || !hasPlatform {
+	forgeType, hasForgeType := Detect(remoteURL, config.ForgeType).Get()
+	if !hasRemoteURL || !hasForgeType {
 		return None[forgedomain.Connector](), nil
 	}
 	var connector forgedomain.Connector
