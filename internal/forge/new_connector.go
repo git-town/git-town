@@ -42,7 +42,7 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
 			AppPassword: config.NormalConfig.BitbucketAppPassword,
-			ForgeType:   forgeType,
+			ForgeType:   forgeTypeOpt,
 			Log:         log,
 			RemoteURL:   remoteURL,
 			UserName:    config.NormalConfig.BitbucketUsername,
