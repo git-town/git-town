@@ -266,7 +266,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		GitLabToken:              None[forgedomain.GitLabToken](),
 		GitUserEmail:             None[configdomain.GitUserEmail](),
 		GitUserName:              None[configdomain.GitUserName](),
-		GiteaToken:               None[configdomain.GiteaToken](),
+		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    hostingOriginHostname,
 		Lineage:                  configdomain.Lineage{},
 		MainBranch:               mainBranch,

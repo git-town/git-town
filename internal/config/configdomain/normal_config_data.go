@@ -24,7 +24,7 @@ type NormalConfigData struct {
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]
-	GiteaToken               Option[GiteaToken]
+	GiteaToken               Option[forgedomain.GiteaToken]
 	HostingOriginHostname    Option[HostingOriginHostname]
 	Lineage                  Lineage
 	NewBranchType            Option[BranchType]
@@ -110,7 +110,7 @@ func DefaultNormalConfig() NormalConfigData {
 		GitHubToken:              None[forgedomain.GitHubToken](),
 		GitLabConnectorType:      None[forgedomain.GitLabConnectorType](),
 		GitLabToken:              None[forgedomain.GitLabToken](),
-		GiteaToken:               None[GiteaToken](),
+		GiteaToken:               None[forgedomain.GiteaToken](),
 		HostingOriginHostname:    None[HostingOriginHostname](),
 		Lineage:                  NewLineage(),
 		NewBranchType:            None[BranchType](),

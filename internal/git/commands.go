@@ -906,7 +906,7 @@ func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value forgedo
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitLabToken.String(), value.String())
 }
 
-func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value configdomain.GiteaToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGiteaToken.String(), value.String())
 }
 

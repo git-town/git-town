@@ -776,7 +776,7 @@ func saveCodebergToken(oldToken, newToken Option[configdomain.CodebergToken], sc
 	return gitCommands.RemoveCodebergToken(frontend)
 }
 
-func saveGiteaToken(oldToken, newToken Option[configdomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGiteaToken(oldToken, newToken Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newToken.Equal(oldToken) {
 		return nil
 	}
