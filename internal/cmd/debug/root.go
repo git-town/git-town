@@ -17,7 +17,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterCommitsToBeam())
 	debugCommand.AddCommand(enterDevRemote())
 	debugCommand.AddCommand(enterFeatureRegex())
-	debugCommand.AddCommand(enterHostingPlatform())
+	debugCommand.AddCommand(enterForgeType())
 	debugCommand.AddCommand(enterGiteaToken())
 	debugCommand.AddCommand(enterGitHubToken())
 	debugCommand.AddCommand(enterGitLabToken())

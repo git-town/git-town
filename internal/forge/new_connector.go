@@ -41,11 +41,11 @@ func NewConnector(config config.UnvalidatedConfig, remote gitdomain.Remote, log 
 		return Some(connector), nil
 	case forgedomain.ForgeTypeBitbucketDatacenter:
 		connector = bitbucketdatacenter.NewConnector(bitbucketdatacenter.NewConnectorArgs{
-			AppPassword:     config.NormalConfig.BitbucketAppPassword,
-			HostingPlatform: forgeType,
-			Log:             log,
-			RemoteURL:       remoteURL,
-			UserName:        config.NormalConfig.BitbucketUsername,
+			AppPassword: config.NormalConfig.BitbucketAppPassword,
+			ForgeType:   forgeType,
+			Log:         log,
+			RemoteURL:   remoteURL,
+			UserName:    config.NormalConfig.BitbucketUsername,
 		})
 		return Some(connector), nil
 	case forgedomain.ForgeTypeCodeberg:
