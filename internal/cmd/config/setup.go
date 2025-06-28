@@ -821,7 +821,7 @@ func saveGitLabConnectorType(oldType, newType Option[forgedomain.GitLabConnector
 	return gitCommands.RemoveGitLabConnectorType(frontend)
 }
 
-func saveGitLabToken(oldToken, newToken Option[configdomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveGitLabToken(oldToken, newToken Option[forgedomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if connectorType, has := gitlabConnectorType.Get(); has {
 		if connectorType == forgedomain.GitLabConnectorTypeGlab {
 			return nil

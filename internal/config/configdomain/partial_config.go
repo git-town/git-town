@@ -22,7 +22,7 @@ type PartialConfig struct {
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
-	GitLabToken              Option[GitLabToken]
+	GitLabToken              Option[forgedomain.GitLabToken]
 	GitUserEmail             Option[GitUserEmail]
 	GitUserName              Option[GitUserName]
 	GiteaToken               Option[GiteaToken]
@@ -111,7 +111,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		GitHubConnectorType:      githubConnectorType,
 		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[KeyGitHubToken]),
 		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              ParseGitLabToken(snapshot[KeyGitLabToken]),
+		GitLabToken:              forgedomain.ParseGitLabToken(snapshot[KeyGitLabToken]),
 		GitUserEmail:             ParseGitUserEmail(snapshot[KeyGitUserEmail]),
 		GitUserName:              ParseGitUserName(snapshot[KeyGitUserName]),
 		GiteaToken:               ParseGiteaToken(snapshot[KeyGiteaToken]),

@@ -902,7 +902,7 @@ func (self *Commands) SetGitLabConnectorType(runner subshelldomain.Runner, value
 	return runner.Run("git", "config", configdomain.KeyGitLabConnectorType.String(), value.String())
 }
 
-func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value configdomain.GitLabToken, scope configdomain.ConfigScope) error {
+func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitLabToken.String(), value.String())
 }
 
