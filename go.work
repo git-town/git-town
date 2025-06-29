@@ -7,6 +7,7 @@ use (
 	./tools/lint_steps
 	./tools/messy_output
 	./tools/optioncompare
+	./tools/print_config_exhaustive
 	./tools/stats_release
 	./tools/structs_sorted
 	./tools/tests_sorted

@@ -91,7 +91,7 @@ lint-messy-output:
 	@(cd tools/messy_output && go build) && ./tools/messy_output/messy_output
 
 lint-print-config:
-	@tools/rta node tools/print_config_exhaustive/lint.js
+	@(cd tools/print_config_exhaustive && go build) && ./tools/print_config_exhaustive/print_config_exhaustive
 
 lint-optioncompare:
 	@(cd tools/optioncompare && go build) && ./tools/optioncompare/optioncompare github.com/git-town/git-town/v21/...
