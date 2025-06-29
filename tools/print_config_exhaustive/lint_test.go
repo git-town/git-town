@@ -197,7 +197,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	}
 }
 `
-	have := main.FindPrintFunction(give)
+	have := main.FindPrintFunc(give)
 	want := `
 	fmt.Println()
 	print.Header("Branches")

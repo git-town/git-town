@@ -20,16 +20,16 @@ var whiteList = []string{
 }
 
 func main() {
-	definedFields := DefinitionFields(readFile(normalConfigDataPath))
-	printFunction := ParsePrintFile(readFile(printConfigPath))
-	unprinted := FindUnprinted(definedFields, printFunction, whiteList)
+	definedFields := FindDefinedFields(readFile(normalConfigDataPath))
+	printFunction := FindPrintFunc(readFile(printConfigPath))
+	unprinted := FindUnprintedFields(definedFields, printFunction, whiteList)
 	if len(unprinted) > 0 {
 		printMissingFields(unprinted)
 		os.Exit(1)
 	}
 }
 
-func DefinitionFields(text string) []string {
+func FindDefinedFields(text string) []string {
 	structRE := regexp.MustCompile(`type NormalConfigData struct {([^}]*)}`)
 	match := structRE.FindStringSubmatch(text)
 	if len(match) < 2 {
@@ -49,27 +49,27 @@ func DefinitionFields(text string) []string {
 	return result
 }
 
-func FindUnprinted(fields []string, text string, whiteList []string) []string {
+func FindUnprintedFields(fields []string, text string, whiteList []string) []string {
 	result := []string{}
 	for _, field := range fields {
-		if strings.Contains(text, field) {
-			continue
+		if !isPrinted(field, text) && !isWhitelisted(field, whiteList) {
+			result = append(result, field)
 		}
-		if isWhitelisted(field, whiteList) {
-			continue
-		}
-		result = append(result, field)
 	}
 	return result
 }
 
-func ParsePrintFile(text string) string {
+func FindPrintFunc(text string) string {
 	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
 	match := functionContentRE.FindStringSubmatch(text)
 	if len(match) < 2 {
 		log.Fatalf("Error: Failed to find printConfig function")
 	}
 	return match[1]
+}
+
+func isPrinted(field, text string) bool {
+	return strings.Contains(text, field)
 }
 
 func isWhitelisted(field string, whitelist []string) bool {
