@@ -10,6 +10,7 @@ import (
 func TestDefinitionFields(t *testing.T) {
 	t.Parallel()
 
+	//nolint:dupword
 	give := `
 	package configdomain
 

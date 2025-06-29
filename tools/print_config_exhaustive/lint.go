@@ -46,7 +46,7 @@ func readFile(path string) string {
 
 func DefinitionFields(text string) []string {
 	structRE := regexp.MustCompile(`type NormalConfigData struct {([^}]*)}`)
-	match := structRE.FindStringSubmatch(string(text))
+	match := structRE.FindStringSubmatch(text)
 	if len(match) < 2 {
 		log.Fatalf("Error: Failed to find NormalConfigData struct")
 	}
@@ -66,7 +66,7 @@ func DefinitionFields(text string) []string {
 
 func ParsePrintFile(text string) string {
 	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
-	match := functionContentRE.FindStringSubmatch(string(text))
+	match := functionContentRE.FindStringSubmatch(text)
 	if len(match) < 2 {
 		log.Fatalf("Error: Failed to find printConfig function")
 	}
