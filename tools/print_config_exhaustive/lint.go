@@ -30,14 +30,10 @@ func main() {
 
 	// find fields that are in the definition file but not the print file
 	unprinted := FindUnprinted(definitionFields, printBody, whiteList)
-	if len(unprinted) == 0 {
-		return
+	if len(unprinted) > 0 {
+		printMissingFields(unprinted)
+		os.Exit(1)
 	}
-	fmt.Println("Missing fields in printConfig function:")
-	for _, field := range unprinted {
-		fmt.Println(field)
-	}
-	os.Exit(1)
 }
 
 func readFile(path string) string {
@@ -93,4 +89,11 @@ func FindUnprinted(fields []string, text string, whiteList []string) []string {
 
 func isWhitelisted(field string, whitelist []string) bool {
 	return slices.Contains(whitelist, field)
+}
+
+func printMissingFields(unprinted []string) {
+	fmt.Println("Missing fields in printConfig function:")
+	for _, field := range unprinted {
+		fmt.Println(field)
+	}
 }
