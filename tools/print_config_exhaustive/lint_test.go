@@ -99,6 +99,32 @@ func (self *NormalConfigData) NoPushHook() NoPushHook {
 	must.Eq(t, want, have)
 }
 
+func TestFindUnprinted(t *testing.T) {
+	t.Parallel()
+	fields := []string{
+		"ContributionRegex",
+		"FeatureRegex",
+		"MainBranch",
+		"ObservedRegex",
+		"ForgeType",
+	}
+	whiteList := []string{
+		"ParkedBranch",
+	}
+	printText := `
+	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
+	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
+	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
+	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
+	`
+	have := main.FindUnprinted(fields, printText, whiteList)
+	want := []string{
+		"ObservedRegex",
+		"ForgeType",
+	}
+	must.Eq(t, want, have)
+}
+
 func TestParsePrintFile(t *testing.T) {
 	t.Parallel()
 	give := `
@@ -183,30 +209,4 @@ func printConfig(config config.UnvalidatedConfig) {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.NormalConfig.Lineage))
 	`
 	must.EqOp(t, want, have)
-}
-
-func TestFindUnprinted(t *testing.T) {
-	t.Parallel()
-	fields := []string{
-		"ContributionRegex",
-		"FeatureRegex",
-		"MainBranch",
-		"ObservedRegex",
-		"ForgeType",
-	}
-	whiteList := []string{
-		"ParkedBranch",
-	}
-	printText := `
-	print.Entry("contribution regex", format.OptionalStringerSetting(config.NormalConfig.ContributionRegex))
-	print.Entry("feature regex", format.OptionalStringerSetting(config.NormalConfig.FeatureRegex))
-	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
-	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
-	`
-	have := main.FindUnprinted(fields, printText, whiteList)
-	want := []string{
-		"ObservedRegex",
-		"ForgeType",
-	}
-	must.Eq(t, want, have)
 }

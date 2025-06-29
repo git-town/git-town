@@ -36,14 +36,6 @@ func main() {
 	}
 }
 
-func readFile(path string) string {
-	result, err := os.ReadFile(path)
-	if err != nil {
-		log.Fatalf("Error reading %s: %v\n", path, err)
-	}
-	return string(result)
-}
-
 func DefinitionFields(text string) []string {
 	structRE := regexp.MustCompile(`type NormalConfigData struct {([^}]*)}`)
 	match := structRE.FindStringSubmatch(text)
@@ -64,15 +56,6 @@ func DefinitionFields(text string) []string {
 	return result
 }
 
-func ParsePrintFile(text string) string {
-	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
-	match := functionContentRE.FindStringSubmatch(text)
-	if len(match) < 2 {
-		log.Fatalf("Error: Failed to find printConfig function")
-	}
-	return match[1]
-}
-
 func FindUnprinted(fields []string, text string, whiteList []string) []string {
 	result := []string{}
 	for _, field := range fields {
@@ -87,6 +70,15 @@ func FindUnprinted(fields []string, text string, whiteList []string) []string {
 	return result
 }
 
+func ParsePrintFile(text string) string {
+	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
+	match := functionContentRE.FindStringSubmatch(text)
+	if len(match) < 2 {
+		log.Fatalf("Error: Failed to find printConfig function")
+	}
+	return match[1]
+}
+
 func isWhitelisted(field string, whitelist []string) bool {
 	return slices.Contains(whitelist, field)
 }
@@ -96,4 +88,12 @@ func printMissingFields(unprinted []string) {
 	for _, field := range unprinted {
 		fmt.Println(field)
 	}
+}
+
+func readFile(path string) string {
+	result, err := os.ReadFile(path)
+	if err != nil {
+		log.Fatalf("Error reading %s: %v\n", path, err)
+	}
+	return string(result)
 }
