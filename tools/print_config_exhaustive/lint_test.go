@@ -62,7 +62,7 @@ func (self *NormalConfigData) NoPushHook() NoPushHook {
 	return self.PushHook.Negate()
 }
 `
-	have := main.DefinitionFields(give)
+	have := main.FindDefinedFields(give)
 	want := []string{
 		"Aliases",
 		"BitbucketAppPassword",
@@ -117,7 +117,7 @@ func TestFindUnprinted(t *testing.T) {
 	print.Entry("main branch", format.OptionalStringerSetting(config.UnvalidatedConfig.MainBranch))
 	print.Entry("observed branches", format.BranchNames(config.NormalConfig.PartialBranchesOfType(configdomain.BranchTypeObservedBranch)))
 	`
-	have := main.FindUnprinted(fields, printText, whiteList)
+	have := main.FindUnprintedFields(fields, printText, whiteList)
 	want := []string{
 		"ObservedRegex",
 		"ForgeType",
@@ -197,7 +197,7 @@ func printConfig(config config.UnvalidatedConfig) {
 	}
 }
 `
-	have := main.ParsePrintFile(give)
+	have := main.FindPrintFunction(give)
 	want := `
 	fmt.Println()
 	print.Header("Branches")

@@ -20,16 +20,9 @@ var whiteList = []string{
 }
 
 func main() {
-	// read and parse definition file
-	definitionText := readFile(normalConfigDataPath)
-	definitionFields := DefinitionFields(definitionText)
-
-	// read and parse print file
-	printText := readFile(printConfigPath)
-	printBody := ParsePrintFile(printText)
-
-	// find fields that are in the definition file but not the print file
-	unprinted := FindUnprinted(definitionFields, printBody, whiteList)
+	definedFields := DefinitionFields(readFile(normalConfigDataPath))
+	printFunction := ParsePrintFile(readFile(printConfigPath))
+	unprinted := FindUnprinted(definedFields, printFunction, whiteList)
 	if len(unprinted) > 0 {
 		printMissingFields(unprinted)
 		os.Exit(1)
