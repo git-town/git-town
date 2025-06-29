@@ -50,8 +50,8 @@ func FindDefinedFields(text string) []string {
 }
 
 func FindPrintFunc(text string) string {
-	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
-	match := functionContentRE.FindStringSubmatch(text)
+	funcBodyRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
+	match := funcBodyRE.FindStringSubmatch(text)
 	if len(match) < 2 {
 		log.Fatalf("Error: Failed to find printConfig function")
 	}
