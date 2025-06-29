@@ -49,6 +49,15 @@ func FindDefinedFields(text string) []string {
 	return result
 }
 
+func FindPrintFunc(text string) string {
+	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
+	match := functionContentRE.FindStringSubmatch(text)
+	if len(match) < 2 {
+		log.Fatalf("Error: Failed to find printConfig function")
+	}
+	return match[1]
+}
+
 func FindUnprintedFields(fields []string, text string, whiteList []string) []string {
 	result := []string{}
 	for _, field := range fields {
@@ -57,15 +66,6 @@ func FindUnprintedFields(fields []string, text string, whiteList []string) []str
 		}
 	}
 	return result
-}
-
-func FindPrintFunc(text string) string {
-	functionContentRE := regexp.MustCompile(`func printConfig\(.*?\) {([^}]*)}`)
-	match := functionContentRE.FindStringSubmatch(text)
-	if len(match) < 2 {
-		log.Fatalf("Error: Failed to find printConfig function")
-	}
-	return match[1]
 }
 
 func isPrinted(field, text string) bool {
