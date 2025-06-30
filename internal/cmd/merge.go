@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -72,12 +73,9 @@ func mergeCommand() *cobra.Command {
 		Short:   mergeDesc,
 		Long:    cmdhelpers.Long(mergeDesc, mergeHelp),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			dryRun, err1 := readDryRunFlag(cmd)
+			verbose, err2 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
 			return executeMerge(dryRun, verbose)

@@ -3,6 +3,7 @@ package cmd
 import (
 	"cmp"
 	"errors"
+	"fmt"
 	"os"
 	"slices"
 
@@ -187,7 +188,6 @@ type appendFeatureData struct {
 }
 
 func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit dialogdomain.Exit, err error) {
-	fc := execute.FailureCollector{}
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -224,12 +224,15 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
-		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch, repo.UnvalidatedConfig.NormalConfig.DevRemote) {
-		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return data, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
@@ -309,7 +312,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		remotes:                   remotes,
 		stashSize:                 stashSize,
 		targetBranch:              targetBranch,
-	}, false, fc.Err
+	}, false, nil
 }
 
 func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
