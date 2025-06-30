@@ -85,10 +85,15 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -118,10 +123,6 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,

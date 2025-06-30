@@ -185,10 +185,15 @@ func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun,
 	if err != nil {
 		return walkData{}, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return walkData{}, false, err
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -210,10 +215,6 @@ func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun,
 	initialBranch, hasInitialBranch := branchesSnapshot.Active.Get()
 	if !hasInitialBranch {
 		return walkData{}, false, errors.New(messages.CurrentBranchCannotDetermine)
-	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return walkData{}, false, err
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()

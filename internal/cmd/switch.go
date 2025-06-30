@@ -15,9 +15,11 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/regexes"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
 )
 
@@ -130,6 +132,7 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             None[forgedomain.Connector](),
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,

@@ -252,10 +252,15 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              detached,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 len(args) == 1 && !repoStatus.OpenChanges && beam.IsFalse() && commit.IsFalse(),
@@ -292,10 +297,6 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		} else {
 			branchesToValidate = targetBranches
 		}
-	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return data, false, err
 	}
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(localBranchNames)
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
