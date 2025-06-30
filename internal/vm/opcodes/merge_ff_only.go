@@ -21,7 +21,7 @@ func (self *MergeFastForward) AbortProgram() []shared.Opcode {
 }
 
 func (self *MergeFastForward) AutomaticUndoError() error {
-	return errors.New(messages.ShipAbortMergeError)
+	return errors.New(messages.ShipExitMergeError)
 }
 
 func (self *MergeFastForward) Run(args shared.RunArgs) error {

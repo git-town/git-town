@@ -25,7 +25,7 @@ func (self *CommitAutoUndo) AbortProgram() []shared.Opcode {
 }
 
 func (self *CommitAutoUndo) AutomaticUndoError() error {
-	return errors.New(messages.ShipAbortMergeError)
+	return errors.New(messages.ShipExitMergeError)
 }
 
 func (self *CommitAutoUndo) Run(args shared.RunArgs) error {

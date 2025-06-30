@@ -24,7 +24,7 @@ func (self *MergeAlwaysProgram) AbortProgram() []shared.Opcode {
 }
 
 func (self *MergeAlwaysProgram) AutomaticUndoError() error {
-	return errors.New(messages.ShipAbortMergeError)
+	return errors.New(messages.ShipExitMergeError)
 }
 
 func (self *MergeAlwaysProgram) Run(args shared.RunArgs) error {
