@@ -1,6 +1,7 @@
 package status
 
 import (
+	"cmp"
 	"fmt"
 	"time"
 
@@ -29,12 +30,9 @@ func RootCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			pending, err := readPendingFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			pending, err1 := readPendingFlag(cmd)
+			verbose, err2 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
 			return executeStatus(pending, verbose)
