@@ -239,7 +239,7 @@ and will be removed in future versions of Git Town.`
 	SettingSunsetBranchList                 = "Inlining deprecated branch list %q"
 	ShareNewBranches                        = "Share new branches: %s\n"
 	ShipBranchIsInOtherWorktree             = "branch %q is checked out in another worktree, please ship from there"
-	ShipAbortedMergeError                   = "aborted because merge exited with error"
+	ShipAbortMergeError                     = "aborted because merge exited with error"
 	ShipAPIConnectorRequired                = "please configure API access to your forge, more info at https://www.git-town.com/configuration#access-tokens"
 	ShipAPIConnectorUnsupported             = "the Git Town driver for your forge does not support shipping via the API"
 	ShipBranchOtherWorktree                 = "branch %q is active in another worktree"

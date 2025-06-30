@@ -34,9 +34,9 @@ func NewList[S comparable](entries Entries[S], cursor int) List[S] {
 	}
 }
 
-// Aborted indicates whether the user has chosen to abort this component.
-func (self *List[S]) Aborted() dialogdomain.Exit {
-	return self.Status == StatusAborted
+// Exited indicates whether the user has chosen to abort this component.
+func (self *List[S]) Exited() dialogdomain.Exit {
+	return self.Status == StatusExit
 }
 
 // EntryNumberStr provides a colorized string to print the given entry number.
@@ -60,7 +60,7 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.MovePageDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
-		self.Status = StatusAborted
+		self.Status = StatusExit
 		return true, tea.Quit
 	}
 	switch keyStr := key.String(); keyStr {
@@ -87,7 +87,7 @@ func (self *List[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.MovePageDown()
 		return true, nil
 	case "q":
-		self.Status = StatusAborted
+		self.Status = StatusExit
 		return true, tea.Quit
 	}
 	return false, nil

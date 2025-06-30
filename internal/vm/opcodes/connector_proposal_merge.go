@@ -30,7 +30,7 @@ func (self *ConnectorProposalMerge) AbortProgram() []shared.Opcode {
 
 func (self *ConnectorProposalMerge) AutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
-		return errors.New(messages.ShipAbortedMergeError)
+		return errors.New(messages.ShipAbortMergeError)
 	}
 	return self.mergeError
 }
