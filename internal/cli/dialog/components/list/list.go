@@ -39,8 +39,8 @@ func (self *List[S]) EntryNumberStr(number int) string {
 	return self.Colors.EntryNumber.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
-// Exited indicates whether the user has chosen to abort this component.
-func (self *List[S]) Exited() dialogdomain.Exit {
+// Aborted indicates whether the user has chosen to abort this component.
+func (self *List[S]) Aborted() dialogdomain.Exit {
 	return self.Status == StatusExit
 }
 

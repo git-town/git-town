@@ -42,13 +42,13 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(AliasesModel)
-	if err != nil || result.Exited() {
-		return configdomain.Aliases{}, result.Exited(), err
+	if err != nil || result.Aborted() {
+		return configdomain.Aliases{}, result.Aborted(), err
 	}
 	selectedCommands := result.Checked()
 	selectionText := DetermineAliasSelectionText(selectedCommands)
-	fmt.Printf(messages.AliasedCommands, components.FormattedSelection(selectionText, result.Exited()))
-	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.Exited(), err
+	fmt.Printf(messages.AliasedCommands, components.FormattedSelection(selectionText, result.Aborted()))
+	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.Aborted(), err
 }
 
 type AliasesModel struct {

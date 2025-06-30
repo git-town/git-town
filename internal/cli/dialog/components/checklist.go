@@ -24,7 +24,7 @@ func CheckList[S comparable](entries list.Entries[S], selections []int, title, h
 		return []S{}, false, err
 	}
 	result := dialogResult.(CheckListModel[S])
-	return result.CheckedEntries(), result.Exited(), nil
+	return result.CheckedEntries(), result.Aborted(), nil
 }
 
 type CheckListModel[S comparable] struct {
