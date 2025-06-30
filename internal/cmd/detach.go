@@ -190,6 +190,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,

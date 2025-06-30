@@ -47,6 +47,10 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, stashSize, previousBranchInfos, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
@@ -127,12 +131,8 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	childBranches := validatedConfig.NormalConfig.Lineage.Children(branchNameToShip)
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	proposalsOfChildBranches := LoadProposalsOfChildBranches(LoadProposalsOfChildBranchesArgs{
-		ConnectorOpt:               connectorOpt,
+		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    repo.IsOffline,
 		OldBranch:                  branchNameToShip,
@@ -144,7 +144,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		branchesSnapshot:         branchesSnapshot,
 		childBranches:            childBranches,
 		config:                   validatedConfig,
-		connector:                connectorOpt,
+		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
