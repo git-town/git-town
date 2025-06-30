@@ -33,7 +33,7 @@ func UnknownBranchType(existingValue configdomain.BranchType, inputs components.
 		configdomain.BranchTypePrototypeBranch,
 	}
 	cursor := slice.Index(options, existingValue).GetOrElse(0)
-	selection, aborted, err := components.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs)
-	fmt.Printf(messages.UnknownBranchType, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	selection, exit, err := components.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs)
+	fmt.Printf(messages.UnknownBranchType, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

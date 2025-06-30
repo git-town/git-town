@@ -35,12 +35,12 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	}
 	entries := list.NewEntries(perennialCandidates...)
 	selections := slice.FindMany(perennialCandidates, oldPerennialBranches)
-	selectedBranchesList, aborted, err := components.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
+	selectedBranchesList, exit, err := components.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf(messages.PerennialBranches, components.FormattedSelection(selectionText, aborted))
-	return selectedBranches, aborted, err
+	fmt.Printf(messages.PerennialBranches, components.FormattedSelection(selectionText, exit))
+	return selectedBranches, exit, err
 }
