@@ -68,12 +68,10 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if args.RunState.Command == "walk" {
 		canSkip = true
 	}
-	err = args.RunState.MarkAsUnfinished(args.Git, args.Backend, canSkip)
-	if err != nil {
+	if err = args.RunState.MarkAsUnfinished(args.Git, args.Backend, canSkip); err != nil {
 		return err
 	}
-	err = runstate.Save(args.RunState, args.RootDir)
-	if err != nil {
+	if err = runstate.Save(args.RunState, args.RootDir); err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())
