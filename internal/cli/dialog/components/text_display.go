@@ -23,7 +23,7 @@ func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Exit, error
 		return false, err
 	}
 	result := dialogResult.(textDisplayModel)
-	return result.status == list.StatusAborted, nil
+	return result.status == list.StatusExit, nil
 }
 
 type textDisplayModel struct {
@@ -45,7 +45,7 @@ func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) 
 			self.status = list.StatusDone
 			return self, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
-			self.status = list.StatusAborted
+			self.status = list.StatusExit
 			return self, tea.Quit
 		}
 		switch msg.String() {
@@ -53,7 +53,7 @@ func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) 
 			self.status = list.StatusDone
 			return self, tea.Quit
 		case "q":
-			self.status = list.StatusAborted
+			self.status = list.StatusExit
 			return self, tea.Quit
 		}
 	case error:

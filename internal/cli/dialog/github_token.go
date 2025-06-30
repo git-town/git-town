@@ -31,13 +31,13 @@ with the GitHub API.
 
 // GitHubToken lets the user enter the GitHub API token.
 func GitHubToken(oldValue Option[forgedomain.GitHubToken], inputs components.TestInput) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
-	text, aborted, err := components.TextField(components.TextFieldArgs{
+	text, exit, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,
 		Prompt:        "Your GitHub API token: ",
 		TestInput:     inputs,
 		Title:         githubTokenTitle,
 	})
-	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, aborted))
-	return forgedomain.ParseGitHubToken(text), aborted, err
+	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, exit))
+	return forgedomain.ParseGitHubToken(text), exit, err
 }
