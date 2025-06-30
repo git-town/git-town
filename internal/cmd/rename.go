@@ -148,6 +148,10 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
@@ -186,10 +190,6 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	if !hasOldBranch {
 		return data, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
@@ -197,7 +197,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{oldBranchName},
-		Connector:          connectorOpt,
+		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -234,10 +234,10 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	_, nonExistingBranches := branchesSnapshot.Branches.Select(repo.UnvalidatedConfig.NormalConfig.DevRemote, lineageBranches...)
 	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
-		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
+		proposalOpt = ship.FindProposal(connector, initialBranch, parentOpt)
 	}
 	proposalsOfChildBranches := ship.LoadProposalsOfChildBranches(ship.LoadProposalsOfChildBranchesArgs{
-		ConnectorOpt:               connectorOpt,
+		ConnectorOpt:               connector,
 		Lineage:                    validatedConfig.NormalConfig.Lineage,
 		Offline:                    false,
 		OldBranch:                  oldBranchName,
@@ -247,7 +247,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		branchInfosLastRun:       branchInfosLastRun,
 		branchesSnapshot:         branchesSnapshot,
 		config:                   validatedConfig,
-		connector:                connectorOpt,
+		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,

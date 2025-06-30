@@ -11,10 +11,12 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
+	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
+	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/regexes"
@@ -126,10 +128,15 @@ func determineSwitchData(args []string, repo execute.OpenRepoResult, verbose con
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
