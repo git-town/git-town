@@ -34,7 +34,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Backend:           args.Repo.Backend,
 			CommandsCounter:   args.Repo.CommandsCounter,
-			Connector:         None[forgedomain.Connector](),
+			Connector:         args.Connector,
 			Detached:          args.Detached,
 			DialogTestInputs:  args.DialogTestInputs,
 			FinalMessages:     args.Repo.FinalMessages,
@@ -83,6 +83,7 @@ type LoadRepoSnapshotArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
+	Connector             Option[forgedomain.Connector]
 	Detached              configdomain.Detached
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
