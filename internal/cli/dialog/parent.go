@@ -35,9 +35,9 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 		return ParentOutcomeExit, selection, err
 	}
 	if selection == PerennialBranchOption {
-		return ParentOutcomePerennialBranch, selection, nil
+		return ParentOutcomePerennialBranch, selection, err
 	}
-	return ParentOutcomeSelectedParent, selection, nil
+	return ParentOutcomeSelectedParent, selection, err
 }
 
 type ParentArgs struct {
