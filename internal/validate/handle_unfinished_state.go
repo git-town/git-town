@@ -49,11 +49,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	if exit {
 		return exit, errors.New("user aborted")
 	}
-	// create the connector now if we haven't received one yet
-	// We don't want to force top-level commands
-	// to create a connector just for handling unfinished runstates
-	// because doing so can take a while and we don't want to introduce latency
-	// into commands like "git town switch" unnecessarily.
+	// Create the connector now if the Git Town command hasn't provided one yet.
 	if args.Connector.IsNone() {
 		args.Connector, err = forge.NewConnector(args.UnvalidatedConfig.NormalConfig, args.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, args.Frontend, args.Backend)
 		if err != nil {
