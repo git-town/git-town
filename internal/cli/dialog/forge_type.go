@@ -58,7 +58,7 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.Te
 	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
-	newValue, aborted, err := components.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
-	fmt.Printf(messages.Forge, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), aborted))
-	return newValue, aborted, err
+	newValue, exit, err := components.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
+	fmt.Printf(messages.Forge, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), exit))
+	return newValue, exit, err
 }

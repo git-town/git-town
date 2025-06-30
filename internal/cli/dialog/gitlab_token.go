@@ -28,13 +28,13 @@ Git Town will not use the GitLab API.
 
 // GitLabToken lets the user enter the GitHub API token.
 func GitLabToken(oldValue Option[forgedomain.GitLabToken], inputs components.TestInput) (Option[forgedomain.GitLabToken], dialogdomain.Exit, error) {
-	text, aborted, err := components.TextField(components.TextFieldArgs{
+	text, exit, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitLabTokenHelp,
 		Prompt:        "Your GitLab API token: ",
 		TestInput:     inputs,
 		Title:         gitLabTokenTitle,
 	})
-	fmt.Printf(messages.GitLabToken, components.FormattedSecret(text, aborted))
-	return forgedomain.ParseGitLabToken(text), aborted, err
+	fmt.Printf(messages.GitLabToken, components.FormattedSecret(text, exit))
+	return forgedomain.ParseGitLabToken(text), exit, err
 }
