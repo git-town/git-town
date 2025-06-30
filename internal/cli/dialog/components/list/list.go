@@ -34,14 +34,14 @@ func NewList[S comparable](entries Entries[S], cursor int) List[S] {
 	}
 }
 
-// EntryNumberStr provides a colorized string to print the given entry number.
-func (self *List[S]) EntryNumberStr(number int) string {
-	return self.Colors.EntryNumber.Styled(fmt.Sprintf(self.NumberFormat, number))
-}
-
 // Aborted indicates whether the user has chosen to abort this component.
 func (self *List[S]) Aborted() dialogdomain.Exit {
 	return self.Status == StatusExit
+}
+
+// EntryNumberStr provides a colorized string to print the given entry number.
+func (self *List[S]) EntryNumberStr(number int) string {
+	return self.Colors.EntryNumber.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
 // HandleKey handles keypresses that are common for all bubbleLists.
