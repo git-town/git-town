@@ -25,11 +25,8 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 	program := tea.NewProgram(model)
 	SendInputs(args.TestInput, program)
 	dialogResult, err := program.Run()
-	if err != nil {
-		return args.ExistingValue, false, err
-	}
 	result := dialogResult.(textFieldModel)
-	return result.textInput.Value(), result.status == list.StatusExit, nil
+	return result.textInput.Value(), result.status == list.StatusExit, err
 }
 
 type TextFieldArgs struct {

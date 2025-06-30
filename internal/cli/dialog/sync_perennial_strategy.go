@@ -36,9 +36,6 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs c
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
-	if err != nil || exit {
-		return configdomain.SyncPerennialStrategyRebase, exit, err
-	}
 	fmt.Printf(messages.SyncPerennialBranches, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

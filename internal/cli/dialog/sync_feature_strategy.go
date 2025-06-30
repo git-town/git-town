@@ -42,9 +42,6 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
-	if err != nil || exit {
-		return configdomain.SyncFeatureStrategyMerge, exit, err
-	}
 	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

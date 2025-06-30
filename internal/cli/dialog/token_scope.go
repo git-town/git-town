@@ -34,9 +34,6 @@ func TokenScope(oldValue configdomain.ConfigScope, inputs components.TestInput) 
 	}
 	defaultPos := entries.IndexOf(oldValue)
 	selection, exit, err := components.RadioList(entries, defaultPos, tokenScopeTitle, tokenScopeHelp, inputs)
-	if err != nil || exit {
-		return configdomain.ConfigScopeLocal, exit, err
-	}
 	fmt.Printf(messages.ForgeAPITokenLocation, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

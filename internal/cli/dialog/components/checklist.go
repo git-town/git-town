@@ -20,9 +20,6 @@ func CheckList[S comparable](entries list.Entries[S], selections []int, title, h
 	})
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
-	if err != nil {
-		return []S{}, false, err
-	}
 	result := dialogResult.(CheckListModel[S])
 	return result.CheckedEntries(), result.Aborted(), nil
 }
