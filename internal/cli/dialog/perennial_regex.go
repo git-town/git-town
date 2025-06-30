@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
@@ -25,17 +26,14 @@ it's safe to leave it blank.
 )
 
 func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs components.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	value, aborted, err := components.TextField(components.TextFieldArgs{
+	value, aborted, err1 := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          PerennialRegexHelp,
 		Prompt:        "Perennial regex: ",
 		TestInput:     inputs,
 		Title:         perennialRegexTitle,
 	})
-	if err != nil {
-		return None[configdomain.PerennialRegex](), false, err
-	}
 	fmt.Printf(messages.PerennialRegex, components.FormattedSelection(value, aborted))
-	perennialRegex, err := configdomain.ParsePerennialRegex(value)
-	return perennialRegex, aborted, err
+	perennialRegex, err2 := configdomain.ParsePerennialRegex(value)
+	return perennialRegex, aborted, cmp.Or(err1, err2)
 }

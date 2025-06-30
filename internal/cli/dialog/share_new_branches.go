@@ -41,9 +41,6 @@ func ShareNewBranches(existing configdomain.ShareNewBranches, inputs components.
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, shareNewBranchesTitle, ShareNewBranchesHelp, inputs)
-	if err != nil || exit {
-		return configdomain.ShareNewBranchesNone, exit, err
-	}
 	fmt.Printf(messages.ShareNewBranches, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

@@ -44,9 +44,6 @@ func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], input
 		defaultPos = entries.IndexOf(existingValue)
 	}
 	selection, exit, err := components.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs)
-	if err != nil || exit {
-		return forgedomain.GitHubConnectorTypeAPI, exit, err
-	}
 	fmt.Printf(messages.GitHubConnectorType, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
