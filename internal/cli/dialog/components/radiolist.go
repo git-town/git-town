@@ -22,7 +22,7 @@ func RadioList[S comparable](entries list.Entries[S], cursor int, title, help st
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(radioListModel[S])
-	return result.SelectedData(), result.Aborted(), nil
+	return result.SelectedData(), result.Aborted(), err
 }
 
 type radioListModel[S comparable] struct {

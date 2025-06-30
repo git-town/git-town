@@ -21,7 +21,7 @@ func CheckList[S comparable](entries list.Entries[S], selections []int, title, h
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(CheckListModel[S])
-	return result.CheckedEntries(), result.Aborted(), nil
+	return result.CheckedEntries(), result.Aborted(), err
 }
 
 type CheckListModel[S comparable] struct {
