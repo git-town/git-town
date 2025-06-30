@@ -7,8 +7,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -46,6 +48,17 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	}
 	if exit {
 		return exit, errors.New("user aborted")
+	}
+	// create the connector now if we haven't received one yet
+	// We don't want to force top-level commands
+	// to create a connector just for handling unfinished runstates
+	// because doing so can take a while and we don't want to introduce latency
+	// into commands like "git town switch" unnecessarily.
+	if args.Connector.IsNone() {
+		args.Connector, err = forge.NewConnector(args.UnvalidatedConfig.NormalConfig, args.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, args.Frontend, args.Backend)
+		if err != nil {
+			return false, err
+		}
 	}
 	switch response {
 	case dialog.ResponseDiscard:

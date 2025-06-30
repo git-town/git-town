@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
@@ -83,6 +84,7 @@ type LoadRepoSnapshotArgs struct {
 	Backend               subshelldomain.RunnerQuerier
 	CommandsCounter       Mutable[gohacks.Counter]
 	ConfigSnapshot        undoconfig.ConfigSnapshot
+	Connector             Option[forgedomain.Connector]
 	Detached              configdomain.Detached
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
