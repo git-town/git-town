@@ -31,6 +31,9 @@ func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs compon
 		Title:         featureRegexTitle,
 	})
 	fmt.Printf(messages.FeatureRegex, components.FormattedSelection(value, aborted))
+	if err != nil {
+		return None[configdomain.FeatureRegex](), false, err
+	}
 	featureRegex, err := configdomain.ParseFeatureRegex(value)
 	return featureRegex, aborted, err
 }
