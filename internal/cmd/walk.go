@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"os"
 
@@ -79,20 +80,11 @@ func walkCommand() *cobra.Command {
 		Short:   walkDesc,
 		Long:    cmdhelpers.Long(walkDesc, walkHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			allBranches, err := readAllFlag(cmd)
-			if err != nil {
-				return err
-			}
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			stack, err := readStackFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			allBranches, err1 := readAllFlag(cmd)
+			dryRun, err2 := readDryRunFlag(cmd)
+			stack, err3 := readStackFlag(cmd)
+			verbose, err4 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4); err != nil {
 				return err
 			}
 			return executeWalk(args, dryRun, allBranches, stack, verbose)
@@ -255,7 +247,7 @@ func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun,
 		previousBranch:     previousBranch,
 		repo:               repo,
 		stashSize:          stashSize,
-	}, false, err
+	}, false, nil
 }
 
 func walkProgram(args []string, data walkData, dryRun configdomain.DryRun) program.Program {
