@@ -25,13 +25,13 @@ Git Town will not use the Bitbucket API.
 )
 
 func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs components.TestInput) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
-	text, aborted, err := components.TextField(components.TextFieldArgs{
+	text, exit, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketUsernameHelp,
 		Prompt:        "Your Bitbucket username: ",
 		TestInput:     inputs,
 		Title:         bitbucketUsernameTitle,
 	})
-	fmt.Printf(messages.BitbucketUsername, components.FormattedSecret(text, aborted))
-	return forgedomain.ParseBitbucketUsername(text), aborted, err
+	fmt.Printf(messages.BitbucketUsername, components.FormattedSecret(text, exit))
+	return forgedomain.ParseBitbucketUsername(text), exit, err
 }

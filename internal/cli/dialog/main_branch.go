@@ -31,7 +31,7 @@ func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntryOpt Option
 	if defaultEntry, hasDefaultEntry := defaultEntryOpt.Get(); hasDefaultEntry {
 		cursor = slice.Index(localBranches, defaultEntry).GetOrElse(0)
 	}
-	selection, aborted, err := components.RadioList(list.NewEntries(localBranches...), cursor, mainBranchTitle, MainBranchHelp, inputs)
-	fmt.Printf(messages.MainBranch, components.FormattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	selection, exit, err := components.RadioList(list.NewEntries(localBranches...), cursor, mainBranchTitle, MainBranchHelp, inputs)
+	fmt.Printf(messages.MainBranch, components.FormattedSelection(selection.String(), exit))
+	return selection, exit, err
 }

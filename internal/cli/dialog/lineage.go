@@ -62,7 +62,7 @@ func Lineage(args LineageArgs) (additionalLineage configdomain.Lineage, addition
 			return additionalLineage, additionalPerennials, false, err
 		}
 		switch outcome {
-		case ParentOutcomeAborted:
+		case ParentOutcomeExit:
 			return additionalLineage, additionalPerennials, true, nil
 		case ParentOutcomePerennialBranch:
 			additionalPerennials = append(additionalPerennials, branchToVerify)

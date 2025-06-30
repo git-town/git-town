@@ -29,7 +29,7 @@ func TextField(args TextFieldArgs) (string, dialogdomain.Exit, error) {
 		return args.ExistingValue, false, err
 	}
 	result := dialogResult.(textFieldModel)
-	return result.textInput.Value(), result.status == list.StatusAborted, nil
+	return result.textInput.Value(), result.status == list.StatusExit, nil
 }
 
 type TextFieldArgs struct {
@@ -60,7 +60,7 @@ func (self textFieldModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) { 
 			self.status = list.StatusDone
 			return self, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
-			self.status = list.StatusAborted
+			self.status = list.StatusExit
 			return self, tea.Quit
 		}
 	case error:

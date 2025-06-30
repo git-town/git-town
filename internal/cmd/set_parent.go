@@ -265,7 +265,7 @@ func setParentProgram(dialogOutcome dialog.ParentOutcome, selectedBranch gitdoma
 	proposal, hasProposal := data.proposal.Get()
 	// update lineage
 	switch dialogOutcome {
-	case dialog.ParentOutcomeAborted:
+	case dialog.ParentOutcomeExit:
 		return prog, true
 	case dialog.ParentOutcomePerennialBranch:
 		prog.Add(&opcodes.BranchTypeOverrideSet{Branch: data.initialBranch, BranchType: configdomain.BranchTypePerennialBranch})

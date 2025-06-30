@@ -37,9 +37,9 @@ func ConfigStorage(inputs components.TestInput) (ConfigStorageOption, dialogdoma
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
 	)
-	selection, aborted, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
-	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), aborted))
-	return selection, aborted, err
+	selection, exit, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
+	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), exit))
+	return selection, exit, err
 }
 
 type ConfigStorageOption string

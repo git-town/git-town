@@ -21,7 +21,7 @@ func (self *MergeSquashAutoUndo) AbortProgram() []shared.Opcode {
 }
 
 func (self *MergeSquashAutoUndo) AutomaticUndoError() error {
-	return errors.New(messages.ShipAbortedMergeError)
+	return errors.New(messages.ShipExitMergeError)
 }
 
 func (self *MergeSquashAutoUndo) Run(args shared.RunArgs) error {

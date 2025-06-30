@@ -24,13 +24,13 @@ if Git Town's auto-detection doesn't work.
 )
 
 func OriginHostname(oldValue Option[configdomain.HostingOriginHostname], inputs components.TestInput) (Option[configdomain.HostingOriginHostname], dialogdomain.Exit, error) {
-	token, aborted, err := components.TextField(components.TextFieldArgs{
+	token, exit, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          OriginHostnameHelp,
 		Prompt:        "Origin hostname override: ",
 		TestInput:     inputs,
 		Title:         originHostnameTitle,
 	})
-	fmt.Printf(messages.OriginHostname, components.FormattedToken(token, aborted))
-	return configdomain.ParseHostingOriginHostname(token), aborted, err
+	fmt.Printf(messages.OriginHostname, components.FormattedToken(token, exit))
+	return configdomain.ParseHostingOriginHostname(token), exit, err
 }

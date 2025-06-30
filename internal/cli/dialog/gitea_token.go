@@ -27,13 +27,13 @@ Git Town will not use the gitea API.
 
 // GiteaToken lets the user enter the Gitea API token.
 func GiteaToken(oldValue Option[forgedomain.GiteaToken], inputs components.TestInput) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
-	text, aborted, err := components.TextField(components.TextFieldArgs{
+	text, exit, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          giteaTokenHelp,
 		Prompt:        "Your Gitea API token: ",
 		TestInput:     inputs,
 		Title:         giteaTokenTitle,
 	})
-	fmt.Printf(messages.GiteaToken, components.FormattedSecret(text, aborted))
-	return forgedomain.ParseGiteaToken(text), aborted, err
+	fmt.Printf(messages.GiteaToken, components.FormattedSecret(text, exit))
+	return forgedomain.ParseGiteaToken(text), exit, err
 }
