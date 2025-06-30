@@ -1,5 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings
 
+  @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
@@ -71,7 +72,7 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     And Git Town prints something like:
       """
-      Could not apply \S+ my second commit
+      could not apply \S+ my second commit
       """
     And file "file.txt" now has content:
       """
@@ -96,7 +97,7 @@ Feature: compatibility between different sync-feature-strategy settings
       """
     And Git Town prints something like:
       """
-      Could not apply \S+ my first commit
+      could not apply \S+ my first commit
       """
     And file "file.txt" now has content:
       """
