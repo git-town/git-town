@@ -7,8 +7,10 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
+	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -46,6 +48,12 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	}
 	if exit {
 		return exit, errors.New("user aborted")
+	}
+	if args.Connector.IsNone() {
+		args.Connector, err = forge.NewConnector(args.UnvalidatedConfig.NormalConfig, args.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, args.Frontend, args.Backend)
+		if err != nil {
+			return false, err
+		}
 	}
 	switch response {
 	case dialog.ResponseDiscard:
