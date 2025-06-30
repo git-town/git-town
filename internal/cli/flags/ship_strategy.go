@@ -19,11 +19,8 @@ func ShipStrategy() (AddFunc, ReadShipStrategyFunc) {
 			return None[configdomain.ShipStrategy](), err
 		}
 		strategyOpt, err := configdomain.ParseShipStrategy(value)
-		if err != nil {
-			return None[configdomain.ShipStrategy](), err
-		}
 		strategy, hasStrategy := strategyOpt.Get()
-		if !hasStrategy {
+		if err != nil || !hasStrategy {
 			return None[configdomain.ShipStrategy](), nil
 		}
 		return Some(strategy), nil
