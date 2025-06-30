@@ -171,10 +171,15 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
@@ -199,10 +204,6 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	}
 	if branchToDelete.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return data, exit, fmt.Errorf(messages.BranchOtherWorktree, branchNameToDelete)
-	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return data, false, err
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())

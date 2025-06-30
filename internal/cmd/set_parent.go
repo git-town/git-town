@@ -178,10 +178,15 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	if err != nil {
 		return data, false, err
 	}
+	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	branchesSnapshot, stashSize, branchInfosLastRun, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		Backend:               repo.Backend,
 		CommandsCounter:       repo.CommandsCounter,
 		ConfigSnapshot:        repo.ConfigSnapshot,
+		Connector:             connector,
 		Detached:              true,
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
@@ -201,16 +206,12 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	}
 	localBranches := branchesSnapshot.Branches.LocalBranches().Names()
 	branchesAndTypes := repo.UnvalidatedConfig.UnvalidatedBranchesAndTypes(branchesSnapshot.Branches.LocalBranches().Names())
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return data, false, err
-	}
 	validatedConfig, exit, err := validate.Config(validate.ConfigArgs{
 		Backend:            repo.Backend,
 		BranchesAndTypes:   branchesAndTypes,
 		BranchesSnapshot:   branchesSnapshot,
 		BranchesToValidate: gitdomain.LocalBranchNames{},
-		Connector:          connectorOpt,
+		Connector:          connector,
 		DialogTestInputs:   dialogTestInputs,
 		Frontend:           repo.Frontend,
 		Git:                repo.Git,
@@ -237,13 +238,13 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 	}
 	proposalOpt := None[forgedomain.Proposal]()
 	if !repo.IsOffline {
-		proposalOpt = ship.FindProposal(connectorOpt, initialBranch, parentOpt)
+		proposalOpt = ship.FindProposal(connector, initialBranch, parentOpt)
 	}
 	return setParentData{
 		branchInfosLastRun: branchInfosLastRun,
 		branchesSnapshot:   branchesSnapshot,
 		config:             validatedConfig,
-		connector:          connectorOpt,
+		connector:          connector,
 		defaultChoice:      defaultChoice,
 		dialogTestInputs:   dialogTestInputs,
 		hasOpenChanges:     repoStatus.OpenChanges,
