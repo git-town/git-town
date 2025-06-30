@@ -35,5 +35,5 @@ func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs compon
 		return None[configdomain.FeatureRegex](), exit, err
 	}
 	featureRegex, err := configdomain.ParseFeatureRegex(value)
-	return featureRegex, exit, err
+	return featureRegex, false, err
 }
