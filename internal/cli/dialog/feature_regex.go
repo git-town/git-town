@@ -23,17 +23,17 @@ is set to something other than "feature".
 )
 
 func FeatureRegex(existingValue Option[configdomain.FeatureRegex], inputs components.TestInput) (Option[configdomain.FeatureRegex], dialogdomain.Exit, error) {
-	value, aborted, err := components.TextField(components.TextFieldArgs{
+	value, exit, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: existingValue.String(),
 		Help:          FeatureRegexHelp,
 		Prompt:        "Feature regex: ",
 		TestInput:     inputs,
 		Title:         featureRegexTitle,
 	})
-	fmt.Printf(messages.FeatureRegex, components.FormattedSelection(value, aborted))
+	fmt.Printf(messages.FeatureRegex, components.FormattedSelection(value, exit))
 	if err != nil {
 		return None[configdomain.FeatureRegex](), false, err
 	}
 	featureRegex, err := configdomain.ParseFeatureRegex(value)
-	return featureRegex, aborted, err
+	return featureRegex, exit, err
 }
