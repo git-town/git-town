@@ -34,14 +34,14 @@ func NewList[S comparable](entries Entries[S], cursor int) List[S] {
 	}
 }
 
-// Exited indicates whether the user has chosen to abort this component.
-func (self *List[S]) Exited() dialogdomain.Exit {
-	return self.Status == StatusExit
-}
-
 // EntryNumberStr provides a colorized string to print the given entry number.
 func (self *List[S]) EntryNumberStr(number int) string {
 	return self.Colors.EntryNumber.Styled(fmt.Sprintf(self.NumberFormat, number))
+}
+
+// Exited indicates whether the user has chosen to abort this component.
+func (self *List[S]) Exited() dialogdomain.Exit {
+	return self.Status == StatusExit
 }
 
 // HandleKey handles keypresses that are common for all bubbleLists.
