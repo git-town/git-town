@@ -131,20 +131,20 @@ func (self *TestRunner) MustRun(name string, arguments ...string) {
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (self *TestRunner) Query(name string, arguments ...string) (output string, err error) {
+func (self *TestRunner) Query(name string, arguments ...string) (string, error) {
 	return self.QueryWith(&Options{}, name, arguments...)
 }
 
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryString(fullCmd string) (output string, err error) {
+func (self *TestRunner) QueryString(fullCmd string) (string, error) {
 	return self.QueryStringWith(fullCmd, &Options{})
 }
 
 // QueryStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (output string, err error) {
+func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
 	parts := asserts.NoError1(shellquote.Split(fullCmd))
 	cmd, args := parts[0], parts[1:]
 	return self.QueryWith(opts, cmd, args...)
@@ -152,13 +152,13 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (output s
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (self *TestRunner) QueryTrim(name string, arguments ...string) (output string, err error) {
-	output, err = self.QueryWith(&Options{}, name, arguments...)
+func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
+	output, err := self.QueryWith(&Options{}, name, arguments...)
 	return strings.TrimSpace(output), err
 }
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.
-func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (output string, err error) {
+func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
 	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output)

@@ -16,8 +16,7 @@ func CopyDirectory(src, dst string) {
 	asserts.NoError(filepath.Walk(src, func(srcPath string, fileInfo os.FileInfo, _ error) error {
 		dstPath := strings.Replace(srcPath, src, dst, 1)
 		if fileInfo.IsDir() {
-			err := os.Mkdir(dstPath, fileInfo.Mode())
-			if err != nil {
+			if err := os.Mkdir(dstPath, fileInfo.Mode()); err != nil {
 				return fmt.Errorf("cannot create target directory: %w", err)
 			}
 			return nil
@@ -34,11 +33,9 @@ func CopyDirectory(src, dst string) {
 		if err != nil {
 			return fmt.Errorf("cannot copy %q into %q: %w", srcPath, dstPath, err)
 		}
-		err = sourceFile.Close()
-		if err != nil {
+		if err = sourceFile.Close(); err != nil {
 			return fmt.Errorf("cannot close source file %q: %w", srcPath, err)
 		}
-		err = destFile.Close()
-		return err
+		return destFile.Close()
 	}))
 }

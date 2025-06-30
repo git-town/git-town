@@ -87,8 +87,7 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 		subProcess.Stderr = io.MultiWriter(os.Stderr, &stderrBuffer)
 		subProcess.Stdin = os.Stdin
 		subProcess.Stdout = os.Stdout
-		err = subProcess.Start()
-		if err != nil {
+		if err := subProcess.Start(); err != nil {
 			return err
 		}
 		interrupt := make(chan os.Signal, 1)
@@ -104,8 +103,7 @@ func (self *FrontendRunner) execute(env []string, cmd string, args ...string) (e
 				fmt.Println("Error killing subprocess:", err)
 			}
 		}()
-		err = subProcess.Wait()
-		if err == nil {
+		if err = subProcess.Wait(); err == nil {
 			break
 		}
 		if !containsConcurrentGitAccess(stderrBuffer.String()) {
