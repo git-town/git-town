@@ -212,7 +212,6 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil {
 		return data, false, err
 	}
-	fc := execute.FailureCollector{}
 	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -240,7 +239,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		return data, exit, err
 	}
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
-	remotes := fc.Remotes(repo.Git.Remotes(repo.Backend))
+	remotes, err := repo.Git.Remotes(repo.Backend)
+	if err != nil {
+		return data, false, err
+	}
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return data, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -338,7 +340,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		remotes:             remotes,
 		stashSize:           stashSize,
 		targetBranch:        targetBranch,
-	}, false, fc.Err
+	}, false, nil
 }
 
 func prependProgram(data prependData, finalMessages stringslice.Collector) program.Program {

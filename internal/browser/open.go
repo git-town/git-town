@@ -20,8 +20,7 @@ func Open(url string, frontend subshelldomain.Runner) {
 		fmt.Printf(messages.BrowserOpen, url)
 		return
 	}
-	err := frontend.Run(command, url)
-	if err != nil {
+	if err := frontend.Run(command, url); err != nil {
 		fmt.Printf(messages.BrowserOpen, url)
 	}
 }

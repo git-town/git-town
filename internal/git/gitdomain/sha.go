@@ -2,6 +2,8 @@ package gitdomain
 
 import (
 	"fmt"
+
+	"github.com/git-town/git-town/v21/pkg/asserts"
 )
 
 // SHA represents a Git SHA as a dedicated data type.
@@ -11,11 +13,7 @@ type SHA string
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
 func NewSHA(id string) SHA {
-	result, err := NewSHAErr(id)
-	if err != nil {
-		panic(err)
-	}
-	return result
+	return asserts.NoError1(NewSHAErr(id))
 }
 
 func NewSHAErr(id string) (SHA, error) {

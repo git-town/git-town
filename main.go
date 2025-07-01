@@ -15,8 +15,7 @@ import (
 
 func main() {
 	debug.SetGCPercent(-1)
-	err := cmd.Execute()
-	if err != nil {
+	if err := cmd.Execute(); err != nil {
 		print.Error(err)
 		os.Exit(1)
 	}
