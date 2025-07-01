@@ -346,9 +346,8 @@ func (self *Commands) ContinueRebase(runner subshelldomain.Runner) error {
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (self *Commands) CreateAndCheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName) error {
-	err := runner.Run("git", "checkout", "-b", name.String())
 	self.CurrentBranchCache.Set(name)
-	return err
+	return runner.Run("git", "checkout", "-b", name.String())
 }
 
 // CreateAndCheckoutBranchWithParent creates a new branch with the given name and parent and checks it out using a single Git operation.
@@ -359,9 +358,8 @@ func (self *Commands) CreateAndCheckoutBranchWithParent(runner subshelldomain.Ru
 	if parent.IsRemoteBranchName() {
 		args = append(args, "--no-track")
 	}
-	err := runner.Run("git", args...)
 	self.CurrentBranchCache.Set(name)
-	return err
+	return runner.Run("git", args...)
 }
 
 // CreateBranch creates a new branch with the given name.

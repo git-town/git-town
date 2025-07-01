@@ -101,8 +101,7 @@ func executeWalk(args []string, dryRun configdomain.DryRun, allBranches configdo
 	if len(args) == 0 && dryRun {
 		return errors.New(messages.WalkNoDryRun)
 	}
-	err := validateArgs(allBranches, fullStack)
-	if err != nil {
+	if err := validateArgs(allBranches, fullStack); err != nil {
 		return err
 	}
 	data, exit, err := determineWalkData(allBranches, dryRun, fullStack, verbose)
