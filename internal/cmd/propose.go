@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"io"
@@ -67,28 +68,13 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyForgeType, configdomain.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			bodyFile, err := readBodyFileFlag(cmd)
-			if err != nil {
-				return err
-			}
-			bodyText, err := readBodyFlag(cmd)
-			if err != nil {
-				return err
-			}
-			stack, err := readStackFlag(cmd)
-			if err != nil {
-				return err
-			}
-			title, err := readTitleFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			dryRun, err1 := readDryRunFlag(cmd)
+			bodyFile, err2 := readBodyFileFlag(cmd)
+			bodyText, err3 := readBodyFlag(cmd)
+			stack, err4 := readStackFlag(cmd)
+			title, err5 := readTitleFlag(cmd)
+			verbose, err6 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
 				return err
 			}
 			return executePropose(dryRun, verbose, title, bodyText, bodyFile, stack)

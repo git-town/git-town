@@ -31,8 +31,7 @@ func (self Connector) CreateProposal(data forgedomain.CreateProposalArgs) error 
 	if body, hasBody := data.ProposalBody.Get(); hasBody {
 		args = append(args, "--body="+body.String())
 	}
-	err := self.Frontend.Run("gh", args...)
-	if err != nil {
+	if err := self.Frontend.Run("gh", args...); err != nil {
 		return err
 	}
 	return self.Frontend.Run("gh", "pr", "view", "--web")
@@ -54,7 +53,7 @@ func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) 
 	return Some(self.searchProposal)
 }
 
-func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) (err error)] {
+func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
 	return Some(self.squashMergeProposal)
 }
 
@@ -94,7 +93,7 @@ func (self Connector) searchProposal(branch gitdomain.LocalBranchName) (Option[f
 	return ParseJSONOutput(out, branch)
 }
 
-func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) (err error) {
+func (self Connector) squashMergeProposal(number int, message gitdomain.CommitMessage) error {
 	return self.Frontend.Run("gh", "pr", "merge", "--squash", "--body="+message.String(), strconv.Itoa(number))
 }
 

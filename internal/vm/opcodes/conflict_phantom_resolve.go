@@ -24,8 +24,7 @@ func (self *ConflictPhantomResolve) ContinueProgram() []shared.Opcode {
 }
 
 func (self *ConflictPhantomResolve) Run(args shared.RunArgs) error {
-	err := args.Git.ResolveConflict(args.Frontend, self.FilePath, self.Resolution)
-	if err != nil {
+	if err := args.Git.ResolveConflict(args.Frontend, self.FilePath, self.Resolution); err != nil {
 		return err
 	}
 	return args.Git.StageFiles(args.Frontend, self.FilePath)

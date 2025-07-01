@@ -58,8 +58,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	rootDir, hasRootDir := gitCommands.RootDirectory(backendRunner).Get()
 	if args.ValidateGitRepo {
 		if !hasRootDir {
-			err = errors.New(messages.RepoOutside)
-			return emptyOpenRepoResult(), err
+			return emptyOpenRepoResult(), errors.New(messages.RepoOutside)
 		}
 	}
 	configGitAccess := gitconfig.Access{Shell: backendRunner}
@@ -113,15 +112,13 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	})
 	isOffline := unvalidatedConfig.NormalConfig.Offline
 	if args.ValidateIsOnline && isOffline.IsOffline() {
-		err = errors.New(messages.OfflineNotAllowed)
-		return emptyOpenRepoResult(), err
+		return emptyOpenRepoResult(), errors.New(messages.OfflineNotAllowed)
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()
 		if err != nil {
-			err = errors.New(messages.DirCurrentProblem)
-			return emptyOpenRepoResult(), err
+			return emptyOpenRepoResult(), errors.New(messages.DirCurrentProblem)
 		}
 		if currentDirectory != rootDir.String() {
 			err = gitCommands.ChangeDir(rootDir)

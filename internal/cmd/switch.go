@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"os"
 	"os/exec"
@@ -38,24 +39,12 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			branchTypes, err := readTypeFlag(cmd)
-			if err != nil {
-				return err
-			}
-			allBranches, err := readAllFlag(cmd)
-			if err != nil {
-				return err
-			}
-			displayTypes, err := readDisplayTypesFlag(cmd)
-			if err != nil {
-				return err
-			}
-			merge, err := readMergeFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			branchTypes, err1 := readTypeFlag(cmd)
+			allBranches, err2 := readAllFlag(cmd)
+			displayTypes, err3 := readDisplayTypesFlag(cmd)
+			merge, err4 := readMergeFlag(cmd)
+			verbose, err5 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
 				return err
 			}
 			return executeSwitch(args, allBranches, verbose, merge, displayTypes, branchTypes)

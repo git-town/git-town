@@ -79,9 +79,9 @@ func (self Connector) SearchProposalFn() Option[func(gitdomain.LocalBranchName) 
 	return Some(self.searchProposal)
 }
 
-func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) (err error)] {
+func (self Connector) SquashMergeProposalFn() Option[func(int, gitdomain.CommitMessage) error] {
 	if self.APIToken.IsNone() {
-		return None[func(int, gitdomain.CommitMessage) (err error)]()
+		return None[func(int, gitdomain.CommitMessage) error]()
 	}
 	return Some(self.squashMergeProposal)
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -79,36 +80,15 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			beam, err := readBeamFlag(cmd)
-			if err != nil {
-				return err
-			}
-			commit, err := readCommitFlag(cmd)
-			if err != nil {
-				return err
-			}
-			commitMessage, err := readCommitMessageFlag(cmd)
-			if err != nil {
-				return err
-			}
-			detached, err := readDetachedFlag(cmd)
-			if err != nil {
-				return err
-			}
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			propose, err := readProposeFlag(cmd)
-			if err != nil {
-				return err
-			}
-			prototype, err := readPrototypeFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			beam, err1 := readBeamFlag(cmd)
+			commit, err2 := readCommitFlag(cmd)
+			commitMessage, err3 := readCommitMessageFlag(cmd)
+			detached, err4 := readDetachedFlag(cmd)
+			dryRun, err5 := readDryRunFlag(cmd)
+			propose, err6 := readProposeFlag(cmd)
+			prototype, err7 := readPrototypeFlag(cmd)
+			verbose, err8 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8); err != nil {
 				return err
 			}
 			if commitMessage.IsSome() || propose.IsTrue() {

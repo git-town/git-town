@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"fmt"
 	"time"
 
@@ -21,12 +22,9 @@ func killCommand() *cobra.Command {
 		Long:   cmdhelpers.Long(deleteDesc, deleteHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printKillDeprecationNotice()
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			dryRun, err1 := readDryRunFlag(cmd)
+			verbose, err2 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
 			result := executeDelete(args, dryRun, verbose)

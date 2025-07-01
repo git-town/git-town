@@ -54,9 +54,6 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
-	if err != nil || exit {
-		return configdomain.ShipStrategyAPI, exit, err
-	}
 	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

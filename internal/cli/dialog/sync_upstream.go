@@ -44,9 +44,6 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
-	if err != nil || exit {
-		return true, exit, err
-	}
 	fmt.Printf(messages.SyncWithUpstream, components.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

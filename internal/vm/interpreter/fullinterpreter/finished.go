@@ -24,8 +24,7 @@ func finished(args finishedArgs) error {
 	if err != nil {
 		return err
 	}
-	err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir)
-	if err != nil {
+	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir); err != nil {
 		return err
 	}
 	configGitAccess := gitconfig.Access{Shell: args.Backend}
@@ -47,8 +46,7 @@ func finished(args finishedArgs) error {
 	}
 	args.RunState.EndStashSize = Some(endStashSize)
 	args.RunState.MarkAsFinished(endBranchesSnapshot)
-	err = runstate.Save(args.RunState, args.RootDir)
-	if err != nil {
+	if err = runstate.Save(args.RunState, args.RootDir); err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
 	print.Footer(args.Verbose, args.CommandsCounter.Immutable(), args.FinalMessages.Result())

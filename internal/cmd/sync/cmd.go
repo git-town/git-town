@@ -2,6 +2,7 @@
 package sync
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -64,32 +65,14 @@ func Cmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    cmdhelpers.Long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			allBranches, err := readAllFlag(cmd)
-			if err != nil {
-				return err
-			}
-			detached, err := readDetachedFlag(cmd)
-			if err != nil {
-				return err
-			}
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			noPush, err := readNoPushFlag(cmd)
-			if err != nil {
-				return err
-			}
-			prune, err := readPruneFlag(cmd)
-			if err != nil {
-				return err
-			}
-			stack, err := readStackFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			allBranches, err1 := readAllFlag(cmd)
+			detached, err2 := readDetachedFlag(cmd)
+			dryRun, err3 := readDryRunFlag(cmd)
+			noPush, err4 := readNoPushFlag(cmd)
+			prune, err5 := readPruneFlag(cmd)
+			stack, err6 := readStackFlag(cmd)
+			verbose, err7 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7); err != nil {
 				return err
 			}
 			return executeSync(allBranches, stack, detached, dryRun, verbose, noPush, prune)
@@ -121,8 +104,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err != nil || exit {
 		return err
 	}
-	err = validateSyncData(data)
-	if err != nil {
+	if err = validateSyncData(data); err != nil {
 		return err
 	}
 	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)

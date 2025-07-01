@@ -36,8 +36,7 @@ func Execute(args ExecuteArgs) error {
 		Prog:          args.RunState.AbortProgram,
 	})
 	args.RunState.AbortProgram = program.Program{}
-	err := revertChangesToCurrentBranch(args)
-	if err != nil {
+	if err := revertChangesToCurrentBranch(args); err != nil {
 		return err
 	}
 	args.RunState.RunProgram = RemoveOpcodesForCurrentBranch(args.RunState.RunProgram)

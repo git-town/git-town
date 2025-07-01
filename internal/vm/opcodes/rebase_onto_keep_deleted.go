@@ -37,8 +37,7 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 	if subshell.IsInTest() {
 		time.Sleep(1 * time.Second)
 	}
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream)
-	if err != nil {
+	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove, self.Upstream); err != nil {
 		conflictingFiles, err := args.Git.FileConflictQuickInfos(args.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot determine conflicting files after rebase: %w", err)
@@ -51,8 +50,7 @@ func (self *RebaseOntoKeepDeleted) Run(args shared.RunArgs) error {
 				_ = args.Git.StageFiles(args.Frontend, baseChange.FilePath)
 			}
 		}
-		err = args.Git.ContinueRebase(args.Frontend)
-		if err != nil {
+		if err = args.Git.ContinueRebase(args.Frontend); err != nil {
 			return fmt.Errorf("cannot continue rebase: %w", err)
 		}
 	}

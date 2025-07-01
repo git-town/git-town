@@ -64,8 +64,7 @@ func executeRunLog(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = showRunLog(data)
-	if err != nil {
+	if err = showRunLog(data); err != nil {
 		return err
 	}
 	print.Footer(verbose, *repo.CommandsCounter.Value, []string{})

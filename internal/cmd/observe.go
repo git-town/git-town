@@ -68,8 +68,7 @@ func executeObserve(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	err = validateObserveData(data, repo)
-	if err != nil {
+	if err = validateObserveData(data, repo); err != nil {
 		return err
 	}
 	branchNames := data.branchesToObserve.Keys()

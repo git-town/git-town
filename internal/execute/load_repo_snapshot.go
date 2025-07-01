@@ -53,8 +53,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		}
 	}
 	if args.ValidateNoOpenChanges {
-		err = validate.NoOpenChanges(args.RepoStatus.OpenChanges)
-		if err != nil {
+		if err = validate.NoOpenChanges(args.RepoStatus.OpenChanges); err != nil {
 			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 		}
 	}
@@ -65,8 +64,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 		}
 		if remotes.HasRemote(args.UnvalidatedConfig.NormalConfig.DevRemote) && args.Repo.IsOffline.IsOnline() {
-			err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags)
-			if err != nil {
+			if err = args.Git.Fetch(args.Frontend, args.UnvalidatedConfig.NormalConfig.SyncTags); err != nil {
 				return gitdomain.EmptyBranchesSnapshot(), 0, previousBranchInfos, false, err
 			}
 		}

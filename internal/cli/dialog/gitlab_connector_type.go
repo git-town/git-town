@@ -44,9 +44,6 @@ func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], input
 		defaultPos = entries.IndexOf(existingValue)
 	}
 	selection, exit, err := components.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs)
-	if err != nil || exit {
-		return forgedomain.GitLabConnectorTypeAPI, exit, err
-	}
 	fmt.Printf(messages.GitLabConnectorType, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

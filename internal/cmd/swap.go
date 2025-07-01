@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -72,12 +73,9 @@ func swapCommand() *cobra.Command {
 		GroupID: cmdhelpers.GroupIDStack,
 		Long:    cmdhelpers.Long(swapDesc, swapHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			dryRun, err1 := readDryRunFlag(cmd)
+			verbose, err2 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
 			return executeSwap(args, dryRun, verbose)

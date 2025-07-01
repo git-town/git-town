@@ -19,11 +19,8 @@ func TextDisplay(title, text string, inputs TestInput) (dialogdomain.Exit, error
 	program := tea.NewProgram(model)
 	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
-	if err != nil {
-		return false, err
-	}
 	result := dialogResult.(textDisplayModel)
-	return result.status == list.StatusExit, nil
+	return result.status == list.StatusExit, err
 }
 
 type textDisplayModel struct {

@@ -16,8 +16,7 @@ type RebaseTrackingBranch struct {
 func (self *RebaseTrackingBranch) Run(args shared.RunArgs) error {
 	if self.PushBranches {
 		// force-push-with-lease-if-includes here first, this avoids phantom merge conflicts from amended local commits
-		err := args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true)
-		if err == nil {
+		if err := args.Git.ForcePushBranchSafely(args.Frontend, args.Config.Value.NormalConfig.NoPushHook(), true); err == nil {
 			// The force-push succeeded --> the remote branch didn't contain new commits, we are done.
 			return nil
 		}

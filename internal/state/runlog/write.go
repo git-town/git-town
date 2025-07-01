@@ -25,8 +25,7 @@ func Write(event Event, branchInfos gitdomain.BranchInfos, pendingCommand Option
 		return err
 	}
 	persistenceDir := filepath.Dir(persistencePath)
-	err = os.MkdirAll(persistenceDir, 0o700)
-	if err != nil {
+	if err = os.MkdirAll(persistenceDir, 0o700); err != nil {
 		return err
 	}
 	file, err := os.OpenFile(persistencePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o600)

@@ -105,8 +105,7 @@ func (self *Program) TouchedBranches() []gitdomain.BranchName {
 // UnmarshalJSON unmarshals the program from JSON.
 func (self *Program) UnmarshalJSON(b []byte) error {
 	var jsonOpcodes []JSON
-	err := json.Unmarshal(b, &jsonOpcodes)
-	if err != nil {
+	if err := json.Unmarshal(b, &jsonOpcodes); err != nil {
 		return err
 	}
 	if len(jsonOpcodes) > 0 {

@@ -42,9 +42,6 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 		defaultPos = 1
 	}
 	selection, exit, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
-	if err != nil || exit {
-		return true, exit, err
-	}
 	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(format.Bool(selection), exit))
 	return configdomain.ShipDeleteTrackingBranch(selection), exit, err
 }

@@ -91,7 +91,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	}
 	return repoData{
 		connector: connector,
-	}, err
+	}, nil
 }
 
 type repoData struct {

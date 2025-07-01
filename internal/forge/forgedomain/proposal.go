@@ -23,13 +23,11 @@ func (self Proposal) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON is used when de-serializing a Proposal from JSON.
 func (self *Proposal) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
-	err := json.Unmarshal(b, &mapping)
-	if err != nil {
+	if err := json.Unmarshal(b, &mapping); err != nil {
 		return err
 	}
 	var forgeTypeName string
-	err = json.Unmarshal(mapping["forge-type"], &forgeTypeName)
-	if err != nil {
+	if err := json.Unmarshal(mapping["forge-type"], &forgeTypeName); err != nil {
 		return err
 	}
 	forgeTypeOpt, err := ParseForgeType(forgeTypeName)

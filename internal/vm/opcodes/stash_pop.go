@@ -15,8 +15,7 @@ func (self *StashPop) ContinueProgram() []shared.Opcode {
 }
 
 func (self *StashPop) Run(args shared.RunArgs) error {
-	err := args.Git.PopStash(args.Frontend)
-	if err != nil {
+	if err := args.Git.PopStash(args.Frontend); err != nil {
 		args.FinalMessages.Add(messages.DiffConflictWithMain)
 	}
 	return nil

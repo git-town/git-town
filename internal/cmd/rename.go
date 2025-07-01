@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"os"
@@ -49,16 +50,10 @@ func renameCommand() *cobra.Command {
 		Short: renameDesc,
 		Long:  cmdhelpers.Long(renameDesc, renameHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			force, err := readForceFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			dryRun, err1 := readDryRunFlag(cmd)
+			force, err2 := readForceFlag(cmd)
+			verbose, err3 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3); err != nil {
 				return err
 			}
 			return executeRename(args, dryRun, force, verbose)

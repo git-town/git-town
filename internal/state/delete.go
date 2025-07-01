@@ -21,8 +21,7 @@ func Delete(repoDir gitdomain.RepoRootDir, fileType FileType) (existed bool, err
 		}
 		return false, fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
-	err = os.Remove(filename)
-	if err != nil {
+	if err = os.Remove(filename); err != nil {
 		return false, fmt.Errorf(messages.FileDeleteProblem, filename, err)
 	}
 	return true, nil

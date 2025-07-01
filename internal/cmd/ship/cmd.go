@@ -1,6 +1,7 @@
 package ship
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 
@@ -54,24 +55,12 @@ func Cmd() *cobra.Command {
 		Short: shipDesc,
 		Long:  cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGitHubToken)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			shipStrategyOverride, err := readShipStrategyFlag(cmd)
-			if err != nil {
-				return err
-			}
-			message, err := readMessageFlag(cmd)
-			if err != nil {
-				return err
-			}
-			dryRun, err := readDryRunFlag(cmd)
-			if err != nil {
-				return err
-			}
-			toParent, err := readToParentFlag(cmd)
-			if err != nil {
-				return err
-			}
-			verbose, err := readVerboseFlag(cmd)
-			if err != nil {
+			shipStrategyOverride, err1 := readShipStrategyFlag(cmd)
+			message, err2 := readMessageFlag(cmd)
+			dryRun, err3 := readDryRunFlag(cmd)
+			toParent, err4 := readToParentFlag(cmd)
+			verbose, err5 := readVerboseFlag(cmd)
+			if err := cmp.Or(err1, err2, err3, err4, err5); err != nil {
 				return err
 			}
 			return executeShip(args, message, dryRun, verbose, shipStrategyOverride, toParent)
@@ -101,8 +90,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 	if err != nil || exit {
 		return err
 	}
-	err = validateSharedData(sharedData, toParent, message)
-	if err != nil {
+	if err = validateSharedData(sharedData, toParent, message); err != nil {
 		return err
 	}
 	prog := NewMutable(&program.Program{})
@@ -112,8 +100,7 @@ func executeShip(args []string, message Option[gitdomain.CommitMessage], dryRun 
 		if err != nil {
 			return err
 		}
-		err = shipAPIProgram(prog, sharedData, apiData, message)
-		if err != nil {
+		if err = shipAPIProgram(prog, sharedData, apiData, message); err != nil {
 			return err
 		}
 	case configdomain.ShipStrategyAlwaysMerge:
