@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
-	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -164,12 +163,13 @@ func (self *NormalConfig) RemoveSyncUpstream() {
 // SetBranchTypeOverride registers the given branch names as contribution branches.
 // The branches must exist.
 func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
-	result := gohacks.ErrorCollector{}
 	for _, branch := range branches {
 		self.BranchTypeOverrides[branch] = branchType
-		result.Check(self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()))
+		if err := self.GitConfigAccess.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()); err != nil {
+			return err
+		}
 	}
-	return result.Err
+	return nil
 }
 
 // SetDevRemote updates the locally configured development remote.

@@ -1,9 +1,10 @@
 package configdomain
 
 import (
+	"cmp"
+
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -54,50 +55,28 @@ func EmptyPartialConfig() PartialConfig {
 }
 
 func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
-	ec := gohacks.ErrorCollector{}
 	aliases := snapshot.Aliases()
-	branchTypeOverrides, err := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
-	ec.Check(err)
-	contributionRegex, err := ParseContributionRegex(snapshot[KeyContributionRegex])
-	ec.Check(err)
-	featureRegex, err := ParseFeatureRegex(snapshot[KeyFeatureRegex])
-	ec.Check(err)
-	forgeType, err := forgedomain.ParseForgeType(snapshot[KeyForgeType])
-	ec.Check(err)
-	githubConnectorType, err := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
-	ec.Check(err)
-	gitlabConnectorType, err := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
-	ec.Check(err)
-	lineage, err := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
-	ec.Check(err)
-	newBranchType, err := ParseBranchType(snapshot[KeyNewBranchType])
-	ec.Check(err)
-	observedRegex, err := ParseObservedRegex(snapshot[KeyObservedRegex])
-	ec.Check(err)
-	offline, err := ParseOffline(snapshot[KeyOffline], KeyOffline)
-	ec.Check(err)
-	perennialRegex, err := ParsePerennialRegex(snapshot[KeyPerennialRegex])
-	ec.Check(err)
-	pushHook, err := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
-	ec.Check(err)
-	shareNewBranches, err := ParseShareNewBranches(snapshot[KeyShareNewBranches], KeyShareNewBranches)
-	ec.Check(err)
-	shipDeleteTrackingBranch, err := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch)
-	ec.Check(err)
-	shipStrategy, err := ParseShipStrategy(snapshot[KeyShipStrategy])
-	ec.Check(err)
-	syncFeatureStrategy, err := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
-	ec.Check(err)
-	syncPerennialStrategy, err := ParseSyncPerennialStrategy(snapshot[KeySyncPerennialStrategy])
-	ec.Check(err)
-	syncPrototypeStrategy, err := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
-	ec.Check(err)
-	syncTags, err := ParseSyncTags(snapshot[KeySyncTags], KeySyncTags)
-	ec.Check(err)
-	syncUpstream, err := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream)
-	ec.Check(err)
-	unknownBranchType, err := ParseBranchType(snapshot[KeyUnknownBranchType])
-	ec.Check(err)
+	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
+	contributionRegex, err2 := ParseContributionRegex(snapshot[KeyContributionRegex])
+	featureRegex, err3 := ParseFeatureRegex(snapshot[KeyFeatureRegex])
+	forgeType, err4 := forgedomain.ParseForgeType(snapshot[KeyForgeType])
+	githubConnectorType, err5 := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
+	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
+	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
+	newBranchType, err8 := ParseBranchType(snapshot[KeyNewBranchType])
+	observedRegex, err9 := ParseObservedRegex(snapshot[KeyObservedRegex])
+	offline, err10 := ParseOffline(snapshot[KeyOffline], KeyOffline)
+	perennialRegex, err11 := ParsePerennialRegex(snapshot[KeyPerennialRegex])
+	pushHook, err12 := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
+	shareNewBranches, err13 := ParseShareNewBranches(snapshot[KeyShareNewBranches], KeyShareNewBranches)
+	shipDeleteTrackingBranch, err14 := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch)
+	shipStrategy, err15 := ParseShipStrategy(snapshot[KeyShipStrategy])
+	syncFeatureStrategy, err16 := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
+	syncPerennialStrategy, err17 := ParseSyncPerennialStrategy(snapshot[KeySyncPerennialStrategy])
+	syncPrototypeStrategy, err18 := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
+	syncTags, err19 := ParseSyncTags(snapshot[KeySyncTags], KeySyncTags)
+	syncUpstream, err20 := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream)
+	unknownBranchType, err21 := ParseBranchType(snapshot[KeyUnknownBranchType])
 	return PartialConfig{
 		Aliases:                  aliases,
 		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
@@ -133,7 +112,7 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
-	}, ec.Err
+	}, cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10, err11, err12, err13, err14, err15, err16, err17, err18, err19, err20, err21)
 }
 
 // a function that deletes the local Git configuration value with the given key
