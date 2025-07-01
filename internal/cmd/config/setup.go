@@ -28,6 +28,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/glab"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
@@ -584,7 +585,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 }
 
 func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
-	fc := execute.FailureCollector{}
+	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(oldConfig.NormalConfig.Aliases, userInput.config.NormalConfig.Aliases, gitCommands, frontend),
 	)
@@ -629,7 +630,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 
 func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
-	fc := execute.FailureCollector{}
+	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
 			saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig),
