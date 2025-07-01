@@ -26,13 +26,11 @@ func (self *JSON) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON unmarshals the opcode from JSON.
 func (self *JSON) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
-	err := json.Unmarshal(b, &mapping)
-	if err != nil {
+	if err := json.Unmarshal(b, &mapping); err != nil {
 		return err
 	}
 	var opcodeType string
-	err = json.Unmarshal(mapping["type"], &opcodeType)
-	if err != nil {
+	if err := json.Unmarshal(mapping["type"], &opcodeType); err != nil {
 		return err
 	}
 	self.Opcode = opcodes.Lookup(opcodeType)

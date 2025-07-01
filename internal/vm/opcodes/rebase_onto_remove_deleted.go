@@ -30,8 +30,7 @@ func (self *RebaseOntoRemoveDeleted) ContinueProgram() []shared.Opcode {
 }
 
 func (self *RebaseOntoRemoveDeleted) Run(args shared.RunArgs) error {
-	err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream)
-	if err != nil {
+	if err := args.Git.RebaseOnto(args.Frontend, self.BranchToRebaseOnto.Location(), self.CommitsToRemove.Location(), self.Upstream); err != nil {
 		// Here the rebase-onto has failed.
 		// The branch that gets rebased onto will be deleted.
 		// We therefore don't need to bother the user with resolving the merge conflict

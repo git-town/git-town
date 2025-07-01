@@ -176,12 +176,9 @@ func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bo
 	})
 	components.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
-	if err != nil {
-		return "", false, err
-	}
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()
-	return selectedData.Branch, result.Aborted(), nil
+	return selectedData.Branch, result.Aborted(), err
 }
 
 func newSwitchBranchListEntries(switchBranchEntries []SwitchBranchEntry) list.Entries[SwitchBranchEntry] {

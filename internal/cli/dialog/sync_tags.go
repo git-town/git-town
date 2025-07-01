@@ -32,9 +32,6 @@ func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (conf
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
-	if err != nil || exit {
-		return true, exit, err
-	}
 	fmt.Printf(messages.SyncTags, components.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

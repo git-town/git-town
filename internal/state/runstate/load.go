@@ -30,8 +30,7 @@ func Load(repoDir gitdomain.RepoRootDir) (Option[RunState], error) {
 		return None[RunState](), fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
 	var runState RunState
-	err = json.Unmarshal(content, &runState)
-	if err != nil {
+	if err = json.Unmarshal(content, &runState); err != nil {
 		return None[RunState](), fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
 	}
 	return Some(runState), nil

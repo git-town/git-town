@@ -20,13 +20,10 @@ func determineMergeData(repo execute.OpenRepoResult, branch, parent gitdomain.Lo
 		return result, err
 	}
 	branchAuthors, err := repo.Git.BranchAuthors(repo.Backend, branch, parent)
-	if err != nil {
-		return result, err
-	}
 	return shipDataMerge{
 		authors: branchAuthors,
 		remotes: remotes,
-	}, nil
+	}, err
 }
 
 func shipProgramSquashMerge(prog Mutable[program.Program], sharedData sharedShipData, squashMergeData shipDataMerge, commitMessage Option[gitdomain.CommitMessage]) {

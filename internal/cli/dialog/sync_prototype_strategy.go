@@ -40,9 +40,6 @@ func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs c
 	}
 	defaultPos := entries.IndexOf(existing)
 	selection, exit, err := components.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
-	if err != nil || exit {
-		return configdomain.SyncPrototypeStrategyMerge, exit, err
-	}
 	fmt.Printf(messages.SyncPrototypeBranches, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

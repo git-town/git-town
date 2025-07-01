@@ -34,9 +34,6 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 		return result, errors.New(messages.ShipAPIConnectorUnsupported)
 	}
 	proposalOpt, err := findProposal(sharedData.branchNameToShip, sharedData.targetBranchName)
-	if err != nil {
-		return result, err
-	}
 	proposal, hasProposal := proposalOpt.Get()
 	if !hasProposal {
 		return result, fmt.Errorf(messages.ShipAPINoProposal, sharedData.branchNameToShip)
@@ -45,7 +42,7 @@ func determineAPIData(sharedData sharedShipData) (result shipDataAPI, err error)
 		branchToShipRemoteName: branchToShipRemoteName,
 		connector:              connector,
 		proposal:               proposal,
-	}, nil
+	}, err
 }
 
 func shipAPIProgram(prog Mutable[program.Program], sharedData sharedShipData, apiData shipDataAPI, commitMessage Option[gitdomain.CommitMessage]) error {

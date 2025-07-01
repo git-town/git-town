@@ -192,8 +192,7 @@ func (self *Commands) ChangeDir(dir gitdomain.RepoRootDir) error {
 }
 
 func (self *Commands) CheckoutBranch(runner subshelldomain.Runner, name gitdomain.LocalBranchName, merge configdomain.SwitchUsingMerge) error {
-	err := self.CheckoutBranchUncached(runner, name, merge)
-	if err != nil {
+	if err := self.CheckoutBranchUncached(runner, name, merge); err != nil {
 		return err
 	}
 	if name.String() != "-" {
@@ -209,8 +208,7 @@ func (self *Commands) CheckoutBranchUncached(runner subshelldomain.Runner, name 
 	if merge {
 		args = append(args, "-m")
 	}
-	err := runner.Run("git", args...)
-	if err != nil {
+	if err := runner.Run("git", args...); err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
 	return nil
@@ -932,8 +930,7 @@ func (self *Commands) StageFiles(runner subshelldomain.Runner, names ...string) 
 }
 
 func (self *Commands) Stash(runner subshelldomain.Runner) error {
-	err := runner.Run("git", "add", "-A")
-	if err != nil {
+	if err := runner.Run("git", "add", "-A"); err != nil {
 		return err
 	}
 	return runner.Run("git", "stash", "-m", "Git Town WIP")

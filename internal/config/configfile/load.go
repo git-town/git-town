@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -90,6 +91,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.SyncUpstream != nil {
 		syncUpstream = Some(configdomain.SyncUpstream(*data.SyncUpstream))
 	}
+	ec := gohacks.ErrorCollector{}
 	// load proper definitions, overriding the values from the legacy definitions that were loaded above
 	if data.Branches != nil {
 		if data.Branches.Main != nil {
@@ -98,56 +100,42 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		perennialBranches = gitdomain.NewLocalBranchNames(data.Branches.Perennials...)
 		if data.Branches.PerennialRegex != nil {
 			perennialRegex, err = configdomain.ParsePerennialRegex(*data.Branches.PerennialRegex)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Branches.DefaultType != nil {
 			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.DefaultType)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Branches.FeatureRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.FeatureRegex)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				featureRegex = Some(configdomain.FeatureRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.ContributionRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ContributionRegex)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				contributionRegex = Some(configdomain.ContributionRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.ObservedRegex != nil {
 			verifiedRegexOpt, err := configdomain.ParseRegex(*data.Branches.ObservedRegex)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 			if verifiedRegex, hasVerifiedRegex := verifiedRegexOpt.Get(); hasVerifiedRegex {
 				observedRegex = Some(configdomain.ObservedRegex{VerifiedRegex: verifiedRegex})
 			}
 		}
 		if data.Branches.UnknownType != nil {
 			unknownBranchType, err = configdomain.ParseBranchType(*data.Branches.UnknownType)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 	}
 	if data.Create != nil {
 		if data.Create.NewBranchType != nil {
 			newBranchType, err = configdomain.ParseBranchType(*data.Create.NewBranchType)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Create.PushNewbranches != nil {
 			shareNewBranches = Some(configdomain.ParseShareNewBranchesDeprecatedBool(*data.Create.PushNewbranches))
@@ -155,38 +143,28 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		}
 		if data.Create.ShareNewBranches != nil {
 			shareNewBranches, err = configdomain.ParseShareNewBranches(*data.Create.ShareNewBranches, configdomain.KeyShareNewBranches)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.Platform)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Hosting.DevRemote != nil {
 			devRemote = gitdomain.NewRemote(*data.Hosting.DevRemote)
 		}
 		if data.Hosting.ForgeType != nil {
 			forgeType, err = forgedomain.ParseForgeType(*data.Hosting.ForgeType)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Hosting.GitHubConnectorType != nil {
 			githubConnectorType, err = forgedomain.ParseGitHubConnectorType(*data.Hosting.GitHubConnectorType)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Hosting.GitLabConnectorType != nil {
 			gitLabConnectorType, err = forgedomain.ParseGitLabConnectorType(*data.Hosting.GitLabConnectorType)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Hosting.OriginHostname != nil {
 			hostingOriginHostname = configdomain.ParseHostingOriginHostname(*data.Hosting.OriginHostname)
@@ -203,41 +181,29 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 	if data.SyncStrategy != nil {
 		if data.SyncStrategy.FeatureBranches != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.SyncStrategy.FeatureBranches)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.SyncStrategy.PerennialBranches != nil {
 			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.SyncStrategy.PerennialBranches)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.SyncStrategy.PrototypeBranches != nil {
 			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.SyncStrategy.PrototypeBranches)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 	}
 	if data.Sync != nil {
 		if data.Sync.FeatureStrategy != nil {
 			syncFeatureStrategy, err = configdomain.ParseSyncFeatureStrategy(*data.Sync.FeatureStrategy)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Sync.PerennialStrategy != nil {
 			syncPerennialStrategy, err = configdomain.ParseSyncPerennialStrategy(*data.Sync.PerennialStrategy)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Sync.PrototypeStrategy != nil {
 			syncPrototypeStrategy, err = configdomain.ParseSyncPrototypeStrategy(*data.Sync.PrototypeStrategy)
-			if err != nil {
-				return configdomain.EmptyPartialConfig(), err
-			}
+			ec.Check(err)
 		}
 		if data.Sync.PushHook != nil {
 			pushHook = Some(configdomain.PushHook(*data.Sync.PushHook))
@@ -284,5 +250,5 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
-	}, nil
+	}, ec.Err
 }

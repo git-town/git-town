@@ -49,9 +49,6 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 		}
 	}
 	selection, exit, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
-	if err != nil || exit {
-		return None[configdomain.BranchType](), exit, err
-	}
 	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

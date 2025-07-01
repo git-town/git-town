@@ -22,12 +22,10 @@ func Save(runState RunState, repoDir gitdomain.RepoRootDir) error {
 		return err
 	}
 	persistenceDir := filepath.Dir(persistencePath)
-	err = os.MkdirAll(persistenceDir, 0o700)
-	if err != nil {
+	if err = os.MkdirAll(persistenceDir, 0o700); err != nil {
 		return err
 	}
-	err = os.WriteFile(persistencePath, content, 0o600)
-	if err != nil {
+	if err = os.WriteFile(persistencePath, content, 0o600); err != nil {
 		return fmt.Errorf(messages.FileWriteProblem, persistencePath, err)
 	}
 	return nil
