@@ -9,6 +9,7 @@ Feature: on the main branch
     And local Git setting "color.ui" is "always"
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                                           |
