@@ -8,7 +8,7 @@
 - Git Town can now use GitLab's [glab CLI tool](https://gitlab.com/gitlab-org/cli/-/tree/main) to communicate with the GitLab API ([](https://github.com/git-town/git-town/pull/5079)).
 - Git Town no longer depends on the `which` tool on Unix-like platforms ([#5060](https://github.com/git-town/git-town/pull/5060)).
 - Git Town is now available from the official Arch Linux repositories ([#5015](https://github.com/git-town/git-town/pull/5015)).
-- Git Town is now available on OpenSUSE [Tumbleweed](https://github.com/git-town/git-town/issues/5032) and [15+](https://github.com/git-town/git-town/pull/5058).
+- Git Town is now available on OpenSUSE [Tumbleweed](https://github.com/git-town/git-town/issues/5032) and [stable](https://github.com/git-town/git-town/pull/5058).
 - The Setup Assistant now verifies that the forge information you enter works. If it doesn't connect to the forge, you get a change to enter it again. ([#3030](https://github.com/git-town/git-town/issues/3030)).
 
 #### Bug Fixes
