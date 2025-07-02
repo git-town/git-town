@@ -372,7 +372,6 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 		Log:                  print.Logger{},
 		RemoteURL:            data.userInput.config.NormalConfig.DevURL().Or(data.config.NormalConfig.DevURL()),
 	})
-
 	if err != nil {
 		return false, false, err
 	}
