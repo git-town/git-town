@@ -81,7 +81,22 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 	if !hasRemote {
 		return repoData{connector: nil}, nil
 	}
-	connectorOpt, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, remote, print.Logger{}, repo.Frontend, repo.Backend)
+	config := repo.UnvalidatedConfig.NormalConfig
+	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		CodebergToken:        config.CodebergToken,
+		ForgeType:            config.ForgeType,
+		GiteaToken:           config.GiteaToken,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		RemoteURL:            config.RemoteURL(remote),
+		Log:                  print.Logger{},
+		Frontend:             repo.Frontend,
+		Backend:              repo.Backend,
+	})
 	if err != nil {
 		return data, err
 	}
