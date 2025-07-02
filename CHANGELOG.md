@@ -16,7 +16,7 @@
 - `git town diff-parent` now displays only the changes made by the current branch, even if that branch is behind its parent ([#5053](https://github.com/git-town/git-town/pull/5053)).
 - The GitLab connector now handles the `--title` and `--body` arguments correctly ([#5072](https://github.com/git-town/git-town/issues/5072)).
 - When running a Git Town command while another Git Town command is suspended, and choosing to continue the suspended Git Town command, it is now able to continue commands that require forge connections ([#5098](https://github.com/git-town/git-town/pull/5098)).
-- All dialogs are now no more than 80 characters wide ([#5074](https://github.com/git-town/git-town/pull/5074)).
+- All dialogs now fit within 80 characters wide terminals ([#5074](https://github.com/git-town/git-town/pull/5074)).
 - The setup assistant now correctly pre-selects the chosen token scope ([#5046](https://github.com/git-town/git-town/pull/5046)).
 
 #### Contributors
