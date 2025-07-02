@@ -29,16 +29,15 @@ to:
 Configuring API access is straightforward. Git Town supports the following
 platforms:
 
-- GitHub: Git Town can use GitHub's [gh CLI](https://cli.github.com) to talk to
-  GitHub's API. If you don't have `gh` installed, you can also set up an
+- GitHub: uses the [GitHub CLI](https://cli.github.com). If you prefer not to
+  install `gh`, you can also configure an
   [access token](preferences/github-token.md) and use Git Town's built-in GitHub
-  connector.
-- GitLab: Git Town can use GitLab's
-  [glab CLI](https://gitlab.com/gitlab-org/cli/-/tree/main) to talk to GitLab's
-  API. If you don't have this tool installed, you can also set up an
-  [access token](preferences/gitlab-token.md) and use Git Town's built-in GitLab
-  connector.
-- Bitbucket: [username](preferences/bitbucket-username.md) and
+  integration.
+- GitLab: uses the [GitLab CLI](https://gitlab.com/gitlab-org/cli/-/tree/main).
+  Without `glab`, you can configure an
+  [access token](preferences/gitlab-token.md) for Git Town's built-in GitLab
+  support.
+- Bitbucket: requires a [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
-- Gitea: [access token](preferences/gitea-token.md)
-- Codeberg: [access token](preferences/codeberg-token.md)
+- Gitea: requires an [access token](preferences/gitea-token.md)
+- Codeberg: requires an [access token](preferences/codeberg-token.md)
