@@ -119,11 +119,11 @@ type NewConnectorArgs struct {
 	CodebergToken        Option[forgedomain.CodebergToken]
 	ForgeType            Option[forgedomain.ForgeType]
 	Frontend             subshelldomain.Runner
-	GiteaToken           Option[forgedomain.GiteaToken]
 	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
 	GitHubToken          Option[forgedomain.GitHubToken]
 	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
 	GitLabToken          Option[forgedomain.GitLabToken]
+	GiteaToken           Option[forgedomain.GiteaToken]
 	Log                  print.Logger
 	RemoteURL            Option[giturl.Parts]
 }

@@ -366,19 +366,19 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 		return false, false, nil
 	}
 	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
 		BitbucketAppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword.Or(data.config.NormalConfig.BitbucketAppPassword),
 		BitbucketUsername:    data.userInput.config.NormalConfig.BitbucketUsername.Or(data.config.NormalConfig.BitbucketUsername),
 		CodebergToken:        data.userInput.config.NormalConfig.CodebergToken.Or(data.config.NormalConfig.CodebergToken),
 		ForgeType:            forgeTypeOpt,
-		GiteaToken:           data.userInput.config.NormalConfig.GiteaToken.Or(data.config.NormalConfig.GiteaToken),
+		Frontend:             repo.Backend,
 		GitHubConnectorType:  data.userInput.config.NormalConfig.GitHubConnectorType.Or(data.config.NormalConfig.GitHubConnectorType),
 		GitHubToken:          data.userInput.config.NormalConfig.GitHubToken.Or(data.config.NormalConfig.GitHubToken),
 		GitLabConnectorType:  data.userInput.config.NormalConfig.GitLabConnectorType.Or(data.config.NormalConfig.GitLabConnectorType),
 		GitLabToken:          data.userInput.config.NormalConfig.GitLabToken.Or(data.config.NormalConfig.GitLabToken),
-		RemoteURL:            data.userInput.config.NormalConfig.DevURL().Or(data.config.NormalConfig.DevURL()),
+		GiteaToken:           data.userInput.config.NormalConfig.GiteaToken.Or(data.config.NormalConfig.GiteaToken),
 		Log:                  print.Logger{},
-		Frontend:             repo.Backend,
-		Backend:              repo.Backend,
+		RemoteURL:            data.userInput.config.NormalConfig.DevURL().Or(data.config.NormalConfig.DevURL()),
 	})
 
 	createConnector(data.userInput.config.NormalConfig, repo.Backend, forgeTypeOpt)

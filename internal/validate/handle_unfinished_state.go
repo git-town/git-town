@@ -59,11 +59,11 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 			CodebergToken:        config.CodebergToken,
 			ForgeType:            config.ForgeType,
 			Frontend:             args.Frontend,
-			GiteaToken:           config.GiteaToken,
 			GitHubConnectorType:  config.GitHubConnectorType,
 			GitHubToken:          config.GitHubToken,
 			GitLabConnectorType:  config.GitLabConnectorType,
 			GitLabToken:          config.GitLabToken,
+			GiteaToken:           config.GiteaToken,
 			Log:                  print.Logger{},
 			RemoteURL:            config.DevURL(),
 		})

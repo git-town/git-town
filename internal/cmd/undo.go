@@ -72,19 +72,19 @@ func executeUndo(verbose configdomain.Verbose) error {
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		CodebergToken:        config.CodebergToken,
 		ForgeType:            config.ForgeType,
-		GiteaToken:           config.GiteaToken,
+		Frontend:             repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,
 		GitHubToken:          config.GitHubToken,
 		GitLabConnectorType:  config.GitLabConnectorType,
 		GitLabToken:          config.GitLabToken,
-		RemoteURL:            config.DevURL(),
+		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		Frontend:             repo.Frontend,
-		Backend:              repo.Backend,
+		RemoteURL:            config.DevURL(),
 	})
 	if err != nil {
 		return err
@@ -124,19 +124,19 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		CodebergToken:        config.CodebergToken,
 		ForgeType:            config.ForgeType,
-		GiteaToken:           config.GiteaToken,
+		Frontend:             repo.Frontend,
 		GitHubConnectorType:  config.GitHubConnectorType,
 		GitHubToken:          config.GitHubToken,
 		GitLabConnectorType:  config.GitLabConnectorType,
 		GitLabToken:          config.GitLabToken,
-		RemoteURL:            config.DevURL(),
+		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		Frontend:             repo.Frontend,
-		Backend:              repo.Backend,
+		RemoteURL:            config.DevURL(),
 	})
 	if err != nil {
 		return data, false, err
