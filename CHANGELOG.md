@@ -2,7 +2,23 @@
 
 ## 21.2.0 (2025-07-02)
 
-  g
+#### New Features
+
+- Git Town can now use GitHub's [gh CLI tool](https://cli.github.com) to communicate with the GitHub API. No more manual setup of access tokens! ([](https://github.com/git-town/git-town/issues/1639)).
+- Git Town can now use GitLab's [glab CLI tool](https://gitlab.com/gitlab-org/cli/-/tree/main) to communicate with the GitLab API ([](https://github.com/git-town/git-town/pull/5079)).
+- Git Town no longer depends on the `which` tool on Unix-like platforms ([#5060](https://github.com/git-town/git-town/pull/5060)).
+- Git Town is now available from the official Arch Linux repositories ([#5015](https://github.com/git-town/git-town/pull/5015)).
+- Git Town is now available on OpenSUSE [Tumbleweed](https://github.com/git-town/git-town/issues/5032) and [15+](https://github.com/git-town/git-town/pull/5058).
+- The Setup Assistant now verifies that the forge information you enter works. If it doesn't connect to the forge, you get a change to enter it again. ([#3030](https://github.com/git-town/git-town/issues/3030)).
+
+
+#### Bug Fixes
+
+- `git town diff-parent` now displays only the changes made by the current branch, even if that branch is behind its parent ([#5053](https://github.com/git-town/git-town/pull/5053)).
+- The GitLab connector now handles the `--title` and `--body` arguments correctly ([#5072](https://github.com/git-town/git-town/issues/5072)).
+- When running a Git Town command while another Git Town command is suspended, and choosing to continue the suspended Git Town command, it is now able to continue commands that require forge connections ([#5098](https://github.com/git-town/git-town/pull/5098)).
+- All dialogs are now no more than 80 characters wide ([#5074](https://github.com/git-town/git-town/pull/5074)).
+- The setup assistant now correctly pre-selects the chosen token scope ([#5046](https://github.com/git-town/git-town/pull/5046)).
 
 ## 21.1.0 (2025-06-04)
 
