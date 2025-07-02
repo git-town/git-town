@@ -13,11 +13,11 @@
 
 #### Bug Fixes
 
-- `git town diff-parent` now displays only the changes made by the current branch, even if that branch is behind its parent ([#5053](https://github.com/git-town/git-town/pull/5053)).
+- `git town diff-parent` now shows only the changes introduced by the current branch, even when it's behind its parent ([#5053](https://github.com/git-town/git-town/pull/5053)).
 - The GitLab connector now handles the `--title` and `--body` arguments correctly ([#5072](https://github.com/git-town/git-town/issues/5072)).
-- When running a Git Town command while another Git Town command is suspended, and choosing to continue the suspended Git Town command, it is now able to continue commands that require forge connections ([#5098](https://github.com/git-town/git-town/pull/5098)).
-- All dialogs now fit within 80 characters wide terminals ([#5074](https://github.com/git-town/git-town/pull/5074)).
-- The setup assistant now correctly pre-selects the chosen token scope ([#5046](https://github.com/git-town/git-town/pull/5046)).
+- Continuing a suspended Git Town command that needs forge access now works correctly in all edge cases ([#5098](https://github.com/git-town/git-town/pull/5098)).
+- All interactive dialogs now render properly in 80-character-wide terminals ([#5074](https://github.com/git-town/git-town/pull/5074)).
+- The setup assistant now correctly pre-selects the token scope you previously configured ([#5046](https://github.com/git-town/git-town/pull/5046)).
 
 #### Contributors
 
