@@ -43,6 +43,7 @@ Feature: display all executed Git commands
       Ran 27 shell commands.
       """
 
+  @this
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
@@ -59,7 +60,6 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                                                                                                                                                                                                                                                                                                                   |
       |        | backend  | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
-      |        | backend  | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
       | new    | frontend | git checkout main                                                                                                                                                                                                                                                                                                                                |
       |        | backend  | git rev-parse HEAD                                                                                                                                                                                                                                                                                                                               |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}                                                                                                                                                                                                                                                                                                      |
@@ -67,5 +67,5 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.new.parent                                                                                                                                                                                                                                                                                                    |
     And Git Town prints:
       """
-      Ran 18 shell commands.
+      Ran 17 shell commands.
       """
