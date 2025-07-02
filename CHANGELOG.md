@@ -4,12 +4,12 @@
 
 #### New Features
 
-- Git Town can now use GitHub's [gh CLI tool](https://cli.github.com) to communicate with the GitHub API. No more manual setup of access tokens! ([](https://github.com/git-town/git-town/issues/1639)).
-- Git Town can now use GitLab's [glab CLI tool](https://gitlab.com/gitlab-org/cli/-/tree/main) to communicate with the GitLab API ([](https://github.com/git-town/git-town/pull/5079)).
-- Git Town no longer depends on the `which` tool on Unix-like platforms ([#5060](https://github.com/git-town/git-town/pull/5060)).
-- Git Town is now available from the official Arch Linux repositories ([#5015](https://github.com/git-town/git-town/pull/5015)).
-- Git Town is now available on OpenSUSE [stable](https://github.com/git-town/git-town/pull/5058) and [Tumbleweed](https://github.com/git-town/git-town/issues/5032).
-- The Setup Assistant now verifies that the forge information you enter works. If it doesn't connect to the forge, you can enter it again ([#3030](https://github.com/git-town/git-town/issues/3030)).
+- Git Town can now use GitHub's [gh CLI](https://cli.github.com) to talk to the GitHub API. No more messing with access tokens manually! ([#1639](https://github.com/git-town/git-town/issues/1639))
+- GitLab users get the same treatment: Git Town now integrates with the [glab CLI](https://gitlab.com/gitlab-org/cli/-/tree/main) to access the GitLab API. ([#5079](https://github.com/git-town/git-town/pull/5079))
+- Dropped the dependency on `which` on Unix-like systems. One less external tool to worry about. ([#5060](https://github.com/git-town/git-town/pull/5060))
+- Git Town is now in the official Arch Linux repositories. Install with `pacman -S git-town` ([#5015](https://github.com/git-town/git-town/pull/5015)).
+- Git Town is now also available on OpenSUSE [Stable](https://github.com/git-town/git-town/pull/5058) and [Tumbleweed](https://github.com/git-town/git-town/issues/5032).
+- The Setup Assistant now validates the forge information you enter works. If the connection fails, you get a chance to enter the credentials again. No more silent misconfigurations. ([#3030](https://github.com/git-town/git-town/issues/3030)).
 
 #### Bug Fixes
 
