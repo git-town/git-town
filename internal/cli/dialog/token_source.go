@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -15,7 +16,7 @@ const (
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func TokenSource(forgeType forgedomain.ForgeType, oldValue forgedomain.TokenSource, inputs components.TestInput) (forgedomain.TokenSource, dialogdomain.Exit, error) {
+func TokenSource(forgeType forgedomain.ForgeType, oldValue Option[forgedomain.TokenSource], inputs components.TestInput) (forgedomain.TokenSource, dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.TokenSource]{
 		{
 			Data: forgedomain.TokenSourceManual,
@@ -26,7 +27,10 @@ func TokenSource(forgeType forgedomain.ForgeType, oldValue forgedomain.TokenSour
 			Text: "provide a script that outputs the token to Git Town if needed",
 		},
 	}
-	defaultPos := entries.IndexOf(oldValue)
+	defaultPos := 0
+	if existing, has := oldValue.Get(); has {
+		entries.IndexOf(existing)
+	}
 	selection, exit, err := components.RadioList(entries, defaultPos, fmt.Sprintf(tokenSourceTitle, forgeType), "", inputs)
 	fmt.Printf(messages.ForgeAPITokenSource, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
