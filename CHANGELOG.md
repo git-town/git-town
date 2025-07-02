@@ -9,7 +9,7 @@
 - Git Town no longer depends on the `which` tool on Unix-like platforms ([#5060](https://github.com/git-town/git-town/pull/5060)).
 - Git Town is now available from the official Arch Linux repositories ([#5015](https://github.com/git-town/git-town/pull/5015)).
 - Git Town is now available on OpenSUSE [stable](https://github.com/git-town/git-town/pull/5058) and [Tumbleweed](https://github.com/git-town/git-town/issues/5032).
-- The Setup Assistant now verifies that the forge information you enter works. If it doesn't connect to the forge, you get a change to enter it again. ([#3030](https://github.com/git-town/git-town/issues/3030)).
+- The Setup Assistant now verifies that the forge information you enter works. If it doesn't connect to the forge, you get a chance to enter it again. ([#3030](https://github.com/git-town/git-town/issues/3030)).
 
 #### Bug Fixes
 
