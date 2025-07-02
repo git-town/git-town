@@ -15,7 +15,7 @@ const (
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func TokenSource(oldValue forgedomain.TokenSource, inputs components.TestInput) (forgedomain.TokenSource, dialogdomain.Exit, error) {
+func TokenSource(forgeType forgedomain.ForgeType, oldValue forgedomain.TokenSource, inputs components.TestInput) (forgedomain.TokenSource, dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.TokenSource]{
 		{
 			Data: forgedomain.TokenSourceManual,
@@ -27,7 +27,7 @@ func TokenSource(oldValue forgedomain.TokenSource, inputs components.TestInput) 
 		},
 	}
 	defaultPos := entries.IndexOf(oldValue)
-	selection, exit, err := components.RadioList(entries, defaultPos, tokenSourceTitle, "", inputs)
+	selection, exit, err := components.RadioList(entries, defaultPos, fmt.Sprintf(tokenSourceTitle, forgeType), "", inputs)
 	fmt.Printf(messages.ForgeAPITokenSource, components.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
