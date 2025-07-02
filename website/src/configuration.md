@@ -3,8 +3,8 @@
 If your repository already contains a `.git-branches.toml` or `.git-town.toml`
 file, you are good to go. If not, or something doesn't work, you can run Git
 Town's setup assistant to configure Git Town. It walks you through every
-available configuration option, explains it, and gives you a chance to adjust
-it.
+available configuration option, explains it, gives you a chance to adjust it,
+and verifies that your configuration works.
 
 ```
 git town config setup
