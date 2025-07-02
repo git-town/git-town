@@ -25,14 +25,13 @@ Some of Git Towns' functionality requires access the API of your forge:
 
 Configuring API access is easy. Here is how you do it:
 
-- GitHub: Git Town can use GitHub's official
-  [gh CLI tool](https://cli.github.com) to talk to GitHub's API. If you don't
-  have this tool installed you can also set up an
+- GitHub: Git Town can use GitHub's [gh CLI](https://cli.github.com) to talk to
+  GitHub's API. If you don't have `gh` installed, you can also set up an
   [access token](preferences/github-token.md) and use Git Town's built-in GitHub
   connector.
-- GitLab: Git Town can use GitLab's official
-  [glab CLI tool](https://gitlab.com/gitlab-org/cli/-/tree/main) to talk to
-  GitLab's API. If you don't have this tool installed, you can also set up an
+- GitLab: Git Town can use GitLab's
+  [glab CLI](https://gitlab.com/gitlab-org/cli/-/tree/main) to talk to GitLab's
+  API. If you don't have this tool installed, you can also set up an
   [access token](preferences/gitlab-token.md) and use Git Town's built-in GitLab
   connector.
 - Bitbucket: [username](preferences/bitbucket-username.md) and
