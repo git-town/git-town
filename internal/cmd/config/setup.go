@@ -186,6 +186,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 			return tokenScope, exit, err
 		}
 	}
+	var forgeType Option[forgedomain.ForgeType]
 	for {
 		if configFile.HostingOriginHostname.IsNone() {
 			data.userInput.config.NormalConfig.HostingOriginHostname, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
@@ -199,12 +200,12 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 				return tokenScope, exit, err
 			}
 		}
-		data.userInput.config.NormalConfig.ForgeType = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
-		exit, err = enterForgeAuth(repo, data, data.userInput.config.NormalConfig.ForgeType)
+		forgeType = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
+		exit, err = enterForgeAuth(repo, data, forgeType)
 		if err != nil || exit {
 			return tokenScope, exit, err
 		}
-		repeat, exit, err := testForgeAuth(data, repo, data.userInput.config.NormalConfig.ForgeType)
+		repeat, exit, err := testForgeAuth(data, repo, forgeType)
 		if err != nil || exit {
 			return tokenScope, exit, err
 		}
@@ -212,7 +213,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 			break
 		}
 	}
-	tokenScope, exit, err = enterTokenScope(data.userInput.config.NormalConfig.ForgeType, data, repo)
+	tokenScope, exit, err = enterTokenScope(forgeType, data, repo)
 	if err != nil || exit {
 		return tokenScope, exit, err
 	}
