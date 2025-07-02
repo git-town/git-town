@@ -43,7 +43,6 @@ Feature: display all executed Git commands
       Ran 27 shell commands.
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo --verbose"
     Then Git Town runs the commands
