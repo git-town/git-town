@@ -113,17 +113,17 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 }
 
 type NewConnectorArgs struct {
+	Backend              subshelldomain.Querier
 	BitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	BitbucketUsername    Option[forgedomain.BitbucketUsername]
 	CodebergToken        Option[forgedomain.CodebergToken]
 	ForgeType            Option[forgedomain.ForgeType]
+	Frontend             subshelldomain.Runner
 	GiteaToken           Option[forgedomain.GiteaToken]
 	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
 	GitHubToken          Option[forgedomain.GitHubToken]
 	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
 	GitLabToken          Option[forgedomain.GitLabToken]
-	RemoteURL            Option[giturl.Parts]
 	Log                  print.Logger
-	Frontend             subshelldomain.Runner
-	Backend              subshelldomain.Querier
+	RemoteURL            Option[giturl.Parts]
 }

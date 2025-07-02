@@ -53,19 +53,19 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	if args.Connector.IsNone() {
 		config := args.UnvalidatedConfig.NormalConfig
 		args.Connector, err = forge.NewConnector(forge.NewConnectorArgs{
+			Backend:              args.Backend,
 			BitbucketAppPassword: config.BitbucketAppPassword,
 			BitbucketUsername:    config.BitbucketUsername,
 			CodebergToken:        config.CodebergToken,
 			ForgeType:            config.ForgeType,
+			Frontend:             args.Frontend,
 			GiteaToken:           config.GiteaToken,
 			GitHubConnectorType:  config.GitHubConnectorType,
 			GitHubToken:          config.GitHubToken,
 			GitLabConnectorType:  config.GitLabConnectorType,
 			GitLabToken:          config.GitLabToken,
-			RemoteURL:            config.DevURL(),
 			Log:                  print.Logger{},
-			Frontend:             args.Frontend,
-			Backend:              args.Backend,
+			RemoteURL:            config.DevURL(),
 		})
 		if err != nil {
 			return false, err

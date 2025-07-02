@@ -178,19 +178,19 @@ func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun,
 	}
 	config := repo.UnvalidatedConfig.NormalConfig
 	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
 		BitbucketAppPassword: config.BitbucketAppPassword,
 		BitbucketUsername:    config.BitbucketUsername,
 		CodebergToken:        config.CodebergToken,
 		ForgeType:            config.ForgeType,
+		Frontend:             repo.Frontend,
 		GiteaToken:           config.GiteaToken,
 		GitHubConnectorType:  config.GitHubConnectorType,
 		GitHubToken:          config.GitHubToken,
 		GitLabConnectorType:  config.GitLabConnectorType,
 		GitLabToken:          config.GitLabToken,
-		RemoteURL:            config.DevURL(),
 		Log:                  print.Logger{},
-		Frontend:             repo.Frontend,
-		Backend:              repo.Backend,
+		RemoteURL:            config.DevURL(),
 	})
 	if err != nil {
 		return walkData{}, false, err
