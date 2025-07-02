@@ -11,7 +11,6 @@
 - Git Town is now available on OpenSUSE [Tumbleweed](https://github.com/git-town/git-town/issues/5032) and [15+](https://github.com/git-town/git-town/pull/5058).
 - The Setup Assistant now verifies that the forge information you enter works. If it doesn't connect to the forge, you get a change to enter it again. ([#3030](https://github.com/git-town/git-town/issues/3030)).
 
-
 #### Bug Fixes
 
 - `git town diff-parent` now displays only the changes made by the current branch, even if that branch is behind its parent ([#5053](https://github.com/git-town/git-town/pull/5053)).
@@ -19,6 +18,10 @@
 - When running a Git Town command while another Git Town command is suspended, and choosing to continue the suspended Git Town command, it is now able to continue commands that require forge connections ([#5098](https://github.com/git-town/git-town/pull/5098)).
 - All dialogs are now no more than 80 characters wide ([#5074](https://github.com/git-town/git-town/pull/5074)).
 - The setup assistant now correctly pre-selects the chosen token scope ([#5046](https://github.com/git-town/git-town/pull/5046)).
+
+#### Contributors
+
+Shoutout to @ChrisMM, @JafethAriasH, @alerque, @alphatroya, @ccoVeille, @emmanuel-ferdman, @haltcase, @kastl-ars, @kelbyers, @kevgo, @stephenwade, @tranhl, @vectro, @znd4 for contributing ideas, feedback, code, and installer support in 86 shipped PRs and 9 resolved issues!
 
 ## 21.1.0 (2025-06-04)
 
