@@ -21,7 +21,7 @@
 
 #### Contributors
 
-Shoutout to @ChrisMM, @JafethAriasH, @alerque, @alphatroya, @ccoVeille, @emmanuel-ferdman, @haltcase, @kastl-ars, @kelbyers, @kevgo, @stephenwade, @tranhl, @vectro, @znd4 for contributing ideas, feedback, code, and installer support in 86 shipped PRs and 9 resolved issues!
+Huge thanks to @ChrisMM, @JafethAriasH, @alerque, @alphatroya, @ccoVeille, @emmanuel-ferdman, @haltcase, @kastl-ars, @kelbyers, @kevgo, @stephenwade, @tranhl, @vectro, @znd4 for contributing ideas, feedback, code, and installer support to 86 shipped PRs and 9 resolved issues. Cheers!
 
 ## 21.1.0 (2025-06-04)
 
