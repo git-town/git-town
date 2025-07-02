@@ -22,6 +22,7 @@ type NormalConfigData struct {
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
 	GitHubToken              Option[forgedomain.GitHubToken]
+	GitHubTokenScript        Option[forgedomain.GitHubTokenScript]
 	GitHubTokenSource        Option[forgedomain.TokenSource]
 	GitLabConnectorType      Option[forgedomain.GitLabConnectorType]
 	GitLabToken              Option[forgedomain.GitLabToken]

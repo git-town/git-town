@@ -303,9 +303,12 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt O
 				return exit, err
 			}
 			data.userInput.config.NormalConfig.GitHubTokenSource = Some(answer)
-			return enterGitHubToken(data, repo)
-		case forgedomain.GitHubConnectorTypeGh:
-			return false, nil
+			switch answer {
+			case forgedomain.TokenSourceManual:
+				return enterGitHubToken(data, repo)
+			case forgedomain.TokenSourceScript:
+				return enterGitHubTokenScript(data, repo)
+			}
 		}
 	case forgedomain.ForgeTypeGitLab:
 		existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
@@ -350,6 +353,12 @@ func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (exit dialogd
 func enterGitHubToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
 	existingToken := data.userInput.config.NormalConfig.GitHubToken.Or(repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 	data.userInput.config.NormalConfig.GitHubToken, exit, err = dialog.GitHubToken(existingToken, data.dialogInputs.Next())
+	return exit, err
+}
+
+func enterGitHubTokenScript(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
+	existingScript := data.userInput.config.NormalConfig.GitHubTokenScript.Or(repo.UnvalidatedConfig.NormalConfig.GitHubTokenScript)
+	data.userInput.config.NormalConfig.GitHubTokenScript, exit, err = dialog.GitHubTokenScript(existingScript, data.dialogInputs.Next())
 	return exit, err
 }
 

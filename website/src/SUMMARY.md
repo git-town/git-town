@@ -76,6 +76,7 @@
     - [Gitea token](preferences/gitea-token.md)
     - [GitHub connector](preferences/github-connector.md)
     - [GitHub token](preferences/github-token.md)
+    - [GitHub token script](preferences/github-token-script.md)
     - [GitLab connector](preferences/gitlab-connector.md)
     - [GitLab token](preferences/gitlab-token.md)
   - [Ship]()

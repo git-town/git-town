@@ -62,6 +62,7 @@ func NewConnector(args NewConnectorArgs) (Option[forgedomain.Connector], error) 
 		if githubConnectorType, hasGitHubConnectorType := args.GitHubConnectorType.Get(); hasGitHubConnectorType {
 			switch githubConnectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
+				token := args.GitHubToken.Or(args.GitHubTokenScript.Lo)
 				connector, err = github.NewConnector(github.NewConnectorArgs{
 					APIToken:  args.GitHubToken,
 					Log:       args.Log,
@@ -121,6 +122,7 @@ type NewConnectorArgs struct {
 	Frontend             subshelldomain.Runner
 	GitHubConnectorType  Option[forgedomain.GitHubConnectorType]
 	GitHubToken          Option[forgedomain.GitHubToken]
+	GitHubTokenScript    Option[forgedomain.GitHubTokenScript]
 	GitLabConnectorType  Option[forgedomain.GitLabConnectorType]
 	GitLabToken          Option[forgedomain.GitLabToken]
 	GiteaToken           Option[forgedomain.GiteaToken]
