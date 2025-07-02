@@ -51,7 +51,22 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	}
 	// Create the connector now if the Git Town command hasn't provided one yet.
 	if args.Connector.IsNone() {
-		args.Connector, err = forge.NewConnector(args.UnvalidatedConfig.NormalConfig, args.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, args.Frontend, args.Backend)
+		config := args.UnvalidatedConfig.NormalConfig
+		args.Connector, err = forge.NewConnector(forge.NewConnectorArgs{
+			BitbucketAppPassword: config.BitbucketAppPassword,
+			BitbucketUsername:    config.BitbucketUsername,
+			CodebergToken:        config.CodebergToken,
+			ForgeType:            config.ForgeType,
+			GiteaToken:           config.GiteaToken,
+			GitHubConnectorType:  config.GitHubConnectorType,
+			GitHubToken:          config.GitHubToken,
+			GitLabConnectorType:  config.GitLabConnectorType,
+			GitLabToken:          config.GitLabToken,
+			RemoteURL:            config.DevURL(),
+			Log:                  print.Logger{},
+			Frontend:             args.Frontend,
+			Backend:              args.Backend,
+		})
 		if err != nil {
 			return false, err
 		}

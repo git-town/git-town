@@ -70,7 +70,22 @@ func executeUndo(verbose configdomain.Verbose) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		CodebergToken:        config.CodebergToken,
+		ForgeType:            config.ForgeType,
+		GiteaToken:           config.GiteaToken,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		RemoteURL:            config.DevURL(),
+		Log:                  print.Logger{},
+		Frontend:             repo.Frontend,
+		Backend:              repo.Backend,
+	})
 	if err != nil {
 		return err
 	}
@@ -107,7 +122,22 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 	if err != nil {
 		return data, false, err
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		CodebergToken:        config.CodebergToken,
+		ForgeType:            config.ForgeType,
+		GiteaToken:           config.GiteaToken,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		RemoteURL:            config.DevURL(),
+		Log:                  print.Logger{},
+		Frontend:             repo.Frontend,
+		Backend:              repo.Backend,
+	})
 	if err != nil {
 		return data, false, err
 	}
