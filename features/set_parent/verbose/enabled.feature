@@ -53,11 +53,10 @@ Feature: display all executed Git commands
       |        | backend | git stash list                                                                                                                                                                                                                                                                                                                                   |
       |        | backend | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |        | backend | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
-      |        | backend | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
       |        | backend | git config git-town-branch.child.parent parent                                                                                                                                                                                                                                                                                                   |
     And Git Town prints:
       """
-      Ran 14 shell commands.
+      Ran 13 shell commands.
       """
     And the initial commits exist now
     And the initial branches and lineage exist now
