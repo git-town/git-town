@@ -1,5 +1,9 @@
 # Git Town Changelog
 
+## 21.2.0 (2025-07-02)
+
+  g
+
 ## 21.1.0 (2025-06-04)
 
 #### New Features
