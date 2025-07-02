@@ -297,6 +297,12 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt O
 		data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
 		switch answer {
 		case forgedomain.GitHubConnectorTypeAPI:
+			existing := data.userInput.config.NormalConfig.GitHubTokenSource.Or(data.config.NormalConfig.GitHubTokenSource)
+			answer, exit, err := dialog.TokenSource(forgedomain.ForgeTypeGitHub, existing, data.dialogInputs.Next())
+			if err != nil || exit {
+				return exit, err
+			}
+			data.userInput.config.NormalConfig.GitHubTokenSource = Some(answer)
 			return enterGitHubToken(data, repo)
 		case forgedomain.GitHubConnectorTypeGh:
 			return false, nil
