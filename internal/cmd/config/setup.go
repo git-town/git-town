@@ -44,7 +44,18 @@ func SetupCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeConfigSetup(verbose)
+			repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+				DryRun:           false,
+				PrintBranchNames: false,
+				PrintCommands:    true,
+				ValidateGitRepo:  true,
+				ValidateIsOnline: false,
+				Verbose:          verbose,
+			})
+			if err != nil {
+				return err
+			}
+			return executeConfigSetup(repo, verbose)
 		},
 	}
 	addVerboseFlag(&cmd)
@@ -59,18 +70,7 @@ func defaultUserInput(gitAccess gitconfig.Access, gitVersion git.Version) userIn
 	}
 }
 
-func executeConfigSetup(verbose configdomain.Verbose) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
-		PrintBranchNames: false,
-		PrintCommands:    true,
-		ValidateGitRepo:  true,
-		ValidateIsOnline: false,
-		Verbose:          verbose,
-	})
-	if err != nil {
-		return err
-	}
+func executeConfigSetup(repo execute.OpenRepoResult, verbose configdomain.Verbose) error {
 	data, exit, err := loadSetupData(repo, verbose)
 	if err != nil || exit {
 		return err

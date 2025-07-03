@@ -23,6 +23,8 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	// enter and save main and perennials
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
+		// run setup assistant here
+
 		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 			Backend:               args.Backend,
 			DialogInputs:          args.TestInputs,
