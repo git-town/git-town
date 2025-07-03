@@ -26,3 +26,11 @@ func (self *ValidatedConfigData) Author() gitdomain.Author {
 func (self *ValidatedConfigData) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
+
+func EmptyValidateConfigData() ValidatedConfigData {
+	return ValidatedConfigData{
+		GitUserEmail: "",
+		GitUserName:  "",
+		MainBranch:   "",
+	}
+}
