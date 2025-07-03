@@ -70,15 +70,11 @@ func executeUndo(verbose configdomain.Verbose) error {
 		fmt.Println(messages.UndoNothingToDo)
 		return nil
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
-	if err != nil {
-		return err
-	}
 	return undo.Execute(undo.ExecuteArgs{
 		Backend:          repo.Backend,
 		CommandsCounter:  repo.CommandsCounter,
 		Config:           data.config,
-		Connector:        connector,
+		Connector:        data.connector,
 		Detached:         true,
 		FinalMessages:    repo.FinalMessages,
 		Frontend:         repo.Frontend,
@@ -107,7 +103,22 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 	if err != nil {
 		return data, false, err
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		CodebergToken:        config.CodebergToken,
+		ForgeType:            config.ForgeType,
+		Frontend:             repo.Frontend,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		GiteaToken:           config.GiteaToken,
+		Log:                  print.Logger{},
+		RemoteURL:            config.DevURL(),
+	})
 	if err != nil {
 		return data, false, err
 	}

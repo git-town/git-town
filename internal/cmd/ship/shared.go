@@ -47,7 +47,22 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 	if err != nil {
 		return data, false, err
 	}
-	connector, err := forge.NewConnector(repo.UnvalidatedConfig.NormalConfig, repo.UnvalidatedConfig.NormalConfig.DevRemote, print.Logger{}, repo.Frontend, repo.Backend)
+	config := repo.UnvalidatedConfig.NormalConfig
+	connector, err := forge.NewConnector(forge.NewConnectorArgs{
+		Backend:              repo.Backend,
+		BitbucketAppPassword: config.BitbucketAppPassword,
+		BitbucketUsername:    config.BitbucketUsername,
+		CodebergToken:        config.CodebergToken,
+		ForgeType:            config.ForgeType,
+		Frontend:             repo.Frontend,
+		GitHubConnectorType:  config.GitHubConnectorType,
+		GitHubToken:          config.GitHubToken,
+		GitLabConnectorType:  config.GitLabConnectorType,
+		GitLabToken:          config.GitLabToken,
+		GiteaToken:           config.GiteaToken,
+		Log:                  print.Logger{},
+		RemoteURL:            config.DevURL(),
+	})
 	if err != nil {
 		return data, false, err
 	}

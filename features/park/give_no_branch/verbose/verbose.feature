@@ -47,10 +47,9 @@ Feature: park the current branch verbosely
       |        | backend | git stash list                                                                                                                                                                                                                                                                                                                                   |
       |        | backend | git for-each-ref "--format=refname:%(refname) branchname:%(refname:lstrip=2) sha:%(objectname) head:%(if)%(HEAD)%(then)Y%(else)N%(end) worktree:%(if)%(worktreepath)%(then)Y%(else)N%(end) symref:%(if)%(symref)%(then)Y%(else)N%(end) upstream:%(upstream:lstrip=2) track:%(upstream:track,nobracket)" --sort=refname refs/heads/ refs/remotes/ |
       |        | backend | git rev-parse --verify --abbrev-ref @{-1}                                                                                                                                                                                                                                                                                                        |
-      |        | backend | git remote get-url origin                                                                                                                                                                                                                                                                                                                        |
       |        | backend | git config --unset git-town-branch.feature.branchtype                                                                                                                                                                                                                                                                                            |
     And Git Town prints:
       """
-      Ran 14 shell commands
+      Ran 13 shell commands
       """
     And branch "feature" now has type "feature"
