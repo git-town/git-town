@@ -3,14 +3,18 @@ package config
 import (
 	"os"
 
+	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configsetup"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
+	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/spf13/cobra"
@@ -87,12 +91,20 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	if len(remotes) == 0 {
 		remotes = gitdomain.Remotes{repo.Git.DefaultRemote(repo.Backend)}
 	}
-	return setupData{
-		config:        repo.UnvalidatedConfig,
-		configFile:    repo.UnvalidatedConfig.NormalConfig.ConfigFile,
-		dialogInputs:  dialogTestInputs,
-		localBranches: branchesSnapshot.Branches,
-		remotes:       remotes,
-		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
+	return configsetup.SetupData{
+		UnvalidatedConfig: repo.UnvalidatedConfig,
+		ConfigFile:        repo.UnvalidatedConfig.NormalConfig.ConfigFile,
+		DialogInputs:      dialogTestInputs,
+		LocalBranches:     branchesSnapshot.Branches,
+		Remotes:           remotes,
+		UserInput:         defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitConfigAccess, repo.UnvalidatedConfig.NormalConfig.GitVersion),
 	}, exit, nil
+}
+
+// the config settings to be used if the user accepts all default options
+func defaultUserInput(gitAccess gitconfig.Access, gitVersion git.Version) configsetup.UserInput {
+	return configsetup.UserInput{
+		Config:        config.DefaultUnvalidatedConfig(gitAccess, gitVersion),
+		ConfigStorage: dialog.ConfigStorageOptionFile,
+	}
 }

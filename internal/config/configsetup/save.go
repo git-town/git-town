@@ -15,42 +15,42 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveAll(userInput UserInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], tokenScope configdomain.ConfigScope, forgeTypeOpt Option[forgedomain.ForgeType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
-		saveAliases(oldConfig.NormalConfig.Aliases, userInput.config.NormalConfig.Aliases, gitCommands, frontend),
+		saveAliases(oldConfig.NormalConfig.Aliases, userInput.Config.NormalConfig.Aliases, gitCommands, frontend),
 	)
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
-				saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend),
+				saveBitbucketUsername(oldConfig.NormalConfig.BitbucketUsername, userInput.Config.NormalConfig.BitbucketUsername, tokenScope, gitCommands, frontend),
 			)
 			fc.Check(
-				saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend),
+				saveBitbucketAppPassword(oldConfig.NormalConfig.BitbucketAppPassword, userInput.Config.NormalConfig.BitbucketAppPassword, tokenScope, gitCommands, frontend),
 			)
 		case forgedomain.ForgeTypeCodeberg:
 			fc.Check(
-				saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend),
+				saveCodebergToken(oldConfig.NormalConfig.CodebergToken, userInput.Config.NormalConfig.CodebergToken, tokenScope, gitCommands, frontend),
 			)
 		case forgedomain.ForgeTypeGitHub:
 			fc.Check(
-				saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.config.NormalConfig.GitHubToken, tokenScope, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend),
+				saveGitHubToken(oldConfig.NormalConfig.GitHubToken, userInput.Config.NormalConfig.GitHubToken, tokenScope, userInput.Config.NormalConfig.GitHubConnectorType, gitCommands, frontend),
 			)
 		case forgedomain.ForgeTypeGitLab:
 			fc.Check(
-				saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.config.NormalConfig.GitLabToken, tokenScope, userInput.config.NormalConfig.GitLabConnectorType, gitCommands, frontend),
+				saveGitLabToken(oldConfig.NormalConfig.GitLabToken, userInput.Config.NormalConfig.GitLabToken, tokenScope, userInput.Config.NormalConfig.GitLabConnectorType, gitCommands, frontend),
 			)
 		case forgedomain.ForgeTypeGitea:
 			fc.Check(
-				saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend),
+				saveGiteaToken(oldConfig.NormalConfig.GiteaToken, userInput.Config.NormalConfig.GiteaToken, tokenScope, gitCommands, frontend),
 			)
 		}
 	}
 	if fc.Err != nil {
 		return fc.Err
 	}
-	switch userInput.configStorage {
+	switch userInput.ConfigStorage {
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, oldConfig)
 	case dialog.ConfigStorageOptionGit:
@@ -59,107 +59,107 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	return nil
 }
 
-func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveToGit(userInput UserInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
-			saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.config.NormalConfig.NewBranchType, oldConfig),
+			saveNewBranchType(oldConfig.NormalConfig.NewBranchType, userInput.Config.NormalConfig.NewBranchType, oldConfig),
 		)
 	}
 	if configFile.ForgeType.IsNone() {
 		fc.Check(
-			saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend),
+			saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.Config.NormalConfig.ForgeType, gitCommands, frontend),
 		)
 	}
 	if configFile.GitHubConnectorType.IsNone() {
 		fc.Check(
-			saveGitHubConnectorType(oldConfig.NormalConfig.GitHubConnectorType, userInput.config.NormalConfig.GitHubConnectorType, gitCommands, frontend),
+			saveGitHubConnectorType(oldConfig.NormalConfig.GitHubConnectorType, userInput.Config.NormalConfig.GitHubConnectorType, gitCommands, frontend),
 		)
 	}
 	if configFile.GitLabConnectorType.IsNone() {
 		fc.Check(
-			saveGitLabConnectorType(oldConfig.NormalConfig.GitLabConnectorType, userInput.config.NormalConfig.GitLabConnectorType, gitCommands, frontend),
+			saveGitLabConnectorType(oldConfig.NormalConfig.GitLabConnectorType, userInput.Config.NormalConfig.GitLabConnectorType, gitCommands, frontend),
 		)
 	}
 	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(
-			saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.config.NormalConfig.HostingOriginHostname, gitCommands, frontend),
+			saveOriginHostname(oldConfig.NormalConfig.HostingOriginHostname, userInput.Config.NormalConfig.HostingOriginHostname, gitCommands, frontend),
 		)
 	}
 	if configFile.MainBranch.IsNone() {
 		fc.Check(
-			saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch, oldConfig),
+			saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.Config.UnvalidatedConfig.MainBranch, oldConfig),
 		)
 	}
 	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(
-			savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig),
+			savePerennialBranches(oldConfig.NormalConfig.PerennialBranches, userInput.Config.NormalConfig.PerennialBranches, oldConfig),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
-			savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.config.NormalConfig.PerennialRegex, oldConfig),
+			savePerennialRegex(oldConfig.NormalConfig.PerennialRegex, userInput.Config.NormalConfig.PerennialRegex, oldConfig),
 		)
 	}
 	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
-			saveUnknownBranchType(oldConfig.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, oldConfig),
+			saveUnknownBranchType(oldConfig.NormalConfig.UnknownBranchType, userInput.Config.NormalConfig.UnknownBranchType, oldConfig),
 		)
 	}
 	if configFile.DevRemote.IsNone() {
 		fc.Check(
-			saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.config.NormalConfig.DevRemote, oldConfig),
+			saveDevRemote(oldConfig.NormalConfig.DevRemote, userInput.Config.NormalConfig.DevRemote, oldConfig),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(
-			saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig),
+			saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.Config.NormalConfig.FeatureRegex, oldConfig),
 		)
 	}
 	if configFile.PushHook.IsNone() {
 		fc.Check(
-			savePushHook(oldConfig.NormalConfig.PushHook, userInput.config.NormalConfig.PushHook, oldConfig),
+			savePushHook(oldConfig.NormalConfig.PushHook, userInput.Config.NormalConfig.PushHook, oldConfig),
 		)
 	}
 	if configFile.ShareNewBranches.IsNone() {
 		fc.Check(
-			saveShareNewBranches(oldConfig.NormalConfig.ShareNewBranches, userInput.config.NormalConfig.ShareNewBranches, oldConfig),
+			saveShareNewBranches(oldConfig.NormalConfig.ShareNewBranches, userInput.Config.NormalConfig.ShareNewBranches, oldConfig),
 		)
 	}
 	if configFile.ShipStrategy.IsNone() {
 		fc.Check(
-			saveShipStrategy(oldConfig.NormalConfig.ShipStrategy, userInput.config.NormalConfig.ShipStrategy, oldConfig),
+			saveShipStrategy(oldConfig.NormalConfig.ShipStrategy, userInput.Config.NormalConfig.ShipStrategy, oldConfig),
 		)
 	}
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
-			saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.config.NormalConfig.ShipDeleteTrackingBranch, oldConfig),
+			saveShipDeleteTrackingBranch(oldConfig.NormalConfig.ShipDeleteTrackingBranch, userInput.Config.NormalConfig.ShipDeleteTrackingBranch, oldConfig),
 		)
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		fc.Check(
-			saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.config.NormalConfig.SyncFeatureStrategy, oldConfig),
+			saveSyncFeatureStrategy(oldConfig.NormalConfig.SyncFeatureStrategy, userInput.Config.NormalConfig.SyncFeatureStrategy, oldConfig),
 		)
 	}
 	if configFile.SyncPerennialStrategy.IsNone() {
 		fc.Check(
-			saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.config.NormalConfig.SyncPerennialStrategy, oldConfig),
+			saveSyncPerennialStrategy(oldConfig.NormalConfig.SyncPerennialStrategy, userInput.Config.NormalConfig.SyncPerennialStrategy, oldConfig),
 		)
 	}
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		fc.Check(
-			saveSyncPrototypeStrategy(oldConfig.NormalConfig.SyncPrototypeStrategy, userInput.config.NormalConfig.SyncPrototypeStrategy, oldConfig),
+			saveSyncPrototypeStrategy(oldConfig.NormalConfig.SyncPrototypeStrategy, userInput.Config.NormalConfig.SyncPrototypeStrategy, oldConfig),
 		)
 	}
 	if configFile.SyncUpstream.IsNone() {
 		fc.Check(
-			saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.config.NormalConfig.SyncUpstream, oldConfig),
+			saveSyncUpstream(oldConfig.NormalConfig.SyncUpstream, userInput.Config.NormalConfig.SyncUpstream, oldConfig),
 		)
 	}
 	if configFile.SyncTags.IsNone() {
 		fc.Check(
-			saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.config.NormalConfig.SyncTags, oldConfig),
+			saveSyncTags(oldConfig.NormalConfig.SyncTags, userInput.Config.NormalConfig.SyncTags, oldConfig),
 		)
 	}
 	return fc.Err
@@ -424,8 +424,8 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
-	if err := configfile.Save(&userInput.config); err != nil {
+func saveToFile(userInput UserInput, config config.UnvalidatedConfig) error {
+	if err := configfile.Save(&userInput.Config); err != nil {
 		return err
 	}
 	config.NormalConfig.RemoveCreatePrototypeBranches()
@@ -443,8 +443,8 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveSyncPrototypeStrategy()
 	config.NormalConfig.RemoveSyncUpstream()
 	config.NormalConfig.RemoveSyncTags()
-	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
+	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.Config.NormalConfig.UnknownBranchType, config); err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config)
+	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.Config.NormalConfig.FeatureRegex, config)
 }

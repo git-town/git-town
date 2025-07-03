@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -18,23 +17,15 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// the config settings to be used if the user accepts all default options
-func defaultUserInput(gitAccess gitconfig.Access, gitVersion git.Version) userInput {
-	return userInput{
-		config:        config.DefaultUnvalidatedConfig(gitAccess, gitVersion),
-		configStorage: dialog.ConfigStorageOptionFile,
-	}
-}
-
-func Execute(data SetupData) error {
+func Execute(data SetupData) (gitdomain.LocalBranchName, error) {
 	tokenScope, forgeTypeOpt, exit, err := enterData(&data)
 	if err != nil || exit {
-		return err
+		return "", err
 	}
 	if err = saveAll(data.UserInput, data.UnvalidatedConfig, data.ConfigFile, tokenScope, forgeTypeOpt, data.Git, data.Frontend); err != nil {
-		return err
+		return "", err
 	}
-	return configinterpreter.Finished(configinterpreter.FinishedArgs{
+	err = configinterpreter.Finished(configinterpreter.FinishedArgs{
 		Backend:               data.Backend,
 		BeginBranchesSnapshot: None[gitdomain.BranchesSnapshot](),
 		BeginConfigSnapshot:   data.ConfigSnapshot,
@@ -46,6 +37,7 @@ func Execute(data SetupData) error {
 		TouchedBranches:       []gitdomain.BranchName{},
 		Verbose:               data.Verbose,
 	})
+	return data.UserInput.Config.UnvalidatedConfig.MainBranch, err
 }
 
 type SetupData struct {
@@ -62,13 +54,13 @@ type SetupData struct {
 	Remotes           gitdomain.Remotes
 	RootDir           gitdomain.RepoRootDir
 	UnvalidatedConfig config.UnvalidatedConfig
-	UserInput         userInput
+	UserInput         UserInput
 	Verbose           configdomain.Verbose
 }
 
-type userInput struct {
-	config        config.UnvalidatedConfig
-	configStorage dialog.ConfigStorageOption
+type UserInput struct {
+	Config        config.UnvalidatedConfig
+	ConfigStorage dialog.ConfigStorageOption
 }
 
 func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType]) Option[forgedomain.ForgeType] {
