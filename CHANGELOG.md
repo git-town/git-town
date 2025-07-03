@@ -1,5 +1,28 @@
 # Git Town Changelog
 
+## 21.2.0 (2025-07-02)
+
+#### New Features
+
+- Git Town can now use GitHub's [gh CLI](https://cli.github.com) to talk to the GitHub API. No more messing with access tokens manually! ([#1639](https://github.com/git-town/git-town/issues/1639))
+- GitLab users get the same treatment: Git Town now integrates with the [glab CLI](https://gitlab.com/gitlab-org/cli/-/tree/main) to access the GitLab API ([#5079](https://github.com/git-town/git-town/pull/5079)).
+- Dropped the dependency on `which` on Unix-like systems. One less external tool to worry about ([#5060](https://github.com/git-town/git-town/pull/5060)).
+- Git Town is now in the official Arch Linux repositories. Install with `pacman -S git-town` ([#5015](https://github.com/git-town/git-town/pull/5015)).
+- Git Town is now also available on OpenSUSE [Stable](https://github.com/git-town/git-town/pull/5058) and [Tumbleweed](https://github.com/git-town/git-town/issues/5032).
+- The Setup Assistant now validates the forge information you enter works. If the connection fails, you get a chance to enter the credentials again. No more silent misconfigurations. ([#3030](https://github.com/git-town/git-town/issues/3030)).
+
+#### Bug Fixes
+
+- `git town diff-parent` now shows only the changes introduced by the current branch, even when it's behind its parent ([#5053](https://github.com/git-town/git-town/pull/5053)).
+- The GitLab connector now handles the `--title` and `--body` arguments correctly ([#5072](https://github.com/git-town/git-town/issues/5072)).
+- Continuing a suspended Git Town command that needs forge access now works correctly in all edge cases ([#5098](https://github.com/git-town/git-town/pull/5098)).
+- All interactive dialogs now render properly in 80-character-wide terminals ([#5074](https://github.com/git-town/git-town/pull/5074)).
+- The setup assistant now correctly pre-selects the token scope you previously configured ([#5046](https://github.com/git-town/git-town/pull/5046)).
+
+#### Contributors
+
+Huge thanks to @ChrisMM, @JafethAriasH, @alerque, @alphatroya, @ccoVeille, @emmanuel-ferdman, @haltcase, @kastl-ars, @kelbyers, @kevgo, @stephenwade, @tranhl, @vectro, @znd4 for contributing ideas, feedback, code, and installer support to 86 shipped PRs and 9 resolved issues. Cheers!
+
 ## 21.1.0 (2025-06-04)
 
 #### New Features
