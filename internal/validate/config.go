@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/configsetup"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -13,7 +14,7 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) {
+func Config(repo OpenRepoResult, verbose configdomain.Verbose) (config.ValidatedConfig, dialogdomain.Exit, error) {
 	// check Git user data
 	gitUserEmail, gitUserName, err := GitUser(args.Unvalidated.Value.UnvalidatedConfig)
 	if err != nil {
@@ -24,6 +25,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 	mainBranch, hasMain := args.Unvalidated.Value.UnvalidatedConfig.MainBranch.Get()
 	if !hasMain {
 		// run setup assistant here
+		err = configsetup.Execute(repo, args.Verbose)
 
 		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 			Backend:               args.Backend,
