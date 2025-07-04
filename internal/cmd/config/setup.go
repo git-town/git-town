@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
@@ -257,7 +258,21 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
 			}
 		}
-		repeat, exit, err := testForgeAuth(data, repo, actualForgeType)
+		repeat, exit, err := testForgeAuth(testForgeAuthArgs{
+			backend:              repo.Backend,
+			bitbucketAppPassword: bitbucketAppPassword,
+			bitbucketUsername:    bitbucketUsername,
+			codebergToken:        codebergToken,
+			configuredValues:     repo.UnvalidatedConfig.NormalConfig,
+			inputs:               data.dialogInputs,
+			githubConnectorType:  githubConnectorTypeOpt,
+			githubToken:          githubToken,
+			gitlabConnectorType:  gitlabConnectorTypeOpt,
+			gitlabToken:          gitlabToken,
+			giteaToken:           giteaToken,
+			forgeTypeOpt:         actualForgeType,
+			remoteURL:            data.config.NormalConfig.RemoteURL(devRemote),
+		})
 		if err != nil || exit {
 			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
 		}
@@ -384,24 +399,24 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 	return normalData, validatedData, tokenScope, enteredForgeType, false, nil
 }
 
-func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Option[forgedomain.ForgeType]) (repeat bool, exit dialogdomain.Exit, err error) {
+func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
 	if _, inTest := os.LookupEnv(subshell.TestToken); inTest {
 		return false, false, nil
 	}
 	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
-		Backend:              repo.Backend,
-		BitbucketAppPassword: data.userInput.config.NormalConfig.BitbucketAppPassword.Or(data.config.NormalConfig.BitbucketAppPassword),
-		BitbucketUsername:    data.userInput.config.NormalConfig.BitbucketUsername.Or(data.config.NormalConfig.BitbucketUsername),
-		CodebergToken:        data.userInput.config.NormalConfig.CodebergToken.Or(data.config.NormalConfig.CodebergToken),
-		ForgeType:            forgeTypeOpt,
-		Frontend:             repo.Backend,
-		GitHubConnectorType:  data.userInput.config.NormalConfig.GitHubConnectorType.Or(data.config.NormalConfig.GitHubConnectorType),
-		GitHubToken:          data.userInput.config.NormalConfig.GitHubToken.Or(data.config.NormalConfig.GitHubToken),
-		GitLabConnectorType:  data.userInput.config.NormalConfig.GitLabConnectorType.Or(data.config.NormalConfig.GitLabConnectorType),
-		GitLabToken:          data.userInput.config.NormalConfig.GitLabToken.Or(data.config.NormalConfig.GitLabToken),
-		GiteaToken:           data.userInput.config.NormalConfig.GiteaToken.Or(data.config.NormalConfig.GiteaToken),
+		Backend:              args.backend,
+		BitbucketAppPassword: args.bitbucketAppPassword.Or(args.configuredValues.BitbucketAppPassword),
+		BitbucketUsername:    args.bitbucketUsername.Or(args.configuredValues.BitbucketUsername),
+		CodebergToken:        args.codebergToken.Or(args.configuredValues.CodebergToken),
+		ForgeType:            args.forgeTypeOpt,
+		Frontend:             args.backend,
+		GitHubConnectorType:  args.githubConnectorType.Or(args.configuredValues.GitHubConnectorType),
+		GitHubToken:          args.githubToken.Or(args.configuredValues.GitHubToken),
+		GitLabConnectorType:  args.gitlabConnectorType.Or(args.configuredValues.GitLabConnectorType),
+		GitLabToken:          args.gitlabToken.Or(args.configuredValues.GitLabToken),
+		GiteaToken:           args.giteaToken.Or(args.configuredValues.GiteaToken),
 		Log:                  print.Logger{},
-		RemoteURL:            data.userInput.config.NormalConfig.DevURL().Or(data.config.NormalConfig.DevURL()),
+		RemoteURL:            args.remoteURL.Or(args.configuredValues.DevURL()),
 	})
 	if err != nil {
 		return false, false, err
@@ -412,16 +427,32 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 	}
 	verifyResult := connector.VerifyConnection()
 	if verifyResult.AuthenticationError != nil {
-		return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, data.dialogInputs.Next())
+		return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, args.inputs.Next())
 	}
 	if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
 		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(user, exit))
 	}
 	if verifyResult.AuthorizationError != nil {
-		return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, data.dialogInputs.Next())
+		return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, args.inputs.Next())
 	}
 	fmt.Println(messages.CredentialsAccess)
 	return false, false, nil
+}
+
+type testForgeAuthArgs struct {
+	backend              subshelldomain.RunnerQuerier
+	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
+	bitbucketUsername    Option[forgedomain.BitbucketUsername]
+	codebergToken        Option[forgedomain.CodebergToken]
+	configuredValues     config.NormalConfig
+	inputs               components.TestInputs
+	githubConnectorType  Option[forgedomain.GitHubConnectorType]
+	githubToken          Option[forgedomain.GitHubToken]
+	gitlabConnectorType  Option[forgedomain.GitLabConnectorType]
+	gitlabToken          Option[forgedomain.GitLabToken]
+	giteaToken           Option[forgedomain.GiteaToken]
+	forgeTypeOpt         Option[forgedomain.ForgeType]
+	remoteURL            Option[giturl.Parts]
 }
 
 func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
