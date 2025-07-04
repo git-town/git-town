@@ -26,21 +26,21 @@ func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOver
 }
 
 // provides the branch type overrides stored in the given Git metadata snapshot
-func NewBranchTypeOverridesInSnapshot(snapshot SingleSnapshot, removeLocalConfigValue removeLocalConfigValueFunc) (BranchTypeOverrides, error) {
+func NewBranchTypeOverridesInSnapshot(snapshot SingleSnapshot, gitCommands configRemover) (BranchTypeOverrides, error) {
 	result := BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
 		branch := key.Branch()
 		if branch == "" {
 			// empty branch name --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = removeLocalConfigValue(key.Key)
+			_ = gitCommands.RemoveConfigValue(ConfigScopeLocal, key.Key)
 			continue
 		}
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty branch type values are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = removeLocalConfigValue(key.Key)
+			_ = gitCommands.RemoveConfigValue(ConfigScopeLocal, key.Key)
 			continue
 		}
 		branchTypeOpt, err := ParseBranchType(value)
@@ -52,4 +52,8 @@ func NewBranchTypeOverridesInSnapshot(snapshot SingleSnapshot, removeLocalConfig
 		}
 	}
 	return result, nil
+}
+
+type configRemover interface {
+	RemoveConfigValue(ConfigScope, Key) error
 }
