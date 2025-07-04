@@ -92,6 +92,11 @@ func (self *NormalConfig) RemoveNewBranchType() error {
 	return self.GitPersistence.RemoveNewBranchType()
 }
 
+func (self *NormalConfig) RemovePerennialRegex() error {
+	self.PerennialRegex = None[configdomain.PerennialRegex]()
+	return self.GitPersistence.RemovePerennialRegex()
+}
+
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.GitConfig.Lineage = self.GitConfig.Lineage.RemoveBranch(branch)

@@ -846,7 +846,7 @@ func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], 
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetPerennialRegexLocally(value)
 	}
-	_ = config.NormalConfig.GitPersistence.RemovePerennialRegex()
+	_ = config.NormalConfig.RemovePerennialRegex()
 	return nil
 }
 
