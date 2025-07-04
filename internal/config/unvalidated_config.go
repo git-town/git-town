@@ -79,7 +79,7 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-func DefaultUnvalidatedConfig(gitAccess gitconfig.Access, gitVersion git.Version) UnvalidatedConfig {
+func DefaultUnvalidatedConfig(gitAccess gitconfig.IO, gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
@@ -115,7 +115,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 }
 
 type NewUnvalidatedConfigArgs struct {
-	Access        gitconfig.Access
+	Access        gitconfig.IO
 	ConfigFile    Option[configdomain.PartialConfig]
 	DryRun        configdomain.DryRun
 	EnvConfig     configdomain.PartialConfig

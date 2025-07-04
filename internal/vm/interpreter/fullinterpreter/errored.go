@@ -26,7 +26,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
-	configGitAccess := gitconfig.Access{Shell: args.Backend}
+	configGitAccess := gitconfig.IO{Shell: args.Backend}
 	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err

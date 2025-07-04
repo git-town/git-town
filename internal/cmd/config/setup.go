@@ -52,7 +52,7 @@ func SetupCommand() *cobra.Command {
 }
 
 // the config settings to be used if the user accepts all default options
-func defaultUserInput(gitAccess gitconfig.Access, gitVersion git.Version) userInput {
+func defaultUserInput(gitAccess gitconfig.IO, gitVersion git.Version) userInput {
 	return userInput{
 		config:        config.DefaultUnvalidatedConfig(gitAccess, gitVersion),
 		configStorage: dialog.ConfigStorageOptionFile,

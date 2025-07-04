@@ -105,7 +105,7 @@ upstream = true
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		var gitAccess gitconfig.Access
+		var gitAccess gitconfig.IO
 		config := config.DefaultUnvalidatedConfig(gitAccess, git.EmptyVersion())
 		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 		err := configfile.Save(&config)

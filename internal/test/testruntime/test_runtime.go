@@ -93,7 +93,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		RemotesCache:       &cache.Cache[gitdomain.Remotes]{},
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access: gitconfig.Access{
+		Access: gitconfig.IO{
 			Shell: &testRunner,
 		},
 		ConfigFile:    None[configdomain.PartialConfig](),
