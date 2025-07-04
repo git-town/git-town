@@ -87,8 +87,6 @@ share-new-branches = "push"
 
 [hosting]
 dev-remote = "fork"
-# forge-type = ""
-# origin-hostname = ""
 
 [ship]
 delete-tracking-branch = true
@@ -130,8 +128,6 @@ share-new-branches = "no"
 
 [hosting]
 dev-remote = "origin"
-# forge-type = ""
-# origin-hostname = ""
 
 [ship]
 delete-tracking-branch = true

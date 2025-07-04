@@ -67,8 +67,6 @@ Feature: Accepting all default values leads to a working setup
 
       [hosting]
       dev-remote = "origin"
-      # forge-type = ""
-      # origin-hostname = ""
 
       [ship]
       delete-tracking-branch = true
