@@ -54,15 +54,15 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
-func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, removeLocalConfigValue removeLocalConfigValueFunc) (PartialConfig, error) {
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, gitCommands configRemover) (PartialConfig, error) {
 	aliases := snapshot.Aliases()
-	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, removeLocalConfigValue)
+	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, gitCommands)
 	contributionRegex, err2 := ParseContributionRegex(snapshot[KeyContributionRegex])
 	featureRegex, err3 := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	forgeType, err4 := forgedomain.ParseForgeType(snapshot[KeyForgeType])
 	githubConnectorType, err5 := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
 	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
-	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, removeLocalConfigValue)
+	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, gitCommands)
 	newBranchType, err8 := ParseBranchType(snapshot[KeyNewBranchType])
 	observedRegex, err9 := ParseObservedRegex(snapshot[KeyObservedRegex])
 	offline, err10 := ParseOffline(snapshot[KeyOffline], KeyOffline)
@@ -114,9 +114,6 @@ func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, 
 		UnknownBranchType:        unknownBranchType,
 	}, cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10, err11, err12, err13, err14, err15, err16, err17, err18, err19, err20, err21)
 }
-
-// a function that deletes the local Git configuration value with the given key
-type removeLocalConfigValueFunc func(Key) error
 
 // Merges the given PartialConfig into this configuration object.
 func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
