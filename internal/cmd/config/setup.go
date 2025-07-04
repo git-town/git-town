@@ -698,7 +698,7 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	if value, hasValue := newValue.Get(); hasValue {
 		return config.NormalConfig.SetNewBranchType(value)
 	}
-	config.NormalConfig.GitPersistence.RemoveNewBranchType()
+	_ = config.NormalConfig.GitPersistence.RemoveNewBranchType()
 	return nil
 }
 
@@ -723,7 +723,7 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetFeatureRegexLocally(value)
 	}
-	config.NormalConfig.GitPersistence.RemoveFeatureRegex()
+	_ = config.NormalConfig.GitPersistence.RemoveFeatureRegex()
 	return nil
 }
 
@@ -846,7 +846,7 @@ func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], 
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetPerennialRegexLocally(value)
 	}
-	config.NormalConfig.GitPersistence.RemovePerennialRegex()
+	_ = config.NormalConfig.GitPersistence.RemovePerennialRegex()
 	return nil
 }
 
@@ -917,21 +917,21 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	config.NormalConfig.GitPersistence.RemoveCreatePrototypeBranches()
-	config.NormalConfig.GitPersistence.RemoveDevRemote()
+	_ = config.NormalConfig.GitPersistence.RemoveCreatePrototypeBranches()
+	_ = config.NormalConfig.GitPersistence.RemoveDevRemote()
 	config.RemoveMainBranch()
-	config.NormalConfig.GitPersistence.RemoveNewBranchType()
-	config.NormalConfig.GitPersistence.RemovePerennialBranches()
-	config.NormalConfig.GitPersistence.RemovePerennialRegex()
-	config.NormalConfig.GitPersistence.RemoveShareNewBranches()
-	config.NormalConfig.GitPersistence.RemovePushHook()
-	config.NormalConfig.GitPersistence.RemoveShipStrategy()
-	config.NormalConfig.GitPersistence.RemoveShipDeleteTrackingBranch()
-	config.NormalConfig.GitPersistence.RemoveSyncFeatureStrategy()
-	config.NormalConfig.GitPersistence.RemoveSyncPerennialStrategy()
-	config.NormalConfig.GitPersistence.RemoveSyncPrototypeStrategy()
-	config.NormalConfig.GitPersistence.RemoveSyncUpstream()
-	config.NormalConfig.GitPersistence.RemoveSyncTags()
+	_ = config.NormalConfig.GitPersistence.RemoveNewBranchType()
+	_ = config.NormalConfig.GitPersistence.RemovePerennialBranches()
+	_ = config.NormalConfig.GitPersistence.RemovePerennialRegex()
+	_ = config.NormalConfig.GitPersistence.RemoveShareNewBranches()
+	_ = config.NormalConfig.GitPersistence.RemovePushHook()
+	_ = config.NormalConfig.GitPersistence.RemoveShipStrategy()
+	_ = config.NormalConfig.GitPersistence.RemoveShipDeleteTrackingBranch()
+	_ = config.NormalConfig.GitPersistence.RemoveSyncFeatureStrategy()
+	_ = config.NormalConfig.GitPersistence.RemoveSyncPerennialStrategy()
+	_ = config.NormalConfig.GitPersistence.RemoveSyncPrototypeStrategy()
+	_ = config.NormalConfig.GitPersistence.RemoveSyncUpstream()
+	_ = config.NormalConfig.GitPersistence.RemoveSyncTags()
 	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
 		return err
 	}

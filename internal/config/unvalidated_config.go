@@ -79,14 +79,14 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-func DefaultUnvalidatedConfig(GitPersistence gitconfig.Persistence, gitVersion git.Version) UnvalidatedConfig {
+func DefaultUnvalidatedConfig(gitPersistence gitconfig.Persistence, gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
 			EnvConfig:        configdomain.EmptyPartialConfig(),
 			GitConfig:        configdomain.EmptyPartialConfig(),
-			GitPersistence:   GitPersistence,
+			GitPersistence:   gitPersistence,
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},

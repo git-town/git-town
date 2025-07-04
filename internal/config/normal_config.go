@@ -34,7 +34,7 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 			_ = self.GitPersistence.SetParent(child, parent)
 		} else {
 			self.Lineage = self.Lineage.RemoveBranch(child)
-			self.GitPersistence.RemoveParent(parent)
+			_ = self.GitPersistence.RemoveParent(parent)
 		}
 	}
 	self.Lineage = self.Lineage.RemoveBranch(branch)
