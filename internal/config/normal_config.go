@@ -183,19 +183,19 @@ func (self *NormalConfig) SetShipStrategy(value configdomain.ShipStrategy, scope
 
 func (self *NormalConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
 	self.SyncFeatureStrategy = value
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy, value.String())
+	return self.GitPersistence.SetSyncFeatureStrategy(value)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *NormalConfig) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
 	self.SyncPerennialStrategy = strategy
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy, strategy.String())
+	return self.GitPersistence.SetSyncPerennialStrategy(strategy)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *NormalConfig) SetSyncPrototypeStrategy(strategy configdomain.SyncPrototypeStrategy) error {
 	self.SyncPrototypeStrategy = strategy
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, strategy.String())
+	return self.GitPersistence.SetSyncPrototypeStrategy(strategy)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.

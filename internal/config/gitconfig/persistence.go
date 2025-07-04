@@ -140,3 +140,15 @@ func (self Persistence) SetShipDeleteTrackingBranch(scope configdomain.ConfigSco
 func (self Persistence) SetShipStrategy(scope configdomain.ConfigScope, value configdomain.ShipStrategy) error {
 	return self.io.SetConfigValue(scope, configdomain.KeyShipStrategy, value.String())
 }
+
+func (self Persistence) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy, value.String())
+}
+
+func (self Persistence) SetSyncPerennialStrategy(value configdomain.SyncPerennialStrategy) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy, value.String())
+}
+
+func (self Persistence) SetSyncPrototypeStrategy(value configdomain.SyncPrototypeStrategy) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, value.String())
+}
