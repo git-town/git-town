@@ -603,7 +603,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(
-			saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, oldConfig),
+			saveFeatureRegex(oldConfig.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, gitCommands, frontend),
 		)
 	}
 	if configFile.PushHook.IsNone() {
@@ -716,14 +716,14 @@ func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.Unvalidate
 	return config.NormalConfig.SetDevRemote(newValue)
 }
 
-func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
+func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return config.NormalConfig.SetFeatureRegexLocally(value)
+		return gitCommands.SetFeatureRegex(frontend, value, configdomain.ConfigScopeLocal)
 	}
-	config.NormalConfig.RemoveFeatureRegex()
+	gitCommands.RemoveFeatureRegex(frontend)
 	return nil
 }
 
@@ -913,12 +913,11 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig, gitCommands git.Commands) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	config.NormalConfig.RemoveCreatePrototypeBranches()
-	config.NormalConfig.RemoveDevRemote()
+	gitCommands.RemoveDevRemote()
 	config.RemoveMainBranch()
 	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()
@@ -935,5 +934,5 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config)
+	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex)
 }

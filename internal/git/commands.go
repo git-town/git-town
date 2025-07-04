@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -627,6 +628,64 @@ func (self *Commands) HasRebaseInProgress(querier subshelldomain.Querier) (bool,
 	return false, nil
 }
 
+func (self *Commands) LoadSnapshot(runner subshelldomain.RunnerQuerier, scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
+	snapshot := configdomain.SingleSnapshot{}
+	cmdArgs := []string{"config", "-lz"}
+	scope, hasScope := scopeOpt.Get()
+	if hasScope {
+		cmdArgs = append(cmdArgs, scope.GitFlag())
+	}
+	output, err := runner.Query("git", cmdArgs...)
+	if err != nil || output == "" {
+		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
+	}
+	for _, line := range strings.Split(output, "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		key, value, _ := strings.Cut(line, "\n")
+		configKey, hasConfigKey := configdomain.ParseKey(key).Get()
+		if updateOutdated.IsTrue() && hasScope {
+			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
+			if keyIsDeprecated {
+				self.UpdateDeprecatedSetting(scope, configKey, newKey, value)
+				configKey = newKey
+			}
+			if configKey != configdomain.KeyPerennialBranches && value == "" {
+				_ = self.RemoveLocalConfigValue(configKey)
+				continue
+			}
+			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
+				_ = self.RemoveConfigValue(scope, configKey)
+				fmt.Printf(messages.SettingSunsetDeleted, configKey)
+				continue
+			}
+			for _, update := range configdomain.ConfigUpdates {
+				if configKey == update.Before.Key && value == update.Before.Value {
+					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
+					configKey = update.After.Key
+					value = update.After.Value
+				}
+			}
+			for branchList, branchType := range configdomain.ObsoleteBranchLists {
+				if configKey == branchList {
+					for _, branch := range strings.Split(value, " ") {
+						branchTypeKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
+						snapshot[branchTypeKey] = branchType.String()
+						_ = self.SetConfigValue(configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
+					}
+					_ = self.RemoveLocalConfigValue(configKey)
+					fmt.Printf(messages.SettingSunsetBranchList, configKey)
+				}
+			}
+		}
+		if hasConfigKey {
+			snapshot[configKey] = value
+		}
+	}
+	return snapshot, err
+}
+
 func (self *Commands) MergeBranchNoEdit(runner subshelldomain.Runner, branch gitdomain.BranchName) error {
 	return runner.Run("git", "merge", "--no-edit", "--ff", branch.String())
 }
@@ -773,6 +832,10 @@ func (self *Commands) RemoveCommit(runner subshelldomain.Runner, commit gitdomai
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", commit.String()+"^", commit.String())
 }
 
+func (self *Commands) RemoveFeatureRegex(runner subshelldomain.Runner) error {
+	return runner.Run("git", "config", "--unset", configdomain.KeyFeatureRegex.String())
+}
+
 func (self *Commands) RemoveFile(runner subshelldomain.Runner, fileName string) error {
 	return runner.Run("git", "rm", fileName)
 }
@@ -880,6 +943,10 @@ func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value forge
 	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
 }
 
+func (self *Commands) SetFeatureRegex(runner subshelldomain.Runner, value configdomain.FeatureRegex, scope configdomain.ConfigScope) error {
+	return runner.Run("git", "config", configdomain.KeyFeatureRegex.String(), value.String())
+}
+
 func (self *Commands) SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
 	return runner.Run("git", "config", configdomain.KeyForgeType.String(), forgeType.String())
 }
@@ -947,6 +1014,16 @@ func (self *Commands) UndoLastCommit(runner subshelldomain.Runner) error {
 
 func (self *Commands) UnstageAll(runner subshelldomain.Runner) error {
 	return runner.Run("git", "restore", "--staged", ".")
+}
+
+func (self *Commands) UpdateDeprecatedSetting(runner subshelldomain.RunnerQuerier, scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
+	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedMessage, scope, oldKey, newKey)))
+	if err := self.RemoveConfigValue(scope, oldKey); err != nil {
+		fmt.Printf(messages.SettingCannotRemove, scope, oldKey, err)
+	}
+	if err := self.SetConfigValue(scope, newKey, value); err != nil {
+		fmt.Printf(messages.SettingCannotWrite, scope, newKey, err)
+	}
 }
 
 func LastBranchInRef(output string) string {
