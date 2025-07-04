@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -167,18 +166,18 @@ func (self *NormalConfig) SetPushHookLocally(value configdomain.PushHook) error 
 // freshly created branches to origin.
 func (self *NormalConfig) SetShareNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
 	self.ShareNewBranches = value
-	return self.GitPersistence.SetShareNewBranches(scope, value)
+	return self.GitPersistence.SetShareNewBranches(value, scope)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
 func (self *NormalConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
 	self.ShipDeleteTrackingBranch = value
-	return self.GitPersistence.SetShipDeleteTrackingBranch(scope, value)
+	return self.GitPersistence.SetShipDeleteTrackingBranch(value, scope)
 }
 
 func (self *NormalConfig) SetShipStrategy(value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
 	self.ShipStrategy = value
-	return self.GitPersistence.SetShipStrategy(scope, value)
+	return self.GitPersistence.SetShipStrategy(value, scope)
 }
 
 func (self *NormalConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
@@ -201,17 +200,17 @@ func (self *NormalConfig) SetSyncPrototypeStrategy(strategy configdomain.SyncPro
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *NormalConfig) SetSyncTags(value configdomain.SyncTags) error {
 	self.SyncTags = value
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncTags, value.String())
+	return self.GitPersistence.SetSyncTags(value)
 }
 
 // SetSyncUpstream updates the configured sync-upstream strategy.
 func (self *NormalConfig) SetSyncUpstream(value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
 	self.SyncUpstream = value
-	return self.GitIO.SetConfigValue(scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+	return self.GitPersistence.SetSyncUpstream(value, scope)
 }
 
 // SetUnknownBranchTypeLocally updates the locally configured unknown branch type.
 func (self *NormalConfig) SetUnknownBranchTypeLocally(value configdomain.BranchType) error {
 	self.UnknownBranchType = value
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
+	return self.GitPersistence.SetUnknownBranchType(value)
 }

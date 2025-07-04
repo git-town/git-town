@@ -129,15 +129,15 @@ func (self Persistence) SetPushHook(value configdomain.PushHook) error {
 	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(value.IsTrue()))
 }
 
-func (self Persistence) SetShareNewBranches(scope configdomain.ConfigScope, value configdomain.ShareNewBranches) error {
+func (self Persistence) SetShareNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
 	return self.io.SetConfigValue(scope, configdomain.KeyShareNewBranches, value.String())
 }
 
-func (self Persistence) SetShipDeleteTrackingBranch(scope configdomain.ConfigScope, value configdomain.ShipDeleteTrackingBranch) error {
+func (self Persistence) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
 	return self.io.SetConfigValue(scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
 }
 
-func (self Persistence) SetShipStrategy(scope configdomain.ConfigScope, value configdomain.ShipStrategy) error {
+func (self Persistence) SetShipStrategy(value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
 	return self.io.SetConfigValue(scope, configdomain.KeyShipStrategy, value.String())
 }
 
@@ -151,4 +151,16 @@ func (self Persistence) SetSyncPerennialStrategy(value configdomain.SyncPerennia
 
 func (self Persistence) SetSyncPrototypeStrategy(value configdomain.SyncPrototypeStrategy) error {
 	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, value.String())
+}
+
+func (self Persistence) SetSyncTags(value configdomain.SyncTags) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncTags, value.String())
+}
+
+func (self Persistence) SetSyncUpstream(value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
+	return self.io.SetConfigValue(scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+}
+
+func (self Persistence) SetUnknownBranchType(value configdomain.BranchType) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
 }
