@@ -1,6 +1,7 @@
 package gitconfig
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -122,4 +123,12 @@ func (self Persistence) SetPerennialBranches(branches gitdomain.LocalBranchNames
 
 func (self Persistence) SetPerennialRegex(value configdomain.PerennialRegex) error {
 	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
+}
+
+func (self Persistence) SetPushHook(value configdomain.PushHook) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(value.IsTrue()))
+}
+
+func (self Persistence) SetShareNewBranches(scope configdomain.ConfigScope, value configdomain.ShareNewBranches) error {
+	return self.io.SetConfigValue(scope, configdomain.KeyShareNewBranches, value.String())
 }

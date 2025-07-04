@@ -160,14 +160,14 @@ func (self *NormalConfig) SetPerennialRegexLocally(value configdomain.PerennialR
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *NormalConfig) SetPushHookLocally(value configdomain.PushHook) error {
 	self.PushHook = value
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
+	return self.GitPersistence.SetPushHook(value)
 }
 
 // SetShareNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
 func (self *NormalConfig) SetShareNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
 	self.ShareNewBranches = value
-	return self.GitIO.SetConfigValue(scope, configdomain.KeyShareNewBranches, value.String())
+	return self.GitPersistence.SetShareNewBranches(configdomain.ConfigScopeLocal, value)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
