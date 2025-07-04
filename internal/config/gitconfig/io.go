@@ -43,7 +43,7 @@ func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOu
 				configKey = newKey
 			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
-				_ = self.RemoveLocalConfigValue(configKey)
+				_ = self.RemoveConfigValue(configdomain.ConfigScopeLocal, configKey)
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
@@ -65,7 +65,7 @@ func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOu
 						snapshot[branchTypeKey] = branchType.String()
 						_ = self.SetConfigValue(configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
 					}
-					_ = self.RemoveLocalConfigValue(configKey)
+					_ = self.RemoveConfigValue(configdomain.ConfigScopeLocal, configKey)
 					fmt.Printf(messages.SettingSunsetBranchList, configKey)
 				}
 			}
@@ -84,12 +84,6 @@ func (self *IO) RemoveConfigValue(scope configdomain.ConfigScope, key configdoma
 	}
 	args = append(args, "--unset", key.String())
 	return self.Shell.Run("git", args...)
-}
-
-// removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-// TODO: remove this and replace calls with RemoveConfigValue(localScope)
-func (self *IO) RemoveLocalConfigValue(key configdomain.Key) error {
-	return self.Shell.Run("git", "config", "--unset", key.String())
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
