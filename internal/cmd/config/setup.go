@@ -452,7 +452,7 @@ type testForgeAuthArgs struct {
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	codebergToken        Option[forgedomain.CodebergToken]
 	configuredValues     config.NormalConfig
-	inputs               components.TestInputs
+	inputs               dialogcomponents.TestInputs
 	githubConnectorType  Option[forgedomain.GitHubConnectorType]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabConnectorType  Option[forgedomain.GitLabConnectorType]
@@ -462,7 +462,7 @@ type testForgeAuthArgs struct {
 	remoteURL            Option[giturl.Parts]
 }
 
-func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data configdomain.NormalConfigData, repo execute.OpenRepoResult, inputs components.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data configdomain.NormalConfigData, repo execute.OpenRepoResult, inputs dialogcomponents.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if shouldAskForScope(forgeTypeOpt, data, repo) {
 		return tokenScopeDialog(forgeTypeOpt, repo, inputs)
 	}
@@ -488,7 +488,7 @@ func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data configdo
 	return false
 }
 
-func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], repo execute.OpenRepoResult, inputs components.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], repo execute.OpenRepoResult, inputs dialogcomponents.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
