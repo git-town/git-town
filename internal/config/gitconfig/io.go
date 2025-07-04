@@ -19,7 +19,7 @@ type IO struct {
 	Shell subshelldomain.RunnerQuerier
 }
 
-func (self *IO) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
+func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz"}
 	scope, hasScope := scopeOpt.Get()

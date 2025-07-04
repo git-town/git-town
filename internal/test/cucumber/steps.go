@@ -405,7 +405,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := configdomain.NewParentKey(branchName)
-		return devRepo.Config.NormalConfig.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configKey, value)
+		return devRepo.Config.NormalConfig.GitPersistence.IO.SetConfigValue(configdomain.ConfigScopeLocal, configKey, value)
 	})
 
 	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
@@ -525,7 +525,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		parsedScope := configdomain.ParseConfigScope(scope)
-		return devRepo.Config.NormalConfig.GitIO.SetConfigValue(parsedScope, configdomain.Key(key), value)
+		return devRepo.Config.NormalConfig.GitPersistence.IO.SetConfigValue(parsedScope, configdomain.Key(key), value)
 	})
 
 	sc.Step(`^(global |local |)Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(ctx context.Context, scope, name, want string) error {

@@ -52,9 +52,9 @@ func SetupCommand() *cobra.Command {
 }
 
 // the config settings to be used if the user accepts all default options
-func defaultUserInput(gitIO gitconfig.IO, gitVersion git.Version) userInput {
+func defaultUserInput(gitPersistence gitconfig.Persistence, gitVersion git.Version) userInput {
 	return userInput{
-		config:        config.DefaultUnvalidatedConfig(gitIO, gitVersion),
+		config:        config.DefaultUnvalidatedConfig(gitPersistence, gitVersion),
 		configStorage: dialog.ConfigStorageOptionFile,
 	}
 }
@@ -500,7 +500,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
-		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitIO, repo.UnvalidatedConfig.NormalConfig.GitVersion),
+		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitPersistence, repo.UnvalidatedConfig.NormalConfig.GitVersion),
 	}, exit, nil
 }
 
@@ -698,7 +698,7 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	if value, hasValue := newValue.Get(); hasValue {
 		return config.NormalConfig.SetNewBranchType(value)
 	}
-	config.NormalConfig.RemoveNewBranchType()
+	config.NormalConfig.GitPersistence.RemoveNewBranchType()
 	return nil
 }
 
@@ -723,7 +723,7 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetFeatureRegexLocally(value)
 	}
-	config.NormalConfig.RemoveFeatureRegex()
+	config.NormalConfig.GitPersistence.RemoveFeatureRegex()
 	return nil
 }
 
@@ -846,7 +846,7 @@ func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], 
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetPerennialRegexLocally(value)
 	}
-	config.NormalConfig.RemovePerennialRegex()
+	config.NormalConfig.GitPersistence.RemovePerennialRegex()
 	return nil
 }
 
@@ -917,21 +917,21 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	config.NormalConfig.RemoveCreatePrototypeBranches()
-	config.NormalConfig.RemoveDevRemote()
+	config.NormalConfig.GitPersistence.RemoveCreatePrototypeBranches()
+	config.NormalConfig.GitPersistence.RemoveDevRemote()
 	config.RemoveMainBranch()
-	config.NormalConfig.RemoveNewBranchType()
-	config.NormalConfig.RemovePerennialBranches()
-	config.NormalConfig.RemovePerennialRegex()
-	config.NormalConfig.RemoveShareNewBranches()
-	config.NormalConfig.RemovePushHook()
-	config.NormalConfig.RemoveShipStrategy()
-	config.NormalConfig.RemoveShipDeleteTrackingBranch()
-	config.NormalConfig.RemoveSyncFeatureStrategy()
-	config.NormalConfig.RemoveSyncPerennialStrategy()
-	config.NormalConfig.RemoveSyncPrototypeStrategy()
-	config.NormalConfig.RemoveSyncUpstream()
-	config.NormalConfig.RemoveSyncTags()
+	config.NormalConfig.GitPersistence.RemoveNewBranchType()
+	config.NormalConfig.GitPersistence.RemovePerennialBranches()
+	config.NormalConfig.GitPersistence.RemovePerennialRegex()
+	config.NormalConfig.GitPersistence.RemoveShareNewBranches()
+	config.NormalConfig.GitPersistence.RemovePushHook()
+	config.NormalConfig.GitPersistence.RemoveShipStrategy()
+	config.NormalConfig.GitPersistence.RemoveShipDeleteTrackingBranch()
+	config.NormalConfig.GitPersistence.RemoveSyncFeatureStrategy()
+	config.NormalConfig.GitPersistence.RemoveSyncPerennialStrategy()
+	config.NormalConfig.GitPersistence.RemoveSyncPrototypeStrategy()
+	config.NormalConfig.GitPersistence.RemoveSyncUpstream()
+	config.NormalConfig.GitPersistence.RemoveSyncTags()
 	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
 		return err
 	}

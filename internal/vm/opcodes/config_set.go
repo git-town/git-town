@@ -13,5 +13,5 @@ type ConfigSet struct {
 }
 
 func (self *ConfigSet) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitIO.SetConfigValue(self.Scope, self.Key, self.Value)
+	return args.Config.Value.NormalConfig.GitPersistence.IO.SetConfigValue(self.Scope, self.Key, self.Value)
 }

@@ -98,8 +98,10 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
 		GitConfig:     configdomain.EmptyPartialConfig(),
-		GitIO: gitconfig.IO{
-			Shell: &testRunner,
+		GitPersistence: gitconfig.Persistence{
+			IO: gitconfig.IO{
+				Shell: &testRunner,
+			},
 		},
 		GitVersion: git.Version{Major: 2, Minor: 38},
 	})
