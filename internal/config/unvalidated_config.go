@@ -58,14 +58,14 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.NormalConfig.GitIO.RemoveLocalConfigValue(configdomain.KeyMainBranch)
+	_ = self.NormalConfig.GitPersistence.RemoveMainBranch()
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return self.NormalConfig.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return self.NormalConfig.GitPersistence.SetMainBranch(branch)
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
@@ -79,14 +79,14 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-func DefaultUnvalidatedConfig(gitIO gitconfig.IO, gitVersion git.Version) UnvalidatedConfig {
+func DefaultUnvalidatedConfig(GitPersistence gitconfig.Persistence, gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
 			EnvConfig:        configdomain.EmptyPartialConfig(),
 			GitConfig:        configdomain.EmptyPartialConfig(),
-			GitIO:            gitIO,
+			GitPersistence:   GitPersistence,
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},
@@ -106,7 +106,7 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 			DryRun:           args.DryRun,
 			EnvConfig:        args.EnvConfig,
 			GitConfig:        args.GitConfig,
-			GitIO:            args.GitIO,
+			GitPersistence:   args.GitPersistence,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
@@ -115,13 +115,13 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 }
 
 type NewUnvalidatedConfigArgs struct {
-	ConfigFile    Option[configdomain.PartialConfig]
-	DryRun        configdomain.DryRun
-	EnvConfig     configdomain.PartialConfig
-	FinalMessages stringslice.Collector
-	GitConfig     configdomain.PartialConfig
-	GitIO         gitconfig.IO
-	GitVersion    git.Version
+	ConfigFile     Option[configdomain.PartialConfig]
+	DryRun         configdomain.DryRun
+	EnvConfig      configdomain.PartialConfig
+	FinalMessages  stringslice.Collector
+	GitConfig      configdomain.PartialConfig
+	GitPersistence gitconfig.Persistence
+	GitVersion     git.Version
 }
 
 func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, configdomain.NormalConfigData) {

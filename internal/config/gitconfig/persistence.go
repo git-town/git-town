@@ -41,6 +41,10 @@ func (self Persistence) RemoveFeatureRegex() error {
 	return self.io.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
 }
 
+func (self Persistence) RemoveMainBranch() error {
+	return self.io.RemoveLocalConfigValue(configdomain.KeyMainBranch)
+}
+
 func (self Persistence) RemoveNewBranchType() error {
 	return self.io.RemoveLocalConfigValue(configdomain.KeyNewBranchType)
 }
@@ -103,6 +107,10 @@ func (self Persistence) SetDevRemote(value gitdomain.Remote) error {
 
 func (self Persistence) SetFeatureRegex(value configdomain.FeatureRegex) error {
 	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
+}
+
+func (self Persistence) SetMainBranch(value gitdomain.LocalBranchName) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, value.String())
 }
 
 func (self Persistence) SetNewBranchType(value configdomain.BranchType) error {
