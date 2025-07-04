@@ -115,3 +115,11 @@ func (self Persistence) SetOffline(value configdomain.Offline) error {
 func (self Persistence) SetParent(child, parent gitdomain.LocalBranchName) error {
 	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 }
+
+func (self Persistence) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
+}
+
+func (self Persistence) SetPerennialRegex(value configdomain.PerennialRegex) error {
+	return self.io.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
+}

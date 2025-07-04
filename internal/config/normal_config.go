@@ -148,13 +148,13 @@ func (self *NormalConfig) SetParent(branch, parentBranch gitdomain.LocalBranchNa
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
+	return self.GitPersistence.SetPerennialBranches(branches)
 }
 
 // SetPerennialRegexLocally updates the locally configured perennial regex.
 func (self *NormalConfig) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
 	self.PerennialRegex = Some(value)
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
+	return self.GitPersistence.SetPerennialRegex(value)
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
