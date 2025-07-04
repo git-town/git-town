@@ -443,7 +443,7 @@ func (self *TestCommands) RemoveMainBranchConfiguration() {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.Config.NormalConfig.GitIO.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+	return self.Config.NormalConfig.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
