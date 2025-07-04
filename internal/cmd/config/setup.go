@@ -76,7 +76,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	tokenScope, forgeTypeOpt, exit, err := enterData(repo, &data)
+	unvalidatedUserInput, validatedUserInput, tokenScope, forgeTypeOpt, configStorage, exit, err := enterData(repo, &data)
 	if err != nil || exit {
 		return err
 	}
@@ -121,17 +121,17 @@ func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forge
 	return None[forgedomain.ForgeType]()
 }
 
-func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.NormalConfigData, configdomain.ValidatedConfigData, configdomain.ConfigScope, Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.NormalConfigData, configdomain.ValidatedConfigData, configdomain.ConfigScope, Option[forgedomain.ForgeType], Option[dialog.ConfigStorageOption], dialogdomain.Exit, error) {
 	configFile := data.configFile.GetOrDefault()
 	exit, err := dialog.Welcome(data.dialogInputs.Next())
 	emptyNormal := configdomain.DefaultNormalConfig()
 	emptyValidated := configdomain.EmptyValidateConfigData()
 	if err != nil || exit {
-		return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+		return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 	}
 	aliases, exit, err := dialog.Aliases(configdomain.AllAliasableCommands(), repo.UnvalidatedConfig.NormalConfig.Aliases, data.dialogInputs.Next())
 	if err != nil || exit {
-		return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+		return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 	}
 	var mainBranch gitdomain.LocalBranchName
 	if configFileMainBranch, configFileHasMainBranch := configFile.MainBranch.Get(); configFileHasMainBranch {
@@ -146,42 +146,42 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 		}
 		mainBranch, exit, err = dialog.MainBranch(data.localBranches.Names(), existingMainBranch, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var perennialBranches gitdomain.LocalBranchNames
 	if len(configFile.PerennialBranches) == 0 {
 		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), repo.UnvalidatedConfig.NormalConfig.PerennialBranches, mainBranch, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	perennialRegex := None[configdomain.PerennialRegex]()
 	if configFile.PerennialRegex.IsNone() {
 		perennialRegex, exit, err = dialog.PerennialRegex(repo.UnvalidatedConfig.NormalConfig.PerennialRegex, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	featureRegex := None[configdomain.FeatureRegex]()
 	if configFile.FeatureRegex.IsNone() {
 		featureRegex, exit, err = dialog.FeatureRegex(repo.UnvalidatedConfig.NormalConfig.FeatureRegex, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var unknownBranchType configdomain.BranchType
 	if configFile.UnknownBranchType.IsNone() {
 		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var devRemote gitdomain.Remote
 	if configFile.DevRemote.IsNone() {
 		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
@@ -199,13 +199,13 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 		if configFile.HostingOriginHostname.IsNone() {
 			hostingOriginHostName, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
 			if err != nil || exit {
-				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), exit, err
+				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, None[forgedomain.ForgeType](), None[dialog.ConfigStorageOption](), exit, err
 			}
 		}
 		if configFile.ForgeType.IsNone() {
 			enteredForgeType, exit, err = dialog.ForgeType(repo.UnvalidatedConfig.NormalConfig.ForgeType, data.dialogInputs.Next())
 			if err != nil || exit {
-				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
+				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 			}
 		}
 		actualForgeType = determineForgeType(repo.UnvalidatedConfig, enteredForgeType.Or(repo.UnvalidatedConfig.NormalConfig.ForgeType))
@@ -215,7 +215,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 				existingUsername := bitbucketUsername.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
 				bitbucketUsername, exit, err = dialog.BitbucketUsername(existingUsername, data.dialogInputs.Next())
 				if err != nil || exit {
-					return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
+					return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 				}
 				existingPassword := bitbucketAppPassword.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
 				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(existingPassword, data.dialogInputs.Next())
@@ -229,7 +229,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 				existingType := githubConnectorTypeOpt.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
 				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(existingType, data.dialogInputs.Next())
 				if err != nil || exit {
-					return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
+					return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 				}
 				if githubConnectorType, has := githubConnectorTypeOpt.Get(); has {
 					switch githubConnectorType {
@@ -243,7 +243,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 				existingType := gitlabConnectorTypeOpt.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
 				gitlabConnectorTypeOpt, exit, err = dialog.GitLabConnectorType(existingType, data.dialogInputs.Next())
 				if err != nil || exit {
-					return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
+					return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 				}
 				if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
 					switch gitlabConnectorType {
@@ -255,7 +255,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 				}
 			}
 			if err != nil || exit {
-				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
+				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 			}
 		}
 		repeat, exit, err := testForgeAuth(testForgeAuthArgs{
@@ -274,7 +274,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 			remoteURL:            data.config.NormalConfig.RemoteURL(devRemote),
 		})
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 		if !repeat {
 			break
@@ -282,81 +282,81 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 	}
 	tokenScope, exit, err := enterTokenScope(enteredForgeType, data, repo)
 	if err != nil || exit {
-		return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+		return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 	}
 	var syncFeatureStrategy configdomain.SyncFeatureStrategy
 	if configFile.SyncFeatureStrategy.IsNone() {
 		syncFeatureStrategy, exit, err = dialog.SyncFeatureStrategy(repo.UnvalidatedConfig.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var syncPerennialStrategy configdomain.SyncPerennialStrategy
 	if configFile.SyncPerennialStrategy.IsNone() {
 		syncPerennialStrategy, exit, err = dialog.SyncPerennialStrategy(repo.UnvalidatedConfig.NormalConfig.SyncPerennialStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var syncPrototypeStrategy configdomain.SyncPrototypeStrategy
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var syncUpstream configdomain.SyncUpstream
 	if configFile.SyncUpstream.IsNone() {
 		syncUpstream, exit, err = dialog.SyncUpstream(repo.UnvalidatedConfig.NormalConfig.SyncUpstream, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var syncTags configdomain.SyncTags
 	if configFile.SyncTags.IsNone() {
 		syncTags, exit, err = dialog.SyncTags(repo.UnvalidatedConfig.NormalConfig.SyncTags, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var shareNewBranches configdomain.ShareNewBranches
 	if configFile.ShareNewBranches.IsNone() {
 		shareNewBranches, exit, err = dialog.ShareNewBranches(repo.UnvalidatedConfig.NormalConfig.ShareNewBranches, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var pushHook configdomain.PushHook
 	if configFile.PushHook.IsNone() {
 		pushHook, exit, err = dialog.PushHook(repo.UnvalidatedConfig.NormalConfig.PushHook, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	newBranchType := None[configdomain.BranchType]()
 	if configFile.NewBranchType.IsNone() {
 		newBranchType, exit, err = dialog.NewBranchType(repo.UnvalidatedConfig.NormalConfig.NewBranchType, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var shipStrategy configdomain.ShipStrategy
 	if configFile.ShipStrategy.IsNone() {
 		shipStrategy, exit, err = dialog.ShipStrategy(repo.UnvalidatedConfig.NormalConfig.ShipStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	var shipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		shipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 		if err != nil || exit {
-			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+			return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 		}
 	}
 	configStorage, exit, err := dialog.ConfigStorage(data.dialogInputs.Next())
 	if err != nil || exit {
-		return emptyNormal, emptyValidated, tokenScope, enteredForgeType, exit, err
+		return emptyNormal, emptyValidated, tokenScope, enteredForgeType, None[dialog.ConfigStorageOption](), exit, err
 	}
 	normalData := configdomain.NormalConfigData{
 		Aliases:                  aliases,
@@ -368,11 +368,11 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,
-		GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
-		GitHubToken:              Option[forgedomain.GitHubToken]{},
-		GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
-		GitLabToken:              Option[forgedomain.GitLabToken]{},
-		GiteaToken:               Option[forgedomain.GiteaToken]{},
+		GitHubConnectorType:      githubConnectorTypeOpt,
+		GitHubToken:              githubToken,
+		GitLabConnectorType:      gitlabConnectorTypeOpt,
+		GitLabToken:              gitlabToken,
+		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
 		Lineage:                  configdomain.Lineage{},
 		NewBranchType:            newBranchType,
@@ -392,11 +392,11 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 		UnknownBranchType:        unknownBranchType,
 	}
 	validatedData := configdomain.ValidatedConfigData{
-		GitUserEmail: "",
-		GitUserName:  "",
+		GitUserEmail: "", // the setup assistant doesn't ask for this
+		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	return normalData, validatedData, tokenScope, enteredForgeType, false, nil
+	return normalData, validatedData, tokenScope, enteredForgeType, configStorage, false, nil
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {

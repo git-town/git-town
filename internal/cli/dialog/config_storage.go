@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 const (
@@ -32,14 +33,14 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(inputs components.TestInput) (ConfigStorageOption, dialogdomain.Exit, error) {
+func ConfigStorage(inputs components.TestInput) (Option[ConfigStorageOption], dialogdomain.Exit, error) {
 	entries := list.NewEntries(
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
 	)
 	selection, exit, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
 	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), exit))
-	return selection, exit, err
+	return NewOption(selection), exit, err
 }
 
 type ConfigStorageOption string
