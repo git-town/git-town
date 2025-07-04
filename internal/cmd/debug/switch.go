@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -30,7 +29,7 @@ func switchBranch() *cobra.Command {
 					Type:          configdomain.BranchTypeFeatureBranch,
 				}
 			}
-			dialogTestInputs := components.LoadTestInputs(os.Environ())
+			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err = dialog.SwitchBranch(entries, 0, false, false, dialogTestInputs.Next())
 			return err
 		},

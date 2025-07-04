@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -99,7 +98,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 type setupData struct {
 	config        config.UnvalidatedConfig
 	configFile    Option[configdomain.PartialConfig]
-	dialogInputs  components.TestInputs
+	dialogInputs  dialogcomponents.TestInputs
 	localBranches gitdomain.BranchInfos
 	remotes       gitdomain.Remotes
 	userInput     userInput
@@ -384,7 +383,7 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 		return dialog.CredentialsNoAccess(verifyResult.AuthenticationError, data.dialogInputs.Next())
 	}
 	if user, hasUser := verifyResult.AuthenticatedUser.Get(); hasUser {
-		fmt.Printf(messages.CredentialsForgeUserName, components.FormattedSelection(user, exit))
+		fmt.Printf(messages.CredentialsForgeUserName, dialogcomponents.FormattedSelection(user, exit))
 	}
 	if verifyResult.AuthorizationError != nil {
 		return dialog.CredentialsNoProposalAccess(verifyResult.AuthorizationError, data.dialogInputs.Next())
@@ -460,7 +459,7 @@ func existsAndChanged[T fmt.Stringer](input, existing T) bool {
 }
 
 func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setupData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err

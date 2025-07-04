@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -150,7 +149,7 @@ type proposeData struct {
 	branchesToSync      configdomain.BranchesToSync
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    components.TestInputs
+	dialogTestInputs    dialogcomponents.TestInputs
 	dryRun              configdomain.DryRun
 	hasOpenChanges      bool
 	initialBranch       gitdomain.LocalBranchName
@@ -175,7 +174,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err

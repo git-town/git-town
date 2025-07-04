@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/pkg/asserts"
@@ -31,7 +30,7 @@ func enterCommitsToBeam() *cobra.Command {
 			for i := range amount {
 				commits[i] = allCommits[i]
 			}
-			dialogTestInputs := components.LoadTestInputs(os.Environ())
+			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err := dialog.CommitsToBeam(commits, "target-branch", repo.Git, repo.Backend, dialogTestInputs.Next())
 			return err
 		},

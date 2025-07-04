@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -24,7 +24,7 @@ branches when pull requests are merged through its UI.
 `
 )
 
-func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs components.TestInput) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Exit, error) {
+func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs dialogcomponents.TestInput) (configdomain.ShipDeleteTrackingBranch, dialogdomain.Exit, error) {
 	entries := list.Entries[bool]{
 		{
 			Data: true,
@@ -41,7 +41,7 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	} else {
 		defaultPos = 1
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(format.Bool(selection), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipDeleteTrackingBranchTitle, ShipDeleteTrackingBranchHelp, inputs)
+	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedSelection(format.Bool(selection), exit))
 	return configdomain.ShipDeleteTrackingBranch(selection), exit, err
 }

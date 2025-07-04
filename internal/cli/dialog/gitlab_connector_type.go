@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -28,7 +28,7 @@ Git Town supports two ways to connect to GitLab:
 `
 )
 
-func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], inputs components.TestInput) (forgedomain.GitLabConnectorType, dialogdomain.Exit, error) {
+func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], inputs dialogcomponents.TestInput) (forgedomain.GitLabConnectorType, dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.GitLabConnectorType]{
 		{
 			Data: forgedomain.GitLabConnectorTypeAPI,
@@ -43,7 +43,7 @@ func GitLabConnectorType(existing Option[forgedomain.GitLabConnectorType], input
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs)
-	fmt.Printf(messages.GitLabConnectorType, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitLabConnectorTypeTitle, gitLabConnectorTypeHelp, inputs)
+	fmt.Printf(messages.GitLabConnectorType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

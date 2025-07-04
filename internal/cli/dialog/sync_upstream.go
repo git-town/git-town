@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -31,7 +31,7 @@ made to the original project.
 `
 )
 
-func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInput) (configdomain.SyncUpstream, dialogdomain.Exit, error) {
+func SyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.TestInput) (configdomain.SyncUpstream, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncUpstream]{
 		{
 			Data: true,
@@ -43,7 +43,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
-	fmt.Printf(messages.SyncWithUpstream, components.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
+	fmt.Printf(messages.SyncWithUpstream, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

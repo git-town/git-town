@@ -2,7 +2,6 @@ package validate
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -94,11 +93,11 @@ type ConfigArgs struct {
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	Connector          Option[forgedomain.Connector]
-	DialogTestInputs   components.TestInputs
+	DialogTestInputs   dialogcomponents.TestInputs
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
 	RepoStatus         gitdomain.RepoStatus
-	TestInputs         components.TestInputs
+	TestInputs         dialogcomponents.TestInputs
 	Unvalidated        Mutable[config.UnvalidatedConfig]
 }

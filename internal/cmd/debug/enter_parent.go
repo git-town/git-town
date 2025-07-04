@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -26,7 +25,7 @@ func enterParentCmd() *cobra.Command {
 				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
 			}
 			lineage := configdomain.Lineage{}
-			dialogTestInputs := components.LoadTestInputs(os.Environ())
+			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 			_, _, err = dialog.Parent(dialog.ParentArgs{
 				Branch:          "branch-2",
 				DefaultChoice:   "main",

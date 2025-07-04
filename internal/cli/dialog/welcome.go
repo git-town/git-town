@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 )
 
@@ -27,6 +26,6 @@ When you're ready, press ENTER or O to continue.
 )
 
 // MainBranch lets the user select a new main branch for this repo.
-func Welcome(inputs components.TestInput) (dialogdomain.Exit, error) {
-	return components.TextDisplay(welcomeTitle, welcomeText, inputs)
+func Welcome(inputs dialogcomponents.TestInput) (dialogdomain.Exit, error) {
+	return dialogcomponents.TextDisplay(welcomeTitle, welcomeText, inputs)
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -90,7 +90,7 @@ func executeUndo(verbose configdomain.Verbose) error {
 type undoData struct {
 	config                  config.ValidatedConfig
 	connector               Option[forgedomain.Connector]
-	dialogTestInputs        components.TestInputs
+	dialogTestInputs        dialogcomponents.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          Option[gitdomain.LocalBranchName]
@@ -98,7 +98,7 @@ type undoData struct {
 }
 
 func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
