@@ -30,13 +30,9 @@ func RenderTOML(config *config.UnvalidatedConfig) string {
 	result.WriteString(fmt.Sprintf("dev-remote = %q\n", config.NormalConfig.DevRemote.String()))
 	if forgeType, has := config.NormalConfig.ForgeType.Get(); has {
 		result.WriteString(fmt.Sprintf("forge-type = %q\n", forgeType))
-	} else {
-		result.WriteString("# forge-type = \"\"\n")
 	}
-	if config.NormalConfig.HostingOriginHostname.IsNone() {
-		result.WriteString("# origin-hostname = \"\"\n")
-	} else {
-		result.WriteString(fmt.Sprintf("origin-hostname = %q\n", config.NormalConfig.HostingOriginHostname))
+	if hostName, has := config.NormalConfig.HostingOriginHostname.Get(); has {
+		result.WriteString(fmt.Sprintf("origin-hostname = %q\n", hostName))
 	}
 	result.WriteString("\n[ship]\n")
 	result.WriteString(fmt.Sprintf("delete-tracking-branch = %t\n", config.NormalConfig.ShipDeleteTrackingBranch))
