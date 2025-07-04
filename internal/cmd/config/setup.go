@@ -610,7 +610,7 @@ func saveAll(enteredData enterDataResult, oldConfig config.UnvalidatedConfig, gi
 	}
 	switch enteredData.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, oldConfig)
+		return saveToFile(enteredData.unvalidatedUserInput, oldConfig)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(userInput, oldConfig, configFile, gitCommands, frontend)
 	}
@@ -982,8 +982,8 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
-	if err := configfile.Save(&userInput.config); err != nil {
+func saveToFile(userInput config.UnvalidatedConfig, config config.UnvalidatedConfig) error {
+	if err := configfile.Save(&userInput); err != nil {
 		return err
 	}
 	config.NormalConfig.RemoveCreatePrototypeBranches()
@@ -1001,8 +1001,8 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
 	config.NormalConfig.RemoveSyncPrototypeStrategy()
 	config.NormalConfig.RemoveSyncUpstream()
 	config.NormalConfig.RemoveSyncTags()
-	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
+	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.NormalConfig.UnknownBranchType, config); err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config)
+	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.NormalConfig.FeatureRegex, config)
 }
