@@ -26,12 +26,12 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
-	configGitAccess := gitconfig.Access{Shell: args.Backend}
-	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
+	gitIO := gitconfig.IO{Shell: args.Backend}
+	globalSnapshot, err := gitIO.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
 	}
-	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
+	localSnapshot, err := gitIO.Load(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
 	}
