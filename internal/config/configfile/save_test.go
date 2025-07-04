@@ -105,8 +105,8 @@ upstream = true
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		var gitIO gitconfig.IO
-		config := config.DefaultUnvalidatedConfig(gitIO, git.EmptyVersion())
+		gitPersistence := gitconfig.Persistence{IO: gitconfig.IO{}}
+		config := config.DefaultUnvalidatedConfig(gitPersistence, git.EmptyVersion())
 		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 		err := configfile.Save(&config)
 		defer os.Remove(configfile.FileName)
