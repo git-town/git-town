@@ -9,7 +9,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
@@ -76,16 +75,6 @@ func (self *IO) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated c
 		}
 	}
 	return snapshot, err
-}
-
-func (self *IO) RemoteURL(remote gitdomain.Remote) Option[string] {
-	output, err := self.Shell.Query("git", "remote", "get-url", remote.String())
-	if err != nil {
-		// NOTE: it's okay to ignore the error here.
-		// If we get an error here, we simply don't use the origin remote.
-		return None[string]()
-	}
-	return NewOption(strings.TrimSpace(output))
 }
 
 func (self *IO) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {

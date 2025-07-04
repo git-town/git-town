@@ -17,12 +17,12 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	ConfigFile Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
-	DryRun     configdomain.DryRun                // whether to only print the Git commands but not execute them
-	EnvConfig  configdomain.PartialConfig         // content of the Git Town related environment variables
-	GitConfig  configdomain.PartialConfig         // content of the unscoped Git configuration
-	GitIO      gitconfig.IO                       // access to the Git configuration settings
-	GitVersion git.Version                        // version of the installed Git executable
+	ConfigFile     Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	DryRun         configdomain.DryRun                // whether to only print the Git commands but not execute them
+	EnvConfig      configdomain.PartialConfig         // content of the Git Town related environment variables
+	GitConfig      configdomain.PartialConfig         // content of the unscoped Git configuration
+	GitPersistence gitconfig.Persistence              // access to Git configuration settings
+	GitVersion     git.Version                        // version of the installed Git executable
 }
 
 // removes the given branch from the lineage, and updates its children
@@ -32,14 +32,14 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	for _, child := range children {
 		if hasParent {
 			self.Lineage = self.Lineage.Set(child, parent)
-			_ = self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+			_ = self.GitPersistence.SetParent(child, parent)
 		} else {
 			self.Lineage = self.Lineage.RemoveBranch(child)
-			_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
+			self.GitPersistence.RemoveParent(parent)
 		}
 	}
 	self.Lineage = self.Lineage.RemoveBranch(branch)
-	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
+	_ = self.GitPersistence.RemoveParent(branch)
 }
 
 // DevURL provides the URL for the development remote.
@@ -74,90 +74,29 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 	if remoteOverride.IsSome() {
 		return remoteOverride
 	}
-	return self.GitIO.RemoteURL(remote)
+	return self.GitPersistence.RemoteURL(remote)
 }
 
 func (self *NormalConfig) RemoveBranchTypeOverride(branch gitdomain.LocalBranchName) error {
 	delete(self.BranchTypeOverrides, branch)
-	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-	_ = self.GitIO.RemoveLocalConfigValue(key.Key)
+	_ = self.GitPersistence.RemoveBranchTypeOverride(branch)
 	return nil
-}
-
-func (self *NormalConfig) RemoveCreatePrototypeBranches() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
-}
-
-func (self *NormalConfig) RemoveDevRemote() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyDevRemote)
-}
-
-func (self *NormalConfig) RemoveFeatureRegex() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
-}
-
-func (self *NormalConfig) RemoveNewBranchType() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyNewBranchType)
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.GitConfig.Lineage = self.GitConfig.Lineage.RemoveBranch(branch)
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
+	_ = self.GitPersistence.RemoveParent(branch)
 }
 
 func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
-			_ = self.GitIO.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
+			_ = self.GitPersistence.RemoveParent(perennialBranch)
 			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
 	}
-}
-
-func (self *NormalConfig) RemovePerennialBranches() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
-}
-
-func (self *NormalConfig) RemovePerennialRegex() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyPerennialRegex)
-}
-
-func (self *NormalConfig) RemovePushHook() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyPushHook)
-}
-
-func (self *NormalConfig) RemoveShareNewBranches() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyShareNewBranches)
-}
-
-func (self *NormalConfig) RemoveShipDeleteTrackingBranch() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch)
-}
-
-func (self *NormalConfig) RemoveShipStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyShipStrategy)
-}
-
-func (self *NormalConfig) RemoveSyncFeatureStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncFeatureStrategy)
-}
-
-func (self *NormalConfig) RemoveSyncPerennialStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncPerennialStrategy)
-}
-
-func (self *NormalConfig) RemoveSyncPrototypeStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncPrototypeStrategy)
-}
-
-func (self *NormalConfig) RemoveSyncTags() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncTags)
-}
-
-func (self *NormalConfig) RemoveSyncUpstream() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncUpstream)
 }
 
 // SetBranchTypeOverride registers the given branch names as contribution branches.
@@ -165,7 +104,7 @@ func (self *NormalConfig) RemoveSyncUpstream() {
 func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
 	for _, branch := range branches {
 		self.BranchTypeOverrides[branch] = branchType
-		if err := self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()); err != nil {
+		if err := self.GitPersistence.SetBranchTypeOverride(branch, branchType); err != nil {
 			return err
 		}
 	}
@@ -175,25 +114,25 @@ func (self *NormalConfig) SetBranchTypeOverride(branchType configdomain.BranchTy
 // SetDevRemote updates the locally configured development remote.
 func (self *NormalConfig) SetDevRemote(value gitdomain.Remote) error {
 	self.DevRemote = value
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
+	return self.GitPersistence.SetDevRemote(value)
 }
 
 // SetFeatureRegexLocally updates the locally configured feature regex.
 func (self *NormalConfig) SetFeatureRegexLocally(value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
+	return self.GitPersistence.SetFeatureRegex(value)
 }
 
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *NormalConfig) SetNewBranchType(value configdomain.BranchType) error {
 	self.NewBranchType = Some(value)
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+	return self.GitPersistence.SetNewBranchType(value)
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (self *NormalConfig) SetOffline(value configdomain.Offline) error {
 	self.Offline = value
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
+	return self.GitPersistence.SetOffline(value)
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
@@ -203,7 +142,7 @@ func (self *NormalConfig) SetParent(branch, parentBranch gitdomain.LocalBranchNa
 		return nil
 	}
 	self.Lineage = self.Lineage.Set(branch, parentBranch)
-	return self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch), parentBranch.String())
+	return self.GitPersistence.SetParent(branch, parentBranch)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
