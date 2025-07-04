@@ -76,7 +76,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	unvalidatedUserInput, validatedUserInput, tokenScope, forgeTypeOpt, configStorage, exit, err := enterData(repo, &data)
+	unvalidatedUserInput, validatedUserInput, tokenScope, forgeTypeOpt, configStorage, exit, err := enterData(repo, data)
 	if err != nil || exit {
 		return err
 	}
@@ -121,7 +121,7 @@ func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forge
 	return None[forgedomain.ForgeType]()
 }
 
-func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.NormalConfigData, configdomain.ValidatedConfigData, configdomain.ConfigScope, Option[forgedomain.ForgeType], Option[dialog.ConfigStorageOption], dialogdomain.Exit, error) {
+func enterData(repo execute.OpenRepoResult, data setupData) (configdomain.NormalConfigData, configdomain.ValidatedConfigData, configdomain.ConfigScope, Option[forgedomain.ForgeType], Option[dialog.ConfigStorageOption], dialogdomain.Exit, error) {
 	configFile := data.configFile.GetOrDefault()
 	exit, err := dialog.Welcome(data.dialogInputs.Next())
 	emptyNormal := configdomain.DefaultNormalConfig()
