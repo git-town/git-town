@@ -45,6 +45,7 @@ func Execute(args ExecuteArgs) error {
 			Config:                          NewMutable(&args.Config),
 			Connector:                       args.Connector,
 			Detached:                        args.Detached,
+			DialogTestInputs:                args.DialogTestInputs,
 			FinalMessages:                   args.FinalMessages,
 			Frontend:                        args.Frontend,
 			Git:                             args.Git,
