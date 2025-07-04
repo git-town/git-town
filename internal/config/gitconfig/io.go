@@ -29,15 +29,6 @@ func (self *IO) RemoteURL(remote gitdomain.Remote) Option[string] {
 	return NewOption(strings.TrimSpace(output))
 }
 
-func (self *IO) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
-	args := []string{"config"}
-	if scope == configdomain.ConfigScopeGlobal {
-		args = append(args, "--global")
-	}
-	args = append(args, "--unset", key.String())
-	return self.Shell.Run("git", args...)
-}
-
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (self *IO) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSnapshot) error {
 	if err := self.Shell.Run("git", "config", "--remove-section", "git-town"); err != nil {
@@ -59,16 +50,6 @@ func (self *IO) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSna
 		}
 	}
 	return nil
-}
-
-// SetConfigValue sets the given configuration setting in the global Git configuration.
-func (self *IO) SetConfigValue(scope configdomain.ConfigScope, key configdomain.Key, value string) error {
-	args := []string{"config"}
-	if scope == configdomain.ConfigScopeGlobal {
-		args = append(args, "--global")
-	}
-	args = append(args, key.String(), value)
-	return self.Shell.Run("git", args...)
 }
 
 // updates a custom Git alias (not set up by Git Town)
