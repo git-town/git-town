@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 )
@@ -20,13 +20,13 @@ API error message: %v
 `
 )
 
-func CredentialsNoAccess(connectorError error, inputs components.TestInput) (repeat bool, exit dialogdomain.Exit, err error) {
+func CredentialsNoAccess(connectorError error, inputs dialogcomponents.TestInput) (repeat bool, exit dialogdomain.Exit, err error) {
 	entries := list.NewEntries(
 		CredentialsNoAccessChoiceRetry,
 		CredentialsNoAccessChoiceIgnore,
 	)
-	selection, exit, err := components.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
-	fmt.Printf(messages.CredentialsNoAccess, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, 0, credentialsNoAccessTitle, fmt.Sprintf(credentialsNoAccessHelp, connectorError), inputs)
+	fmt.Printf(messages.CredentialsNoAccess, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection.Repeat(), exit, err
 }
 

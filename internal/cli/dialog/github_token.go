@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -30,14 +30,14 @@ with the GitHub API.
 )
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(oldValue Option[forgedomain.GitHubToken], inputs components.TestInput) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
-	text, exit, err := components.TextField(components.TextFieldArgs{
+func GitHubToken(oldValue Option[forgedomain.GitHubToken], inputs dialogcomponents.TestInput) (Option[forgedomain.GitHubToken], dialogdomain.Exit, error) {
+	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          gitHubTokenHelp,
 		Prompt:        "Your GitHub API token: ",
 		TestInput:     inputs,
 		Title:         githubTokenTitle,
 	})
-	fmt.Printf(messages.GitHubToken, components.FormattedSecret(text, exit))
+	fmt.Printf(messages.GitHubToken, dialogcomponents.FormattedSecret(text, exit))
 	return forgedomain.ParseGitHubToken(text), exit, err
 }

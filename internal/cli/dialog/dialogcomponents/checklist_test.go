@@ -1,10 +1,10 @@
-package components_test
+package dialogcomponents_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
@@ -14,7 +14,7 @@ func TestPerennialBranches(t *testing.T) {
 
 	t.Run("checkedEntries", func(t *testing.T) {
 		t.Parallel()
-		model := components.CheckListModel[gitdomain.LocalBranchName]{
+		model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 			List: list.List[gitdomain.LocalBranchName]{
 				Entries: list.NewEntries[gitdomain.LocalBranchName]("zero", "one", "two", "three"),
 			},
@@ -29,7 +29,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := components.CheckListModel[gitdomain.LocalBranchName]{
+			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
@@ -41,7 +41,7 @@ func TestPerennialBranches(t *testing.T) {
 		})
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := components.CheckListModel[gitdomain.LocalBranchName]{
+			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
@@ -57,7 +57,7 @@ func TestPerennialBranches(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := components.CheckListModel[gitdomain.LocalBranchName]{
+			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
@@ -69,7 +69,7 @@ func TestPerennialBranches(t *testing.T) {
 		})
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := components.CheckListModel[gitdomain.LocalBranchName]{
+			model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 				List: list.List[gitdomain.LocalBranchName]{
 					Cursor: 2,
 				},
@@ -83,7 +83,7 @@ func TestPerennialBranches(t *testing.T) {
 
 	t.Run("isRowChecked", func(t *testing.T) {
 		t.Parallel()
-		model := components.CheckListModel[gitdomain.LocalBranchName]{
+		model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 			Selections: []int{2},
 		}
 		must.False(t, model.IsRowChecked(1))
@@ -93,7 +93,7 @@ func TestPerennialBranches(t *testing.T) {
 
 	t.Run("toggleCurrentEntry", func(t *testing.T) {
 		t.Parallel()
-		model := components.CheckListModel[gitdomain.LocalBranchName]{
+		model := dialogcomponents.CheckListModel[gitdomain.LocalBranchName]{
 			List: list.List[gitdomain.LocalBranchName]{
 				Cursor: 2,
 			},

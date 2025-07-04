@@ -3,7 +3,7 @@ package dialog
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -79,7 +79,7 @@ type LineageArgs struct {
 	BranchesToVerify  gitdomain.LocalBranchNames
 	Connector         Option[forgedomain.Connector]
 	DefaultChoice     gitdomain.LocalBranchName
-	DialogTestInputs  components.TestInputs
+	DialogTestInputs  dialogcomponents.TestInputs
 	Lineage           configdomain.Lineage
 	LocalBranches     gitdomain.LocalBranchNames
 	MainBranch        gitdomain.LocalBranchName

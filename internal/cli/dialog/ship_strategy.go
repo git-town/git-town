@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -33,7 +33,7 @@ Options:
 `
 )
 
-func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInput) (configdomain.ShipStrategy, dialogdomain.Exit, error) {
+func ShipStrategy(existing configdomain.ShipStrategy, inputs dialogcomponents.TestInput) (configdomain.ShipStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.ShipStrategy]{
 		{
 			Data: configdomain.ShipStrategyAPI,
@@ -53,8 +53,8 @@ func ShipStrategy(existing configdomain.ShipStrategy, inputs components.TestInpu
 		},
 	}
 	defaultPos := shipStrategyEntryIndex(entries, existing)
-	selection, exit, err := components.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
-	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, shipStrategyTitle, ShipStrategyHelp, inputs)
+	fmt.Printf(messages.ShipDeletesTrackingBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }
 

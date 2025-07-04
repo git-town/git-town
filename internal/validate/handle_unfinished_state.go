@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
@@ -91,7 +91,7 @@ type UnfinishedStateArgs struct {
 	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[forgedomain.Connector]
 	Detached          configdomain.Detached
-	DialogTestInputs  components.TestInputs
+	DialogTestInputs  dialogcomponents.TestInputs
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands
@@ -239,7 +239,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 
 type quickValidateConfigArgs struct {
 	backend      subshelldomain.RunnerQuerier
-	dialogInputs components.TestInputs
+	dialogInputs dialogcomponents.TestInputs
 	git          git.Commands
 	unvalidated  Mutable[config.UnvalidatedConfig]
 }
