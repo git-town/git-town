@@ -87,6 +87,7 @@ func (self *IO) RemoveConfigValue(scope configdomain.ConfigScope, key configdoma
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
+// TODO: remove this and replace calls with RemoveConfigValue(localScope)
 func (self *IO) RemoveLocalConfigValue(key configdomain.Key) error {
 	return self.Shell.Run("git", "config", "--unset", key.String())
 }

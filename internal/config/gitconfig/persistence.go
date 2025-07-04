@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
@@ -39,6 +40,10 @@ func (self Persistence) RemoveDevRemote() error {
 
 func (self Persistence) RemoveFeatureRegex() error {
 	return self.IO.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
+}
+
+func (self Persistence) RemoveForgeType() error {
+	return self.IO.RemoveLocalConfigValue(configdomain.KeyForgeType)
 }
 
 func (self Persistence) RemoveMainBranch() error {
@@ -107,6 +112,10 @@ func (self Persistence) SetDevRemote(value gitdomain.Remote) error {
 
 func (self Persistence) SetFeatureRegex(value configdomain.FeatureRegex) error {
 	return self.IO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
+}
+
+func (self Persistence) SetForgeType(value forgedomain.ForgeType) error {
+	return self.IO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyForgeType, value.String())
 }
 
 func (self Persistence) SetMainBranch(value gitdomain.LocalBranchName) error {

@@ -558,7 +558,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.ForgeType.IsNone() {
 		fc.Check(
-			saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, gitCommands, frontend),
+			saveForgeType(oldConfig.NormalConfig.ForgeType, userInput.config.NormalConfig.ForgeType, oldConfig),
 		)
 	}
 	if configFile.GitHubConnectorType.IsNone() {
@@ -727,19 +727,14 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	return nil
 }
 
-func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], gitCommands git.Commands, frontend subshelldomain.Runner) (err error) {
-	oldValue, oldHas := oldForgeType.Get()
-	newValue, newHas := newForgeType.Get()
-	if !oldHas && !newHas {
+func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], config config.UnvalidatedConfig) (err error) {
+	if newForgeType.Equal(oldForgeType) {
 		return nil
 	}
-	if oldValue == newValue {
-		return nil
+	if newValue, newHas := newForgeType.Get(); newHas {
+		return config.NormalConfig.SetForgeType(newValue)
 	}
-	if newHas {
-		return gitCommands.SetForgeType(frontend, newValue)
-	}
-	return gitCommands.DeleteConfigEntryForgeType(frontend)
+	return config.NormalConfig.RemoveForgeType()
 }
 
 func saveCodebergToken(oldToken, newToken Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {

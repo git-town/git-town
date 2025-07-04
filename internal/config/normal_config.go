@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
@@ -87,6 +88,11 @@ func (self *NormalConfig) RemoveFeatureRegex() error {
 	return self.GitPersistence.RemoveFeatureRegex()
 }
 
+func (self *NormalConfig) RemoveForgeType() error {
+	self.ForgeType = None[forgedomain.ForgeType]()
+	return self.GitPersistence.RemoveForgeType()
+}
+
 func (self *NormalConfig) RemoveNewBranchType() error {
 	self.NewBranchType = None[configdomain.BranchType]()
 	return self.GitPersistence.RemoveNewBranchType()
@@ -135,6 +141,11 @@ func (self *NormalConfig) SetDevRemote(value gitdomain.Remote) error {
 func (self *NormalConfig) SetFeatureRegexLocally(value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
 	return self.GitPersistence.SetFeatureRegex(value)
+}
+
+func (self *NormalConfig) SetForgeType(value forgedomain.ForgeType) error {
+	self.ForgeType = Some(value)
+	return self.GitPersistence.SetForgeType(value)
 }
 
 // SetContributionBranches marks the given branches as contribution branches.
