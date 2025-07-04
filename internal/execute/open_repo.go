@@ -62,6 +62,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	gitIO := gitconfig.IO{Shell: backendRunner}
+	gitPersistence := gitconfig.Persistence{IO: gitIO}
 	globalSnapshot, err := gitIO.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedYes)
 	if err != nil {
 		return emptyOpenRepoResult(), err
@@ -94,13 +95,13 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		ConfigFile:    configFile,
-		DryRun:        args.DryRun,
-		EnvConfig:     envconfig.Load(),
-		FinalMessages: finalMessages,
-		GitConfig:     unscopedConfig,
-		GitIO:         gitIO,
-		GitVersion:    gitVersion,
+		ConfigFile:     configFile,
+		DryRun:         args.DryRun,
+		EnvConfig:      envconfig.Load(),
+		FinalMessages:  finalMessages,
+		GitConfig:      unscopedConfig,
+		GitPersistence: gitPersistence,
+		GitVersion:     gitVersion,
 	})
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
