@@ -58,7 +58,7 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.NormalConfig.GitIO.RemoveLocalConfigValue(configdomain.KeyMainBranch)
+	_ = self.NormalConfig.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
 
 // SetMainBranch marks the given branch as the main branch
