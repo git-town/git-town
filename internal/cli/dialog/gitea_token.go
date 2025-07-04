@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -26,14 +26,14 @@ Git Town will not use the gitea API.
 )
 
 // GiteaToken lets the user enter the Gitea API token.
-func GiteaToken(oldValue Option[forgedomain.GiteaToken], inputs components.TestInput) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
-	text, exit, err := components.TextField(components.TextFieldArgs{
+func GiteaToken(oldValue Option[forgedomain.GiteaToken], inputs dialogcomponents.TestInput) (Option[forgedomain.GiteaToken], dialogdomain.Exit, error) {
+	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          giteaTokenHelp,
 		Prompt:        "Your Gitea API token: ",
 		TestInput:     inputs,
 		Title:         giteaTokenTitle,
 	})
-	fmt.Printf(messages.GiteaToken, components.FormattedSecret(text, exit))
+	fmt.Printf(messages.GiteaToken, dialogcomponents.FormattedSecret(text, exit))
 	return forgedomain.ParseGiteaToken(text), exit, err
 }

@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -24,14 +24,14 @@ Git Town will not use the Bitbucket API.
 `
 )
 
-func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs components.TestInput) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
-	text, exit, err := components.TextField(components.TextFieldArgs{
+func BitbucketUsername(oldValue Option[forgedomain.BitbucketUsername], inputs dialogcomponents.TestInput) (Option[forgedomain.BitbucketUsername], dialogdomain.Exit, error) {
+	text, exit, err := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          bitbucketUsernameHelp,
 		Prompt:        "Your Bitbucket username: ",
 		TestInput:     inputs,
 		Title:         bitbucketUsernameTitle,
 	})
-	fmt.Printf(messages.BitbucketUsername, components.FormattedSecret(text, exit))
+	fmt.Printf(messages.BitbucketUsername, dialogcomponents.FormattedSecret(text, exit))
 	return forgedomain.ParseBitbucketUsername(text), exit, err
 }

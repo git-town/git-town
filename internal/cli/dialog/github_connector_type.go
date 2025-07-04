@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -28,7 +28,7 @@ Git Town supports two ways to connect to GitHub:
 `
 )
 
-func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], inputs components.TestInput) (forgedomain.GitHubConnectorType, dialogdomain.Exit, error) {
+func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], inputs dialogcomponents.TestInput) (forgedomain.GitHubConnectorType, dialogdomain.Exit, error) {
 	entries := list.Entries[forgedomain.GitHubConnectorType]{
 		{
 			Data: forgedomain.GitHubConnectorTypeAPI,
@@ -43,7 +43,7 @@ func GitHubConnectorType(existing Option[forgedomain.GitHubConnectorType], input
 	if existingValue, hasExisting := existing.Get(); hasExisting {
 		defaultPos = entries.IndexOf(existingValue)
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs)
-	fmt.Printf(messages.GitHubConnectorType, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, gitHubConnectorTypeTitle, gitHubConnectorTypeHelp, inputs)
+	fmt.Printf(messages.GitHubConnectorType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

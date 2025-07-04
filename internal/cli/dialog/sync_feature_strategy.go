@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -25,7 +25,7 @@ new features and bug fixes.
 `
 )
 
-func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs components.TestInput) (configdomain.SyncFeatureStrategy, dialogdomain.Exit, error) {
+func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncFeatureStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncFeatureStrategy]{
 		{
 			Data: configdomain.SyncFeatureStrategyMerge,
@@ -41,7 +41,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
-	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
+	fmt.Printf(messages.SyncFeatureBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

@@ -1,7 +1,7 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -83,7 +83,7 @@ type LoadRepoSnapshotArgs struct {
 	ConfigSnapshot        undoconfig.ConfigSnapshot
 	Connector             Option[forgedomain.Connector]
 	Detached              configdomain.Detached
-	DialogTestInputs      components.TestInputs
+	DialogTestInputs      dialogcomponents.TestInputs
 	Fetch                 bool
 	FinalMessages         stringslice.Collector
 	Frontend              subshelldomain.Runner

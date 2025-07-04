@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -30,7 +30,7 @@ func TestParent(t *testing.T) {
 			have := dialog.ParentCandidateNames(dialog.ParentArgs{
 				Branch:          branch2,
 				DefaultChoice:   main,
-				DialogTestInput: components.TestInput{},
+				DialogTestInput: dialogcomponents.TestInput{},
 				Lineage:         lineage,
 				LocalBranches:   localBranches,
 				MainBranch:      main,
@@ -57,7 +57,7 @@ func TestParent(t *testing.T) {
 			have := dialog.ParentCandidateNames(dialog.ParentArgs{
 				Branch:          branch2,
 				DefaultChoice:   main,
-				DialogTestInput: components.TestInput{},
+				DialogTestInput: dialogcomponents.TestInput{},
 				Lineage:         lineage,
 				LocalBranches:   localBranches,
 				MainBranch:      main,

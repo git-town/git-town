@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -23,7 +23,7 @@ and limiting the sharing of confidential changes.
 `
 )
 
-func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs components.TestInput) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
+func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPrototypeStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncPrototypeStrategy]{
 		{
 			Data: configdomain.SyncPrototypeStrategyMerge,
@@ -39,7 +39,7 @@ func SyncPrototypeStrategy(existing configdomain.SyncPrototypeStrategy, inputs c
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := components.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
-	fmt.Printf(messages.SyncPrototypeBranches, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPrototypeStrategyTitle, SyncPrototypeStrategyHelp, inputs)
+	fmt.Printf(messages.SyncPrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

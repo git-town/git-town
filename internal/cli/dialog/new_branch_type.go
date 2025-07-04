@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -23,7 +23,7 @@ More details: https://www.git-town.com/preferences/new-branch-type.
 `
 )
 
-func NewBranchType(existingOpt Option[configdomain.BranchType], inputs components.TestInput) (Option[configdomain.BranchType], dialogdomain.Exit, error) {
+func NewBranchType(existingOpt Option[configdomain.BranchType], inputs dialogcomponents.TestInput) (Option[configdomain.BranchType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[configdomain.BranchType]]{
 		{
 			Data: Some(configdomain.BranchTypeFeatureBranch),
@@ -48,7 +48,7 @@ func NewBranchType(existingOpt Option[configdomain.BranchType], inputs component
 			defaultPos = e
 		}
 	}
-	selection, exit, err := components.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
-	fmt.Println(messages.CreatePrototypeBranches, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, newBranchTypeTitle, NewBranchTypeHelp, inputs)
+	fmt.Println(messages.CreatePrototypeBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

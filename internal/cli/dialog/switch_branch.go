@@ -5,8 +5,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -80,7 +80,7 @@ func (self SwitchModel) View() string {
 	window := slice.Window(slice.WindowArgs{
 		CursorPos:    self.Cursor,
 		ElementCount: len(self.Entries),
-		WindowSize:   components.WindowSize,
+		WindowSize:   dialogcomponents.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
 		entry := self.Entries[i]
@@ -167,14 +167,14 @@ func ShouldDisplayBranchType(branchType configdomain.BranchType) bool {
 	panic("unhandled branch type:" + branchType.String())
 }
 
-func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs components.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
+func SwitchBranch(entries []SwitchBranchEntry, cursor int, uncommittedChanges bool, displayTypes configdomain.DisplayTypes, inputs dialogcomponents.TestInput) (gitdomain.LocalBranchName, dialogdomain.Exit, error) {
 	dialogProgram := tea.NewProgram(SwitchModel{
 		DisplayBranchTypes: displayTypes,
 		InitialBranchPos:   cursor,
 		List:               list.NewList(newSwitchBranchListEntries(entries), cursor),
 		UncommittedChanges: uncommittedChanges,
 	})
-	components.SendInputs(inputs, dialogProgram)
+	dialogcomponents.SendInputs(inputs, dialogProgram)
 	dialogResult, err := dialogProgram.Run()
 	result := dialogResult.(SwitchModel)
 	selectedData := result.List.SelectedData()

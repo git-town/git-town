@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -184,7 +184,7 @@ type syncData struct {
 	branchesToSync           configdomain.BranchesToSync
 	config                   config.ValidatedConfig
 	detached                 configdomain.Detached
-	dialogTestInputs         components.TestInputs
+	dialogTestInputs         dialogcomponents.TestInputs
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
 	nonExistingBranches      gitdomain.LocalBranchNames
@@ -197,7 +197,7 @@ type syncData struct {
 }
 
 func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
