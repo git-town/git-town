@@ -982,11 +982,11 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(newValue)
 }
 
-func saveToFile(userInput config.UnvalidatedConfig, config config.UnvalidatedConfig) error {
-	if err := configfile.Save(&userInput); err != nil {
+func saveToFile(normalConfig configdomain.NormalConfigData, validatedConfig configdomain.ValidatedConfigData) error {
+	if err := configfile.Save(normalConfig, validatedConfig); err != nil {
 		return err
 	}
-	config.NormalConfig.RemoveCreatePrototypeBranches()
+	normalConfig.RemoveCreatePrototypeBranches()
 	config.NormalConfig.RemoveDevRemote()
 	config.RemoveMainBranch()
 	config.NormalConfig.RemoveNewBranchType()
