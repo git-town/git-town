@@ -45,8 +45,6 @@ Feature: Configure a different development remote
 
       [hosting]
       dev-remote = "fork"
-      # forge-type = ""
-      # origin-hostname = ""
 
       [ship]
       delete-tracking-branch = true
