@@ -186,9 +186,12 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
 	forgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType
 	actualForgeType := None[forgedomain.ForgeType]()
+	bitbucketUsername := None[forgedomain.BitbucketUsername]()
+	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
+	codebergToken := None[forgedomain.CodebergToken]()
 	for {
 		if configFile.HostingOriginHostname.IsNone() {
-			hostingOriginHostname, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
+			hostingOriginHostName, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
 			if err != nil || exit {
 				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, forgeType, exit, err
 			}
@@ -200,9 +203,45 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 			}
 		}
 		actualForgeType = determineForgeType(repo.UnvalidatedConfig, forgeType)
-		exit, err = enterForgeAuth(repo, data, actualForgeType)
-		if err != nil || exit {
-			return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, forgeType, exit, err
+		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
+			switch forgeType {
+			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
+				bitbucketUsername, bitbucketAppPassword, exit, err = enterBitbucketToken(bitbucketUsername, bitbucketAppPassword, repo, data.dialogInputs)
+			case forgedomain.ForgeTypeCodeberg:
+				codebergToken, exit, err = enterCodebergToken(codebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken, data.dialogInputs.Next())
+			case forgedomain.ForgeTypeGitea:
+				return enterGiteaToken(data, repo)
+			case forgedomain.ForgeTypeGitHub:
+				existing := data.userInput.config.NormalConfig.GitHubConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
+				answer, exit, err := dialog.GitHubConnectorType(existing, data.dialogInputs.Next())
+				if err != nil || exit {
+					return exit, err
+				}
+				data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
+				switch answer {
+				case forgedomain.GitHubConnectorTypeAPI:
+					return enterGitHubToken(data, repo)
+				case forgedomain.GitHubConnectorTypeGh:
+					return false, nil
+				}
+			case forgedomain.ForgeTypeGitLab:
+				existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
+				answer, exit, err := dialog.GitLabConnectorType(existing, data.dialogInputs.Next())
+				if err != nil || exit {
+					return exit, err
+				}
+				data.userInput.config.NormalConfig.GitLabConnectorType = Some(answer)
+				switch answer {
+				case forgedomain.GitLabConnectorTypeAPI:
+					return enterGitLabToken(data, repo)
+				case forgedomain.GitLabConnectorTypeGlab:
+					return false, nil
+				}
+			}
+			return false, nil
+			if err != nil || exit {
+				return emptyNormal, emptyValidated, configdomain.ConfigScopeLocal, forgeType, exit, err
+			}
 		}
 		repeat, exit, err := testForgeAuth(data, repo, actualForgeType)
 		if err != nil || exit {
@@ -279,24 +318,25 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 			return emptyNormal, emptyValidated, tokenScope, forgeType, exit, err
 		}
 	}
+	var shipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
-		data.userInput.config.NormalConfig.ShipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+		shipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyNormal, emptyValidated, tokenScope, forgeType, exit, err
 		}
 	}
-	data.userInput.configStorage, exit, err = dialog.ConfigStorage(data.dialogInputs.Next())
+	configStorage, exit, err := dialog.ConfigStorage(data.dialogInputs.Next())
 	if err != nil || exit {
 		return emptyNormal, emptyValidated, tokenScope, forgeType, exit, err
 	}
 	normalData := configdomain.NormalConfigData{
 		Aliases:                  aliases,
-		BitbucketAppPassword:     Option[forgedomain.BitbucketAppPassword]{},
+		BitbucketAppPassword:     bitbucket,
 		BitbucketUsername:        Option[forgedomain.BitbucketUsername]{},
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            Option[forgedomain.CodebergToken]{},
-		ContributionRegex:        Option[configdomain.ContributionRegex]{},
-		DevRemote:                "",
+		ContributionRegex:        contributionRegex,
+		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
@@ -304,23 +344,23 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 		GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
 		GitLabToken:              Option[forgedomain.GitLabToken]{},
 		GiteaToken:               Option[forgedomain.GiteaToken]{},
-		HostingOriginHostname:    Option[configdomain.HostingOriginHostname]{},
+		HostingOriginHostname:    hostingOriginHostName,
 		Lineage:                  configdomain.Lineage{},
-		NewBranchType:            Option[configdomain.BranchType]{},
-		ObservedRegex:            Option[configdomain.ObservedRegex]{},
+		NewBranchType:            newBranchType,
+		ObservedRegex:            observedRegex,
 		Offline:                  false,
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
-		PushHook:                 false,
-		ShareNewBranches:         "",
-		ShipDeleteTrackingBranch: false,
-		ShipStrategy:             "",
-		SyncFeatureStrategy:      "",
-		SyncPerennialStrategy:    "",
-		SyncPrototypeStrategy:    "",
-		SyncTags:                 false,
-		SyncUpstream:             false,
-		UnknownBranchType:        "",
+		PushHook:                 pushHook,
+		ShareNewBranches:         shareNewBranches,
+		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
+		ShipStrategy:             shipStrategy,
+		SyncFeatureStrategy:      syncFeatureStrategy,
+		SyncPerennialStrategy:    syncPerennialStrategy,
+		SyncPrototypeStrategy:    syncPrototypeStrategy,
+		SyncTags:                 syncTags,
+		SyncUpstream:             syncUpstream,
+		UnknownBranchType:        unknownBranchType,
 	}
 	validatedData := configdomain.ValidatedConfigData{
 		GitUserEmail: "",
@@ -330,63 +370,21 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Norma
 	return normalData, validatedData, tokenScope, forgeType, false, nil
 }
 
-func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt Option[forgedomain.ForgeType]) (exit dialogdomain.Exit, err error) {
-	forgeType, hasForgeType := forgeTypeOpt.Get()
-	if !hasForgeType {
-		return false, nil
-	}
-	switch forgeType {
-	case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-		return enterBitbucketToken(data, repo)
-	case forgedomain.ForgeTypeCodeberg:
-		return enterCodebergToken(data, repo)
-	case forgedomain.ForgeTypeGitea:
-		return enterGiteaToken(data, repo)
-	case forgedomain.ForgeTypeGitHub:
-		existing := data.userInput.config.NormalConfig.GitHubConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
-		answer, exit, err := dialog.GitHubConnectorType(existing, data.dialogInputs.Next())
-		if err != nil || exit {
-			return exit, err
-		}
-		data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
-		switch answer {
-		case forgedomain.GitHubConnectorTypeAPI:
-			return enterGitHubToken(data, repo)
-		case forgedomain.GitHubConnectorTypeGh:
-			return false, nil
-		}
-	case forgedomain.ForgeTypeGitLab:
-		existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
-		answer, exit, err := dialog.GitLabConnectorType(existing, data.dialogInputs.Next())
-		if err != nil || exit {
-			return exit, err
-		}
-		data.userInput.config.NormalConfig.GitLabConnectorType = Some(answer)
-		switch answer {
-		case forgedomain.GitLabConnectorTypeAPI:
-			return enterGitLabToken(data, repo)
-		case forgedomain.GitLabConnectorTypeGlab:
-			return false, nil
-		}
-	}
-	return false, nil
-}
-
-func enterBitbucketToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	existingUsername := data.userInput.config.NormalConfig.BitbucketUsername.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
-	data.userInput.config.NormalConfig.BitbucketUsername, exit, err = dialog.BitbucketUsername(existingUsername, data.dialogInputs.Next())
+func enterBitbucketToken(previouslyEnteredUsername Option[forgedomain.BitbucketUsername], previouslyEnteredAppPassword Option[forgedomain.BitbucketAppPassword], repo execute.OpenRepoResult, inputs components.TestInputs) (Option[forgedomain.BitbucketUsername], Option[forgedomain.BitbucketAppPassword], dialogdomain.Exit, error) {
+	existingUsername := previouslyEnteredUsername.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
+	username, exit, err := dialog.BitbucketUsername(existingUsername, inputs.Next())
 	if err != nil || exit {
-		return exit, err
+		return None[forgedomain.BitbucketUsername](), None[forgedomain.BitbucketAppPassword](), exit, err
 	}
-	existingPassword := data.userInput.config.NormalConfig.BitbucketAppPassword.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
-	data.userInput.config.NormalConfig.BitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(existingPassword, data.dialogInputs.Next())
-	return exit, err
+	existingPassword := previouslyEnteredAppPassword.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
+	appPassword, exit, err := dialog.BitbucketAppPassword(existingPassword, inputs.Next())
+	return username, appPassword, exit, err
 }
 
-func enterCodebergToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
-	existingToken := data.userInput.config.NormalConfig.CodebergToken.Or(repo.UnvalidatedConfig.NormalConfig.CodebergToken)
-	data.userInput.config.NormalConfig.CodebergToken, exit, err = dialog.CodebergToken(existingToken, data.dialogInputs.Next())
-	return exit, err
+func enterCodebergToken(previouslyEnteredToken, configuredValue Option[forgedomain.CodebergToken], input components.TestInput) (Option[forgedomain.CodebergToken], dialogdomain.Exit, error) {
+	existingToken := previouslyEnteredToken.Or(configuredValue)
+	codebergToken, exit, err := dialog.CodebergToken(existingToken, input)
+	return codebergToken, exit, err
 }
 
 func enterGiteaToken(data *setupData, repo execute.OpenRepoResult) (exit dialogdomain.Exit, err error) {
