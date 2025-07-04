@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -24,7 +24,7 @@ is hosted at a custom URL.
 `
 )
 
-func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.TestInput) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
+func ForgeType(existingValue Option[forgedomain.ForgeType], inputs dialogcomponents.TestInput) (Option[forgedomain.ForgeType], dialogdomain.Exit, error) {
 	entries := list.Entries[Option[forgedomain.ForgeType]]{
 		{
 			Data: None[forgedomain.ForgeType](),
@@ -58,7 +58,7 @@ func ForgeType(existingValue Option[forgedomain.ForgeType], inputs components.Te
 	cursor := entries.IndexOfFunc(existingValue, func(optA, optB Option[forgedomain.ForgeType]) bool {
 		return optA.Equal(optB)
 	})
-	newValue, exit, err := components.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
-	fmt.Printf(messages.Forge, components.FormattedSelection(newValue.GetOrElse("auto-detect").String(), exit))
+	newValue, exit, err := dialogcomponents.RadioList(entries, cursor, forgeTypeTitle, forgeTypeHelp, inputs)
+	fmt.Printf(messages.Forge, dialogcomponents.FormattedSelection(newValue.GetOrElse("auto-detect").String(), exit))
 	return newValue, exit, err
 }

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -151,7 +151,7 @@ type walkData struct {
 	branchesToWalk     gitdomain.LocalBranchNames
 	config             config.ValidatedConfig
 	connector          Option[forgedomain.Connector]
-	dialogTestInputs   components.TestInputs
+	dialogTestInputs   dialogcomponents.TestInputs
 	hasOpenChanges     bool
 	initialBranch      gitdomain.LocalBranchName
 	previousBranch     Option[gitdomain.LocalBranchName]
@@ -171,7 +171,7 @@ func determineWalkData(all configdomain.AllBranches, dryRun configdomain.DryRun,
 	if err != nil {
 		return walkData{}, false, err
 	}
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return walkData{}, false, err

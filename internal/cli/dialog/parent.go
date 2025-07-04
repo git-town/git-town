@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
@@ -29,8 +29,8 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 	cursor := slice.Index(parentCandidates, args.DefaultChoice).GetOrElse(0)
 	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
 	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch)
-	selection, exit, err := components.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
-	fmt.Printf(messages.ParentDialogSelected, args.Branch, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(parentCandidates...), cursor, title, help, args.DialogTestInput)
+	fmt.Printf(messages.ParentDialogSelected, args.Branch, dialogcomponents.FormattedSelection(selection.String(), exit))
 	if exit {
 		return ParentOutcomeExit, selection, err
 	}
@@ -43,7 +43,7 @@ func Parent(args ParentArgs) (ParentOutcome, gitdomain.LocalBranchName, error) {
 type ParentArgs struct {
 	Branch          gitdomain.LocalBranchName
 	DefaultChoice   gitdomain.LocalBranchName
-	DialogTestInput components.TestInput
+	DialogTestInput dialogcomponents.TestInput
 	Lineage         configdomain.Lineage
 	LocalBranches   gitdomain.LocalBranchNames
 	MainBranch      gitdomain.LocalBranchName

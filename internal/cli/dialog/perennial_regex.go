@@ -4,7 +4,7 @@ import (
 	"cmp"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -25,15 +25,15 @@ it's safe to leave it blank.
 `
 )
 
-func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs components.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
-	value, exit, err1 := components.TextField(components.TextFieldArgs{
+func PerennialRegex(oldValue Option[configdomain.PerennialRegex], inputs dialogcomponents.TestInput) (Option[configdomain.PerennialRegex], dialogdomain.Exit, error) {
+	value, exit, err1 := dialogcomponents.TextField(dialogcomponents.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          PerennialRegexHelp,
 		Prompt:        "Perennial regex: ",
 		TestInput:     inputs,
 		Title:         perennialRegexTitle,
 	})
-	fmt.Printf(messages.PerennialRegex, components.FormattedSelection(value, exit))
+	fmt.Printf(messages.PerennialRegex, dialogcomponents.FormattedSelection(value, exit))
 	perennialRegex, err2 := configdomain.ParsePerennialRegex(value)
 	return perennialRegex, exit, cmp.Or(err1, err2)
 }

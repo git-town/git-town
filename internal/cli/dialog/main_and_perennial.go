@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -31,7 +31,7 @@ func MainAndPerennials(args MainAndPerennialsArgs) (mainBranch gitdomain.LocalBr
 
 type MainAndPerennialsArgs struct {
 	Backend               subshelldomain.RunnerQuerier
-	DialogInputs          components.TestInputs
+	DialogInputs          dialogcomponents.TestInputs
 	GetDefaultBranch      func(subshelldomain.Querier) Option[gitdomain.LocalBranchName]
 	HasConfigFile         bool
 	LocalBranches         gitdomain.LocalBranchNames
