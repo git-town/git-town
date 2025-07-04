@@ -279,7 +279,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (enterDataResult, di
 			break
 		}
 	}
-	tokenScope, exit, err := enterTokenScope(enteredForgeType, data, repo)
+	tokenScope, exit, err := enterTokenScope(enteredForgeType, data.config.NormalConfig.NormalConfigData, repo, data.dialogInputs)
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -462,50 +462,50 @@ type testForgeAuthArgs struct {
 	remoteURL            Option[giturl.Parts]
 }
 
-func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func enterTokenScope(forgeTypeOpt Option[forgedomain.ForgeType], data configdomain.NormalConfigData, repo execute.OpenRepoResult, inputs components.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if shouldAskForScope(forgeTypeOpt, data, repo) {
-		return tokenScopeDialog(forgeTypeOpt, data, repo)
+		return tokenScopeDialog(forgeTypeOpt, repo, inputs)
 	}
 	return configdomain.ConfigScopeLocal, false, nil
 }
 
-func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) bool {
+func shouldAskForScope(forgeTypeOpt Option[forgedomain.ForgeType], data configdomain.NormalConfigData, repo execute.OpenRepoResult) bool {
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			return existsAndChanged(data.userInput.config.NormalConfig.BitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername) &&
-				existsAndChanged(data.userInput.config.NormalConfig.BitbucketAppPassword, repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
+			return existsAndChanged(data.BitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername) &&
+				existsAndChanged(data.BitbucketAppPassword, repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
 		case forgedomain.ForgeTypeCodeberg:
-			return existsAndChanged(data.userInput.config.NormalConfig.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
+			return existsAndChanged(data.CodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
 		case forgedomain.ForgeTypeGitea:
-			return existsAndChanged(data.userInput.config.NormalConfig.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
+			return existsAndChanged(data.GiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 		case forgedomain.ForgeTypeGitHub:
-			return existsAndChanged(data.userInput.config.NormalConfig.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+			return existsAndChanged(data.GitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 		case forgedomain.ForgeTypeGitLab:
-			return existsAndChanged(data.userInput.config.NormalConfig.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+			return existsAndChanged(data.GitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 		}
 	}
 	return false
 }
 
-func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupData, repo execute.OpenRepoResult) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], repo execute.OpenRepoResult, inputs components.TestInputs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
-			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
+			return dialog.TokenScope(existingScope, inputs.Next())
 		case forgedomain.ForgeTypeCodeberg:
 			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
-			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
+			return dialog.TokenScope(existingScope, inputs.Next())
 		case forgedomain.ForgeTypeGitea:
 			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
-			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
+			return dialog.TokenScope(existingScope, inputs.Next())
 		case forgedomain.ForgeTypeGitHub:
 			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
-			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
+			return dialog.TokenScope(existingScope, inputs.Next())
 		case forgedomain.ForgeTypeGitLab:
 			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
-			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
+			return dialog.TokenScope(existingScope, inputs.Next())
 		}
 	}
 	return configdomain.ConfigScopeLocal, false, nil
