@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/slice"
@@ -24,7 +24,7 @@ on the next screen.
 `
 )
 
-func UnknownBranchType(existingValue configdomain.BranchType, inputs components.TestInput) (configdomain.BranchType, dialogdomain.Exit, error) {
+func UnknownBranchType(existingValue configdomain.BranchType, inputs dialogcomponents.TestInput) (configdomain.BranchType, dialogdomain.Exit, error) {
 	options := []configdomain.BranchType{
 		configdomain.BranchTypeContributionBranch,
 		configdomain.BranchTypeFeatureBranch,
@@ -33,7 +33,7 @@ func UnknownBranchType(existingValue configdomain.BranchType, inputs components.
 		configdomain.BranchTypePrototypeBranch,
 	}
 	cursor := slice.Index(options, existingValue).GetOrElse(0)
-	selection, exit, err := components.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs)
-	fmt.Printf(messages.UnknownBranchType, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(list.NewEntries(options...), cursor, unknownBranchTypeTitle, UnknownBranchTypeHelp, inputs)
+	fmt.Printf(messages.UnknownBranchType, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

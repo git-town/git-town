@@ -1,4 +1,4 @@
-package components
+package dialogcomponents
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/colors"

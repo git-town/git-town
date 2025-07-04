@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -15,7 +15,7 @@ import (
 const commitsToBeamTitle = `Select the commits to beam into branch %q`
 
 // lets the user select commits to beam to the target branch
-func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, git git.Commands, querier subshelldomain.Querier, inputs components.TestInput) (gitdomain.Commits, dialogdomain.Exit, error) {
+func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranchName, git git.Commands, querier subshelldomain.Querier, inputs dialogcomponents.TestInput) (gitdomain.Commits, dialogdomain.Exit, error) {
 	if len(commits) == 0 {
 		return gitdomain.Commits{}, false, nil
 	}
@@ -30,7 +30,7 @@ func CommitsToBeam(commits []gitdomain.Commit, targetBranch gitdomain.LocalBranc
 			Text: fmt.Sprintf("%s %s", shortSHA, commit.Message.String()),
 		}
 	}
-	selection, exit, err := components.CheckList(entries, []int{}, fmt.Sprintf(commitsToBeamTitle, targetBranch), "", inputs)
+	selection, exit, err := dialogcomponents.CheckList(entries, []int{}, fmt.Sprintf(commitsToBeamTitle, targetBranch), "", inputs)
 	fmt.Printf(messages.CommitsSelected, len(selection))
 	return selection, exit, err
 }
