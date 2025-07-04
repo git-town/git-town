@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/spf13/cobra"
 )
 

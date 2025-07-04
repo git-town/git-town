@@ -16,6 +16,7 @@ import (
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
 	"github.com/git-town/git-town/v21/internal/browser"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"

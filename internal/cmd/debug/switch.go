@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/spf13/cobra"
