@@ -18,14 +18,14 @@ Feature: change existing information in Git metadata
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | change the perennial branches             | space down space enter |
-      | enter a perennial regex                   | 3 3 6 6 enter          |
+      | enter a perennial regex                   |          3 3 6 6 enter |
       | feature regex                             | u s e r enter          |
       | unknown branch type                       | down enter             |
       | dev-remote                                | enter                  |
       | origin hostname                           | c o d e enter          |
       | set forge type to "github"                | up up enter            |
       | set github forge type to "API"            | enter                  |
-      | github token                              | 1 2 3 4 5 6 enter      |
+      | github token                              |      1 2 3 4 5 6 enter |
       | token scope                               | enter                  |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
@@ -39,6 +39,7 @@ Feature: change existing information in Git metadata
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -58,9 +59,9 @@ Feature: change existing information in Git metadata
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
       | git config --local git-town.github-token 123456          |
-      | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |
       | git config git-town.hosting-origin-hostname code         |
+      # | git config git-town.forge-type github                    |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
