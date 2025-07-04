@@ -15,12 +15,12 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// Access provides typesafe access to the Git configuration on disk.
-type Access struct {
+// IO provides low-level access to the Git configuration on disk.
+type IO struct {
 	Shell subshelldomain.RunnerQuerier
 }
 
-func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
+func (self *IO) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz"}
 	scope, hasScope := scopeOpt.Get()
@@ -78,7 +78,7 @@ func (self *Access) Load(scopeOpt Option[configdomain.ConfigScope], updateOutdat
 	return snapshot, err
 }
 
-func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
+func (self *IO) RemoteURL(remote gitdomain.Remote) Option[string] {
 	output, err := self.Shell.Query("git", "remote", "get-url", remote.String())
 	if err != nil {
 		// NOTE: it's okay to ignore the error here.
@@ -88,7 +88,7 @@ func (self *Access) RemoteURL(remote gitdomain.Remote) Option[string] {
 	return NewOption(strings.TrimSpace(output))
 }
 
-func (self *Access) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
+func (self *IO) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
 	args := []string{"config"}
 	if scope == configdomain.ConfigScopeGlobal {
 		args = append(args, "--global")
@@ -98,12 +98,12 @@ func (self *Access) RemoveConfigValue(scope configdomain.ConfigScope, key config
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
+func (self *IO) RemoveLocalConfigValue(key configdomain.Key) error {
 	return self.Shell.Run("git", "config", "--unset", key.String())
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *Access) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSnapshot) error {
+func (self *IO) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSnapshot) error {
 	if err := self.Shell.Run("git", "config", "--remove-section", "git-town"); err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -126,7 +126,7 @@ func (self *Access) RemoveLocalGitConfiguration(localSnapshot configdomain.Singl
 }
 
 // SetConfigValue sets the given configuration setting in the global Git configuration.
-func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdomain.Key, value string) error {
+func (self *IO) SetConfigValue(scope configdomain.ConfigScope, key configdomain.Key, value string) error {
 	args := []string{"config"}
 	if scope == configdomain.ConfigScopeGlobal {
 		args = append(args, "--global")
@@ -135,7 +135,7 @@ func (self *Access) SetConfigValue(scope configdomain.ConfigScope, key configdom
 	return self.Shell.Run("git", args...)
 }
 
-func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
+func (self *IO) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedMessage, scope, oldKey, newKey)))
 	if err := self.RemoveConfigValue(scope, oldKey); err != nil {
 		fmt.Printf(messages.SettingCannotRemove, scope, oldKey, err)
@@ -146,7 +146,7 @@ func (self *Access) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldK
 }
 
 // updates a custom Git alias (not set up by Git Town)
-func (self *Access) UpdateExternalGitTownAlias(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
+func (self *IO) UpdateExternalGitTownAlias(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
 	if err := self.SetConfigValue(scope, key, newValue); err != nil {
 		fmt.Printf(messages.SettingCannotWrite, scope, key, err)

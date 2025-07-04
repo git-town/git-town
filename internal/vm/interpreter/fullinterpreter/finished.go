@@ -27,12 +27,12 @@ func finished(args finishedArgs) error {
 	if err = runlog.Write(runlog.EventEnd, endBranchesSnapshot.Branches, Some(args.RunState.Command), args.RootDir); err != nil {
 		return err
 	}
-	configGitAccess := gitconfig.Access{Shell: args.Backend}
-	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
+	gitIO := gitconfig.IO{Shell: args.Backend}
+	globalSnapshot, err := gitIO.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
 	}
-	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
+	localSnapshot, err := gitIO.Load(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
 	}

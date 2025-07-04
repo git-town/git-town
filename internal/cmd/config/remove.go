@@ -45,7 +45,7 @@ func executeRemoveConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.UnvalidatedConfig.NormalConfig.GitConfigAccess.RemoveLocalGitConfiguration(repo.ConfigSnapshot.Local); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.GitIO.RemoveLocalGitConfiguration(repo.ConfigSnapshot.Local); err != nil {
 		return err
 	}
 	aliasNames := slices.Collect(maps.Keys(repo.UnvalidatedConfig.NormalConfig.Aliases))
