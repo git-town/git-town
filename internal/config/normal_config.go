@@ -80,36 +80,36 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 func (self *NormalConfig) RemoveBranchTypeOverride(branch gitdomain.LocalBranchName) error {
 	delete(self.BranchTypeOverrides, branch)
 	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-	_ = self.GitIO.RemoveLocalConfigValue(key.Key)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
 	return nil
 }
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyDeprecatedCreatePrototypeBranches)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
 
 func (self *NormalConfig) RemoveDevRemote() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyDevRemote)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyFeatureRegex)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
 }
 
 func (self *NormalConfig) RemoveNewBranchType() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyNewBranchType)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType)
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.GitConfig.Lineage = self.GitConfig.Lineage.RemoveBranch(branch)
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
 func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
-			_ = self.GitIO.RemoveLocalConfigValue(configdomain.NewParentKey(perennialBranch))
+			_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(perennialBranch))
 			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
@@ -117,47 +117,47 @@ func (self *NormalConfig) RemovePerennialAncestors(finalMessages stringslice.Col
 }
 
 func (self *NormalConfig) RemovePerennialBranches() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
 }
 
 func (self *NormalConfig) RemovePerennialRegex() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyPerennialRegex)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
 }
 
 func (self *NormalConfig) RemovePushHook() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyPushHook)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPushHook)
 }
 
 func (self *NormalConfig) RemoveShareNewBranches() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyShareNewBranches)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches)
 }
 
 func (self *NormalConfig) RemoveShipDeleteTrackingBranch() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
 }
 
 func (self *NormalConfig) RemoveShipStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeyShipStrategy)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
 }
 
 func (self *NormalConfig) RemoveSyncFeatureStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncFeatureStrategy)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy)
 }
 
 func (self *NormalConfig) RemoveSyncPerennialStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncPerennialStrategy)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy)
 }
 
 func (self *NormalConfig) RemoveSyncPrototypeStrategy() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncPrototypeStrategy)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy)
 }
 
 func (self *NormalConfig) RemoveSyncTags() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncTags)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncTags)
 }
 
 func (self *NormalConfig) RemoveSyncUpstream() {
-	_ = self.GitIO.RemoveLocalConfigValue(configdomain.KeySyncUpstream)
+	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
 }
 
 // SetBranchTypeOverride registers the given branch names as contribution branches.
