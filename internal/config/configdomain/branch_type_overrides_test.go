@@ -38,9 +38,7 @@ func TestBranchTypeOverrides(t *testing.T) {
 			"git-town-branch.branch-3.parent":     "main",
 			"git-town.prototype-branches":         "foo",
 		}
-		gitIO := gitconfig.IO{
-			Shell: nil,
-		}
+		gitIO := gitconfig.IO{Shell: nil}
 		have, err := configdomain.NewBranchTypeOverridesInSnapshot(snapshot, &gitIO)
 		must.NoError(t, err)
 		want := configdomain.BranchTypeOverrides{
