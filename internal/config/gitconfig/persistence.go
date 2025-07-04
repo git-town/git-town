@@ -136,3 +136,7 @@ func (self Persistence) SetShareNewBranches(scope configdomain.ConfigScope, valu
 func (self Persistence) SetShipDeleteTrackingBranch(scope configdomain.ConfigScope, value configdomain.ShipDeleteTrackingBranch) error {
 	return self.io.SetConfigValue(scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
 }
+
+func (self Persistence) SetShipStrategy(scope configdomain.ConfigScope, value configdomain.ShipStrategy) error {
+	return self.io.SetConfigValue(scope, configdomain.KeyShipStrategy, value.String())
+}

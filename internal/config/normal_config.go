@@ -178,7 +178,7 @@ func (self *NormalConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDel
 
 func (self *NormalConfig) SetShipStrategy(value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
 	self.ShipStrategy = value
-	return self.GitIO.SetConfigValue(scope, configdomain.KeyShipStrategy, value.String())
+	return self.GitPersistence.SetShipStrategy(scope, value)
 }
 
 func (self *NormalConfig) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
