@@ -132,3 +132,7 @@ func (self Persistence) SetPushHook(value configdomain.PushHook) error {
 func (self Persistence) SetShareNewBranches(scope configdomain.ConfigScope, value configdomain.ShareNewBranches) error {
 	return self.io.SetConfigValue(scope, configdomain.KeyShareNewBranches, value.String())
 }
+
+func (self Persistence) SetShipDeleteTrackingBranch(scope configdomain.ConfigScope, value configdomain.ShipDeleteTrackingBranch) error {
+	return self.io.SetConfigValue(scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+}

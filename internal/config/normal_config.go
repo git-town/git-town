@@ -167,13 +167,13 @@ func (self *NormalConfig) SetPushHookLocally(value configdomain.PushHook) error 
 // freshly created branches to origin.
 func (self *NormalConfig) SetShareNewBranches(value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
 	self.ShareNewBranches = value
-	return self.GitPersistence.SetShareNewBranches(configdomain.ConfigScopeLocal, value)
+	return self.GitPersistence.SetShareNewBranches(scope, value)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
 func (self *NormalConfig) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
 	self.ShipDeleteTrackingBranch = value
-	return self.GitIO.SetConfigValue(scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+	return self.GitPersistence.SetShipDeleteTrackingBranch(scope, value)
 }
 
 func (self *NormalConfig) SetShipStrategy(value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
