@@ -115,12 +115,12 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 }
 
 type NewUnvalidatedConfigArgs struct {
-	GitIO         gitconfig.IO
 	ConfigFile    Option[configdomain.PartialConfig]
 	DryRun        configdomain.DryRun
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
 	GitConfig     configdomain.PartialConfig
+	GitIO         gitconfig.IO
 	GitVersion    git.Version
 }
 
