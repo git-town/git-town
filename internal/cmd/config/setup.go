@@ -698,7 +698,7 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	if value, hasValue := newValue.Get(); hasValue {
 		return config.NormalConfig.SetNewBranchType(value)
 	}
-	_ = config.NormalConfig.GitPersistence.RemoveNewBranchType()
+	_ = config.NormalConfig.RemoveNewBranchType()
 	return nil
 }
 
@@ -723,7 +723,7 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetFeatureRegexLocally(value)
 	}
-	_ = config.NormalConfig.GitPersistence.RemoveFeatureRegex()
+	_ = config.NormalConfig.RemoveFeatureRegex()
 	return nil
 }
 

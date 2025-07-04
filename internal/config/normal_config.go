@@ -82,6 +82,16 @@ func (self *NormalConfig) RemoveBranchTypeOverride(branch gitdomain.LocalBranchN
 	return nil
 }
 
+func (self *NormalConfig) RemoveFeatureRegex() error {
+	self.FeatureRegex = None[configdomain.FeatureRegex]()
+	return self.GitPersistence.RemoveFeatureRegex()
+}
+
+func (self *NormalConfig) RemoveNewBranchType() error {
+	self.NewBranchType = None[configdomain.BranchType]()
+	return self.GitPersistence.RemoveNewBranchType()
+}
+
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.GitConfig.Lineage = self.GitConfig.Lineage.RemoveBranch(branch)
