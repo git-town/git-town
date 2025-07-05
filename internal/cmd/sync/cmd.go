@@ -107,7 +107,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err = validateSyncData(data); err != nil {
 		return err
 	}
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Frontend)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend)
 	runProgram := NewMutable(&program.Program{})
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
