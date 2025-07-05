@@ -166,7 +166,7 @@ type convertToFeatureData struct {
 }
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.appendData, args.finalMessages, true)
+	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,

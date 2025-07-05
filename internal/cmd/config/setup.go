@@ -577,7 +577,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.MainBranch.IsNone() {
 		fc.Check(
-			saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch, oldConfig),
+			saveMainBranch(oldConfig.UnvalidatedConfig.MainBranch, userInput.config.UnvalidatedConfig.MainBranch, oldConfig, frontend),
 		)
 	}
 	if len(configFile.PerennialBranches) == 0 {
@@ -811,12 +811,12 @@ func saveGitLabToken(oldToken, newToken Option[forgedomain.GitLabToken], scope c
 	return gitCommands.RemoveGitLabToken(frontend)
 }
 
-func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[gitdomain.LocalBranchName], config config.UnvalidatedConfig) error {
+func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[gitdomain.LocalBranchName], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if mainBranch, hasNewValue := newValue.Get(); hasNewValue {
-		return config.SetMainBranch(mainBranch)
+		return config.SetMainBranch(mainBranch, runner)
 	}
 	return nil
 }
@@ -918,7 +918,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner sub
 	}
 	config.NormalConfig.RemoveCreatePrototypeBranches(runner)
 	config.NormalConfig.RemoveDevRemote(runner)
-	config.RemoveMainBranch()
+	config.RemoveMainBranch(runner)
 	config.NormalConfig.RemoveNewBranchType(runner)
 	config.NormalConfig.RemovePerennialBranches(runner)
 	config.NormalConfig.RemovePerennialRegex(runner)

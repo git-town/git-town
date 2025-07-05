@@ -134,7 +134,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody Option[g
 	if err != nil || exit {
 		return err
 	}
-	runProgram := prependProgram(data, repo.FinalMessages)
+	runProgram := prependProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -358,10 +358,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}, false, nil
 }
 
-func prependProgram(data prependData, finalMessages stringslice.Collector) program.Program {
+func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
-		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
+		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
