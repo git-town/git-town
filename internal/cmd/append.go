@@ -23,7 +23,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
@@ -331,9 +330,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 	}, false, nil
 }
 
-func appendProgram(backend subshelldomain.RunnerQuerier, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
+func appendProgram(repo execute.OpenRepoResult, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, backend)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Frontend)
 	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{

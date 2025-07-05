@@ -327,7 +327,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 
 func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	prog.Value.Add(
 		&opcodes.RebaseOntoKeepDeleted{
 			BranchToRebaseOnto: data.grandParentBranch.BranchName(),

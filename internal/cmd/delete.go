@@ -280,7 +280,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 
 func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	undoProg := NewMutable(&program.Program{})
 	switch data.branchToDeleteType {
 	case

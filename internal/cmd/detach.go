@@ -325,7 +325,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 
 func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	prog.Value.Add(
 		&opcodes.RebaseOntoRemoveDeleted{
 			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,
