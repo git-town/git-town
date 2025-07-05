@@ -74,7 +74,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, &gitIO)
+	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, gitIO)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}

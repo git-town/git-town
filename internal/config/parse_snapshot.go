@@ -7,13 +7,14 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/colors"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 )
 
 // provides the branch type overrides stored in the given Git metadata snapshot
-func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, gitCommands configRemover) (configdomain.BranchTypeOverrides, error) {
+func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, gitCommands gitconfig.IO) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
 		branch := key.Branch()
@@ -41,11 +42,7 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, gitC
 	return result, nil
 }
 
-type configRemover interface {
-	RemoveConfigValue(configdomain.ConfigScope, configdomain.Key) error
-}
-
-func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, gitCommands configRemover) (configdomain.Lineage, error) {
+func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, gitCommands gitconfig.IO) (configdomain.Lineage, error) {
 	result := configdomain.NewLineage()
 	for key, value := range snapshot.LineageEntries() {
 		child := key.ChildBranch()
@@ -72,7 +69,7 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 	return result, nil
 }
 
-func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, gitCommands configRemover) (configdomain.PartialConfig, error) {
+func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, gitCommands gitconfig.IO) (configdomain.PartialConfig, error) {
 	aliases := snapshot.Aliases()
 	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, gitCommands)
 	contributionRegex, err2 := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
