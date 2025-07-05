@@ -37,7 +37,7 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 	globalSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	localSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unscopedSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unscopedGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
+	unscopedGitConfig, _ := NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		env:  envConfig,
