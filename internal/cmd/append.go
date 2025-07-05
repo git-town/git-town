@@ -123,7 +123,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(repo.Frontend, data, repo.FinalMessages, false)
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, false)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
