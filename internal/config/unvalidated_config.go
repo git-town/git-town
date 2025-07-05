@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
@@ -79,14 +78,13 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-func DefaultUnvalidatedConfig(gitIO gitconfig.IO, gitVersion git.Version) UnvalidatedConfig {
+func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
 			EnvConfig:        configdomain.EmptyPartialConfig(),
 			GitConfig:        configdomain.EmptyPartialConfig(),
-			GitIO:            gitIO,
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},
@@ -106,7 +104,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 			DryRun:           args.DryRun,
 			EnvConfig:        args.EnvConfig,
 			GitConfig:        args.GitConfig,
-			GitIO:            args.GitIO,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
@@ -120,7 +117,6 @@ type NewUnvalidatedConfigArgs struct {
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
 	GitConfig     configdomain.PartialConfig
-	GitIO         gitconfig.IO
 	GitVersion    git.Version
 }
 

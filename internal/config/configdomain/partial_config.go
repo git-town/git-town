@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -54,15 +55,15 @@ func EmptyPartialConfig() PartialConfig {
 	} //exhaustruct:ignore
 }
 
-func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, gitCommands configRemover) (PartialConfig, error) {
+func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (PartialConfig, error) {
 	aliases := snapshot.Aliases()
-	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, gitCommands)
+	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, err2 := ParseContributionRegex(snapshot[KeyContributionRegex])
 	featureRegex, err3 := ParseFeatureRegex(snapshot[KeyFeatureRegex])
 	forgeType, err4 := forgedomain.ParseForgeType(snapshot[KeyForgeType])
 	githubConnectorType, err5 := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
 	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
-	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, gitCommands)
+	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchType, err8 := ParseBranchType(snapshot[KeyNewBranchType])
 	observedRegex, err9 := ParseObservedRegex(snapshot[KeyObservedRegex])
 	offline, err10 := ParseOffline(snapshot[KeyOffline], KeyOffline)

@@ -14,7 +14,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -52,9 +51,9 @@ func SetupCommand() *cobra.Command {
 }
 
 // the config settings to be used if the user accepts all default options
-func defaultUserInput(gitIO gitconfig.IO, gitVersion git.Version) userInput {
+func defaultUserInput(gitVersion git.Version) userInput {
 	return userInput{
-		config:        config.DefaultUnvalidatedConfig(gitIO, gitVersion),
+		config:        config.DefaultUnvalidatedConfig(gitVersion),
 		configStorage: dialog.ConfigStorageOptionFile,
 	}
 }
@@ -110,11 +109,11 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType]) Option[forgedomain.ForgeType] {
+func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType], querier subshelldomain.Querier) Option[forgedomain.ForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	if devURL, hasDevURL := config.NormalConfig.DevURL().Get(); hasDevURL {
+	if devURL, hasDevURL := config.NormalConfig.DevURL(querier).Get(); hasDevURL {
 		return forge.Detect(devURL, userChoice)
 	}
 	return None[forgedomain.ForgeType]()
@@ -192,7 +191,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 				return tokenScope, forgeType, exit, err
 			}
 		}
-		forgeType = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType)
+		forgeType = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType, repo.Backend)
 		exit, err = enterForgeAuth(repo, data, forgeType)
 		if err != nil || exit {
 			return tokenScope, forgeType, exit, err
@@ -370,7 +369,7 @@ func testForgeAuth(data *setupData, repo execute.OpenRepoResult, forgeTypeOpt Op
 		GitLabToken:          data.userInput.config.NormalConfig.GitLabToken.Or(data.config.NormalConfig.GitLabToken),
 		GiteaToken:           data.userInput.config.NormalConfig.GiteaToken.Or(data.config.NormalConfig.GiteaToken),
 		Log:                  print.Logger{},
-		RemoteURL:            data.userInput.config.NormalConfig.DevURL().Or(data.config.NormalConfig.DevURL()),
+		RemoteURL:            data.userInput.config.NormalConfig.DevURL(repo.Backend).Or(data.config.NormalConfig.DevURL(repo.Backend)),
 	})
 	if err != nil {
 		return false, false, err
@@ -500,7 +499,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
-		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitIO, repo.UnvalidatedConfig.NormalConfig.GitVersion),
+		userInput:     defaultUserInput(repo.UnvalidatedConfig.NormalConfig.GitVersion),
 	}, exit, nil
 }
 
@@ -691,39 +690,39 @@ func saveBitbucketUsername(oldValue, newValue Option[forgedomain.BitbucketUserna
 	return gitCommands.RemoveBitbucketUsername(frontend)
 }
 
-func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], config config.UnvalidatedConfig) error {
+func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, hasValue := newValue.Get(); hasValue {
-		return config.NormalConfig.SetNewBranchType(value)
+		return config.NormalConfig.SetNewBranchType(runner, value)
 	}
-	config.NormalConfig.RemoveNewBranchType()
+	config.NormalConfig.RemoveNewBranchType(runner)
 	return nil
 }
 
-func saveUnknownBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig) error {
+func saveUnknownBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetUnknownBranchTypeLocally(newValue)
+	return config.NormalConfig.SetUnknownBranchTypeLocally(runner, newValue)
 }
 
-func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.UnvalidatedConfig) error {
+func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetDevRemote(newValue)
+	return config.NormalConfig.SetDevRemote(runner, newValue)
 }
 
-func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig) error {
+func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return config.NormalConfig.SetFeatureRegexLocally(value)
+		return config.NormalConfig.SetFeatureRegexLocally(runner, value)
 	}
-	config.NormalConfig.RemoveFeatureRegex()
+	config.NormalConfig.RemoveFeatureRegex(runner)
 	return nil
 }
 
@@ -832,108 +831,108 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 	return gitCommands.DeleteConfigEntryOriginHostname(frontend)
 }
 
-func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig) error {
+func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if slices.Compare(oldValue, newValue) != 0 || config.NormalConfig.GitConfig.PerennialBranches == nil {
-		return config.NormalConfig.SetPerennialBranches(newValue)
+		return config.NormalConfig.SetPerennialBranches(runner, newValue)
 	}
 	return nil
 }
 
-func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.UnvalidatedConfig) error {
+func savePerennialRegex(oldValue, newValue Option[configdomain.PerennialRegex], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue.Equal(oldValue) {
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return config.NormalConfig.SetPerennialRegexLocally(value)
+		return config.NormalConfig.SetPerennialRegexLocally(runner, value)
 	}
-	config.NormalConfig.RemovePerennialRegex()
+	config.NormalConfig.RemovePerennialRegex(runner)
 	return nil
 }
 
-func savePushHook(oldValue, newValue configdomain.PushHook, config config.UnvalidatedConfig) error {
+func savePushHook(oldValue, newValue configdomain.PushHook, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetPushHookLocally(newValue)
+	return config.NormalConfig.SetPushHookLocally(runner, newValue)
 }
 
-func saveShareNewBranches(oldValue, newValue configdomain.ShareNewBranches, config config.UnvalidatedConfig) error {
+func saveShareNewBranches(oldValue, newValue configdomain.ShareNewBranches, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetShareNewBranches(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShareNewBranches(runner, newValue, configdomain.ConfigScopeLocal)
 }
 
-func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig) error {
+func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetShipDeleteTrackingBranch(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShipDeleteTrackingBranch(runner, newValue, configdomain.ConfigScopeLocal)
 }
 
-func saveShipStrategy(oldValue, newValue configdomain.ShipStrategy, config config.UnvalidatedConfig) error {
+func saveShipStrategy(oldValue, newValue configdomain.ShipStrategy, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetShipStrategy(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShipStrategy(runner, newValue, configdomain.ConfigScopeLocal)
 }
 
-func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig) error {
+func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetSyncFeatureStrategy(newValue)
+	return config.NormalConfig.SetSyncFeatureStrategy(runner, newValue)
 }
 
-func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.UnvalidatedConfig) error {
+func saveSyncPerennialStrategy(oldValue, newValue configdomain.SyncPerennialStrategy, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetSyncPerennialStrategy(newValue)
+	return config.NormalConfig.SetSyncPerennialStrategy(runner, newValue)
 }
 
-func saveSyncPrototypeStrategy(oldValue, newValue configdomain.SyncPrototypeStrategy, config config.UnvalidatedConfig) error {
+func saveSyncPrototypeStrategy(oldValue, newValue configdomain.SyncPrototypeStrategy, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetSyncPrototypeStrategy(newValue)
+	return config.NormalConfig.SetSyncPrototypeStrategy(runner, newValue)
 }
 
-func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig) error {
+func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetSyncUpstream(newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetSyncUpstream(runner, newValue, configdomain.ConfigScopeLocal)
 }
 
-func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.UnvalidatedConfig) error {
+func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetSyncTags(newValue)
+	return config.NormalConfig.SetSyncTags(runner, newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	config.NormalConfig.RemoveCreatePrototypeBranches()
-	config.NormalConfig.RemoveDevRemote()
+	config.NormalConfig.RemoveCreatePrototypeBranches(runner)
+	config.NormalConfig.RemoveDevRemote(runner)
 	config.RemoveMainBranch()
-	config.NormalConfig.RemoveNewBranchType()
-	config.NormalConfig.RemovePerennialBranches()
-	config.NormalConfig.RemovePerennialRegex()
-	config.NormalConfig.RemoveShareNewBranches()
-	config.NormalConfig.RemovePushHook()
-	config.NormalConfig.RemoveShipStrategy()
-	config.NormalConfig.RemoveShipDeleteTrackingBranch()
-	config.NormalConfig.RemoveSyncFeatureStrategy()
-	config.NormalConfig.RemoveSyncPerennialStrategy()
-	config.NormalConfig.RemoveSyncPrototypeStrategy()
-	config.NormalConfig.RemoveSyncUpstream()
-	config.NormalConfig.RemoveSyncTags()
-	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
+	config.NormalConfig.RemoveNewBranchType(runner)
+	config.NormalConfig.RemovePerennialBranches(runner)
+	config.NormalConfig.RemovePerennialRegex(runner)
+	config.NormalConfig.RemoveShareNewBranches(runner)
+	config.NormalConfig.RemovePushHook(runner)
+	config.NormalConfig.RemoveShipStrategy(runner)
+	config.NormalConfig.RemoveShipDeleteTrackingBranch(runner)
+	config.NormalConfig.RemoveSyncFeatureStrategy(runner)
+	config.NormalConfig.RemoveSyncPerennialStrategy(runner)
+	config.NormalConfig.RemoveSyncPrototypeStrategy(runner)
+	config.NormalConfig.RemoveSyncUpstream(runner)
+	config.NormalConfig.RemoveSyncTags(runner)
+	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config, runner); err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config)
+	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config, runner)
 }
