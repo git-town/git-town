@@ -23,12 +23,11 @@ func exitToShell(args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.EndBranchesSnapshot = Some(endBranchesSnapshot)
-	gitIO := gitconfig.IO{Shell: args.Backend}
-	globalSnapshot, err := gitIO.LoadSnapshot(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
+	globalSnapshot, err := gitconfig.LoadSnapshot(args.Backend, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
 	}
-	localSnapshot, err := gitIO.LoadSnapshot(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
+	localSnapshot, err := gitconfig.LoadSnapshot(args.Backend, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return err
 	}

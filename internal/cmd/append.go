@@ -122,7 +122,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data, repo.FinalMessages, false)
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, false)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -211,7 +211,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -330,9 +330,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 	}, false, nil
 }
 
-func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
+func appendProgram(repo execute.OpenRepoResult, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Frontend)
 	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{

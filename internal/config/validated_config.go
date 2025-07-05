@@ -2,8 +2,10 @@ package config
 
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
 // Config provides type-safe access to Git Town configuration settings
@@ -42,9 +44,9 @@ func (self *ValidatedConfig) BranchesOfType(branches gitdomain.LocalBranchNames,
 	return result
 }
 
-func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector) {
-	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches)
-	self.NormalConfig.RemovePerennialAncestors(finalMessages)
+func (self *ValidatedConfig) CleanupLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, finalMessages stringslice.Collector, runner subshelldomain.Runner) {
+	self.RemoveDeletedBranchesFromLineage(branchInfos, nonExistingBranches, runner)
+	self.NormalConfig.RemovePerennialAncestors(runner, finalMessages)
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
@@ -58,20 +60,20 @@ func (self *ValidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return append(gitdomain.LocalBranchNames{self.ValidatedConfigData.MainBranch}, self.NormalConfig.PerennialBranches...)
 }
 
-func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames) {
+func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdomain.BranchInfos, nonExistingBranches gitdomain.LocalBranchNames, runner subshelldomain.Runner) {
 	for _, nonExistingBranch := range nonExistingBranches {
-		self.NormalConfig.CleanupBranchFromLineage(nonExistingBranch)
+		self.NormalConfig.CleanupBranchFromLineage(runner, nonExistingBranch)
 	}
 	for _, entry := range self.NormalConfig.Lineage.Entries() {
 		childDoesntExist := nonExistingBranches.Contains(entry.Child)
 		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
 		if childDoesntExist || parentDoesntExist {
-			self.NormalConfig.RemoveParent(entry.Child)
+			self.NormalConfig.RemoveParent(runner, entry.Child)
 		}
 		childExists := branchInfos.HasBranch(entry.Child)
 		parentExists := branchInfos.HasBranch(entry.Parent)
 		if !childExists || !parentExists {
-			self.NormalConfig.RemoveParent(entry.Child)
+			self.NormalConfig.RemoveParent(runner, entry.Child)
 		}
 	}
 }
@@ -92,7 +94,7 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
+func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.ValidatedConfigData.MainBranch = branch
-	return self.NormalConfig.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }

@@ -15,19 +15,14 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-// IO provides low-level access to the Git configuration on disk.
-type IO struct {
-	Shell subshelldomain.RunnerQuerier
-}
-
-func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
+func LoadSnapshot(runnerquerier subshelldomain.RunnerQuerier, scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz"}
 	scope, hasScope := scopeOpt.Get()
 	if hasScope {
 		cmdArgs = append(cmdArgs, scope.GitFlag())
 	}
-	output, err := self.Shell.Query("git", cmdArgs...)
+	output, err := runnerquerier.Query("git", cmdArgs...)
 	if err != nil || output == "" {
 		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
 	}
@@ -40,21 +35,21 @@ func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOu
 		if updateOutdated.IsTrue() && hasScope {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
-				self.UpdateDeprecatedSetting(scope, configKey, newKey, value)
+				UpdateDeprecatedSetting(runnerquerier, scope, configKey, newKey, value)
 				configKey = newKey
 			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
-				_ = self.RemoveConfigValue(configdomain.ConfigScopeLocal, configKey)
+				_ = RemoveConfigValue(runnerquerier, configdomain.ConfigScopeLocal, configKey)
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
-				_ = self.RemoveConfigValue(scope, configKey)
+				_ = RemoveConfigValue(runnerquerier, scope, configKey)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
 			for _, update := range configdomain.ConfigUpdates {
 				if configKey == update.Before.Key && value == update.Before.Value {
-					self.UpdateDeprecatedSetting(scope, configKey, update.After.Key, update.After.Value)
+					UpdateDeprecatedSetting(runnerquerier, scope, configKey, update.After.Key, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
 				}
@@ -64,9 +59,9 @@ func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOu
 					for _, branch := range strings.Split(value, " ") {
 						branchTypeKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
 						snapshot[branchTypeKey] = branchType.String()
-						_ = self.SetConfigValue(configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
+						_ = SetConfigValue(runnerquerier, configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
 					}
-					_ = self.RemoveConfigValue(configdomain.ConfigScopeLocal, configKey)
+					_ = RemoveConfigValue(runnerquerier, configdomain.ConfigScopeLocal, configKey)
 					fmt.Printf(messages.SettingSunsetBranchList, configKey)
 				}
 			}
@@ -78,8 +73,8 @@ func (self *IO) LoadSnapshot(scopeOpt Option[configdomain.ConfigScope], updateOu
 	return snapshot, err
 }
 
-func (self *IO) RemoteURL(remote gitdomain.Remote) Option[string] {
-	output, err := self.Shell.Query("git", "remote", "get-url", remote.String())
+func RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
+	output, err := querier.Query("git", "remote", "get-url", remote.String())
 	if err != nil {
 		// NOTE: it's okay to ignore the error here.
 		// If we get an error here, we simply don't use the origin remote.
@@ -88,18 +83,18 @@ func (self *IO) RemoteURL(remote gitdomain.Remote) Option[string] {
 	return NewOption(strings.TrimSpace(output))
 }
 
-func (self *IO) RemoveConfigValue(scope configdomain.ConfigScope, key configdomain.Key) error {
+func RemoveConfigValue(runner subshelldomain.Runner, scope configdomain.ConfigScope, key configdomain.Key) error {
 	args := []string{"config"}
 	if scope == configdomain.ConfigScopeGlobal {
 		args = append(args, "--global")
 	}
 	args = append(args, "--unset", key.String())
-	return self.Shell.Run("git", args...)
+	return runner.Run("git", args...)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *IO) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSnapshot) error {
-	if err := self.Shell.Run("git", "config", "--remove-section", "git-town"); err != nil {
+func RemoveLocalGitConfiguration(runner subshelldomain.Runner, localSnapshot configdomain.SingleSnapshot) error {
+	if err := runner.Run("git", "config", "--remove-section", "git-town"); err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			if exitErr.ExitCode() == 128 {
@@ -112,7 +107,7 @@ func (self *IO) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSna
 	}
 	for key := range localSnapshot {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
-			if err := self.Shell.Run("git", "config", "--unset", key.String()); err != nil {
+			if err := runner.Run("git", "config", "--unset", key.String()); err != nil {
 				return fmt.Errorf(messages.ConfigRemoveError, err)
 			}
 		}
@@ -121,29 +116,29 @@ func (self *IO) RemoveLocalGitConfiguration(localSnapshot configdomain.SingleSna
 }
 
 // SetConfigValue sets the given configuration setting in the global Git configuration.
-func (self *IO) SetConfigValue(scope configdomain.ConfigScope, key configdomain.Key, value string) error {
+func SetConfigValue(runner subshelldomain.Runner, scope configdomain.ConfigScope, key configdomain.Key, value string) error {
 	args := []string{"config"}
 	if scope == configdomain.ConfigScopeGlobal {
 		args = append(args, "--global")
 	}
 	args = append(args, key.String(), value)
-	return self.Shell.Run("git", args...)
+	return runner.Run("git", args...)
 }
 
-func (self *IO) UpdateDeprecatedSetting(scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
+func UpdateDeprecatedSetting(runner subshelldomain.Runner, scope configdomain.ConfigScope, oldKey, newKey configdomain.Key, value string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedMessage, scope, oldKey, newKey)))
-	if err := self.RemoveConfigValue(scope, oldKey); err != nil {
+	if err := RemoveConfigValue(runner, scope, oldKey); err != nil {
 		fmt.Printf(messages.SettingCannotRemove, scope, oldKey, err)
 	}
-	if err := self.SetConfigValue(scope, newKey, value); err != nil {
+	if err := SetConfigValue(runner, scope, newKey, value); err != nil {
 		fmt.Printf(messages.SettingCannotWrite, scope, newKey, err)
 	}
 }
 
 // updates a custom Git alias (not set up by Git Town)
-func (self *IO) UpdateExternalGitTownAlias(scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
+func UpdateExternalGitTownAlias(runner subshelldomain.Runner, scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
 	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
-	if err := self.SetConfigValue(scope, key, newValue); err != nil {
+	if err := SetConfigValue(runner, scope, key, newValue); err != nil {
 		fmt.Printf(messages.SettingCannotWrite, scope, key, err)
 	}
 }
