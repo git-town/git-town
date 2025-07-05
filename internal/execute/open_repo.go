@@ -73,7 +73,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, true, backendRunner)
+	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}

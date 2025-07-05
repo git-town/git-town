@@ -14,5 +14,5 @@ type BranchTypeOverrideSet struct {
 }
 
 func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.SetBranchTypeOverride(self.BranchType, self.Branch)
+	return args.Config.Value.NormalConfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
 }

@@ -351,7 +351,7 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
 	localSnapshot, _ := gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
-	localGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
+	localGitConfig, _ := config.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	lineage := localGitConfig.Lineage
 	for _, entry := range lineage.Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())

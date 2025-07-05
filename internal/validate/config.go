@@ -37,12 +37,12 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		mainBranch = validatedMain
 		args.BranchesAndTypes[validatedMain] = configdomain.BranchTypeMainBranch
-		if err = args.Unvalidated.Value.SetMainBranch(validatedMain); err != nil {
+		if err = args.Unvalidated.Value.SetMainBranch(validatedMain, args.Backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		if len(additionalPerennials) > 0 {
 			newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(newPerennials); err != nil {
+			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 				return config.EmptyValidatedConfig(), false, err
 			}
 		}
@@ -64,13 +64,13 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		return config.EmptyValidatedConfig(), exit, err
 	}
 	for _, entry := range additionalLineage.Entries() {
-		if err = args.Unvalidated.Value.NormalConfig.SetParent(entry.Child, entry.Parent); err != nil {
+		if err = args.Unvalidated.Value.NormalConfig.SetParent(args.Backend, entry.Child, entry.Parent); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-		if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(newPerennials); err != nil {
+		if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}

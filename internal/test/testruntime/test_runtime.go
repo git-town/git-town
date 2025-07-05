@@ -7,7 +7,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
@@ -51,9 +50,9 @@ func CreateGitTown(t *testing.T) commands.TestCommands {
 	t.Helper()
 	repo := Create(t)
 	repo.CreateBranch("main", "initial")
-	err := repo.Config.SetMainBranch("main")
+	err := repo.Config.SetMainBranch("main", repo.TestRunner)
 	must.NoError(t, err)
-	err = repo.Config.NormalConfig.SetPerennialBranches(gitdomain.LocalBranchNames{})
+	err = repo.Config.NormalConfig.SetPerennialBranches(repo.TestRunner, gitdomain.LocalBranchNames{})
 	must.NoError(t, err)
 	return repo
 }
@@ -98,10 +97,7 @@ func New(workingDir, homeDir, binDir string) commands.TestCommands {
 		EnvConfig:     configdomain.EmptyPartialConfig(),
 		FinalMessages: stringslice.NewCollector(),
 		GitConfig:     configdomain.EmptyPartialConfig(),
-		GitIO: gitconfig.IO{
-			Shell: &testRunner,
-		},
-		GitVersion: git.Version{Major: 2, Minor: 38},
+		GitVersion:    git.Version{Major: 2, Minor: 38},
 	})
 	unvalidatedConfig.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 	testCommands := commands.TestCommands{

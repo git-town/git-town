@@ -1,14 +1,7 @@
 package configdomain
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/git-town/git-town/v21/internal/cli/colors"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
-	"github.com/git-town/git-town/v21/internal/messages"
-	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
 // BranchTypeOverrides contains all configured branch type overrides.
@@ -25,37 +18,4 @@ func (self BranchTypeOverrides) Concat(other BranchTypeOverrides) BranchTypeOver
 		result[key] = value
 	}
 	return result
-}
-
-// provides the branch type overrides stored in the given Git metadata snapshot
-func NewBranchTypeOverridesInSnapshot(snapshot SingleSnapshot, runner subshelldomain.Runner) (BranchTypeOverrides, error) {
-	result := BranchTypeOverrides{}
-	for key, value := range snapshot.BranchTypeOverrideEntries() {
-		branch := key.Branch()
-		if branch == "" {
-			// empty branch name --> delete it
-			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = gitconfig.RemoveConfigValue(runner, ConfigScopeLocal, key.Key)
-			continue
-		}
-		value = strings.TrimSpace(value)
-		if value == "" {
-			// empty branch type values are invalid --> delete it
-			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = gitconfig.RemoveConfigValue(runner, ConfigScopeLocal, key.Key)
-			continue
-		}
-		branchTypeOpt, err := ParseBranchType(value)
-		if err != nil {
-			return result, err
-		}
-		if branchType, hasBranchType := branchTypeOpt.Get(); hasBranchType {
-			result[branch] = branchType
-		}
-	}
-	return result, nil
-}
-
-type configRemover interface {
-	RemoveConfigValue(ConfigScope, Key) error
 }
