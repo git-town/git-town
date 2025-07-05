@@ -395,7 +395,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-			if err := args.config.NormalConfig.SetBranchTypeOverride(args.repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
+			if err := args.config.NormalConfig.SetBranchTypeOverride(args.repo.Frontend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeFeatureBranch:
