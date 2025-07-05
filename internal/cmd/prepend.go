@@ -515,7 +515,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 		switch syncStrategy {
 		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
 			prog.Value.Add(
-				&opcodes.MergeParent{Parent: parentName.BranchName()},
+				&opcodes.MergeIntoCurrentBranch{BranchToMerge: parentName.BranchName()},
 			)
 			if initialBranchInfo.HasTrackingBranch() {
 				prog.Value.Add(
