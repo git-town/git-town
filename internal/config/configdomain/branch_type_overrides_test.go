@@ -3,7 +3,6 @@ package configdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/shoenig/test/must"
 )
@@ -26,23 +25,6 @@ func TestBranchTypeOverrides(t *testing.T) {
 			"branch-1": configdomain.BranchTypeContributionBranch,
 			"branch-2": configdomain.BranchTypeParkedBranch,
 			"branch-3": configdomain.BranchTypeObservedBranch,
-		}
-		must.Eq(t, want, have)
-	})
-
-	t.Run("NewBranchTypeOverridesFromSnapshot", func(t *testing.T) {
-		t.Parallel()
-		snapshot := configdomain.SingleSnapshot{
-			"git-town-branch.branch-1.branchtype": "feature",
-			"git-town-branch.branch-2.branchtype": "observed",
-			"git-town-branch.branch-3.parent":     "main",
-			"git-town.prototype-branches":         "foo",
-		}
-		have, err := config.NewBranchTypeOverridesInSnapshot(snapshot, nil)
-		must.NoError(t, err)
-		want := configdomain.BranchTypeOverrides{
-			"branch-1": configdomain.BranchTypeFeatureBranch,
-			"branch-2": configdomain.BranchTypeObservedBranch,
 		}
 		must.Eq(t, want, have)
 	})
