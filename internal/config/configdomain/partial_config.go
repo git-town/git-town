@@ -1,8 +1,6 @@
 package configdomain
 
 import (
-	"cmp"
-
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/mapstools"
@@ -52,67 +50,6 @@ func EmptyPartialConfig() PartialConfig {
 		Aliases: Aliases{},
 		Lineage: NewLineage(),
 	} //exhaustruct:ignore
-}
-
-func NewPartialConfigFromSnapshot(snapshot SingleSnapshot, updateOutdated bool, gitCommands configRemover) (PartialConfig, error) {
-	aliases := snapshot.Aliases()
-	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, gitCommands)
-	contributionRegex, err2 := ParseContributionRegex(snapshot[KeyContributionRegex])
-	featureRegex, err3 := ParseFeatureRegex(snapshot[KeyFeatureRegex])
-	forgeType, err4 := forgedomain.ParseForgeType(snapshot[KeyForgeType])
-	githubConnectorType, err5 := forgedomain.ParseGitHubConnectorType(snapshot[KeyGitHubConnectorType])
-	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[KeyGitLabConnectorType])
-	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, gitCommands)
-	newBranchType, err8 := ParseBranchType(snapshot[KeyNewBranchType])
-	observedRegex, err9 := ParseObservedRegex(snapshot[KeyObservedRegex])
-	offline, err10 := ParseOffline(snapshot[KeyOffline], KeyOffline)
-	perennialRegex, err11 := ParsePerennialRegex(snapshot[KeyPerennialRegex])
-	pushHook, err12 := ParsePushHook(snapshot[KeyPushHook], KeyPushHook)
-	shareNewBranches, err13 := ParseShareNewBranches(snapshot[KeyShareNewBranches], KeyShareNewBranches)
-	shipDeleteTrackingBranch, err14 := ParseShipDeleteTrackingBranch(snapshot[KeyShipDeleteTrackingBranch], KeyShipDeleteTrackingBranch)
-	shipStrategy, err15 := ParseShipStrategy(snapshot[KeyShipStrategy])
-	syncFeatureStrategy, err16 := ParseSyncFeatureStrategy(snapshot[KeySyncFeatureStrategy])
-	syncPerennialStrategy, err17 := ParseSyncPerennialStrategy(snapshot[KeySyncPerennialStrategy])
-	syncPrototypeStrategy, err18 := ParseSyncPrototypeStrategy(snapshot[KeySyncPrototypeStrategy])
-	syncTags, err19 := ParseSyncTags(snapshot[KeySyncTags], KeySyncTags)
-	syncUpstream, err20 := ParseSyncUpstream(snapshot[KeySyncUpstream], KeySyncUpstream)
-	unknownBranchType, err21 := ParseBranchType(snapshot[KeyUnknownBranchType])
-	return PartialConfig{
-		Aliases:                  aliases,
-		BitbucketAppPassword:     forgedomain.ParseBitbucketAppPassword(snapshot[KeyBitbucketAppPassword]),
-		BitbucketUsername:        forgedomain.ParseBitbucketUsername(snapshot[KeyBitbucketUsername]),
-		BranchTypeOverrides:      branchTypeOverrides,
-		CodebergToken:            forgedomain.ParseCodebergToken(snapshot[KeyCodebergToken]),
-		ContributionRegex:        contributionRegex,
-		DevRemote:                gitdomain.NewRemote(snapshot[KeyDevRemote]),
-		FeatureRegex:             featureRegex,
-		ForgeType:                forgeType,
-		GitHubConnectorType:      githubConnectorType,
-		GitHubToken:              forgedomain.ParseGitHubToken(snapshot[KeyGitHubToken]),
-		GitLabConnectorType:      gitlabConnectorType,
-		GitLabToken:              forgedomain.ParseGitLabToken(snapshot[KeyGitLabToken]),
-		GitUserEmail:             gitdomain.ParseGitUserEmail(snapshot[KeyGitUserEmail]),
-		GitUserName:              gitdomain.ParseGitUserName(snapshot[KeyGitUserName]),
-		GiteaToken:               forgedomain.ParseGiteaToken(snapshot[KeyGiteaToken]),
-		HostingOriginHostname:    ParseHostingOriginHostname(snapshot[KeyHostingOriginHostname]),
-		Lineage:                  lineage,
-		MainBranch:               gitdomain.NewLocalBranchNameOption(snapshot[KeyMainBranch]),
-		NewBranchType:            newBranchType,
-		ObservedRegex:            observedRegex,
-		Offline:                  offline,
-		PerennialBranches:        gitdomain.ParseLocalBranchNames(snapshot[KeyPerennialBranches]),
-		PerennialRegex:           perennialRegex,
-		PushHook:                 pushHook,
-		ShareNewBranches:         shareNewBranches,
-		ShipDeleteTrackingBranch: shipDeleteTrackingBranch,
-		ShipStrategy:             shipStrategy,
-		SyncFeatureStrategy:      syncFeatureStrategy,
-		SyncPerennialStrategy:    syncPerennialStrategy,
-		SyncPrototypeStrategy:    syncPrototypeStrategy,
-		SyncTags:                 syncTags,
-		SyncUpstream:             syncUpstream,
-		UnknownBranchType:        unknownBranchType,
-	}, cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10, err11, err12, err13, err14, err15, err16, err17, err18, err19, err20, err21)
 }
 
 // Merges the given PartialConfig into this configuration object.
