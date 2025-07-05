@@ -95,7 +95,7 @@ func determineRepoData(args []string, repo execute.OpenRepoResult) (data repoDat
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.RemoteURL(remote),
+		RemoteURL:            config.RemoteURL(repo.Backend, remote),
 	})
 	if err != nil {
 		return data, err
