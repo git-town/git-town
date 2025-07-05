@@ -1,6 +1,6 @@
 Feature: compatibility between different sync-feature-strategy settings
 
-  @this
+  @debug @this
   Scenario: I use rebase and my coworker uses merge
     Given a Git repo with origin
     And the branches
