@@ -16,9 +16,9 @@ Feature: reset the configuration
     Then Git Town runs the commands
       | COMMAND                                               |
       | git config --remove-section git-town                  |
-      | git config --unset git-town-branch.qa.branchtype      |
       | git config --unset git-town-branch.staging.branchtype |
       | git config --unset git-town-branch.feature.parent     |
+      | git config --unset git-town-branch.qa.branchtype      |
       | git config --global --unset alias.hack                |
       | git config --global --unset alias.sync                |
     And Git Town is no longer configured
