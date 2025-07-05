@@ -166,7 +166,7 @@ type convertToFeatureData struct {
 }
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.frontend, args.appendData, args.finalMessages, true)
+	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -395,7 +395,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-			if err := args.config.NormalConfig.SetBranchTypeOverride(args.repo.Frontend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
+			if err := args.config.NormalConfig.SetBranchTypeOverride(args.repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeFeatureBranch:
