@@ -3,9 +3,11 @@ package config
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -32,10 +34,10 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
-func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
-	globalSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	localSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unscopedSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+func (self *UnvalidatedConfig) Reload(runquer subshelldomain.RunnerQuerier) (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
+	globalSnapshot, _ = gitconfig.LoadSnapshot(runquer, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ = gitconfig.LoadSnapshot(runquer, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unscopedSnapshot, _ = gitconfig.LoadSnapshot(runquer, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unscopedGitConfig, _ := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
@@ -49,22 +51,21 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 		DryRun:           self.NormalConfig.DryRun,
 		EnvConfig:        envConfig,
 		GitConfig:        unscopedGitConfig,
-		GitIO:            self.NormalConfig.GitIO,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
 	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
-func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.NormalConfig.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
+func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
+	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
+func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return self.NormalConfig.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
