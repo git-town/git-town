@@ -134,11 +134,3 @@ func UpdateDeprecatedSetting(runner subshelldomain.Runner, scope configdomain.Co
 		fmt.Printf(messages.SettingCannotWrite, scope, newKey, err)
 	}
 }
-
-// updates a custom Git alias (not set up by Git Town)
-func UpdateExternalGitTownAlias(runner subshelldomain.Runner, scope configdomain.ConfigScope, key configdomain.Key, oldValue, newValue string) {
-	fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.SettingDeprecatedValueMessage, scope, key, oldValue, newValue)))
-	if err := SetConfigValue(runner, scope, key, newValue); err != nil {
-		fmt.Printf(messages.SettingCannotWrite, scope, key, err)
-	}
-}
