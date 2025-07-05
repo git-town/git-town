@@ -14,9 +14,13 @@ Feature: reset the configuration
     And global Git setting "alias.append" is "commit --amend"
     When I run "git-town config remove"
     Then Git Town runs the commands
-      | COMMAND                                |
-      | git config --global --unset alias.hack |
-      | git config --global --unset alias.sync |
+      | COMMAND                                               |
+      | git config --remove-section git-town                  |
+      | git config --unset git-town-branch.qa.branchtype      |
+      | git config --unset git-town-branch.staging.branchtype |
+      | git config --unset git-town-branch.feature.parent     |
+      | git config --global --unset alias.hack                |
+      | git config --global --unset alias.sync                |
     And Git Town is no longer configured
     And global Git setting "alias.append" is still "commit --amend"
 
