@@ -60,7 +60,7 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig)
 	case 1:
-		err = setOfflineStatus(args[0], repo.UnvalidatedConfig, repo.Backend)
+		err = setOfflineStatus(args[0], repo.UnvalidatedConfig, repo.Frontend)
 		if err != nil {
 			return err
 		}
