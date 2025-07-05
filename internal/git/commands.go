@@ -841,6 +841,10 @@ func (self *Commands) RemoveConfigValue(runner subshelldomain.Runner, scope conf
 	return runner.Run("git", args...)
 }
 
+func (self *Commands) RemoveDevRemoteSetting(runner subshelldomain.Runner) {
+	_ = self.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
+}
+
 func (self *Commands) RemoveFeatureRegex(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyFeatureRegex.String())
 }
@@ -871,6 +875,10 @@ func (self *Commands) RemoveGitLabToken(runner subshelldomain.Runner) error {
 
 func (self *Commands) RemoveGiteaToken(runner subshelldomain.Runner) error {
 	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
+}
+
+func (self *Commands) RemoveMainBranch(runner subshelldomain.Runner) {
+	_ = self.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
 
 func (self *Commands) RenameBranch(runner subshelldomain.Runner, oldName, newName gitdomain.LocalBranchName) error {

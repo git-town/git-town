@@ -541,7 +541,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, oldConfig)
+		return saveToFile(userInput, oldConfig, gitCommands, frontend)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(userInput, oldConfig, configFile, gitCommands, frontend)
 	}
@@ -913,12 +913,12 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig, gitCommands git.Commands) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig, gitCommands git.Commands, runner subshelldomain.Runner) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	gitCommands.RemoveDevRemote()
-	config.RemoveMainBranch()
+	gitCommands.RemoveDevRemoteSetting(runner)
+	gitCommands.RemoveMainBranch(runner)
 	config.NormalConfig.RemoveNewBranchType()
 	config.NormalConfig.RemovePerennialBranches()
 	config.NormalConfig.RemovePerennialRegex()
@@ -934,5 +934,5 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig, gitCommand
 	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config); err != nil {
 		return err
 	}
-	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex)
+	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, gitCommands, runner)
 }

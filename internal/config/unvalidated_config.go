@@ -57,10 +57,6 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
-func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.NormalConfig.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
-}
-
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {

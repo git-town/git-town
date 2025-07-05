@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/git/giturl"
@@ -17,12 +16,12 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	ConfigFile Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
-	DryRun     configdomain.DryRun                // whether to only print the Git commands but not execute them
-	EnvConfig  configdomain.PartialConfig         // content of the Git Town related environment variables
-	GitConfig  configdomain.PartialConfig         // content of the unscoped Git configuration
-	GitIO      gitconfig.IO                       // access to the Git configuration settings
-	GitVersion git.Version                        // version of the installed Git executable
+	ConfigFile  Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	DryRun      configdomain.DryRun                // whether to only print the Git commands but not execute them
+	EnvConfig   configdomain.PartialConfig         // content of the Git Town related environment variables
+	GitConfig   configdomain.PartialConfig         // content of the unscoped Git configuration
+	GitCommands git.Commands                       // access to the Git configuration settings
+	GitVersion  git.Version                        // version of the installed Git executable
 }
 
 // removes the given branch from the lineage, and updates its children
@@ -32,14 +31,14 @@ func (self *NormalConfig) CleanupBranchFromLineage(branch gitdomain.LocalBranchN
 	for _, child := range children {
 		if hasParent {
 			self.Lineage = self.Lineage.Set(child, parent)
-			_ = self.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+			_ = self.GitCommands.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 		} else {
 			self.Lineage = self.Lineage.RemoveBranch(child)
-			_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
+			_ = self.GitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
 		}
 	}
 	self.Lineage = self.Lineage.RemoveBranch(branch)
-	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
+	_ = self.GitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
 }
 
 // DevURL provides the URL for the development remote.
@@ -74,22 +73,18 @@ func (self *NormalConfig) RemoteURLString(remote gitdomain.Remote) Option[string
 	if remoteOverride.IsSome() {
 		return remoteOverride
 	}
-	return self.GitIO.RemoteURL(remote)
+	return self.GitCommands.RemoteURL(remote)
 }
 
 func (self *NormalConfig) RemoveBranchTypeOverride(branch gitdomain.LocalBranchName) error {
 	delete(self.BranchTypeOverrides, branch)
 	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
+	_ = self.GitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
 	return nil
 }
 
 func (self *NormalConfig) RemoveCreatePrototypeBranches() {
 	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
-}
-
-func (self *NormalConfig) RemoveDevRemote() {
-	_ = self.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
 }
 
 func (self *NormalConfig) RemoveFeatureRegex() {
