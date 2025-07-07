@@ -1216,7 +1216,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the coworker runs "([^"]*)" and closes the editor$`, func(ctx context.Context, cmd string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		output, exitCode := state.fixture.CoworkerRepo.GetOrPanic().MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		output, exitCode := coworkerRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.runOutput = Some(output)
 		state.runExitCode = Some(exitCode)
 	})
