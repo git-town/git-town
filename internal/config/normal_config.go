@@ -79,13 +79,8 @@ func (self *NormalConfig) RemoteURLString(querier subshelldomain.Querier, remote
 
 func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
 	delete(self.BranchTypeOverrides, branch)
-	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
+	_ = gitconfig.RemoveBranchTypeOverride(runner, branch)
 	return nil
-}
-
-func (self *NormalConfig) RemoveCreatePrototypeBranches(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
 
 func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
