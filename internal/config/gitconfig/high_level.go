@@ -23,6 +23,10 @@ func RemoveFeatureRegex(runner subshelldomain.Runner, scope configdomain.ConfigS
 	return RemoveConfigValue(runner, scope, configdomain.KeyFeatureRegex)
 }
 
+func RemoveNewBranchType(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyNewBranchType)
+}
+
 func RemoveParent(runner subshelldomain.Runner, child gitdomain.LocalBranchName) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child))
 }
