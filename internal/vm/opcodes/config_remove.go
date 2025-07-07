@@ -2,6 +2,7 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
 
@@ -12,5 +13,5 @@ type ConfigRemove struct {
 }
 
 func (self *ConfigRemove) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.GitIO.RemoveConfigValue(self.Scope, self.Key)
+	return gitconfig.RemoveConfigValue(args.Backend, self.Scope, self.Key)
 }

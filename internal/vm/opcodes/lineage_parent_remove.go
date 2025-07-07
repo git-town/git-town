@@ -12,7 +12,7 @@ type LineageParentRemove struct {
 
 func (self *LineageParentRemove) Run(args shared.RunArgs) error {
 	if !args.Config.Value.NormalConfig.DryRun {
-		args.Config.Value.NormalConfig.RemoveParent(self.Branch)
+		args.Config.Value.NormalConfig.RemoveParent(args.Backend, self.Branch)
 	}
 	return nil
 }

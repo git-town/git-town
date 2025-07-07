@@ -107,7 +107,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 	if err = validateSyncData(data); err != nil {
 		return err
 	}
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend)
 	runProgram := NewMutable(&program.Program{})
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	BranchesProgram(data.branchesToSync, BranchProgramArgs{
@@ -220,7 +220,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err

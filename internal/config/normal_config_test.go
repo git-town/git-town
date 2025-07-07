@@ -13,10 +13,10 @@ func TestNormalConfig(t *testing.T) {
 	t.Run("SetOffline", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		err := repo.Config.NormalConfig.SetOffline(true)
+		err := repo.Config.NormalConfig.SetOffline(repo.TestRunner, true)
 		must.NoError(t, err)
 		must.True(t, repo.Config.NormalConfig.Offline.IsOffline())
-		err = repo.Config.NormalConfig.SetOffline(false)
+		err = repo.Config.NormalConfig.SetOffline(repo.TestRunner, false)
 		must.NoError(t, err)
 		must.False(t, repo.Config.NormalConfig.Offline.IsOffline())
 	})

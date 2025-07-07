@@ -51,7 +51,7 @@ func TestValidatedConfig(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		repo.CreateFeatureBranch("feature1", "main")
 		repo.CreateFeatureBranch("feature2", "main")
-		repo.Config.Reload()
+		repo.Config.Reload(repo.TestRunner)
 		have := repo.Config.NormalConfig.Lineage
 		want := configdomain.NewLineageWith(configdomain.LineageData{
 			"feature1": "main",
@@ -91,7 +91,7 @@ func TestValidatedConfig(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have, has := repo.Config.NormalConfig.RemoteURL(gitdomain.RemoteOrigin).Get()
+			have, has := repo.Config.NormalConfig.RemoteURL(repo.TestRunner, gitdomain.RemoteOrigin).Get()
 			must.True(t, has)
 			must.EqOp(t, want, have)
 		}
