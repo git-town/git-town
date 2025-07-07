@@ -37,12 +37,13 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
+    # And inspect the repo
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                                              |
       | welcome                                 | enter                                                             |
       | add all aliases                         | n enter                                                           |
       | keep the already configured main branch | enter                                                             |
-      | change the perennial branches           | space down space enter                                            |
+      | change the perennial branches           | down space enter                                                  |
       | remove the perennial regex              | backspace backspace backspace backspace enter                     |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
       | unknown branch type                     | down enter                                                        |
@@ -61,6 +62,7 @@ Feature: remove existing configuration in Git metadata
       | disable ship-delete-tracking-branch     | down enter                                                        |
       | save config to Git metadata             | down enter                                                        |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                             |
