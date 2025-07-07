@@ -832,8 +832,6 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 }
 
 func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
-	fmt.Println("111111111111111111111111111", oldValue)
-	fmt.Println("111111111111111111111111111", newValue)
 	if slices.Compare(oldValue, newValue) != 0 || config.NormalConfig.GitConfig.PerennialBranches == nil {
 		return config.NormalConfig.SetPerennialBranches(runner, newValue)
 	}
