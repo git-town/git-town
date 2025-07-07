@@ -201,7 +201,7 @@ func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, br
 func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, value gitdomain.Remote) error {
 	self.DevRemote = value
 	existing, has := self.GitConfig.DevRemote.Get()
-	if has || existing == value {
+	if has && existing == value {
 		return nil
 	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
@@ -211,7 +211,7 @@ func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, value gitdo
 func (self *NormalConfig) SetFeatureRegexLocally(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
 	existing, has := self.GitConfig.FeatureRegex.Get()
-	if has || existing == value {
+	if has && existing == value {
 		return nil
 	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
@@ -221,7 +221,7 @@ func (self *NormalConfig) SetFeatureRegexLocally(runner subshelldomain.Runner, v
 func (self *NormalConfig) SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
 	self.NewBranchType = Some(value)
 	existing, has := self.GitConfig.NewBranchType.Get()
-	if has || existing == value {
+	if has && existing == value {
 		return nil
 	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
