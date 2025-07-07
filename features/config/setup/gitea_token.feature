@@ -27,13 +27,14 @@ Feature: enter the Gitea API token
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
       | push-hook                   | enter             |                                             |
-      | new-branch-type             | down enter        |                                             |
+      | new-branch-type             | enter             |                                             |
       | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                        |
       | git config --local git-town.gitea-token 123456 |
+      | git config git-town.new-branch-type feature    |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.gitea-token" is now "123456"
 
@@ -66,6 +67,7 @@ Feature: enter the Gitea API token
     Then Git Town runs the commands
       | COMMAND                                        |
       | git config --local git-town.gitea-token 123456 |
+      | git config git-town.new-branch-type feature    |
       | git config git-town.forge-type gitea           |
     And local Git setting "git-town.forge-type" is now "gitea"
     And local Git setting "git-town.gitea-token" is now "123456"
@@ -100,6 +102,7 @@ Feature: enter the Gitea API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --global git-town.gitea-token 123456 |
+      | git config git-town.new-branch-type feature     |
     And global Git setting "git-town.gitea-token" is now "123456"
 
   Scenario: edit global Gitea token
@@ -133,4 +136,5 @@ Feature: enter the Gitea API token
     Then Git Town runs the commands
       | COMMAND                                      |
       | git config --global git-town.gitea-token 456 |
+      | git config git-town.new-branch-type feature  |
     And global Git setting "git-town.gitea-token" is now "456"

@@ -29,7 +29,9 @@ Feature: Configure a different development remote
       | save config to config file  | enter    |
 
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | COMMAND                                 |
+      | git config --unset git-town.main-branch |
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file

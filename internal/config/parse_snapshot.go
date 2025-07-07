@@ -11,24 +11,25 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
 // provides the branch type overrides stored in the given Git metadata snapshot
-func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, gitCommands gitconfig.IO) (configdomain.BranchTypeOverrides, error) {
+func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, runner subshelldomain.Runner) (configdomain.BranchTypeOverrides, error) {
 	result := configdomain.BranchTypeOverrides{}
 	for key, value := range snapshot.BranchTypeOverrideEntries() {
 		branch := key.Branch()
 		if branch == "" {
 			// empty branch name --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = gitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
+			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty branch type values are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigBranchTypeOverrideEmpty))
-			_ = gitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
+			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
 		branchTypeOpt, err := configdomain.ParseBranchType(value)
@@ -42,26 +43,26 @@ func NewBranchTypeOverridesInSnapshot(snapshot configdomain.SingleSnapshot, gitC
 	return result, nil
 }
 
-func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, gitCommands gitconfig.IO) (configdomain.Lineage, error) {
+func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.Lineage, error) {
 	result := configdomain.NewLineage()
 	for key, value := range snapshot.LineageEntries() {
 		child := key.ChildBranch()
 		if child == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
-			_ = gitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
+			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
 		value = strings.TrimSpace(value)
 		if value == "" {
 			// empty lineage entries are invalid --> delete it
 			fmt.Println(colors.Cyan().Styled(messages.ConfigLineageEmptyChild))
-			_ = gitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
+			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 			continue
 		}
 		if updateOutdated && child.String() == value {
 			fmt.Println(colors.Cyan().Styled(fmt.Sprintf(messages.ConfigLineageParentIsChild, child)))
-			_ = gitCommands.RemoveConfigValue(configdomain.ConfigScopeLocal, key.Key)
+			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 		}
 		parent := gitdomain.NewLocalBranchName(value)
 		result = result.Set(child, parent)
@@ -69,15 +70,15 @@ func NewLineageFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated
 	return result, nil
 }
 
-func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, gitCommands gitconfig.IO) (configdomain.PartialConfig, error) {
+func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOutdated bool, runner subshelldomain.Runner) (configdomain.PartialConfig, error) {
 	aliases := snapshot.Aliases()
-	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, gitCommands)
+	branchTypeOverrides, err1 := NewBranchTypeOverridesInSnapshot(snapshot, runner)
 	contributionRegex, err2 := configdomain.ParseContributionRegex(snapshot[configdomain.KeyContributionRegex])
 	featureRegex, err3 := configdomain.ParseFeatureRegex(snapshot[configdomain.KeyFeatureRegex])
 	forgeType, err4 := forgedomain.ParseForgeType(snapshot[configdomain.KeyForgeType])
 	githubConnectorType, err5 := forgedomain.ParseGitHubConnectorType(snapshot[configdomain.KeyGitHubConnectorType])
 	gitlabConnectorType, err6 := forgedomain.ParseGitLabConnectorType(snapshot[configdomain.KeyGitLabConnectorType])
-	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, gitCommands)
+	lineage, err7 := NewLineageFromSnapshot(snapshot, updateOutdated, runner)
 	newBranchType, err8 := configdomain.ParseBranchType(snapshot[configdomain.KeyNewBranchType])
 	observedRegex, err9 := configdomain.ParseObservedRegex(snapshot[configdomain.KeyObservedRegex])
 	offline, err10 := configdomain.ParseOffline(snapshot[configdomain.KeyOffline], configdomain.KeyOffline)

@@ -111,7 +111,7 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 	if err != nil {
 		return err
 	}
-	runProgram := detachProgram(data, repo.FinalMessages)
+	runProgram := detachProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -194,7 +194,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -323,9 +323,9 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 	}, false, nil
 }
 
-func detachProgram(data detachData, finalMessages stringslice.Collector) program.Program {
+func detachProgram(repo execute.OpenRepoResult, data detachData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	prog.Value.Add(
 		&opcodes.RebaseOntoRemoveDeleted{
 			BranchToRebaseOnto: data.config.ValidatedConfigData.MainBranch,

@@ -32,8 +32,10 @@ Feature: override an existing Git alias
     Then Git Town runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |
+      | git config --unset git-town.main-branch        |
     And global Git setting "alias.append" is now "town append"
 
   Scenario: undo
     When I run "git-town undo"
     Then global Git setting "alias.append" is now "checkout"
+    And local Git setting "git-town.main-branch" is now "main"

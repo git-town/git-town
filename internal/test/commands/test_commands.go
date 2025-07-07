@@ -173,7 +173,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 	} else {
 		self.CreateBranch(name, "main")
 	}
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(branchType, name))
+	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -191,7 +191,7 @@ func (self *TestCommands) CreateCommit(commit testgit.Commit) {
 // creates a feature branch with the given name in this repository
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.BranchName) {
 	self.CreateBranch(name, parent)
-	asserts.NoError(self.Config.NormalConfig.SetParent(name, parent.LocalName()))
+	asserts.NoError(self.Config.NormalConfig.SetParent(self.TestRunner, name, parent.LocalName()))
 }
 
 // creates a file with the given name and content in this repository
@@ -350,9 +350,8 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "PARENT")
-	localSnapshot, _ := self.Config.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
-	gitIO := gitconfig.IO{Shell: nil}
-	localGitConfig, _ := config.NewPartialConfigFromSnapshot(localSnapshot, false, gitIO)
+	localSnapshot, _ := gitconfig.LoadSnapshot(self.TestRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)
+	localGitConfig, _ := config.NewPartialConfigFromSnapshot(localSnapshot, false, nil)
 	lineage := localGitConfig.Lineage
 	for _, entry := range lineage.Entries() {
 		result.AddRow(entry.Child.String(), entry.Parent.String())
@@ -428,7 +427,7 @@ func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) 
 }
 
 func (self *TestCommands) Reload() {
-	globalConfigSnapshot, localConfigSnapshot, _ := self.Config.Reload()
+	globalConfigSnapshot, localConfigSnapshot, _ := self.Config.Reload(self.TestRunner)
 	self.SnapShots[configdomain.ConfigScopeGlobal] = globalConfigSnapshot
 	self.SnapShots[configdomain.ConfigScopeLocal] = localConfigSnapshot
 }
@@ -445,7 +444,7 @@ func (self *TestCommands) RemoveMainBranchConfiguration() {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.Config.NormalConfig.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
+	return gitconfig.RemoveConfigValue(self.TestRunner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
@@ -539,7 +538,7 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 	if len(output) > 0 {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
-	self.Config.Reload()
+	self.Config.Reload(self.TestRunner)
 	for aliasName, aliasValue := range self.Config.NormalConfig.Aliases {
 		if strings.HasPrefix(aliasValue, "town ") {
 			return fmt.Errorf("unexpected Git Town alias %q with value %q. All aliases: %#v", aliasName, aliasValue, self.Config.NormalConfig.Aliases)

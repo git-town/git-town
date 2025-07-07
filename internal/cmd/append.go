@@ -23,6 +23,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/state/runstate"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	"github.com/git-town/git-town/v21/internal/undo/undoconfig"
 	"github.com/git-town/git-town/v21/internal/validate"
 	"github.com/git-town/git-town/v21/internal/vm/interpreter/fullinterpreter"
@@ -122,7 +123,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 	if err != nil || exit {
 		return err
 	}
-	runProgram := appendProgram(data, repo.FinalMessages, false)
+	runProgram := appendProgram(repo.Backend, data, repo.FinalMessages, false)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -211,7 +212,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -330,9 +331,9 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 	}, false, nil
 }
 
-func appendProgram(data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
+func appendProgram(frontend subshelldomain.Runner, data appendFeatureData, finalMessages stringslice.Collector, beamCherryPick bool) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, frontend)
 	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{

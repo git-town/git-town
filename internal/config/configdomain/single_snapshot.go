@@ -24,6 +24,7 @@ func (self SingleSnapshot) Aliases() Aliases {
 }
 
 // provides all the configuration entries that describe branch type overrides
+// TODO: remove this, use NewBranchTypeOverridesInSnapshot
 func (self SingleSnapshot) BranchTypeOverrideEntries() map[BranchTypeOverrideKey]string {
 	result := map[BranchTypeOverrideKey]string{}
 	for key, value := range self {

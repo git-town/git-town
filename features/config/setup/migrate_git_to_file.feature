@@ -43,7 +43,21 @@ Feature: migrate existing configuration in Git metadata to a config file
       | save config to config file                | enter |
 
   Scenario: result
-    Then Git Town runs no commands
+    Then Git Town runs the commands
+      | COMMAND                                                 |
+      | git config --unset git-town.dev-remote                  |
+      | git config --unset git-town.main-branch                 |
+      | git config --unset git-town.new-branch-type             |
+      | git config --unset git-town.perennial-branches          |
+      | git config --unset git-town.perennial-regex             |
+      | git config --unset git-town.share-new-branches          |
+      | git config --unset git-town.push-hook                   |
+      | git config --unset git-town.ship-strategy               |
+      | git config --unset git-town.ship-delete-tracking-branch |
+      | git config --unset git-town.sync-feature-strategy       |
+      | git config --unset git-town.sync-perennial-strategy     |
+      | git config --unset git-town.sync-upstream               |
+      | git config --unset git-town.sync-tags                   |
     And the main branch is now not set
     And there are now no perennial branches
     And local Git setting "git-town.forge-type" now doesn't exist
