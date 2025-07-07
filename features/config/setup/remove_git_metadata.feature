@@ -58,28 +58,41 @@ Feature: remove existing configuration in Git metadata
       | sync-tags                               | down enter                                                        |
       | enable share-new-branches               | up enter                                                          |
       | enable the push hook                    | down enter                                                        |
-      | new-branch-type                         | down enter                                                        |
+      | new-branch-type                         | up enter                                                          |
       | change ship-strategy                    | down enter                                                        |
       | disable ship-delete-tracking-branch     | down enter                                                        |
       | save config to Git metadata             | down enter                                                        |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                             |
-      | git config --global --unset alias.append            |
-      | git config --global --unset alias.diff-parent       |
-      | git config --global --unset alias.hack              |
-      | git config --global --unset alias.delete            |
-      | git config --global --unset alias.prepend           |
-      | git config --global --unset alias.propose           |
-      | git config --global --unset alias.rename            |
-      | git config --global --unset alias.repo              |
-      | git config --global --unset alias.set-parent        |
-      | git config --global --unset alias.ship              |
-      | git config --global --unset alias.sync              |
-      | git config --unset git-town.forge-type              |
-      | git config --unset git-town.hosting-origin-hostname |
+      | COMMAND                                              |
+      | git config --global --unset alias.append             |
+      | git config --global --unset alias.diff-parent        |
+      | git config --global --unset alias.hack               |
+      | git config --global --unset alias.delete             |
+      | git config --global --unset alias.prepend            |
+      | git config --global --unset alias.propose            |
+      | git config --global --unset alias.rename             |
+      | git config --global --unset alias.repo               |
+      | git config --global --unset alias.set-parent         |
+      | git config --global --unset alias.ship               |
+      | git config --global --unset alias.sync               |
+      | git config git-town.new-branch-type feature          |
+      | git config --unset git-town.forge-type               |
+      | git config --unset git-town.hosting-origin-hostname  |
+      | git config git-town.perennial-branches ""            |
+      | git config --unset git-town.perennial-regex          |
+      | git config git-town.unknown-branch-type feature      |
+      | git config --unset git-town.feature-regex            |
+      | git config git-town.push-hook true                   |
+      | git config git-town.share-new-branches no            |
+      | git config git-town.ship-strategy api                |
+      | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.sync-feature-strategy merge      |
+      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-prototype-strategy merge    |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.sync-tags true                   |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
@@ -94,7 +107,7 @@ Feature: remove existing configuration in Git metadata
     And the main branch is still "main"
     And there are now no perennial branches
     And local Git setting "git-town.dev-remote" is now "fork"
-    And local Git setting "git-town.new-branch-type" is now "prototype"
+    And local Git setting "git-town.new-branch-type" is now "feature"
     And local Git setting "git-town.forge-type" now doesn't exist
     And local Git setting "git-town.github-token" now doesn't exist
     And local Git setting "git-town.hosting-origin-hostname" now doesn't exist
