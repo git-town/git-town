@@ -84,7 +84,6 @@ func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner,
 	return nil
 }
 
-// TODO: extract into gitconfig package
 func (self *NormalConfig) RemoveCreatePrototypeBranches(runner subshelldomain.Runner) {
 	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
