@@ -1223,20 +1223,21 @@ func defineSteps(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(ctx context.Context, childBranch, parentBranch string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		repo := state.fixture.DevRepo.GetOrPanic()
-		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.NormalConfig.SetParent(repo.TestRunner, gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		_ = coworkerRepo.Config.NormalConfig.SetParent(coworkerRepo.TestRunner, gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
 	})
 
 	sc.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(ctx context.Context, value string) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		repo := state.fixture.DevRepo.GetOrPanic()
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value))
-		_ = state.fixture.CoworkerRepo.GetOrPanic().Config.NormalConfig.SetSyncFeatureStrategy(repo.TestRunner, syncFeatureStrategy.GetOrPanic())
+		_ = coworkerRepo.Config.NormalConfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic())
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
-		actualContent := state.fixture.CoworkerRepo.GetOrPanic().FileContent(file)
+		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
+		actualContent := coworkerRepo.FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
