@@ -32,14 +32,14 @@ func (self *NormalConfig) CleanupBranchFromLineage(runner subshelldomain.Runner,
 	for _, child := range children {
 		if hasParent {
 			self.Lineage = self.Lineage.Set(child, parent)
-			_ = gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+			_ = gitconfig.SetParent(runner, child, parent)
 		} else {
 			self.Lineage = self.Lineage.RemoveBranch(child)
-			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
+			_ = gitconfig.RemoveParent(runner, parent)
 		}
 	}
 	self.Lineage = self.Lineage.RemoveBranch(branch)
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
+	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 // DevURL provides the URL for the development remote.
