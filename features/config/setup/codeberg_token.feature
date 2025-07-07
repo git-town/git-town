@@ -27,7 +27,7 @@ Feature: enter the Codeberg API token
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
       | push-hook                   | enter             |                                             |
-      | new-branch-type             | down enter        |                                             |
+      | new-branch-type             | enter             |                                             |
       | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
@@ -50,7 +50,7 @@ Feature: enter the Codeberg API token
       | dev-remote                  | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | down down down enter |                                             |
-      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
+      | codeberg token              |    1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                |                                             |
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
@@ -93,7 +93,7 @@ Feature: enter the Codeberg API token
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
       | push-hook                   | enter             |                                             |
-      | new-branch-type             | down enter        |                                             |
+      | new-branch-type             | enter             |                                             |
       | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
@@ -126,7 +126,7 @@ Feature: enter the Codeberg API token
       | sync-tags                   | enter                                     |                                             |
       | share-new-branches          | enter                                     |                                             |
       | push-hook                   | enter                                     |                                             |
-      | new-branch-type             | down enter                                |                                             |
+      | new-branch-type             | enter                                     |                                             |
       | ship-strategy               | enter                                     |                                             |
       | ship-delete-tracking-branch | enter                                     |                                             |
       | save config to Git metadata | down enter                                |                                             |

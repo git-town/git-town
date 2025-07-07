@@ -28,7 +28,7 @@ Feature: enter the GitHub API token
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
       | push-hook                   | enter             |                                             |
-      | new-branch-type             | down enter        |                                             |
+      | new-branch-type             | enter             |                                             |
       | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
@@ -53,7 +53,7 @@ Feature: enter the GitHub API token
       | origin hostname             | enter                          |                                             |
       | forge type                  | down down down down down enter |                                             |
       | github connector type: API  | enter                          |                                             |
-      | github token                | 1 2 3 4 5 6 enter              |                                             |
+      | github token                |              1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                          |                                             |
       | sync-feature-strategy       | enter                          |                                             |
       | sync-perennial-strategy     | enter                          |                                             |
