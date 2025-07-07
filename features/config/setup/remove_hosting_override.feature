@@ -30,8 +30,9 @@ Feature: remove an existing forge type override
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                |
-      | git config --unset git-town.forge-type |
+      | COMMAND                                     |
+      | git config git-town.new-branch-type feature |
+      | git config --unset git-town.forge-type      |
     And local Git setting "git-town.forge-type" now doesn't exist
 
   Scenario: undo

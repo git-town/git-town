@@ -34,6 +34,7 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                           |
       | git config --local git-town.codeberg-token 123456 |
+      | git config git-town.new-branch-type feature       |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.codeberg-token" is now "123456"
 
@@ -66,6 +67,7 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                           |
       | git config --local git-town.codeberg-token 123456 |
+      | git config git-town.new-branch-type feature       |
       | git config git-town.forge-type codeberg           |
     And local Git setting "git-town.forge-type" is now "codeberg"
     And local Git setting "git-town.codeberg-token" is now "123456"
@@ -100,6 +102,7 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                            |
       | git config --global git-town.codeberg-token 123456 |
+      | git config git-town.new-branch-type feature        |
     And global Git setting "git-town.codeberg-token" is now "123456"
 
   Scenario: edit global Codeberge API token
@@ -133,4 +136,5 @@ Feature: enter the Codeberg API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --global git-town.codeberg-token 456 |
+      | git config git-town.new-branch-type feature     |
     And global Git setting "git-town.codeberg-token" is now "456"

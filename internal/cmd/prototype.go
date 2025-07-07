@@ -70,7 +70,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToPrototype.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypePrototypeBranch, branchNames...); err != nil {
+	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypePrototypeBranch, branchNames...); err != nil {
 		return err
 	}
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {

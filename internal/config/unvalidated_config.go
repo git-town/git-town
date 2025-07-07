@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
+	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
@@ -33,12 +34,11 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
-func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
-	globalSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	localSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unscopedSnapshot, _ = self.NormalConfig.GitIO.LoadSnapshot(None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	gitIO := gitconfig.IO{Shell: nil}
-	unscopedGitConfig, _ := NewPartialConfigFromSnapshot(unscopedSnapshot, false, gitIO)
+func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
+	globalSnapshot, _ = gitconfig.LoadSnapshot(backend, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ = gitconfig.LoadSnapshot(backend, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unscopedSnapshot, _ = gitconfig.LoadSnapshot(backend, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unscopedGitConfig, _ := NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		env:  envConfig,
@@ -51,22 +51,23 @@ func (self *UnvalidatedConfig) Reload() (globalSnapshot, localSnapshot, unscoped
 		DryRun:           self.NormalConfig.DryRun,
 		EnvConfig:        envConfig,
 		GitConfig:        unscopedGitConfig,
-		GitIO:            self.NormalConfig.GitIO,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
 	return globalSnapshot, localSnapshot, unscopedSnapshot
 }
 
-func (self *UnvalidatedConfig) RemoveMainBranch() {
-	_ = self.NormalConfig.GitIO.RemoveConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
+func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
+	if self.NormalConfig.GitConfig.MainBranch.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
+	}
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName) error {
+func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
-	return self.NormalConfig.GitIO.SetConfigValue(configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
@@ -80,14 +81,13 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 	return result
 }
 
-func DefaultUnvalidatedConfig(gitIO gitconfig.IO, gitVersion git.Version) UnvalidatedConfig {
+func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
 			ConfigFile:       None[configdomain.PartialConfig](),
 			DryRun:           false,
 			EnvConfig:        configdomain.EmptyPartialConfig(),
 			GitConfig:        configdomain.EmptyPartialConfig(),
-			GitIO:            gitIO,
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},
@@ -107,7 +107,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 			DryRun:           args.DryRun,
 			EnvConfig:        args.EnvConfig,
 			GitConfig:        args.GitConfig,
-			GitIO:            args.GitIO,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
@@ -121,7 +120,6 @@ type NewUnvalidatedConfigArgs struct {
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
 	GitConfig     configdomain.PartialConfig
-	GitIO         gitconfig.IO
 	GitVersion    git.Version
 }
 
