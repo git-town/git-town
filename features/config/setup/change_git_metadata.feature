@@ -33,13 +33,12 @@ Feature: change existing information in Git metadata
       | sync-upstream                             | down enter             |
       | sync-tags                                 | down enter             |
       | enable share-new-branches                 | down enter             |
-      | disable the push hook                     | down enter             |
+      | enable the push hook                      | down enter             |
       | new-branch-type                           | down enter             |
       | set ship-strategy to "fast-forward"       | down down enter        |
       | disable ship-delete-tracking-branch       | down enter             |
       | save config to Git metadata               | down enter             |
 
-  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                                  |
@@ -59,9 +58,23 @@ Feature: change existing information in Git metadata
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
       | git config --local git-town.github-token 123456          |
+      | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |
       | git config git-town.hosting-origin-hostname code         |
+      | git config git-town.perennial-branches "production qa"   |
+      | git config git-town.perennial-regex 3366                 |
+      | git config git-town.unknown-branch-type observed         |
+      | git config git-town.feature-regex user                   |
+      | git config git-town.push-hook true                       |
+      | git config git-town.share-new-branches push              |
+      | git config git-town.ship-strategy fast-forward           |
+      | git config git-town.ship-delete-tracking-branch false    |
+      | git config git-town.sync-feature-strategy rebase         |
+      | git config git-town.sync-perennial-strategy ff-only      |
+      | git config git-town.sync-prototype-strategy rebase       |
+      | git config git-town.sync-upstream false                  |
+      | git config git-town.sync-tags true                       |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
