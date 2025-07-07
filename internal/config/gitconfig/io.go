@@ -73,8 +73,8 @@ func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdo
 	return snapshot, err
 }
 
-func RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
-	output, err := querier.Query("git", "remote", "get-url", remote.String())
+func RemoteURL(backend subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
+	output, err := backend.Query("git", "remote", "get-url", remote.String())
 	if err != nil {
 		// NOTE: it's okay to ignore the error here.
 		// If we get an error here, we simply don't use the origin remote.
