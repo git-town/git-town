@@ -81,7 +81,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 	if err != nil || exit {
 		return err
 	}
-	runProgram := renameProgram(data, repo.FinalMessages)
+	runProgram := renameProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -157,7 +157,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -273,9 +273,9 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 	}, false, err
 }
 
-func renameProgram(data renameData, finalMessages stringslice.Collector) program.Program {
+func renameProgram(repo execute.OpenRepoResult, data renameData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
 	oldLocalBranch, hasOldLocalBranch := data.oldBranch.LocalName.Get()
 	if !hasOldLocalBranch {
 		return prog.Immutable()

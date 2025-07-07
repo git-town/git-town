@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -105,8 +104,7 @@ upstream = true
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		var gitIO gitconfig.IO
-		config := config.DefaultUnvalidatedConfig(gitIO, git.EmptyVersion())
+		config := config.DefaultUnvalidatedConfig(git.EmptyVersion())
 		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 		err := configfile.Save(&config)
 		defer os.Remove(configfile.FileName)

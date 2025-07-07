@@ -65,7 +65,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 			GitLabToken:          normalConfig.GitLabToken,
 			GiteaToken:           normalConfig.GiteaToken,
 			Log:                  print.Logger{},
-			RemoteURL:            normalConfig.DevURL(),
+			RemoteURL:            normalConfig.DevURL(args.Backend),
 		})
 		if err != nil {
 			return false, err
@@ -159,7 +159,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		if err = args.unvalidated.Value.SetMainBranch(validatedMain); err != nil {
+		if err = args.unvalidated.Value.SetMainBranch(validatedMain, args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		mainBranch = validatedMain

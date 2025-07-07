@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +46,7 @@ func executeRemoveConfig(verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.UnvalidatedConfig.NormalConfig.GitIO.RemoveLocalGitConfiguration(repo.ConfigSnapshot.Local); err != nil {
+	if err = gitconfig.RemoveLocalGitConfiguration(repo.Backend, repo.ConfigSnapshot.Local); err != nil {
 		return err
 	}
 	aliasNames := slices.Collect(maps.Keys(repo.UnvalidatedConfig.NormalConfig.Aliases))

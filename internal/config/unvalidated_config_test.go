@@ -17,7 +17,7 @@ func TestUnvalidatedConfig(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			repo.CreateFeatureBranch("branch", "main")
-			repo.Config.Reload()
+			repo.Config.Reload(repo.TestRunner)
 			want := configdomain.NewLineageWith(configdomain.LineageData{
 				"branch": "main",
 			})
@@ -27,9 +27,9 @@ func TestUnvalidatedConfig(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			repo.CreateBranch("branch", "main")
-			err := repo.Config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeContributionBranch, "branch")
+			err := repo.Config.NormalConfig.SetBranchTypeOverride(repo.TestRunner, configdomain.BranchTypeContributionBranch, "branch")
 			must.NoError(t, err)
-			repo.Config.Reload()
+			repo.Config.Reload(repo.TestRunner)
 			must.Eq(t, configdomain.BranchTypeContributionBranch, repo.Config.BranchType("branch"))
 		})
 	})

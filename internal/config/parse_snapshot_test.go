@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,8 +16,7 @@ func TestNewBranchTypeOverridesFromSnapshot(t *testing.T) {
 		"git-town-branch.branch-3.parent":     "main",
 		"git-town.prototype-branches":         "foo",
 	}
-	gitIO := gitconfig.IO{Shell: nil}
-	have, err := config.NewBranchTypeOverridesInSnapshot(snapshot, gitIO)
+	have, err := config.NewBranchTypeOverridesInSnapshot(snapshot, nil)
 	must.NoError(t, err)
 	want := configdomain.BranchTypeOverrides{
 		"branch-1": configdomain.BranchTypeFeatureBranch,

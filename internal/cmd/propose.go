@@ -194,7 +194,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -347,7 +347,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 
 func proposeProgram(repo execute.OpenRepoResult, data proposeData) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages)
+	data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, repo.FinalMessages, repo.Backend)
 	branchesToDelete := set.New[gitdomain.LocalBranchName]()
 	sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 		BranchInfos:         data.branchInfos,
