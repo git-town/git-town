@@ -90,7 +90,9 @@ func (self *NormalConfig) RemoveCreatePrototypeBranches(runner subshelldomain.Ru
 }
 
 func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
+	if self.GitConfig.DevRemote.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
+	}
 }
 
 func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
@@ -98,7 +100,9 @@ func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
 }
 
 func (self *NormalConfig) RemoveNewBranchType(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType)
+	if self.GitConfig.NewBranchType.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType)
+	}
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
@@ -118,47 +122,69 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 }
 
 func (self *NormalConfig) RemovePerennialBranches(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
+	if len(self.GitConfig.PerennialBranches) > 0 {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
+	}
 }
 
 func (self *NormalConfig) RemovePerennialRegex(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
+	if self.GitConfig.PerennialRegex.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
+	}
 }
 
 func (self *NormalConfig) RemovePushHook(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook)
+	if self.GitConfig.PushHook.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook)
+	}
 }
 
 func (self *NormalConfig) RemoveShareNewBranches(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches)
+	if self.GitConfig.ShareNewBranches.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches)
+	}
 }
 
 func (self *NormalConfig) RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
+	if self.GitConfig.ShipDeleteTrackingBranch.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
+	}
 }
 
 func (self *NormalConfig) RemoveShipStrategy(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
+	if self.GitConfig.ShipStrategy.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
+	}
 }
 
 func (self *NormalConfig) RemoveSyncFeatureStrategy(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy)
+	if self.GitConfig.SyncFeatureStrategy.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy)
+	}
 }
 
 func (self *NormalConfig) RemoveSyncPerennialStrategy(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy)
+	if self.GitConfig.SyncPerennialStrategy.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy)
+	}
 }
 
 func (self *NormalConfig) RemoveSyncPrototypeStrategy(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy)
+	if self.GitConfig.SyncPrototypeStrategy.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy)
+	}
 }
 
 func (self *NormalConfig) RemoveSyncTags(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags)
+	if self.GitConfig.SyncTags.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags)
+	}
 }
 
 func (self *NormalConfig) RemoveSyncUpstream(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
+	if self.GitConfig.SyncUpstream.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
+	}
 }
 
 // SetBranchTypeOverride registers the given branch names as contribution branches.

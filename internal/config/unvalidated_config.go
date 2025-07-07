@@ -58,7 +58,9 @@ func (self *UnvalidatedConfig) Reload(runquer subshelldomain.RunnerQuerier) (glo
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
+	if self.NormalConfig.GitConfig.MainBranch.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
+	}
 }
 
 // SetMainBranch marks the given branch as the main branch

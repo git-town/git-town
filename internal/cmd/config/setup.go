@@ -916,7 +916,6 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner sub
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	config.NormalConfig.RemoveCreatePrototypeBranches(runner)
 	config.NormalConfig.RemoveDevRemote(runner)
 	config.RemoveMainBranch(runner)
 	config.NormalConfig.RemoveNewBranchType(runner)
