@@ -85,12 +85,14 @@ func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner,
 
 func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
 	if self.GitConfig.DevRemote.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
+		_ = gitconfig.RemoveDevRemote(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
+	if self.GitConfig.FeatureRegex.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
+	}
 }
 
 func (self *NormalConfig) RemoveNewBranchType(runner subshelldomain.Runner) {

@@ -6,13 +6,21 @@ import (
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
+func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
+	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
+}
+
 func RemoveDeprecatedCreatePrototypeBranches(runner subshelldomain.Runner) {
 	_ = RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
 }
 
-func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
-	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
+func RemoveDevRemote(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyDevRemote)
+}
+
+func RemoveFeatureRegex(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyFeatureRegex)
 }
 
 func RemoveParent(runner subshelldomain.Runner, child gitdomain.LocalBranchName) error {
