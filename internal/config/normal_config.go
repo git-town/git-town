@@ -84,10 +84,6 @@ func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner,
 	return nil
 }
 
-func (self *NormalConfig) RemoveCreatePrototypeBranches(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
-}
-
 func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
 	if self.GitConfig.DevRemote.IsSome() {
 		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
