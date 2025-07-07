@@ -76,7 +76,6 @@ const (
 	ContributionBranchCannotPark       = "cannot park contribution branches"
 	ContributionBranchCannotPropose    = "cannot propose contribution branches"
 	ContributionBranchCannotShip       = "cannot ship contribution branches"
-	CreatePrototypeBranches            = "Create prototype branches:"
 	CreatePrototypeBranchesDeprecation = `The Git Town configuration file contains the deprecated setting "create-prototype-branches".
 Please upgrade to the new format: create.new-branch-type = "prototype"`
 	CredentialsAccess                   = "API token permits access to pull requests"
@@ -162,6 +161,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	MergeNoParent                         = "cannot merge branch %q because it has no parent"
 	MergeNotInSyncWithTracking            = `branch %q is not in sync with its tracking branch, please run "git town sync" and try again`
 	MergeWrongBranchType                  = "cannot merge %s branches"
+	NewBranchType                         = "New branch type:"
 	ObservedBranchCannotPark              = "cannot park observed branches"
 	ObservedBranchCannotPropose           = "cannot propose observed branches"
 	ObservedBranchCannotShip              = "cannot ship observed branches"
