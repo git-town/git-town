@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -91,7 +92,9 @@ func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
 }
 
 func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
+	if self.GitConfig.FeatureRegex.IsSome() {
+		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
+	}
 }
 
 func (self *NormalConfig) RemoveNewBranchType(runner subshelldomain.Runner) {
@@ -197,24 +200,40 @@ func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, br
 // SetDevRemote updates the locally configured development remote.
 func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, value gitdomain.Remote) error {
 	self.DevRemote = value
+	existing, has := self.GitConfig.DevRemote.Get()
+	if has || existing == value {
+		return nil
+	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
 }
 
 // SetFeatureRegexLocally updates the locally configured feature regex.
 func (self *NormalConfig) SetFeatureRegexLocally(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
+	existing, has := self.GitConfig.FeatureRegex.Get()
+	if has || existing == value {
+		return nil
+	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
 }
 
 // SetContributionBranches marks the given branches as contribution branches.
 func (self *NormalConfig) SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
 	self.NewBranchType = Some(value)
+	existing, has := self.GitConfig.NewBranchType.Get()
+	if has || existing == value {
+		return nil
+	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (self *NormalConfig) SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
 	self.Offline = value
+	existing, has := self.GitConfig.Offline.Get()
+	if has || existing == value {
+		return nil
+	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
 }
 
@@ -231,6 +250,9 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
+	if slices.Compare(self.GitConfig.PerennialBranches, branches) == 0 {
+		return nil
+	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
 }
 

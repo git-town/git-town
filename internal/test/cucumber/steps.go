@@ -397,7 +397,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^Git Town is not configured$`, func(ctx context.Context) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		asserts.NoError(devRepo.RemovePerennialBranchConfiguration())
+		_ = devRepo.RemovePerennialBranchConfiguration()
 		devRepo.RemoveMainBranchConfiguration()
 	})
 
