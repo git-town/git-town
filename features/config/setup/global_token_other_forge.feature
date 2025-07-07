@@ -27,7 +27,7 @@ Feature: a global API token of another forge exists
       | sync-tags                   | enter             |                                             |
       | share-new-branches          | enter             |                                             |
       | push-hook                   | enter             |                                             |
-      | new-branch-type             | down enter        |                                             |
+      | new-branch-type             | enter             |                                             |
       | ship-strategy               | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
