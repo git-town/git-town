@@ -29,11 +29,12 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.hosting-origin-hostname" is "code"
     And local Git setting "git-town.sync-feature-strategy" is "rebase"
-    And local Git setting "git-town.sync-perennial-strategy" is "rebase"
-    And local Git setting "git-town.sync-upstream" is "true"
-    And local Git setting "git-town.sync-tags" is "true"
+    And local Git setting "git-town.sync-perennial-strategy" is "ff-only"
+    And local Git setting "git-town.sync-prototype-strategy" is "rebase"
+    And local Git setting "git-town.sync-upstream" is "false"
+    And local Git setting "git-town.sync-tags" is "false"
     And local Git setting "git-town.share-new-branches" is "push"
-    And local Git setting "git-town.push-hook" is "true"
+    And local Git setting "git-town.push-hook" is "false"
     And local Git setting "git-town.new-branch-type" is "parked"
     And local Git setting "git-town.ship-strategy" is "squash-merge"
     And local Git setting "git-town.ship-delete-tracking-branch" is "false"
@@ -42,20 +43,20 @@ Feature: remove existing configuration in Git metadata
       | welcome                                 | enter                                                             |
       | add all aliases                         | n enter                                                           |
       | keep the already configured main branch | enter                                                             |
-      | change the perennial branches           | space down space enter                                            |
+      | remove the perennial branches           | down space enter                                                  |
       | remove the perennial regex              | backspace backspace backspace backspace enter                     |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter |
-      | unknown branch type                     | down enter                                                        |
+      | unknown branch type                     | up enter                                                          |
       | dev-remote                              | enter                                                             |
       | remove origin hostname                  | backspace backspace backspace backspace enter                     |
       | remove forge type override              | up up up up up enter                                              |
-      | sync-feature-strategy                   | down enter                                                        |
+      | sync-feature-strategy                   | up enter                                                          |
       | sync-perennial-strategy                 | down enter                                                        |
-      | sync-prototype-strategy                 | down enter                                                        |
+      | sync-prototype-strategy                 | up enter                                                          |
       | sync-upstream                           | down enter                                                        |
       | sync-tags                               | down enter                                                        |
       | enable share-new-branches               | up enter                                                          |
-      | disable the push hook                   | down enter                                                        |
+      | enable the push hook                    | down enter                                                        |
       | new-branch-type                         | down enter                                                        |
       | change ship-strategy                    | down enter                                                        |
       | disable ship-delete-tracking-branch     | down enter                                                        |
