@@ -230,6 +230,10 @@ func (self *NormalConfig) SetNewBranchType(runner subshelldomain.Runner, value c
 // SetOffline updates whether Git Town is in offline mode.
 func (self *NormalConfig) SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
 	self.Offline = value
+	existing, has := self.GitConfig.Offline.Get()
+	if has && existing == value {
+		return nil
+	}
 	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
 }
 
