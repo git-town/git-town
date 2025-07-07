@@ -15,14 +15,14 @@ import (
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
-func LoadSnapshot(runnerquerier subshelldomain.RunnerQuerier, scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
+func LoadSnapshot(backend subshelldomain.RunnerQuerier, scopeOpt Option[configdomain.ConfigScope], updateOutdated configdomain.UpdateOutdatedSettings) (configdomain.SingleSnapshot, error) {
 	snapshot := configdomain.SingleSnapshot{}
 	cmdArgs := []string{"config", "-lz"}
 	scope, hasScope := scopeOpt.Get()
 	if hasScope {
 		cmdArgs = append(cmdArgs, scope.GitFlag())
 	}
-	output, err := runnerquerier.Query("git", cmdArgs...)
+	output, err := backend.Query("git", cmdArgs...)
 	if err != nil || output == "" {
 		return snapshot, nil //nolint:nilerr  // Git returns an error if there is no global Git config, assume empty config in this case
 	}
@@ -35,21 +35,21 @@ func LoadSnapshot(runnerquerier subshelldomain.RunnerQuerier, scopeOpt Option[co
 		if updateOutdated.IsTrue() && hasScope {
 			newKey, keyIsDeprecated := configdomain.DeprecatedKeys[configKey]
 			if keyIsDeprecated {
-				UpdateDeprecatedSetting(runnerquerier, scope, configKey, newKey, value)
+				UpdateDeprecatedSetting(backend, scope, configKey, newKey, value)
 				configKey = newKey
 			}
 			if configKey != configdomain.KeyPerennialBranches && value == "" {
-				_ = RemoveConfigValue(runnerquerier, configdomain.ConfigScopeLocal, configKey)
+				_ = RemoveConfigValue(backend, configdomain.ConfigScopeLocal, configKey)
 				continue
 			}
 			if slices.Contains(configdomain.ObsoleteKeys, configKey) {
-				_ = RemoveConfigValue(runnerquerier, scope, configKey)
+				_ = RemoveConfigValue(backend, scope, configKey)
 				fmt.Printf(messages.SettingSunsetDeleted, configKey)
 				continue
 			}
 			for _, update := range configdomain.ConfigUpdates {
 				if configKey == update.Before.Key && value == update.Before.Value {
-					UpdateDeprecatedSetting(runnerquerier, scope, configKey, update.After.Key, update.After.Value)
+					UpdateDeprecatedSetting(backend, scope, configKey, update.After.Key, update.After.Value)
 					configKey = update.After.Key
 					value = update.After.Value
 				}
@@ -59,9 +59,9 @@ func LoadSnapshot(runnerquerier subshelldomain.RunnerQuerier, scopeOpt Option[co
 					for _, branch := range strings.Split(value, " ") {
 						branchTypeKey := configdomain.Key(configdomain.BranchSpecificKeyPrefix + branch + configdomain.BranchTypeSuffix)
 						snapshot[branchTypeKey] = branchType.String()
-						_ = SetConfigValue(runnerquerier, configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
+						_ = SetConfigValue(backend, configdomain.ConfigScopeLocal, branchTypeKey, branchType.String())
 					}
-					_ = RemoveConfigValue(runnerquerier, configdomain.ConfigScopeLocal, configKey)
+					_ = RemoveConfigValue(backend, configdomain.ConfigScopeLocal, configKey)
 					fmt.Printf(messages.SettingSunsetBranchList, configKey)
 				}
 			}

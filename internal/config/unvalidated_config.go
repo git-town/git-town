@@ -34,10 +34,10 @@ func (self *UnvalidatedConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 	return self.NormalConfig.PerennialBranches
 }
 
-func (self *UnvalidatedConfig) Reload(runquer subshelldomain.RunnerQuerier) (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
-	globalSnapshot, _ = gitconfig.LoadSnapshot(runquer, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	localSnapshot, _ = gitconfig.LoadSnapshot(runquer, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
-	unscopedSnapshot, _ = gitconfig.LoadSnapshot(runquer, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (globalSnapshot, localSnapshot, unscopedSnapshot configdomain.SingleSnapshot) {
+	globalSnapshot, _ = gitconfig.LoadSnapshot(backend, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedNo) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	localSnapshot, _ = gitconfig.LoadSnapshot(backend, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	unscopedSnapshot, _ = gitconfig.LoadSnapshot(backend, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	unscopedGitConfig, _ := NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
