@@ -15,6 +15,7 @@ Feature: enter the GitLab API token
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -50,6 +51,7 @@ Feature: enter the GitLab API token
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -88,6 +90,7 @@ Feature: enter the GitLab API token
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -125,6 +128,7 @@ Feature: enter the GitLab API token
       | perennial regex             | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
       | contribution regex          | enter                                     |                                             |
+      | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |

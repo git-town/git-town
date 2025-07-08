@@ -14,6 +14,7 @@ Feature: a global API token of another forge exists
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |

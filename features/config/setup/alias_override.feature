@@ -13,6 +13,7 @@ Feature: override an existing Git alias
       | perennial regex             | enter   |
       | feature regex               | enter   |
       | contribution regex          | enter   |
+      | observed regex              | enter   |
       | unknown branch type         | enter   |
       | dev-remote                  | enter   |
       | origin hostname             | enter   |
