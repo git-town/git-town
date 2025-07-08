@@ -1431,7 +1431,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the perennial branches are "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.SetPerennialBranches(devRepo.TestRunner, gitdomain.NewLocalBranchNames(name))
+		return gitconfig.SetPerennialBranches(devRepo.TestRunner, gitdomain.NewLocalBranchNames(name))
 	})
 
 	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {
