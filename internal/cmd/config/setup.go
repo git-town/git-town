@@ -173,6 +173,13 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 			return tokenScope, forgeType, exit, err
 		}
 	}
+	observedRegex := None[configdomain.ObservedRegex]()
+	if configFile.ObservedRegex.IsNone() {
+		observedRegex, exit, err = dialog.ObservedRegex(repo.UnvalidatedConfig.NormalConfig.ObservedRegex, data.dialogInputs.Next())
+		if err != nil || exit {
+			return tokenScope, forgeType, exit, err
+		}
+	}
 	if configFile.UnknownBranchType.IsNone() {
 		data.userInput.config.NormalConfig.UnknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
 		if err != nil || exit {
