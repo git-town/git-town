@@ -59,7 +59,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
 	if self.NormalConfig.GitConfig.MainBranch.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
+		_ = gitconfig.RemoveMainBranch(runner)
 	}
 }
 
