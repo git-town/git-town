@@ -134,8 +134,20 @@ func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.Bitbuc
 	return SetConfigValue(runner, scope, configdomain.KeyBitbucketUsername, value.String())
 }
 
+func SetBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String())
+}
+
 func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
+}
+
+func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, remote.String())
+}
+
+func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
 }
 
 func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
@@ -162,22 +174,6 @@ func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, s
 	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
 }
 
-func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname, hostname.String())
-}
-
-func SetBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String())
-}
-
-func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, remote.String())
-}
-
-func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
-}
-
 func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, value.String())
 }
@@ -188,6 +184,10 @@ func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchTyp
 
 func SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
+}
+
+func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname, hostname.String())
 }
 
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
