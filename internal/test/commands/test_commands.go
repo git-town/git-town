@@ -155,9 +155,9 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 }
 
 // creates a feature branch with the given name in this repository
-func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) {
-	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent))
-	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
+func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
+	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent.Location()))
+	asserts.NoError(gitconfig.SetParent(self, name, parent))
 }
 
 // CreateBranch creates a new branch with the given name.

@@ -526,7 +526,7 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				origin := testruntime.Create(t)
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
-				origin.CreateAndCheckoutFeatureBranch("branch", initial.Location())
+				origin.CreateAndCheckoutFeatureBranch("branch", initial)
 				origin.CreateCommit(testgit.Commit{
 					Branch:      "branch",
 					FileContent: "content",
@@ -564,7 +564,7 @@ func TestBackendCommands(t *testing.T) {
 				origin := testruntime.Create(t)
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
 				initialCommits := asserts.NoError1(local.Git.CommitsInBranch(local, initial, None[gitdomain.LocalBranchName]()))
-				local.CreateAndCheckoutFeatureBranch("branch", initial.Location())
+				local.CreateAndCheckoutFeatureBranch("branch", initial)
 				local.CreateCommit(testgit.Commit{
 					Branch:      "branch",
 					FileContent: "content",
@@ -599,7 +599,7 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				origin := testruntime.Create(t)
 				local := testruntime.Clone(origin.TestRunner, t.TempDir())
-				origin.CreateAndCheckoutFeatureBranch("branch", initial.Location())
+				origin.CreateAndCheckoutFeatureBranch("branch", initial)
 				origin.CreateCommit(testgit.Commit{
 					Branch:      "branch",
 					FileContent: "content",
@@ -953,7 +953,7 @@ func TestBackendCommands(t *testing.T) {
 			branch := gitdomain.NewLocalBranchName("branch")
 			main := gitdomain.NewLocalBranchName("main")
 			repo.CheckoutBranch(main)
-			repo.CreateAndCheckoutFeatureBranch(branch, main.Location())
+			repo.CreateAndCheckoutFeatureBranch(branch, main)
 			repo.PushBranchToRemote(branch, gitdomain.RemoteOrigin)
 			have := repo.Git.CurrentBranchHasTrackingBranch(repo)
 			must.True(t, have)
@@ -966,7 +966,7 @@ func TestBackendCommands(t *testing.T) {
 			branch := gitdomain.NewLocalBranchName("branch")
 			main := gitdomain.NewLocalBranchName("main")
 			repo.CheckoutBranch(main)
-			repo.CreateAndCheckoutFeatureBranch(branch, main.Location())
+			repo.CreateAndCheckoutFeatureBranch(branch, main)
 			have := repo.Git.CurrentBranchHasTrackingBranch(repo)
 			must.False(t, have)
 		})
