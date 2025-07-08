@@ -680,6 +680,11 @@ func saveToGit(userInput dialogData, oldConfig config.UnvalidatedConfig, configF
 			saveFeatureRegex(userInput.normalConfig.FeatureRegex, oldConfig.NormalConfig, frontend),
 		)
 	}
+	if configFile.ContributionRegex.IsNone() {
+		fc.Check(
+			saveContributionRegex(userInput.config.NormalConfig.ContributionRegex, oldConfig.NormalConfig, frontend),
+		)
+	}
 	if configFile.PushHook.IsNone() {
 		fc.Check(
 			savePushHook(userInput.normalConfig.PushHook, oldConfig.NormalConfig, frontend),
@@ -798,6 +803,17 @@ func saveFeatureRegex(value Option[configdomain.FeatureRegex], config config.Nor
 		return gitconfig.SetFeatureRegex(runner, value)
 	}
 	_ = gitconfig.RemoveFeatureRegex(runner)
+	return nil
+}
+
+func saveContributionRegex(value Option[configdomain.ContributionRegex], config config.NormalConfig, runner subshelldomain.Runner) error {
+	if value.Equal(config.ContributionRegex) {
+		return nil
+	}
+	if value, has := value.Get(); has {
+		return gitconfig.SetContributionRegex(runner, value)
+	}
+	_ = gitconfig.RemoveContributionRegex(runner)
 	return nil
 }
 
