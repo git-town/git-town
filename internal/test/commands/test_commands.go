@@ -173,7 +173,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 	} else {
 		self.CreateBranch(name, "main")
 	}
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
+	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, name, branchType))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
