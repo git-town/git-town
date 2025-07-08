@@ -398,7 +398,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		_ = devRepo.RemovePerennialBranchConfiguration()
-		devRepo.RemoveMainBranchConfiguration()
+		asserts.NoError(gitconfig.RemoveMainBranch(devRepo.TestRunner))
 	})
 
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, parent string) error {
@@ -971,7 +971,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^offline mode is enabled$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.SetOffline(devRepo.TestRunner, true)
+		return gitconfig.SetOffline(devRepo.TestRunner, true)
 	})
 
 	sc.Step(`^origin deletes the "([^"]*)" branch$`, func(ctx context.Context, branch string) {
@@ -1232,7 +1232,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		coworkerRepo := state.fixture.CoworkerRepo.GetOrPanic()
 		syncFeatureStrategy := asserts.NoError1(configdomain.ParseSyncFeatureStrategy(value))
-		_ = coworkerRepo.Config.NormalConfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic())
+		_ = gitconfig.SetSyncFeatureStrategy(coworkerRepo.TestRunner, syncFeatureStrategy.GetOrPanic())
 	})
 
 	sc.Step(`^the coworkers workspace now contains file "([^"]*)" with content "([^"]*)"$`, func(ctx context.Context, file, expectedContent string) error {
@@ -1431,7 +1431,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^the perennial branches are "([^"]+)"$`, func(ctx context.Context, name string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.SetPerennialBranches(devRepo.TestRunner, gitdomain.NewLocalBranchNames(name))
+		return gitconfig.SetPerennialBranches(devRepo.TestRunner, gitdomain.NewLocalBranchNames(name))
 	})
 
 	sc.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(ctx context.Context, name string) error {

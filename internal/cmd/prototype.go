@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -70,7 +71,7 @@ func executePrototype(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	branchNames := data.branchesToPrototype.Keys()
-	if err = repo.UnvalidatedConfig.NormalConfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypePrototypeBranch, branchNames...); err != nil {
+	if err = gitconfig.SetBranchTypeOverride(repo.Backend, configdomain.BranchTypePrototypeBranch, branchNames...); err != nil {
 		return err
 	}
 	if checkout, hasCheckout := data.checkout.Get(); hasCheckout {

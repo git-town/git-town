@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -26,7 +27,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		validatedMain, additionalPerennials, exit, err := dialog.MainAndPerennials(dialog.MainAndPerennialsArgs{
 			Backend:               args.Backend,
 			DialogInputs:          args.TestInputs,
-			GetDefaultBranch:      args.Git.DefaultBranch,
+			GetDefaultBranch:      gitconfig.DefaultBranch,
 			HasConfigFile:         args.Unvalidated.Value.NormalConfig.File.IsSome(),
 			LocalBranches:         args.LocalBranches,
 			UnvalidatedMain:       args.Unvalidated.Value.UnvalidatedConfig.MainBranch,

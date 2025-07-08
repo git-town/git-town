@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
@@ -52,7 +53,7 @@ func CreateGitTown(t *testing.T) commands.TestCommands {
 	repo.CreateBranch("main", "initial")
 	err := repo.Config.SetMainBranch("main", repo.TestRunner)
 	must.NoError(t, err)
-	err = repo.Config.NormalConfig.SetPerennialBranches(repo.TestRunner, gitdomain.LocalBranchNames{})
+	err = gitconfig.SetPerennialBranches(repo.TestRunner, gitdomain.LocalBranchNames{})
 	must.NoError(t, err)
 	return repo
 }

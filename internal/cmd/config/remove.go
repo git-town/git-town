@@ -53,7 +53,7 @@ func executeRemoveConfig(verbose configdomain.Verbose) error {
 	slices.Sort(aliasNames)
 	for _, aliasName := range aliasNames {
 		if strings.HasPrefix(repo.UnvalidatedConfig.NormalConfig.Aliases[aliasName], "town ") {
-			if err = repo.Git.RemoveGitAlias(repo.Frontend, aliasName); err != nil {
+			if err = gitconfig.RemoveAlias(repo.Frontend, aliasName); err != nil {
 				return err
 			}
 		}

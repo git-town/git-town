@@ -155,9 +155,9 @@ func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) 
 }
 
 // creates a feature branch with the given name in this repository
-func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) {
-	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent))
-	self.MustRun("git", "config", "git-town-branch."+name.String()+".parent", parent.String())
+func (self *TestCommands) CreateAndCheckoutFeatureBranch(name gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
+	asserts.NoError(self.Git.CreateAndCheckoutBranchWithParent(self, name, parent.Location()))
+	asserts.NoError(gitconfig.SetParent(self, name, parent))
 }
 
 // CreateBranch creates a new branch with the given name.
@@ -173,7 +173,7 @@ func (self *TestCommands) CreateBranchOfType(name gitdomain.LocalBranchName, par
 	} else {
 		self.CreateBranch(name, "main")
 	}
-	asserts.NoError(self.Config.NormalConfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
+	asserts.NoError(gitconfig.SetBranchTypeOverride(self.TestRunner, branchType, name))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -435,11 +435,6 @@ func (self *TestCommands) Reload() {
 // RemoveBranch deletes the branch with the given name from this repo.
 func (self *TestCommands) RemoveBranch(name gitdomain.LocalBranchName) {
 	self.MustRun("git", "branch", "-D", name.String())
-}
-
-// DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func (self *TestCommands) RemoveMainBranchConfiguration() {
-	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
