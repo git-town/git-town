@@ -97,6 +97,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 }
 
 type setupData struct {
+	backend       subshelldomain.Querier
 	config        config.UnvalidatedConfig
 	configFile    Option[configdomain.PartialConfig]
 	dialogInputs  dialogcomponents.TestInputs
@@ -120,10 +121,10 @@ func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forge
 	return None[forgedomain.ForgeType]()
 }
 
-func enterData(repo execute.OpenRepoResult, data setupData) (enterDataResult, dialogdomain.Exit, error) {
+func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogdomain.Exit, error) {
 	configFile := data.configFile.GetOrDefault()
 	exit, err := dialog.Welcome(data.dialogInputs.Next())
-	emptyResult := enterDataResult{}
+	emptyResult := dialogData{}
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
@@ -168,6 +169,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (enterDataResult, di
 			return emptyResult, exit, err
 		}
 	}
+	contributionRegex := None[configdomain.ContributionRegex]()
+	if configFile.ContributionRegex.IsNone() {
+		contributionRegex, exit, err = dialog.ContributionRegex(repo.UnvalidatedConfig.NormalConfig.ContributionRegex, data.dialogInputs.Next())
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+	}
 	var unknownBranchType configdomain.BranchType
 	if configFile.UnknownBranchType.IsNone() {
 		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
@@ -206,7 +214,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (enterDataResult, di
 				return emptyResult, exit, err
 			}
 		}
-		actualForgeType = determineForgeType(repo.UnvalidatedConfig, enteredForgeType.Or(repo.UnvalidatedConfig.NormalConfig.ForgeType))
+		actualForgeType = determineForgeType(repo.UnvalidatedConfig, enteredForgeType.Or(repo.UnvalidatedConfig.NormalConfig.ForgeType), data.backend)
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
@@ -269,7 +277,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (enterDataResult, di
 			gitlabToken:          gitlabToken,
 			giteaToken:           giteaToken,
 			forgeTypeOpt:         actualForgeType,
-			remoteURL:            data.config.NormalConfig.RemoteURL(devRemote),
+			remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote),
 		})
 		if err != nil || exit {
 			return emptyResult, exit, err
@@ -394,10 +402,10 @@ func enterData(repo execute.OpenRepoResult, data setupData) (enterDataResult, di
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	return enterDataResult{normalData, validatedData, tokenScope, enteredForgeType, configStorage}, false, nil
+	return dialogData{normalData, validatedData, tokenScope, enteredForgeType, configStorage}, false, nil
 }
 
-type enterDataResult struct {
+type dialogData struct {
 	unvalidatedUserInput configdomain.NormalConfigData
 	validatedUserInput   configdomain.ValidatedConfigData
 	configScope          configdomain.ConfigScope
@@ -572,7 +580,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}, exit, nil
 }
 
-func saveAll(enteredData enterDataResult, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveAll(enteredData dialogData, oldConfig config.UnvalidatedConfig, gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(oldConfig.NormalConfig.Aliases, enteredData.unvalidatedUserInput.Aliases, gitCommands, frontend),
