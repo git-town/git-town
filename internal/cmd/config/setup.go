@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -628,14 +629,14 @@ func saveAll(enteredData dialogData, oldConfig config.UnvalidatedConfig, gitComm
 	}
 	switch enteredData.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(enteredData.unvalidatedUserInput, oldConfig, frontend)
+		return saveToFile(enteredData, oldConfig, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, oldConfig, configFile, gitCommands, frontend)
+		return saveToGit(enteredData, oldConfig, configFile, gitCommands, frontend)
 	}
 	return nil
 }
 
-func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend subshelldomain.Runner) error {
+func saveToGit(userInput dialogData, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], gitCommands git.Commands, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
@@ -789,18 +790,18 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	return nil
 }
 
-func saveUnknownBranchType(oldValue, newValue configdomain.BranchType, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+func saveUnknownBranchType(oldValue, newValue configdomain.BranchType, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetUnknownBranchType(runner, newValue)
+	return gitconfig.SetUnknownBranchType(runner, newValue)
 }
 
 func saveDevRemote(oldValue, newValue gitdomain.Remote, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetDevRemote(runner, newValue)
+	return gitconfig.SetDevRemote(runner, newValue)
 }
 
 func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
@@ -810,7 +811,7 @@ func saveFeatureRegex(oldValue, newValue Option[configdomain.FeatureRegex], conf
 	if value, has := newValue.Get(); has {
 		return config.NormalConfig.SetFeatureRegex(runner, value)
 	}
-	config.NormalConfig.RemoveFeatureRegex(runner)
+	gitconfig.RemoveFeatureRegex(runner)
 	return nil
 }
 
@@ -824,9 +825,9 @@ func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], git
 		return nil
 	}
 	if newHas {
-		return gitCommands.SetForgeType(frontend, newValue)
+		return gitconfig.SetForgeType(frontend, newValue)
 	}
-	return gitCommands.DeleteConfigEntryForgeType(frontend)
+	return gitconfig.DeleteConfigEntryForgeType(frontend)
 }
 
 func saveCodebergToken(oldToken, newToken Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -1000,8 +1001,8 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(runner, newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
-	if err := configfile.Save(&userInput.config); err != nil {
+func saveToFile(userInput dialogData, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+	if err := configfile.Save(userInput.unvalidatedUserInput, userInput.validatedUserInput); err != nil {
 		return err
 	}
 	config.NormalConfig.RemoveDevRemote(runner)
@@ -1018,7 +1019,7 @@ func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner sub
 	config.NormalConfig.RemoveSyncPrototypeStrategy(runner)
 	config.NormalConfig.RemoveSyncUpstream(runner)
 	config.NormalConfig.RemoveSyncTags(runner)
-	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config, runner); err != nil {
+	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, config.NormalConfig.UnknownBranchType, config, runner); err != nil {
 		return err
 	}
 	return saveFeatureRegex(config.NormalConfig.FeatureRegex, userInput.config.NormalConfig.FeatureRegex, config, runner)
