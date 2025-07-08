@@ -124,23 +124,3 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 	}
 	return gitconfig.SetPerennialBranches(runner, branches)
 }
-
-// SetPerennialRegex updates the locally configured perennial regex.
-func (self *NormalConfig) SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
-	self.PerennialRegex = Some(value)
-	existing, has := self.Git.PerennialRegex.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetPerennialRegex(runner, value)
-}
-
-// SetPushHook updates the locally configured push-hook strategy.
-func (self *NormalConfig) SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook) error {
-	self.PushHook = value
-	existing, has := self.Git.PushHook.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetPushHook(runner, value)
-}
