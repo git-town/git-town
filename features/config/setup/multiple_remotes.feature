@@ -36,23 +36,23 @@ Feature: Configure a different development remote
     And the configuration file is now:
       """
       # More info around this file at https://www.git-town.com/configuration-file
-      
+
       [branches]
       main = "main"
       perennials = []
       perennial-regex = ""
-      
+
       [create]
       new-branch-type = "feature"
       share-new-branches = "no"
-      
+
       [hosting]
       dev-remote = "fork"
-      
+
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-      
+
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
