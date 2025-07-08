@@ -222,7 +222,7 @@ func (self *NormalConfig) SetNewBranchType(runner subshelldomain.Runner, value c
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+	return gitconfig.SetNewBranchType(runner, value)
 }
 
 // SetOffline updates whether Git Town is in offline mode.
@@ -360,5 +360,5 @@ func (self *NormalConfig) SetUnknownBranchType(runner subshelldomain.Runner, val
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
+	return gitconfig.SetUnknownBranchType(runner, value)
 }

@@ -93,6 +93,10 @@ func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureReg
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
 }
 
+func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, value.String())
+}
+
 func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
 }

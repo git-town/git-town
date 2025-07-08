@@ -405,8 +405,8 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
-		configKey := configdomain.NewParentKey(branchName)
-		return gitconfig.SetConfigValue(devRepo.TestRunner, configdomain.ConfigScopeLocal, configKey, value)
+		parentName := gitdomain.NewLocalBranchName(value)
+		return gitconfig.SetParent(devRepo.TestRunner, branchName, parentName)
 	})
 
 	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
