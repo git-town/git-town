@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -107,7 +107,7 @@ func executeDelete(args []string, dryRun configdomain.DryRun, verbose configdoma
 	if err != nil {
 		return err
 	}
-	runProgram, finalUndoProgram := deleteProgram(data, repo.FinalMessages)
+	runProgram, finalUndoProgram := deleteProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -153,7 +153,7 @@ type deleteData struct {
 	branchesSnapshot         gitdomain.BranchesSnapshot
 	config                   config.ValidatedConfig
 	connector                Option[forgedomain.Connector]
-	dialogTestInputs         components.TestInputs
+	dialogTestInputs         dialogcomponents.TestInputs
 	dryRun                   configdomain.DryRun
 	hasOpenChanges           bool
 	initialBranch            gitdomain.LocalBranchName
@@ -164,7 +164,7 @@ type deleteData struct {
 }
 
 func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data deleteData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -183,7 +183,7 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -278,9 +278,9 @@ func determineDeleteData(args []string, repo execute.OpenRepoResult, dryRun conf
 	}, false, nil
 }
 
-func deleteProgram(data deleteData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
+func deleteProgram(repo execute.OpenRepoResult, data deleteData, finalMessages stringslice.Collector) (runProgram, finalUndoProgram program.Program) {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Backend)
 	undoProg := NewMutable(&program.Program{})
 	switch data.branchToDeleteType {
 	case

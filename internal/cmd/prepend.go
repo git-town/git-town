@@ -8,7 +8,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -134,7 +134,7 @@ func executePrepend(args []string, beam configdomain.Beam, proposalBody Option[g
 	if err != nil || exit {
 		return err
 	}
-	runProgram := prependProgram(data, repo.FinalMessages)
+	runProgram := prependProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -182,7 +182,7 @@ type prependData struct {
 	commitsToBeam       gitdomain.Commits
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    components.TestInputs
+	dialogTestInputs    dialogcomponents.TestInputs
 	dryRun              configdomain.DryRun
 	existingParent      gitdomain.LocalBranchName
 	hasOpenChanges      bool
@@ -207,7 +207,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -226,7 +226,7 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -358,10 +358,10 @@ func determinePrependData(args []string, repo execute.OpenRepoResult, beam confi
 	}, false, nil
 }
 
-func prependProgram(data prependData, finalMessages stringslice.Collector) program.Program {
+func prependProgram(repo execute.OpenRepoResult, data prependData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
 	if !data.hasOpenChanges && data.beam.IsFalse() && data.commit.IsFalse() {
-		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages)
+		data.config.CleanupLineage(data.branchInfos, data.nonExistingBranches, finalMessages, repo.Backend)
 		branchesToDelete := set.New[gitdomain.LocalBranchName]()
 		sync.BranchesProgram(data.branchesToSync, sync.BranchProgramArgs{
 			BranchInfos:         data.branchInfos,
@@ -515,7 +515,7 @@ func syncWithParent(prog Mutable[program.Program], parentName gitdomain.LocalBra
 		switch syncStrategy {
 		case configdomain.SyncStrategyCompress, configdomain.SyncStrategyMerge:
 			prog.Value.Add(
-				&opcodes.MergeParent{Parent: parentName.BranchName()},
+				&opcodes.MergeIntoCurrentBranch{BranchToMerge: parentName.BranchName()},
 			)
 			if initialBranchInfo.HasTrackingBranch() {
 				prog.Value.Add(

@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -23,7 +23,7 @@ by shipping feature branches.
 `
 )
 
-func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs components.TestInput) (configdomain.SyncPerennialStrategy, dialogdomain.Exit, error) {
+func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPerennialStrategy, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncPerennialStrategy]{
 		{
 			Data: configdomain.SyncPerennialStrategyFFOnly,
@@ -35,7 +35,7 @@ func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs c
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := components.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
-	fmt.Printf(messages.SyncPerennialBranches, components.FormattedSelection(selection.String(), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyTitle, SyncPerennialStrategyHelp, inputs)
+	fmt.Printf(messages.SyncPerennialBranches, dialogcomponents.FormattedSelection(selection.String(), exit))
 	return selection, exit, err
 }

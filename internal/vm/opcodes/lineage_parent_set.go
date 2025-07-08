@@ -17,7 +17,7 @@ type LineageParentSet struct {
 }
 
 func (self *LineageParentSet) Run(args shared.RunArgs) error {
-	if err := args.Config.Value.NormalConfig.SetParent(self.Branch, self.Parent); err != nil {
+	if err := args.Config.Value.NormalConfig.SetParent(args.Backend, self.Branch, self.Parent); err != nil {
 		return err
 	}
 	args.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, self.Branch, self.Parent))

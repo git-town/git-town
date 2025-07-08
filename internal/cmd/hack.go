@@ -8,7 +8,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -166,7 +166,7 @@ type convertToFeatureData struct {
 }
 
 func createFeatureBranch(args createFeatureBranchArgs) error {
-	runProgram := appendProgram(args.appendData, args.finalMessages, true)
+	runProgram := appendProgram(args.backend, args.appendData, args.finalMessages, true)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: args.beginBranchesSnapshot,
 		BeginConfigSnapshot:   args.beginConfigSnapshot,
@@ -224,7 +224,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 	if err != nil {
 		return data, false, err
 	}
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	targetBranches := gitdomain.NewLocalBranchNames(args...)
 	var repoStatus gitdomain.RepoStatus
@@ -246,7 +246,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -395,7 +395,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-			if err := args.config.NormalConfig.SetBranchTypeOverride(configdomain.BranchTypeFeatureBranch, branchName); err != nil {
+			if err := args.config.NormalConfig.SetBranchTypeOverride(args.repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeFeatureBranch:

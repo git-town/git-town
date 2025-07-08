@@ -61,20 +61,19 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 			return emptyOpenRepoResult(), errors.New(messages.RepoOutside)
 		}
 	}
-	configGitAccess := gitconfig.Access{Shell: backendRunner}
-	globalSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedYes)
+	globalSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeGlobal), configdomain.UpdateOutdatedYes)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	localSnapshot, err := configGitAccess.Load(Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
+	localSnapshot, err := gitconfig.LoadSnapshot(backendRunner, Some(configdomain.ConfigScopeLocal), configdomain.UpdateOutdatedYes)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedSnapshot, err := configGitAccess.Load(None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)
+	unscopedSnapshot, err := gitconfig.LoadSnapshot(backendRunner, None[configdomain.ConfigScope](), configdomain.UpdateOutdatedNo)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
-	unscopedConfig, err := configdomain.NewPartialConfigFromSnapshot(unscopedSnapshot, true, configGitAccess.RemoveLocalConfigValue)
+	unscopedConfig, err := config.NewPartialConfigFromSnapshot(unscopedSnapshot, true, backendRunner)
 	if err != nil {
 		return emptyOpenRepoResult(), err
 	}
@@ -94,7 +93,6 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		}
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
-		Access:        configGitAccess,
 		ConfigFile:    configFile,
 		DryRun:        args.DryRun,
 		EnvConfig:     envconfig.Load(),

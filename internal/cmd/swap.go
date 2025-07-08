@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
@@ -106,7 +106,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 	if err != nil {
 		return err
 	}
-	runProgram := swapProgram(data, repo.FinalMessages)
+	runProgram := swapProgram(repo, data, repo.FinalMessages)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
@@ -152,7 +152,7 @@ type swapData struct {
 	children            []swapChildBranch
 	config              config.ValidatedConfig
 	connector           Option[forgedomain.Connector]
-	dialogTestInputs    components.TestInputs
+	dialogTestInputs    dialogcomponents.TestInputs
 	dryRun              configdomain.DryRun
 	grandParentBranch   gitdomain.LocalBranchName
 	hasOpenChanges      bool
@@ -172,7 +172,7 @@ type swapChildBranch struct {
 }
 
 func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data swapData, exit dialogdomain.Exit, err error) {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -191,7 +191,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 		GitLabToken:          config.GitLabToken,
 		GiteaToken:           config.GiteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            config.DevURL(),
+		RemoteURL:            config.DevURL(repo.Backend),
 	})
 	if err != nil {
 		return data, false, err
@@ -325,9 +325,9 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 	}, false, nil
 }
 
-func swapProgram(data swapData, finalMessages stringslice.Collector) program.Program {
+func swapProgram(repo execute.OpenRepoResult, data swapData, finalMessages stringslice.Collector) program.Program {
 	prog := NewMutable(&program.Program{})
-	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages)
+	data.config.CleanupLineage(data.branchesSnapshot.Branches, data.nonExistingBranches, finalMessages, repo.Frontend)
 	prog.Value.Add(
 		&opcodes.RebaseOntoKeepDeleted{
 			BranchToRebaseOnto: data.grandParentBranch.BranchName(),

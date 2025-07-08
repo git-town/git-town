@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -18,7 +18,7 @@ type RunArgs struct {
 	Config                          Mutable[config.ValidatedConfig]
 	Connector                       Option[forgedomain.Connector]
 	Detached                        configdomain.Detached
-	DialogTestInputs                components.TestInputs
+	DialogTestInputs                dialogcomponents.TestInputs
 	FinalMessages                   stringslice.Collector
 	Frontend                        subshelldomain.Runner
 	Git                             git.Commands

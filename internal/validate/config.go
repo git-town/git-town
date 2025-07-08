@@ -2,7 +2,7 @@ package validate
 
 import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -37,12 +37,12 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		}
 		mainBranch = validatedMain
 		args.BranchesAndTypes[validatedMain] = configdomain.BranchTypeMainBranch
-		if err = args.Unvalidated.Value.SetMainBranch(validatedMain); err != nil {
+		if err = args.Unvalidated.Value.SetMainBranch(validatedMain, args.Backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		if len(additionalPerennials) > 0 {
 			newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(newPerennials); err != nil {
+			if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 				return config.EmptyValidatedConfig(), false, err
 			}
 		}
@@ -64,13 +64,13 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 		return config.EmptyValidatedConfig(), exit, err
 	}
 	for _, entry := range additionalLineage.Entries() {
-		if err = args.Unvalidated.Value.NormalConfig.SetParent(entry.Child, entry.Parent); err != nil {
+		if err = args.Unvalidated.Value.NormalConfig.SetParent(args.Backend, entry.Child, entry.Parent); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
 	if len(additionalPerennials) > 0 {
 		newPerennials := append(args.Unvalidated.Value.NormalConfig.PerennialBranches, additionalPerennials...)
-		if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(newPerennials); err != nil {
+		if err = args.Unvalidated.Value.NormalConfig.SetPerennialBranches(args.Backend, newPerennials); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 	}
@@ -94,11 +94,11 @@ type ConfigArgs struct {
 	BranchesSnapshot   gitdomain.BranchesSnapshot
 	BranchesToValidate gitdomain.LocalBranchNames
 	Connector          Option[forgedomain.Connector]
-	DialogTestInputs   components.TestInputs
+	DialogTestInputs   dialogcomponents.TestInputs
 	Frontend           subshelldomain.Runner
 	Git                git.Commands
 	LocalBranches      gitdomain.LocalBranchNames
 	RepoStatus         gitdomain.RepoStatus
-	TestInputs         components.TestInputs
+	TestInputs         dialogcomponents.TestInputs
 	Unvalidated        Mutable[config.UnvalidatedConfig]
 }

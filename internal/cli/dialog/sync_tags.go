@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/format"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -19,7 +19,7 @@ Should "git town sync" sync Git tags with origin?
 `
 )
 
-func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (configdomain.SyncTags, dialogdomain.Exit, error) {
+func SyncTags(existing configdomain.SyncTags, inputs dialogcomponents.TestInput) (configdomain.SyncTags, dialogdomain.Exit, error) {
 	entries := list.Entries[configdomain.SyncTags]{
 		{
 			Data: true,
@@ -31,7 +31,7 @@ func SyncTags(existing configdomain.SyncTags, inputs components.TestInput) (conf
 		},
 	}
 	defaultPos := entries.IndexOf(existing)
-	selection, exit, err := components.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
-	fmt.Printf(messages.SyncTags, components.FormattedSelection(format.Bool(selection.IsTrue()), exit))
+	selection, exit, err := dialogcomponents.RadioList(entries, defaultPos, syncTagsTitle, SyncTagsHelp, inputs)
+	fmt.Printf(messages.SyncTags, dialogcomponents.FormattedSelection(format.Bool(selection.IsTrue()), exit))
 	return selection, exit, err
 }

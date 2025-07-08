@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
@@ -51,21 +51,21 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (dialogdomain.Exit, error) 
 	}
 	// Create the connector now if the Git Town command hasn't provided one yet.
 	if args.Connector.IsNone() {
-		config := args.UnvalidatedConfig.NormalConfig
+		normalConfig := args.UnvalidatedConfig.NormalConfig
 		args.Connector, err = forge.NewConnector(forge.NewConnectorArgs{
 			Backend:              args.Backend,
-			BitbucketAppPassword: config.BitbucketAppPassword,
-			BitbucketUsername:    config.BitbucketUsername,
-			CodebergToken:        config.CodebergToken,
-			ForgeType:            config.ForgeType,
+			BitbucketAppPassword: normalConfig.BitbucketAppPassword,
+			BitbucketUsername:    normalConfig.BitbucketUsername,
+			CodebergToken:        normalConfig.CodebergToken,
+			ForgeType:            normalConfig.ForgeType,
 			Frontend:             args.Frontend,
-			GitHubConnectorType:  config.GitHubConnectorType,
-			GitHubToken:          config.GitHubToken,
-			GitLabConnectorType:  config.GitLabConnectorType,
-			GitLabToken:          config.GitLabToken,
-			GiteaToken:           config.GiteaToken,
+			GitHubConnectorType:  normalConfig.GitHubConnectorType,
+			GitHubToken:          normalConfig.GitHubToken,
+			GitLabConnectorType:  normalConfig.GitLabConnectorType,
+			GitLabToken:          normalConfig.GitLabToken,
+			GiteaToken:           normalConfig.GiteaToken,
 			Log:                  print.Logger{},
-			RemoteURL:            config.DevURL(),
+			RemoteURL:            normalConfig.DevURL(args.Backend),
 		})
 		if err != nil {
 			return false, err
@@ -91,7 +91,7 @@ type UnfinishedStateArgs struct {
 	CommandsCounter   Mutable[gohacks.Counter]
 	Connector         Option[forgedomain.Connector]
 	Detached          configdomain.Detached
-	DialogTestInputs  components.TestInputs
+	DialogTestInputs  dialogcomponents.TestInputs
 	FinalMessages     stringslice.Collector
 	Frontend          subshelldomain.Runner
 	Git               git.Commands
@@ -159,7 +159,7 @@ func quickValidateConfig(args quickValidateConfigArgs) (config.ValidatedConfig, 
 		if err != nil || exit {
 			return config.EmptyValidatedConfig(), exit, err
 		}
-		if err = args.unvalidated.Value.SetMainBranch(validatedMain); err != nil {
+		if err = args.unvalidated.Value.SetMainBranch(validatedMain, args.backend); err != nil {
 			return config.EmptyValidatedConfig(), false, err
 		}
 		mainBranch = validatedMain
@@ -239,7 +239,7 @@ func undoRunState(args UnfinishedStateArgs, runState runstate.RunState) (dialogd
 
 type quickValidateConfigArgs struct {
 	backend      subshelldomain.RunnerQuerier
-	dialogInputs components.TestInputs
+	dialogInputs dialogcomponents.TestInputs
 	git          git.Commands
 	unvalidated  Mutable[config.UnvalidatedConfig]
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
-	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -87,8 +86,6 @@ share-new-branches = "push"
 
 [hosting]
 dev-remote = "fork"
-# forge-type = ""
-# origin-hostname = ""
 
 [ship]
 delete-tracking-branch = true
@@ -107,8 +104,7 @@ upstream = true
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		var gitAccess gitconfig.Access
-		config := config.DefaultUnvalidatedConfig(gitAccess, git.EmptyVersion())
+		config := config.DefaultUnvalidatedConfig(git.EmptyVersion())
 		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
 		err := configfile.Save(&config)
 		defer os.Remove(configfile.FileName)
@@ -130,8 +126,6 @@ share-new-branches = "no"
 
 [hosting]
 dev-remote = "origin"
-# forge-type = ""
-# origin-hostname = ""
 
 [ship]
 delete-tracking-branch = true

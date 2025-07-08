@@ -1,36 +1,43 @@
 # Set up configuration
 
-If your repository already contains a `.git-branches.toml` or `.git-town.toml`
-file, you are good to go. If not, or something doesn't work, you can run Git
-Town's setup assistant to configure Git Town. It walks you through every
-available configuration option, explains it, and gives you a chance to adjust
-it.
+If your repository already contains a `.git-town.toml` or `.git-branches.toml`
+file, you're all set. If not - or if something isn't working as expected - Git
+Town provides an interactive that guides you through the entire configuration
+process. Just run:
 
 ```
 git town config setup
 ```
 
-You can find more background around how Git Town stores configuration in the
-[overview of all configuration options](preferences.md).
+This command walks you through all available configuration options, explains
+what each one does, lets you adjust them, and validates that everything is
+working correctly.
 
-### Access tokens
+For more details on how Git Town handles configuration, see the
+[configuration reference](preferences.md).
 
-Some of Git Towns' functionality requires access the API of your forge:
+### API access
 
-- if the parent of a branch is not known, Git Town can look for a pull requests
-  of this branch and uses their parent branch
-- when you prepend, rename, remove branches or change their parent, Git Town can
-  updates the affected pull requests
-- click the "merge" button on a pull request from your CLI
+Some Git Town features require access the your code forge. This allows Git Town
+to:
 
-Configuring API access is easy. Here is how you do it:
+- infer the parent of a branch from open pull requests
+- automatically update pull requests when you prepend, rename, or remove
+  branches or change their parent
+- trigger pull request merges directly from your terminal
 
-- GitHub: You can set up the [access token](preferences/github-token.md) that
-  allows Git Town to talk to GitHub's API, or set up GitHub's
-  [gh tool](https://cli.github.com) and let Git Town interact with Github
-  through it
-- GitLab: [access token](preferences/gitlab-token.md)
-- Bitbucket: [username](preferences/bitbucket-username.md) and
+Configuring API access is straightforward. Git Town supports the following
+platforms:
+
+- GitHub: uses the [GitHub CLI](https://cli.github.com). If you prefer not to
+  install `gh`, you can also configure an
+  [access token](preferences/github-token.md) and use Git Town's built-in GitHub
+  integration.
+- GitLab: uses the [GitLab CLI](https://gitlab.com/gitlab-org/cli/-/tree/main).
+  Without `glab`, you can configure an
+  [access token](preferences/gitlab-token.md) for Git Town's built-in GitLab
+  support.
+- Bitbucket: requires a [username](preferences/bitbucket-username.md) and
   [app password](preferences/bitbucket-app-password.md)
-- Gitea: [access token](preferences/gitea-token.md)
-- Codeberg: [access token](preferences/codeberg-token.md)
+- Gitea: requires an [access token](preferences/gitea-token.md)
+- Codeberg: requires an [access token](preferences/codeberg-token.md)

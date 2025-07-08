@@ -6,8 +6,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v21/internal/cli/colors"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components"
-	"github.com/git-town/git-town/v21/internal/cli/dialog/components/list"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -31,7 +31,7 @@ You can always adjust later.
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs components.TestInput) (configdomain.Aliases, dialogdomain.Exit, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, inputs dialogcomponents.TestInput) (configdomain.Aliases, dialogdomain.Exit, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
@@ -39,7 +39,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 		OriginalAliases:      existingAliases,
 		selectedColor:        colors.Green(),
 	})
-	components.SendInputs(inputs, program)
+	dialogcomponents.SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	result := dialogResult.(AliasesModel)
 	if err != nil || result.Aborted() {
@@ -47,7 +47,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	}
 	selectedCommands := result.Checked()
 	selectionText := DetermineAliasSelectionText(selectedCommands)
-	fmt.Printf(messages.AliasedCommands, components.FormattedSelection(selectionText, result.Aborted()))
+	fmt.Printf(messages.AliasedCommands, dialogcomponents.FormattedSelection(selectionText, result.Aborted()))
 	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.Aborted(), err
 }
 

@@ -35,6 +35,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --local git-town.gitlab-token 123456 |
+      | git config git-town.new-branch-type feature     |
       | git config git-town.gitlab-connector api        |
     And local Git setting "git-town.forge-type" still doesn't exist
 
@@ -68,6 +69,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --local git-town.gitlab-token 123456 |
+      | git config git-town.new-branch-type feature     |
       | git config git-town.forge-type gitlab           |
       | git config git-town.gitlab-connector api        |
     And local Git setting "git-town.forge-type" is now "gitlab"
@@ -104,6 +106,7 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                          |
       | git config --global git-town.gitlab-token 123456 |
+      | git config git-town.new-branch-type feature      |
       | git config git-town.gitlab-connector api         |
     And global Git setting "git-town.gitlab-token" is now "123456"
 
@@ -139,5 +142,6 @@ Feature: enter the GitLab API token
     Then Git Town runs the commands
       | COMMAND                                       |
       | git config --global git-town.gitlab-token 456 |
+      | git config git-town.new-branch-type feature   |
       | git config git-town.gitlab-connector api      |
     And global Git setting "git-town.gitlab-token" is now "456"
