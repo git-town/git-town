@@ -53,7 +53,7 @@ Feature: enter the Codeberg API token
       | dev-remote                  | enter                |                                             |
       | origin hostname             | enter                |                                             |
       | forge type                  | down down down enter |                                             |
-      | codeberg token              |    1 2 3 4 5 6 enter |                                             |
+      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
       | token scope                 | enter                |                                             |
       | sync-feature-strategy       | enter                |                                             |
       | sync-perennial-strategy     | enter                |                                             |
