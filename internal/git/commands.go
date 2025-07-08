@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
-	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
 	"github.com/git-town/git-town/v21/internal/gohacks/stringslice"
@@ -437,38 +436,6 @@ func (self *Commands) CurrentSHA(querier subshelldomain.Querier) (gitdomain.SHA,
 	return self.SHAForBranch(querier, "HEAD")
 }
 
-func (self *Commands) DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
-	name, err := querier.QueryTrim("git", "config", "--get", "init.defaultbranch")
-	if err != nil {
-		return None[gitdomain.LocalBranchName]()
-	}
-	name = strings.TrimSpace(name)
-	if name == "" {
-		return None[gitdomain.LocalBranchName]()
-	}
-	return Some(gitdomain.LocalBranchName(name))
-}
-
-func (self *Commands) DefaultRemote(querier subshelldomain.Querier) gitdomain.Remote {
-	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
-	if err != nil {
-		// Git returns an error if the user has not configured a default remote name.
-		// In this case use the Git default of "origin".
-		return gitdomain.RemoteOrigin
-	}
-	return gitdomain.Remote(output)
-}
-
-// DeleteConfigEntryForgeType removes the forge type config entry.
-func (self *Commands) DeleteConfigEntryForgeType(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
-}
-
-// DeleteConfigEntryOriginHostname removes the origin hostname override
-func (self *Commands) DeleteConfigEntryOriginHostname(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
-}
-
 // DeleteLastCommit resets HEAD to the previous commit.
 func (self *Commands) DeleteLastCommit(runner subshelldomain.Runner) error {
 	return runner.Run("git", "reset", "--hard", "HEAD~1")
@@ -756,18 +723,6 @@ func (self *Commands) RemotesUncached(querier subshelldomain.Querier) (gitdomain
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
-func (self *Commands) RemoveBitbucketAppPassword(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketAppPassword.String())
-}
-
-func (self *Commands) RemoveBitbucketUsername(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyBitbucketUsername.String())
-}
-
-func (self *Commands) RemoveCodebergToken(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyCodebergToken.String())
-}
-
 // RemoveCommit removes the given commit from the current branch
 func (self *Commands) RemoveCommit(runner subshelldomain.Runner, commit gitdomain.SHA) error {
 	return runner.Run("git", "-c", "rebase.updateRefs=false", "rebase", "--onto", commit.String()+"^", commit.String())
@@ -775,30 +730,6 @@ func (self *Commands) RemoveCommit(runner subshelldomain.Runner, commit gitdomai
 
 func (self *Commands) RemoveFile(runner subshelldomain.Runner, fileName string) error {
 	return runner.Run("git", "rm", fileName)
-}
-
-func (self *Commands) RemoveGitAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
-	return runner.Run("git", "config", "--global", "--unset", aliasableCommand.Key().String())
-}
-
-func (self *Commands) RemoveGitHubConnectorType(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGitHubConnectorType.String())
-}
-
-func (self *Commands) RemoveGitHubToken(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGitHubToken.String())
-}
-
-func (self *Commands) RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGitLabConnectorType.String())
-}
-
-func (self *Commands) RemoveGitLabToken(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGitLabToken.String())
-}
-
-func (self *Commands) RemoveGiteaToken(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyGiteaToken.String())
 }
 
 func (self *Commands) RenameBranch(runner subshelldomain.Runner, oldName, newName gitdomain.LocalBranchName) error {
@@ -866,50 +797,6 @@ func (self *Commands) SHAForBranch(querier subshelldomain.Querier, name gitdomai
 		return gitdomain.SHA(""), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
 	return gitdomain.NewSHA(output), nil
-}
-
-func (self *Commands) SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketAppPassword.String(), value.String())
-}
-
-func (self *Commands) SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyBitbucketUsername.String(), value.String())
-}
-
-func (self *Commands) SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyCodebergToken.String(), value.String())
-}
-
-func (self *Commands) SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
-	return runner.Run("git", "config", configdomain.KeyForgeType.String(), forgeType.String())
-}
-
-func (self *Commands) SetGitAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
-	return runner.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
-}
-
-func (self *Commands) SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType) error {
-	return runner.Run("git", "config", configdomain.KeyGitHubConnectorType.String(), value.String())
-}
-
-func (self *Commands) SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitHubToken.String(), value.String())
-}
-
-func (self *Commands) SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType) error {
-	return runner.Run("git", "config", configdomain.KeyGitLabConnectorType.String(), value.String())
-}
-
-func (self *Commands) SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGitLabToken.String(), value.String())
-}
-
-func (self *Commands) SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
-	return runner.Run("git", "config", scope.GitFlag(), configdomain.KeyGiteaToken.String(), value.String())
-}
-
-func (self *Commands) SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
-	return runner.Run("git", "config", configdomain.KeyHostingOriginHostname.String(), hostname.String())
 }
 
 func (self *Commands) ShortenSHA(querier subshelldomain.Querier, sha gitdomain.SHA) (gitdomain.SHA, error) {

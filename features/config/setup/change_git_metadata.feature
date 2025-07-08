@@ -57,7 +57,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.set-parent "town set-parent"   |
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
-      | git config --local git-town.github-token 123456          |
+      | git config git-town.github-token 123456                  |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |

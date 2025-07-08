@@ -8,6 +8,7 @@ import (
 	"github.com/cucumber/godog"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks/cache"
@@ -239,7 +240,7 @@ func developerRepoPath(rootDir string) string {
 
 func initializeWorkspace(repo *commands.TestCommands) {
 	asserts.NoError(repo.Config.SetMainBranch("main", repo.TestRunner))
-	asserts.NoError(repo.Config.NormalConfig.SetPerennialBranches(repo.TestRunner, gitdomain.LocalBranchNames{}))
+	asserts.NoError(gitconfig.SetPerennialBranches(repo.TestRunner, gitdomain.LocalBranchNames{}))
 	repo.MustRun("git", "checkout", "main")
 	// NOTE: the developer repos receives the initial branch from origin
 	//       but we don't want it here because it isn't used in tests.
