@@ -174,13 +174,13 @@ func (self *NormalConfig) RemoveSyncPrototypeStrategy(runner subshelldomain.Runn
 
 func (self *NormalConfig) RemoveSyncTags(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncTags.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags)
+		_ = gitconfig.RemoveSyncTags(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncUpstream(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncUpstream.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
+		_ = gitconfig.RemoveSyncUpstream(runner, configdomain.ConfigScopeLocal)
 	}
 }
 

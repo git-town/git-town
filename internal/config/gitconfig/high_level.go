@@ -67,6 +67,14 @@ func RemoveSyncPrototypeStrategy(runner subshelldomain.Runner, scope configdomai
 	return RemoveConfigValue(runner, scope, configdomain.KeySyncPrototypeStrategy)
 }
 
+func RemoveSyncTags(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeySyncTags)
+}
+
+func RemoveSyncUpstream(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeySyncUpstream)
+}
+
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 }
