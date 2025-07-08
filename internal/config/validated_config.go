@@ -96,5 +96,5 @@ func (self *ValidatedConfig) RemovePerennials(stack gitdomain.LocalBranchNames) 
 // in the Git Town configuration.
 func (self *ValidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.ValidatedConfigData.MainBranch = branch
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch, branch.String())
+	return gitconfig.SetMainBranch(runner, branch)
 }
