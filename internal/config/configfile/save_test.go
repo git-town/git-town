@@ -4,11 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
-	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
@@ -97,9 +95,40 @@ upstream = true
 
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
-		config := config.DefaultUnvalidatedConfig(git.EmptyVersion())
-		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
-		err := configfile.Save(config.NormalConfig.NormalConfigData, "main")
+		config := configdomain.NormalConfigData{
+			Aliases:                  configdomain.Aliases{},
+			BitbucketAppPassword:     Option[forgedomain.BitbucketAppPassword]{},
+			BitbucketUsername:        Option[forgedomain.BitbucketUsername]{},
+			BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
+			CodebergToken:            Option[forgedomain.CodebergToken]{},
+			ContributionRegex:        Option[configdomain.ContributionRegex]{},
+			DevRemote:                "origin",
+			FeatureRegex:             Option[configdomain.FeatureRegex]{},
+			ForgeType:                Option[forgedomain.ForgeType]{},
+			GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
+			GitHubToken:              Option[forgedomain.GitHubToken]{},
+			GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
+			GitLabToken:              Option[forgedomain.GitLabToken]{},
+			GiteaToken:               Option[forgedomain.GiteaToken]{},
+			HostingOriginHostname:    Option[configdomain.HostingOriginHostname]{},
+			Lineage:                  configdomain.Lineage{},
+			NewBranchType:            Option[configdomain.BranchType]{},
+			ObservedRegex:            Option[configdomain.ObservedRegex]{},
+			Offline:                  false,
+			PerennialBranches:        gitdomain.LocalBranchNames{},
+			PerennialRegex:           Option[configdomain.PerennialRegex]{},
+			PushHook:                 true,
+			ShareNewBranches:         configdomain.ShareNewBranchesNone,
+			ShipDeleteTrackingBranch: true,
+			ShipStrategy:             configdomain.ShipStrategyAPI,
+			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
+			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
+			SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyRebase,
+			SyncTags:                 true,
+			SyncUpstream:             true,
+			UnknownBranchType:        "",
+		}
+		err := configfile.Save(config, "main")
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
 		bytes, err := os.ReadFile(configfile.FileName)

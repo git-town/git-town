@@ -108,7 +108,7 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 }
 
 func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogdomain.Exit, error) {
-	emptyResult := dialogData{}
+	var emptyResult dialogData
 	configFile := data.configFile.GetOrDefault()
 	exit, err := dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || exit {
@@ -265,13 +265,14 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 			bitbucketUsername:    bitbucketUsername,
 			codebergToken:        codebergToken,
 			configuredValues:     repo.UnvalidatedConfig.NormalConfig,
-			inputs:               data.dialogInputs,
+			devURL:               devURL,
+			forgeTypeOpt:         actualForgeType,
+			giteaToken:           giteaToken,
 			githubConnectorType:  githubConnectorTypeOpt,
 			githubToken:          githubToken,
 			gitlabConnectorType:  gitlabConnectorTypeOpt,
 			gitlabToken:          gitlabToken,
-			giteaToken:           giteaToken,
-			forgeTypeOpt:         actualForgeType,
+			inputs:               data.dialogInputs,
 			remoteURL:            data.config.NormalConfig.RemoteURL(data.backend, devRemote),
 		})
 		if err != nil || exit {
@@ -397,16 +398,16 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	return dialogData{normalData, validatedData, tokenScope, enteredForgeType, devURL, configStorage}, false, nil
+	return dialogData{enteredForgeType, devURL, normalData, tokenScope, configStorage, validatedData}, false, nil
 }
 
 type dialogData struct {
-	normalConfig        configdomain.NormalConfigData
-	validatedConfig     configdomain.ValidatedConfigData
-	scope               configdomain.ConfigScope
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	devURL              Option[giturl.Parts]
+	normalConfig        configdomain.NormalConfigData
+	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
+	validatedConfig     configdomain.ValidatedConfigData
 }
 
 func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit, err error) {
@@ -456,13 +457,13 @@ type testForgeAuthArgs struct {
 	codebergToken        Option[forgedomain.CodebergToken]
 	configuredValues     config.NormalConfig
 	devURL               Option[giturl.Parts]
-	inputs               dialogcomponents.TestInputs
+	forgeTypeOpt         Option[forgedomain.ForgeType]
+	giteaToken           Option[forgedomain.GiteaToken]
 	githubConnectorType  Option[forgedomain.GitHubConnectorType]
 	githubToken          Option[forgedomain.GitHubToken]
 	gitlabConnectorType  Option[forgedomain.GitLabConnectorType]
 	gitlabToken          Option[forgedomain.GitLabToken]
-	giteaToken           Option[forgedomain.GiteaToken]
-	forgeTypeOpt         Option[forgedomain.ForgeType]
+	inputs               dialogcomponents.TestInputs
 	remoteURL            Option[giturl.Parts]
 }
 
@@ -568,6 +569,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
 	}
 	return setupData{
+		backend:       repo.Backend,
 		config:        repo.UnvalidatedConfig,
 		configFile:    repo.UnvalidatedConfig.NormalConfig.File,
 		dialogInputs:  dialogTestInputs,
