@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
@@ -60,7 +61,7 @@ func executeOffline(args []string, verbose configdomain.Verbose) error {
 	case 0:
 		displayOfflineStatus(repo.UnvalidatedConfig)
 	case 1:
-		err = setOfflineStatus(args[0], repo.UnvalidatedConfig, repo.Frontend)
+		err = setOfflineStatus(args[0], repo.Frontend)
 		if err != nil {
 			return err
 		}
@@ -83,11 +84,11 @@ func displayOfflineStatus(config config.UnvalidatedConfig) {
 	fmt.Println(format.Bool(config.NormalConfig.Offline.IsOffline()))
 }
 
-func setOfflineStatus(text string, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+func setOfflineStatus(text string, runner subshelldomain.Runner) error {
 	value, err := gohacks.ParseBool(text, "offline status")
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	return config.NormalConfig.SetOffline(runner, configdomain.Offline(value))
+	return gitconfig.SetOffline(runner, configdomain.Offline(value))
 	// in the future, we could remove the offline setting here
 }
