@@ -205,8 +205,8 @@ func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, remote gitd
 	return gitconfig.SetDevRemote(runner, remote)
 }
 
-// SetFeatureRegexLocally updates the locally configured feature regex.
-func (self *NormalConfig) SetFeatureRegexLocally(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
+// SetFeatureRegex updates the locally configured feature regex.
+func (self *NormalConfig) SetFeatureRegex(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
 	existing, has := self.GitConfig.FeatureRegex.Get()
 	if has && existing == value {
@@ -254,8 +254,8 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 	return gitconfig.SetPerennialBranches(runner, branches)
 }
 
-// SetPerennialRegexLocally updates the locally configured perennial regex.
-func (self *NormalConfig) SetPerennialRegexLocally(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
+// SetPerennialRegex updates the locally configured perennial regex.
+func (self *NormalConfig) SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
 	self.PerennialRegex = Some(value)
 	existing, has := self.GitConfig.PerennialRegex.Get()
 	if has && existing == value {
@@ -264,8 +264,8 @@ func (self *NormalConfig) SetPerennialRegexLocally(runner subshelldomain.Runner,
 	return gitconfig.SetPerennialRegex(runner, value)
 }
 
-// SetPushHookLocally updates the locally configured push-hook strategy.
-func (self *NormalConfig) SetPushHookLocally(runner subshelldomain.Runner, value configdomain.PushHook) error {
+// SetPushHook updates the locally configured push-hook strategy.
+func (self *NormalConfig) SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook) error {
 	self.PushHook = value
 	existing, has := self.GitConfig.PushHook.Get()
 	if has && existing == value {
@@ -353,8 +353,8 @@ func (self *NormalConfig) SetSyncUpstream(runner subshelldomain.Runner, value co
 	return gitconfig.SetSyncUpstream(runner, value)
 }
 
-// SetUnknownBranchTypeLocally updates the locally configured unknown branch type.
-func (self *NormalConfig) SetUnknownBranchTypeLocally(runner subshelldomain.Runner, value configdomain.BranchType) error {
+// SetUnknownBranchType updates the locally configured unknown branch type.
+func (self *NormalConfig) SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
 	self.UnknownBranchType = value
 	existing, has := self.GitConfig.UnknownBranchType.Get()
 	if has && existing == value {
