@@ -14,27 +14,27 @@ Feature: don't ask for information already provided by the config file
       perennial-regex = "release-"
       perennials = ["staging"]
       unknown-type = "observed"
-
+      
       [create]
       new-branch-type = "feature"
       share-new-branches = "propose"
-
+      
       [hosting]
       dev-remote = "origin"
       origin-hostname = "github.com"
       forge-type = "github"
-
+      
       [ship]
       delete-tracking-branch = true
       strategy = "api"
-
+      
       [sync]
       feature-strategy = "merge"
       perennial-strategy = "rebase"
       push-hook = true
       tags = true
       upstream = true
-
+      
       [sync-strategy]
       feature-branches = "rebase"
       prototype-branches = "merge"
@@ -49,9 +49,9 @@ Feature: don't ask for information already provided by the config file
       | token scope: local         | enter             |
       | save config to config file | down enter        |
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config --local git-town.github-token 123456 |
-      | git config git-town.github-connector api        |
+      | COMMAND                                  |
+      | git config git-town.github-token 123456  |
+      | git config git-town.github-connector api |
     And there are still no perennial branches
     And local Git setting "git-town.dev-remote" still doesn't exist
     And local Git setting "git-town.new-branch-type" still doesn't exist

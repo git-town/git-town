@@ -1,6 +1,7 @@
 package gitconfig
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
@@ -159,6 +160,7 @@ func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitH
 }
 
 func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
+	fmt.Println("111111111111111111111111111111", scope)
 	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
 }
 
