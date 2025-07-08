@@ -105,46 +105,6 @@ func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, br
 	return nil
 }
 
-// SetDevRemote updates the locally configured development remote.
-func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
-	self.DevRemote = remote
-	existing, has := self.Git.DevRemote.Get()
-	if has && existing == remote {
-		return nil
-	}
-	return gitconfig.SetDevRemote(runner, remote)
-}
-
-// SetFeatureRegex updates the locally configured feature regex.
-func (self *NormalConfig) SetFeatureRegex(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
-	self.FeatureRegex = Some(value)
-	existing, has := self.Git.FeatureRegex.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetFeatureRegex(runner, value)
-}
-
-// SetContributionBranches marks the given branches as contribution branches.
-func (self *NormalConfig) SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
-	self.NewBranchType = Some(value)
-	existing, has := self.Git.NewBranchType.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetNewBranchType(runner, value)
-}
-
-// SetOffline updates whether Git Town is in offline mode.
-func (self *NormalConfig) SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
-	self.Offline = value
-	existing, has := self.Git.Offline.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetOffline(runner, value)
-}
-
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {

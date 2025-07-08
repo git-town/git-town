@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
@@ -88,6 +89,6 @@ func setOfflineStatus(text string, config config.UnvalidatedConfig, runner subsh
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	return config.NormalConfig.SetOffline(runner, configdomain.Offline(value))
+	return gitconfig.SetOffline(runner, configdomain.Offline(value))
 	// in the future, we could remove the offline setting here
 }

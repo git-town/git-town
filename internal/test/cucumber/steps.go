@@ -971,7 +971,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 	sc.Step(`^offline mode is enabled$`, func(ctx context.Context) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
-		return devRepo.Config.NormalConfig.SetOffline(devRepo.TestRunner, true)
+		return gitconfig.SetOffline(devRepo.TestRunner, true)
 	})
 
 	sc.Step(`^origin deletes the "([^"]*)" branch$`, func(ctx context.Context, branch string) {

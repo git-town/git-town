@@ -696,7 +696,7 @@ func saveNewBranchType(newValue Option[configdomain.BranchType], config config.N
 		return nil
 	}
 	if value, hasValue := newValue.Get(); hasValue {
-		return config.SetNewBranchType(runner, value)
+		return gitconfig.SetNewBranchType(runner, value)
 	}
 	_ = gitconfig.RemoveNewBranchType(runner)
 	return nil
@@ -721,7 +721,7 @@ func saveFeatureRegex(value Option[configdomain.FeatureRegex], config config.Nor
 		return nil
 	}
 	if value, has := value.Get(); has {
-		return config.SetFeatureRegex(runner, value)
+		return gitconfig.SetFeatureRegex(runner, value)
 	}
 	_ = gitconfig.RemoveFeatureRegex(runner)
 	return nil
