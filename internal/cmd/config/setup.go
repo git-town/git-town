@@ -97,7 +97,7 @@ type setupData struct {
 	remotes       gitdomain.Remotes
 }
 
-func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
+func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
@@ -185,11 +185,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	}
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType
-	actualForgeType := None[forgedomain.ForgeType]()
+	var actualForgeType Option[forgedomain.ForgeType]
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	codebergToken := None[forgedomain.CodebergToken]()
-	devURL := None[giturl.Parts]()
+	var devURL Option[giturl.Parts]
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
@@ -209,7 +209,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 			}
 		}
 		devURL = data.config.NormalConfig.DevURL(data.backend)
-		actualForgeType = determineForgeType(repo.UnvalidatedConfig, enteredForgeType.Or(repo.UnvalidatedConfig.NormalConfig.ForgeType), devURL)
+		actualForgeType = determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.NormalConfig.ForgeType), devURL)
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
