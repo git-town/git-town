@@ -75,6 +75,30 @@ func RemoveSyncUpstream(runner subshelldomain.Runner, scope configdomain.ConfigS
 	return RemoveConfigValue(runner, scope, configdomain.KeySyncUpstream)
 }
 
+func SetBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String())
+}
+
+func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, remote.String())
+}
+
+func SetFeatureRegex(runner subshelldomain.Runner, regex configdomain.FeatureRegex) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, regex.String())
+}
+
+func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+}
+
+func SetOffline(runner subshelldomain.Runner, scope configdomain.ConfigScope, value configdomain.Offline) error {
+	return SetConfigValue(runner, scope, configdomain.KeyOffline, value.String())
+}
+
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+}
+
+func SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
 }

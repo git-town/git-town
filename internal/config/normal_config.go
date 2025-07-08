@@ -189,7 +189,7 @@ func (self *NormalConfig) RemoveSyncUpstream(runner subshelldomain.Runner) {
 func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
 	for _, branch := range branches {
 		self.BranchTypeOverrides[branch] = branchType
-		if err := gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()); err != nil {
+		if err := gitconfig.SetBranchTypeOverride(runner, branch, branchType); err != nil {
 			return err
 		}
 	}
@@ -197,13 +197,13 @@ func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, br
 }
 
 // SetDevRemote updates the locally configured development remote.
-func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, value gitdomain.Remote) error {
-	self.DevRemote = value
+func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
+	self.DevRemote = remote
 	existing, has := self.GitConfig.DevRemote.Get()
-	if has && existing == value {
+	if has && existing == remote {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
+	return gitconfig.SetDevRemote(runner, remote)
 }
 
 // SetFeatureRegexLocally updates the locally configured feature regex.
@@ -213,7 +213,7 @@ func (self *NormalConfig) SetFeatureRegexLocally(runner subshelldomain.Runner, v
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
+	return gitconfig.SetFeatureRegex(runner, value)
 }
 
 // SetContributionBranches marks the given branches as contribution branches.
@@ -233,7 +233,7 @@ func (self *NormalConfig) SetOffline(runner subshelldomain.Runner, value configd
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
+	return gitconfig.SetOffline(runner, configdomain.ConfigScopeGlobal, value)
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
@@ -243,7 +243,7 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 		return nil
 	}
 	self.Lineage = self.Lineage.Set(branch, parentBranch)
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch), parentBranch.String())
+	return gitconfig.SetParent(runner, branch, parentBranch)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
