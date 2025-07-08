@@ -100,6 +100,10 @@ func RemoveNewBranchType(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType)
 }
 
+func RemoveObservedRegex(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyObservedRegex)
+}
+
 func RemoveOriginHostname(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname)
 }
@@ -219,6 +223,10 @@ func SetMainBranch(runner subshelldomain.Runner, value gitdomain.LocalBranchName
 
 func SetNewBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+}
+
+func SetObservedRegex(runner subshelldomain.Runner, regex configdomain.ObservedRegex) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyObservedRegex, regex.String())
 }
 
 func SetOffline(runner subshelldomain.Runner, value configdomain.Offline) error {
