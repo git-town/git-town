@@ -55,6 +55,7 @@ Feature: don't ask for information already provided by the config file
     And local Git setting "git-town.main-branch" still doesn't exist
     And local Git setting "git-town.perennial-branches" still doesn't exist
     And local Git setting "git-town.feature-regex" still doesn't exist
+    And local Git setting "git-town.contribution-regex" still doesn't exist
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" still doesn't exist
     And global Git setting "git-town.github-token" is still "123456"
