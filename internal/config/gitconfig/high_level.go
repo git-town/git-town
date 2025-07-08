@@ -13,10 +13,6 @@ func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.Loc
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
 }
 
-func RemoveDeprecatedCreatePrototypeBranches(runner subshelldomain.Runner) {
-	_ = RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDeprecatedCreatePrototypeBranches)
-}
-
 func RemoveDevRemote(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
 }
