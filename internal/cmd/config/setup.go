@@ -682,7 +682,7 @@ func saveToGit(userInput dialogData, oldConfig config.UnvalidatedConfig, configF
 	}
 	if configFile.ContributionRegex.IsNone() {
 		fc.Check(
-			saveContributionRegex(userInput.config.NormalConfig.ContributionRegex, oldConfig.NormalConfig, frontend),
+			saveContributionRegex(userInput.normalConfig.ContributionRegex, oldConfig.NormalConfig, frontend),
 		)
 	}
 	if configFile.PushHook.IsNone() {
