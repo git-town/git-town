@@ -12,6 +12,7 @@ Feature: Configure a different development remote
       | perennial branches          | enter    |
       | perennial regex             | enter    |
       | feature regex               | enter    |
+      | contribution regex          | enter    |
       | unknown branch type         | enter    |
       | dev-remote                  | up enter |
       | origin hostname             | enter    |

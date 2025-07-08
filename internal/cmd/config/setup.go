@@ -167,6 +167,12 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 			return tokenScope, forgeType, exit, err
 		}
 	}
+	if configFile.ContributionRegex.IsNone() {
+		data.userInput.config.NormalConfig.ContributionRegex, exit, err = dialog.ContributionRegex(repo.UnvalidatedConfig.NormalConfig.ContributionRegex, data.dialogInputs.Next())
+		if err != nil || exit {
+			return tokenScope, forgeType, exit, err
+		}
+	}
 	if configFile.UnknownBranchType.IsNone() {
 		data.userInput.config.NormalConfig.UnknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
 		if err != nil || exit {
@@ -606,6 +612,11 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 			saveFeatureRegex(userInput.config.NormalConfig.FeatureRegex, oldConfig.NormalConfig, frontend),
 		)
 	}
+	if configFile.ContributionRegex.IsNone() {
+		fc.Check(
+			saveContributionRegex(userInput.config.NormalConfig.ContributionRegex, oldConfig.NormalConfig, frontend),
+		)
+	}
 	if configFile.PushHook.IsNone() {
 		fc.Check(
 			savePushHook(userInput.config.NormalConfig.PushHook, oldConfig.NormalConfig, frontend),
@@ -724,6 +735,17 @@ func saveFeatureRegex(value Option[configdomain.FeatureRegex], config config.Nor
 		return gitconfig.SetFeatureRegex(runner, value)
 	}
 	_ = gitconfig.RemoveFeatureRegex(runner)
+	return nil
+}
+
+func saveContributionRegex(value Option[configdomain.ContributionRegex], config config.NormalConfig, runner subshelldomain.Runner) error {
+	if value.Equal(config.ContributionRegex) {
+		return nil
+	}
+	if value, has := value.Get(); has {
+		return gitconfig.SetContributionRegex(runner, value)
+	}
+	_ = gitconfig.RemoveContributionRegex(runner)
 	return nil
 }
 

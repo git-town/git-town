@@ -94,6 +94,7 @@ Please upgrade to the new format: create.new-branch-type = "prototype"`
 	ContinueNothingToDo                 = "nothing to continue"
 	ContinueUnresolvedConflicts         = "you must resolve the conflicts before continuing"
 	ContinueUntrackedChanges            = "please stage or commit the untracked changes first"
+	ContributionRegex                   = "Contribution regex: %s\n"
 	CurrentBranchCannotDetermine        = "cannot determine the current branch"
 	DeleteCannotDeleteMainBranch        = "you cannot delete the main branch"
 	DeleteCannotDeletePerennialBranches = "you cannot delete perennial branches"
