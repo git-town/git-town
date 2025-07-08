@@ -11,12 +11,12 @@ Feature: change offline mode
       | GIVE  | WANT  |
       | true  | true  |
       | t     | true  |
-      | 1     | true  |
+      |     1 | true  |
       | on    | true  |
       | yes   | true  |
       | false | false |
       | f     | false |
-      | 0     | false |
+      |     0 | false |
       | off   | false |
       | no    | false |
 

@@ -860,21 +860,21 @@ func saveShareNewBranches(oldValue, newValue configdomain.ShareNewBranches, conf
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetShareNewBranches(runner, newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShareNewBranches(runner, newValue)
 }
 
 func saveShipDeleteTrackingBranch(oldValue, newValue configdomain.ShipDeleteTrackingBranch, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetShipDeleteTrackingBranch(runner, newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShipDeleteTrackingBranch(runner, newValue)
 }
 
 func saveShipStrategy(oldValue, newValue configdomain.ShipStrategy, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetShipStrategy(runner, newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetShipStrategy(runner, newValue)
 }
 
 func saveSyncFeatureStrategy(oldValue, newValue configdomain.SyncFeatureStrategy, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
@@ -902,7 +902,7 @@ func saveSyncUpstream(oldValue, newValue configdomain.SyncUpstream, config confi
 	if newValue == oldValue {
 		return nil
 	}
-	return config.NormalConfig.SetSyncUpstream(runner, newValue, configdomain.ConfigScopeLocal)
+	return config.NormalConfig.SetSyncUpstream(runner, newValue)
 }
 
 func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
