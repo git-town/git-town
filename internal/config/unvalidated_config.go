@@ -42,15 +42,15 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
 		env:  envConfig,
-		file: self.NormalConfig.ConfigFile,
+		file: self.NormalConfig.File,
 		git:  unscopedGitConfig,
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		ConfigFile:       self.NormalConfig.ConfigFile,
+		File:             self.NormalConfig.File,
 		DryRun:           self.NormalConfig.DryRun,
-		EnvConfig:        envConfig,
-		GitConfig:        unscopedGitConfig,
+		Env:              envConfig,
+		Git:              unscopedGitConfig,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
@@ -58,7 +58,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	if self.NormalConfig.GitConfig.MainBranch.IsSome() {
+	if self.NormalConfig.Git.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
 }
@@ -84,10 +84,10 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			ConfigFile:       None[configdomain.PartialConfig](),
+			File:             None[configdomain.PartialConfig](),
 			DryRun:           false,
-			EnvConfig:        configdomain.EmptyPartialConfig(),
-			GitConfig:        configdomain.EmptyPartialConfig(),
+			Env:              configdomain.EmptyPartialConfig(),
+			Git:              configdomain.EmptyPartialConfig(),
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},
@@ -103,10 +103,10 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	})
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			ConfigFile:       args.ConfigFile,
+			File:             args.ConfigFile,
 			DryRun:           args.DryRun,
-			EnvConfig:        args.EnvConfig,
-			GitConfig:        args.GitConfig,
+			Env:              args.EnvConfig,
+			Git:              args.GitConfig,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},

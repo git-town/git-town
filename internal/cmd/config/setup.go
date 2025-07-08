@@ -495,7 +495,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
-		configFile:    repo.UnvalidatedConfig.NormalConfig.ConfigFile,
+		configFile:    repo.UnvalidatedConfig.NormalConfig.File,
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
@@ -582,7 +582,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(
-			savePerennialBranches(oldConfig.NormalConfig.GitConfig.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig, frontend),
+			savePerennialBranches(oldConfig.NormalConfig.Git.PerennialBranches, userInput.config.NormalConfig.PerennialBranches, oldConfig, frontend),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
@@ -832,7 +832,7 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 }
 
 func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
-	if slices.Compare(oldValue, newValue) != 0 || config.NormalConfig.GitConfig.PerennialBranches == nil {
+	if slices.Compare(oldValue, newValue) != 0 || config.NormalConfig.Git.PerennialBranches == nil {
 		return config.NormalConfig.SetPerennialBranches(runner, newValue)
 	}
 	return nil
