@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/gohacks"
@@ -975,7 +976,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.SetDefaultGitBranch("main")
-		have := runtime.Git.DefaultBranch(runtime)
+		have := gitconfig.DefaultBranch(runtime)
 		want := gitdomain.NewLocalBranchNameOption("main")
 		must.Eq(t, want, have)
 	})

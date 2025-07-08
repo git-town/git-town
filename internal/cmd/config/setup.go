@@ -138,7 +138,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 	} else {
 		existingMainBranch := repo.UnvalidatedConfig.UnvalidatedConfig.MainBranch
 		if existingMainBranch.IsNone() {
-			existingMainBranch = repo.Git.DefaultBranch(repo.Backend)
+			existingMainBranch = gitconfig.DefaultBranch(repo.Backend)
 		}
 		if existingMainBranch.IsNone() {
 			existingMainBranch = repo.Git.OriginHead(repo.Backend)
@@ -492,7 +492,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		return data, exit, err
 	}
 	if len(remotes) == 0 {
-		remotes = gitdomain.Remotes{repo.Git.DefaultRemote(repo.Backend)}
+		remotes = gitdomain.Remotes{gitconfig.DefaultRemote(repo.Backend)}
 	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,

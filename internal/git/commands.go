@@ -436,38 +436,6 @@ func (self *Commands) CurrentSHA(querier subshelldomain.Querier) (gitdomain.SHA,
 	return self.SHAForBranch(querier, "HEAD")
 }
 
-func (self *Commands) DefaultBranch(querier subshelldomain.Querier) Option[gitdomain.LocalBranchName] {
-	name, err := querier.QueryTrim("git", "config", "--get", "init.defaultbranch")
-	if err != nil {
-		return None[gitdomain.LocalBranchName]()
-	}
-	name = strings.TrimSpace(name)
-	if name == "" {
-		return None[gitdomain.LocalBranchName]()
-	}
-	return Some(gitdomain.LocalBranchName(name))
-}
-
-func (self *Commands) DefaultRemote(querier subshelldomain.Querier) gitdomain.Remote {
-	output, err := querier.QueryTrim("git", "config", "--get", "clone.defaultRemoteName")
-	if err != nil {
-		// Git returns an error if the user has not configured a default remote name.
-		// In this case use the Git default of "origin".
-		return gitdomain.RemoteOrigin
-	}
-	return gitdomain.Remote(output)
-}
-
-// DeleteConfigEntryForgeType removes the forge type config entry.
-func (self *Commands) DeleteConfigEntryForgeType(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyForgeType.String())
-}
-
-// DeleteConfigEntryOriginHostname removes the origin hostname override
-func (self *Commands) DeleteConfigEntryOriginHostname(runner subshelldomain.Runner) error {
-	return runner.Run("git", "config", "--unset", configdomain.KeyHostingOriginHostname.String())
-}
-
 // DeleteLastCommit resets HEAD to the previous commit.
 func (self *Commands) DeleteLastCommit(runner subshelldomain.Runner) error {
 	return runner.Run("git", "reset", "--hard", "HEAD~1")
