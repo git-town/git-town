@@ -120,25 +120,25 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 
 func (self *NormalConfig) RemovePerennialBranches(runner subshelldomain.Runner) {
 	if len(self.GitConfig.PerennialBranches) > 0 {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
+		_ = gitconfig.RemovePerennialBranches(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemovePerennialRegex(runner subshelldomain.Runner) {
 	if self.GitConfig.PerennialRegex.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
+		_ = gitconfig.RemovePerennialRegex(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemovePushHook(runner subshelldomain.Runner) {
 	if self.GitConfig.PushHook.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook)
+		_ = gitconfig.RemovePushHook(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveShareNewBranches(runner subshelldomain.Runner) {
 	if self.GitConfig.ShareNewBranches.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches)
+		_ = gitconfig.RemoveShareNewBranches(runner, configdomain.ConfigScopeLocal)
 	}
 }
 

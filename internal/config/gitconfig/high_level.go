@@ -31,6 +31,22 @@ func RemoveParent(runner subshelldomain.Runner, child gitdomain.LocalBranchName)
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child))
 }
 
+func RemovePerennialBranches(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyPerennialBranches)
+}
+
+func RemovePerennialRegex(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyPerennialRegex)
+}
+
+func RemovePushHook(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyPushHook)
+}
+
+func RemoveShareNewBranches(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyShareNewBranches)
+}
+
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 }
