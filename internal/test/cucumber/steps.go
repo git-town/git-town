@@ -398,7 +398,7 @@ func defineSteps(sc *godog.ScenarioContext) {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		_ = devRepo.RemovePerennialBranchConfiguration()
-		devRepo.RemoveMainBranchConfiguration()
+		asserts.NoError(gitconfig.RemoveMainBranch(devRepo.TestRunner))
 	})
 
 	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, parent string) error {
