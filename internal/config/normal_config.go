@@ -77,12 +77,6 @@ func (self *NormalConfig) RemoteURLString(querier subshelldomain.Querier, remote
 	return gitconfig.RemoteURL(querier, remote)
 }
 
-func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
-	delete(self.BranchTypeOverrides, branch)
-	_ = gitconfig.RemoveBranchTypeOverride(runner, branch)
-	return nil
-}
-
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
 	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
@@ -96,72 +90,6 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
-	}
-}
-
-func (self *NormalConfig) RemovePerennialBranches(runner subshelldomain.Runner) {
-	if len(self.Git.PerennialBranches) > 0 {
-		_ = gitconfig.RemovePerennialBranches(runner)
-	}
-}
-
-func (self *NormalConfig) RemovePerennialRegex(runner subshelldomain.Runner) {
-	if self.Git.PerennialRegex.IsSome() {
-		_ = gitconfig.RemovePerennialRegex(runner)
-	}
-}
-
-func (self *NormalConfig) RemovePushHook(runner subshelldomain.Runner) {
-	if self.Git.PushHook.IsSome() {
-		_ = gitconfig.RemovePushHook(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveShareNewBranches(runner subshelldomain.Runner) {
-	if self.Git.ShareNewBranches.IsSome() {
-		_ = gitconfig.RemoveShareNewBranches(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner) {
-	if self.Git.ShipDeleteTrackingBranch.IsSome() {
-		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveShipStrategy(runner subshelldomain.Runner) {
-	if self.Git.ShipStrategy.IsSome() {
-		_ = gitconfig.RemoveShipStrategy(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveSyncFeatureStrategy(runner subshelldomain.Runner) {
-	if self.Git.SyncFeatureStrategy.IsSome() {
-		_ = gitconfig.RemoveSyncFeatureStrategy(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveSyncPerennialStrategy(runner subshelldomain.Runner) {
-	if self.Git.SyncPerennialStrategy.IsSome() {
-		_ = gitconfig.RemoveSyncPerennialStrategy(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveSyncPrototypeStrategy(runner subshelldomain.Runner) {
-	if self.Git.SyncPrototypeStrategy.IsSome() {
-		_ = gitconfig.RemoveSyncPrototypeStrategy(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveSyncTags(runner subshelldomain.Runner) {
-	if self.Git.SyncTags.IsSome() {
-		_ = gitconfig.RemoveSyncTags(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveSyncUpstream(runner subshelldomain.Runner) {
-	if self.Git.SyncUpstream.IsSome() {
-		_ = gitconfig.RemoveSyncUpstream(runner)
 	}
 }
 

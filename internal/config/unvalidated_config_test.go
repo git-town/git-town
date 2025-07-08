@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -27,7 +28,7 @@ func TestUnvalidatedConfig(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			repo.CreateBranch("branch", "main")
-			err := repo.Config.NormalConfig.SetBranchTypeOverride(repo.TestRunner, configdomain.BranchTypeContributionBranch, "branch")
+			err := gitconfig.SetBranchTypeOverride(repo.TestRunner, "branch", configdomain.BranchTypeContributionBranch)
 			must.NoError(t, err)
 			repo.Config.Reload(repo.TestRunner)
 			must.Eq(t, configdomain.BranchTypeContributionBranch, repo.Config.BranchType("branch"))
