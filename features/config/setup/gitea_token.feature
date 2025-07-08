@@ -15,6 +15,7 @@ Feature: enter the Gitea API token
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -49,11 +50,12 @@ Feature: enter the Gitea API token
       | perennial regex             | enter                     |                                             |
       | feature regex               | enter                     |                                             |
       | contribution regex          | enter                     |                                             |
+      | observed regex              | enter                     |                                             |
       | unknown branch type         | enter                     |                                             |
       | dev-remote                  | enter                     |                                             |
       | origin hostname             | enter                     |                                             |
       | forge type                  | down down down down enter |                                             |
-      | gitea token                 | 1 2 3 4 5 6 enter         |                                             |
+      | gitea token                 |         1 2 3 4 5 6 enter |                                             |
       | token scope                 | enter                     |                                             |
       | sync-feature-strategy       | enter                     |                                             |
       | sync-perennial-strategy     | enter                     |                                             |
@@ -85,6 +87,7 @@ Feature: enter the Gitea API token
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
       | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -120,6 +123,7 @@ Feature: enter the Gitea API token
       | perennial regex             | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
       | contribution regex          | enter                                     |                                             |
+      | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |
