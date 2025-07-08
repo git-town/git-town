@@ -228,6 +228,7 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
+// TODO: inline into setup.go:savePerennialBranches
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
 	if slices.Compare(self.Git.PerennialBranches, branches) == 0 {
@@ -254,93 +255,4 @@ func (self *NormalConfig) SetPushHook(runner subshelldomain.Runner, value config
 		return nil
 	}
 	return gitconfig.SetPushHook(runner, value)
-}
-
-// SetShareNewBranches updates whether the current repository is configured to push
-// freshly created branches to origin.
-func (self *NormalConfig) SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches) error {
-	self.ShareNewBranches = value
-	existing, has := self.Git.ShareNewBranches.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetShareNewBranches(runner, value)
-}
-
-// SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
-func (self *NormalConfig) SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch) error {
-	self.ShipDeleteTrackingBranch = value
-	existing, has := self.Git.ShipDeleteTrackingBranch.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetShipDeleteTrackingBranch(runner, value)
-}
-
-func (self *NormalConfig) SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy) error {
-	self.ShipStrategy = value
-	existing, has := self.Git.ShipStrategy.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetShipStrategy(runner, value)
-}
-
-func (self *NormalConfig) SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy) error {
-	self.SyncFeatureStrategy = value
-	existing, has := self.Git.SyncFeatureStrategy.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetSyncFeatureStrategy(runner, value)
-}
-
-// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
-func (self *NormalConfig) SetSyncPerennialStrategy(runner subshelldomain.Runner, strategy configdomain.SyncPerennialStrategy) error {
-	self.SyncPerennialStrategy = strategy
-	existing, has := self.Git.SyncPerennialStrategy.Get()
-	if has && existing == strategy {
-		return nil
-	}
-	return gitconfig.SetSyncPerennialStrategy(runner, strategy)
-}
-
-// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
-func (self *NormalConfig) SetSyncPrototypeStrategy(runner subshelldomain.Runner, strategy configdomain.SyncPrototypeStrategy) error {
-	self.SyncPrototypeStrategy = strategy
-	existing, has := self.Git.SyncPrototypeStrategy.Get()
-	if has && existing == strategy {
-		return nil
-	}
-	return gitconfig.SetSyncPrototypeStrategy(runner, strategy)
-}
-
-// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
-func (self *NormalConfig) SetSyncTags(runner subshelldomain.Runner, value configdomain.SyncTags) error {
-	self.SyncTags = value
-	existing, has := self.Git.SyncTags.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetSyncTags(runner, value)
-}
-
-// SetSyncUpstream updates the configured sync-upstream strategy.
-func (self *NormalConfig) SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream) error {
-	self.SyncUpstream = value
-	existing, has := self.Git.SyncUpstream.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetSyncUpstream(runner, value)
-}
-
-// SetUnknownBranchType updates the locally configured unknown branch type.
-func (self *NormalConfig) SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
-	self.UnknownBranchType = value
-	existing, has := self.Git.UnknownBranchType.Get()
-	if has && existing == value {
-		return nil
-	}
-	return gitconfig.SetUnknownBranchType(runner, value)
 }
