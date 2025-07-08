@@ -123,7 +123,7 @@ func RemoveSyncUpstream(runner subshelldomain.Runner) error {
 }
 
 func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
+	return SetConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
 }
 
 func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
