@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"slices"
-	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -33,14 +32,14 @@ func (self *NormalConfig) CleanupBranchFromLineage(runner subshelldomain.Runner,
 	for _, child := range children {
 		if hasParent {
 			self.Lineage = self.Lineage.Set(child, parent)
-			_ = gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
+			_ = gitconfig.SetParent(runner, child, parent)
 		} else {
 			self.Lineage = self.Lineage.RemoveBranch(child)
-			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(parent))
+			_ = gitconfig.RemoveParent(runner, parent)
 		}
 	}
 	self.Lineage = self.Lineage.RemoveBranch(branch)
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
+	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 // DevURL provides the URL for the development remote.
@@ -80,39 +79,38 @@ func (self *NormalConfig) RemoteURLString(querier subshelldomain.Querier, remote
 
 func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
 	delete(self.BranchTypeOverrides, branch)
-	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
+	_ = gitconfig.RemoveBranchTypeOverride(runner, branch)
 	return nil
 }
 
 func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
 	if self.GitConfig.DevRemote.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
+		_ = gitconfig.RemoveDevRemote(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
 	if self.GitConfig.FeatureRegex.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
+		_ = gitconfig.RemoveFeatureRegex(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveNewBranchType(runner subshelldomain.Runner) {
 	if self.GitConfig.NewBranchType.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType)
+		_ = gitconfig.RemoveNewBranchType(runner)
 	}
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
 	self.GitConfig.Lineage = self.GitConfig.Lineage.RemoveBranch(branch)
-	_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch))
+	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner, finalMessages stringslice.Collector) {
 	for _, perennialBranch := range self.PerennialBranches {
 		if self.Lineage.Parent(perennialBranch).IsSome() {
-			_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(perennialBranch))
+			_ = gitconfig.RemoveParent(runner, perennialBranch)
 			self.Lineage = self.Lineage.RemoveBranch(perennialBranch)
 			finalMessages.Add(fmt.Sprintf(messages.PerennialBranchRemovedParentEntry, perennialBranch))
 		}
@@ -121,67 +119,67 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 
 func (self *NormalConfig) RemovePerennialBranches(runner subshelldomain.Runner) {
 	if len(self.GitConfig.PerennialBranches) > 0 {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches)
+		_ = gitconfig.RemovePerennialBranches(runner)
 	}
 }
 
 func (self *NormalConfig) RemovePerennialRegex(runner subshelldomain.Runner) {
 	if self.GitConfig.PerennialRegex.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex)
+		_ = gitconfig.RemovePerennialRegex(runner)
 	}
 }
 
 func (self *NormalConfig) RemovePushHook(runner subshelldomain.Runner) {
 	if self.GitConfig.PushHook.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook)
+		_ = gitconfig.RemovePushHook(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveShareNewBranches(runner subshelldomain.Runner) {
 	if self.GitConfig.ShareNewBranches.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShareNewBranches)
+		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner) {
 	if self.GitConfig.ShipDeleteTrackingBranch.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
+		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveShipStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.ShipStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
+		_ = gitconfig.RemoveShipStrategy(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncFeatureStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncFeatureStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy)
+		_ = gitconfig.RemoveSyncFeatureStrategy(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncPerennialStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncPerennialStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy)
+		_ = gitconfig.RemoveSyncPerennialStrategy(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncPrototypeStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncPrototypeStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy)
+		_ = gitconfig.RemoveSyncPrototypeStrategy(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncTags(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncTags.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags)
+		_ = gitconfig.RemoveSyncTags(runner)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncUpstream(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncUpstream.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
+		_ = gitconfig.RemoveSyncUpstream(runner)
 	}
 }
 
@@ -190,7 +188,7 @@ func (self *NormalConfig) RemoveSyncUpstream(runner subshelldomain.Runner) {
 func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
 	for _, branch := range branches {
 		self.BranchTypeOverrides[branch] = branchType
-		if err := gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()); err != nil {
+		if err := gitconfig.SetBranchTypeOverride(runner, branch, branchType); err != nil {
 			return err
 		}
 	}
@@ -198,23 +196,23 @@ func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, br
 }
 
 // SetDevRemote updates the locally configured development remote.
-func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, value gitdomain.Remote) error {
-	self.DevRemote = value
+func (self *NormalConfig) SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
+	self.DevRemote = remote
 	existing, has := self.GitConfig.DevRemote.Get()
-	if has && existing == value {
+	if has && existing == remote {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote, value.String())
+	return gitconfig.SetDevRemote(runner, remote)
 }
 
-// SetFeatureRegexLocally updates the locally configured feature regex.
-func (self *NormalConfig) SetFeatureRegexLocally(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
+// SetFeatureRegex updates the locally configured feature regex.
+func (self *NormalConfig) SetFeatureRegex(runner subshelldomain.Runner, value configdomain.FeatureRegex) error {
 	self.FeatureRegex = Some(value)
 	existing, has := self.GitConfig.FeatureRegex.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex, value.String())
+	return gitconfig.SetFeatureRegex(runner, value)
 }
 
 // SetContributionBranches marks the given branches as contribution branches.
@@ -224,7 +222,7 @@ func (self *NormalConfig) SetNewBranchType(runner subshelldomain.Runner, value c
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType, value.String())
+	return gitconfig.SetNewBranchType(runner, value)
 }
 
 // SetOffline updates whether Git Town is in offline mode.
@@ -234,7 +232,7 @@ func (self *NormalConfig) SetOffline(runner subshelldomain.Runner, value configd
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeGlobal, configdomain.KeyOffline, value.String())
+	return gitconfig.SetOffline(runner, value)
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
@@ -244,7 +242,7 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 		return nil
 	}
 	self.Lineage = self.Lineage.Set(branch, parentBranch)
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(branch), parentBranch.String())
+	return gitconfig.SetParent(runner, branch, parentBranch)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
@@ -253,57 +251,57 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 	if slices.Compare(self.GitConfig.PerennialBranches, branches) == 0 {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialBranches, branches.Join(" "))
+	return gitconfig.SetPerennialBranches(runner, branches)
 }
 
-// SetPerennialRegexLocally updates the locally configured perennial regex.
-func (self *NormalConfig) SetPerennialRegexLocally(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
+// SetPerennialRegex updates the locally configured perennial regex.
+func (self *NormalConfig) SetPerennialRegex(runner subshelldomain.Runner, value configdomain.PerennialRegex) error {
 	self.PerennialRegex = Some(value)
 	existing, has := self.GitConfig.PerennialRegex.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPerennialRegex, value.String())
+	return gitconfig.SetPerennialRegex(runner, value)
 }
 
-// SetPushHookLocally updates the locally configured push-hook strategy.
-func (self *NormalConfig) SetPushHookLocally(runner subshelldomain.Runner, value configdomain.PushHook) error {
+// SetPushHook updates the locally configured push-hook strategy.
+func (self *NormalConfig) SetPushHook(runner subshelldomain.Runner, value configdomain.PushHook) error {
 	self.PushHook = value
 	existing, has := self.GitConfig.PushHook.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
+	return gitconfig.SetPushHook(runner, value)
 }
 
 // SetShareNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
-func (self *NormalConfig) SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches, scope configdomain.ConfigScope) error {
+func (self *NormalConfig) SetShareNewBranches(runner subshelldomain.Runner, value configdomain.ShareNewBranches) error {
 	self.ShareNewBranches = value
 	existing, has := self.GitConfig.ShareNewBranches.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, scope, configdomain.KeyShareNewBranches, value.String())
+	return gitconfig.SetShareNewBranches(runner, value)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
-func (self *NormalConfig) SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch, scope configdomain.ConfigScope) error {
+func (self *NormalConfig) SetShipDeleteTrackingBranch(runner subshelldomain.Runner, value configdomain.ShipDeleteTrackingBranch) error {
 	self.ShipDeleteTrackingBranch = value
 	existing, has := self.GitConfig.ShipDeleteTrackingBranch.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.IsTrue()))
+	return gitconfig.SetShipDeleteTrackingBranch(runner, value)
 }
 
-func (self *NormalConfig) SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy, scope configdomain.ConfigScope) error {
+func (self *NormalConfig) SetShipStrategy(runner subshelldomain.Runner, value configdomain.ShipStrategy) error {
 	self.ShipStrategy = value
 	existing, has := self.GitConfig.ShipStrategy.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, scope, configdomain.KeyShipStrategy, value.String())
+	return gitconfig.SetShipStrategy(runner, value)
 }
 
 func (self *NormalConfig) SetSyncFeatureStrategy(runner subshelldomain.Runner, value configdomain.SyncFeatureStrategy) error {
@@ -312,7 +310,7 @@ func (self *NormalConfig) SetSyncFeatureStrategy(runner subshelldomain.Runner, v
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy, value.String())
+	return gitconfig.SetSyncFeatureStrategy(runner, value)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
@@ -322,7 +320,7 @@ func (self *NormalConfig) SetSyncPerennialStrategy(runner subshelldomain.Runner,
 	if has && existing == strategy {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy, strategy.String())
+	return gitconfig.SetSyncPerennialStrategy(runner, strategy)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
@@ -332,7 +330,7 @@ func (self *NormalConfig) SetSyncPrototypeStrategy(runner subshelldomain.Runner,
 	if has && existing == strategy {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy, strategy.String())
+	return gitconfig.SetSyncPrototypeStrategy(runner, strategy)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
@@ -342,25 +340,25 @@ func (self *NormalConfig) SetSyncTags(runner subshelldomain.Runner, value config
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncTags, value.String())
+	return gitconfig.SetSyncTags(runner, value)
 }
 
 // SetSyncUpstream updates the configured sync-upstream strategy.
-func (self *NormalConfig) SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream, scope configdomain.ConfigScope) error {
+func (self *NormalConfig) SetSyncUpstream(runner subshelldomain.Runner, value configdomain.SyncUpstream) error {
 	self.SyncUpstream = value
 	existing, has := self.GitConfig.SyncUpstream.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, scope, configdomain.KeySyncUpstream, strconv.FormatBool(value.IsTrue()))
+	return gitconfig.SetSyncUpstream(runner, value)
 }
 
-// SetUnknownBranchTypeLocally updates the locally configured unknown branch type.
-func (self *NormalConfig) SetUnknownBranchTypeLocally(runner subshelldomain.Runner, value configdomain.BranchType) error {
+// SetUnknownBranchType updates the locally configured unknown branch type.
+func (self *NormalConfig) SetUnknownBranchType(runner subshelldomain.Runner, value configdomain.BranchType) error {
 	self.UnknownBranchType = value
 	existing, has := self.GitConfig.UnknownBranchType.Get()
 	if has && existing == value {
 		return nil
 	}
-	return gitconfig.SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyUnknownBranchType, value.String())
+	return gitconfig.SetUnknownBranchType(runner, value)
 }

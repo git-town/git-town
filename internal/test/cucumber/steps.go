@@ -401,12 +401,12 @@ func defineSteps(sc *godog.ScenarioContext) {
 		devRepo.RemoveMainBranchConfiguration()
 	})
 
-	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, value string) error {
+	sc.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(ctx context.Context, branch, parent string) error {
 		state := ctx.Value(keyScenarioState).(*ScenarioState)
 		devRepo := state.fixture.DevRepo.GetOrPanic()
 		branchName := gitdomain.NewLocalBranchName(branch)
-		configKey := configdomain.NewParentKey(branchName)
-		return gitconfig.SetConfigValue(devRepo.TestRunner, configdomain.ConfigScopeLocal, configKey, value)
+		parentName := gitdomain.NewLocalBranchName(parent)
+		return gitconfig.SetParent(devRepo.TestRunner, branchName, parentName)
 	})
 
 	sc.Step(`^Git Town prints:$`, func(ctx context.Context, expected *godog.DocString) error {
