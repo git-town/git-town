@@ -44,34 +44,27 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := config.UnvalidatedConfig{
-			UnvalidatedConfig: configdomain.UnvalidatedConfigData{
-				MainBranch: gitdomain.NewLocalBranchNameOption("main"),
-			},
-			NormalConfig: config.NormalConfig{
-				NormalConfigData: configdomain.NormalConfigData{
-					DevRemote:                "fork",
-					FeatureRegex:             None[configdomain.FeatureRegex](),
-					ForgeType:                None[forgedomain.ForgeType](),
-					HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-					Lineage:                  configdomain.NewLineage(),
-					NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
-					Offline:                  false,
-					PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
-					PerennialRegex:           None[configdomain.PerennialRegex](),
-					PushHook:                 true,
-					ShareNewBranches:         configdomain.ShareNewBranchesPush,
-					ShipStrategy:             configdomain.ShipStrategySquashMerge,
-					ShipDeleteTrackingBranch: true,
-					SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
-					SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
-					SyncTags:                 true,
-					SyncUpstream:             true,
-					UnknownBranchType:        configdomain.BranchTypeFeatureBranch,
-				},
-			},
+		give := configdomain.NormalConfigData{
+			DevRemote:                "fork",
+			FeatureRegex:             None[configdomain.FeatureRegex](),
+			ForgeType:                None[forgedomain.ForgeType](),
+			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
+			Lineage:                  configdomain.NewLineage(),
+			NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
+			Offline:                  false,
+			PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
+			PerennialRegex:           None[configdomain.PerennialRegex](),
+			PushHook:                 true,
+			ShareNewBranches:         configdomain.ShareNewBranchesPush,
+			ShipStrategy:             configdomain.ShipStrategySquashMerge,
+			ShipDeleteTrackingBranch: true,
+			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
+			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
+			SyncTags:                 true,
+			SyncUpstream:             true,
+			UnknownBranchType:        configdomain.BranchTypeFeatureBranch,
 		}
-		have := configfile.RenderTOML(&give)
+		have := configfile.RenderTOML(give, "main")
 		want := `
 # More info around this file at https://www.git-town.com/configuration-file
 
@@ -106,7 +99,7 @@ upstream = true
 		t.Parallel()
 		config := config.DefaultUnvalidatedConfig(git.EmptyVersion())
 		config.UnvalidatedConfig.MainBranch = gitdomain.NewLocalBranchNameOption("main")
-		err := configfile.Save(&config)
+		err := configfile.Save(config.NormalConfig.NormalConfigData, "main")
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
 		bytes, err := os.ReadFile(configfile.FileName)

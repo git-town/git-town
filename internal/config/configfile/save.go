@@ -16,11 +16,11 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
 }
 
-func RenderTOML(normalConfig configdomain.NormalConfigData, validatedConfig configdomain.ValidatedConfigData) string {
+func RenderTOML(normalConfig configdomain.NormalConfigData, mainBranch gitdomain.LocalBranchName) string {
 	result := strings.Builder{}
 	result.WriteString("# More info around this file at https://www.git-town.com/configuration-file\n")
 	result.WriteString("\n[branches]\n")
-	result.WriteString(fmt.Sprintf("main = %q\n", validatedConfig.MainBranch))
+	result.WriteString(fmt.Sprintf("main = %q\n", mainBranch))
 	result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(normalConfig.PerennialBranches)))
 	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", normalConfig.PerennialRegex))
 	result.WriteString("\n[create]\n")
@@ -47,6 +47,6 @@ func RenderTOML(normalConfig configdomain.NormalConfigData, validatedConfig conf
 	return result.String()
 }
 
-func Save(normalConfig configdomain.NormalConfigData, validatedConfig configdomain.ValidatedConfigData) error {
-	return os.WriteFile(FileName, []byte(RenderTOML(normalConfig, validatedConfig)), 0o600)
+func Save(normalConfig configdomain.NormalConfigData, mainBranch gitdomain.LocalBranchName) error {
+	return os.WriteFile(FileName, []byte(RenderTOML(normalConfig, mainBranch)), 0o600)
 }
