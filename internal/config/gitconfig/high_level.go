@@ -47,6 +47,26 @@ func RemoveShareNewBranches(runner subshelldomain.Runner, scope configdomain.Con
 	return RemoveConfigValue(runner, scope, configdomain.KeyShareNewBranches)
 }
 
+func RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyShipDeleteTrackingBranch)
+}
+
+func RemoveShipStrategy(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeyShipStrategy)
+}
+
+func RemoveSyncFeatureStrategy(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeySyncFeatureStrategy)
+}
+
+func RemoveSyncPerennialStrategy(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeySyncPerennialStrategy)
+}
+
+func RemoveSyncPrototypeStrategy(runner subshelldomain.Runner, scope configdomain.ConfigScope) error {
+	return RemoveConfigValue(runner, scope, configdomain.KeySyncPrototypeStrategy)
+}
+
 func SetParent(runner subshelldomain.Runner, child, parent gitdomain.LocalBranchName) error {
 	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewParentKey(child), parent.String())
 }

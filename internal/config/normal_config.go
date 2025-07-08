@@ -144,31 +144,31 @@ func (self *NormalConfig) RemoveShareNewBranches(runner subshelldomain.Runner) {
 
 func (self *NormalConfig) RemoveShipDeleteTrackingBranch(runner subshelldomain.Runner) {
 	if self.GitConfig.ShipDeleteTrackingBranch.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipDeleteTrackingBranch)
+		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveShipStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.ShipStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyShipStrategy)
+		_ = gitconfig.RemoveShipStrategy(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncFeatureStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncFeatureStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncFeatureStrategy)
+		_ = gitconfig.RemoveSyncFeatureStrategy(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncPerennialStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncPerennialStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPerennialStrategy)
+		_ = gitconfig.RemoveSyncPerennialStrategy(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
 func (self *NormalConfig) RemoveSyncPrototypeStrategy(runner subshelldomain.Runner) {
 	if self.GitConfig.SyncPrototypeStrategy.IsSome() {
-		_ = gitconfig.RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncPrototypeStrategy)
+		_ = gitconfig.RemoveSyncPrototypeStrategy(runner, configdomain.ConfigScopeLocal)
 	}
 }
 
