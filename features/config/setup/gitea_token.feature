@@ -32,9 +32,9 @@ Feature: enter the Gitea API token
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
-      | COMMAND                                        |
-      | git config --local git-town.gitea-token 123456 |
-      | git config git-town.new-branch-type feature    |
+      | COMMAND                                     |
+      | git config git-town.gitea-token 123456      |
+      | git config git-town.new-branch-type feature |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.gitea-token" is now "123456"
 
@@ -65,10 +65,10 @@ Feature: enter the Gitea API token
       | ship-delete-tracking-branch | enter                     |                                             |
       | save config to Git metadata | down enter                |                                             |
     Then Git Town runs the commands
-      | COMMAND                                        |
-      | git config --local git-town.gitea-token 123456 |
-      | git config git-town.new-branch-type feature    |
-      | git config git-town.forge-type gitea           |
+      | COMMAND                                     |
+      | git config git-town.gitea-token 123456      |
+      | git config git-town.new-branch-type feature |
+      | git config git-town.forge-type gitea        |
     And local Git setting "git-town.forge-type" is now "gitea"
     And local Git setting "git-town.gitea-token" is now "123456"
 
