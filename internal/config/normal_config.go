@@ -93,18 +93,6 @@ func (self *NormalConfig) RemovePerennialAncestors(runner subshelldomain.Runner,
 	}
 }
 
-// SetBranchTypeOverride registers the given branch names as contribution branches.
-// The branches must exist.
-func (self *NormalConfig) SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
-	for _, branch := range branches {
-		self.BranchTypeOverrides[branch] = branchType
-		if err := gitconfig.SetBranchTypeOverride(runner, branch, branchType); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parentBranch gitdomain.LocalBranchName) error {

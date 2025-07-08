@@ -160,8 +160,13 @@ func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.Bitbuc
 	return SetConfigValue(runner, scope, configdomain.KeyBitbucketUsername, value.String())
 }
 
-func SetBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, branchType configdomain.BranchType) error {
-	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String())
+func SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain.BranchType, branches ...gitdomain.LocalBranchName) error {
+	for _, branch := range branches {
+		if err := SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.NewBranchTypeOverrideKeyForBranch(branch).Key, branchType.String()); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
