@@ -4,13 +4,30 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
 )
 
+func RemoveAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeGlobal, aliasableCommand.Key().Key())
+}
+
+func RemoveBitbucketAppPassword(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBitbucketAppPassword)
+}
+
+func RemoveBitbucketUsername(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyBitbucketUsername)
+}
+
 func RemoveBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) error {
 	key := configdomain.NewBranchTypeOverrideKeyForBranch(branch)
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, key.Key)
+}
+
+func RemoveCodebergToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyCodebergToken)
 }
 
 func RemoveDevRemote(runner subshelldomain.Runner) error {
@@ -21,12 +38,40 @@ func RemoveFeatureRegex(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyFeatureRegex)
 }
 
+func RemoveForgeType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgeType)
+}
+
+func RemoveGitHubConnectorType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubConnectorType)
+}
+
+func RemoveGitHubToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubToken)
+}
+
+func RemoveGitLabConnectorType(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType)
+}
+
+func RemoveGitLabToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabToken)
+}
+
+func RemoveGiteaToken(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGiteaToken)
+}
+
 func RemoveMainBranch(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyMainBranch)
 }
 
 func RemoveNewBranchType(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyNewBranchType)
+}
+
+func RemoveOriginHostname(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname)
 }
 
 func RemoveParent(runner subshelldomain.Runner, child gitdomain.LocalBranchName) error {
@@ -75,6 +120,50 @@ func RemoveSyncTags(runner subshelldomain.Runner) error {
 
 func RemoveSyncUpstream(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeySyncUpstream)
+}
+
+func SetAlias(runner subshelldomain.Runner, aliasableCommand configdomain.AliasableCommand) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, aliasableCommand.Key().Key(), "town "+aliasableCommand.String())
+}
+
+func SetBitbucketAppPassword(runner subshelldomain.Runner, value forgedomain.BitbucketAppPassword, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyBitbucketAppPassword, value.String())
+}
+
+func SetBitbucketUsername(runner subshelldomain.Runner, value forgedomain.BitbucketUsername, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyBitbucketUsername, value.String())
+}
+
+func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
+}
+
+func SetForgeType(runner subshelldomain.Runner, forgeType forgedomain.ForgeType) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyForgeType, forgeType.String())
+}
+
+func SetGitHubConnectorType(runner subshelldomain.Runner, value forgedomain.GitHubConnectorType) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitHubConnectorType, value.String())
+}
+
+func SetGitHubToken(runner subshelldomain.Runner, value forgedomain.GitHubToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitHubToken, value.String())
+}
+
+func SetGitLabConnectorType(runner subshelldomain.Runner, value forgedomain.GitLabConnectorType) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyGitLabConnectorType, value.String())
+}
+
+func SetGitLabToken(runner subshelldomain.Runner, value forgedomain.GitLabToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGitLabToken, value.String())
+}
+
+func SetGiteaToken(runner subshelldomain.Runner, value forgedomain.GiteaToken, scope configdomain.ConfigScope) error {
+	return SetConfigValue(runner, scope, configdomain.KeyGiteaToken, value.String())
+}
+
+func SetOriginHostname(runner subshelldomain.Runner, hostname configdomain.HostingOriginHostname) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyHostingOriginHostname, hostname.String())
 }
 
 func SetBranchTypeOverride(runner subshelldomain.Runner, branch gitdomain.LocalBranchName, branchType configdomain.BranchType) error {

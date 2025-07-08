@@ -660,9 +660,9 @@ func saveAliases(oldAliases, newAliases configdomain.Aliases, gitCommands git.Co
 		newAlias, hasNew := newAliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
-			err = gitCommands.RemoveGitAlias(frontend, aliasableCommand)
+			err = gitconfig.RemoveAlias(frontend, aliasableCommand)
 		case newAlias != oldAlias:
-			err = gitCommands.SetGitAlias(frontend, aliasableCommand)
+			err = gitconfig.SetAlias(frontend, aliasableCommand)
 		}
 		if err != nil {
 			return err
@@ -676,9 +676,9 @@ func saveBitbucketAppPassword(oldPassword, newPassword Option[forgedomain.Bitbuc
 		return nil
 	}
 	if value, has := newPassword.Get(); has {
-		return gitCommands.SetBitbucketAppPassword(frontend, value, scope)
+		return gitconfig.SetBitbucketAppPassword(frontend, value, scope)
 	}
-	return gitCommands.RemoveBitbucketAppPassword(frontend)
+	return gitconfig.RemoveBitbucketAppPassword(frontend)
 }
 
 func saveBitbucketUsername(oldValue, newValue Option[forgedomain.BitbucketUsername], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -686,9 +686,9 @@ func saveBitbucketUsername(oldValue, newValue Option[forgedomain.BitbucketUserna
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return gitCommands.SetBitbucketUsername(frontend, value, scope)
+		return gitconfig.SetBitbucketUsername(frontend, value, scope)
 	}
-	return gitCommands.RemoveBitbucketUsername(frontend)
+	return gitconfig.RemoveBitbucketUsername(frontend)
 }
 
 func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
@@ -698,7 +698,7 @@ func saveNewBranchType(oldValue, newValue Option[configdomain.BranchType], confi
 	if value, hasValue := newValue.Get(); hasValue {
 		return config.NormalConfig.SetNewBranchType(runner, value)
 	}
-	config.NormalConfig.RemoveNewBranchType(runner)
+	gitconfig.RemoveNewBranchType(runner)
 	return nil
 }
 
@@ -723,7 +723,7 @@ func saveFeatureRegex(newValue Option[configdomain.FeatureRegex], config config.
 	if value, has := newValue.Get(); has {
 		return config.SetFeatureRegex(runner, value)
 	}
-	config.RemoveFeatureRegex(runner)
+	gitconfig.RemoveFeatureRegex(runner)
 	return nil
 }
 
@@ -737,9 +737,9 @@ func saveForgeType(oldForgeType, newForgeType Option[forgedomain.ForgeType], git
 		return nil
 	}
 	if newHas {
-		return gitCommands.SetForgeType(frontend, newValue)
+		return gitconfig.SetForgeType(frontend, newValue)
 	}
-	return gitCommands.DeleteConfigEntryForgeType(frontend)
+	return gitconfig.RemoveForgeType(frontend)
 }
 
 func saveCodebergToken(oldToken, newToken Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -747,9 +747,9 @@ func saveCodebergToken(oldToken, newToken Option[forgedomain.CodebergToken], sco
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetCodebergToken(frontend, value, scope)
+		return gitconfig.SetCodebergToken(frontend, value, scope)
 	}
-	return gitCommands.RemoveCodebergToken(frontend)
+	return gitconfig.RemoveCodebergToken(frontend)
 }
 
 func saveGiteaToken(oldToken, newToken Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -757,9 +757,9 @@ func saveGiteaToken(oldToken, newToken Option[forgedomain.GiteaToken], scope con
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGiteaToken(frontend, value, scope)
+		return gitconfig.SetGiteaToken(frontend, value, scope)
 	}
-	return gitCommands.RemoveGiteaToken(frontend)
+	return gitconfig.RemoveGiteaToken(frontend)
 }
 
 func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -767,9 +767,9 @@ func saveGitHubConnectorType(oldType, newType Option[forgedomain.GitHubConnector
 		return nil
 	}
 	if value, has := newType.Get(); has {
-		return gitCommands.SetGitHubConnectorType(frontend, value)
+		return gitconfig.SetGitHubConnectorType(frontend, value)
 	}
-	return gitCommands.RemoveGitHubConnectorType(frontend)
+	return gitconfig.RemoveGitHubConnectorType(frontend)
 }
 
 func saveGitHubToken(oldToken, newToken Option[forgedomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -782,9 +782,9 @@ func saveGitHubToken(oldToken, newToken Option[forgedomain.GitHubToken], scope c
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGitHubToken(frontend, value, scope)
+		return gitconfig.SetGitHubToken(frontend, value, scope)
 	}
-	return gitCommands.RemoveGitHubToken(frontend)
+	return gitconfig.RemoveGitHubToken(frontend)
 }
 
 func saveGitLabConnectorType(oldType, newType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -792,9 +792,9 @@ func saveGitLabConnectorType(oldType, newType Option[forgedomain.GitLabConnector
 		return nil
 	}
 	if value, has := newType.Get(); has {
-		return gitCommands.SetGitLabConnectorType(frontend, value)
+		return gitconfig.SetGitLabConnectorType(frontend, value)
 	}
-	return gitCommands.RemoveGitLabConnectorType(frontend)
+	return gitconfig.RemoveGitLabConnectorType(frontend)
 }
 
 func saveGitLabToken(oldToken, newToken Option[forgedomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], gitCommands git.Commands, frontend subshelldomain.Runner) error {
@@ -807,9 +807,9 @@ func saveGitLabToken(oldToken, newToken Option[forgedomain.GitLabToken], scope c
 		return nil
 	}
 	if value, has := newToken.Get(); has {
-		return gitCommands.SetGitLabToken(frontend, value, scope)
+		return gitconfig.SetGitLabToken(frontend, value, scope)
 	}
-	return gitCommands.RemoveGitLabToken(frontend)
+	return gitconfig.RemoveGitLabToken(frontend)
 }
 
 func saveMainBranch(oldValue Option[gitdomain.LocalBranchName], newValue Option[gitdomain.LocalBranchName], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
@@ -827,9 +827,9 @@ func saveOriginHostname(oldValue, newValue Option[configdomain.HostingOriginHost
 		return nil
 	}
 	if value, has := newValue.Get(); has {
-		return gitCommands.SetOriginHostname(frontend, value)
+		return gitconfig.SetOriginHostname(frontend, value)
 	}
-	return gitCommands.DeleteConfigEntryOriginHostname(frontend)
+	return gitconfig.RemoveOriginHostname(frontend)
 }
 
 func savePerennialBranches(oldValue, newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {

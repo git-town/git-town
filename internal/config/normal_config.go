@@ -83,18 +83,6 @@ func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner,
 	return nil
 }
 
-func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
-	if self.Git.FeatureRegex.IsSome() {
-		_ = gitconfig.RemoveFeatureRegex(runner)
-	}
-}
-
-func (self *NormalConfig) RemoveNewBranchType(runner subshelldomain.Runner) {
-	if self.Git.NewBranchType.IsSome() {
-		_ = gitconfig.RemoveNewBranchType(runner)
-	}
-}
-
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
 	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
