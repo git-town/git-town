@@ -56,6 +56,10 @@ func RemoveCodebergToken(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyCodebergToken)
 }
 
+func RemoveContributionRegex(runner subshelldomain.Runner) error {
+	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex)
+}
+
 func RemoveDevRemote(runner subshelldomain.Runner) error {
 	return RemoveConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyDevRemote)
 }
@@ -171,6 +175,10 @@ func SetBranchTypeOverride(runner subshelldomain.Runner, branchType configdomain
 
 func SetCodebergToken(runner subshelldomain.Runner, value forgedomain.CodebergToken, scope configdomain.ConfigScope) error {
 	return SetConfigValue(runner, scope, configdomain.KeyCodebergToken, value.String())
+}
+
+func SetContributionRegex(runner subshelldomain.Runner, regex configdomain.ContributionRegex) error {
+	return SetConfigValue(runner, configdomain.ConfigScopeLocal, configdomain.KeyContributionRegex, regex.String())
 }
 
 func SetDevRemote(runner subshelldomain.Runner, remote gitdomain.Remote) error {
