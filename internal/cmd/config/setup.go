@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -540,7 +541,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, oldConfig, frontend)
+		return saveToFile(userInput, oldConfig.NormalConfig.Git, frontend)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(userInput, oldConfig, configFile, gitCommands, frontend)
 	}
@@ -912,24 +913,52 @@ func saveSyncTags(oldValue, newValue configdomain.SyncTags, config config.Unvali
 	return config.NormalConfig.SetSyncTags(runner, newValue)
 }
 
-func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+func saveToFile(userInput userInput, existingLocalGitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}
-	config.NormalConfig.RemoveDevRemote(runner)
-	config.RemoveMainBranch(runner)
-	config.NormalConfig.RemoveNewBranchType(runner)
-	config.NormalConfig.RemovePerennialBranches(runner)
-	config.NormalConfig.RemovePerennialRegex(runner)
-	config.NormalConfig.RemoveShareNewBranches(runner)
-	config.NormalConfig.RemovePushHook(runner)
-	config.NormalConfig.RemoveShipStrategy(runner)
-	config.NormalConfig.RemoveShipDeleteTrackingBranch(runner)
-	config.NormalConfig.RemoveSyncFeatureStrategy(runner)
-	config.NormalConfig.RemoveSyncPerennialStrategy(runner)
-	config.NormalConfig.RemoveSyncPrototypeStrategy(runner)
-	config.NormalConfig.RemoveSyncUpstream(runner)
-	config.NormalConfig.RemoveSyncTags(runner)
+	if existingLocalGitConfig.DevRemote.IsSome() {
+		gitconfig.RemoveDevRemote(runner)
+	}
+	if existingLocalGitConfig.MainBranch.IsSome() {
+		gitconfig.RemoveMainBranch(runner)
+	}
+	if existingLocalGitConfig.NewBranchType.IsSome() {
+		gitconfig.RemoveNewBranchType(runner)
+	}
+	if len(existingLocalGitConfig.PerennialBranches) > 0 {
+		gitconfig.RemovePerennialBranches(runner)
+	}
+	if existingLocalGitConfig.PerennialRegex.IsSome() {
+		gitconfig.RemovePerennialRegex(runner)
+	}
+	if existingLocalGitConfig.ShareNewBranches.IsSome() {
+		gitconfig.RemoveShareNewBranches(runner)
+	}
+	if existingLocalGitConfig.PushHook.IsSome() {
+		gitconfig.RemovePushHook(runner)
+	}
+	if existingLocalGitConfig.ShipStrategy.IsSome() {
+		gitconfig.RemoveShipStrategy(runner)
+	}
+	if existingLocalGitConfig.ShipDeleteTrackingBranch.IsSome() {
+		gitconfig.RemoveShipDeleteTrackingBranch(runner)
+	}
+	if existingLocalGitConfig.SyncFeatureStrategy.IsSome() {
+		gitconfig.RemoveSyncFeatureStrategy(runner)
+	}
+	if existingLocalGitConfig.SyncPerennialStrategy.IsSome() {
+		gitconfig.RemoveSyncPerennialStrategy(runner)
+	}
+	if existingLocalGitConfig.SyncPrototypeStrategy.IsSome() {
+		gitconfig.RemoveSyncPrototypeStrategy(runner)
+	}
+	if existingLocalGitConfig.SyncUpstream.IsSome() {
+		gitconfig.RemoveSyncUpstream(runner)
+	}
+	if existingLocalGitConfig.SyncTags.IsSome() {
+		gitconfig.RemoveSyncTags(runner)
+	}
 	if err := saveUnknownBranchType(config.NormalConfig.UnknownBranchType, userInput.config.NormalConfig.UnknownBranchType, config, runner); err != nil {
 		return err
 	}

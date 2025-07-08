@@ -83,12 +83,6 @@ func (self *NormalConfig) RemoveBranchTypeOverride(runner subshelldomain.Runner,
 	return nil
 }
 
-func (self *NormalConfig) RemoveDevRemote(runner subshelldomain.Runner) {
-	if self.Git.DevRemote.IsSome() {
-		_ = gitconfig.RemoveDevRemote(runner)
-	}
-}
-
 func (self *NormalConfig) RemoveFeatureRegex(runner subshelldomain.Runner) {
 	if self.Git.FeatureRegex.IsSome() {
 		_ = gitconfig.RemoveFeatureRegex(runner)
