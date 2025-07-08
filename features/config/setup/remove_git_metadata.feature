@@ -25,6 +25,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-regex" is "qa.*"
     And local Git setting "git-town.feature-regex" is "user.*"
     And local Git setting "git-town.contribution-regex" is "other.*"
+    And local Git setting "git-town.observed-regex" is "obs.*"
     And local Git setting "git-town.unknown-branch-type" is "observed"
     And local Git setting "git-town.dev-remote" is "fork"
     And local Git setting "git-town.push-hook" is "false"
@@ -48,6 +49,7 @@ Feature: remove existing configuration in Git metadata
       | remove the perennial regex              | backspace backspace backspace backspace enter                               |
       | feature regex                           | backspace backspace backspace backspace backspace backspace enter           |
       | contribution regex                      | backspace backspace backspace backspace backspace backspace backspace enter |
+      | observed regex                          | backspace backspace backspace backspace backspace enter                     |
       | unknown branch type                     | up enter                                                                    |
       | dev-remote                              | enter                                                                       |
       | remove origin hostname                  | backspace backspace backspace backspace enter                               |
@@ -86,6 +88,7 @@ Feature: remove existing configuration in Git metadata
       | git config git-town.unknown-branch-type feature      |
       | git config --unset git-town.feature-regex            |
       | git config --unset git-town.contribution-regex       |
+      | git config --unset git-town.observed-regex           |
       | git config git-town.push-hook true                   |
       | git config git-town.share-new-branches no            |
       | git config git-town.ship-strategy api                |
@@ -120,6 +123,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
     And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" is now "feature"
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "true"
@@ -147,6 +151,7 @@ Feature: remove existing configuration in Git metadata
     And local Git setting "git-town.perennial-regex" is now "qa.*"
     And local Git setting "git-town.feature-regex" is now "user.*"
     And local Git setting "git-town.contribution-regex" is now "other.*"
+    And local Git setting "git-town.observed-regex" is now "obs.*"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "false"
