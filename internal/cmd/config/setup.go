@@ -176,6 +176,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 			return emptyResult, exit, err
 		}
 	}
+	observedRegex := None[configdomain.ObservedRegex]()
+	if configFile.ObservedRegex.IsNone() {
+		observedRegex, exit, err = dialog.ObservedRegex(repo.UnvalidatedConfig.NormalConfig.ObservedRegex, data.dialogInputs.Next())
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
+	}
 	var unknownBranchType configdomain.BranchType
 	if configFile.UnknownBranchType.IsNone() {
 		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
