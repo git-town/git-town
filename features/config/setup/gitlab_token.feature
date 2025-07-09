@@ -79,6 +79,7 @@ Feature: enter the GitLab API token
     And local Git setting "git-town.forge-type" is now "gitlab"
     And local Git setting "git-town.gitlab-token" is now "123456"
 
+  @debug @this
   Scenario: store GitLab API token globally
     Given my repo's "origin" remote is "git@gitlab.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:

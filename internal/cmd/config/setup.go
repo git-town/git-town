@@ -363,7 +363,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	var shipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		shipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
-		fmt.Println("333333333333333333333333333333", shipDeleteTrackingBranch)
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -480,7 +479,9 @@ type testForgeAuthArgs struct {
 }
 
 func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
+	fmt.Println("1111111111111111111111111111111111111")
 	if shouldAskForScope(args) {
+		fmt.Println("2222222222222222222222222222222")
 		return tokenScopeDialog(args)
 	}
 	return configdomain.ConfigScopeLocal, false, nil
@@ -730,7 +731,6 @@ func saveToGit(userInput dialogData, oldConfig config.UnvalidatedConfig, configF
 			saveShipStrategy(userInput.normalConfig.ShipStrategy, oldConfig.NormalConfig, frontend),
 		)
 	}
-	fmt.Println("1111111111111111111111111", configFile.ShipDeleteTrackingBranch)
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
 			saveShipDeleteTrackingBranch(userInput.normalConfig.ShipDeleteTrackingBranch, oldConfig.NormalConfig, frontend),
@@ -996,8 +996,6 @@ func saveShareNewBranches(newValue configdomain.ShareNewBranches, config config.
 }
 
 func saveShipDeleteTrackingBranch(newValue configdomain.ShipDeleteTrackingBranch, config config.NormalConfig, runner subshelldomain.Runner) error {
-	fmt.Println("2222222222222222222222222222222222222222222222", newValue)
-	fmt.Println("2222222222222222222222222222222222222222222222", config.ShipDeleteTrackingBranch)
 	if newValue == config.ShipDeleteTrackingBranch {
 		return nil
 	}
