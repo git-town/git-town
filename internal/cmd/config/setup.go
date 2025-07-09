@@ -286,7 +286,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		bitbucketAppPassword: bitbucketAppPassword,
 		bitbucketUsername:    bitbucketUsername,
 		codebergToken:        codebergToken,
-		determinedForgeType:  enteredForgeType,
+		determinedForgeType:  actualForgeType,
 		existingConfig:       data.config.NormalConfig.NormalConfigData,
 		giteaToken:           giteaToken,
 		githubToken:          githubToken,
