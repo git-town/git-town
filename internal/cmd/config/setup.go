@@ -435,26 +435,26 @@ func tokenScopeDialog(forgeTypeOpt Option[forgedomain.ForgeType], data *setupDat
 	if forgeType, hasForgeType := forgeTypeOpt.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
+			existingScope := determineExistingScope(repo.ConfigSnapshot, configdomain.KeyBitbucketUsername, repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeCodeberg:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
+			existingScope := determineExistingScope(repo.ConfigSnapshot, configdomain.KeyCodebergToken, repo.UnvalidatedConfig.NormalConfig.CodebergToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitea:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
+			existingScope := determineExistingScope(repo.ConfigSnapshot, configdomain.KeyGiteaToken, repo.UnvalidatedConfig.NormalConfig.GiteaToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitHub:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
+			existingScope := determineExistingScope(repo.ConfigSnapshot, configdomain.KeyGitHubToken, repo.UnvalidatedConfig.NormalConfig.GitHubToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		case forgedomain.ForgeTypeGitLab:
-			existingScope := determineScope(repo.ConfigSnapshot, configdomain.KeyGitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
+			existingScope := determineExistingScope(repo.ConfigSnapshot, configdomain.KeyGitLabToken, repo.UnvalidatedConfig.NormalConfig.GitLabToken)
 			return dialog.TokenScope(existingScope, data.dialogInputs.Next())
 		}
 	}
 	return configdomain.ConfigScopeLocal, false, nil
 }
 
-func determineScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
+func determineExistingScope(configSnapshot undoconfig.ConfigSnapshot, key configdomain.Key, oldValue fmt.Stringer) configdomain.ConfigScope {
 	switch {
 	case oldValue.String() == "":
 		return configdomain.ConfigScopeLocal
