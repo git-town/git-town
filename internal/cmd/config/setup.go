@@ -705,6 +705,7 @@ func saveToGit(userInput dialogData, oldConfig config.UnvalidatedConfig, configF
 			saveShipStrategy(userInput.normalConfig.ShipStrategy, oldConfig.NormalConfig, frontend),
 		)
 	}
+	fmt.Println("1111111111111111111111111", configFile.ShipDeleteTrackingBranch)
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
 			saveShipDeleteTrackingBranch(userInput.normalConfig.ShipDeleteTrackingBranch, oldConfig.NormalConfig, frontend),
@@ -970,6 +971,8 @@ func saveShareNewBranches(newValue configdomain.ShareNewBranches, config config.
 }
 
 func saveShipDeleteTrackingBranch(newValue configdomain.ShipDeleteTrackingBranch, config config.NormalConfig, runner subshelldomain.Runner) error {
+	fmt.Println("2222222222222222222222222222222222222222222222", newValue)
+	fmt.Println("2222222222222222222222222222222222222222222222", config.ShipDeleteTrackingBranch)
 	if newValue == config.ShipDeleteTrackingBranch {
 		return nil
 	}
