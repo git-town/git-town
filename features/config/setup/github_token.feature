@@ -14,6 +14,8 @@ Feature: enter the GitHub API token
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -33,10 +35,10 @@ Feature: enter the GitHub API token
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config --local git-town.github-token 123456 |
-      | git config git-town.new-branch-type feature     |
-      | git config git-town.github-connector api        |
+      | COMMAND                                     |
+      | git config git-town.github-token 123456     |
+      | git config git-town.new-branch-type feature |
+      | git config git-town.github-connector api    |
     And local Git setting "git-town.forge-type" still doesn't exist
     And local Git setting "git-town.github-token" is now "123456"
 
@@ -49,6 +51,8 @@ Feature: enter the GitHub API token
       | perennial branches          |                                | no input here since the dialog doesn't show |
       | perennial regex             | enter                          |                                             |
       | feature regex               | enter                          |                                             |
+      | contribution regex          | enter                          |                                             |
+      | observed regex              | enter                          |                                             |
       | unknown branch type         | enter                          |                                             |
       | dev-remote                  | enter                          |                                             |
       | origin hostname             | enter                          |                                             |
@@ -68,11 +72,11 @@ Feature: enter the GitHub API token
       | ship-delete-tracking-branch | enter                          |                                             |
       | save config to Git metadata | down enter                     |                                             |
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config --local git-town.github-token 123456 |
-      | git config git-town.new-branch-type feature     |
-      | git config git-town.forge-type github           |
-      | git config git-town.github-connector api        |
+      | COMMAND                                     |
+      | git config git-town.github-token 123456     |
+      | git config git-town.new-branch-type feature |
+      | git config git-town.forge-type github       |
+      | git config git-town.github-connector api    |
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
 
@@ -87,6 +91,8 @@ Feature: enter the GitHub API token
       | perennial branches          |                                     | no input here since the dialog doesn't show |
       | perennial regex             | enter                               |                                             |
       | feature regex               | enter                               |                                             |
+      | contribution regex          | enter                               |                                             |
+      | observed regex              | enter                               |                                             |
       | unknown branch type         | enter                               |                                             |
       | dev-remote                  | enter                               |                                             |
       | origin hostname             | enter                               |                                             |
@@ -122,6 +128,8 @@ Feature: enter the GitHub API token
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -158,6 +166,8 @@ Feature: enter the GitHub API token
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
+      | contribution regex          | enter                                     |                                             |
+      | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |

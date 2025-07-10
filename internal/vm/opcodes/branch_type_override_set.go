@@ -2,6 +2,7 @@ package opcodes
 
 import (
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
@@ -14,5 +15,5 @@ type BranchTypeOverrideSet struct {
 }
 
 func (self *BranchTypeOverrideSet) Run(args shared.RunArgs) error {
-	return args.Config.Value.NormalConfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
+	return gitconfig.SetBranchTypeOverride(args.Backend, self.BranchType, self.Branch)
 }

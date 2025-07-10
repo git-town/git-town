@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/test/filesystem"
 	"github.com/git-town/git-town/v21/internal/test/fixture"
@@ -297,8 +298,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("the perennial branches are configured", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			must.NoError(t, runtime.Config.NormalConfig.SetPerennialBranches(runtime.TestRunner, gitdomain.NewLocalBranchNames("qa")))
-
+			must.NoError(t, gitconfig.SetPerennialBranches(runtime.TestRunner, gitdomain.NewLocalBranchNames("qa")))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("branch lineage is configured", func(t *testing.T) {

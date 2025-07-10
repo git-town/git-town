@@ -20,6 +20,8 @@ Feature: change existing information in Git metadata
       | change the perennial branches             | space down space enter |
       | enter a perennial regex                   | 3 3 6 6 enter          |
       | feature regex                             | u s e r enter          |
+      | contribution regex                        | 1 1 1 1 enter          |
+      | observed regex                            | 2 2 2 2 enter          |
       | unknown branch type                       | down enter             |
       | dev-remote                                | enter                  |
       | origin hostname                           | c o d e enter          |
@@ -57,7 +59,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.set-parent "town set-parent"   |
       | git config --global alias.ship "town ship"               |
       | git config --global alias.sync "town sync"               |
-      | git config --local git-town.github-token 123456          |
+      | git config git-town.github-token 123456                  |
       | git config git-town.new-branch-type prototype            |
       | git config git-town.forge-type github                    |
       | git config git-town.github-connector api                 |
@@ -66,6 +68,8 @@ Feature: change existing information in Git metadata
       | git config git-town.perennial-regex 3366                 |
       | git config git-town.unknown-branch-type observed         |
       | git config git-town.feature-regex user                   |
+      | git config git-town.contribution-regex 1111              |
+      | git config git-town.observed-regex 2222                  |
       | git config git-town.push-hook true                       |
       | git config git-town.share-new-branches push              |
       | git config git-town.ship-strategy fast-forward           |
@@ -100,6 +104,8 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-tags" is now "true"
     And local Git setting "git-town.perennial-regex" is now "3366"
     And local Git setting "git-town.feature-regex" is now "user"
+    And local Git setting "git-town.contribution-regex" is now "1111"
+    And local Git setting "git-town.observed-regex" is now "2222"
     And local Git setting "git-town.unknown-branch-type" is now "observed"
     And local Git setting "git-town.share-new-branches" is now "push"
     And local Git setting "git-town.push-hook" is now "true"
@@ -131,6 +137,8 @@ Feature: change existing information in Git metadata
     And local Git setting "git-town.sync-upstream" now doesn't exist
     And local Git setting "git-town.perennial-regex" now doesn't exist
     And local Git setting "git-town.feature-regex" now doesn't exist
+    And local Git setting "git-town.contribution-regex" now doesn't exist
+    And local Git setting "git-town.observed-regex" now doesn't exist
     And local Git setting "git-town.unknown-branch-type" now doesn't exist
     And local Git setting "git-town.share-new-branches" is now "no"
     And local Git setting "git-town.push-hook" is now "false"

@@ -12,6 +12,8 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | perennial branches          |            | no input here since the dialog doesn't show |
       | perennial regex             | enter      |                                             |
       | feature regex               | enter      |                                             |
+      | contribution regex          | enter      |                                             |
+      | observed regex              | enter      |                                             |
       | unknown branch type         | enter      |                                             |
       | dev-remote                  | enter      |                                             |
       | origin hostname             | enter      |                                             |

@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 	"github.com/git-town/git-town/v21/internal/config"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/git"
@@ -395,7 +396,7 @@ func convertToFeatureBranch(args convertToFeatureBranchArgs) error {
 			configdomain.BranchTypeObservedBranch,
 			configdomain.BranchTypeParkedBranch,
 			configdomain.BranchTypePrototypeBranch:
-			if err := args.config.NormalConfig.SetBranchTypeOverride(args.repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
+			if err := gitconfig.SetBranchTypeOverride(args.repo.Backend, configdomain.BranchTypeFeatureBranch, branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeFeatureBranch:

@@ -14,6 +14,8 @@ Feature: enter the GitLab API token
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -33,10 +35,10 @@ Feature: enter the GitLab API token
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config --local git-town.gitlab-token 123456 |
-      | git config git-town.new-branch-type feature     |
-      | git config git-town.gitlab-connector api        |
+      | COMMAND                                     |
+      | git config git-town.gitlab-token 123456     |
+      | git config git-town.new-branch-type feature |
+      | git config git-town.gitlab-connector api    |
     And local Git setting "git-town.forge-type" still doesn't exist
 
   Scenario: select GitLab manually
@@ -48,6 +50,8 @@ Feature: enter the GitLab API token
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -67,11 +71,11 @@ Feature: enter the GitLab API token
       | ship-delete-tracking-branch | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
-      | COMMAND                                         |
-      | git config --local git-town.gitlab-token 123456 |
-      | git config git-town.new-branch-type feature     |
-      | git config git-town.forge-type gitlab           |
-      | git config git-town.gitlab-connector api        |
+      | COMMAND                                     |
+      | git config git-town.gitlab-token 123456     |
+      | git config git-town.new-branch-type feature |
+      | git config git-town.forge-type gitlab       |
+      | git config git-town.gitlab-connector api    |
     And local Git setting "git-town.forge-type" is now "gitlab"
     And local Git setting "git-town.gitlab-token" is now "123456"
 
@@ -85,6 +89,8 @@ Feature: enter the GitLab API token
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | perennial regex             | enter             |                                             |
       | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
       | unknown branch type         | enter             |                                             |
       | dev-remote                  | enter             |                                             |
       | origin hostname             | enter             |                                             |
@@ -121,6 +127,8 @@ Feature: enter the GitLab API token
       | perennial branches          |                                           | no input here since the dialog doesn't show |
       | perennial regex             | enter                                     |                                             |
       | feature regex               | enter                                     |                                             |
+      | contribution regex          | enter                                     |                                             |
+      | observed regex              | enter                                     |                                             |
       | unknown branch type         | enter                                     |                                             |
       | dev-remote                  | enter                                     |                                             |
       | origin hostname             | enter                                     |                                             |

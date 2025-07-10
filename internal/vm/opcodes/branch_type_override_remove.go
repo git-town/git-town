@@ -1,6 +1,7 @@
 package opcodes
 
 import (
+	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/vm/shared"
 )
@@ -12,6 +13,6 @@ type BranchTypeOverrideRemove struct {
 }
 
 func (self *BranchTypeOverrideRemove) Run(args shared.RunArgs) error {
-	_ = args.Config.Value.NormalConfig.RemoveBranchTypeOverride(args.Backend, self.Branch)
+	_ = gitconfig.RemoveBranchTypeOverride(args.Backend, self.Branch)
 	return nil
 }
