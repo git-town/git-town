@@ -370,11 +370,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		Aliases:                  aliases,
 		BitbucketAppPassword:     bitbucketAppPassword,
 		BitbucketUsername:        bitbucketUsername,
-		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
+		BranchTypeOverrides:      configdomain.BranchTypeOverrides{}, // the setup assistant doesn't ask for this
 		CodebergToken:            codebergToken,
 		ContributionRegex:        contributionRegex,
 		DevRemote:                devRemote,
-		DryRun:                   false,
+		DryRun:                   false, // the setup assistant doesn't ask for this
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,
 		GitHubConnectorType:      githubConnectorTypeOpt,
@@ -383,10 +383,10 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		GitLabToken:              gitlabToken,
 		GiteaToken:               giteaToken,
 		HostingOriginHostname:    hostingOriginHostName,
-		Lineage:                  configdomain.Lineage{},
+		Lineage:                  configdomain.Lineage{}, // the setup assistant doesn't ask for this
 		NewBranchType:            newBranchType,
 		ObservedRegex:            observedRegex,
-		Offline:                  false,
+		Offline:                  false, // the setup assistant doesn't ask for this
 		PerennialBranches:        perennialBranches,
 		PerennialRegex:           perennialRegex,
 		PushHook:                 pushHook,
@@ -399,7 +399,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
-		Verbose:                  false,
+		Verbose:                  false, // the setup assistant doesn't ask for this
 	}
 	validatedData := configdomain.ValidatedConfigData{
 		GitUserEmail: "", // the setup assistant doesn't ask for this
