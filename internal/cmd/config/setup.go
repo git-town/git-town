@@ -424,18 +424,18 @@ func testForgeAuth(args testForgeAuthArgs) (repeat bool, exit dialogdomain.Exit,
 	}
 	connectorOpt, err := forge.NewConnector(forge.NewConnectorArgs{
 		Backend:              args.backend,
-		BitbucketAppPassword: args.bitbucketAppPassword.Or(args.configuredValues.BitbucketAppPassword),
-		BitbucketUsername:    args.bitbucketUsername.Or(args.configuredValues.BitbucketUsername),
-		CodebergToken:        args.codebergToken.Or(args.configuredValues.CodebergToken),
+		BitbucketAppPassword: args.bitbucketAppPassword,
+		BitbucketUsername:    args.bitbucketUsername,
+		CodebergToken:        args.codebergToken,
 		ForgeType:            args.forgeTypeOpt,
 		Frontend:             args.backend,
-		GitHubConnectorType:  args.githubConnectorType.Or(args.configuredValues.GitHubConnectorType),
-		GitHubToken:          args.githubToken.Or(args.configuredValues.GitHubToken),
-		GitLabConnectorType:  args.gitlabConnectorType.Or(args.configuredValues.GitLabConnectorType),
-		GitLabToken:          args.gitlabToken.Or(args.configuredValues.GitLabToken),
-		GiteaToken:           args.giteaToken.Or(args.configuredValues.GiteaToken),
+		GitHubConnectorType:  args.githubConnectorType,
+		GitHubToken:          args.githubToken,
+		GitLabConnectorType:  args.gitlabConnectorType,
+		GitLabToken:          args.gitlabToken,
+		GiteaToken:           args.giteaToken,
 		Log:                  print.Logger{},
-		RemoteURL:            args.devURL.Or(args.configuredValues.DevURL(args.backend)),
+		RemoteURL:            args.devURL,
 	})
 	if err != nil {
 		return false, false, err
