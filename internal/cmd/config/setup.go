@@ -188,7 +188,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		}
 	}
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
-	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType
+	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
@@ -212,7 +212,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 				return emptyResult, exit, err
 			}
 		}
-		actualForgeType = determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType), devURL)
+		actualForgeType = determineForgeType(enteredForgeType, devURL)
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
