@@ -53,7 +53,7 @@ func (self *NormalConfig) DevURL(querier subshelldomain.Querier) Option[giturl.P
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
 func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdomain.Remote) Option[giturl.Parts] {
-	urlStr, hasURLStr := self.RemoteURLString(querier, remote).Get()
+	urlStr, hasURLStr := remoteURLString(querier, remote).Get()
 	if !hasURLStr {
 		return None[giturl.Parts]()
 	}
@@ -65,16 +65,6 @@ func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdo
 		url.Host = hostnameOverride.String()
 	}
 	return Some(url)
-}
-
-// RemoteURLString provides the URL for the given remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func (self *NormalConfig) RemoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
-	remoteOverride := envconfig.RemoteURLOverride()
-	if remoteOverride.IsSome() {
-		return remoteOverride
-	}
-	return gitconfig.RemoteURL(querier, remote)
 }
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
@@ -111,4 +101,14 @@ func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, bra
 		return nil
 	}
 	return gitconfig.SetPerennialBranches(runner, branches)
+}
+
+// remoteURLString provides the URL for the given remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+func remoteURLString(querier subshelldomain.Querier, remote gitdomain.Remote) Option[string] {
+	remoteOverride := envconfig.RemoteURLOverride()
+	if remoteOverride.IsSome() {
+		return remoteOverride
+	}
+	return gitconfig.RemoteURL(querier, remote)
 }
