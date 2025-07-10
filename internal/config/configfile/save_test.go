@@ -43,82 +43,8 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.NormalConfigData{
-			DevRemote:                "fork",
-			FeatureRegex:             None[configdomain.FeatureRegex](),
-			ForgeType:                None[forgedomain.ForgeType](),
-			HostingOriginHostname:    None[configdomain.HostingOriginHostname](),
-			Lineage:                  configdomain.NewLineage(),
-			NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
-			Offline:                  false,
-			PerennialBranches:        gitdomain.NewLocalBranchNames("one", "two"),
-			PerennialRegex:           None[configdomain.PerennialRegex](),
-			PushHook:                 true,
-			ShareNewBranches:         configdomain.ShareNewBranchesPush,
-			ShipStrategy:             configdomain.ShipStrategySquashMerge,
-			ShipDeleteTrackingBranch: true,
-			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
-			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
-			SyncTags:                 true,
-			SyncUpstream:             true,
-			UnknownBranchType:        configdomain.BranchTypeFeatureBranch,
-		}
+		give := exampleConfig()
 		have := configfile.RenderTOML(give, "main")
-		want := `
-# More info around this file at https://www.git-town.com/configuration-file
-
-[branches]
-main = "main"
-perennials = ["one", "two"]
-perennial-regex = ""
-
-[create]
-new-branch-type = "prototype"
-share-new-branches = "push"
-
-[hosting]
-dev-remote = "fork"
-
-[ship]
-delete-tracking-branch = true
-strategy = "squash-merge"
-
-[sync]
-feature-strategy = "merge"
-perennial-strategy = "rebase"
-prototype-strategy = ""
-push-hook = true
-tags = true
-upstream = true
-`[1:]
-		must.EqOp(t, want, have)
-	})
-
-	t.Run("Save", func(t *testing.T) {
-		t.Parallel()
-		config := configdomain.NormalConfigData{
-			DevRemote:                "origin",
-			ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
-			HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
-			NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
-			PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
-			PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
-			PushHook:                 true,
-			ShareNewBranches:         configdomain.ShareNewBranchesPropose,
-			ShipDeleteTrackingBranch: true,
-			ShipStrategy:             configdomain.ShipStrategyAPI,
-			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
-			SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
-			SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyRebase,
-			SyncTags:                 true,
-			SyncUpstream:             true,
-		}
-		err := configfile.Save(config, "main")
-		defer os.Remove(configfile.FileName)
-		must.NoError(t, err)
-		bytes, err := os.ReadFile(configfile.FileName)
-		must.NoError(t, err)
-		have := string(bytes)
 		want := `
 # More info around this file at https://www.git-town.com/configuration-file
 
@@ -143,11 +69,44 @@ strategy = "api"
 [sync]
 feature-strategy = "merge"
 perennial-strategy = "rebase"
-prototype-strategy = "rebase"
+prototype-strategy = "compress"
 push-hook = true
 tags = true
 upstream = true
 `[1:]
 		must.EqOp(t, want, have)
 	})
+
+	t.Run("Save", func(t *testing.T) {
+		t.Parallel()
+		config := exampleConfig()
+		err := configfile.Save(config, "main")
+		defer os.Remove(configfile.FileName)
+		must.NoError(t, err)
+		bytes, err := os.ReadFile(configfile.FileName)
+		must.NoError(t, err)
+		have := string(bytes)
+		want := configfile.RenderTOML(config, "main")
+		must.EqOp(t, want, have)
+	})
+}
+
+func exampleConfig() configdomain.NormalConfigData {
+	return configdomain.NormalConfigData{
+		DevRemote:                "origin",
+		ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
+		HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
+		NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
+		PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
+		PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
+		PushHook:                 true,
+		ShareNewBranches:         configdomain.ShareNewBranchesPropose,
+		ShipDeleteTrackingBranch: true,
+		ShipStrategy:             configdomain.ShipStrategyAPI,
+		SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
+		SyncPerennialStrategy:    configdomain.SyncPerennialStrategyRebase,
+		SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyCompress,
+		SyncTags:                 true,
+		SyncUpstream:             true,
+	}
 }
