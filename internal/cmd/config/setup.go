@@ -383,6 +383,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		CodebergToken:            codebergToken,
 		ContributionRegex:        contributionRegex,
 		DevRemote:                devRemote,
+		DryRun:                   false,
 		FeatureRegex:             featureRegex,
 		ForgeType:                enteredForgeType,
 		GitHubConnectorType:      githubConnectorTypeOpt,
@@ -407,6 +408,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
+		Verbose:                  false,
 	}
 	validatedData := configdomain.ValidatedConfigData{
 		GitUserEmail: "", // the setup assistant doesn't ask for this
@@ -483,9 +485,7 @@ type testForgeAuthArgs struct {
 }
 
 func enterTokenScope(args enterTokenScopeArgs) (configdomain.ConfigScope, dialogdomain.Exit, error) {
-	fmt.Println("1111111111111111111111111111111111111")
 	if shouldAskForScope(args) {
-		fmt.Println("2222222222222222222222222222222")
 		return tokenScopeDialog(args)
 	}
 	return configdomain.ConfigScopeLocal, false, nil
