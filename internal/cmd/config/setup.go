@@ -21,6 +21,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/internal/git/giturl"
 	"github.com/git-town/git-town/v21/internal/gohacks"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell"
@@ -114,11 +115,11 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
-func determineForgeType(config config.UnvalidatedConfig, userChoice Option[forgedomain.ForgeType], querier subshelldomain.Querier) Option[forgedomain.ForgeType] {
+func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[giturl.Parts]) Option[forgedomain.ForgeType] {
 	if userChoice.IsSome() {
 		return userChoice
 	}
-	if devURL, hasDevURL := config.NormalConfig.DevURL(querier).Get(); hasDevURL {
+	if devURL, hasDevURL := devURL.Get(); hasDevURL {
 		return forge.Detect(devURL, userChoice)
 	}
 	return None[forgedomain.ForgeType]()
@@ -208,7 +209,7 @@ func enterData(repo execute.OpenRepoResult, data *setupData) (configdomain.Confi
 				return tokenScope, forgeType, exit, err
 			}
 		}
-		forgeType = determineForgeType(repo.UnvalidatedConfig, data.userInput.config.NormalConfig.ForgeType, repo.Backend)
+		forgeType = determineForgeType(data.userInput.config.NormalConfig.ForgeType, repo.UnvalidatedConfig.NormalConfig.DevURL(repo.Backend))
 		exit, err = enterForgeAuth(repo, data, forgeType)
 		if err != nil || exit {
 			return tokenScope, forgeType, exit, err
