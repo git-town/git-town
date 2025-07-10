@@ -292,16 +292,16 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	if err != nil || exit {
 		return emptyResult, exit, err
 	}
-	var syncFeatureStrategy configdomain.SyncFeatureStrategy
+	syncFeatureStrategy := repo.UnvalidatedConfig.NormalConfig.SyncFeatureStrategy
 	if configFile.SyncFeatureStrategy.IsNone() {
-		syncFeatureStrategy, exit, err = dialog.SyncFeatureStrategy(repo.UnvalidatedConfig.NormalConfig.SyncFeatureStrategy, data.dialogInputs.Next())
+		syncFeatureStrategy, exit, err = dialog.SyncFeatureStrategy(syncFeatureStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var syncPerennialStrategy configdomain.SyncPerennialStrategy
+	syncPerennialStrategy := repo.UnvalidatedConfig.NormalConfig.SyncPerennialStrategy
 	if configFile.SyncPerennialStrategy.IsNone() {
-		syncPerennialStrategy, exit, err = dialog.SyncPerennialStrategy(repo.UnvalidatedConfig.NormalConfig.SyncPerennialStrategy, data.dialogInputs.Next())
+		syncPerennialStrategy, exit, err = dialog.SyncPerennialStrategy(syncPerennialStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
