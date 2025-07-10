@@ -259,7 +259,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 			bitbucketAppPassword: bitbucketAppPassword,
 			bitbucketUsername:    bitbucketUsername,
 			codebergToken:        codebergToken,
-			configuredValues:     repo.UnvalidatedConfig.NormalConfig,
 			devURL:               devURL,
 			forgeTypeOpt:         actualForgeType,
 			giteaToken:           giteaToken,
@@ -463,7 +462,6 @@ type testForgeAuthArgs struct {
 	bitbucketAppPassword Option[forgedomain.BitbucketAppPassword]
 	bitbucketUsername    Option[forgedomain.BitbucketUsername]
 	codebergToken        Option[forgedomain.CodebergToken]
-	configuredValues     config.NormalConfig
 	devURL               Option[giturl.Parts]
 	forgeTypeOpt         Option[forgedomain.ForgeType]
 	giteaToken           Option[forgedomain.GiteaToken]
