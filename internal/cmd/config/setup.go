@@ -415,7 +415,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	return dialogData{enteredForgeType, devURL, normalData, tokenScope, configStorage, validatedData}, false, nil
+	return dialogData{actualForgeType, devURL, normalData, tokenScope, configStorage, validatedData}, false, nil
 }
 
 type dialogData struct {
@@ -613,7 +613,9 @@ func saveAll(userInput dialogData, oldConfig config.UnvalidatedConfig, configFil
 	fc.Check(
 		saveAliases(userInput.normalConfig.Aliases, oldConfig.NormalConfig, frontend),
 	)
+	fmt.Println("1111111111111", userInput.determinedForgeType)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
+		fmt.Println("2222222222222222222", forgeType)
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
