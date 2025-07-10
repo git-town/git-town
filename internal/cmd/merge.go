@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -78,7 +79,11 @@ func mergeCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			return executeMerge(dryRun, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeMerge(cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -86,33 +91,32 @@ func mergeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executeMerge(cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineMergeData(repo, verbose)
+	data, exit, err := determineMergeData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
 	if err = validateMergeData(repo, data); err != nil {
 		return err
 	}
-	runProgram := mergeProgram(data, dryRun)
+	runProgram := mergeProgram(data, cliConfig.DryRun)
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: data.branchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               mergeCmd,
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -138,7 +142,7 @@ func executeMerge(dryRun configdomain.DryRun, verbose configdomain.Verbose) erro
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -161,7 +165,7 @@ type mergeData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (mergeData, dialogdomain.Exit, error) {
+func determineMergeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (mergeData, dialogdomain.Exit, error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -203,7 +207,7 @@ func determineMergeData(repo execute.OpenRepoResult, verbose configdomain.Verbos
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return mergeData{}, exit, err

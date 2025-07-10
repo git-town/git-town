@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -42,26 +42,29 @@ func diffParentCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeDiffParent(args, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeDiffParent(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeDiffParent(args []string, verbose configdomain.Verbose) error {
+func executeDiffParent(args []string, cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineDiffParentData(args, repo, verbose)
+	data, exit, err := determineDiffParentData(args, repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -69,7 +72,7 @@ func executeDiffParent(args []string, verbose configdomain.Verbose) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
+	print.Footer(cliConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return nil
 }
 
@@ -79,7 +82,7 @@ type diffParentData struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose configdomain.Verbose) (data diffParentData, exit dialogdomain.Exit, err error) {
+func determineDiffParentData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data diffParentData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -121,7 +124,7 @@ func determineDiffParentData(args []string, repo execute.OpenRepoResult, verbose
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

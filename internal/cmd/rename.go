@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/ship"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -56,7 +57,11 @@ func renameCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3); err != nil {
 				return err
 			}
-			return executeRename(args, dryRun, force, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeRename(args, cliConfig, force)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -65,19 +70,18 @@ func renameCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeRename(args []string, dryRun configdomain.DryRun, force configdomain.Force, verbose configdomain.Verbose) error {
+func executeRename(args []string, cliConfig cliconfig.CliConfig, force configdomain.Force) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineRenameData(args, force, repo, dryRun, verbose)
+	data, exit, err := determineRenameData(args, cliConfig, force, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -88,7 +92,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               "rename",
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -114,7 +118,7 @@ func executeRename(args []string, dryRun configdomain.DryRun, force configdomain
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -136,7 +140,7 @@ type renameData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineRenameData(args []string, force configdomain.Force, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data renameData, exit dialogdomain.Exit, err error) {
+func determineRenameData(args []string, cliConfig cliconfig.CliConfig, force configdomain.Force, repo execute.OpenRepoResult) (data renameData, exit dialogdomain.Exit, err error) {
 	previousBranch := repo.Git.PreviouslyCheckedOutBranch(repo.Backend)
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
@@ -179,7 +183,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -260,7 +264,7 @@ func determineRenameData(args []string, force configdomain.Force, repo execute.O
 		config:                   validatedConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
+		dryRun:                   cliConfig.DryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		newBranch:                newBranchName,
