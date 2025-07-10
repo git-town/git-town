@@ -101,9 +101,7 @@ upstream = true
 			ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
 			HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 			NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
-			ObservedRegex:            Option[configdomain.ObservedRegex]{},
-			Offline:                  false,
-			PerennialBranches:        gitdomain.LocalBranchNames{},
+			PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 			PerennialRegex:           Option[configdomain.PerennialRegex]{},
 			PushHook:                 true,
 			ShareNewBranches:         configdomain.ShareNewBranchesNone,
@@ -127,7 +125,7 @@ upstream = true
 
 [branches]
 main = "main"
-perennials = []
+perennials = ["qa", "staging"]
 perennial-regex = ""
 
 [create]
