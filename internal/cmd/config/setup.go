@@ -409,6 +409,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	return dialogData{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
 }
 
+// data entered by the user in the setup assistant
 type dialogData struct {
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	normalConfig        configdomain.NormalConfigData
