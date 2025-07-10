@@ -100,8 +100,7 @@ upstream = true
 			DevRemote:                "origin",
 			ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
 			HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
-			Lineage:                  configdomain.Lineage{},
-			NewBranchType:            Option[configdomain.BranchType]{},
+			NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
 			ObservedRegex:            Option[configdomain.ObservedRegex]{},
 			Offline:                  false,
 			PerennialBranches:        gitdomain.LocalBranchNames{},
@@ -132,7 +131,7 @@ perennials = []
 perennial-regex = ""
 
 [create]
-new-branch-type = ""
+new-branch-type = "prototype"
 share-new-branches = "no"
 
 [hosting]
