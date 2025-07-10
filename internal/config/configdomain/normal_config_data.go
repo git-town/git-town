@@ -18,6 +18,7 @@ type NormalConfigData struct {
 	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                gitdomain.Remote
+	DryRun                   DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]

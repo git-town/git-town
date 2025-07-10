@@ -18,7 +18,6 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	DryRun     configdomain.DryRun                // whether to only print the Git commands but not execute them
 	Env        configdomain.PartialConfig         // configuration data taken from environment variables
 	File       Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	Git        configdomain.PartialConfig         // configuration data taken from Git metadata, in particular the unscoped Git metadata
