@@ -13,6 +13,7 @@ import (
 )
 
 type UnvalidatedConfig struct {
+	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
@@ -47,12 +48,11 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 			Verbose: false,
 		},
 		env:  envConfig,
-		file: self.NormalConfig.File,
+		file: self.File,
 		git:  unscopedGitConfig,
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		File:             self.NormalConfig.File,
 		Git:              unscopedGitConfig,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
@@ -86,8 +86,8 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 
 func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
+		File: None[configdomain.PartialConfig](),
 		NormalConfig: NormalConfig{
-			File:             None[configdomain.PartialConfig](),
 			Git:              configdomain.EmptyPartialConfig(),
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
@@ -104,8 +104,8 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 		git:  args.GitConfig,
 	})
 	return UnvalidatedConfig{
+		File: args.ConfigFile,
 		NormalConfig: NormalConfig{
-			File:             args.ConfigFile,
 			Git:              args.GitConfig,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
