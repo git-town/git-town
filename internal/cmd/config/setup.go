@@ -111,8 +111,8 @@ func determineForgeType(userChoice Option[forgedomain.ForgeType], devURL Option[
 	return None[forgedomain.ForgeType]()
 }
 
-func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogdomain.Exit, error) {
-	var emptyResult dialogData
+func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdomain.Exit, error) {
+	var emptyResult userInput
 	configFile := data.configFile.GetOrDefault()
 	exit, err := dialog.Welcome(data.dialogInputs.Next())
 	if err != nil || exit {
@@ -406,11 +406,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	return dialogData{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
+	return userInput{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
 }
 
 // data entered by the user in the setup assistant
-type dialogData struct {
+type userInput struct {
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
 	normalConfig        configdomain.NormalConfigData
 	scope               configdomain.ConfigScope
@@ -599,7 +599,7 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}, exit, nil
 }
 
-func saveAll(userInput dialogData, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.normalConfig.Aliases, oldConfig.NormalConfig, frontend),
@@ -643,7 +643,7 @@ func saveAll(userInput dialogData, oldConfig config.UnvalidatedConfig, configFil
 	return nil
 }
 
-func saveToGit(userInput dialogData, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
@@ -1039,7 +1039,7 @@ func saveSyncTags(newValue configdomain.SyncTags, config config.NormalConfig, ru
 	return gitconfig.SetSyncTags(runner, newValue)
 }
 
-func saveToFile(userInput dialogData, config config.NormalConfig, runner subshelldomain.Runner) error {
+func saveToFile(userInput userInput, config config.NormalConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(userInput.normalConfig, userInput.validatedConfig.MainBranch); err != nil {
 		return err
 	}
