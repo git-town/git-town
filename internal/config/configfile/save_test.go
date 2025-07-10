@@ -104,7 +104,7 @@ upstream = true
 			PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
 			PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
 			PushHook:                 true,
-			ShareNewBranches:         configdomain.ShareNewBranchesNone,
+			ShareNewBranches:         configdomain.ShareNewBranchesPropose,
 			ShipDeleteTrackingBranch: true,
 			ShipStrategy:             configdomain.ShipStrategyAPI,
 			SyncFeatureStrategy:      configdomain.SyncFeatureStrategyMerge,
@@ -112,7 +112,6 @@ upstream = true
 			SyncPrototypeStrategy:    configdomain.SyncPrototypeStrategyRebase,
 			SyncTags:                 true,
 			SyncUpstream:             true,
-			UnknownBranchType:        "",
 		}
 		err := configfile.Save(config, "main")
 		defer os.Remove(configfile.FileName)
@@ -130,7 +129,7 @@ perennial-regex = "perennial-"
 
 [create]
 new-branch-type = "prototype"
-share-new-branches = "no"
+share-new-branches = "propose"
 
 [hosting]
 dev-remote = "origin"
