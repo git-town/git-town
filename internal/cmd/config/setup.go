@@ -191,7 +191,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
 	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
-	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
+	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
 	codebergToken := None[forgedomain.CodebergToken]()
 	devURL := data.config.NormalConfig.DevURL(data.backend)
 	giteaToken := None[forgedomain.GiteaToken]()
@@ -220,8 +220,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
-				existingPassword := bitbucketAppPassword.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword)
-				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(existingPassword, data.dialogInputs.Next())
+				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeCodeberg:
 				existingToken := codebergToken.Or(repo.UnvalidatedConfig.NormalConfig.CodebergToken)
 				codebergToken, exit, err = dialog.CodebergToken(existingToken, data.dialogInputs.Next())
