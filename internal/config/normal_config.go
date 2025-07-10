@@ -65,7 +65,7 @@ func (self *NormalConfig) RemoteURL(querier subshelldomain.Querier, remote gitdo
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *NormalConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	self.Git.Lineage = self.Git.Lineage.RemoveBranch(branch)
+	self.Lineage = self.Lineage.RemoveBranch(branch)
 	_ = gitconfig.RemoveParent(runner, branch)
 }
 
