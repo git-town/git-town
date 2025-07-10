@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -87,16 +86,6 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 	}
 	self.Lineage = self.Lineage.Set(branch, parentBranch)
 	return gitconfig.SetParent(runner, branch, parentBranch)
-}
-
-// SetPerennialBranches marks the given branches as perennial branches.
-// TODO: inline into setup.go:savePerennialBranches
-func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
-	self.PerennialBranches = branches
-	if slices.Compare(self.PerennialBranches, branches) == 0 {
-		return nil
-	}
-	return gitconfig.SetPerennialBranches(runner, branches)
 }
 
 // remoteURLString provides the URL for the given remote.

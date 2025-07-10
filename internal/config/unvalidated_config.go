@@ -1,6 +1,8 @@
 package config
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -71,6 +73,15 @@ func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
 func (self *UnvalidatedConfig) SetMainBranch(branch gitdomain.LocalBranchName, runner subshelldomain.Runner) error {
 	self.UnvalidatedConfig.MainBranch = Some(branch)
 	return gitconfig.SetMainBranch(runner, branch)
+}
+
+// SetPerennialBranches marks the given branches as perennial branches.
+func (self *UnvalidatedConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
+	self.NormalConfig.PerennialBranches = branches
+	if slices.Compare(self.Git.PerennialBranches, branches) == 0 {
+		return nil
+	}
+	return gitconfig.SetPerennialBranches(runner, branches)
 }
 
 // UnvalidatedBranchesAndTypes provides the types for the given branches.
