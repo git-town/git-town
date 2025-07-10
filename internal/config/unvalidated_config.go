@@ -52,7 +52,6 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		Env:              envConfig,
 		File:             self.NormalConfig.File,
 		Git:              unscopedGitConfig,
 		GitVersion:       self.NormalConfig.GitVersion,
@@ -88,7 +87,6 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			Env:              configdomain.EmptyPartialConfig(),
 			File:             None[configdomain.PartialConfig](),
 			Git:              configdomain.EmptyPartialConfig(),
 			GitVersion:       gitVersion,
@@ -107,7 +105,6 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	})
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			Env:              args.EnvConfig,
 			File:             args.ConfigFile,
 			Git:              args.GitConfig,
 			GitVersion:       args.GitVersion,
