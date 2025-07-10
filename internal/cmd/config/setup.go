@@ -138,51 +138,51 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 			return emptyResult, exit, err
 		}
 	}
-	var perennialBranches gitdomain.LocalBranchNames
+	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
 	if len(configFile.PerennialBranches) == 0 {
-		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), repo.UnvalidatedConfig.NormalConfig.PerennialBranches, mainBranch, data.dialogInputs.Next())
+		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, mainBranch, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	perennialRegex := None[configdomain.PerennialRegex]()
+	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
 	if configFile.PerennialRegex.IsNone() {
-		perennialRegex, exit, err = dialog.PerennialRegex(repo.UnvalidatedConfig.NormalConfig.PerennialRegex, data.dialogInputs.Next())
+		perennialRegex, exit, err = dialog.PerennialRegex(perennialRegex, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	featureRegex := None[configdomain.FeatureRegex]()
+	featureRegex := repo.UnvalidatedConfig.NormalConfig.FeatureRegex
 	if configFile.FeatureRegex.IsNone() {
-		featureRegex, exit, err = dialog.FeatureRegex(repo.UnvalidatedConfig.NormalConfig.FeatureRegex, data.dialogInputs.Next())
+		featureRegex, exit, err = dialog.FeatureRegex(featureRegex, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	contributionRegex := None[configdomain.ContributionRegex]()
+	contributionRegex := repo.UnvalidatedConfig.NormalConfig.ContributionRegex
 	if configFile.ContributionRegex.IsNone() {
-		contributionRegex, exit, err = dialog.ContributionRegex(repo.UnvalidatedConfig.NormalConfig.ContributionRegex, data.dialogInputs.Next())
+		contributionRegex, exit, err = dialog.ContributionRegex(contributionRegex, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	observedRegex := None[configdomain.ObservedRegex]()
+	observedRegex := repo.UnvalidatedConfig.NormalConfig.ObservedRegex
 	if configFile.ObservedRegex.IsNone() {
-		observedRegex, exit, err = dialog.ObservedRegex(repo.UnvalidatedConfig.NormalConfig.ObservedRegex, data.dialogInputs.Next())
+		observedRegex, exit, err = dialog.ObservedRegex(observedRegex, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var unknownBranchType configdomain.BranchType
+	unknownBranchType := repo.UnvalidatedConfig.NormalConfig.UnknownBranchType
 	if configFile.UnknownBranchType.IsNone() {
-		unknownBranchType, exit, err = dialog.UnknownBranchType(repo.UnvalidatedConfig.NormalConfig.UnknownBranchType, data.dialogInputs.Next())
+		unknownBranchType, exit, err = dialog.UnknownBranchType(unknownBranchType, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var devRemote gitdomain.Remote
+	devRemote := repo.UnvalidatedConfig.NormalConfig.DevRemote
 	if configFile.DevRemote.IsNone() {
-		devRemote, exit, err = dialog.DevRemote(repo.UnvalidatedConfig.NormalConfig.DevRemote, data.remotes, data.dialogInputs.Next())
+		devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
@@ -201,13 +201,13 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	gitlabToken := None[forgedomain.GitLabToken]()
 	for {
 		if configFile.HostingOriginHostname.IsNone() {
-			hostingOriginHostName, exit, err = dialog.OriginHostname(repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname, data.dialogInputs.Next())
+			hostingOriginHostName, exit, err = dialog.OriginHostname(hostingOriginHostName, data.dialogInputs.Next())
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
 		}
 		if configFile.ForgeType.IsNone() {
-			enteredForgeType, exit, err = dialog.ForgeType(repo.UnvalidatedConfig.NormalConfig.ForgeType, data.dialogInputs.Next())
+			enteredForgeType, exit, err = dialog.ForgeType(enteredForgeType, data.dialogInputs.Next())
 			if err != nil || exit {
 				return emptyResult, exit, err
 			}
