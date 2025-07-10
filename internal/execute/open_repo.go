@@ -95,7 +95,6 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		ConfigFile:    configFile,
-		DryRun:        args.CliConfig.DryRun,
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
 		GitConfig:     unscopedConfig,
