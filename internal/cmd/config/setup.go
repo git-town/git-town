@@ -557,7 +557,7 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, oldConfig.NormalConfig, frontend)
+		return saveToFile(userInput, oldConfig, frontend)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(userInput, oldConfig, configFile, frontend)
 	}
@@ -599,7 +599,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(
-			savePerennialBranches(userInput.config.NormalConfig.PerennialBranches, oldConfig.NormalConfig, frontend),
+			savePerennialBranches(userInput.config.NormalConfig.PerennialBranches, oldConfig, frontend),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
@@ -609,7 +609,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
-			saveUnknownBranchType(userInput.config.NormalConfig.UnknownBranchType, oldConfig.NormalConfig, frontend),
+			saveUnknownBranchType(userInput.config.NormalConfig.UnknownBranchType, oldConfig, frontend),
 		)
 	}
 	if configFile.DevRemote.IsNone() {
@@ -619,7 +619,7 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(
-			saveFeatureRegex(userInput.config.NormalConfig.FeatureRegex, oldConfig.NormalConfig, frontend),
+			saveFeatureRegex(userInput.config.NormalConfig.FeatureRegex, oldConfig, frontend),
 		)
 	}
 	if configFile.ContributionRegex.IsNone() {
@@ -728,8 +728,8 @@ func saveNewBranchType(newValue Option[configdomain.BranchType], config config.N
 	return nil
 }
 
-func saveUnknownBranchType(value configdomain.BranchType, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if value == config.UnknownBranchType {
+func saveUnknownBranchType(value configdomain.BranchType, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+	if value == config.NormalConfig.UnknownBranchType {
 		return nil
 	}
 	return gitconfig.SetUnknownBranchType(runner, value)
@@ -742,8 +742,8 @@ func saveDevRemote(value gitdomain.Remote, config config.NormalConfig, runner su
 	return gitconfig.SetDevRemote(runner, value)
 }
 
-func saveFeatureRegex(value Option[configdomain.FeatureRegex], config config.NormalConfig, runner subshelldomain.Runner) error {
-	if value.Equal(config.FeatureRegex) {
+func saveFeatureRegex(value Option[configdomain.FeatureRegex], config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+	if value.Equal(config.NormalConfig.FeatureRegex) {
 		return nil
 	}
 	if value, has := value.Get(); has {
@@ -880,8 +880,8 @@ func saveOriginHostname(newValue Option[configdomain.HostingOriginHostname], con
 	return gitconfig.RemoveOriginHostname(frontend)
 }
 
-func savePerennialBranches(newValue gitdomain.LocalBranchNames, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if slices.Compare(config.PerennialBranches, newValue) != 0 || config.Git.PerennialBranches == nil {
+func savePerennialBranches(newValue gitdomain.LocalBranchNames, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
+	if slices.Compare(config.NormalConfig.PerennialBranches, newValue) != 0 || config.Git.PerennialBranches == nil {
 		return gitconfig.SetPerennialBranches(runner, newValue)
 	}
 	return nil
@@ -961,7 +961,7 @@ func saveSyncTags(newValue configdomain.SyncTags, config config.NormalConfig, ru
 	return gitconfig.SetSyncTags(runner, newValue)
 }
 
-func saveToFile(userInput userInput, config config.NormalConfig, runner subshelldomain.Runner) error {
+func saveToFile(userInput userInput, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(&userInput.config); err != nil {
 		return err
 	}

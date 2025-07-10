@@ -14,6 +14,7 @@ import (
 
 type UnvalidatedConfig struct {
 	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	Git               configdomain.PartialConfig         // configuration data taken from Git metadata, in particular the unscoped Git metadata
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }
