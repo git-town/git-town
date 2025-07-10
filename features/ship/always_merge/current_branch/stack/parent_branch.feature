@@ -14,6 +14,7 @@ Feature: ship a parent branch using the always-merge strategy
     And Git setting "git-town.ship-strategy" is "always-merge"
     When I run "git-town ship" and close the editor
 
+  @this
   Scenario: result
     Then Git Town runs the commands
       | BRANCH | COMMAND                            |
