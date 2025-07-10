@@ -193,7 +193,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	bitbucketUsername := None[forgedomain.BitbucketUsername]()
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	codebergToken := None[forgedomain.CodebergToken]()
-	var devURL Option[giturl.Parts]
+	devURL := data.config.NormalConfig.DevURL(data.backend)
 	giteaToken := None[forgedomain.GiteaToken]()
 	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
 	githubToken := None[forgedomain.GitHubToken]()
@@ -212,7 +212,6 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 				return emptyResult, exit, err
 			}
 		}
-		devURL = data.config.NormalConfig.DevURL(data.backend)
 		actualForgeType = determineForgeType(enteredForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType), devURL)
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
