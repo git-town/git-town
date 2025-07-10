@@ -18,9 +18,8 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	File       Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
-	Git        configdomain.PartialConfig         // configuration data taken from Git metadata, in particular the unscoped Git metadata
-	GitVersion git.Version                        // version of the installed Git executable
+	Git        configdomain.PartialConfig // configuration data taken from Git metadata, in particular the unscoped Git metadata
+	GitVersion git.Version                // version of the installed Git executable
 }
 
 // removes the given branch from the lineage, and updates its children
