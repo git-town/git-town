@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -38,26 +38,29 @@ func undoCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeUndo(verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeUndo(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeUndo(verbose configdomain.Verbose) error {
+func executeUndo(cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineUndoData(repo, verbose)
+	data, exit, err := determineUndoData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -83,7 +86,7 @@ func executeUndo(verbose configdomain.Verbose) error {
 		InitialStashSize: data.stashSize,
 		RootDir:          repo.RootDir,
 		RunState:         runState,
-		Verbose:          verbose,
+		Verbose:          cliConfig.Verbose,
 	})
 }
 
@@ -97,7 +100,7 @@ type undoData struct {
 	stashSize               gitdomain.StashSize
 }
 
-func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data undoData, exit dialogdomain.Exit, err error) {
+func determineUndoData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data undoData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -139,7 +142,7 @@ func determineUndoData(repo execute.OpenRepoResult, verbose configdomain.Verbose
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, false, err
