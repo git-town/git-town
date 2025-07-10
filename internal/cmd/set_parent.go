@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/ship"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -70,26 +71,29 @@ func setParentCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeSetParent(args, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeSetParent(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSetParent(args []string, verbose configdomain.Verbose) error {
+func executeSetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSetParentData(repo, verbose)
+	data, exit, err := determineSetParentData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -154,7 +158,7 @@ func executeSetParent(args []string, verbose configdomain.Verbose) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -172,7 +176,7 @@ type setParentData struct {
 	stashSize          gitdomain.StashSize
 }
 
-func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setParentData, exit dialogdomain.Exit, err error) {
+func determineSetParentData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setParentData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -214,7 +218,7 @@ func determineSetParentData(repo execute.OpenRepoResult, verbose configdomain.Ve
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

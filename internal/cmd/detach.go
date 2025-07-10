@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -83,7 +84,11 @@ func detachCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			return executeDetach(args, dryRun, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeDetach(args, cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -91,19 +96,18 @@ func detachCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executeDetach(args []string, cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineDetachData(args, repo, dryRun, verbose)
+	data, exit, err := determineDetachData(args, repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -117,7 +121,7 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		Command:               detachCommandName,
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -144,7 +148,7 @@ func executeDetach(args []string, dryRun configdomain.DryRun, verbose configdoma
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -174,7 +178,7 @@ type detachChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data detachData, exit dialogdomain.Exit, err error) {
+func determineDetachData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data detachData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -216,7 +220,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -313,7 +317,7 @@ func determineDetachData(args []string, repo execute.OpenRepoResult, dryRun conf
 		connector:           connector,
 		descendents:         descendents,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              dryRun,
+		dryRun:              cliConfig.DryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,

@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -26,21 +26,24 @@ func getParentCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeGetParent(args, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeGetParent(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeGetParent(args []string, verbose configdomain.Verbose) error {
+func executeGetParent(args []string, cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: false,
 		PrintCommands:    false,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -58,6 +61,6 @@ func executeGetParent(args []string, verbose configdomain.Verbose) error {
 	if parent, hasParent := parentOpt.Get(); hasParent {
 		fmt.Print(parent)
 	}
-	print.Footer(verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
+	print.Footer(cliConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return nil
 }
