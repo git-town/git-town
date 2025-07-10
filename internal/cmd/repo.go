@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -42,21 +43,24 @@ func repoCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeRepo(args, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeRepo(args, cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRepo(args []string, verbose configdomain.Verbose) error {
+func executeRepo(args []string, cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: true,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -66,7 +70,7 @@ func executeRepo(args []string, verbose configdomain.Verbose) error {
 		return err
 	}
 	err = data.connector.OpenRepository(repo.Frontend)
-	print.Footer(verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
+	print.Footer(cliConfig.Verbose, repo.CommandsCounter.Immutable(), repo.FinalMessages.Result())
 	return err
 }
 

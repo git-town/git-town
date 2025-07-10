@@ -28,7 +28,7 @@ func Config(args ConfigArgs) (config.ValidatedConfig, dialogdomain.Exit, error) 
 			Backend:               args.Backend,
 			DialogInputs:          args.TestInputs,
 			GetDefaultBranch:      gitconfig.DefaultBranch,
-			HasConfigFile:         args.Unvalidated.Value.NormalConfig.File.IsSome(),
+			HasConfigFile:         args.Unvalidated.Value.File.IsSome(),
 			LocalBranches:         args.LocalBranches,
 			UnvalidatedMain:       args.Unvalidated.Value.UnvalidatedConfig.MainBranch,
 			UnvalidatedPerennials: args.Unvalidated.Value.NormalConfig.PerennialBranches,
