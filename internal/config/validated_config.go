@@ -68,14 +68,20 @@ func (self *ValidatedConfig) RemoveDeletedBranchesFromLineage(branchInfos gitdom
 		childDoesntExist := nonExistingBranches.Contains(entry.Child)
 		parentDoesntExist := nonExistingBranches.Contains(entry.Parent)
 		if childDoesntExist || parentDoesntExist {
-			self.NormalConfig.RemoveParent(runner, entry.Child)
+			self.RemoveParent(runner, entry.Child)
 		}
 		childExists := branchInfos.HasBranch(entry.Child)
 		parentExists := branchInfos.HasBranch(entry.Parent)
 		if !childExists || !parentExists {
-			self.NormalConfig.RemoveParent(runner, entry.Child)
+			self.RemoveParent(runner, entry.Child)
 		}
 	}
+}
+
+// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
+func (self *ValidatedConfig) RemoveParent(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
+	self.NormalConfig.Lineage = self.NormalConfig.Lineage.RemoveBranch(branch)
+	_ = gitconfig.RemoveParent(runner, branch)
 }
 
 // provides this collection without the perennial branch at the root
