@@ -54,7 +54,6 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		Git:              unscopedGitConfig,
 		GitVersion:       self.NormalConfig.GitVersion,
 		NormalConfigData: normalConfig,
 	}
@@ -62,7 +61,7 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 }
 
 func (self *UnvalidatedConfig) RemoveMainBranch(runner subshelldomain.Runner) {
-	if self.NormalConfig.Git.MainBranch.IsSome() {
+	if self.UnvalidatedConfig.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
 }
@@ -89,7 +88,6 @@ func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		File: None[configdomain.PartialConfig](),
 		NormalConfig: NormalConfig{
-			Git:              configdomain.EmptyPartialConfig(),
 			GitVersion:       gitVersion,
 			NormalConfigData: configdomain.DefaultNormalConfig(),
 		},
@@ -106,8 +104,8 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	})
 	return UnvalidatedConfig{
 		File: args.ConfigFile,
+		Git:  args.GitConfig,
 		NormalConfig: NormalConfig{
-			Git:              args.GitConfig,
 			GitVersion:       args.GitVersion,
 			NormalConfigData: normalConfig,
 		},
