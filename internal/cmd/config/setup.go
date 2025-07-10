@@ -310,12 +310,14 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt O
 		if err != nil || exit {
 			return exit, err
 		}
-		data.userInput.config.NormalConfig.GitHubConnectorType = Some(answer)
-		switch answer {
-		case forgedomain.GitHubConnectorTypeAPI:
-			return enterGitHubToken(data, repo)
-		case forgedomain.GitHubConnectorTypeGh:
-			return false, nil
+		data.userInput.config.NormalConfig.GitHubConnectorType = answer
+		if connectorType, has := answer.Get(); has {
+			switch connectorType {
+			case forgedomain.GitHubConnectorTypeAPI:
+				return enterGitHubToken(data, repo)
+			case forgedomain.GitHubConnectorTypeGh:
+				return false, nil
+			}
 		}
 	case forgedomain.ForgeTypeGitLab:
 		existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
