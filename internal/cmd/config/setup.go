@@ -604,9 +604,7 @@ func saveAll(userInput dialogData, oldConfig config.UnvalidatedConfig, configFil
 	fc.Check(
 		saveAliases(userInput.normalConfig.Aliases, oldConfig.NormalConfig, frontend),
 	)
-	fmt.Println("1111111111111", userInput.determinedForgeType)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
-		fmt.Println("2222222222222222222", forgeType)
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
