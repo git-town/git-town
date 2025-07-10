@@ -18,6 +18,7 @@ type NormalConfigData struct {
 	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                gitdomain.Remote
+	DryRun                   DryRun // whether to only print the Git commands but not execute them
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType] // None = auto-detect
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
@@ -42,6 +43,7 @@ type NormalConfigData struct {
 	SyncTags                 SyncTags
 	SyncUpstream             SyncUpstream
 	UnknownBranchType        BranchType
+	Verbose                  Verbose
 }
 
 func (self *NormalConfigData) NoPushHook() NoPushHook {
@@ -104,6 +106,7 @@ func DefaultNormalConfig() NormalConfigData {
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[ContributionRegex](),
 		DevRemote:                gitdomain.RemoteOrigin,
+		DryRun:                   false,
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
@@ -128,5 +131,6 @@ func DefaultNormalConfig() NormalConfigData {
 		SyncTags:                 true,
 		SyncUpstream:             true,
 		UnknownBranchType:        BranchTypeFeatureBranch,
+		Verbose:                  false,
 	}
 }

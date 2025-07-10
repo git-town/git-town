@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -78,7 +79,11 @@ func swapCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			return executeSwap(args, dryRun, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeSwap(args, cliConfig)
 		},
 	}
 	addDryRunFlag(&cmd)
@@ -86,19 +91,18 @@ func swapCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain.Verbose) error {
+func executeSwap(args []string, cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSwapData(args, repo, dryRun, verbose)
+	data, exit, err := determineSwapData(args, repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -113,7 +117,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               swapCommandName,
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -139,7 +143,7 @@ func executeSwap(args []string, dryRun configdomain.DryRun, verbose configdomain
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -171,7 +175,7 @@ type swapChildBranch struct {
 	proposal Option[forgedomain.Proposal]
 }
 
-func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, verbose configdomain.Verbose) (data swapData, exit dialogdomain.Exit, err error) {
+func determineSwapData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data swapData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -213,7 +217,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -312,7 +316,7 @@ func determineSwapData(args []string, repo execute.OpenRepoResult, dryRun config
 		config:              validatedConfig,
 		connector:           connector,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              dryRun,
+		dryRun:              cliConfig.DryRun,
 		grandParentBranch:   grandParentBranch,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,

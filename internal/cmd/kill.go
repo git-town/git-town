@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +28,11 @@ func killCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			result := executeDelete(args, dryRun, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			result := executeDelete(args, cliConfig)
 			printKillDeprecationNotice()
 			return result
 		},

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
@@ -35,7 +36,11 @@ func RootCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2); err != nil {
 				return err
 			}
-			return executeStatus(pending, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeStatus(cliConfig, pending)
 		},
 	}
 	addPendingFlag(&cmd)
@@ -45,14 +50,13 @@ func RootCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) error {
+func executeStatus(cliConfig cliconfig.CliConfig, pending configdomain.Pending) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		if pending {
@@ -66,7 +70,7 @@ func executeStatus(pending configdomain.Pending, verbose configdomain.Verbose) e
 	}
 	displayStatus(data, pending)
 	if !pending {
-		print.Footer(verbose, *repo.CommandsCounter.Value, []string{})
+		print.Footer(cliConfig.Verbose, *repo.CommandsCounter.Value, []string{})
 	}
 	return nil
 }

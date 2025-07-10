@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -38,26 +39,29 @@ func branchCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeBranch(verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeBranch(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeBranch(verbose configdomain.Verbose) error {
+func executeBranch(cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineBranchData(repo, verbose)
+	data, exit, err := determineBranchData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -66,7 +70,7 @@ func executeBranch(verbose configdomain.Verbose) error {
 	return nil
 }
 
-func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data branchData, exit dialogdomain.Exit, err error) {
+func determineBranchData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data branchData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -89,7 +93,7 @@ func determineBranchData(repo execute.OpenRepoResult, verbose configdomain.Verbo
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

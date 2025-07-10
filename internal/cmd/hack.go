@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
@@ -95,7 +96,11 @@ func hackCmd() *cobra.Command {
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
-			return executeHack(args, beam, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeHack(args, cliConfig, beam, commit, commitMessage, detached, propose, prototype)
 		},
 	}
 	addBeamFlag(&cmd)
@@ -109,19 +114,18 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeHack(args []string, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeHack(args []string, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineHackData(args, repo, beam, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+	data, exit, err := determineHackData(args, repo, cliConfig, beam, commit, commitMessage, detached, propose, prototype)
 	if err != nil || exit {
 		return err
 	}
@@ -135,12 +139,12 @@ func executeHack(args []string, beam configdomain.Beam, commit configdomain.Comm
 			beginStashSize:        createNewFeatureBranchData.stashSize,
 			branchInfosLastRun:    createNewFeatureBranchData.branchInfosLastRun,
 			commandsCounter:       repo.CommandsCounter,
-			dryRun:                dryRun,
+			dryRun:                cliConfig.DryRun,
 			finalMessages:         repo.FinalMessages,
 			frontend:              repo.Frontend,
 			git:                   repo.Git,
 			rootDir:               repo.RootDir,
-			verbose:               verbose,
+			verbose:               cliConfig.Verbose,
 		})
 	}
 	if doConvertToFeatureBranch {
@@ -150,7 +154,7 @@ func executeHack(args []string, beam configdomain.Beam, commit configdomain.Comm
 			makeFeatureData:     convertToFeatureBranchData,
 			repo:                repo,
 			rootDir:             repo.RootDir,
-			verbose:             verbose,
+			verbose:             cliConfig.Verbose,
 		})
 	}
 	panic("both config arms were nil")
@@ -220,7 +224,7 @@ type createFeatureBranchArgs struct {
 	verbose               configdomain.Verbose
 }
 
-func determineHackData(args []string, repo execute.OpenRepoResult, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data hackData, exit dialogdomain.Exit, err error) {
+func determineHackData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) (data hackData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -269,7 +273,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -371,7 +375,7 @@ func determineHackData(args []string, repo execute.OpenRepoResult, beam configdo
 		connector:                 connector,
 		detached:                  detached,
 		dialogTestInputs:          dialogTestInputs,
-		dryRun:                    dryRun,
+		dryRun:                    cliConfig.DryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,

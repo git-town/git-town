@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -75,7 +76,11 @@ func Cmd() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3, err4, err5, err6, err7); err != nil {
 				return err
 			}
-			return executeSync(allBranches, stack, detached, dryRun, verbose, noPush, prune)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeSync(cliConfig, allBranches, stack, detached, noPush, prune)
 		},
 	}
 	addAllFlag(&cmd)
@@ -88,19 +93,18 @@ func Cmd() *cobra.Command {
 	return &cmd
 }
 
-func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, dryRun configdomain.DryRun, verbose configdomain.Verbose, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
+func executeSync(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, detached configdomain.Detached, pushBranches configdomain.PushBranches, prune configdomain.Prune) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineSyncData(syncAllBranches, syncStack, repo, verbose, detached)
+	data, exit, err := determineSyncData(cliConfig, syncAllBranches, syncStack, repo, detached)
 	if err != nil || exit {
 		return err
 	}
@@ -135,7 +139,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		runProgram.Value.Add(&opcodes.PushTags{})
 	}
 	cmdhelpers.Wrap(runProgram, cmdhelpers.WrapOptions{
-		DryRun:                   dryRun,
+		DryRun:                   cliConfig.DryRun,
 		InitialStashSize:         data.stashSize,
 		RunInGitRoot:             true,
 		StashOpenChanges:         data.hasOpenChanges,
@@ -147,7 +151,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
 		Command:               syncCommand,
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -174,7 +178,7 @@ func executeSync(syncAllBranches configdomain.AllBranches, syncStack configdomai
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -196,7 +200,7 @@ type syncData struct {
 	stashSize                gitdomain.StashSize
 }
 
-func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, verbose configdomain.Verbose, detached configdomain.Detached) (data syncData, exit dialogdomain.Exit, err error) {
+func determineSyncData(cliConfig cliconfig.CliConfig, syncAllBranches configdomain.AllBranches, syncStack configdomain.FullStack, repo execute.OpenRepoResult, detached configdomain.Detached) (data syncData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	preFetchBranchesSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
@@ -242,7 +246,7 @@ func determineSyncData(syncAllBranches configdomain.AllBranches, syncStack confi
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
