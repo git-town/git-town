@@ -190,7 +190,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
 	enteredForgeType := repo.UnvalidatedConfig.NormalConfig.ForgeType.Or(repo.UnvalidatedConfig.File.GetOrDefault().ForgeType)
 	var actualForgeType Option[forgedomain.ForgeType]
-	bitbucketUsername := None[forgedomain.BitbucketUsername]()
+	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
 	bitbucketAppPassword := None[forgedomain.BitbucketAppPassword]()
 	codebergToken := None[forgedomain.CodebergToken]()
 	devURL := data.config.NormalConfig.DevURL(data.backend)
@@ -216,8 +216,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		if forgeType, hasForgeType := actualForgeType.Get(); hasForgeType {
 			switch forgeType {
 			case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
-				existingUsername := bitbucketUsername.Or(repo.UnvalidatedConfig.NormalConfig.BitbucketUsername)
-				bitbucketUsername, exit, err = dialog.BitbucketUsername(existingUsername, data.dialogInputs.Next())
+				bitbucketUsername, exit, err = dialog.BitbucketUsername(bitbucketUsername, data.dialogInputs.Next())
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
