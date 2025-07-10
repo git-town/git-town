@@ -42,6 +42,10 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	unscopedGitConfig, _ := NewPartialConfigFromSnapshot(unscopedSnapshot, false, nil)
 	envConfig := envconfig.Load()
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
+		cli: cliconfig.CliConfig{
+			DryRun:  false,
+			Verbose: false,
+		},
 		env:  envConfig,
 		file: self.NormalConfig.File,
 		git:  unscopedGitConfig,

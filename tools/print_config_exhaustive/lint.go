@@ -17,6 +17,8 @@ const (
 var whiteList = []string{
 	"Aliases",
 	"BranchTypeOverrides",
+	"DryRun",
+	"Verbose",
 }
 
 func main() {

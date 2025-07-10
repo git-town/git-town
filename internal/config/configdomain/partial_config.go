@@ -64,6 +64,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		CodebergToken:            other.CodebergToken.Or(self.CodebergToken),
 		ContributionRegex:        other.ContributionRegex.Or(self.ContributionRegex),
 		DevRemote:                other.DevRemote.Or(self.DevRemote),
+		DryRun:                   other.DryRun.Or(self.DryRun),
 		FeatureRegex:             other.FeatureRegex.Or(self.FeatureRegex),
 		ForgeType:                other.ForgeType.Or(self.ForgeType),
 		GitHubConnectorType:      other.GitHubConnectorType.Or(self.GitHubConnectorType),
@@ -91,6 +92,7 @@ func (self PartialConfig) Merge(other PartialConfig) PartialConfig {
 		SyncTags:                 other.SyncTags.Or(self.SyncTags),
 		SyncUpstream:             other.SyncUpstream.Or(self.SyncUpstream),
 		UnknownBranchType:        other.UnknownBranchType.Or(self.UnknownBranchType),
+		Verbose:                  other.Verbose.Or(self.Verbose),
 	}
 }
 
@@ -104,6 +106,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		CodebergToken:            self.CodebergToken,
 		ContributionRegex:        self.ContributionRegex,
 		DevRemote:                self.DevRemote.GetOrElse(defaults.DevRemote),
+		DryRun:                   self.DryRun.GetOrDefault(),
 		FeatureRegex:             self.FeatureRegex,
 		ForgeType:                self.ForgeType,
 		GitHubConnectorType:      self.GitHubConnectorType,
@@ -128,6 +131,7 @@ func (self PartialConfig) ToNormalConfig(defaults NormalConfigData) NormalConfig
 		SyncTags:                 self.SyncTags.GetOrElse(defaults.SyncTags),
 		SyncUpstream:             self.SyncUpstream.GetOrElse(defaults.SyncUpstream),
 		UnknownBranchType:        self.UnknownBranchType.GetOrElse(BranchTypeFeatureBranch),
+		Verbose:                  self.Verbose.GetOrDefault(),
 	}
 }
 

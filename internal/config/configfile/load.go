@@ -222,6 +222,7 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        contributionRegex,
+		DryRun:                   None[configdomain.DryRun](),
 		UnknownBranchType:        unknownBranchType,
 		DevRemote:                devRemote,
 		FeatureRegex:             featureRegex,
@@ -250,5 +251,6 @@ func Validate(data Data, finalMessages stringslice.Collector) (configdomain.Part
 		SyncPrototypeStrategy:    syncPrototypeStrategy,
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
+		Verbose:                  None[configdomain.Verbose](),
 	}, ec.Err
 }

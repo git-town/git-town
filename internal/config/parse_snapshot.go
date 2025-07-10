@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
 	"github.com/git-town/git-town/v21/internal/subshell/subshelldomain"
+	. "github.com/git-town/git-town/v21/pkg/prelude"
 )
 
 // provides the branch type overrides stored in the given Git metadata snapshot
@@ -101,6 +102,7 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		CodebergToken:            forgedomain.ParseCodebergToken(snapshot[configdomain.KeyCodebergToken]),
 		ContributionRegex:        contributionRegex,
 		DevRemote:                gitdomain.NewRemote(snapshot[configdomain.KeyDevRemote]),
+		DryRun:                   None[configdomain.DryRun](),
 		FeatureRegex:             featureRegex,
 		ForgeType:                forgeType,
 		GitHubConnectorType:      githubConnectorType,
@@ -128,5 +130,6 @@ func NewPartialConfigFromSnapshot(snapshot configdomain.SingleSnapshot, updateOu
 		SyncTags:                 syncTags,
 		SyncUpstream:             syncUpstream,
 		UnknownBranchType:        unknownBranchType,
+		Verbose:                  None[configdomain.Verbose](),
 	}, cmp.Or(err1, err2, err3, err4, err5, err6, err7, err8, err9, err10, err11, err12, err13, err14, err15, err16, err17, err18, err19, err20, err21)
 }

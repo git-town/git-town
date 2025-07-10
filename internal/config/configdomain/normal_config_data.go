@@ -106,6 +106,7 @@ func DefaultNormalConfig() NormalConfigData {
 		CodebergToken:            None[forgedomain.CodebergToken](),
 		ContributionRegex:        None[ContributionRegex](),
 		DevRemote:                gitdomain.RemoteOrigin,
+		DryRun:                   false,
 		FeatureRegex:             None[FeatureRegex](),
 		ForgeType:                None[forgedomain.ForgeType](),
 		GitHubConnectorType:      None[forgedomain.GitHubConnectorType](),
@@ -130,5 +131,6 @@ func DefaultNormalConfig() NormalConfigData {
 		SyncTags:                 true,
 		SyncUpstream:             true,
 		UnknownBranchType:        BranchTypeFeatureBranch,
+		Verbose:                  false,
 	}
 }
