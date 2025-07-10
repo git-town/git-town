@@ -43,6 +43,7 @@ type NormalConfigData struct {
 	SyncTags                 SyncTags
 	SyncUpstream             SyncUpstream
 	UnknownBranchType        BranchType
+	Verbose                  Verbose
 }
 
 func (self *NormalConfigData) NoPushHook() NoPushHook {

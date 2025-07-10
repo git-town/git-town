@@ -8,6 +8,7 @@ import (
 	"runtime"
 
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
@@ -26,7 +27,7 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	commandsCounter := NewMutable(new(gohacks.Counter))
-	if args.Verbose {
+	if args.CliConfig.Verbose {
 		fmt.Println("Git Town " + config.GitTownVersion)
 		fmt.Println("OS:", runtime.GOOS)
 		var cmd *exec.Cmd
@@ -42,7 +43,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	backendRunner := subshell.BackendRunner{
 		Dir:             None[string](),
 		CommandsCounter: commandsCounter,
-		Verbose:         args.Verbose,
+		Verbose:         args.CliConfig.Verbose,
 	}
 	gitCommands := git.Commands{
 		CurrentBranchCache: &cache.WithPrevious[gitdomain.LocalBranchName]{},
@@ -94,7 +95,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	}
 	unvalidatedConfig := config.NewUnvalidatedConfig(config.NewUnvalidatedConfigArgs{
 		ConfigFile:    configFile,
-		DryRun:        args.DryRun,
+		DryRun:        args.CliConfig.DryRun,
 		EnvConfig:     envconfig.Load(),
 		FinalMessages: finalMessages,
 		GitConfig:     unscopedConfig,
@@ -103,7 +104,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	frontEndRunner := newFrontendRunner(newFrontendRunnerArgs{
 		backend:          backendRunner,
 		counter:          commandsCounter,
-		dryRun:           args.DryRun,
+		dryRun:           args.CliConfig.DryRun,
 		getCurrentBranch: gitCommands.CurrentBranch,
 		printBranchNames: args.PrintBranchNames,
 		printCommands:    args.PrintCommands,
@@ -136,12 +137,11 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 }
 
 type OpenRepoArgs struct {
-	DryRun           configdomain.DryRun
+	CliConfig        cliconfig.CliConfig
 	PrintBranchNames bool
 	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool
-	Verbose          configdomain.Verbose
 }
 
 type OpenRepoResult struct {

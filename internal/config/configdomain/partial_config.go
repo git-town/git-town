@@ -16,6 +16,7 @@ type PartialConfig struct {
 	CodebergToken            Option[forgedomain.CodebergToken]
 	ContributionRegex        Option[ContributionRegex]
 	DevRemote                Option[gitdomain.Remote]
+	DryRun                   Option[DryRun]
 	FeatureRegex             Option[FeatureRegex]
 	ForgeType                Option[forgedomain.ForgeType]
 	GitHubConnectorType      Option[forgedomain.GitHubConnectorType]
@@ -43,6 +44,7 @@ type PartialConfig struct {
 	SyncTags                 Option[SyncTags]
 	SyncUpstream             Option[SyncUpstream]
 	UnknownBranchType        Option[BranchType]
+	Verbose                  Option[Verbose]
 }
 
 func EmptyPartialConfig() PartialConfig {

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/envconfig"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
@@ -47,7 +48,6 @@ func (self *UnvalidatedConfig) Reload(backend subshelldomain.RunnerQuerier) (glo
 	})
 	self.UnvalidatedConfig = unvalidatedConfig
 	self.NormalConfig = NormalConfig{
-		DryRun:           self.NormalConfig.DryRun,
 		Env:              envConfig,
 		File:             self.NormalConfig.File,
 		Git:              unscopedGitConfig,
@@ -84,7 +84,6 @@ func (self *UnvalidatedConfig) UnvalidatedBranchesAndTypes(branches gitdomain.Lo
 func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			DryRun:           false,
 			Env:              configdomain.EmptyPartialConfig(),
 			File:             None[configdomain.PartialConfig](),
 			Git:              configdomain.EmptyPartialConfig(),
@@ -97,13 +96,13 @@ func DefaultUnvalidatedConfig(gitVersion git.Version) UnvalidatedConfig {
 
 func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 	unvalidatedConfig, normalConfig := mergeConfigs(mergeConfigsArgs{
+		cli:  args.CliConfig,
 		env:  args.EnvConfig,
 		file: args.ConfigFile,
 		git:  args.GitConfig,
 	})
 	return UnvalidatedConfig{
 		NormalConfig: NormalConfig{
-			DryRun:           args.DryRun,
 			Env:              args.EnvConfig,
 			File:             args.ConfigFile,
 			Git:              args.GitConfig,
@@ -115,8 +114,8 @@ func NewUnvalidatedConfig(args NewUnvalidatedConfigArgs) UnvalidatedConfig {
 }
 
 type NewUnvalidatedConfigArgs struct {
+	CliConfig     cliconfig.CliConfig
 	ConfigFile    Option[configdomain.PartialConfig]
-	DryRun        configdomain.DryRun
 	EnvConfig     configdomain.PartialConfig
 	FinalMessages stringslice.Collector
 	GitConfig     configdomain.PartialConfig
@@ -130,10 +129,13 @@ func mergeConfigs(args mergeConfigsArgs) (configdomain.UnvalidatedConfigData, co
 	}
 	result = result.Merge(args.git)
 	result = result.Merge(args.env)
+	result.DryRun = Some(args.cli.DryRun)
+	result.Verbose = Some(args.cli.Verbose)
 	return result.ToUnvalidatedConfig(), result.ToNormalConfig(configdomain.DefaultNormalConfig())
 }
 
 type mergeConfigsArgs struct {
+	cli  cliconfig.CliConfig
 	env  configdomain.PartialConfig         // configuration data taken from environment variables
 	file Option[configdomain.PartialConfig] // data of the configuration file
 	git  configdomain.PartialConfig         // data from the unscoped Git configuration
