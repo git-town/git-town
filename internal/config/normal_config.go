@@ -27,7 +27,7 @@ type NormalConfig struct {
 
 // removes the given branch from the lineage, and updates its children
 func (self *NormalConfig) CleanupBranchFromLineage(runner subshelldomain.Runner, branch gitdomain.LocalBranchName) {
-	parent, hasParent := self.Git.Lineage.Parent(branch).Get()
+	parent, hasParent := self.Lineage.Parent(branch).Get()
 	children := self.Lineage.Children(branch)
 	for _, child := range children {
 		if hasParent {
