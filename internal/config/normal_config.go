@@ -94,10 +94,10 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 // TODO: inline into setup.go:savePerennialBranches
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
-	if slices.Compare(self.Git.PerennialBranches, branches) == 0 {
-		return nil
+	if slices.Compare(self.Git.PerennialBranches, branches) != 0 {
+		return gitconfig.SetPerennialBranches(runner, branches)
 	}
-	return gitconfig.SetPerennialBranches(runner, branches)
+	return nil
 }
 
 // remoteURLString provides the URL for the given remote.
