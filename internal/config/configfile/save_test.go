@@ -99,12 +99,7 @@ upstream = true
 		config := configdomain.NormalConfigData{
 			DevRemote:                "origin",
 			ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
-			GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
-			GitHubToken:              Option[forgedomain.GitHubToken]{},
-			GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
-			GitLabToken:              Option[forgedomain.GitLabToken]{},
-			GiteaToken:               Option[forgedomain.GiteaToken]{},
-			HostingOriginHostname:    Option[configdomain.HostingOriginHostname]{},
+			HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 			Lineage:                  configdomain.Lineage{},
 			NewBranchType:            Option[configdomain.BranchType]{},
 			ObservedRegex:            Option[configdomain.ObservedRegex]{},
@@ -143,6 +138,7 @@ share-new-branches = "no"
 [hosting]
 dev-remote = "origin"
 forge-type = "github"
+origin-hostname = "forge"
 
 [ship]
 delete-tracking-branch = true
