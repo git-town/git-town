@@ -93,7 +93,7 @@ func (self *NormalConfig) SetParent(runner subshelldomain.Runner, branch, parent
 // TODO: inline into setup.go:savePerennialBranches
 func (self *NormalConfig) SetPerennialBranches(runner subshelldomain.Runner, branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
-	if slices.Compare(self.Git.PerennialBranches, branches) == 0 {
+	if slices.Compare(self.PerennialBranches, branches) == 0 {
 		return nil
 	}
 	return gitconfig.SetPerennialBranches(runner, branches)
