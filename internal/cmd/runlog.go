@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/flags"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
 	"github.com/git-town/git-town/v21/internal/messages"
@@ -41,21 +41,24 @@ func runLogCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeRunLog(verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeRunLog(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRunLog(verbose configdomain.Verbose) error {
+func executeRunLog(cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -67,7 +70,7 @@ func executeRunLog(verbose configdomain.Verbose) error {
 	if err = showRunLog(data); err != nil {
 		return err
 	}
-	print.Footer(verbose, *repo.CommandsCounter.Value, []string{})
+	print.Footer(cliConfig.Verbose, *repo.CommandsCounter.Value, []string{})
 	return nil
 }
 
