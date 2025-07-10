@@ -20,9 +20,7 @@ func shipProgramAlwaysMerge(prog Mutable[program.Program], sharedData sharedShip
 	if mergeData.remotes.HasRemote(sharedData.config.NormalConfig.DevRemote) && sharedData.config.NormalConfig.Offline.IsOnline() {
 		prog.Value.Add(&opcodes.PushCurrentBranchIfNeeded{CurrentBranch: sharedData.targetBranchName})
 	}
-	if !sharedData.dryRun {
-		prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
-	}
+	prog.Value.Add(&opcodes.LineageParentRemove{Branch: sharedData.branchNameToShip})
 	if branchToShipRemoteName, hasRemoteName := sharedData.branchToShip.RemoteName.Get(); hasRemoteName {
 		if sharedData.config.NormalConfig.Offline.IsOnline() {
 			if sharedData.config.NormalConfig.ShipDeleteTrackingBranch {
