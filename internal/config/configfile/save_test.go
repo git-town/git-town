@@ -102,7 +102,7 @@ upstream = true
 			HostingOriginHostname:    configdomain.ParseHostingOriginHostname("forge"),
 			NewBranchType:            Some(configdomain.BranchTypePrototypeBranch),
 			PerennialBranches:        gitdomain.NewLocalBranchNames("qa", "staging"),
-			PerennialRegex:           Option[configdomain.PerennialRegex]{},
+			PerennialRegex:           asserts.NoError1(configdomain.ParsePerennialRegex("perennial-")),
 			PushHook:                 true,
 			ShareNewBranches:         configdomain.ShareNewBranchesNone,
 			ShipDeleteTrackingBranch: true,
@@ -126,7 +126,7 @@ upstream = true
 [branches]
 main = "main"
 perennials = ["qa", "staging"]
-perennial-regex = ""
+perennial-regex = "perennial-"
 
 [create]
 new-branch-type = "prototype"
