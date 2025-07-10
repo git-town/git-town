@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
-	"github.com/git-town/git-town/v21/internal/config/configdomain"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
@@ -40,21 +40,24 @@ func continueCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeContinue(verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeContinue(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeContinue(verbose configdomain.Verbose) error {
+func executeContinue(cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -63,7 +66,7 @@ func executeContinue(verbose configdomain.Verbose) error {
 	if err != nil || exit {
 		return err
 	}
-	data, exit, err := determineContinueData(repo, verbose)
+	data, exit, err := determineContinueData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -85,11 +88,11 @@ func executeContinue(verbose configdomain.Verbose) error {
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
-func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data continueData, exit dialogdomain.Exit, err error) {
+func determineContinueData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data continueData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -131,7 +134,7 @@ func determineContinueData(repo execute.OpenRepoResult, verbose configdomain.Ver
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err

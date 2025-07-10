@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogdomain"
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -41,7 +42,7 @@ type sharedShipData struct {
 	targetBranchName         gitdomain.LocalBranchName
 }
 
-func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun configdomain.DryRun, shipStrategyOverride Option[configdomain.ShipStrategy], verbose configdomain.Verbose) (data sharedShipData, exit dialogdomain.Exit, err error) {
+func determineSharedShipData(args []string, repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, shipStrategyOverride Option[configdomain.ShipStrategy]) (data sharedShipData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -83,7 +84,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: len(args) == 0,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -162,7 +163,7 @@ func determineSharedShipData(args []string, repo execute.OpenRepoResult, dryRun 
 		config:                   validatedConfig,
 		connector:                connector,
 		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
+		dryRun:                   cliConfig.DryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		initialBranch:            initialBranch,
 		isShippingInitialBranch:  isShippingInitialBranch,

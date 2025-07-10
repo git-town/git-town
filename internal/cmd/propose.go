@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -77,7 +78,11 @@ func proposeCommand() *cobra.Command {
 			if err := cmp.Or(err1, err2, err3, err4, err5, err6); err != nil {
 				return err
 			}
-			return executePropose(dryRun, verbose, title, bodyText, bodyFile, stack)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executePropose(cliConfig, title, bodyText, bodyFile, stack)
 		},
 	}
 	addBodyFlag(&cmd)
@@ -89,19 +94,18 @@ func proposeCommand() *cobra.Command {
 	return &cmd
 }
 
-func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFile Option[gitdomain.ProposalBodyFile], fullStack configdomain.FullStack) error {
+func executePropose(cliConfig cliconfig.CliConfig, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFile Option[gitdomain.ProposalBodyFile], fullStack configdomain.FullStack) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: true,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineProposeData(repo, dryRun, fullStack, verbose, title, body, bodyFile)
+	data, exit, err := determineProposeData(repo, cliConfig, fullStack, title, body, bodyFile)
 	if err != nil || exit {
 		return err
 	}
@@ -112,7 +116,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 		BeginStashSize:        data.stashSize,
 		BranchInfosLastRun:    data.branchInfosLastRun,
 		Command:               proposeCmd,
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -138,7 +142,7 @@ func executePropose(dryRun configdomain.DryRun, verbose configdomain.Verbose, ti
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -170,7 +174,7 @@ type branchToProposeData struct {
 	syncStatus          gitdomain.SyncStatus
 }
 
-func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRun, fullStack configdomain.FullStack, verbose configdomain.Verbose, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFileOpt Option[gitdomain.ProposalBodyFile]) (data proposeData, exit dialogdomain.Exit, err error) {
+func determineProposeData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig, fullStack configdomain.FullStack, title Option[gitdomain.ProposalTitle], body Option[gitdomain.ProposalBody], bodyFileOpt Option[gitdomain.ProposalBodyFile]) (data proposeData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -216,7 +220,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -332,7 +336,7 @@ func determineProposeData(repo execute.OpenRepoResult, dryRun configdomain.DryRu
 		config:              validatedConfig,
 		connector:           connectorOpt,
 		dialogTestInputs:    dialogTestInputs,
-		dryRun:              dryRun,
+		dryRun:              cliConfig.DryRun,
 		hasOpenChanges:      repoStatus.OpenChanges,
 		initialBranch:       initialBranch,
 		nonExistingBranches: nonExistingBranches,

@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/cmd/sync"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/execute"
 	"github.com/git-town/git-town/v21/internal/forge"
@@ -93,7 +94,11 @@ func appendCmd() *cobra.Command {
 			if commitMessage.IsSome() || propose.IsTrue() {
 				commit = true
 			}
-			return executeAppend(args[0], beam, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  dryRun,
+				Verbose: verbose,
+			}
+			return executeAppend(args[0], cliConfig, beam, commit, commitMessage, detached, propose, prototype)
 		},
 	}
 	addBeamFlag(&cmd)
@@ -107,19 +112,18 @@ func appendCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) error {
+func executeAppend(arg string, cliConfig cliconfig.CliConfig, beam configdomain.Beam, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           dryRun,
+		CliConfig:        cliConfig,
 		PrintBranchNames: true,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := determineAppendData(gitdomain.NewLocalBranchName(arg), beam, repo, commit, commitMessage, detached, dryRun, propose, prototype, verbose)
+	data, exit, err := determineAppendData(cliConfig, gitdomain.NewLocalBranchName(arg), beam, repo, commit, commitMessage, detached, propose, prototype)
 	if err != nil || exit {
 		return err
 	}
@@ -129,7 +133,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        data.stashSize,
 		Command:               "append",
-		DryRun:                dryRun,
+		DryRun:                cliConfig.DryRun,
 		EndBranchesSnapshot:   None[gitdomain.BranchesSnapshot](),
 		EndConfigSnapshot:     None[undoconfig.ConfigSnapshot](),
 		EndStashSize:          None[gitdomain.StashSize](),
@@ -156,7 +160,7 @@ func executeAppend(arg string, beam configdomain.Beam, commit configdomain.Commi
 		PendingCommand:          None[string](),
 		RootDir:                 repo.RootDir,
 		RunState:                runState,
-		Verbose:                 verbose,
+		Verbose:                 cliConfig.Verbose,
 	})
 }
 
@@ -188,7 +192,7 @@ type appendFeatureData struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, dryRun configdomain.DryRun, propose configdomain.Propose, prototype configdomain.Prototype, verbose configdomain.Verbose) (data appendFeatureData, exit dialogdomain.Exit, err error) {
+func determineAppendData(cliConfig cliconfig.CliConfig, targetBranch gitdomain.LocalBranchName, beam configdomain.Beam, repo execute.OpenRepoResult, commit configdomain.Commit, commitMessage Option[gitdomain.CommitMessage], detached configdomain.Detached, propose configdomain.Propose, prototype configdomain.Prototype) (data appendFeatureData, exit dialogdomain.Exit, err error) {
 	preFetchBranchSnapshot, err := repo.Git.BranchesSnapshot(repo.Backend)
 	if err != nil {
 		return data, false, err
@@ -234,7 +238,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil || exit {
 		return data, exit, err
@@ -315,7 +319,7 @@ func determineAppendData(targetBranch gitdomain.LocalBranchName, beam configdoma
 		connector:                 connector,
 		detached:                  detached,
 		dialogTestInputs:          dialogTestInputs,
-		dryRun:                    dryRun,
+		dryRun:                    cliConfig.DryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             initialBranch,
 		initialBranchInfo:         initialBranchInfo,

@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/cli/print"
 	"github.com/git-town/git-town/v21/internal/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v21/internal/config"
+	"github.com/git-town/git-town/v21/internal/config/cliconfig"
 	"github.com/git-town/git-town/v21/internal/config/configdomain"
 	"github.com/git-town/git-town/v21/internal/config/configfile"
 	"github.com/git-town/git-town/v21/internal/config/gitconfig"
@@ -44,26 +45,29 @@ func SetupCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return executeConfigSetup(verbose)
+			cliConfig := cliconfig.CliConfig{
+				DryRun:  false,
+				Verbose: verbose,
+			}
+			return executeConfigSetup(cliConfig)
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeConfigSetup(verbose configdomain.Verbose) error {
+func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		DryRun:           false,
+		CliConfig:        cliConfig,
 		PrintBranchNames: false,
 		PrintCommands:    true,
 		ValidateGitRepo:  true,
 		ValidateIsOnline: false,
-		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
 	}
-	data, exit, err := loadSetupData(repo, verbose)
+	data, exit, err := loadSetupData(repo, cliConfig)
 	if err != nil || exit {
 		return err
 	}
@@ -84,7 +88,7 @@ func executeConfigSetup(verbose configdomain.Verbose) error {
 		Git:                   repo.Git,
 		RootDir:               repo.RootDir,
 		TouchedBranches:       []gitdomain.BranchName{},
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 }
 
@@ -559,7 +563,7 @@ func existsAndChanged[T fmt.Stringer](input, existing T) bool {
 	return input.String() != "" && input.String() != existing.String()
 }
 
-func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (data setupData, exit dialogdomain.Exit, err error) {
+func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (data setupData, exit dialogdomain.Exit, err error) {
 	dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	repoStatus, err := repo.Git.RepoStatus(repo.Backend)
 	if err != nil {
@@ -582,7 +586,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 		RootDir:               repo.RootDir,
 		UnvalidatedConfig:     repo.UnvalidatedConfig,
 		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
+		Verbose:               cliConfig.Verbose,
 	})
 	if err != nil {
 		return data, exit, err
@@ -597,7 +601,7 @@ func loadSetupData(repo execute.OpenRepoResult, verbose configdomain.Verbose) (d
 	return setupData{
 		backend:       repo.Backend,
 		config:        repo.UnvalidatedConfig,
-		configFile:    repo.UnvalidatedConfig.NormalConfig.File,
+		configFile:    repo.UnvalidatedConfig.File,
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
