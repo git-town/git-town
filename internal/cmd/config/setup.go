@@ -512,7 +512,7 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}
 	return setupData{
 		config:        repo.UnvalidatedConfig,
-		configFile:    repo.UnvalidatedConfig.NormalConfig.File,
+		configFile:    repo.UnvalidatedConfig.File,
 		dialogInputs:  dialogTestInputs,
 		localBranches: branchesSnapshot.Branches,
 		remotes:       remotes,
