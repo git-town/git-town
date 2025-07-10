@@ -965,7 +965,7 @@ func saveSyncTags(newValue configdomain.SyncTags, config config.NormalConfig, ru
 }
 
 func saveToFile(userInput userInput, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if err := configfile.Save(userInput.config.NormalConfig.NormalConfigData, userInput.config.UnvalidatedConfig.MainBranch.GetOrPanic()); err != nil {
+	if err := configfile.Save(userInput.config.NormalConfig.NormalConfigData, userInput.config.UnvalidatedConfig.MainBranch.GetOrDefault()); err != nil {
 		return err
 	}
 	if config.Git.DevRemote.IsSome() {
