@@ -306,12 +306,11 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt O
 		return enterGiteaToken(data, repo)
 	case forgedomain.ForgeTypeGitHub:
 		existing := data.userInput.config.NormalConfig.GitHubConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
-		answer, exit, err := dialog.GitHubConnectorType(existing, data.dialogInputs.Next())
+		data.userInput.config.NormalConfig.GitHubConnectorType, exit, err = dialog.GitHubConnectorType(existing, data.dialogInputs.Next())
 		if err != nil || exit {
 			return exit, err
 		}
-		data.userInput.config.NormalConfig.GitHubConnectorType = answer
-		if connectorType, has := answer.Get(); has {
+		if connectorType, has := data.userInput.config.NormalConfig.GitHubConnectorType.Get(); has {
 			switch connectorType {
 			case forgedomain.GitHubConnectorTypeAPI:
 				return enterGitHubToken(data, repo)
@@ -321,16 +320,17 @@ func enterForgeAuth(repo execute.OpenRepoResult, data *setupData, forgeTypeOpt O
 		}
 	case forgedomain.ForgeTypeGitLab:
 		existing := data.userInput.config.NormalConfig.GitLabConnectorType.Or(repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType)
-		answer, exit, err := dialog.GitLabConnectorType(existing, data.dialogInputs.Next())
+		data.userInput.config.NormalConfig.GitLabConnectorType, exit, err = dialog.GitLabConnectorType(existing, data.dialogInputs.Next())
 		if err != nil || exit {
 			return exit, err
 		}
-		data.userInput.config.NormalConfig.GitLabConnectorType = Some(answer)
-		switch answer {
-		case forgedomain.GitLabConnectorTypeAPI:
-			return enterGitLabToken(data, repo)
-		case forgedomain.GitLabConnectorTypeGlab:
-			return false, nil
+		if connectorType, has := data.userInput.config.NormalConfig.GitLabConnectorType.Get(); has {
+			switch connectorType {
+			case forgedomain.GitLabConnectorTypeAPI:
+				return enterGitLabToken(data, repo)
+			case forgedomain.GitLabConnectorTypeGlab:
+				return false, nil
+			}
 		}
 	}
 	return false, nil
