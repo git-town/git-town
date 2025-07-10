@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v21/internal/config/configfile"
 	"github.com/git-town/git-town/v21/internal/forge/forgedomain"
 	"github.com/git-town/git-town/v21/internal/git/gitdomain"
+	"github.com/git-town/git-town/v21/pkg/asserts"
 	. "github.com/git-town/git-town/v21/pkg/prelude"
 	"github.com/shoenig/test/must"
 )
@@ -96,15 +97,8 @@ upstream = true
 	t.Run("Save", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.NormalConfigData{
-			Aliases:                  configdomain.Aliases{},
-			BitbucketAppPassword:     Option[forgedomain.BitbucketAppPassword]{},
-			BitbucketUsername:        Option[forgedomain.BitbucketUsername]{},
-			BranchTypeOverrides:      configdomain.BranchTypeOverrides{},
-			CodebergToken:            Option[forgedomain.CodebergToken]{},
-			ContributionRegex:        Option[configdomain.ContributionRegex]{},
 			DevRemote:                "origin",
-			FeatureRegex:             Option[configdomain.FeatureRegex]{},
-			ForgeType:                Option[forgedomain.ForgeType]{},
+			ForgeType:                asserts.NoError1(forgedomain.ParseForgeType("github")),
 			GitHubConnectorType:      Option[forgedomain.GitHubConnectorType]{},
 			GitHubToken:              Option[forgedomain.GitHubToken]{},
 			GitLabConnectorType:      Option[forgedomain.GitLabConnectorType]{},
@@ -148,6 +142,7 @@ share-new-branches = "no"
 
 [hosting]
 dev-remote = "origin"
+forge-type = "github"
 
 [ship]
 delete-tracking-branch = true
