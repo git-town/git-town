@@ -306,30 +306,30 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 			return emptyResult, exit, err
 		}
 	}
-	var syncPrototypeStrategy configdomain.SyncPrototypeStrategy
+	syncPrototypeStrategy := repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy
 	if configFile.SyncPrototypeStrategy.IsNone() {
-		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(repo.UnvalidatedConfig.NormalConfig.SyncPrototypeStrategy, data.dialogInputs.Next())
+		syncPrototypeStrategy, exit, err = dialog.SyncPrototypeStrategy(syncPrototypeStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var syncUpstream configdomain.SyncUpstream
+	syncUpstream := repo.UnvalidatedConfig.NormalConfig.SyncUpstream
 	if configFile.SyncUpstream.IsNone() {
-		syncUpstream, exit, err = dialog.SyncUpstream(repo.UnvalidatedConfig.NormalConfig.SyncUpstream, data.dialogInputs.Next())
+		syncUpstream, exit, err = dialog.SyncUpstream(syncUpstream, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var syncTags configdomain.SyncTags
+	syncTags := repo.UnvalidatedConfig.NormalConfig.SyncTags
 	if configFile.SyncTags.IsNone() {
-		syncTags, exit, err = dialog.SyncTags(repo.UnvalidatedConfig.NormalConfig.SyncTags, data.dialogInputs.Next())
+		syncTags, exit, err = dialog.SyncTags(syncTags, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var shareNewBranches configdomain.ShareNewBranches
+	shareNewBranches := repo.UnvalidatedConfig.NormalConfig.ShareNewBranches
 	if configFile.ShareNewBranches.IsNone() {
-		shareNewBranches, exit, err = dialog.ShareNewBranches(repo.UnvalidatedConfig.NormalConfig.ShareNewBranches, data.dialogInputs.Next())
+		shareNewBranches, exit, err = dialog.ShareNewBranches(shareNewBranches, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
