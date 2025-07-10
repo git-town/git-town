@@ -334,30 +334,30 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 			return emptyResult, exit, err
 		}
 	}
-	var pushHook configdomain.PushHook
+	pushHook := repo.UnvalidatedConfig.NormalConfig.PushHook
 	if configFile.PushHook.IsNone() {
-		pushHook, exit, err = dialog.PushHook(repo.UnvalidatedConfig.NormalConfig.PushHook, data.dialogInputs.Next())
+		pushHook, exit, err = dialog.PushHook(pushHook, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	newBranchType := None[configdomain.BranchType]()
+	newBranchType := repo.UnvalidatedConfig.NormalConfig.NewBranchType
 	if configFile.NewBranchType.IsNone() {
-		newBranchType, exit, err = dialog.NewBranchType(repo.UnvalidatedConfig.NormalConfig.NewBranchType, data.dialogInputs.Next())
+		newBranchType, exit, err = dialog.NewBranchType(newBranchType, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var shipStrategy configdomain.ShipStrategy
+	shipStrategy := repo.UnvalidatedConfig.NormalConfig.ShipStrategy
 	if configFile.ShipStrategy.IsNone() {
-		shipStrategy, exit, err = dialog.ShipStrategy(repo.UnvalidatedConfig.NormalConfig.ShipStrategy, data.dialogInputs.Next())
+		shipStrategy, exit, err = dialog.ShipStrategy(shipStrategy, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
 	}
-	var shipDeleteTrackingBranch configdomain.ShipDeleteTrackingBranch
+	shipDeleteTrackingBranch := repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
-		shipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(repo.UnvalidatedConfig.NormalConfig.ShipDeleteTrackingBranch, data.dialogInputs.Next())
+		shipDeleteTrackingBranch, exit, err = dialog.ShipDeleteTrackingBranch(shipDeleteTrackingBranch, data.dialogInputs.Next())
 		if err != nil || exit {
 			return emptyResult, exit, err
 		}
