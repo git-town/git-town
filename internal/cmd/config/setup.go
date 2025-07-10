@@ -198,7 +198,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
 	githubToken := repo.UnvalidatedConfig.NormalConfig.GitHubToken
 	gitlabConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitLabConnectorType
-	gitlabToken := None[forgedomain.GitLabToken]()
+	gitlabToken := repo.UnvalidatedConfig.NormalConfig.GitLabToken
 	for {
 		if configFile.HostingOriginHostname.IsNone() {
 			hostingOriginHostName, exit, err = dialog.OriginHostname(hostingOriginHostName, data.dialogInputs.Next())
@@ -245,8 +245,7 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 				if gitlabConnectorType, has := gitlabConnectorTypeOpt.Get(); has {
 					switch gitlabConnectorType {
 					case forgedomain.GitLabConnectorTypeAPI:
-						existingToken := gitlabToken.Or(repo.UnvalidatedConfig.NormalConfig.GitLabToken)
-						gitlabToken, exit, err = dialog.GitLabToken(existingToken, data.dialogInputs.Next())
+						gitlabToken, exit, err = dialog.GitLabToken(gitlabToken, data.dialogInputs.Next())
 					case forgedomain.GitLabConnectorTypeGlab:
 					}
 				}
