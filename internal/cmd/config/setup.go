@@ -406,12 +406,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 		GitUserName:  "", // the setup assistant doesn't ask for this
 		MainBranch:   mainBranch,
 	}
-	return dialogData{actualForgeType, devURL, normalData, tokenScope, configStorage, validatedData}, false, nil
+	return dialogData{actualForgeType, normalData, tokenScope, configStorage, validatedData}, false, nil
 }
 
 type dialogData struct {
 	determinedForgeType Option[forgedomain.ForgeType] // the forge type that was determined by the setup assistant - not necessarily what the user entered (could also be "auto detect")
-	devURL              Option[giturl.Parts]
 	normalConfig        configdomain.NormalConfigData
 	scope               configdomain.ConfigScope
 	storageLocation     dialog.ConfigStorageOption
