@@ -192,10 +192,10 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 	var actualForgeType Option[forgedomain.ForgeType]
 	bitbucketUsername := repo.UnvalidatedConfig.NormalConfig.BitbucketUsername
 	bitbucketAppPassword := repo.UnvalidatedConfig.NormalConfig.BitbucketAppPassword
-	codebergToken := None[forgedomain.CodebergToken]()
+	codebergToken := repo.UnvalidatedConfig.NormalConfig.CodebergToken
 	devURL := data.config.NormalConfig.DevURL(data.backend)
-	giteaToken := None[forgedomain.GiteaToken]()
-	githubConnectorTypeOpt := None[forgedomain.GitHubConnectorType]()
+	giteaToken := repo.UnvalidatedConfig.NormalConfig.GiteaToken
+	githubConnectorTypeOpt := repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType
 	githubToken := None[forgedomain.GitHubToken]()
 	gitlabConnectorTypeOpt := None[forgedomain.GitLabConnectorType]()
 	gitlabToken := None[forgedomain.GitLabToken]()
@@ -222,14 +222,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (dialogData, dialogd
 				}
 				bitbucketAppPassword, exit, err = dialog.BitbucketAppPassword(bitbucketAppPassword, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeCodeberg:
-				existingToken := codebergToken.Or(repo.UnvalidatedConfig.NormalConfig.CodebergToken)
-				codebergToken, exit, err = dialog.CodebergToken(existingToken, data.dialogInputs.Next())
+				codebergToken, exit, err = dialog.CodebergToken(codebergToken, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeGitea:
-				existingToken := giteaToken.Or(repo.UnvalidatedConfig.NormalConfig.GiteaToken)
-				giteaToken, exit, err = dialog.GiteaToken(existingToken, data.dialogInputs.Next())
+				giteaToken, exit, err = dialog.GiteaToken(giteaToken, data.dialogInputs.Next())
 			case forgedomain.ForgeTypeGitHub:
-				existingType := githubConnectorTypeOpt.Or(repo.UnvalidatedConfig.NormalConfig.GitHubConnectorType)
-				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(existingType, data.dialogInputs.Next())
+				githubConnectorTypeOpt, exit, err = dialog.GitHubConnectorType(githubConnectorTypeOpt, data.dialogInputs.Next())
 				if err != nil || exit {
 					return emptyResult, exit, err
 				}
