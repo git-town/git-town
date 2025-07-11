@@ -18,39 +18,46 @@ func TestOption(t *testing.T) {
 			t.Parallel()
 			t.Run("equal", func(t *testing.T) {
 				t.Parallel()
-				a := Some(1)
-				b := Some(1)
-				must.True(t, a.Equal(b))
+				must.True(t, Some(1).Equal(Some(1)))
 			})
 			t.Run("not equal", func(t *testing.T) {
 				t.Parallel()
-				a := Some(1)
-				b := Some(2)
-				must.False(t, a.Equal(b))
+				must.False(t, Some(1).Equal(Some(2)))
 			})
 			t.Run("Some and None", func(t *testing.T) {
 				t.Parallel()
-				a := Some(1)
-				b := None[int]()
-				must.False(t, a.Equal(b))
+				must.False(t, Some(1).Equal(None[int]()))
 			})
 			t.Run("None and Some", func(t *testing.T) {
 				t.Parallel()
-				a := Some(1)
-				b := None[int]()
-				must.False(t, a.Equal(b))
+				must.False(t, None[int]().Equal(Some(1)))
 			})
 			t.Run("None and None", func(t *testing.T) {
 				t.Parallel()
-				a := None[int]()
-				b := None[int]()
-				must.True(t, a.Equal(b))
+				must.True(t, None[int]().Equal(None[int]()))
 			})
 			t.Run("Some(Default) and None", func(t *testing.T) {
 				t.Parallel()
-				a := Some(0)
-				b := None[int]()
-				must.False(t, a.Equal(b))
+				must.False(t, Some(0).Equal(None[int]()))
+			})
+		})
+	})
+
+	t.Run("EqualSome", func(t *testing.T) {
+		t.Parallel()
+		t.Run("int", func(t *testing.T) {
+			t.Parallel()
+			t.Run("equal", func(t *testing.T) {
+				t.Parallel()
+				must.True(t, Some(1).EqualSome(1))
+			})
+			t.Run("not equal", func(t *testing.T) {
+				t.Parallel()
+				must.False(t, Some(1).EqualSome(2))
+			})
+			t.Run("None", func(t *testing.T) {
+				t.Parallel()
+				must.False(t, None[int]().EqualSome(1))
 			})
 		})
 	})
