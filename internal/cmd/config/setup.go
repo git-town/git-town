@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"os"
-	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
@@ -675,10 +674,10 @@ func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFi
 			saveMainBranch(userInput.validatedConfig.MainBranch, oldConfig, frontend),
 		)
 	}
-	perennialBranchesInGit := slice.Remove(userInput.normalConfig.PerennialBranches, configFile.PerennialBranches)
-	if len(configFile.PerennialBranches) == 0 {
+	perennialBranchesForGit := slice.Remove(userInput.normalConfig.PerennialBranches, configFile.PerennialBranches...)
+	if len(perennialBranchesForGit) == 0 {
 		fc.Check(
-			savePerennialBranches(userInput.normalConfig.PerennialBranches, oldConfig.NormalConfig, frontend),
+			gitconfig.SetPerennialBranches(frontend, perennialBranchesForGit),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
@@ -956,13 +955,6 @@ func saveOriginHostname(newValue Option[configdomain.HostingOriginHostname], con
 		return gitconfig.SetOriginHostname(frontend, value)
 	}
 	return gitconfig.RemoveOriginHostname(frontend)
-}
-
-func savePerennialBranches(newValue gitdomain.LocalBranchNames, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if slices.Compare(config.PerennialBranches, newValue) != 0 || config.Git.PerennialBranches == nil {
-		return gitconfig.SetPerennialBranches(runner, newValue)
-	}
-	return nil
 }
 
 func savePerennialRegex(newValue Option[configdomain.PerennialRegex], config config.NormalConfig, runner subshelldomain.Runner) error {
