@@ -38,12 +38,3 @@ func (self *UnvalidatedConfigData) ToValidatedConfig(defaults ValidatedConfigDat
 		MainBranch:   self.MainBranch.GetOrElse(defaults.MainBranch),
 	}
 }
-
-// DefaultUnvalidatedConfig provides the default configuration data to use when nothing is configured.
-func DefaultUnvalidatedConfig() UnvalidatedConfigData {
-	return UnvalidatedConfigData{
-		GitUserEmail: None[gitdomain.GitUserEmail](),
-		GitUserName:  None[gitdomain.GitUserName](),
-		MainBranch:   None[gitdomain.LocalBranchName](),
-	}
-}
