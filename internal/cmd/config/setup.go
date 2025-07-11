@@ -139,9 +139,11 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		}
 	}
 	perennialBranches := repo.UnvalidatedConfig.NormalConfig.PerennialBranches
-	perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, mainBranch, data.dialogInputs.Next())
-	if err != nil || exit {
-		return emptyResult, exit, err
+	if len(configFile.PerennialBranches) == 0 {
+		perennialBranches, exit, err = dialog.PerennialBranches(data.localBranches.Names(), perennialBranches, mainBranch, data.dialogInputs.Next())
+		if err != nil || exit {
+			return emptyResult, exit, err
+		}
 	}
 	perennialRegex := repo.UnvalidatedConfig.NormalConfig.PerennialRegex
 	if configFile.PerennialRegex.IsNone() {

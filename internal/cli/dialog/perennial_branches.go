@@ -32,7 +32,7 @@ The main branch is automatically perennial.
 // This includes asking the user and updating the respective settings based on the user selection.
 func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs dialogcomponents.TestInput) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
 	perennialCandidates := localBranches.AppendAllMissing(oldPerennialBranches...)
-	if len(perennialCandidates) == 0 {
+	if len(perennialCandidates) < 2 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
 	entries := make(list.Entries[gitdomain.LocalBranchName], len(perennialCandidates))
