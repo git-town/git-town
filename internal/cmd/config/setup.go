@@ -757,10 +757,10 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 	return fc.Err
 }
 
-func saveAliases(aliasesToWriteToGit configdomain.Aliases, aliasesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {
+func saveAliases(valuesToWriteToGit configdomain.Aliases, valuesAlreadyInGit configdomain.Aliases, frontend subshelldomain.Runner) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
-		oldAlias, hasOld := aliasesAlreadyInGit[aliasableCommand]
-		newAlias, hasNew := aliasesToWriteToGit[aliasableCommand]
+		oldAlias, hasOld := valuesAlreadyInGit[aliasableCommand]
+		newAlias, hasNew := valuesToWriteToGit[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
 			err = gitconfig.RemoveAlias(frontend, aliasableCommand)
