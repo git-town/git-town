@@ -12,8 +12,9 @@ import (
 
 // lets the user select zero, one, or many of the given entries
 func CheckList[S comparable](entries list.Entries[S], selections []int, title, help string, inputs TestInput) (selected []S, exit dialogdomain.Exit, err error) {
+	cursor := entries.FirstEnabled()
 	program := tea.NewProgram(CheckListModel[S]{
-		List:       list.NewList(entries, 0),
+		List:       list.NewList(entries, cursor),
 		Selections: selections,
 		help:       help,
 		title:      title,
