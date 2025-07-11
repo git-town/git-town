@@ -75,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig, data.configFile, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -597,35 +597,35 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
-		saveAliases(userInput.normalConfig.Aliases, oldConfig.NormalConfig.Aliases, frontend),
+		saveAliases(userInput.normalConfig.Aliases, existingGitConfig.Aliases, frontend),
 	)
 	if forgeType, hasForgeType := userInput.determinedForgeType.Get(); hasForgeType {
 		switch forgeType {
 		case forgedomain.ForgeTypeBitbucket, forgedomain.ForgeTypeBitbucketDatacenter:
 			fc.Check(
-				saveBitbucketUsername(userInput.normalConfig.BitbucketUsername, oldConfig.NormalConfig, userInput.scope, frontend),
+				saveBitbucketUsername(userInput.normalConfig.BitbucketUsername, existingGitConfig.BitbucketUsername, userInput.scope, frontend),
 			)
 			fc.Check(
-				saveBitbucketAppPassword(userInput.normalConfig.BitbucketAppPassword, oldConfig.NormalConfig, userInput.scope, frontend),
+				saveBitbucketAppPassword(userInput.normalConfig.BitbucketAppPassword, existingGitConfig.BitbucketAppPassword, userInput.scope, frontend),
 			)
 		case forgedomain.ForgeTypeCodeberg:
 			fc.Check(
-				saveCodebergToken(userInput.normalConfig.CodebergToken, oldConfig.NormalConfig, userInput.scope, frontend),
+				saveCodebergToken(userInput.normalConfig.CodebergToken, existingGitConfig.CodebergToken, userInput.scope, frontend),
 			)
 		case forgedomain.ForgeTypeGitHub:
 			fc.Check(
-				saveGitHubToken(userInput.normalConfig.GitHubToken, oldConfig.NormalConfig, userInput.scope, userInput.normalConfig.GitHubConnectorType, frontend),
+				saveGitHubToken(userInput.normalConfig.GitHubToken, existingGitConfig.GitHubToken, userInput.scope, userInput.normalConfig.GitHubConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitLab:
 			fc.Check(
-				saveGitLabToken(userInput.normalConfig.GitLabToken, oldConfig.NormalConfig, userInput.scope, userInput.normalConfig.GitLabConnectorType, frontend),
+				saveGitLabToken(userInput.normalConfig.GitLabToken, existingGitConfig.GitLabToken, userInput.scope, userInput.normalConfig.GitLabConnectorType, frontend),
 			)
 		case forgedomain.ForgeTypeGitea:
 			fc.Check(
-				saveGiteaToken(userInput.normalConfig.GiteaToken, oldConfig.NormalConfig, userInput.scope, frontend),
+				saveGiteaToken(userInput.normalConfig.GiteaToken, existingGitConfig.GiteaToken, userInput.scope, frontend),
 			)
 		}
 	}
@@ -634,124 +634,124 @@ func saveAll(userInput userInput, oldConfig config.UnvalidatedConfig, configFile
 	}
 	switch userInput.storageLocation {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput, oldConfig.NormalConfig, frontend)
+		return saveToFile(userInput, existingGitConfig, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, oldConfig, configFile, frontend)
+		return saveToGit(userInput, existingGitConfig, configFile, frontend)
 	}
 	return nil
 }
 
-func saveToGit(userInput userInput, oldConfig config.UnvalidatedConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
 		fc.Check(
-			saveNewBranchType(userInput.normalConfig.NewBranchType, oldConfig.NormalConfig, frontend),
+			saveNewBranchType(userInput.normalConfig.NewBranchType, existingGitConfig.NewBranchType, frontend),
 		)
 	}
 	if configFile.ForgeType.IsNone() {
 		fc.Check(
-			saveForgeType(userInput.normalConfig.ForgeType, oldConfig.NormalConfig, frontend),
+			saveForgeType(userInput.normalConfig.ForgeType, existingGitConfig.ForgeType, frontend),
 		)
 	}
 	if configFile.GitHubConnectorType.IsNone() {
 		fc.Check(
-			saveGitHubConnectorType(userInput.normalConfig.GitHubConnectorType, oldConfig.NormalConfig, frontend),
+			saveGitHubConnectorType(userInput.normalConfig.GitHubConnectorType, existingGitConfig.GitHubConnectorType, frontend),
 		)
 	}
 	if configFile.GitLabConnectorType.IsNone() {
 		fc.Check(
-			saveGitLabConnectorType(userInput.normalConfig.GitLabConnectorType, oldConfig.NormalConfig, frontend),
+			saveGitLabConnectorType(userInput.normalConfig.GitLabConnectorType, existingGitConfig.GitLabConnectorType, frontend),
 		)
 	}
 	if configFile.HostingOriginHostname.IsNone() {
 		fc.Check(
-			saveOriginHostname(userInput.normalConfig.HostingOriginHostname, oldConfig.NormalConfig, frontend),
+			saveOriginHostname(userInput.normalConfig.HostingOriginHostname, existingGitConfig.HostingOriginHostname, frontend),
 		)
 	}
 	if configFile.MainBranch.IsNone() {
 		fc.Check(
-			saveMainBranch(userInput.validatedConfig.MainBranch, oldConfig, frontend),
+			saveMainBranch(userInput.validatedConfig.MainBranch, existingGitConfig.MainBranch, frontend),
 		)
 	}
 	if len(configFile.PerennialBranches) == 0 {
 		fc.Check(
-			savePerennialBranches(userInput.normalConfig.PerennialBranches, oldConfig.NormalConfig, frontend),
+			savePerennialBranches(userInput.normalConfig.PerennialBranches, existingGitConfig.PerennialBranches, frontend),
 		)
 	}
 	if configFile.PerennialRegex.IsNone() {
 		fc.Check(
-			savePerennialRegex(userInput.normalConfig.PerennialRegex, oldConfig.NormalConfig, frontend),
+			savePerennialRegex(userInput.normalConfig.PerennialRegex, existingGitConfig.PerennialRegex, frontend),
 		)
 	}
 	if configFile.UnknownBranchType.IsNone() {
 		fc.Check(
-			saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, oldConfig.NormalConfig, frontend),
+			saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
 	if configFile.DevRemote.IsNone() {
 		fc.Check(
-			saveDevRemote(userInput.normalConfig.DevRemote, oldConfig.NormalConfig, frontend),
+			saveDevRemote(userInput.normalConfig.DevRemote, existingGitConfig.DevRemote, frontend),
 		)
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(
-			saveFeatureRegex(userInput.normalConfig.FeatureRegex, oldConfig.NormalConfig, frontend),
+			saveFeatureRegex(userInput.normalConfig.FeatureRegex, existingGitConfig.FeatureRegex, frontend),
 		)
 	}
 	if configFile.ContributionRegex.IsNone() {
 		fc.Check(
-			saveContributionRegex(userInput.normalConfig.ContributionRegex, oldConfig.NormalConfig, frontend),
+			saveContributionRegex(userInput.normalConfig.ContributionRegex, existingGitConfig.ContributionRegex, frontend),
 		)
 	}
 	if configFile.ObservedRegex.IsNone() {
 		fc.Check(
-			saveObservedRegex(userInput.normalConfig.ObservedRegex, oldConfig.NormalConfig, frontend),
+			saveObservedRegex(userInput.normalConfig.ObservedRegex, existingGitConfig.ObservedRegex, frontend),
 		)
 	}
 	if configFile.PushHook.IsNone() {
 		fc.Check(
-			savePushHook(userInput.normalConfig.PushHook, oldConfig.NormalConfig, frontend),
+			savePushHook(userInput.normalConfig.PushHook, existingGitConfig.PushHook, frontend),
 		)
 	}
 	if configFile.ShareNewBranches.IsNone() {
 		fc.Check(
-			saveShareNewBranches(userInput.normalConfig.ShareNewBranches, oldConfig.NormalConfig, frontend),
+			saveShareNewBranches(userInput.normalConfig.ShareNewBranches, existingGitConfig.ShareNewBranches, frontend),
 		)
 	}
 	if configFile.ShipStrategy.IsNone() {
 		fc.Check(
-			saveShipStrategy(userInput.normalConfig.ShipStrategy, oldConfig.NormalConfig, frontend),
+			saveShipStrategy(userInput.normalConfig.ShipStrategy, existingGitConfig.ShipStrategy, frontend),
 		)
 	}
 	if configFile.ShipDeleteTrackingBranch.IsNone() {
 		fc.Check(
-			saveShipDeleteTrackingBranch(userInput.normalConfig.ShipDeleteTrackingBranch, oldConfig.NormalConfig, frontend),
+			saveShipDeleteTrackingBranch(userInput.normalConfig.ShipDeleteTrackingBranch, existingGitConfig.ShipDeleteTrackingBranch, frontend),
 		)
 	}
 	if configFile.SyncFeatureStrategy.IsNone() {
 		fc.Check(
-			saveSyncFeatureStrategy(userInput.normalConfig.SyncFeatureStrategy, oldConfig.NormalConfig, frontend),
+			saveSyncFeatureStrategy(userInput.normalConfig.SyncFeatureStrategy, existingGitConfig.SyncFeatureStrategy, frontend),
 		)
 	}
 	if configFile.SyncPerennialStrategy.IsNone() {
 		fc.Check(
-			saveSyncPerennialStrategy(userInput.normalConfig.SyncPerennialStrategy, oldConfig.NormalConfig, frontend),
+			saveSyncPerennialStrategy(userInput.normalConfig.SyncPerennialStrategy, existingGitConfig.SyncPerennialStrategy, frontend),
 		)
 	}
 	if configFile.SyncPrototypeStrategy.IsNone() {
 		fc.Check(
-			saveSyncPrototypeStrategy(userInput.normalConfig.SyncPrototypeStrategy, oldConfig.NormalConfig, frontend),
+			saveSyncPrototypeStrategy(userInput.normalConfig.SyncPrototypeStrategy, existingGitConfig.SyncPrototypeStrategy, frontend),
 		)
 	}
 	if configFile.SyncUpstream.IsNone() {
 		fc.Check(
-			saveSyncUpstream(userInput.normalConfig.SyncUpstream, oldConfig.NormalConfig, frontend),
+			saveSyncUpstream(userInput.normalConfig.SyncUpstream, existingGitConfig.SyncUpstream, frontend),
 		)
 	}
 	if configFile.SyncTags.IsNone() {
 		fc.Check(
-			saveSyncTags(userInput.normalConfig.SyncTags, oldConfig.NormalConfig, frontend),
+			saveSyncTags(userInput.normalConfig.SyncTags, existingGitConfig.SyncTags, frontend),
 		)
 	}
 	return fc.Err
@@ -784,8 +784,8 @@ func saveBitbucketAppPassword(valueToWriteToGit Option[forgedomain.BitbucketAppP
 	return gitconfig.RemoveBitbucketAppPassword(runner)
 }
 
-func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsername], valueAlreadyInGit config.NormalConfig, scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit.BitbucketUsername) {
+func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsername], valueAlreadyInGit Option[forgedomain.BitbucketUsername], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -794,8 +794,8 @@ func saveBitbucketUsername(valueToWriteToGit Option[forgedomain.BitbucketUsernam
 	return gitconfig.RemoveBitbucketUsername(frontend)
 }
 
-func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueAlreadyInGit config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit.NewBranchType) {
+func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, hasValue := valueToWriteToGit.Get(); hasValue {
@@ -805,22 +805,22 @@ func saveNewBranchType(valueToWriteToGit Option[configdomain.BranchType], valueA
 	return nil
 }
 
-func saveUnknownBranchType(valueToWriteToGit configdomain.BranchType, valueAlreadyInGit config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == valueAlreadyInGit.UnknownBranchType {
+func saveUnknownBranchType(valueToWriteToGit configdomain.BranchType, valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetUnknownBranchType(runner, valueToWriteToGit)
 }
 
-func saveDevRemote(valueToWriteToGit gitdomain.Remote, valueAlreadyInGit config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == valueAlreadyInGit.DevRemote {
+func saveDevRemote(valueToWriteToGit gitdomain.Remote, valueAlreadyInGit Option[gitdomain.Remote], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetDevRemote(runner, valueToWriteToGit)
 }
 
-func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], valueAlreadyInGit config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(valueAlreadyInGit.FeatureRegex) {
+func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], valueAlreadyInGit Option[configdomain.FeatureRegex], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -830,9 +830,9 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 	return nil
 }
 
-func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit config.NormalConfig, runner subshelldomain.Runner) error {
+func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {
 
-	if valueToWriteToGit.Equal(valueAlreadyInGit.ContributionRegex) {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -842,8 +842,8 @@ func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionReg
 	return nil
 }
 
-func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.ObservedRegex) {
+func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], valueAlreadyInGit Option[configdomain.ObservedRegex], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -853,8 +853,8 @@ func saveObservedRegex(valueToWriteToGit Option[configdomain.ObservedRegex], con
 	return nil
 }
 
-func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], config config.NormalConfig, frontend subshelldomain.Runner) (err error) {
-	oldValue, oldHas := config.ForgeType.Get()
+func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], valueAlreadyInGit Option[forgedomain.ForgeType], frontend subshelldomain.Runner) (err error) {
+	oldValue, oldHas := valueAlreadyInGit.Get()
 	newValue, newHas := valueToWriteToGit.Get()
 	if !oldHas && !newHas {
 		return nil
@@ -868,8 +868,8 @@ func saveForgeType(valueToWriteToGit Option[forgedomain.ForgeType], config confi
 	return gitconfig.RemoveForgeType(frontend)
 }
 
-func saveCodebergToken(valueToWriteToGit Option[forgedomain.CodebergToken], config config.NormalConfig, scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.CodebergToken) {
+func saveCodebergToken(valueToWriteToGit Option[forgedomain.CodebergToken], valueAlreadyInGit Option[forgedomain.CodebergToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -878,8 +878,8 @@ func saveCodebergToken(valueToWriteToGit Option[forgedomain.CodebergToken], conf
 	return gitconfig.RemoveCodebergToken(frontend)
 }
 
-func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], config config.NormalConfig, scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.GiteaToken) {
+func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], valueAlreadyInGit Option[forgedomain.GiteaToken], scope configdomain.ConfigScope, frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -888,8 +888,8 @@ func saveGiteaToken(valueToWriteToGit Option[forgedomain.GiteaToken], config con
 	return gitconfig.RemoveGiteaToken(frontend)
 }
 
-func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnectorType], config config.NormalConfig, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.GitHubConnectorType) {
+func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnectorType], valueAlreadyInGit Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -898,13 +898,13 @@ func saveGitHubConnectorType(valueToWriteToGit Option[forgedomain.GitHubConnecto
 	return gitconfig.RemoveGitHubConnectorType(frontend)
 }
 
-func saveGitHubToken(valueToWriteToGit Option[forgedomain.GitHubToken], config config.NormalConfig, scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
+func saveGitHubToken(valueToWriteToGit Option[forgedomain.GitHubToken], valueAlreadyInGit Option[forgedomain.GitHubToken], scope configdomain.ConfigScope, githubConnectorType Option[forgedomain.GitHubConnectorType], frontend subshelldomain.Runner) error {
 	if connectorType, has := githubConnectorType.Get(); has {
 		if connectorType == forgedomain.GitHubConnectorTypeGh {
 			return nil
 		}
 	}
-	if valueToWriteToGit.Equal(config.GitHubToken) {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -913,8 +913,8 @@ func saveGitHubToken(valueToWriteToGit Option[forgedomain.GitHubToken], config c
 	return gitconfig.RemoveGitHubToken(frontend)
 }
 
-func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitLabConnectorType], config config.NormalConfig, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.GitLabConnectorType) {
+func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitLabConnectorType], valueAlreadyInGit Option[forgedomain.GitLabConnectorType], frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -923,13 +923,13 @@ func saveGitLabConnectorType(valueToWriteToGit Option[forgedomain.GitLabConnecto
 	return gitconfig.RemoveGitLabConnectorType(frontend)
 }
 
-func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitLabToken], config config.NormalConfig, scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], frontend subshelldomain.Runner) error {
+func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitLabToken], valueAlreadyInGit Option[forgedomain.GitLabToken], scope configdomain.ConfigScope, gitlabConnectorType Option[forgedomain.GitLabConnectorType], frontend subshelldomain.Runner) error {
 	if connectorType, has := gitlabConnectorType.Get(); has {
 		if connectorType == forgedomain.GitLabConnectorTypeGlab {
 			return nil
 		}
 	}
-	if valueToWriteToGit.Equal(config.GitLabToken) {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -938,17 +938,17 @@ func saveGitLabToken(valueToWriteToGit Option[forgedomain.GitLabToken], config c
 	return gitconfig.RemoveGitLabToken(frontend)
 }
 
-func saveMainBranch(valueToWriteToGit gitdomain.LocalBranchName, config config.UnvalidatedConfig, runner subshelldomain.Runner) error {
-	if existing, hasExisting := config.UnvalidatedConfig.MainBranch.Get(); hasExisting {
+func saveMainBranch(valueToWriteToGit gitdomain.LocalBranchName, valueAlreadyInGit Option[gitdomain.LocalBranchName], runner subshelldomain.Runner) error {
+	if existing, hasExisting := valueAlreadyInGit.Get(); hasExisting {
 		if existing == valueToWriteToGit {
 			return nil
 		}
 	}
-	return config.SetMainBranch(valueToWriteToGit, runner)
+	return gitconfig.SetMainBranch(runner, valueToWriteToGit)
 }
 
-func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostname], config config.NormalConfig, frontend subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.HostingOriginHostname) {
+func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostname], valueAlreadyInGit Option[configdomain.HostingOriginHostname], frontend subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -957,15 +957,15 @@ func saveOriginHostname(valueToWriteToGit Option[configdomain.HostingOriginHostn
 	return gitconfig.RemoveOriginHostname(frontend)
 }
 
-func savePerennialBranches(valueToWriteToGit gitdomain.LocalBranchNames, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if slices.Compare(config.PerennialBranches, valueToWriteToGit) != 0 || config.Git.PerennialBranches == nil {
-		return gitconfig.SetPerennialBranches(runner, valueToWriteToGit)
+func savePerennialBranches(valueToWriteToGit gitdomain.LocalBranchNames, valueAlreadyInGit gitdomain.LocalBranchNames, runner subshelldomain.Runner) error {
+	if slices.Compare(valueAlreadyInGit, valueToWriteToGit) == 0 {
+		return nil
 	}
-	return nil
+	return gitconfig.SetPerennialBranches(runner, valueToWriteToGit)
 }
 
-func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit.Equal(config.PerennialRegex) {
+func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], valueAlreadyInGit Option[configdomain.PerennialRegex], runner subshelldomain.Runner) error {
+	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
 	if value, has := valueToWriteToGit.Get(); has {
@@ -975,117 +975,117 @@ func savePerennialRegex(valueToWriteToGit Option[configdomain.PerennialRegex], c
 	return nil
 }
 
-func savePushHook(valueToWriteToGit configdomain.PushHook, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.PushHook {
+func savePushHook(valueToWriteToGit configdomain.PushHook, valueAlreadyInGit Option[configdomain.PushHook], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetPushHook(runner, valueToWriteToGit)
 }
 
-func saveShareNewBranches(valueToWriteToGit configdomain.ShareNewBranches, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.ShareNewBranches {
+func saveShareNewBranches(valueToWriteToGit configdomain.ShareNewBranches, valueAlreadyInGit Option[configdomain.ShareNewBranches], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetShareNewBranches(runner, valueToWriteToGit)
 }
 
-func saveShipDeleteTrackingBranch(valueToWriteToGit configdomain.ShipDeleteTrackingBranch, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.ShipDeleteTrackingBranch {
+func saveShipDeleteTrackingBranch(valueToWriteToGit configdomain.ShipDeleteTrackingBranch, valueAlreadyInGit Option[configdomain.ShipDeleteTrackingBranch], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetShipDeleteTrackingBranch(runner, valueToWriteToGit)
 }
 
-func saveShipStrategy(valueToWriteToGit configdomain.ShipStrategy, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.ShipStrategy {
+func saveShipStrategy(valueToWriteToGit configdomain.ShipStrategy, valueAlreadyInGit Option[configdomain.ShipStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetShipStrategy(runner, valueToWriteToGit)
 }
 
-func saveSyncFeatureStrategy(valueToWriteToGit configdomain.SyncFeatureStrategy, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.SyncFeatureStrategy {
+func saveSyncFeatureStrategy(valueToWriteToGit configdomain.SyncFeatureStrategy, valueAlreadyInGit Option[configdomain.SyncFeatureStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetSyncFeatureStrategy(runner, valueToWriteToGit)
 }
 
-func saveSyncPerennialStrategy(valueToWriteToGit configdomain.SyncPerennialStrategy, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.SyncPerennialStrategy {
+func saveSyncPerennialStrategy(valueToWriteToGit configdomain.SyncPerennialStrategy, valueAlreadyInGit Option[configdomain.SyncPerennialStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetSyncPerennialStrategy(runner, valueToWriteToGit)
 }
 
-func saveSyncPrototypeStrategy(valueToWriteToGit configdomain.SyncPrototypeStrategy, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.SyncPrototypeStrategy {
+func saveSyncPrototypeStrategy(valueToWriteToGit configdomain.SyncPrototypeStrategy, valueAlreadyInGit Option[configdomain.SyncPrototypeStrategy], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetSyncPrototypeStrategy(runner, valueToWriteToGit)
 }
 
-func saveSyncUpstream(valueToWriteToGit configdomain.SyncUpstream, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.SyncUpstream {
+func saveSyncUpstream(valueToWriteToGit configdomain.SyncUpstream, valueAlreadyInGit Option[configdomain.SyncUpstream], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetSyncUpstream(runner, valueToWriteToGit)
 }
 
-func saveSyncTags(valueToWriteToGit configdomain.SyncTags, config config.NormalConfig, runner subshelldomain.Runner) error {
-	if valueToWriteToGit == config.SyncTags {
+func saveSyncTags(valueToWriteToGit configdomain.SyncTags, valueAlreadyInGit Option[configdomain.SyncTags], runner subshelldomain.Runner) error {
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
 		return nil
 	}
 	return gitconfig.SetSyncTags(runner, valueToWriteToGit)
 }
 
-func saveToFile(userInput userInput, config config.NormalConfig, runner subshelldomain.Runner) error {
+func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runner subshelldomain.Runner) error {
 	if err := configfile.Save(userInput.normalConfig, userInput.validatedConfig.MainBranch); err != nil {
 		return err
 	}
-	if config.Git.DevRemote.IsSome() {
+	if gitConfig.DevRemote.IsSome() {
 		_ = gitconfig.RemoveDevRemote(runner)
 	}
-	if config.Git.MainBranch.IsSome() {
+	if gitConfig.MainBranch.IsSome() {
 		_ = gitconfig.RemoveMainBranch(runner)
 	}
-	if config.Git.NewBranchType.IsSome() {
+	if gitConfig.NewBranchType.IsSome() {
 		_ = gitconfig.RemoveNewBranchType(runner)
 	}
-	if len(config.Git.PerennialBranches) > 0 {
+	if len(gitConfig.PerennialBranches) > 0 {
 		_ = gitconfig.RemovePerennialBranches(runner)
 	}
-	if config.Git.PerennialRegex.IsSome() {
+	if gitConfig.PerennialRegex.IsSome() {
 		_ = gitconfig.RemovePerennialRegex(runner)
 	}
-	if config.Git.ShareNewBranches.IsSome() {
+	if gitConfig.ShareNewBranches.IsSome() {
 		_ = gitconfig.RemoveShareNewBranches(runner)
 	}
-	if config.Git.PushHook.IsSome() {
+	if gitConfig.PushHook.IsSome() {
 		_ = gitconfig.RemovePushHook(runner)
 	}
-	if config.Git.ShipStrategy.IsSome() {
+	if gitConfig.ShipStrategy.IsSome() {
 		_ = gitconfig.RemoveShipStrategy(runner)
 	}
-	if config.Git.ShipDeleteTrackingBranch.IsSome() {
+	if gitConfig.ShipDeleteTrackingBranch.IsSome() {
 		_ = gitconfig.RemoveShipDeleteTrackingBranch(runner)
 	}
-	if config.Git.SyncFeatureStrategy.IsSome() {
+	if gitConfig.SyncFeatureStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncFeatureStrategy(runner)
 	}
-	if config.Git.SyncPerennialStrategy.IsSome() {
+	if gitConfig.SyncPerennialStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncPerennialStrategy(runner)
 	}
-	if config.Git.SyncPrototypeStrategy.IsSome() {
+	if gitConfig.SyncPrototypeStrategy.IsSome() {
 		_ = gitconfig.RemoveSyncPrototypeStrategy(runner)
 	}
-	if config.Git.SyncUpstream.IsSome() {
+	if gitConfig.SyncUpstream.IsSome() {
 		_ = gitconfig.RemoveSyncUpstream(runner)
 	}
-	if config.Git.SyncTags.IsSome() {
+	if gitConfig.SyncTags.IsSome() {
 		_ = gitconfig.RemoveSyncTags(runner)
 	}
-	if err := saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, config, runner); err != nil {
+	if err := saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
-	return saveFeatureRegex(userInput.normalConfig.FeatureRegex, config, runner)
+	return saveFeatureRegex(userInput.normalConfig.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
