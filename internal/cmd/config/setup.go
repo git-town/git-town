@@ -181,12 +181,10 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		}
 	}
 	devRemote := repo.UnvalidatedConfig.NormalConfig.DevRemote
-	if len(data.remotes) > 1 {
-		if configFile.DevRemote.IsNone() {
-			devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs.Next())
-			if err != nil || exit {
-				return emptyResult, exit, err
-			}
+	if len(data.remotes) > 1 && configFile.DevRemote.IsNone() {
+		devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs.Next())
+		if err != nil || exit {
+			return emptyResult, exit, err
 		}
 	}
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
