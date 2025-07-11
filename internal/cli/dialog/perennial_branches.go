@@ -2,6 +2,7 @@ package dialog
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v21/internal/cli/dialog/dialogcomponents/list"
@@ -23,18 +24,28 @@ For more flexible configuration,
 you can also use the "perennial-regex" setting
 to match branch names dynamically.
 
+The main branch is automatically perennial.
 `
 )
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs dialogcomponents.TestInput) (gitdomain.LocalBranchNames, dialogdomain.Exit, error) {
-	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
+	perennialCandidates := localBranches.AppendAllMissing(oldPerennialBranches...)
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	entries := list.NewEntries(perennialCandidates...)
+	entries := make(list.Entries[gitdomain.LocalBranchName], len(perennialCandidates))
+	for b, branch := range perennialCandidates {
+		isMain := branch == mainBranch
+		entries[b] = list.Entry[gitdomain.LocalBranchName]{
+			Data:     branch,
+			Disabled: isMain,
+			Text:     branch.String(),
+		}
+	}
 	selections := slice.FindMany(perennialCandidates, oldPerennialBranches)
+	selections = append(selections, slices.Index(perennialCandidates, mainBranch))
 	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
 	selectionText := selectedBranches.Join(", ")
