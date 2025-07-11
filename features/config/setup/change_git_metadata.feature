@@ -19,16 +19,16 @@ Feature: change existing information in Git metadata
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | change the perennial branches             | space down space enter |
-      | enter a perennial regex                   | 3 3 6 6 enter          |
+      | enter a perennial regex                   |          3 3 6 6 enter |
       | feature regex                             | u s e r enter          |
-      | contribution regex                        | 1 1 1 1 enter          |
-      | observed regex                            | 2 2 2 2 enter          |
+      | contribution regex                        |          1 1 1 1 enter |
+      | observed regex                            |          2 2 2 2 enter |
       | unknown branch type                       | down enter             |
       | dev-remote                                | enter                  |
       | origin hostname                           | c o d e enter          |
       | set forge type to "github"                | up up enter            |
       | set github forge type to "API"            | enter                  |
-      | github token                              | 1 2 3 4 5 6 enter      |
+      | github token                              |      1 2 3 4 5 6 enter |
       | token scope                               | enter                  |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
@@ -68,6 +68,7 @@ Feature: change existing information in Git metadata
       | git config git-town.perennial-branches "production qa"   |
       | git config git-town.perennial-regex 3366                 |
       | git config git-town.unknown-branch-type observed         |
+      | git config git-town.dev-remote origin                    |
       | git config git-town.feature-regex user                   |
       | git config git-town.contribution-regex 1111              |
       | git config git-town.observed-regex 2222                  |
@@ -93,7 +94,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And local Git setting "git-town.perennial-branches" is now "production qa"
-    And local Git setting "git-town.dev-remote" now doesn't exist
+    And local Git setting "git-town.dev-remote" is now "origin"
     And local Git setting "git-town.new-branch-type" is now "prototype"
     And local Git setting "git-town.forge-type" is now "github"
     And local Git setting "git-town.github-token" is now "123456"
