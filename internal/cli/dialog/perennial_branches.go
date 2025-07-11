@@ -48,6 +48,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	selections = append(selections, slices.Index(perennialCandidates, mainBranch))
 	selectedBranchesList, exit, err := dialogcomponents.CheckList(entries, selections, perennialBranchesTitle, PerennialBranchesHelp, inputs)
 	selectedBranches := gitdomain.LocalBranchNames(selectedBranchesList)
+	selectedBranches = selectedBranches.Remove(mainBranch)
 	selectionText := selectedBranches.Join(", ")
 	if selectionText == "" {
 		selectionText = "(none)"
