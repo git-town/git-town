@@ -4,6 +4,7 @@ Feature: override an existing Git alias
   Background:
     Given a Git repo with origin
     And I ran "git config --global alias.append checkout"
+    And local Git setting "git-town.unknown-branch-type" is "feature"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    |
       | welcome                     | enter   |
@@ -30,6 +31,7 @@ Feature: override an existing Git alias
       | ship-delete-tracking-branch | enter   |
       | save config to config file  | enter   |
 
+  @debug @this
   Scenario: result
     Then Git Town runs the commands
       | COMMAND                                        |

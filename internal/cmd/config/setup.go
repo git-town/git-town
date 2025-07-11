@@ -1086,5 +1086,6 @@ func saveToFile(userInput userInput, gitConfig configdomain.PartialConfig, runne
 	if err := saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, gitConfig.UnknownBranchType, runner); err != nil {
 		return err
 	}
+	// TODO: also save ObservedRegex ContributionRegex NewBranchType
 	return saveFeatureRegex(userInput.normalConfig.FeatureRegex, gitConfig.FeatureRegex, runner)
 }
