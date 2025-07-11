@@ -21,7 +21,7 @@ Feature: don't ask for information already provided by the config file
       share-new-branches = "propose"
 
       [hosting]
-      dev-remote = "origin"
+      dev-remote = "something"
       origin-hostname = "github.com"
       forge-type = "github"
       github-connector = "gh"

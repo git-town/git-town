@@ -94,7 +94,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       share-new-branches = "no"
 
       [hosting]
-      dev-remote = "origin"
+      dev-remote = "fork"
 
       [ship]
       delete-tracking-branch = false
