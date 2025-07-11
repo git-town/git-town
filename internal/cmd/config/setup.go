@@ -807,10 +807,8 @@ func saveNewBranchType(newValue Option[configdomain.BranchType], config config.N
 }
 
 func saveUnknownBranchType(valueToWriteToGit configdomain.BranchType, valueAlreadyInGit Option[configdomain.BranchType], runner subshelldomain.Runner) error {
-	if valueInGit, has := valueAlreadyInGit.Get(); has {
-		if valueToWriteToGit == valueInGit {
-			return nil
-		}
+	if valueAlreadyInGit.EqualSome(valueToWriteToGit) {
+		return nil
 	}
 	return gitconfig.SetUnknownBranchType(runner, valueToWriteToGit)
 }
