@@ -75,7 +75,7 @@ func executeConfigSetup(cliConfig cliconfig.CliConfig) error {
 	if err != nil || exit {
 		return err
 	}
-	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, repo.Frontend); err != nil {
+	if err = saveAll(enterDataResult, repo.UnvalidatedConfig.NormalConfig.Git, data.configFile, data, repo.Frontend); err != nil {
 		return err
 	}
 	return configinterpreter.Finished(configinterpreter.FinishedArgs{
@@ -181,10 +181,12 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		}
 	}
 	devRemote := repo.UnvalidatedConfig.NormalConfig.DevRemote
-	if configFile.DevRemote.IsNone() {
-		devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs.Next())
-		if err != nil || exit {
-			return emptyResult, exit, err
+	if len(data.remotes) > 1 {
+		if configFile.DevRemote.IsNone() {
+			devRemote, exit, err = dialog.DevRemote(devRemote, data.remotes, data.dialogInputs.Next())
+			if err != nil || exit {
+				return emptyResult, exit, err
+			}
 		}
 	}
 	hostingOriginHostName := repo.UnvalidatedConfig.NormalConfig.HostingOriginHostname
@@ -597,7 +599,7 @@ func loadSetupData(repo execute.OpenRepoResult, cliConfig cliconfig.CliConfig) (
 	}, exit, nil
 }
 
-func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, configFile Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
 	fc := gohacks.ErrorCollector{}
 	fc.Check(
 		saveAliases(userInput.normalConfig.Aliases, existingGitConfig.Aliases, frontend),
@@ -636,12 +638,12 @@ func saveAll(userInput userInput, existingGitConfig configdomain.PartialConfig, 
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput, existingGitConfig, frontend)
 	case dialog.ConfigStorageOptionGit:
-		return saveToGit(userInput, existingGitConfig, configFile, frontend)
+		return saveToGit(userInput, existingGitConfig, configFile, data, frontend)
 	}
 	return nil
 }
 
-func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], frontend subshelldomain.Runner) error {
+func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig, configFileOpt Option[configdomain.PartialConfig], data setupData, frontend subshelldomain.Runner) error {
 	configFile := configFileOpt.GetOrDefault()
 	fc := gohacks.ErrorCollector{}
 	if configFile.NewBranchType.IsNone() {
@@ -689,10 +691,12 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 			saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
-	if configFile.DevRemote.IsNone() {
-		fc.Check(
-			saveDevRemote(userInput.normalConfig.DevRemote, existingGitConfig.DevRemote, frontend),
-		)
+	if len(data.remotes) > 1 {
+		if configFile.DevRemote.IsNone() {
+			fc.Check(
+				saveDevRemote(userInput.normalConfig.DevRemote, existingGitConfig.DevRemote, frontend),
+			)
+		}
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(

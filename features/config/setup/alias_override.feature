@@ -16,7 +16,6 @@ Feature: override an existing Git alias
       | contribution regex          | enter   |
       | observed regex              | enter   |
       | unknown branch type         | enter   |
-      | dev-remote                  | enter   |
       | origin hostname             | enter   |
       | forge type                  | enter   |
       | sync-feature-strategy       | enter   |
