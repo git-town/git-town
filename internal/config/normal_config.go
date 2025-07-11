@@ -18,7 +18,7 @@ import (
 
 type NormalConfig struct {
 	configdomain.NormalConfigData
-	Git        configdomain.PartialConfig // configuration data taken from Git metadata, in particular the unscoped Git metadata
+	Git        configdomain.PartialConfig // configuration data taken from the unscoped Git metadata
 	GitVersion git.Version                // version of the installed Git executable
 }
 

@@ -14,6 +14,8 @@ import (
 
 type UnvalidatedConfig struct {
 	File              Option[configdomain.PartialConfig] // content of git-town.toml, nil = no config file exists
+	GitLocal          configdomain.PartialConfig
+	GitGlobal         configdomain.PartialConfig
 	NormalConfig      NormalConfig
 	UnvalidatedConfig configdomain.UnvalidatedConfigData
 }

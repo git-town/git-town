@@ -131,8 +131,8 @@ func enterData(repo execute.OpenRepoResult, data setupData) (userInput, dialogdo
 		mainBranch, exit, err = dialog.MainBranch(dialog.MainBranchArgs{
 			GitStandardBranch:   gitStandardBranch,
 			LocalBranches:       data.localBranches.Names(),
-			LocalGitMainBranch:  localGitMainBranch,
-			GlobalGitMainBranch: globalGitMainBranch,
+			LocalGitMainBranch:  data.config.GitGlobal.MainBranch,
+			GlobalGitMainBranch: data.config.GitLocal.MainBranch,
 			Inputs:              data.dialogInputs.Next(),
 		})
 		if err != nil || exit {
