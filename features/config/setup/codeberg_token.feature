@@ -7,32 +7,32 @@ Feature: enter the Codeberg API token
   Scenario: auto-detected Codeberg platform
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS              |
-      | welcome                     | enter             |
-      | aliases                     | enter             |
-      | main branch                 | enter             |
-      | perennial branches          | enter             |
-      | perennial regex             | enter             |
-      | feature regex               | enter             |
-      | contribution regex          | enter             |
-      | observed regex              | enter             |
-      | unknown branch type         | enter             |
-      | dev-remote                  | enter             |
-      | origin hostname             | enter             |
-      | forge type: auto-detect     | enter             |
-      | codeberg token              | 1 2 3 4 5 6 enter |
-      | token scope                 | enter             |
-      | sync-feature-strategy       | enter             |
-      | sync-perennial-strategy     | enter             |
-      | sync-prototype-strategy     | enter             |
-      | sync-upstream               | enter             |
-      | sync-tags                   | enter             |
-      | share-new-branches          | enter             |
-      | push-hook                   | enter             |
-      | new-branch-type             | enter             |
-      | ship-strategy               | enter             |
-      | ship-delete-tracking-branch | enter             |
-      | save config to Git metadata | down enter        |
+      | DIALOG                      | KEYS              | DESCRIPTION                                 |
+      | welcome                     | enter             |                                             |
+      | aliases                     | enter             |                                             |
+      | main branch                 | enter             |                                             |
+      | perennial branches          |                   | no input here since the dialog doesn't show |
+      | perennial regex             | enter             |                                             |
+      | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
+      | dev-remote                  | enter             |                                             |
+      | origin hostname             | enter             |                                             |
+      | forge type: auto-detect     | enter             |                                             |
+      | codeberg token              | 1 2 3 4 5 6 enter |                                             |
+      | token scope                 | enter             |                                             |
+      | sync-feature-strategy       | enter             |                                             |
+      | sync-perennial-strategy     | enter             |                                             |
+      | sync-prototype-strategy     | enter             |                                             |
+      | sync-upstream               | enter             |                                             |
+      | sync-tags                   | enter             |                                             |
+      | share-new-branches          | enter             |                                             |
+      | push-hook                   | enter             |                                             |
+      | new-branch-type             | enter             |                                             |
+      | ship-strategy               | enter             |                                             |
+      | ship-delete-tracking-branch | enter             |                                             |
+      | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                     |
       | git config git-town.codeberg-token 123456   |
@@ -42,32 +42,32 @@ Feature: enter the Codeberg API token
 
   Scenario: select Codeberg manually
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS                 |
-      | welcome                     | enter                |
-      | aliases                     | enter                |
-      | main branch                 | enter                |
-      | perennial branches          | enter                |
-      | perennial regex             | enter                |
-      | feature regex               | enter                |
-      | contribution regex          | enter                |
-      | observed regex              | enter                |
-      | unknown branch type         | enter                |
-      | dev-remote                  | enter                |
-      | origin hostname             | enter                |
-      | forge type                  | down down down enter |
-      | codeberg token              | 1 2 3 4 5 6 enter    |
-      | token scope                 | enter                |
-      | sync-feature-strategy       | enter                |
-      | sync-perennial-strategy     | enter                |
-      | sync-prototype-strategy     | enter                |
-      | sync-upstream               | enter                |
-      | sync-tags                   | enter                |
-      | share-new-branches          | enter                |
-      | push-hook                   | enter                |
-      | new-branch-type             | enter                |
-      | ship-strategy               | enter                |
-      | ship-delete-tracking-branch | enter                |
-      | save config to Git metadata | down enter           |
+      | DIALOG                      | KEYS                 | DESCRIPTION                                 |
+      | welcome                     | enter                |                                             |
+      | aliases                     | enter                |                                             |
+      | main branch                 | enter                |                                             |
+      | perennial branches          |                      | no input here since the dialog doesn't show |
+      | perennial regex             | enter                |                                             |
+      | feature regex               | enter                |                                             |
+      | contribution regex          | enter                |                                             |
+      | observed regex              | enter                |                                             |
+      | unknown branch type         | enter                |                                             |
+      | dev-remote                  | enter                |                                             |
+      | origin hostname             | enter                |                                             |
+      | forge type                  | down down down enter |                                             |
+      | codeberg token              | 1 2 3 4 5 6 enter    |                                             |
+      | token scope                 | enter                |                                             |
+      | sync-feature-strategy       | enter                |                                             |
+      | sync-perennial-strategy     | enter                |                                             |
+      | sync-prototype-strategy     | enter                |                                             |
+      | sync-upstream               | enter                |                                             |
+      | sync-tags                   | enter                |                                             |
+      | share-new-branches          | enter                |                                             |
+      | push-hook                   | enter                |                                             |
+      | new-branch-type             | enter                |                                             |
+      | ship-strategy               | enter                |                                             |
+      | ship-delete-tracking-branch | enter                |                                             |
+      | save config to Git metadata | down enter           |                                             |
     Then Git Town runs the commands
       | COMMAND                                     |
       | git config git-town.codeberg-token 123456   |
@@ -79,32 +79,32 @@ Feature: enter the Codeberg API token
   Scenario: store Codeberge API token globally
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS              |
-      | welcome                     | enter             |
-      | aliases                     | enter             |
-      | main branch                 | enter             |
-      | perennial branches          | enter             |
-      | perennial regex             | enter             |
-      | feature regex               | enter             |
-      | contribution regex          | enter             |
-      | observed regex              | enter             |
-      | unknown branch type         | enter             |
-      | dev-remote                  | enter             |
-      | origin hostname             | enter             |
-      | forge type: auto-detect     | enter             |
-      | codeberg token              | 1 2 3 4 5 6 enter |
-      | token scope                 | down enter        |
-      | sync-feature-strategy       | enter             |
-      | sync-perennial-strategy     | enter             |
-      | sync-prototype-strategy     | enter             |
-      | sync-upstream               | enter             |
-      | sync-tags                   | enter             |
-      | share-new-branches          | enter             |
-      | push-hook                   | enter             |
-      | new-branch-type             | enter             |
-      | ship-strategy               | enter             |
-      | ship-delete-tracking-branch | enter             |
-      | save config to Git metadata | down enter        |
+      | DIALOG                      | KEYS              | DESCRIPTION                                 |
+      | welcome                     | enter             |                                             |
+      | aliases                     | enter             |                                             |
+      | main branch                 | enter             |                                             |
+      | perennial branches          |                   | no input here since the dialog doesn't show |
+      | perennial regex             | enter             |                                             |
+      | feature regex               | enter             |                                             |
+      | contribution regex          | enter             |                                             |
+      | observed regex              | enter             |                                             |
+      | unknown branch type         | enter             |                                             |
+      | dev-remote                  | enter             |                                             |
+      | origin hostname             | enter             |                                             |
+      | forge type: auto-detect     | enter             |                                             |
+      | codeberg token              | 1 2 3 4 5 6 enter |                                             |
+      | token scope                 | down enter        |                                             |
+      | sync-feature-strategy       | enter             |                                             |
+      | sync-perennial-strategy     | enter             |                                             |
+      | sync-prototype-strategy     | enter             |                                             |
+      | sync-upstream               | enter             |                                             |
+      | sync-tags                   | enter             |                                             |
+      | share-new-branches          | enter             |                                             |
+      | push-hook                   | enter             |                                             |
+      | new-branch-type             | enter             |                                             |
+      | ship-strategy               | enter             |                                             |
+      | ship-delete-tracking-branch | enter             |                                             |
+      | save config to Git metadata | down enter        |                                             |
     Then Git Town runs the commands
       | COMMAND                                            |
       | git config --global git-town.codeberg-token 123456 |
@@ -115,32 +115,32 @@ Feature: enter the Codeberg API token
     And my repo's "origin" remote is "git@codeberg.org:git-town/docs.git"
     Given global Git setting "git-town.codeberg-token" is "123"
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS                                      |
-      | welcome                     | enter                                     |
-      | aliases                     | enter                                     |
-      | main branch                 | enter                                     |
-      | perennial branches          | enter                                     |
-      | perennial regex             | enter                                     |
-      | feature regex               | enter                                     |
-      | contribution regex          | enter                                     |
-      | observed regex              | enter                                     |
-      | unknown branch type         | enter                                     |
-      | dev-remote                  | enter                                     |
-      | origin hostname             | enter                                     |
-      | forge type: auto-detect     | enter                                     |
-      | github token                | backspace backspace backspace 4 5 6 enter |
-      | token scope                 | enter                                     |
-      | sync-feature-strategy       | enter                                     |
-      | sync-perennial-strategy     | enter                                     |
-      | sync-prototype-strategy     | enter                                     |
-      | sync-upstream               | enter                                     |
-      | sync-tags                   | enter                                     |
-      | share-new-branches          | enter                                     |
-      | push-hook                   | enter                                     |
-      | new-branch-type             | enter                                     |
-      | ship-strategy               | enter                                     |
-      | ship-delete-tracking-branch | enter                                     |
-      | save config to Git metadata | down enter                                |
+      | DIALOG                      | KEYS                                      | DESCRIPTION                                 |
+      | welcome                     | enter                                     |                                             |
+      | aliases                     | enter                                     |                                             |
+      | main branch                 | enter                                     |                                             |
+      | perennial branches          |                                           | no input here since the dialog doesn't show |
+      | perennial regex             | enter                                     |                                             |
+      | feature regex               | enter                                     |                                             |
+      | contribution regex          | enter                                     |                                             |
+      | observed regex              | enter                                     |                                             |
+      | unknown branch type         | enter                                     |                                             |
+      | dev-remote                  | enter                                     |                                             |
+      | origin hostname             | enter                                     |                                             |
+      | forge type: auto-detect     | enter                                     |                                             |
+      | github token                | backspace backspace backspace 4 5 6 enter |                                             |
+      | token scope                 | enter                                     |                                             |
+      | sync-feature-strategy       | enter                                     |                                             |
+      | sync-perennial-strategy     | enter                                     |                                             |
+      | sync-prototype-strategy     | enter                                     |                                             |
+      | sync-upstream               | enter                                     |                                             |
+      | sync-tags                   | enter                                     |                                             |
+      | share-new-branches          | enter                                     |                                             |
+      | push-hook                   | enter                                     |                                             |
+      | new-branch-type             | enter                                     |                                             |
+      | ship-strategy               | enter                                     |                                             |
+      | ship-delete-tracking-branch | enter                                     |                                             |
+      | save config to Git metadata | down enter                                |                                             |
     Then Git Town runs the commands
       | COMMAND                                         |
       | git config --global git-town.codeberg-token 456 |
