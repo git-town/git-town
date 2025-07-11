@@ -33,4 +33,20 @@ func TestRemove(t *testing.T) {
 		want := []string{"one", "three"}
 		must.Eq(t, want, have)
 	})
+
+	t.Run("return multiple elements", func(t *testing.T) {
+		t.Parallel()
+		list := []string{"one", "two", "three", "four"}
+		have := slice.Remove(list, "two", "three")
+		want := []string{"one", "four"}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("return no elements", func(t *testing.T) {
+		t.Parallel()
+		list := []string{"one", "two"}
+		have := slice.Remove(list)
+		want := []string{"one", "two"}
+		must.Eq(t, want, have)
+	})
 }
