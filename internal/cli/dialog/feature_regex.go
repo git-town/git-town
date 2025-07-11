@@ -19,6 +19,8 @@ This setting only applies
 if the "unknown-branch-type"
 is set to something other than "feature".
 
+If you're not sure what to enter here,
+it's safe to leave it blank.
 `
 )
 
