@@ -24,7 +24,8 @@ For more flexible configuration,
 you can also use the "perennial-regex" setting
 to match branch names dynamically.
 
-The main branch is automatically perennial.
+The main branch is automatically perennial
+and therefore always selected in this list.
 `
 )
 
