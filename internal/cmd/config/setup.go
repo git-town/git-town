@@ -689,12 +689,10 @@ func saveToGit(userInput userInput, existingGitConfig configdomain.PartialConfig
 			saveUnknownBranchType(userInput.normalConfig.UnknownBranchType, existingGitConfig.UnknownBranchType, frontend),
 		)
 	}
-	if len(data.remotes) > 1 {
-		if configFile.DevRemote.IsNone() {
-			fc.Check(
-				saveDevRemote(userInput.normalConfig.DevRemote, existingGitConfig.DevRemote, frontend),
-			)
-		}
+	if len(data.remotes) > 1 && configFile.DevRemote.IsNone() {
+		fc.Check(
+			saveDevRemote(userInput.normalConfig.DevRemote, existingGitConfig.DevRemote, frontend),
+		)
 	}
 	if configFile.FeatureRegex.IsNone() {
 		fc.Check(
