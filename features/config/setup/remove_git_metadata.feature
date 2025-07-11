@@ -51,7 +51,6 @@ Feature: remove existing configuration in Git metadata
       | contribution regex                      | backspace backspace backspace backspace backspace backspace backspace enter |
       | observed regex                          | backspace backspace backspace backspace backspace enter                     |
       | unknown branch type                     | up enter                                                                    |
-      | dev-remote                              | enter                                                                       |
       | remove origin hostname                  | backspace backspace backspace backspace enter                               |
       | remove forge type override              | up up up up up enter                                                        |
       | sync-feature-strategy                   | up enter                                                                    |
