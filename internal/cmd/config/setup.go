@@ -831,7 +831,6 @@ func saveFeatureRegex(valueToWriteToGit Option[configdomain.FeatureRegex], value
 }
 
 func saveContributionRegex(valueToWriteToGit Option[configdomain.ContributionRegex], valueAlreadyInGit Option[configdomain.ContributionRegex], runner subshelldomain.Runner) error {
-
 	if valueToWriteToGit.Equal(valueAlreadyInGit) {
 		return nil
 	}
