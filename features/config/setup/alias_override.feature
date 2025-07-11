@@ -4,6 +4,7 @@ Feature: override an existing Git alias
   Background:
     Given a Git repo with origin
     And I ran "git config --global alias.append checkout"
+    And local Git setting "git-town.unknown-branch-type" is "feature"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    |
       | welcome                     | enter   |
@@ -15,7 +16,6 @@ Feature: override an existing Git alias
       | contribution regex          | enter   |
       | observed regex              | enter   |
       | unknown branch type         | enter   |
-      | dev-remote                  | enter   |
       | origin hostname             | enter   |
       | forge type                  | enter   |
       | sync-feature-strategy       | enter   |
