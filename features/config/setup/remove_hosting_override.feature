@@ -32,9 +32,20 @@ Feature: remove an existing forge type override
 
   Scenario: result
     Then Git Town runs the commands
-      | COMMAND                                     |
-      | git config git-town.new-branch-type feature |
-      | git config --unset git-town.forge-type      |
+      | COMMAND                                              |
+      | git config git-town.new-branch-type feature          |
+      | git config --unset git-town.forge-type               |
+      | git config git-town.unknown-branch-type feature      |
+      | git config git-town.dev-remote origin                |
+      | git config git-town.push-hook true                   |
+      | git config git-town.share-new-branches no            |
+      | git config git-town.ship-strategy api                |
+      | git config git-town.ship-delete-tracking-branch true |
+      | git config git-town.sync-feature-strategy merge      |
+      | git config git-town.sync-perennial-strategy rebase   |
+      | git config git-town.sync-prototype-strategy merge    |
+      | git config git-town.sync-upstream true               |
+      | git config git-town.sync-tags true                   |
     And local Git setting "git-town.forge-type" now doesn't exist
 
   Scenario: undo
